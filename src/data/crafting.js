@@ -7,6 +7,7 @@ import { JAR_PREFIX } from './artisan.js';
 export const PLACEABLES = {
   sprinkler:  { name: 'Copper sprinkler', short: 'Sprinkler', kind: 'sprinkler', reach: 1, square: false },
   sprinkler2: { name: 'Iron sprinkler',   short: 'Iron spr.', kind: 'sprinkler', reach: 1, square: true },
+  sprinkler3: { name: 'Steel sprinkler',  short: 'Steel spr.', kind: 'sprinkler', reach: 2, square: true },
   crock:      { name: 'Brine crock',      short: 'Crock',     kind: 'machine' },
   churn:      { name: 'Butter churn',     short: 'Churn',     kind: 'machine' },
   vat:        { name: 'Cheese vat',       short: 'Vat',       kind: 'machine' },
@@ -17,6 +18,7 @@ export const PLACEABLES = {
 export const RECIPES = {
   sprinkler:  { cost: 75,  needs: { copper: 3, stone: 5 }, desc: 'Waters the 4 tiles next to it every morning.' },
   sprinkler2: { cost: 200, needs: { iron: 3, copper: 2 },  desc: 'Waters all 8 tiles around it every morning.' },
+  sprinkler3: { cost: 900, needs: { iron: 5, gel: 5 },     desc: 'Waters the 24 tiles in a 5 by 5 square around it every morning.' },
   crock:      { cost: 500, needs: { stone: 30, copper: 4 }, desc: 'Jars a crop or forage item over 3 nights. Worth twice the item plus 20g.' },
   churn:      { cost: 400, needs: { copper: 6 },            desc: 'Turns milk into butter overnight.' },
   vat:        { cost: 600, needs: { iron: 4 },              desc: 'Turns goat milk into soft cheese overnight.' },

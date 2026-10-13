@@ -5,6 +5,9 @@ import { ITEMS } from '../data/items.js';
 import { NPCS } from '../data/npcs.js';
 import { QUEST_NOTES } from '../data/quests.js';
 import { canDeliver, deliver } from '../systems/quests.js';
+import { PROJECTS } from '../data/projects.js';
+import { funded, fundProject } from '../systems/projects.js';
+import { affordable } from '../systems/upgrades.js';
 import { nextFestival, contestItems, enterContest, buyStall, entry, festivalToday, hoursText, ACCEPT_TEXT } from '../systems/festivals.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
@@ -21,7 +24,11 @@ function board() {
   }).join('') : '<p class="role">No requests today. A new one goes up most mornings.</p>';
   const n = nextFestival();
   const fest = n ? `<h3>Calendar</h3><p>${n.inDays === 0 ? `Today: the <b>${n.f.name}</b> at the festival table, ${hoursText()}.` : `Next: the <b>${n.f.name}</b>, ${n.f.season} ${n.f.day} (in ${n.inDays} day${n.inDays === 1 ? '' : 's'}).`} ${n.f.intro}</p>` : '';
-  openModal(`<h2>Quest board</h2><p class="role">Requests from your neighbours. Requests completed: ${S.questsDone || 0}.</p>${notes}${fest}`, [['Close', closeModal, true]]);
+  const needs = (p) => Object.entries(p.needs).map(([k, n]) => `${n} ${ITEMS[k].name} (you have ${S.bag[k]})`).join(', ');
+  const projects = `<h3>Village projects</h3>` + Object.entries(PROJECTS).map(([k, p]) => (funded(k)
+    ? `<div class="shoprow"><div><b>${p.name}</b><span>Built. ${p.desc}</span></div></div>`
+    : `<div class="shoprow"><div><b>${p.name}</b><span>${p.desc} ${p.cost.toLocaleString('en-US')}g<br>Needs ${needs(p)}</span></div><div class="btns"><button data-project="${k}" ${affordable(p.cost, p.needs) ? '' : 'disabled'}>Fund</button></div></div>`)).join('');
+  openModal(`<h2>Quest board</h2><p class="role">Requests from your neighbours. Requests completed: ${S.questsDone || 0}. You have <b>${S.gold}g</b>.</p>${notes}${fest}${projects}`, [['Close', closeModal, true]]);
 }
 
 function festival() {
@@ -49,6 +56,8 @@ on('ui:festival', festival);
 $('#mbody').addEventListener('click', (e) => {
   const q = e.target.closest('[data-quest]');
   if (q && !q.disabled) { if (deliver(q.dataset.quest)) board(); return; }
+  const pj = e.target.closest('[data-project]');
+  if (pj && !pj.disabled) { if (fundProject(pj.dataset.project)) board(); return; }
   const en = e.target.closest('[data-enter]');
   if (en) {
     const res = enterContest(en.dataset.enter);

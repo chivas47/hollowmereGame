@@ -4,7 +4,7 @@ import { on, notify } from '../core/events.js';
 import { UPGRADES, COOP, BARN, tier } from '../data/upgrades.js';
 import { ITEMS } from '../data/items.js';
 import { nextTier, buyUpgrade, orderCoop, affordable } from '../systems/upgrades.js';
-import { buyChicken, collectEggs } from '../systems/coop.js';
+import { buyChicken, collectEggs, buyFeed } from '../systems/coop.js';
 import { orderBarn } from '../systems/barn.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
@@ -39,7 +39,10 @@ function coopDialog() {
   const hens = S.chickens.length
     ? S.chickens.map((c) => `<div class="inv-row"><span>${c.name}</span><span>${c.pet === S.day ? 'Petted today' : 'Wants a pet'}</span></div>`).join('')
     : '<p class="role">No chickens yet.</p>';
-  let html = `<h2>Chicken coop</h2><p class="role">Pet a chicken today and she lays an egg tomorrow morning. You have <b>${S.gold}g</b>.</p>${hens}`;
+  const nights = S.chickens.length ? Math.floor(S.feed / S.chickens.length) : 0;
+  let html = `<h2>Chicken coop</h2><p class="role">Each chicken eats 1 feed a night. Pet a fed chicken today and she lays an egg tomorrow morning. You have <b>${S.gold}g</b>.</p>${hens}`;
+  html += `<p style="margin-top:12px">Feed: <b>${S.feed}</b>${S.chickens.length ? ` (${nights} night${nights === 1 ? '' : 's'})` : ''}.</p>`;
+  html += `<div class="btns"><button data-coop="feed1" ${S.gold < COOP.feedCost ? 'disabled' : ''}>Buy 1 feed (${COOP.feedCost}g)</button><button data-coop="feed10" ${S.gold < COOP.feedCost * 10 ? 'disabled' : ''}>Buy 10 (${COOP.feedCost * 10}g)</button></div>`;
   html += `<p style="margin-top:12px">${S.eggs ? `${S.eggs} egg${S.eggs === 1 ? '' : 's'} waiting.` : 'No eggs waiting.'}</p>`;
   html += '<div class="btns">';
   if (S.eggs) html += '<button data-coop="collect">Collect eggs</button>';
@@ -60,6 +63,8 @@ $('#mbody').addEventListener('click', (e) => {
   }
   const cp = e.target.closest('[data-coop]');
   if (!cp || cp.disabled) return;
+  if (cp.dataset.coop === 'feed1') buyFeed(1);
+  if (cp.dataset.coop === 'feed10') buyFeed(10);
   if (cp.dataset.coop === 'collect') { const n = collectEggs(); notify(`Collected ${n} egg${n === 1 ? '' : 's'}.`); }
   if (cp.dataset.coop === 'buy' && buyChicken()) notify(`${G.S.chickens[G.S.chickens.length - 1].name} joined the flock.`);
   coopDialog();

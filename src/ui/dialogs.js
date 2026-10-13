@@ -16,7 +16,7 @@ import { $ } from './dom.js';
 const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
 on('ui:sleep', () => {
-  const late = G.S.time >= 22 * 60;
+  const late = G.S.time >= 22 * 60;   // the day ends at 2 am, or 3 am with street lamps
   openModal(
     `<h2>Go to bed?</h2><p>Watered crops grow one day. Anything in the bin gets paid. ${late ? 'It is getting late.' : 'There is still daylight left.'}</p>`,
     [['Not yet', closeModal], ['Sleep', () => { closeModal(); sleep(false); }, true]],
@@ -69,6 +69,7 @@ on('day:report', (r) => {
   if (r.built) html += `<p class="gift">Bram finished your ${r.built}. Visit it to buy animals.</p>`;
   if (r.eggs) html += `<p class="gift">Your chickens laid ${plural(r.eggs, 'egg')}. Collect them at the coop.</p>`;
   if (r.milk) html += `<p class="gift">Your animals gave ${plural(r.milk, 'pail')} of milk. Collect it at the barn.</p>`;
+  if (r.hungryHens) html += `<p class="role">${plural(r.hungryHens, 'chicken')} went hungry: the coop ran out of feed. Buy more at the coop.</p>`;
   if (r.hungry) html += `<p class="role">${plural(r.hungry, 'animal')} went hungry: the loft ran out of hay. Buy more at the barn.</p>`;
   if (r.artisan) html += `<p class="gift">${plural(r.artisan, 'machine')} finished overnight.</p>`;
   if (r.sprinkled) html += `<p>Sprinklers watered ${plural(r.sprinkled, 'tile')}.</p>`;

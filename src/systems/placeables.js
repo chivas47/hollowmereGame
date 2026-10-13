@@ -1,7 +1,8 @@
 // Crafted objects on the farm: the kit slot places them, facing one opens it, they draw every frame.
 // Placed objects write a solid 'Y' tile into the farm grid at runtime; the save keeps G.S.placed.
 import { G } from '../core/game.js';
-import { T, END } from '../core/constants.js';
+import { T } from '../core/constants.js';
+import { dayEnd } from '../core/time.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
@@ -101,7 +102,7 @@ addLayer(20, (c) => {
 // Lanterns glow after 6 pm.
 addLayer(97, (c) => {
   if (G.S.map !== 'farm' || G.S.time < 18 * 60) return;
-  const a = Math.min(0.55, (G.S.time - 18 * 60) / (END - 18 * 60) + 0.2);
+  const a = Math.min(0.55, (G.S.time - 18 * 60) / (dayEnd() - 18 * 60) + 0.2);
   for (const [k, p] of Object.entries(G.S.placed)) {
     if (p.kind !== 'lantern') continue;
     const [x, y] = k.split(',').map(Number);

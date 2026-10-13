@@ -1,5 +1,10 @@
 import { G } from './game.js';
 import { SEASONS, SEASON_LENGTH } from '../data/seasons.js';
+import { END } from './constants.js';
+import { LAMPS_EXTRA_MINUTES } from '../data/projects.js';
+
+// When the player passes out. Street lamps (a village project) push it later.
+export const dayEnd = () => END + (G.S.projects?.lamps ? LAMPS_EXTRA_MINUTES : 0);
 
 export function dateParts(day) {
   const i = day - 1;

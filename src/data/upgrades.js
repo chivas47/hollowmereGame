@@ -17,6 +17,7 @@ export const UPGRADES = {
   house: { name: 'Farmhouse', tiers: [
     { label: 'Cottage', energy: 100 },
     { label: 'Extended farmhouse', energy: 140, cost: 2500, needs: { stone: 60 }, desc: 'A proper bed. Max energy rises to 140.' },
+    { label: 'Hillside manor', energy: 170, cost: 12000, needs: { stone: 120, iron: 25 }, desc: 'Stone walls, a real kitchen. Max energy rises to 170.' },
   ] },
 };
 
@@ -25,8 +26,9 @@ export const tier = (S, key) => UPGRADES[key].tiers[S.upgrades[key]];
 export const COOP = {
   cost: 1200,
   needs: { stone: 30 },
-  desc: 'Bram builds it overnight by the field. Raise up to 4 chickens.',
+  desc: 'Bram builds it overnight by the field. Raise up to 4 chickens (they eat 5g of feed a night).',
   chickenCost: 300,
+  feedCost: 5,                               // each chicken eats 1 feed a night
   maxChickens: 4,
   footprint: { x: 18, y: 11, w: 3, h: 2 },   // tiles the building covers
   yard: { x0: 14, y0: 13, x1: 21, y1: 14 },  // where chickens wander
