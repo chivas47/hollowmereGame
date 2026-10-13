@@ -11,6 +11,8 @@ import { FISH } from '../data/fish.js';
 import { ITEMS } from '../data/items.js';
 import { FESTIVAL_HOURS, festivalOn } from '../data/festivals.js';
 import { drawBunting, drawGlow } from '../render/sprites.js';
+import { takeBest, unitValue } from './quality.js';
+import { QUALITY } from '../data/quality.js';
 import { r } from '../render/pixel.js';
 
 const ACCEPTS = {
@@ -40,12 +42,11 @@ export const contestItems = (f) => Object.keys(G.S.bag).filter((k) => G.S.bag[k]
 export function enterContest(item) {
   const f = festivalToday();
   if (!f || f.kind !== 'contest' || !festivalOpen() || entry(f) || !(G.S.bag[item] > 0) || !ACCEPTS[f.accepts](item)) return null;
-  const score = ITEMS[item].sell, rank = f.ranks.find((rk) => score >= rk.min);
-  G.S.bag[item]--;
+  const tier = takeBest(item), score = unitValue(item, tier), rank = f.ranks.find((rk) => score >= rk.min);
   G.S.gold += rank.gold;
-  G.S.festivals[entryKey(f)] = { item, rank: rank.label };
+  G.S.festivals[entryKey(f)] = { item, rank: rank.label, quality: QUALITY[tier].name };
   changed();
-  return { item, rank };
+  return { item, rank, score };
 }
 
 export function buyStall(key) {

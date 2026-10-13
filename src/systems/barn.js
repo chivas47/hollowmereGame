@@ -11,6 +11,8 @@ import { MAPS } from '../data/maps.js';
 import { drawAnimal, drawHeart } from '../render/sprites.js';
 import { tileOf } from './world.js';
 import { affordable } from './upgrades.js';
+import { addItem, rollSkillQuality } from './quality.js';
+import { skillLevel } from './skills.js';
 
 const farm = MAPS.farm, fp = BARN.footprint, yard = BARN.yard, SPEED = 10;
 
@@ -140,7 +142,8 @@ export function collectMilk() {
   const S = G.S, got = [];
   for (const [k, n] of Object.entries(S.barnGoods)) {
     if (!n) continue;
-    S.bag[k] += n; S.barnGoods[k] = 0;
+    for (let i = 0; i < n; i++) addItem(k, 1, rollSkillQuality(skillLevel('ranching')));
+    S.barnGoods[k] = 0;
     got.push(`${n} ${ITEMS[k].name}`);
     emit('gather', { skill: 'ranching', item: k, n, xp: 4 * n });
   }

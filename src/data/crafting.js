@@ -12,6 +12,15 @@ export const PLACEABLES = {
   churn:      { name: 'Butter churn',     short: 'Churn',     kind: 'machine' },
   vat:        { name: 'Cheese vat',       short: 'Vat',       kind: 'machine' },
   lantern:    { name: 'Frost lantern',    short: 'Lantern',   kind: 'decor' },
+  // Fertilizers go on tilled soil (kind 'fertilizer'). quality: booster level, speed: share of growth
+  // time saved, retain: chance the soil stays watered overnight. Boosters and tonics go on before planting.
+  booster:    { name: 'Soil booster',        short: 'Booster',   kind: 'fertilizer', quality: 1 },
+  booster2:   { name: 'Rich soil booster',   short: 'Rich bst.', kind: 'fertilizer', quality: 2 },
+  booster3:   { name: 'Heirloom booster',    short: 'Heirloom',  kind: 'fertilizer', quality: 3 },
+  tonic:      { name: 'Growth tonic',        short: 'Tonic',     kind: 'fertilizer', speed: 0.1 },
+  tonic2:     { name: 'Strong growth tonic', short: 'Strong tn.', kind: 'fertilizer', speed: 0.25 },
+  mulch:      { name: 'Mulch',               short: 'Mulch',     kind: 'fertilizer', retain: 0.33 },
+  mulch2:     { name: 'Thick mulch',         short: 'Th. mulch', kind: 'fertilizer', retain: 0.66 },
 };
 
 // key -> what it makes (a PLACEABLES key). Lanterns are only sold at the Frostlight Market.
@@ -22,6 +31,7 @@ export const RECIPES = {
   crock:      { cost: 500, needs: { stone: 30, copper: 4 }, desc: 'Jars a crop or forage item over 3 nights. Worth twice the item plus 50g.' },
   churn:      { cost: 400, needs: { copper: 6 },            desc: 'Turns milk into butter overnight.' },
   vat:        { cost: 600, needs: { iron: 4 },              desc: 'Turns goat milk into soft cheese overnight.' },
+  booster3:   { cost: 0,   needs: { iron: 5, gel: 10 },     desc: 'Highest soil booster: crops can come out heirloom quality.' },
 };
 
 // Machines: accepts(itemKey) -> bool, product(itemKey) -> item key, nights to finish.
@@ -41,3 +51,6 @@ export function sprinklerTiles(def, x, y) {
   }
   return out;
 }
+
+// Sold at the seed stall all year (Stardew scale: basic 100g, quality 150g).
+export const SUPPLIES = { booster: 100, booster2: 150, tonic: 100, tonic2: 150, mulch: 100, mulch2: 150 };

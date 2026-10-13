@@ -84,7 +84,8 @@ const { act } = await load('systems/interact.js');
 const { sleep } = await load('systems/days.js');
 const { placePlayer, tileAt, tileOf, soilOf, placeKey, parsePlaceKey } = await load('systems/world.js');
 const { greenhouseBuilt, orderGreenhouse } = await load('systems/greenhouse.js');
-const { buy, ship } = await load('systems/economy.js');
+const { buy, ship, buySupply } = await load('systems/economy.js');
+const { valueOf } = await load('systems/quality.js');
 const { nextTier, buyUpgrade, orderCoop, affordable } = await load('systems/upgrades.js');
 const { buyChicken, collectEggs, buyFeed, flock } = await load('systems/coop.js');
 const { PROJECTS } = await load('data/projects.js');
@@ -235,6 +236,9 @@ function simulate(runSeed) {
   function plant(map, x, y) {
     const s = S(), crop = bestCrop(map);
     if (!crop) return false;
+    // Spread rich soil booster first once the farm can afford it (it stays in the soil).
+    const t = tile(map, x, y);
+    if (t && !t.fert && s.gold > 3000 && (s.kit.booster2 > 0 || track('fertilizer', () => buySupply('booster2', 1)))) { s.kitSel = 'booster2'; use(map, x, y, 'kit'); }
     if (s.seeds[crop] <= 0 && !track('seeds', () => buy(crop, 1))) return false;
     s.seedSel = crop; use(map, x, y, 'seeds');
     return !!tile(map, x, y)?.crop;
@@ -357,7 +361,7 @@ function simulate(runSeed) {
     for (const [k, n] of Object.entries(s.bag)) {
       if (!n || ITEMS[k].material) continue;
       const src = k in CROPS ? 'crops' : k in FORAGE ? 'forage' : k in FISH ? 'fish' : k in PRODUCTS ? 'animal products' : k in ARTISAN ? 'artisan goods' : 'mining';
-      add(log.income, src, n * ITEMS[k].sell);
+      add(log.income, src, valueOf(k));
     }
     ship();
     for (const [k, n] of Object.entries(held)) s.bag[k] += n;

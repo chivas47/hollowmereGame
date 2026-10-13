@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v16: Crop quality and fertilizer
+- Four quality tiers: plain, fine (x1.25), prime (x1.5), heirloom (x2). Crops roll quality at harvest from farming level and soil booster; forage, eggs and milk from foraging and ranching level.
+- Fertilizers in the kit (slot 7), spread on tilled soil: soil boosters (quality, three levels), growth tonics (10% and 25% faster), mulch (33% and 66% chance the soil stays watered). Boosters and tonics go on before planting; fertilizer stays in the soil.
+- The seed stall sells farm supplies all year; the heirloom booster is crafted (5 iron, 10 slime gel).
+- Shipping pays each item's quality. The bag shows quality counts; contests enter your best one. Gifts, quests and machines use plain items first.
+
 ## v15: Save export and import
 - Export save (footer) downloads the farm as a JSON file named after the in-game date.
 - Import save loads a file back after a confirmation showing its date and gold. Older saves and bare state files are filled in like any old save. Invalid files get a plain error and change nothing.

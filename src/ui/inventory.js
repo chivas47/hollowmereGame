@@ -6,6 +6,8 @@ import { ITEMS } from '../data/items.js';
 import { CROPS } from '../data/crops.js';
 import { FISH } from '../data/fish.js';
 import { tier } from '../data/upgrades.js';
+import { QUALITY } from '../data/quality.js';
+import { counts, valueOf } from '../systems/quality.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { SKILLS, BONUS_PER_LEVEL } from '../data/skills.js';
 import { skillProgress } from '../systems/skills.js';
@@ -19,9 +21,10 @@ on('ui:inventory', () => {
   const held = Object.keys(S.bag).filter((k) => S.bag[k] > 0 && !ITEMS[k].material);
   const mats = Object.keys(ITEMS).filter((k) => ITEMS[k].material);
   const materials = mats.map((k) => row(ITEMS[k].name, `× ${S.bag[k]}`)).join('');
-  const worth = held.reduce((s, k) => s + S.bag[k] * ITEMS[k].sell, 0);
+  const worth = held.reduce((s, k) => s + valueOf(k), 0);
+  const tiers = (k) => counts(k).map((n, t) => (t && n ? `<span style="color:${QUALITY[t].color}">${n} ${QUALITY[t].name.toLowerCase()}</span>` : '')).filter(Boolean).join(', ');
   const basket = held.length
-    ? held.map((k) => row(`${ITEMS[k].name} × ${S.bag[k]}`, `${S.bag[k] * ITEMS[k].sell}g`)).join('') + row('Worth if shipped', `${worth}g`, 'total')
+    ? held.map((k) => row(`${ITEMS[k].name} × ${S.bag[k]}${tiers(k) ? ` <span class="role">(${tiers(k)})</span>` : ''}`, `${valueOf(k)}g`)).join('') + row('Worth if shipped', `${worth}g`, 'total')
     : '<p class="role">Empty. Harvest, forage or fish to fill it.</p>';
 
   const seeds = Object.entries(CROPS).map(([k, c]) =>

@@ -10,9 +10,14 @@ import { DIRS } from '../core/constants.js';
 import { tier } from '../data/upgrades.js';
 import { useEnergy, tileAt, soilOf } from './world.js';
 import { swingAt } from './effects.js';
+import { addItem, rollCropQuality } from './quality.js';
+import { skillLevel } from './skills.js';
+import { PLACEABLES } from '../data/crafting.js';
+import { QUALITY } from '../data/quality.js';
 
 const ENERGY = { hoe: 2, wideHoe: 3, water: 2, clear: 1 };
-const isRipe = (crop) => crop.age >= CROPS[crop.type].days;
+const isRipe = (crop) => crop.age >= (crop.need || CROPS[crop.type].days);   // need: days after growth tonics
+const fertOf = (s) => (s?.fert ? PLACEABLES[s.fert] : null);
 
 // Soil lives on the farm and in the greenhouse; greenhouse crops ignore seasons.
 addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
@@ -27,8 +32,8 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
     return true;
   }
   if (s?.crop && isRipe(s.crop)) {
-    const type = s.crop.type;
-    S.bag[type]++; notify(`Picked a ${CROPS[type].name}.`); s.crop = null;
+    const type = s.crop.type, q = rollCropQuality(skillLevel('farming'), fertOf(s)?.quality || 0);
+    addItem(type, 1, q); notify(`Picked a ${q ? `${QUALITY[q].name.toLowerCase()} ` : ''}${CROPS[type].name}.`); s.crop = null;
     emit('gather', { skill: 'farming', item: type, xp: Math.max(3, Math.round(CROPS[type].sell / 10)) });
     changed();
     return true;
@@ -56,7 +61,8 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
     if (s.crop) { notify('Something is already growing here.'); return true; }
     if (!indoors && !c.seasons.includes(season)) { notify(`${c.name} won't grow in ${season}. Plant it in ${c.seasons.join(' or ')}. Press Q to switch seeds.`); return true; }
     if (S.seeds[seed] <= 0) { notify(`No ${c.name} seeds left. The stall sells them, or press Q to switch.`); return true; }
-    S.seeds[seed]--; s.crop = { type: seed, age: 0 };
+    const speed = fertOf(s)?.speed || 0;
+    S.seeds[seed]--; s.crop = { type: seed, age: 0, ...(speed ? { need: Math.max(1, Math.round(c.days * (1 - speed))) } : {}) };
     swingAt(tx, ty, 'seed');
   }
   changed();
@@ -66,7 +72,8 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
 on('day:end', (report) => {
   for (const s of [...Object.values(G.S.soil), ...Object.values(G.S.greenSoil)]) {
     if (s.crop && !s.crop.dead && s.w && !isRipe(s.crop)) { s.crop.age++; report.grown++; }
-    s.w = false;
+    const keep = fertOf(s)?.retain || 0;
+    s.w = keep > 0 && Math.random() < keep;   // mulch can keep the soil damp
   }
 });
 
@@ -81,12 +88,12 @@ addLayer(10, (c) => {
   if (!soil) return;
   for (const [key, s] of Object.entries(soil)) {
     const [x, y] = key.split(',').map(Number);
-    drawSoil(c, x * T, y * T, s.w);
+    drawSoil(c, x * T, y * T, s.w, s.fert);
     if (s.crop) drawCrop(c, x * T, y * T, s.crop);
   }
 });
 
 // Used by the debug panel.
 export function ripenAll() {
-  for (const s of [...Object.values(G.S.soil), ...Object.values(G.S.greenSoil)]) if (s.crop && !s.crop.dead) s.crop.age = CROPS[s.crop.type].days;
+  for (const s of [...Object.values(G.S.soil), ...Object.values(G.S.greenSoil)]) if (s.crop && !s.crop.dead) s.crop.age = s.crop.need || CROPS[s.crop.type].days;
 }

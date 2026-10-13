@@ -201,6 +201,31 @@ One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up 
 
 Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (wide 3), water 2, clear withered crop 1, cast 8, pickaxe 2. Warm cider restores 60.
 
+## Quality and fertilizer
+
+| Tier | Price | Colour |
+|---|---|---|
+| Plain | x1 | |
+| Fine | x1.25 | silver |
+| Prime | x1.5 | gold |
+| Heirloom | x2 | violet |
+
+- Crops (Stardew formula): prime chance = 0.2 x level/10 + 0.2 x booster x (level + 2)/12 + 0.01; fine = min(0.75, 2 x prime); heirloom = prime/2, only with the heirloom booster. At level 0 without booster 98% plain; level 10 with the heirloom booster about 40% heirloom.
+- Forage, eggs and milk: prime level/30, fine level/15 (foraging and ranching levels).
+- The bag keeps totals; anything that takes items without choosing uses plain ones first. Shipping pays per tier; contests enter the best one.
+
+| Supply | Price | Effect |
+|---|---|---|
+| Soil booster | 100g | Quality level 1 |
+| Rich soil booster | 150g | Quality level 2 |
+| Heirloom booster | crafted: 5 iron, 10 gel | Quality level 3, allows heirloom |
+| Growth tonic | 100g | 10% faster growth |
+| Strong growth tonic | 150g | 25% faster growth |
+| Mulch | 100g | 33% chance to stay watered overnight |
+| Thick mulch | 150g | 66% chance to stay watered overnight |
+
+Stardew counterparts: basic, quality and deluxe fertilizer; speed-gro and deluxe speed-gro; basic and quality retaining soil.
+
 ## Sound
 
 - Every sound is generated with Web Audio at runtime: oscillators and filtered noise, no audio files.
