@@ -120,6 +120,77 @@ export function drawHeart(c, px, py) {
   r(c, x, y, 2, 1, h); r(c, x + 3, y, 2, 1, h); r(c, x, y + 1, 5, 1, h); r(c, x + 1, y + 2, 3, 1, h); r(c, x + 2, y + 3, 1, 1, h);
 }
 
+// Barn animals. kind 'cow' or 'goat'.
+export function drawAnimal(c, px, py, dir, moving, kind) {
+  const left = dir === 'left', x = Math.round(px) - 7, base = Math.round(py);
+  const y = base - 11 - (moving && Math.floor(performance.now() / 220) % 2 ? 1 : 0);
+  const body = kind === 'cow' ? '#f4ead2' : '#c9b68e', spot = kind === 'cow' ? '#4a3b2e' : '#a08a64', leg = kind === 'cow' ? '#d9cfb8' : '#8f7a55';
+  r(c, x + 1, base - 1, 13, 1, 'rgba(0,0,0,.25)');
+  r(c, x + 2, y + 3, 10, 6, body);
+  if (kind === 'cow') { r(c, x + 4, y + 4, 3, 2, spot); r(c, x + 8, y + 6, 3, 2, spot); }
+  else r(c, x + 3, y + 3, 8, 1, spot);
+  [3, 5, 9, 11].forEach((lx, i) => r(c, x + lx, y + 9, 1, 2 + (moving && i % 2 ? -1 : 0), leg));
+  const hx = left ? x - 1 : x + 11;
+  r(c, hx, y + 1, 4, 5, body); r(c, left ? hx : hx + 2, y + 4, 2, 2, kind === 'cow' ? '#e2a0a0' : body);
+  r(c, left ? hx + 1 : hx + 2, y + 2, 1, 1, '#2b211a');
+  if (kind === 'cow') { r(c, hx, y, 1, 1, '#e8e0d0'); r(c, hx + 3, y, 1, 1, '#e8e0d0'); }
+  else { r(c, hx + (left ? 2 : 1), y - 1, 1, 2, '#8f7a55'); r(c, hx + (left ? 0 : 3), y + 6, 1, 2, '#e8e0d0'); }
+  r(c, left ? x + 12 : x + 1, y + 4, 1, 3, spot);
+}
+
+// Crafted objects placed on the farm. state: { item, nights } for machines, null otherwise.
+const PLACED_ART = {
+  sprinkler: (c, X, Y) => {
+    r(c, X + 5, Y + 9, 6, 5, '#b8733e'); r(c, X + 5, Y + 9, 6, 1, '#d99a5e'); r(c, X + 7, Y + 5, 2, 4, '#9a6a3e');
+    r(c, X + 4, Y + 5, 8, 1, '#d99a5e'); r(c, X + 7, Y + 2, 2, 8, '#d99a5e'); r(c, X + 7, Y + 4, 2, 2, '#69aedb');
+  },
+  sprinkler2: (c, X, Y) => {
+    r(c, X + 4, Y + 9, 8, 5, '#8d939a'); r(c, X + 4, Y + 9, 8, 1, '#c9ccd6'); r(c, X + 7, Y + 5, 2, 4, '#6f757c');
+    r(c, X + 3, Y + 5, 10, 1, '#c9ccd6'); r(c, X + 7, Y + 2, 2, 8, '#c9ccd6'); r(c, X + 4, Y + 3, 1, 1, '#c9ccd6'); r(c, X + 11, Y + 3, 1, 1, '#c9ccd6'); r(c, X + 7, Y + 4, 2, 2, '#69aedb');
+  },
+  crock: (c, X, Y) => {
+    r(c, X + 3, Y + 14, 10, 1, 'rgba(0,0,0,.25)');
+    r(c, X + 4, Y + 5, 8, 9, '#a0613a'); r(c, X + 3, Y + 7, 10, 5, '#a0613a'); r(c, X + 5, Y + 3, 6, 2, '#7d4a2b'); r(c, X + 4, Y + 2, 8, 1, '#c98a5a');
+    r(c, X + 4, Y + 8, 1, 3, '#c98a5a'); r(c, X + 3, Y + 9, 10, 1, '#e8d9b5');
+  },
+  churn: (c, X, Y) => {
+    r(c, X + 4, Y + 14, 8, 1, 'rgba(0,0,0,.25)');
+    r(c, X + 4, Y + 5, 8, 9, '#94673d'); r(c, X + 4, Y + 7, 8, 1, '#5c371e'); r(c, X + 4, Y + 11, 8, 1, '#5c371e');
+    r(c, X + 5, Y + 4, 6, 1, '#6e4626'); r(c, X + 7, Y, 2, 4, '#c9b68e'); r(c, X + 6, Y, 4, 1, '#c9b68e');
+  },
+  vat: (c, X, Y) => {
+    r(c, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.25)');
+    r(c, X + 2, Y + 6, 12, 8, '#8d939a'); r(c, X + 2, Y + 6, 12, 1, '#c9ccd6'); r(c, X + 3, Y + 7, 10, 2, '#f4ead2');
+    r(c, X + 1, Y + 9, 1, 3, '#6f757c'); r(c, X + 14, Y + 9, 1, 3, '#6f757c'); r(c, X + 4, Y + 12, 8, 1, '#6f757c');
+  },
+  lantern: (c, X, Y) => {
+    r(c, X + 7, Y + 6, 2, 9, '#3f3226'); r(c, X + 5, Y + 14, 6, 1, '#3f3226');
+    r(c, X + 5, Y + 1, 6, 6, '#3f3226'); r(c, X + 6, Y + 2, 4, 4, '#ffd98a'); r(c, X + 4, Y, 8, 1, '#3f3226');
+  },
+};
+
+export function drawPlaced(c, X, Y, kind, state) {
+  (PLACED_ART[kind] || PLACED_ART.crock)(c, X, Y);
+  if (state?.item && state.nights > 0) r(c, X + 12, Y + 1, 3, 3, '#e9b44c');            // working
+  if (state?.item && state.nights <= 0 && blink(400, 2)) { r(c, X + 11, Y, 4, 4, '#fffbe8'); r(c, X + 12, Y + 1, 2, 2, '#86b86a'); }   // ready
+}
+
+// A soft glow around lanterns after dark.
+export function drawGlow(c, X, Y, a) {
+  const g = c.createRadialGradient(X + 8, Y + 4, 2, X + 8, Y + 4, 26);
+  g.addColorStop(0, `rgba(255,217,138,${a})`); g.addColorStop(1, 'rgba(255,217,138,0)');
+  c.fillStyle = g; c.fillRect(X - 20, Y - 22, 56, 52);
+}
+
+// Festival bunting over the village square.
+export function drawBunting(c, x0, x1, y, colors) {
+  for (let x = x0; x < x1; x++) r(c, x, y + Math.round(Math.sin((x - x0) / (x1 - x0) * Math.PI) * 4), 1, 1, '#3f3226');
+  for (let x = x0 + 4, i = 0; x < x1 - 4; x += 8, i++) {
+    const yy = y + Math.round(Math.sin((x - x0) / (x1 - x0) * Math.PI) * 4) + 1, col = colors[i % colors.length];
+    r(c, x - 2, yy, 5, 2, col); r(c, x - 1, yy + 2, 3, 1, col); r(c, x, yy + 3, 1, 1, col);
+  }
+}
+
 // phase: 0 at rest, 0..1 through a hop.
 export function drawSlime(c, px, py, color, hurt, phase) {
   const lift = Math.round(Math.sin(phase * Math.PI) * 3), x = Math.round(px) - 5, base = Math.round(py);

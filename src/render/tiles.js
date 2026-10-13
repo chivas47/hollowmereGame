@@ -120,7 +120,59 @@ function cave(g, p, o) {
   if (p.snow) { r(g, X + 6, Y, 36, 2, SNOW); r(g, X + 2, Y + 4, 8, 1, SNOW); r(g, X + 38, Y + 4, 8, 1, SNOW); }
 }
 
-export const OBJECT_ART = { house, bin, well, shop, workbench, coop, cave };
+function barn(g, p, o) {
+  const X = o.x * T, Y = o.y * T;
+  r(g, X + 2, Y + 31, 60, 1, 'rgba(0,0,0,.25)');
+  r(g, X + 3, Y + 12, 58, 19, '#9a3a27');
+  for (let i = 0; i < 6; i++) r(g, X + 3 + i * 10, Y + 12, 1, 19, '#7d2f20');
+  for (let j = 0; j < 12; j++) r(g, X + 18 - j, Y + j, 28 + 2 * j, 1, j % 3 === 2 ? '#3f3226' : '#5a4a3a');
+  if (p.snow) for (let j = 0; j < 3; j++) r(g, X + 18 - j, Y + j, 28 + 2 * j, 1, SNOW);
+  r(g, X + 2, Y + 11, 60, 2, '#3f3226');
+  r(g, X + 24, Y + 3, 16, 7, '#f4ead2'); r(g, X + 25, Y + 4, 14, 5, '#3f3226'); r(g, X + 31, Y + 4, 2, 5, '#f4ead2');
+  r(g, X + 22, Y + 16, 20, 15, '#5c371e'); r(g, X + 22, Y + 16, 20, 1, '#f4ead2'); r(g, X + 22, Y + 16, 1, 15, '#f4ead2'); r(g, X + 41, Y + 16, 1, 15, '#f4ead2');
+  for (let i = 0; i < 20; i++) { r(g, X + 22 + i, Y + 16 + Math.round(i * 0.75), 1, 1, '#f4ead2'); r(g, X + 41 - i, Y + 16 + Math.round(i * 0.75), 1, 1, '#f4ead2'); }
+  r(g, X + 31, Y + 16, 2, 15, '#f4ead2');
+  [X + 7, X + 50].forEach((wx) => { r(g, wx, Y + 17, 7, 6, '#3f3226'); r(g, wx + 1, Y + 18, 5, 4, '#e9c46a'); });
+}
+
+function cottage(g, p, o) {
+  const X = o.x * T, Y = o.y * T, roof = o.roof || '#a5432f';
+  r(g, X + 2, Y + 31, 44, 1, 'rgba(0,0,0,.25)');
+  r(g, X + 4, Y + 13, 40, 18, '#e2cda0');
+  for (let i = 0; i < 3; i++) r(g, X + 4, Y + 17 + i * 5, 40, 1, '#c9b083');
+  for (let j = 0; j < 12; j++) r(g, X + 12 - j, Y + j, 24 + 2 * j, 1, j % 4 === 3 ? 'rgba(0,0,0,.25)' : roof);
+  r(g, X + 12, Y, 24, 12, roof); for (let j = 3; j < 12; j += 4) r(g, X + 12 - j, Y + j, 24 + 2 * j, 1, 'rgba(0,0,0,.22)');
+  if (p.snow) for (let j = 0; j < 3; j++) r(g, X + 12 - j, Y + j, 24 + 2 * j, 1, SNOW);
+  r(g, X + 34, Y - 3, 5, 7, '#7a6e66');
+  r(g, X + 19, Y + 19, 10, 12, '#7a4b2a'); r(g, X + 19, Y + 19, 10, 1, '#5c371e'); r(g, X + 26, Y + 25, 1, 2, '#e9b44c');
+  [X + 7, X + 33].forEach((wx) => { r(g, wx, Y + 18, 8, 7, '#4e3a26'); r(g, wx + 1, Y + 19, 6, 5, '#7fc4e8'); r(g, wx + 4, Y + 19, 1, 5, '#4e3a26'); });
+}
+
+function board(g, p, o) {
+  const X = o.x * T, Y = o.y * T;
+  r(g, X + 4, Y + 15, 24, 1, 'rgba(0,0,0,.25)');
+  r(g, X + 5, Y + 8, 2, 8, '#6b4a2b'); r(g, X + 25, Y + 8, 2, 8, '#6b4a2b');
+  r(g, X + 2, Y, 28, 11, '#8a5a32'); r(g, X + 3, Y + 1, 26, 9, '#b08d55'); r(g, X + 2, Y, 28, 1, '#a5753f');
+  [[5, 2, '#f4ead2'], [12, 3, '#e8d9b5'], [19, 2, '#f4ead2'], [24, 4, '#e8d9b5']].forEach(([a, b, c]) => { r(g, X + a, Y + b, 5, 5, c); r(g, X + a + 2, Y + b, 1, 1, '#d8484a'); });
+  if (p.snow) r(g, X + 2, Y, 28, 1, SNOW);
+}
+
+function fountain(g, p, o) {
+  const X = o.x * T, Y = o.y * T;
+  r(g, X + 1, Y + 6, 30, 24, '#9a958e'); r(g, X + 3, Y + 4, 26, 2, '#b4b0aa'); r(g, X + 1, Y + 29, 30, 2, '#6f6c68');
+  r(g, X + 4, Y + 8, 24, 18, p.snow ? '#cfe3ee' : p.water); r(g, X + 7, Y + 12, 6, 1, p.snow ? '#ffffff' : p.ripple); r(g, X + 18, Y + 20, 6, 1, p.snow ? '#ffffff' : p.ripple);
+  r(g, X + 14, Y + 2, 4, 16, '#b4b0aa'); r(g, X + 12, Y, 8, 3, '#c9c5be');
+}
+
+function table(g, p, o) {
+  const X = o.x * T, Y = o.y * T;
+  r(g, X + 1, Y + 15, 30, 1, 'rgba(0,0,0,.25)');
+  r(g, X + 3, Y + 9, 2, 6, '#6e4626'); r(g, X + 27, Y + 9, 2, 6, '#6e4626');
+  r(g, X, Y + 5, 32, 5, '#94673d'); r(g, X, Y + 5, 32, 1, '#b08250'); r(g, X, Y + 9, 32, 1, '#6e4626');
+  if (p.snow) r(g, X, Y + 4, 32, 2, SNOW);
+}
+
+export const OBJECT_ART = { house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table };
 
 // ---- Cave tiles (the mine ignores seasons) ----
 export function drawCaveFloor(g, x, y) {

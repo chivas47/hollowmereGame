@@ -1,10 +1,11 @@
 // Dialogs for Bram's workbench and the chicken coop.
 import { G } from '../core/game.js';
 import { on, notify } from '../core/events.js';
-import { UPGRADES, COOP, tier } from '../data/upgrades.js';
+import { UPGRADES, COOP, BARN, tier } from '../data/upgrades.js';
 import { ITEMS } from '../data/items.js';
 import { nextTier, buyUpgrade, orderCoop, affordable } from '../systems/upgrades.js';
 import { buyChicken, collectEggs } from '../systems/coop.js';
+import { orderBarn } from '../systems/barn.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
 
@@ -26,7 +27,10 @@ function workbench() {
   const coop = S.built.coop === true ? offer('Chicken coop', 'Built')
     : S.built.coop === 'pending' ? offer('Chicken coop', 'Bram builds it tonight')
       : offer('Chicken coop', `${COOP.desc} ${COOP.cost}g`, 'data-upgrade="coop"', COOP.cost, COOP.needs);
-  openModal(`<h2>Bram's workbench</h2><p class="role">Bram takes orders here. You have <b>${S.gold}g</b>.</p>${rows}${coop}`,
+  const barn = S.built.barn === true ? offer('Barn', 'Built')
+    : S.built.barn === 'pending' ? offer('Barn', 'Bram builds it tonight')
+      : offer('Barn', `${BARN.desc} ${BARN.cost}g`, 'data-upgrade="barn"', BARN.cost, BARN.needs);
+  openModal(`<h2>Bram's workbench</h2><p class="role">Bram takes orders here. You have <b>${S.gold}g</b>. Press C anywhere to craft sprinklers and machines.</p>${rows}${coop}${barn}`,
     [['Leave', closeModal, true]]);
 }
 
@@ -50,7 +54,7 @@ on('ui:coop', coopDialog);
 $('#mbody').addEventListener('click', (e) => {
   const up = e.target.closest('[data-upgrade]');
   if (up && !up.disabled) {
-    const ok = up.dataset.upgrade === 'coop' ? orderCoop() : buyUpgrade(up.dataset.upgrade);
+    const k = up.dataset.upgrade, ok = k === 'coop' ? orderCoop() : k === 'barn' ? orderBarn() : buyUpgrade(k);
     if (ok) workbench();
     return;
   }

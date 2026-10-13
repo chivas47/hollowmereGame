@@ -92,6 +92,7 @@ addInteraction(66, ({ tx, ty, tile, item, mapId }) => {
   const n = rock.amount[0] + Math.floor(Math.random() * (rock.amount[1] - rock.amount[0] + 1));
   G.S.bag[rock.item] += n;
   delete MINE.rocks[key];
+  emit('gather', { skill: 'mining', item: rock.item, xp: rock.hp * 2 - 1 });
   if (key === MINE.ladder) { MAPS.mine.grid[ty][tx] = 'L'; notify('You found a ladder down!'); }
   else { MAPS.mine.grid[ty][tx] = 'f'; if (rock.item !== 'stone') notify(`+${n} ${ITEMS[rock.item].name}`); }
   emit('world:changed');

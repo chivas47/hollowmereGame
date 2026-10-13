@@ -6,6 +6,9 @@ import { ITEMS } from '../data/items.js';
 import { CROPS } from '../data/crops.js';
 import { FISH } from '../data/fish.js';
 import { tier } from '../data/upgrades.js';
+import { PLACEABLES } from '../data/crafting.js';
+import { SKILLS, BONUS_PER_LEVEL } from '../data/skills.js';
+import { skillProgress } from '../systems/skills.js';
 import { openModal, closeModal } from './modal.js';
 
 const row = (left, right, cls = '') => `<div class="inv-row ${cls}"><span>${left}</span><span>${right}</span></div>`;
@@ -30,6 +33,13 @@ on('ui:inventory', () => {
     + row('Pickaxe', 'Breaks mine rocks') + row('Sword', 'Fends off slimes')
     + row(tier(S, 'house').label, `Max energy ${S.maxEnergy}`);
 
+  const skills = Object.entries(SKILLS).map(([k, sk]) => {
+    const p = skillProgress(k);
+    return row(`${sk.name} <span class="role">level ${p.lv}</span>`, p.next ? `${p.xp} / ${p.next} XP` : 'Mastered');
+  }).join('');
+  const kitKeys = Object.keys(PLACEABLES).filter((k) => S.kit[k] > 0);
+  const kit = kitKeys.length ? kitKeys.map((k) => row(PLACEABLES[k].name, `× ${S.kit[k]}`)).join('') : '<p class="role">Nothing crafted. Press C to craft.</p>';
+
   const known = Object.keys(FISH).filter((k) => S.fishLog[k]).length;
   const fish = Object.entries(FISH).map(([k, f]) => S.fishLog[k]
     ? row(f.name, `${S.fishLog[k]} caught`)
@@ -38,6 +48,8 @@ on('ui:inventory', () => {
   openModal(`<h2>Bag</h2>
     <h3>Basket</h3>${basket}
     <h3>Materials <span class="role">kept for upgrades</span></h3>${materials}
+    <h3>Kit <span class="role">slot 7 places these</span></h3>${kit}
+    <h3>Skills <span class="role">each level: ${Math.round(BONUS_PER_LEVEL * 100)}% chance of a bonus item</span></h3>${skills}
     <h3>Seeds</h3>${seeds}
     <h3>Tools</h3>${tools}
     <h3>Fish log <span class="role">${known} of ${Object.keys(FISH).length}</span></h3>${fish}`,

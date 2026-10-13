@@ -19,6 +19,7 @@ export function initInput(canvas) {
     if (modalOpen()) { if (e.code === 'Escape') closeModal(); return; }
     if (e.code === 'Backquote') { toggleDebug(); return; }
     if (e.code === 'KeyI') { emit('ui:inventory'); return; }
+    if (e.code === 'KeyC') { emit('ui:craft'); return; }
     if (e.code === 'KeyQ') { if (!e.repeat) selectSlot(SEED_SLOT); return; }   // pick seeds, again to switch type
     if (KEYMAP[e.code]) { G.keys[KEYMAP[e.code]] = true; e.preventDefault(); return; }
     if (e.code === 'Space' || e.code === 'KeyE') {
@@ -49,6 +50,7 @@ export function initInput(canvas) {
   });
 
   $('#bagBtn').addEventListener('click', (e) => { emit('ui:inventory'); e.currentTarget.blur(); });
+  $('#craftBtn').addEventListener('click', (e) => { emit('ui:craft'); e.currentTarget.blur(); });
   $('#reset').addEventListener('click', confirmReset);
   $('#debugToggle').addEventListener('click', toggleDebug);
   document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });

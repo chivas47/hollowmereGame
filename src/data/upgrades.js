@@ -32,3 +32,17 @@ export const COOP = {
   yard: { x0: 14, y0: 13, x1: 21, y1: 14 },  // where chickens wander
   names: ['Clementine', 'Pip', 'Marlow', 'Fig'],
 };
+
+export const BARN = {
+  cost: 3000,
+  needs: { stone: 50, copper: 10 },
+  desc: 'Bram builds it overnight by the west fence. Holds 4 cows or goats.',
+  maxAnimals: 4,
+  hayCost: 10,                                 // each animal eats 1 hay a night
+  footprint: { x: 2, y: 11, w: 4, h: 2 },
+  yard: { x0: 2, y0: 13, x1: 8, y1: 14 },
+  animals: {
+    cow:  { name: 'Cow',  cost: 900,  product: 'cowmilk',  names: ['Dumpling', 'Maple', 'Bess', 'Juniper'] },
+    goat: { name: 'Goat', cost: 1100, product: 'goatmilk', names: ['Pepper', 'Nettle', 'Biscuit', 'Thistle'] },
+  },
+};

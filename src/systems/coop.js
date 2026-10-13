@@ -88,6 +88,7 @@ addInteraction(95, ({ tx, ty, mapId }) => {
   if (hen.pet === G.S.day) { notify(`${hen.name} is already content today.`); return true; }
   hen.pet = G.S.day;
   notify(`You pet ${hen.name}. She clucks happily.`);
+  emit('gather', { skill: 'ranching', xp: 2 });
   changed();
   return true;
 });
@@ -111,6 +112,7 @@ export function collectEggs() {
   const n = G.S.eggs;
   if (!n) return 0;
   G.S.bag.egg += n; G.S.eggs = 0;
+  emit('gather', { skill: 'ranching', item: 'egg', n, xp: 3 * n });
   changed();
   return n;
 }

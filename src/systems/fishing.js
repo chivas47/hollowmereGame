@@ -4,7 +4,7 @@
 // reel  -> a marker sweeps a bar; press Use while it is inside the green zone
 import { G } from '../core/game.js';
 import { T, W } from '../core/constants.js';
-import { on, changed, notify } from '../core/events.js';
+import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addUpdater, addLayer } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { FISH } from '../data/fish.js';
@@ -42,7 +42,9 @@ function land(f) {
   S.bag[f.fish]++;
   S.fishLog[f.fish] = (S.fishLog[f.fish] || 0) + 1;
   notify(first ? `New species! You caught a ${fish.name}.` : `You caught a ${fish.name}.`);
-  end(); changed();
+  end();
+  emit('gather', { skill: 'fishing', item: f.fish, xp: 4 + fish.difficulty * 3 });
+  changed();
 }
 
 // While a line is out, Use always goes to fishing.

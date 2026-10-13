@@ -24,7 +24,7 @@
     <canvas id="game" width="384" height="256" aria-label="Game world"></canvas>
     <div class="toast" id="toast" hidden></div>
   </div>
-  <div class="basket"><div>Basket: <b id="basket">empty</b></div><div>In the bin: <b id="bin">0g</b></div><button class="ghost bagbtn" id="bagBtn">Open bag (I)</button></div>
+  <div class="basket"><div>Basket: <b id="basket">empty</b></div><div>In the bin: <b id="bin">0g</b></div><div class="bagbtns"><button class="ghost" id="bagBtn">Open bag (I)</button><button class="ghost" id="craftBtn">Craft (C)</button></div></div>
   <div class="friends" id="friends"></div>
   <div class="bar" id="bar" role="toolbar" aria-label="Tools and seeds"></div>
   <div class="controls">
@@ -46,9 +46,12 @@
     <button data-debug="ore">+ Stone and ore</button>
     <button data-debug="seeds">+5 of every seed</button>
     <button data-debug="heal">Full health</button>
+    <button data-debug="build">Build coop and barn</button>
+    <button data-debug="xp">+100 XP every skill</button>
+    <button data-debug="festival">Skip to next festival</button>
   </section>
   <div class="foot">
-    <p class="hint">WASD or arrows to walk. Space uses the selected tool on the outlined tile. Keys 1 to 6 pick a tool, I opens the bag. Slot 6 holds your seeds: press 6 or Q again (or tap the slot again) to switch seed type. On a phone, use the pad or tap a tile next to you. Till, plant, water, sleep, harvest, then drop produce in the bin. Crops only grow in their season and wither when it ends. Follow the path east to the Ashgrove Wilds to forage, refill at the pond, or face the pond with the rod to fish: wait for the bite, then stop the marker in the green. The cave at the top of the Wilds leads into the Hollow: mine rocks for stone and ore, which upgrades at Bram's workbench need, and fight slimes with the sword. Face a neighbour to talk or give a gift. The day ends at 2 am. Press the backquote key to show debug tools.</p>
+    <p class="hint">WASD or arrows to walk. Space uses the selected tool on the outlined tile. Keys 1 to 7 pick a tool, I opens the bag, C opens crafting. Slot 6 holds your seeds: press 6 or Q again (or tap the slot again) to switch seed type. Slot 7 places crafted sprinklers and machines on untilled farm grass; press 7 again to switch. On a phone, use the pad or tap a tile next to you. Till, plant, water, sleep, harvest, then drop produce in the bin. Crops only grow in their season and wither when it ends. Follow the path east to the Ashgrove Wilds to forage, refill at the pond, or face the pond with the rod to fish: wait for the bite, then stop the marker in the green. The cave at the top of the Wilds leads into the Hollow: mine rocks for stone and ore, which upgrades at Bram's workbench need, and fight slimes with the sword. Face a neighbour to talk or give a gift. The path west of the farmhouse leads to the village: its quest board posts requests, and each season has a festival at the table in the square. Bram's workbench also builds a barn for cows and goats. The day ends at 2 am. Press the backquote key to show debug tools.</p>
     <div class="footbtns"><button class="ghost" id="debugToggle" aria-expanded="false" aria-controls="debug">Debug tools</button><button class="ghost" id="reset">New farm</button></div>
   </div>
 </div>

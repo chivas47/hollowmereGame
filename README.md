@@ -87,10 +87,10 @@ A new tool also needs its key in `data/hotbar.js`, a label in `ui/hotbar.js` and
 
 **Mine content:** rock types, drops, slime scaling and sword damage live in `data/minerals.js`. Floors are generated in `systems/mine.js` (seeded by floor and day, so a floor stays the same until tomorrow). Mark an item `material: true` and the shipping bin keeps it for upgrades.
 
-**Interaction priorities in use** (higher runs first): 200 fishing in progress, 100 neighbours, 95 chickens, 72 workbench, coop, mine entrance and ladders, 70 door, stall and bin, 66 pickaxe, 65 fishing cast, 60 water refill, 58 sword, 50 farming, 45 forage. A tool that swings at anything (like the sword) must sit below everything you open or talk to.
+**Interaction priorities in use** (higher runs first): 200 fishing in progress, 100 neighbours, 95 chickens, 94 barn animals, 72 workbench, coop, barn, placed objects, quest board, festival table, mine entrance and ladders, 71 village flavour, 70 door, stall and bin, 66 pickaxe, 65 fishing cast, 60 water refill, 58 sword, 55 placing from the kit, 50 farming, 45 forage. A tool that swings at anything (like the sword) must sit below everything you open or talk to.
 
 **New saved field:** add it to `newState()` in `core/state.js`. `merge()` keeps old saves working.
 
 ## Debug tools
 
-Press the backquote key or the Debug tools button: skip a day, skip to the next season, ripen all crops, add gold, refill energy and water.
+Press the backquote key or the Debug tools button: skip a day, skip to the next season, skip to the next festival, ripen all crops, add gold, stone and ore, seeds, refill energy and water, heal, build the coop and barn, add skill XP.

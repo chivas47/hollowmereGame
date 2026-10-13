@@ -1,0 +1,63 @@
+// Dialogs for crafting (C key) and for crafted objects placed on the farm.
+import { G } from '../core/game.js';
+import { on } from '../core/events.js';
+import { ITEMS } from '../data/items.js';
+import { RECIPES, PLACEABLES, MACHINES, sprinklerTiles } from '../data/crafting.js';
+import { affordable } from '../systems/upgrades.js';
+import { craft } from '../systems/crafting.js';
+import { placedAt, pickUp } from '../systems/placeables.js';
+import { accepted, loadMachine, collectMachine } from '../systems/artisan.js';
+import { openModal, closeModal } from './modal.js';
+import { $ } from './dom.js';
+
+const needsText = (needs) => Object.entries(needs).map(([k, n]) => `${n} ${ITEMS[k].name} (you have ${G.S.bag[k]})`).join(', ');
+
+function craftMenu() {
+  const S = G.S;
+  const rows = Object.entries(RECIPES).map(([k, rc]) => `
+    <div class="shoprow"><div><b>${PLACEABLES[k].name}</b><span>${rc.desc} ${rc.cost}g<br>Needs ${needsText(rc.needs)}${S.kit[k] ? `<br>In your kit: ${S.kit[k]}` : ''}</span></div>
+    <div class="btns"><button data-craft="${k}" ${affordable(rc.cost, rc.needs) ? '' : 'disabled'}>Craft</button></div></div>`).join('');
+  openModal(`<h2>Crafting</h2><p class="role">Stone and ore from the Hollow, plus Bram's fittings. You have <b>${S.gold}g</b>. Crafted things go to slot 7; face untilled farm grass and press Use to place one.</p>${rows}`,
+    [['Close', closeModal, true]]);
+}
+
+let at = null;   // tile of the placed object whose dialog is open
+
+function placedDialog() {
+  const p = placedAt(at.x, at.y);
+  if (!p) { closeModal(); return; }
+  const def = PLACEABLES[p.kind];
+  let html = `<h2>${def.name}</h2>`;
+  if (def.kind === 'sprinkler') {
+    html += `<p>Waters the ${sprinklerTiles(def, 0, 0).length} tiles around it every morning. Tilled soil only.</p>`;
+  } else if (def.kind === 'decor') {
+    html += '<p>It glows softly once the sun goes down.</p>';
+  } else {
+    const m = MACHINES[p.kind];
+    if (p.item && p.nights > 0) html += `<p>Working on ${ITEMS[p.item].name}. Ready in ${p.nights} night${p.nights === 1 ? '' : 's'}.</p>`;
+    else if (p.item) html += `<p class="gift">${ITEMS[p.item].name} is ready (sells for ${ITEMS[p.item].sell}g).</p><div class="btns"><button data-collect>Collect</button></div>`;
+    else {
+      const items = accepted(at.x, at.y);
+      html += `<p>Takes ${m.hint}. Ready in ${m.nights} night${m.nights === 1 ? '' : 's'}.</p>`;
+      html += items.length
+        ? items.map((k) => `<div class="shoprow"><div><b>${ITEMS[k].name} × ${G.S.bag[k]}</b><span>Becomes ${ITEMS[m.product(k)].name}, ${ITEMS[m.product(k)].sell}g</span></div><div class="btns"><button data-load="${k}">Put in</button></div></div>`).join('')
+        : `<p class="role">You have nothing it takes.</p>`;
+    }
+  }
+  if (!p.item) html += '<p class="role" style="margin-top:12px">Picking it up puts it back in your kit.</p>';
+  const actions = [];
+  if (!p.item) actions.push(['Pick up', () => { if (pickUp(at.x, at.y)) closeModal(); }]);
+  actions.push(['Close', closeModal, true]);
+  openModal(html, actions);
+}
+
+on('ui:craft', craftMenu);
+on('ui:placed', ({ x, y }) => { at = { x, y }; placedDialog(); });
+
+$('#mbody').addEventListener('click', (e) => {
+  const c = e.target.closest('[data-craft]');
+  if (c && !c.disabled) { if (craft(c.dataset.craft)) craftMenu(); return; }
+  const l = e.target.closest('[data-load]');
+  if (l && at) { if (loadMachine(at.x, at.y, l.dataset.load)) placedDialog(); return; }
+  if (e.target.closest('[data-collect]') && at) { if (collectMachine(at.x, at.y)) placedDialog(); }
+});

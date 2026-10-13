@@ -3,8 +3,10 @@ import { G } from '../core/game.js';
 import { T, W, OPPOSITE } from '../core/constants.js';
 import { on, emit, changed } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
+import { today } from '../core/time.js';
 import { ITEMS } from '../data/items.js';
 import { NPCS } from '../data/npcs.js';
+import { festivalOn, FESTIVAL_HOURS, FESTIVAL_SPOTS } from '../data/festivals.js';
 import { drawPerson, drawBubble } from '../render/sprites.js';
 import { tileOf } from './world.js';
 import { recalcStats } from './upgrades.js';
@@ -16,11 +18,29 @@ export const NPCRT = NPCS.map((def) => ({ id: def.id, def, x: 0, y: 0, dir: 'dow
 export const hearts = (st) => Math.min(10, Math.floor(st.pts / 100));
 export const heartStr = (st) => '♥'.repeat(hearts(st)) + '♡'.repeat(10 - hearts(st));
 
+// On a festival day neighbours skip the farm and stand in the village square during festival hours.
+const festival = () => festivalOn(today());
+const npcMap = () => (festival() ? 'village' : HOME);
+
 const hideAll = () => NPCRT.forEach((n) => { n.visible = false; });
 on('day:start', hideAll);
 on('game:reset', hideAll);
 
+function festivalUpdate() {
+  const open = G.S.time >= FESTIVAL_HOURS.from && G.S.time < FESTIVAL_HOURS.to;
+  for (const n of NPCRT) {
+    n.moving = false;
+    if (G.talking === n.id) continue;
+    if (!open) { n.visible = false; continue; }
+    if (!n.visible) {
+      const [x, y] = FESTIVAL_SPOTS[n.id] || [12, 7];
+      Object.assign(n, { visible: true, x: x * T + 8, y: y * T + 12, dir: 'down' });
+    }
+  }
+}
+
 addUpdater((dt) => {
+  if (festival()) { festivalUpdate(); return; }
   const active = G.S.time >= ARRIVE && G.S.time < LEAVE, step = SPEED * dt;
   for (const n of NPCRT) {
     if (G.talking === n.id) { n.moving = false; continue; }
@@ -44,7 +64,7 @@ addUpdater((dt) => {
 });
 
 export function npcAt(tx, ty) {
-  if (G.S.map !== HOME) return null;
+  if (G.S.map !== npcMap()) return null;
   return NPCRT.find((n) => { if (!n.visible) return false; const t = tileOf(n.x, n.y); return t.tx === tx && t.ty === ty; }) || null;
 }
 
@@ -65,17 +85,24 @@ function applyReward(n) {
   return rw.text;
 }
 
+// Friendship from outside a conversation (quest deliveries). The 3-heart reward still waits for a talk or gift.
+export function addPoints(id, pts) {
+  const st = G.S.npcs[id]; if (!st) return;
+  st.pts = Math.min(MAX_POINTS, st.pts + pts);
+  changed();
+}
+
 export function startTalk(n) {
-  const st = G.S.npcs[n.id], d = n.def;
+  const st = G.S.npcs[n.id], d = n.def, fest = festival();
   G.talking = n.id;
   n.dir = OPPOSITE[G.S.dir];
   let extra = '';
   if (st.talked !== G.S.day) {
-    st.talked = G.S.day; st.pts = Math.min(MAX_POINTS, st.pts + TALK_POINTS);
+    st.talked = G.S.day; st.pts = Math.min(MAX_POINTS, st.pts + TALK_POINTS * (fest ? 2 : 1));   // festival talks count double
     extra = applyReward(n); changed();
   }
   const h = hearts(st), lines = d.lines[h >= 5 ? 2 : h >= 2 ? 1 : 0];
-  emit('ui:talk', { npc: n, text: lines[(G.S.day + d.seed) % lines.length], extra });
+  emit('ui:talk', { npc: n, text: fest?.lines?.[d.id] || lines[(G.S.day + d.seed) % lines.length], extra });
 }
 
 export function giftOptions(n) {
@@ -93,7 +120,7 @@ export function giveGift(n, item) {
   emit('ui:talk', { npc: n, text: d.react[kind].replace('{item}', ITEMS[item].name.toLowerCase()), extra });
 }
 
-addEntities(() => (G.S.map !== HOME ? [] : NPCRT.filter((n) => n.visible).map((n) => ({
+addEntities(() => (G.S.map !== npcMap() ? [] : NPCRT.filter((n) => n.visible).map((n) => ({
   y: n.y,
   draw: (c) => {
     drawPerson(c, n.x, n.y, n.dir, n.moving, n.walkT, n.def.pal);
