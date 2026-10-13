@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## Tooling: automatic balance review
+- CI simulates the base branch and the PR, comments the before/after report on the PR and fails on a new balance warning.
+- `tools/balance.mjs --compare base.json --gate` does the same locally.
+- `CLAUDE.md` defines the feature loop; `docs/ROADMAP.md` is the work queue.
+
 ## v9: Village life
 - Crafting menu (C key or the Craft button): copper and iron sprinklers, brine crock, butter churn, cheese vat. Costs gold plus stone and ore.
 - New hotbar slot 7 (kit) places crafted objects on untilled farm grass; press 7 again to switch. Face one and press Use to load, collect or pick it up.
