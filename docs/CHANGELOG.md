@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v24: The farmhouse
+- Walk into the farmhouse through its door. Sleep in the bed; you wake beside it.
+- House upgrades add rooms: a kitchen, a nursery, and with the new third upgrade (100,000g) a cellar with casks.
+- The catalogue lectern: 30 pieces of furniture, 12 wallpapers and 12 floorings, and the full catalogue (30,000g) that makes them free. Furniture is placed from the kit; rugs can be walked over.
+- Renovations at Bram's workbench: an open-plan living room and a reading nook.
+
 ## v23: Pets and horse
 - Your pet lives on the farm: the cat, dog or turtle from the new game screen, in one of three looks, with the name you gave it. Older saves get a cat called Whisk.
 - Pat it once a day and fill its water bowl by the house with the watering can. Friendship shows as five hearts; a devoted pet sometimes leaves a gift by the bowl.

@@ -4,6 +4,7 @@ import { PRODUCE } from './crops.js';
 import { FORAGE } from './forage.js';
 import { JAR_PREFIX } from './artisan.js';
 import { TREES, FRUIT } from './trees.js';
+import { FURNITURE } from './furniture.js';
 
 export const PLACEABLES = {
   sprinkler:  { name: 'Copper sprinkler', short: 'Sprinkler', kind: 'sprinkler', reach: 1, square: false },
@@ -34,6 +35,8 @@ export const PLACEABLES = {
   alderseed:  { name: 'Alder cone',     short: 'Cone',      kind: 'sprout' },
   // v20: catches a storm's lightning as a storm cell (systems/weather.js).
   lightningrod: { name: 'Lightning rod', short: 'L. rod',  kind: 'machine' },
+  // v24: furniture, placed inside the farmhouse (bought from the catalogue there).
+  ...Object.fromEntries(Object.entries(FURNITURE).map(([k, f]) => [k, { name: f.name, short: f.name.length > 10 ? f.name.split(' ').pop() : f.name, kind: 'furniture', walk: !!f.walk }])),
 };
 
 // key -> what it makes (a PLACEABLES key). makes: how many one craft gives (default 1). Lanterns are only sold at the Frostlight Market.

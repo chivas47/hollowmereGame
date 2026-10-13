@@ -51,6 +51,14 @@ Pet hats: 4 at the seed stall, 1000g each (Stardew's hat shop prices), cosmetic.
 
 Stable: 10,000g, 100 wood, 25 iron ore (Stardew: 10,000g, 100 hardwood, 5 iron bars; wood stands in for hardwood, which stays rare until new areas). Built overnight by the well with a horse. Riding speed 1.6 x walking. The horse follows you outdoors, waits outside the mine and greenhouse, is back at the stable each morning, and comes when you press H.
 
+## The farmhouse (v24)
+
+The farm door leads inside; the bed ends the day and you wake beside it. Rooms come with the house upgrades: the extended farmhouse adds a kitchen, the hillside manor a nursery, the manor with cellar (100,000g) a cellar of casks. Kitchen, nursery and cellar are furnished but do nothing yet (cooking, children and ageing come with roadmap items 16, 24 and 12).
+
+The catalogue lectern sells 30 pieces of furniture, 12 wallpapers and 12 floorings (Stardew's furniture shop prices: chairs 300 to 750, tables 750 to 1,500, rugs 1,000 to 1,500, a tall clock 2,000; patterns 100g each). Furniture goes to the kit (slot 7) and is placed on the floor; face it to pick it up. Rugs can be walked over. Doorways stay clear. The full catalogue (30,000g, as in Stardew) makes everything in it free.
+
+Renovations at Bram's workbench: open-plan living room (10,000g, removes the bed corner's wall) and a reading nook (5,000g, a bay in the north wall).
+
 ## Controls
 
 - H whistles for the horse.
@@ -177,8 +185,9 @@ Heart scenes (data/scenes.js): the first talk after reaching 4 and 8 hearts play
 | Wide hoe | 2000 | 25 copper | Tills 3 tiles for 3 energy |
 | Copper axe | 2000 | 25 copper | Chops twice as fast; splits large stumps |
 | Ashwood rod | 1800 | none | Green zone +14 px |
-| Extended farmhouse | 10000 | 150 stone | Max energy 300 |
-| Hillside manor | 50000 | 200 stone, 50 iron | Max energy 340 |
+| Extended farmhouse | 10000 | 150 stone | Max energy 300, adds the kitchen |
+| Hillside manor | 50000 | 200 stone, 50 iron | Max energy 340, adds the nursery |
+| Manor with cellar | 100000 | none | Adds the cellar (Stardew: 100,000g) |
 | Chicken coop | 4000 | 150 stone | Up to 4 chickens at 800g |
 | Barn | 6000 | 250 stone, 10 copper | Up to 4 cows (1500g) or goats (4000g) |
 | Greenhouse | 35000 | none | 126 beds; any crop, any season |

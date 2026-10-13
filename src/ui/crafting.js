@@ -30,6 +30,8 @@ function placedDialog() {
   let html = `<h2>${def.name}</h2>`;
   if (def.kind === 'sprinkler') {
     html += `<p>Waters the ${sprinklerTiles(def, 0, 0).length} tiles around it every morning. Tilled soil only.</p>`;
+  } else if (def.kind === 'furniture') {
+    html += '<p>Part of the house now.</p>';
   } else if (def.kind === 'decor') {
     html += '<p>It glows softly once the sun goes down.</p>';
   } else {

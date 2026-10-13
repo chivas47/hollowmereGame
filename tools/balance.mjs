@@ -41,7 +41,7 @@ const ORCHARD = ['figtree', 'peartree', 'nectarinetree', 'persimmontree', 'plumt
 const STRATEGIES = {
   full: ['can', 'coop', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'house',
     'barn', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, 'stable', ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'rod', 'can',
-    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift'],
+    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'house'],
   crops: ['can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
 };
 
@@ -64,7 +64,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['layouts', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable'];
+  'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');

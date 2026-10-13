@@ -20,8 +20,9 @@ export const UPGRADES = {
   ] },
   house: { name: 'Farmhouse', tiers: [
     { label: 'Cottage', energy: 270 },
-    { label: 'Extended farmhouse', energy: 300, cost: 10000, needs: { stone: 150 }, desc: 'A proper bed. Max energy rises to 300.' },
-    { label: 'Hillside manor', energy: 340, cost: 50000, needs: { stone: 200, iron: 50 }, desc: 'Stone walls, a real kitchen. Max energy rises to 340.' },
+    { label: 'Extended farmhouse', energy: 300, cost: 10000, needs: { stone: 150 }, desc: 'A proper bed and a kitchen. Max energy rises to 300.' },
+    { label: 'Hillside manor', energy: 340, cost: 50000, needs: { stone: 200, iron: 50 }, desc: 'Stone walls and a nursery. Max energy rises to 340.' },
+    { label: 'Manor with cellar', energy: 340, cost: 100000, desc: 'A cellar under the kitchen, lined with casks (Stardew: 100,000g).' },
   ] },
 };
 

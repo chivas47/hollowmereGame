@@ -36,6 +36,7 @@ export function buyUpgrade(key) {
   if (key === 'can') S.water = S.maxw;
   if (key === 'house') S.energy = S.maxEnergy;
   notify(`The ${t.label} is yours.`);
+  emit('upgraded', key);
   changed();
   return true;
 }
