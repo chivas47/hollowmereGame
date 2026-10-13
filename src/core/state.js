@@ -8,6 +8,7 @@ import { MAPS } from '../data/maps.js';
 import { HOTBAR, SEED_SLOT, OLD_SEED_SLOTS, OLD_FIRST_SEED_SLOT } from '../data/hotbar.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { SKILLS } from '../data/skills.js';
+import { DEFAULT_PROFILE } from '../data/profile.js';
 
 const STARTING_SEEDS = { turnip: 6, radish: 3 };
 
@@ -39,6 +40,7 @@ export function newState() {
     kitSel: 'sprinkler',                                // object the kit slot places (see systems/placeables.js)
     placed: {},                                         // "x,y" on the farm -> { kind, item, nights }; fruit trees add { age, fruit }
     giants: {},
+    profile: null,                                      // farmer profile from the new game screen (data/profile.js); null until chosen
     weather: 'sun', forecast: null,                     // today's and tomorrow's weather (systems/weather.js); forecast rolled on load
     mist: null,                                         // this year's Silvermist day: { year, d }
     debris: null,                                       // weeds, stones, stumps, alders: "x,y" -> { kind, hp?, stage? }; null until systems/clearing.js scatters the start clutter                                         // giant crops: top-left "x,y" on the farm -> crop type
@@ -75,6 +77,11 @@ export function merge(saved) {
   s.barnGoods = Object.assign(newState().barnGoods, saved.barnGoods || {});
   if (!s.placed || typeof s.placed !== 'object') s.placed = {};
   if (!s.giants || typeof s.giants !== 'object') s.giants = {};
+  // v21: saves from before character creation keep the look they had. A null profile is a new farm
+  // that has not finished the new game screen yet, so it stays null and the screen opens again.
+  if (saved.profile === undefined || (saved.profile !== null && typeof saved.profile !== 'object')) s.profile = structuredClone(DEFAULT_PROFILE);
+  else if (!s.profile) s.profile = null;
+  else s.profile = { ...structuredClone(DEFAULT_PROFILE), ...s.profile, look: { ...DEFAULT_PROFILE.look, ...s.profile.look } };
   if (!s.debris || typeof s.debris !== 'object') s.debris = null;   // pre-v19 saves get a lighter grove on load
   if (!s.festivals || typeof s.festivals !== 'object') s.festivals = {};
   if (!Array.isArray(s.animals)) s.animals = [];

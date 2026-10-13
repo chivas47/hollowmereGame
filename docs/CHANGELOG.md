@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v21: New game and character creation
+- A new farm opens on a new game screen: your name, your farm's name, a favourite thing, skin, hair, shirt and trouser colours, short or long hair, and a starting pet (cat, dog or turtle).
+- The header and page title show your farm's name, the morning report greets you by name, and neighbours who like you mention your name and favourite thing. The bag shows your profile.
+- Saves from before v21 keep the farmer they had (named Farmer, Hollowmere Farm) and skip the screen. A new farm that has not finished the screen shows it again on the next visit.
+- Fix: the forecast line in the morning report was nested inside another paragraph.
+
 ## v20: Weather
 - Rain, storms and snow with Stardew's odds; the date line shows today's weather and the morning report gives tomorrow's forecast. Festival days are always fair.
 - Rain, storms and Silvermist water the farm in the morning, and any soil you till that day.

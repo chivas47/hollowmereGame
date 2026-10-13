@@ -48,6 +48,7 @@ import './ui/mine.js';
 import './ui/crafting.js';
 import './ui/barn.js';
 import './ui/village.js';
+import './ui/creation.js';
 import { buildHotbar } from './ui/hotbar.js';
 import { initInput } from './ui/input.js';
 import { initDebug } from './ui/debugPanel.js';

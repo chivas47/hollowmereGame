@@ -70,3 +70,13 @@ button:focus-visible{outline:3px solid var(--water);outline-offset:2px}
 .card button.primary{background:var(--harvest);color:var(--soil);border-color:#b8862b;font-weight:600}
 .card button:disabled{opacity:.45;cursor:not-allowed}
 .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap}
+/* v21: new game screen */
+.create{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:8px 0}
+#cPreview{width:72px;height:120px;image-rendering:pixelated;background:var(--seam);border-radius:4px}
+.create .fields{display:flex;flex-direction:column;gap:8px;flex:1;min-width:180px}
+.create label{display:flex;flex-direction:column;font-size:16px;color:var(--straw)}
+.create input{font:inherit;font-size:18px;padding:6px 8px;border:2px solid var(--seam);border-radius:4px;background:#fffbe8;color:#2b211a;min-width:0}
+.pick{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}
+.pick span{width:100%;font-size:16px;color:var(--straw)}
+.pick button[aria-pressed="true"]{outline:3px solid var(--water);outline-offset:1px}
+.swatch{width:32px;height:32px;padding:0;border:2px solid rgba(0,0,0,.35);border-radius:4px}

@@ -23,6 +23,7 @@ src/
     skills.js quests.js festivals.js projects.js quality.js
     trees.js          TREES (saplings, kit keys), FRUIT (items), tree timings
     clearing.js       WOODS (materials), DEBRIS, ALDER, CREEP, START_CLUTTER
+    profile.js        farmer profile: LOOKS, PETS, DEFAULT_PROFILE, playerPal()
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item
     schedules.js      neighbour daily schedules, rest days, map entry points
     scenes.js         heart scenes at 4 and 8 hearts
@@ -74,6 +75,7 @@ src/
   ui/
     sound.js          footer toggles, M key, unlock on first input
     saveFile.js       Export save / Import save buttons, file download and upload
+    creation.js       the new game screen (opens when G.S.profile is null)
     dom.js toast.js modal.js hud.js hotbar.js dialogs.js inventory.js
     workshop.js mine.js input.js debugPanel.js
     crafting.js (craft menu, placed-object dialog) barn.js village.js (board, festival)
