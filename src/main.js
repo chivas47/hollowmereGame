@@ -35,6 +35,7 @@ import './systems/projects.js';
 import './systems/greenhouse.js';
 import './systems/trees.js';
 import './systems/giants.js';
+import './systems/clearing.js';
 
 // UI
 import './ui/toast.js';

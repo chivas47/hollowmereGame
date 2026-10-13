@@ -1,6 +1,8 @@
 // Crafted objects on the farm and in the greenhouse: the kit slot places them, facing one opens it,
 // they draw every frame. Placed objects write a solid 'Y' tile into their map's grid at runtime;
 // the save keeps G.S.placed, keyed by placeKey() ("x,y" on the farm, "greenhouse:x,y" inside).
+// Paths and open gates write a walkable 'P' instead. Trees, fences, gates and paths are drawn by
+// systems/trees.js and systems/clearing.js; alder cones are planted by clearing.js.
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { dayEnd } from '../core/time.js';
@@ -13,18 +15,20 @@ import { drawPlaced, drawGlow } from '../render/sprites.js';
 import { soilOf, placeKey, parsePlaceKey } from './world.js';
 
 const TILE = 'Y';
+const SELF_DRAWN = new Set(['tree', 'fence', 'gate', 'floor']);
+export const tileFor = (p) => (PLACEABLES[p.kind].kind === 'floor' || p.open ? 'P' : TILE);
 const written = new Set();   // placeKey()s this module wrote into a grid
 
 const inRect = (x, y, f) => x >= f.x && x < f.x + f.w && y >= f.y && y < f.y + f.h;
 const reserved = (map, x, y) => map === 'farm' && (inRect(x, y, COOP.footprint) || inRect(x, y, BARN.footprint) || inRect(x, y, GREENHOUSE.footprint));
 
 function syncGrid() {
-  written.forEach((k) => { const { map, x, y } = parsePlaceKey(k); if (MAPS[map].grid[y][x] === TILE) MAPS[map].grid[y][x] = 'g'; });
+  written.forEach((k) => { const { map, x, y } = parsePlaceKey(k); if (MAPS[map].grid[y][x] === TILE || MAPS[map].grid[y][x] === 'P') MAPS[map].grid[y][x] = 'g'; });
   written.clear();
   for (const k of Object.keys(G.S.placed)) {
     const { map, x, y } = parsePlaceKey(k), grid = MAPS[map]?.grid;
     if (!grid || grid[y][x] !== 'g' || reserved(map, x, y)) { G.S.kit[G.S.placed[k].kind]++; delete G.S.placed[k]; continue; }
-    grid[y][x] = TILE; written.add(k);
+    grid[y][x] = tileFor(G.S.placed[k]); written.add(k);
   }
 }
 on('game:loaded', syncGrid);
@@ -60,7 +64,7 @@ export function pickUp(tx, ty) {
   if (!p || p.item) return false;
   G.S.kit[p.kind]++;
   delete G.S.placed[key];
-  if (grid[ty][tx] === TILE) grid[ty][tx] = 'g';
+  if (written.has(key)) grid[ty][tx] = 'g';
   written.delete(key);
   notify(`Picked up the ${PLACEABLES[p.kind].name}.`);
   changed();
@@ -93,7 +97,7 @@ addInteraction(55, ({ tx, ty, tile, mapId, item }) => {
   if (def.kind === 'tree' && treeNear(mapId, tx, ty)) { notify('Fruit trees need a free tile between them.'); return true; }
   S.kit[S.kitSel]--;
   S.placed[key] = { kind: S.kitSel, item: null, nights: 0 };
-  MAPS[mapId].grid[ty][tx] = TILE; written.add(key);
+  MAPS[mapId].grid[ty][tx] = tileFor(S.placed[key]); written.add(key);
   emit('placed', { map: mapId, x: tx, y: ty, kind: S.kitSel });
   notify(`Placed the ${PLACEABLES[S.kitSel].name}.`);
   changed();
@@ -112,7 +116,7 @@ addInteraction(72, ({ tx, ty, tile, mapId }) => {
 addLayer(20, (c) => {
   for (const [k, p] of Object.entries(G.S.placed)) {
     const { map, x, y } = parsePlaceKey(k);
-    if (map !== G.S.map || PLACEABLES[p.kind].kind === 'tree') continue;   // systems/trees.js draws trees
+    if (map !== G.S.map || SELF_DRAWN.has(PLACEABLES[p.kind].kind)) continue;
     drawPlaced(c, x * T, y * T, p.kind, PLACEABLES[p.kind].kind === 'machine' ? p : null);
   }
 });

@@ -20,7 +20,7 @@ export const DEBUG = {
   },
   grow: () => { ripenAll(); changed(); return 'Every living crop is ready to harvest.'; },
   gold: () => { G.S.gold += 1000; changed(); return 'Added 1000g.'; },
-  ore: () => { G.S.bag.stone += 60; G.S.bag.copper += 15; G.S.bag.iron += 10; changed(); return 'Added 60 stone, 15 copper and 10 iron.'; },
+  ore: () => { G.S.bag.stone += 60; G.S.bag.copper += 15; G.S.bag.iron += 10; G.S.bag.wood += 50; G.S.bag.hardwood += 10; changed(); return 'Added 60 stone, 15 copper, 10 iron, 50 wood and 10 hardwood.'; },
   seeds: () => { Object.keys(CROPS).forEach((k) => { G.S.seeds[k] += 5; }); changed(); return 'Added 5 seeds of every crop.'; },
   heal: () => { G.S.hp = G.S.maxHp; changed(); return 'Health restored.'; },
   build: () => {

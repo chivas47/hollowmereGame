@@ -10,6 +10,10 @@ export const UPGRADES = {
     { label: 'Hoe', reach: 1 },
     { label: 'Wide hoe', reach: 3, cost: 2000, needs: { copper: 25 }, desc: 'Tills 3 tiles in a row for 3 energy.' },
   ] },
+  axe:   { name: 'Axe', tiers: [
+    { label: 'Axe', power: 1 },
+    { label: 'Copper axe', power: 2, cost: 2000, needs: { copper: 25 }, desc: 'Chops twice as fast and splits large stumps.' },
+  ] },
   rod:   { name: 'Fishing rod', tiers: [
     { label: 'Bamboo rod', zone: 0 },
     { label: 'Ashwood rod', zone: 14, cost: 1800, desc: 'A wider green zone when reeling.' },

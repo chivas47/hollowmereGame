@@ -211,7 +211,7 @@ export function drawSlime(c, px, py, color, hurt, phase) {
 export function drawSwing(c, s) {
   const X = s.tx * T, Y = s.ty * T, k = 1 - s.t / 0.3;
   if (s.kind === 'sword') { for (let i = 0; i < 6; i++) r(c, X + 2 + i * 2, Y + 12 - i * 2 - Math.round(k * 2), 2, 1, i < 2 ? '#c9ccd6' : '#f4ead2'); return; }
-  if (s.kind === 'pick') { for (let i = 0; i < 4; i++) r(c, X + 3 + i * 3, Y + 9 - k * 6 - (i % 2) * 2, 2, 2, '#9a928a'); return; }
+  if (s.kind === 'pick' || s.kind === 'axe') { for (let i = 0; i < 4; i++) r(c, X + 3 + i * 3, Y + 9 - k * 6 - (i % 2) * 2, 2, 2, '#9a928a'); return; }
   if (s.kind === 'can') { for (let i = 0; i < 5; i++) r(c, X + 2 + i * 3, Y + 2 + ((k * 10 + i * 3) % 11), 1, 2, '#9fd3f2'); }
   else if (s.kind === 'hoe') { for (let i = 0; i < 4; i++) r(c, X + 3 + i * 3, Y + 10 - k * 6 - (i % 2) * 2, 2, 2, '#a87a4f'); }
   else r(c, X + 7, Y + 4 + k * 6, 2, 2, '#e3cf8a');
@@ -256,4 +256,61 @@ export function drawGiant(c, X, Y, type) {
   [-12, -4, 4, 12].forEach((o) => r(c, cx + o, Y + 11, 2, 30, d.line));
   r(c, X + 8, Y + 15, 6, 6, 'rgba(255,255,255,.3)');
   r(c, cx - 2, Y + 4, 4, 6, '#5d7a2e'); r(c, cx + 2, Y + 2, 9, 4, '#6fb552');
+}
+
+// ---- Clearing (v19) ----
+const DEBRIS_ART = {
+  weeds: (c, X, Y) => { [[3, 8], [6, 5], [9, 7], [12, 9]].forEach(([a, b]) => { r(c, X + a, Y + b, 1, 15 - b, '#4f8f3a'); r(c, X + a - 1, Y + b + 1, 1, 2, '#6fae45'); r(c, X + a + 1, Y + b + 2, 1, 2, '#6fae45'); }); r(c, X + 2, Y + 13, 12, 2, '#5da34a'); },
+  stone: (c, X, Y) => { r(c, X + 3, Y + 8, 10, 6, '#8d8a84'); r(c, X + 4, Y + 7, 7, 1, '#8d8a84'); r(c, X + 4, Y + 8, 4, 2, '#b5b1a8'); r(c, X + 3, Y + 13, 10, 1, '#6a6862'); },
+  twig: (c, X, Y) => { for (let i = 0; i < 10; i++) r(c, X + 3 + i, Y + 12 - Math.floor(i / 2), 1, 2, '#7a5a3a'); r(c, X + 7, Y + 7, 1, 3, '#7a5a3a'); r(c, X + 6, Y + 6, 2, 1, '#5da34a'); },
+  stump: (c, X, Y) => {
+    r(c, X + 1, Y + 14, 14, 2, 'rgba(0,0,0,.25)'); r(c, X + 2, Y + 5, 12, 10, '#6e4626'); r(c, X, Y + 12, 16, 3, '#6e4626');
+    r(c, X + 2, Y + 4, 12, 3, '#c9a06a'); r(c, X + 5, Y + 5, 6, 1, '#a07a4a'); r(c, X + 4, Y + 8, 1, 6, '#5c371e'); r(c, X + 10, Y + 8, 1, 5, '#5c371e');
+  },
+  alderstump: (c, X, Y) => { r(c, X + 4, Y + 9, 8, 6, '#7a5a3a'); r(c, X + 4, Y + 8, 8, 2, '#c9a06a'); r(c, X + 6, Y + 8, 4, 1, '#a07a4a'); r(c, X + 3, Y + 14, 10, 1, 'rgba(0,0,0,.2)'); },
+};
+export function drawDebris(c, X, Y, kind) { (DEBRIS_ART[kind] || DEBRIS_ART.stone)(c, X, Y); }
+
+// A wild alder: stage 0 a cone, 1 to 3 young, 4 grown (a tall canopy reaching two tiles up).
+export function drawAlder(c, X, Y, stage, bare) {
+  const cx = X + 8, trunk = '#6b4a2b', leaf = '#2f6b3a', light = '#3f7f45';
+  if (stage === 0) { r(c, cx - 2, Y + 11, 4, 3, '#8a5a32'); r(c, cx - 1, Y + 10, 2, 1, '#6e4626'); return; }
+  if (stage < 4) {
+    const h = 4 + stage * 3;
+    r(c, cx, Y + 15 - h, 1, h, trunk);
+    if (!bare) { r(c, cx - stage - 1, Y + 14 - h, stage * 2 + 3, stage + 3, leaf); r(c, cx - stage, Y + 13 - h, stage * 2 + 1, 1, light); }
+    return;
+  }
+  r(c, X + 1, Y + 14, 14, 2, 'rgba(0,0,0,.25)');
+  r(c, cx - 2, Y - 2, 4, 17, trunk); r(c, cx - 4, Y + 13, 8, 2, trunk); r(c, cx + 1, Y + 2, 1, 10, '#5c371e');
+  if (bare) { r(c, cx - 7, Y - 8, 1, 6, trunk); r(c, cx + 6, Y - 10, 1, 7, trunk); r(c, cx - 7, Y - 3, 14, 1, trunk); r(c, cx - 1, Y - 18, 2, 16, trunk); r(c, cx - 5, Y - 11, 10, 1, '#f4f8fb'); return; }
+  r(c, cx - 7, Y - 20, 14, 22, leaf); r(c, cx - 9, Y - 14, 18, 13, leaf); r(c, cx - 4, Y - 24, 8, 4, leaf); r(c, cx - 5, Y - 21, 6, 4, light); r(c, cx - 8, Y - 12, 4, 3, light);
+  r(c, cx + 2, Y - 6, 6, 4, 'rgba(0,0,0,.15)');
+}
+
+// n: [up, right, down, left] neighbours that join.
+export function drawFence(c, X, Y, col, n) {
+  r(c, X + 6, Y + 2, 4, 12, col); r(c, X + 6, Y + 2, 4, 1, 'rgba(255,255,255,.3)'); r(c, X + 6, Y + 13, 4, 1, 'rgba(0,0,0,.3)');
+  if (n[1]) { r(c, X + 10, Y + 5, 6, 2, col); r(c, X + 10, Y + 10, 6, 2, col); }
+  if (n[3]) { r(c, X, Y + 5, 6, 2, col); r(c, X, Y + 10, 6, 2, col); }
+  if (n[0]) r(c, X + 7, Y - 2, 2, 4, col);
+  if (n[2]) r(c, X + 7, Y + 14, 2, 2, col);
+}
+export function drawGate(c, X, Y, open, across) {
+  const col = '#a5753f', dark = '#6e4626';
+  if (across) {
+    r(c, X, Y + 3, 2, 11, dark); r(c, X + 14, Y + 3, 2, 11, dark);
+    if (open) { r(c, X + 2, Y + 4, 3, 9, col); return; }
+    r(c, X + 2, Y + 5, 12, 2, col); r(c, X + 2, Y + 10, 12, 2, col); r(c, X + 4, Y + 5, 1, 7, col); r(c, X + 11, Y + 5, 1, 7, col);
+    return;
+  }
+  r(c, X + 6, Y, 4, 2, dark); r(c, X + 6, Y + 14, 4, 2, dark);
+  if (open) { r(c, X + 6, Y + 2, 2, 3, col); return; }
+  r(c, X + 7, Y + 2, 2, 12, col); r(c, X + 6, Y + 4, 4, 1, col); r(c, X + 6, Y + 11, 4, 1, col);
+}
+export function drawFloor(c, X, Y, kind, col) {
+  r(c, X, Y, 16, 16, col);
+  if (kind === 'woodpath') { [0, 5, 10].forEach((o) => r(c, X, Y + o + 4, 16, 1, 'rgba(0,0,0,.18)')); r(c, X + 6, Y, 1, 4, 'rgba(0,0,0,.18)'); r(c, X + 11, Y + 5, 1, 5, 'rgba(0,0,0,.18)'); return; }
+  r(c, X + 1, Y + 1, 6, 6, 'rgba(255,255,255,.15)'); r(c, X + 9, Y + 2, 6, 5, 'rgba(0,0,0,.08)'); r(c, X + 2, Y + 9, 5, 6, 'rgba(0,0,0,.08)'); r(c, X + 9, Y + 9, 6, 6, 'rgba(255,255,255,.12)');
+  r(c, X + 8, Y, 1, 16, 'rgba(0,0,0,.15)'); r(c, X, Y + 8, 16, 1, 'rgba(0,0,0,.15)');
 }

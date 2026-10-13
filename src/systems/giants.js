@@ -22,6 +22,7 @@ function syncGrid() {
   written.forEach((k) => mark(k, 'g')); written.clear();
   for (const k of Object.keys(G.S.giants)) { mark(k, 'Y'); written.add(k); }
 }
+on('game:reset', () => { written.forEach((k) => mark(k, 'g')); written.clear(); });
 on('game:loaded', syncGrid);
 
 const ripe = (s, type) => s?.crop && !s.crop.dead && s.crop.type === type && s.crop.age >= (s.crop.need || CROPS[type].days);

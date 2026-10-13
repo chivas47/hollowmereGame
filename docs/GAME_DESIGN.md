@@ -20,7 +20,7 @@ You take over the overgrown Hollowmere plot. Farm through the seasons, fish and 
 
 ## Controls
 
-- Hotbar: 1 Hoe, 2 Can, 3 Rod, 4 Pick, 5 Sword, 6 Seeds, 7 Kit.
+- Hotbar: 1 Hoe, 2 Can, 3 Rod, 4 Pick, 5 Sword, 6 Seeds, 7 Kit, 8 Axe (v19, added at the end so no key moved).
 - The seed slot plants the selected seed type. Press 6 or Q again (or tap the slot again) to switch to the next type you own, in-season types first.
 - The kit slot places the selected crafted object on untilled farm grass. Press 7 again to switch. Face a placed object and press Use to open it (load, collect, pick up).
 - I opens the bag, C opens crafting.
@@ -141,6 +141,7 @@ Heart scenes (data/scenes.js): the first talk after reaching 4 and 8 hearts play
 | Copper can | 2000 | 25 copper | Holds 55 |
 | Steel can | 5000 | 25 iron | Holds 70 |
 | Wide hoe | 2000 | 25 copper | Tills 3 tiles for 3 energy |
+| Copper axe | 2000 | 25 copper | Chops twice as fast; splits large stumps |
 | Ashwood rod | 1800 | none | Green zone +14 px |
 | Extended farmhouse | 10000 | 150 stone | Max energy 300 |
 | Hillside manor | 50000 | 200 stone, 50 iron | Max energy 340 |
@@ -169,10 +170,33 @@ Chickens: each eats 1 feed a night (50g, bought at the coop). A fed chicken pett
 | Butter churn | 400 | 6 copper | Milk -> butter (230g) overnight |
 | Cheese vat | 600 | 4 iron | Goat milk -> soft cheese (400g) overnight |
 | Frost lantern | 350 | Frostlight Market only | Decoration, glows after 6 pm |
+| Wood fence x5 | 0 | 10 wood | Solid posts that join up |
+| Stone fence x5 | 0 | 10 stone | As wood fence |
+| Hardwood fence x5 | 0 | 5 hardwood | As wood fence |
+| Gate | 0 | 10 wood | Face it to open or close; walkable when open |
+| Wood path x5 | 0 | 5 wood | Walkable floor; nothing creeps onto it |
+| Stone path x5 | 0 | 5 stone | As wood path |
 
 - Crafted objects go to the kit (slot 7). Placed on untilled farm grass only; not on the coop or barn footprint. They are solid. Picking one up returns it to the kit (machines only when empty).
 - Sprinklers also water their tiles the moment they are placed.
+- Fences, gates and paths come back to the kit when hit with the axe or pickaxe (2 energy). Stardew ratios: 2 wood, 2 stone or 1 hardwood a fence post, 10 wood a gate, 1 a path tile.
 - Jarred value = 2 x item + 50g. Pumpkin 235g -> 520g over 3 nights (about 95g a day per crock).
+
+### Clearing the farm (v19)
+
+A new farm starts cluttered: 8 grown alder trees, 3 large stumps, 25 weeds, 15 stones and 10 twigs on the grass below the path (never in building footprints or animal yards). Saves from before v19 get a lighter grove: 4 alders, 1 stump, 6 weeds, 4 stones, 4 twigs. Each night up to 2 weeds, stones or twigs creep onto free farm grass (60% chance each, at most 30 loose at once); paths, tilled soil and placed objects keep them off.
+
+| Debris | Clear with | Swings (basic axe) | Drops | Stardew role |
+|---|---|---|---|---|
+| Weeds | Sword (free), hoe, axe or pickaxe | 1 | 1 fiber | Weeds |
+| Stone | Pickaxe | 1 | 1 to 2 stone | Small stone |
+| Twig | Axe | 1 | 1 to 2 wood | Twig |
+| Large stump | Copper axe only | 5 (10 hp, power 2) | 2 hardwood | Large stump |
+| Alder (grown) | Axe | 10 | 10 to 14 wood, half the time an alder cone; leaves a stump | Oak tree |
+| Alder stump | Axe | 5 | 2 to 4 wood | Tree stump |
+| Young alder | Axe, hoe or pickaxe | 1 | nothing | Sapling |
+
+Each swing costs 2 energy, the copper axe does twice the damage. Alder cones go to the kit (slot 7) and are planted on open farm grass. A young alder grows a stage with 20% chance a night (4 stages, about 20 days), not in winter. Grown alders seed a free tile within 2 with 5% chance a night, up to 20 trees. Wood, hardwood and fiber are materials: kept for crafting, never shipped. Chopping gives foraging XP (12 a tree, 25 a large stump), stones give mining XP.
 
 ### Skills
 
@@ -231,7 +255,7 @@ One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up 
 
 ### Energy costs
 
-Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (wide 3), water 2, clear withered crop 1, cast 8, pickaxe 2. Warm cider restores 60.
+Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (wide 3), water 2, clear withered crop 1, cast 8, pickaxe 2, axe 2 a swing. Cutting weeds with the sword is free (Stardew's scythe). Warm cider restores 60.
 
 ## Quality and fertilizer
 
@@ -283,7 +307,10 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Two placed objects can wall the player in; picking one up from the inside fixes it, but nothing prevents it.
 - Neighbours walk straight through trees and the coop on their way out; they have no collision.
 - Chickens never leave the yard.
-- Fruit trees cannot be moved or removed yet; the axe comes with roadmap item 4. Plant them where they can stay.
+- Existing recipes still use stone and ore where Stardew uses wood (the v11 substitution). Switching them to wood now that wood exists is Nuno's call; it would raise costs on saves that have no wood yet.
+- Hardwood only comes from the large stumps a farm starts with (2 each). More sources arrive with new areas (roadmap item 21).
+- Debris can creep onto grass the player meant to keep free; paths keep it off.
+- Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
 - Mine floors have no special floors (treasure, boss, elevator).
 

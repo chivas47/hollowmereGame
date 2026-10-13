@@ -23,9 +23,18 @@ export const PLACEABLES = {
   mulch:      { name: 'Mulch',               short: 'Mulch',     kind: 'fertilizer', retain: 0.33 },
   mulch2:     { name: 'Thick mulch',         short: 'Th. mulch', kind: 'fertilizer', retain: 0.66 },
   ...Object.fromEntries(Object.entries(TREES).map(([k, t]) => [k, { name: t.name, short: t.short, kind: 'tree' }])),
+  // v19: fences block the way and join up with their neighbours; a gate opens when you face it;
+  // paths are walkable floors. An alder cone plants a wild tree (systems/clearing.js).
+  fence:      { name: 'Wood fence',     short: 'Fence',     kind: 'fence', color: '#a5753f' },
+  stonefence: { name: 'Stone fence',    short: 'St. fence', kind: 'fence', color: '#9aa3ab' },
+  hardfence:  { name: 'Hardwood fence', short: 'Hd. fence', kind: 'fence', color: '#6e4626' },
+  gate:       { name: 'Gate',           short: 'Gate',      kind: 'gate',  color: '#a5753f' },
+  woodpath:   { name: 'Wood path',      short: 'W. path',   kind: 'floor', color: '#b08a5a' },
+  stonepath:  { name: 'Stone path',     short: 'S. path',   kind: 'floor', color: '#a9a49a' },
+  alderseed:  { name: 'Alder cone',     short: 'Cone',      kind: 'sprout' },
 };
 
-// key -> what it makes (a PLACEABLES key). Lanterns are only sold at the Frostlight Market.
+// key -> what it makes (a PLACEABLES key). makes: how many one craft gives (default 1). Lanterns are only sold at the Frostlight Market.
 export const RECIPES = {
   sprinkler:  { cost: 75,  needs: { copper: 3, stone: 5 }, desc: 'Waters the 4 tiles next to it every morning.' },
   sprinkler2: { cost: 200, needs: { iron: 3, copper: 2 },  desc: 'Waters all 8 tiles around it every morning.' },
@@ -34,6 +43,13 @@ export const RECIPES = {
   churn:      { cost: 400, needs: { copper: 6 },            desc: 'Turns milk into butter overnight.' },
   vat:        { cost: 600, needs: { iron: 4 },              desc: 'Turns goat milk into soft cheese overnight.' },
   booster3:   { cost: 0,   needs: { iron: 5, gel: 10 },     desc: 'Highest soil booster: crops can come out heirloom quality.' },
+  // Stardew: wood fence 2 wood, stone fence 2 stone, hardwood fence 1 hardwood, gate 10 wood, paths 1 each.
+  fence:      { cost: 0, needs: { wood: 10 },    makes: 5, desc: 'Five fence posts. They join up and block the way.' },
+  stonefence: { cost: 0, needs: { stone: 10 },   makes: 5, desc: 'Five stone fence posts.' },
+  hardfence:  { cost: 0, needs: { hardwood: 5 }, makes: 5, desc: 'Five hardwood fence posts.' },
+  gate:       { cost: 0, needs: { wood: 10 },    desc: 'Opens and closes when you face it. Fits in a fence line.' },
+  woodpath:   { cost: 0, needs: { wood: 5 },     makes: 5, desc: 'Five tiles of wooden path. Weeds and stones never grow on paths.' },
+  stonepath:  { cost: 0, needs: { stone: 5 },    makes: 5, desc: 'Five tiles of stone path. Weeds and stones never grow on paths.' },
 };
 
 // Machines: accepts(itemKey) -> bool, product(itemKey) -> item key, nights to finish.
