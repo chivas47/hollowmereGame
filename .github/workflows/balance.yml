@@ -1,7 +1,7 @@
 # Automatic balance review.
-# On a pull request: simulates the base branch and the PR head, posts a before/after report as a
-# PR comment (updated on every push), and fails if the PR introduces a NEW balance warning.
-# Also fails if the simulation crashes (it plays every system, so that is a real regression).
+# On a pull request: simulates the base branch and the PR head and posts a before/after report as a
+# PR comment (updated on every push). Balance warnings are report-only (values follow the Stardew
+# scale, see CLAUDE.md). Fails only if the simulation crashes: it plays every system, so that is a regression.
 # On main: simulates and puts the report in the job summary.
 name: Balance
 
@@ -44,7 +44,7 @@ jobs:
         id: head
         run: |
           set +e
-          if [ "${{ github.event_name }}" = "pull_request" ]; then GATE="--compare base.json --gate"; fi
+          if [ "${{ github.event_name }}" = "pull_request" ]; then GATE="--compare base.json"; fi
           node tools/balance.mjs $SIM --out balance.md --json balance.json $GATE
           echo "code=$?" >> "$GITHUB_OUTPUT"
 
@@ -75,5 +75,5 @@ jobs:
       - name: Balance gate
         if: steps.head.outputs.code != '0'
         run: |
-          echo "::error::The simulation crashed or this PR adds a new balance warning. See the PR comment or job summary."
+          echo "::error::The balance simulation crashed. See the job log."
           exit 1

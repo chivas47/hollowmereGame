@@ -11,7 +11,7 @@ import { tier } from '../data/upgrades.js';
 import { useEnergy, tileAt } from './world.js';
 import { swingAt } from './effects.js';
 
-const ENERGY = { hoe: 2, wideHoe: 3, water: 1, clear: 1 };
+const ENERGY = { hoe: 2, wideHoe: 3, water: 2, clear: 1 };
 const isRipe = (crop) => crop.age >= CROPS[crop.type].days;
 
 addInteraction(50, ({ tx, ty, tile, mapId, item }) => {

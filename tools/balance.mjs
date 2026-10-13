@@ -28,6 +28,8 @@ const FISH_SKILL = +opt('fish-skill', 1), OUT = opt('out', null), JSON_OUT = opt
 const COMPARE = opt('compare', null), GATE = flag('gate');
 
 // Game minutes each bot action costs, walking included.
+// Energy per action, matching systems/farming.js and systems/fishing.js.
+const COST = { newTile: 4, cast: 8 };
 const TIME = { tile: 1, travel: 6, forage: 3, cast: 10, rock: 1.5, pet: 1, chore: 2 };
 const BEDTIME = 24 * 60;
 
@@ -249,10 +251,10 @@ function simulate(runSeed) {
       if (u?.crop && !u.crop.dead && !u.w && u.crop.age < CROPS[u.crop.type].days) { if (!water(x, y)) return; spend(TIME.tile); }
     }
     if (!expand) return;
-    for (const [x, y] of FIELD) {   // 3 energy per new tile: till, plant, water
+    for (const [x, y] of FIELD) {   // 4 energy per new tile: till 2, water 2
       if (tile(x, y) || late()) continue;
       const crop = bestCrop();
-      if (!crop || s.energy < 3 || (s.seeds[crop] <= 0 && s.gold < CROPS[crop].seed + 50)) return;
+      if (!crop || s.energy < COST.newTile || (s.seeds[crop] <= 0 && s.gold < CROPS[crop].seed + 50)) return;
       use('farm', x, y, 'hoe');
       if (!tile(x, y)) return;
       plant(x, y); water(x, y); spend(TIME.tile * 2);
@@ -269,7 +271,7 @@ function simulate(runSeed) {
   function fish(stopAt) {
     const s = S();
     spend(TIME.travel);
-    while (s.energy >= 3 + stopAt && !late()) {
+    while (s.energy >= COST.cast + stopAt && !late()) {
       use('wilds', 15, 10, 'rod');
       const f = G.fishing; if (!f) break;
       f.t = 0; runUpdaters(0.001);                 // the bite

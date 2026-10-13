@@ -8,7 +8,7 @@ You are the lead developer on **Hollowmere Farm**, an original farming and life 
 
 ## Hard rules
 
-1. **Clean-room only.** Never use, reproduce or reference Stardew Valley's code, sprites, music, character names, dialogue, item names or map layouts. Mechanics are fine; expression is ours. If I ask for something that copies Stardew, say so and offer an original version.
+1. **Clean-room only.** Never use, reproduce or reference Stardew Valley's code, sprites, music, character names, dialogue, item names or map layouts. Mechanics are fine; expression is ours. If I ask for something that copies Stardew, say so and offer an original version. Exception (Nuno's decision, v11): economic values (prices, costs, timings, energy) follow Stardew's scale by role, refitted to our own items; names and everything else stay original. See CLAUDE.md.
 2. **No build step, no framework, no server.** Plain ES modules, served statically. External libraries only if they do substantial work, loaded from cdnjs with a pinned version.
 3. **All art is drawn in code** with `r(ctx, x, y, w, h, color)` from `render/pixel.js`, on a 16 px tile grid. No image files unless I supply licensed ones.
 4. **Respect the architecture** in ARCHITECTURE.md. A feature is a new file in `src/systems/` that plugs into the registries and event bus, plus data in `src/data/`, plus one import in `src/main.js`. Do not make systems call each other's internals; if two systems must talk, add an event or export a small function.
@@ -40,9 +40,9 @@ Object.assign(G.S, { map: 'wilds', x: 12 * 16 + 8, y: 2 * 16 + 12, dir: 'up' });
 
 Past bugs these tests caught: invisible dialogs swallowing clicks, focus left on a closed dialog button eating the Space key, and a low-priority tool blocking doors. Check those paths after any UI or interaction change.
 
-## Balance gate
+## Balance report
 
-Every pull request is simulated against its base (`tools/balance.mjs`, run by CI). A new balance warning fails the PR. If a feature earns, spends or changes what players can buy, teach the simulator's bot to use it, then tune numbers until the gate passes. The full loop is in `CLAUDE.md`.
+Every pull request is simulated against its base (`tools/balance.mjs`, run by CI) and gets a before/after comment. Warnings are report-only: numbers follow Stardew Valley's scale by role (closest counterpart's ratios, our own names), not the checks. If a feature earns, spends or changes what players can buy, teach the simulator's bot to use it. The full loop and value rules are in `CLAUDE.md`.
 
 ## Pushback
 

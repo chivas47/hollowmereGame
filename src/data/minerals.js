@@ -1,9 +1,9 @@
 // Mine drops. material: true means the shipping bin keeps it for upgrades instead of selling it.
 export const MINERALS = {
   stone:  { name: 'Stone',      sell: 2,  material: true },
-  copper: { name: 'Copper ore', sell: 15, material: true },
-  iron:   { name: 'Iron ore',   sell: 30, material: true },
-  gel:    { name: 'Slime gel',  sell: 15 },
+  copper: { name: 'Copper ore', sell: 5, material: true },
+  iron:   { name: 'Iron ore',   sell: 10, material: true },
+  gel:    { name: 'Slime gel',  sell: 5 },
 };
 
 // Rock tiles in the mine: tile code -> what it drops and how many pickaxe hits it takes.

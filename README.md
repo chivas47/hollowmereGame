@@ -104,7 +104,7 @@ node tools/balance.mjs --out balance.md --check  write the report; exit 1 on any
 
 The bot teleports (but pays game time per action), never gets hurt in the mine and ignores gifts. Its shopping lists and the checks are at the top of the file.
 
-**Automatic balance review:** on every pull request that touches `src/`, GitHub Actions simulates the base branch and the PR, posts the before/after comparison as a PR comment, and fails if the PR adds a new balance warning. Locally: `node tools/balance.mjs --json base.json` on `main`, then `node tools/balance.mjs --compare base.json --gate` on your branch.
+**Automatic balance review:** on every pull request that touches `src/`, GitHub Actions simulates the base branch and the PR, posts the before/after comparison as a PR comment. Warnings are report-only (values follow the Stardew scale, see CLAUDE.md); the job fails only if the simulation crashes. Locally: `node tools/balance.mjs --json base.json` on `main`, then `node tools/balance.mjs --compare base.json --gate` on your branch.
 
 ## How features get made
 
