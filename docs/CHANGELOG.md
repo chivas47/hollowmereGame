@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v12: Winter content
+- Greenhouse, ordered at Bram's workbench (35,000g, built overnight north of the path). Face it to walk inside: 126 bed tiles where any crop grows in any season and nothing withers, plus a water trough. Sprinklers, machines and lanterns can be placed inside.
+- Ice fishing: in winter the Wilds pond freezes and only the ice hole on its west edge can be fished. Two ice-only fish: Snow eel (85g) and Rime whitefish (120g).
+- Soil, sprinklers and placed objects are now per map (farm or greenhouse). Farm save keys are unchanged.
+- Simulator bot buys the greenhouse, stocks seeds for winter on Autumn 28, and plants and sprinkles the beds.
+
 ## v11: Stardew-scale values
 - Every price, cost and yield now follows the Stardew Valley scale by role (closest counterpart's ratios, refitted to our growth times; our names kept). Tables in GAME_DESIGN.md.
 - Energy model: 270 base energy (300 and 340 with house upgrades); watering 2, fishing cast 8.

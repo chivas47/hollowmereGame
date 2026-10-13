@@ -1,11 +1,12 @@
 // Dialogs for Bram's workbench and the chicken coop.
 import { G } from '../core/game.js';
 import { on, notify } from '../core/events.js';
-import { UPGRADES, COOP, BARN, tier } from '../data/upgrades.js';
+import { UPGRADES, COOP, BARN, GREENHOUSE, tier } from '../data/upgrades.js';
 import { ITEMS } from '../data/items.js';
 import { nextTier, buyUpgrade, orderCoop, affordable } from '../systems/upgrades.js';
 import { buyChicken, collectEggs, buyFeed } from '../systems/coop.js';
 import { orderBarn } from '../systems/barn.js';
+import { orderGreenhouse } from '../systems/greenhouse.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
 
@@ -30,7 +31,10 @@ function workbench() {
   const barn = S.built.barn === true ? offer('Barn', 'Built')
     : S.built.barn === 'pending' ? offer('Barn', 'Bram builds it tonight')
       : offer('Barn', `${BARN.desc} ${BARN.cost}g`, 'data-upgrade="barn"', BARN.cost, BARN.needs);
-  openModal(`<h2>Bram's workbench</h2><p class="role">Bram takes orders here. You have <b>${S.gold}g</b>. Press C anywhere to craft sprinklers and machines.</p>${rows}${coop}${barn}`,
+  const gh = S.built.greenhouse === true ? offer('Greenhouse', 'Built')
+    : S.built.greenhouse === 'pending' ? offer('Greenhouse', 'Bram builds it tonight')
+      : offer('Greenhouse', `${GREENHOUSE.desc} ${GREENHOUSE.cost.toLocaleString('en-US')}g`, 'data-upgrade="greenhouse"', GREENHOUSE.cost, GREENHOUSE.needs);
+  openModal(`<h2>Bram's workbench</h2><p class="role">Bram takes orders here. You have <b>${S.gold}g</b>. Press C anywhere to craft sprinklers and machines.</p>${rows}${coop}${barn}${gh}`,
     [['Leave', closeModal, true]]);
 }
 
@@ -57,7 +61,7 @@ on('ui:coop', coopDialog);
 $('#mbody').addEventListener('click', (e) => {
   const up = e.target.closest('[data-upgrade]');
   if (up && !up.disabled) {
-    const k = up.dataset.upgrade, ok = k === 'coop' ? orderCoop() : k === 'barn' ? orderBarn() : buyUpgrade(k);
+    const k = up.dataset.upgrade, ok = k === 'coop' ? orderCoop() : k === 'barn' ? orderBarn() : k === 'greenhouse' ? orderGreenhouse() : buyUpgrade(k);
     if (ok) workbench();
     return;
   }

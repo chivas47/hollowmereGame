@@ -7,7 +7,7 @@ import { T, W } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addUpdater, addLayer } from '../core/registry.js';
 import { today } from '../core/time.js';
-import { FISH } from '../data/fish.js';
+import { FISH, ICE_HOLE } from '../data/fish.js';
 import { tier } from '../data/upgrades.js';
 import { r } from '../render/pixel.js';
 import { drawBubble } from '../render/sprites.js';
@@ -19,9 +19,13 @@ const WATER = new Set(['O']);
 function end() { G.fishing = null; G.lock = false; }
 on('map:changed', end); on('day:start', end); on('game:reset', end);
 
-function pickFish() {
+// In winter the pond freezes: only the ice hole can be fished, and it has ice-only fish too.
+const frozen = () => today().season === 'Winter';
+const atHole = (tx, ty, mapId) => mapId === ICE_HOLE.map && tx === ICE_HOLE.x && ty === ICE_HOLE.y;
+
+function pickFish(ice) {
   const season = today().season;
-  const pool = Object.entries(FISH).filter(([, f]) => f.seasons.includes(season));
+  const pool = Object.entries(FISH).filter(([, f]) => f.seasons.includes(season) && (!f.spot || (ice && f.spot === 'ice')));
   const total = pool.reduce((s, [, f]) => s + (6 - f.difficulty), 0);
   let roll = Math.random() * total;
   for (const [k, f] of pool) { roll -= 6 - f.difficulty; if (roll <= 0) return k; }
@@ -59,10 +63,12 @@ addInteraction(200, () => {
 });
 
 // Casting. Priority 65 beats the can refill (60) on the same water.
-addInteraction(65, ({ tx, ty, tile, item }) => {
+addInteraction(65, ({ tx, ty, tile, item, mapId }) => {
   if (item !== 'rod' || !WATER.has(tile)) return false;
+  const ice = frozen() && atHole(tx, ty, mapId);
+  if (frozen() && !ice) { notify('The pond is frozen solid. Fish through the ice hole on its west edge.'); return true; }
   if (!useEnergy(ENERGY)) return true;
-  G.fishing = { phase: 'wait', t: 1.5 + Math.random() * 2.5, tx, ty };
+  G.fishing = { phase: 'wait', t: 1.5 + Math.random() * 2.5, tx, ty, ice };
   G.lock = true;
   changed();
   return true;
@@ -73,7 +79,7 @@ addUpdater((dt) => {
   if (!f) return;
   if (f.phase === 'wait') {
     f.t -= dt;
-    if (f.t <= 0) { f.phase = 'bite'; f.t = BITE_WINDOW; f.fish = pickFish(); notify('A bite! Press Use.'); }
+    if (f.t <= 0) { f.phase = 'bite'; f.t = BITE_WINDOW; f.fish = pickFish(f.ice); notify('A bite! Press Use.'); }
   } else if (f.phase === 'bite') {
     f.t -= dt;
     if (f.t <= 0) { notify('Something nibbled, then got away.'); end(); }
@@ -82,6 +88,13 @@ addUpdater((dt) => {
     if (f.marker <= 0) { f.marker = 0; f.vel = Math.abs(f.vel); }
     if (f.marker >= BAR) { f.marker = BAR; f.vel = -Math.abs(f.vel); }
   }
+});
+
+// The ice hole, drawn on the frozen pond in winter.
+addLayer(12, (c) => {
+  if (G.S.map !== ICE_HOLE.map || !frozen()) return;
+  const X = ICE_HOLE.x * T, Y = ICE_HOLE.y * T;
+  r(c, X + 3, Y + 4, 10, 8, '#e8f3f8'); r(c, X + 4, Y + 5, 8, 6, '#1f4f70'); r(c, X + 5, Y + 6, 3, 1, '#3f7fb0');
 });
 
 // Line and bobber, drawn over the player.

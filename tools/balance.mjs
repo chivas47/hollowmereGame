@@ -36,9 +36,9 @@ const BEDTIME = 24 * 60;
 // What the bot saves up for, in order. Upgrade lines (can, hoe, rod, house) buy their next tier.
 const STRATEGIES = {
   full: ['can', 'coop', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'house',
-    'barn', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', ...Array(9).fill('sprinkler2'), 'hoe', 'rod', 'can',
+    'barn', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', ...Array(9).fill('sprinkler2'), 'greenhouse', ...Array(14).fill('sprinkler2'), 'hoe', 'rod', 'can',
     'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift'],
-  crops: ['can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
+  crops: ['can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'greenhouse', ...Array(14).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
 };
 
 // Warnings when the economy drifts from the design. Each returns a message or null.
@@ -77,12 +77,13 @@ const { PRODUCTS } = await load('data/products.js');
 const { ARTISAN } = await load('data/artisan.js');
 const { ITEMS } = await load('data/items.js');
 const { HOTBAR } = await load('data/hotbar.js');
-const { COOP, BARN } = await load('data/upgrades.js');
+const { COOP, BARN, GREENHOUSE } = await load('data/upgrades.js');
 const { RECIPES, PLACEABLES, MACHINES } = await load('data/crafting.js');
 const { SKILLS } = await load('data/skills.js');
 const { act } = await load('systems/interact.js');
 const { sleep } = await load('systems/days.js');
-const { placePlayer, tileAt, tileOf } = await load('systems/world.js');
+const { placePlayer, tileAt, tileOf, soilOf, placeKey, parsePlaceKey } = await load('systems/world.js');
+const { greenhouseBuilt, orderGreenhouse } = await load('systems/greenhouse.js');
 const { buy, ship } = await load('systems/economy.js');
 const { nextTier, buyUpgrade, orderCoop, affordable } = await load('systems/upgrades.js');
 const { buyChicken, collectEggs, buyFeed, flock } = await load('systems/coop.js');
@@ -125,6 +126,9 @@ function use(map, tx, ty, item) {
 // Field: 3x3 blocks; the centre of each block is kept free for a sprinkler.
 const CENTRES = [[7, 7], [10, 7], [13, 7], [16, 7], [19, 7], [7, 10], [10, 10], [13, 10], [16, 10]];
 const FIELD = CENTRES.flatMap(([cx, cy]) => [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]].map(([a, b]) => [cx + a, cy + b]));
+const GH_CENTRES = []; for (const cy of [5, 8]) for (let cx = 3; cx <= 21; cx += 3) GH_CENTRES.push([cx, cy]);
+const GH_FIELD = GH_CENTRES.flatMap(([cx, cy]) => [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]].map(([a, b]) => [cx + a, cy + b]));
+const PLOTS = { farm: { field: FIELD, centres: CENTRES, well: [12, 3] }, greenhouse: { field: GH_FIELD, centres: GH_CENTRES, well: [2, 12] } };
 const MACHINE_SLOTS = []; for (let y = 5; y <= 7; y++) for (let x = 1; x <= 5; x++) MACHINE_SLOTS.push([x, y]);
 
 // ---- One simulated run ----
@@ -146,6 +150,7 @@ function simulate(runSeed) {
     house: { cost: () => nextTier('house')?.cost, needs: () => nextTier('house')?.needs, ok: () => !!nextTier('house'), buy: () => track('upgrades', () => buyUpgrade('house')) },
     coop: { cost: () => COOP.cost, needs: () => COOP.needs, ok: () => !S().built.coop, buy: () => track('buildings', orderCoop) },
     barn: { cost: () => BARN.cost, needs: () => BARN.needs, ok: () => !S().built.barn, buy: () => track('buildings', orderBarn) },
+    greenhouse: { cost: () => GREENHOUSE.cost, needs: () => GREENHOUSE.needs, ok: () => !S().built.greenhouse, buy: () => track('buildings', orderGreenhouse) },
     chicken: { cost: () => COOP.chickenCost, needs: () => ({}), wait: () => S().built.coop !== true, ok: () => S().chickens.length < COOP.maxChickens, buy: () => track('animals', buyChicken) },
     cow: { cost: () => BARN.animals.cow.cost, needs: () => ({}), wait: () => S().built.barn !== true, ok: () => S().animals.length < BARN.maxAnimals, buy: () => track('animals', () => buyAnimal('cow')) },
     goat: { cost: () => BARN.animals.goat.cost, needs: () => ({}), wait: () => S().built.barn !== true, ok: () => S().animals.length < BARN.maxAnimals, buy: () => track('animals', () => buyAnimal('goat')) },
@@ -172,14 +177,14 @@ function simulate(runSeed) {
 
   // -- placing crafted things --
   function placeKit() {
-    const s = S();
+    const s = S(), maps = greenhouseBuilt() ? ['farm', 'greenhouse'] : ['farm'];
     for (const kind of ['sprinkler2', 'sprinkler']) {
-      for (const [cx, cy] of CENTRES) {
+      for (const map of maps) for (const [cx, cy] of PLOTS[map].centres) {
         if (s.kit[kind] <= 0) break;
-        const here = s.placed[`${cx},${cy}`];
+        const here = s.placed[placeKey(map, cx, cy)];
         if (here && (here.kind === 'sprinkler2' || kind === 'sprinkler')) continue;
-        if (here) pickUp(cx, cy);   // swap a copper sprinkler for an iron one
-        s.kitSel = kind; use('farm', cx, cy, 'kit');
+        if (here) { standFacing(map, cx, cy); pickUp(cx, cy); }   // swap a copper sprinkler for an iron one
+        s.kitSel = kind; use(map, cx, cy, 'kit');
       }
     }
     for (const kind of Object.keys(MACHINES)) {
@@ -205,7 +210,8 @@ function simulate(runSeed) {
     const s = S();
     for (const [k, p] of Object.entries(s.placed)) {
       if (!MACHINES[p.kind]) continue;
-      const [x, y] = k.split(',').map(Number);
+      const { map, x, y } = parsePlaceKey(k);
+      standFacing(map, x, y);
       if (p.item && p.nights <= 0) collectMachine(x, y);
       if (!p.item) {
         const options = accepted(x, y).filter((it) => s.bag[it] > (reserved[it] || 0)).sort((a, b) => ITEMS[b].sell - ITEMS[a].sell);
@@ -215,50 +221,64 @@ function simulate(runSeed) {
     }
   }
 
-  const tile = (x, y) => S().soil[`${x},${y}`];
-  function bestCrop() {
-    const d = today(), left = 28 - d.d;
-    return Object.keys(CROPS).filter((k) => CROPS[k].seasons.includes(d.season) && CROPS[k].days <= left)
-      .sort((a, b) => (CROPS[b].sell - CROPS[b].seed) / CROPS[b].days - (CROPS[a].sell - CROPS[a].seed) / CROPS[a].days)[0] || null;
+  const tile = (map, x, y) => soilOf(map)[`${x},${y}`];
+  const perDay = (k) => (CROPS[k].sell - CROPS[k].seed) / CROPS[k].days;
+  // Outdoors: the best crop that can still ripen this season. In the greenhouse: the best crop we
+  // have seeds for or can buy now, whatever the season.
+  function bestCrop(map) {
+    const d = today(), left = 28 - d.d, s = S();
+    const ok = map === 'greenhouse'
+      ? (k) => s.seeds[k] > 0 || CROPS[k].seasons.includes(d.season)
+      : (k) => CROPS[k].seasons.includes(d.season) && CROPS[k].days <= left;
+    return Object.keys(CROPS).filter(ok).sort((a, b) => perDay(b) - perDay(a))[0] || null;
   }
-  function plant(x, y) {
-    const s = S(), crop = bestCrop();
+  function plant(map, x, y) {
+    const s = S(), crop = bestCrop(map);
     if (!crop) return false;
     if (s.seeds[crop] <= 0 && !track('seeds', () => buy(crop, 1))) return false;
-    s.seedSel = crop; use('farm', x, y, 'seeds');
-    return !!tile(x, y)?.crop;
+    s.seedSel = crop; use(map, x, y, 'seeds');
+    return !!tile(map, x, y)?.crop;
   }
-  function water(x, y) {
+  function water(map, x, y) {
     const s = S();
-    if (s.water <= 0) { use('farm', 12, 3, 'can'); spend(TIME.travel); }
-    if (s.energy < 1) return false;
-    use('farm', x, y, 'can');
+    if (s.water <= 0) { use(map, ...PLOTS[map].well, 'can'); spend(TIME.travel); }
+    if (s.energy < 2) return false;
+    use(map, x, y, 'can');
     return true;
   }
   // Harvest, clear, replant and water. With expand, also till new tiles while energy and gold allow.
-  function farm(expand) {
-    const s = S();
-    for (const [x, y] of FIELD) {
-      const t = tile(x, y);
+  function farm(map, expand) {
+    const s = S(), field = PLOTS[map].field;
+    for (const [x, y] of field) {
+      const t = tile(map, x, y);
       if (!t?.crop) continue;
-      if (t.crop.dead) { if (s.energy >= 1) { use('farm', x, y, 'hoe'); spend(TIME.tile); } continue; }
-      if (t.crop.age >= CROPS[t.crop.type].days) { use('farm', x, y, 'hoe'); spend(TIME.tile); }
+      if (t.crop.dead) { if (s.energy >= 1) { use(map, x, y, 'hoe'); spend(TIME.tile); } continue; }
+      if (t.crop.age >= CROPS[t.crop.type].days) { use(map, x, y, 'hoe'); spend(TIME.tile); }
     }
-    for (const [x, y] of FIELD) {
-      const t = tile(x, y);
-      if (t && !t.crop && plant(x, y)) spend(TIME.tile);
-      const u = tile(x, y);
-      if (u?.crop && !u.crop.dead && !u.w && u.crop.age < CROPS[u.crop.type].days) { if (!water(x, y)) return; spend(TIME.tile); }
+    for (const [x, y] of field) {
+      const t = tile(map, x, y);
+      if (t && !t.crop && plant(map, x, y)) spend(TIME.tile);
+      const u = tile(map, x, y);
+      if (u?.crop && !u.crop.dead && !u.w && u.crop.age < CROPS[u.crop.type].days) { if (!water(map, x, y)) return; spend(TIME.tile); }
     }
     if (!expand) return;
-    for (const [x, y] of FIELD) {   // 4 energy per new tile: till 2, water 2
-      if (tile(x, y) || late()) continue;
-      const crop = bestCrop();
+    for (const [x, y] of field) {   // 4 energy per new tile: till 2, water 2
+      if (tile(map, x, y) || late()) continue;
+      const crop = bestCrop(map);
       if (!crop || s.energy < COST.newTile || (s.seeds[crop] <= 0 && s.gold < CROPS[crop].seed + 50)) return;
-      use('farm', x, y, 'hoe');
-      if (!tile(x, y)) return;
-      plant(x, y); water(x, y); spend(TIME.tile * 2);
+      use(map, x, y, 'hoe');
+      if (!tile(map, x, y)) return;
+      plant(map, x, y); water(map, x, y); spend(TIME.tile * 2);
     }
+  }
+  // Seeds can only be bought in season, so stock the greenhouse for winter on the last day of autumn.
+  function stockForWinter() {
+    const s = S(), d = today();
+    if (!greenhouseBuilt() || d.season !== 'Autumn' || d.d !== 28) return;
+    const crop = bestCrop('farm') || Object.keys(CROPS).filter((k) => CROPS[k].seasons.includes('Autumn')).sort((a, b) => perDay(b) - perDay(a))[0];
+    const want = GH_FIELD.length * Math.floor(28 / CROPS[crop].days) - s.seeds[crop];
+    const n = Math.min(want, Math.floor((s.gold * 0.6) / CROPS[crop].seed));
+    if (n > 0) track('seeds', () => buy(crop, n));
   }
 
   function forage() {
@@ -351,13 +371,16 @@ function simulate(runSeed) {
     let reserved = reserves();
     machines(reserved);
     purchases(today().season === 'Winter' ? 0 : 150);
+    stockForWinter();
     placeKit();
-    farm(false);
+    farm('farm', false);
+    if (greenhouseBuilt()) { spend(TIME.travel); farm('greenhouse', false); }
     village();
     reserved = reserves();
     forage();
     if (Object.keys(missingMats()).length && !late()) mine();   // saving up for something that needs ore: mine first
-    if (!late()) farm(true);
+    if (!late()) farm('farm', true);
+    if (!late() && greenhouseBuilt()) farm('greenhouse', true);
     if (!late()) fish(0);
     machines(reserved);
     shipAll(reserves());

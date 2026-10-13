@@ -43,7 +43,7 @@ on('ui:inventory', () => {
   const known = Object.keys(FISH).filter((k) => S.fishLog[k]).length;
   const fish = Object.entries(FISH).map(([k, f]) => S.fishLog[k]
     ? row(f.name, `${S.fishLog[k]} caught`)
-    : row('???', f.seasons.length === 4 ? 'All year' : f.seasons.join(', '), 'muted')).join('');
+    : row('???', f.spot === 'ice' ? 'Winter, ice hole' : f.seasons.length === 4 ? 'All year' : f.seasons.join(', '), 'muted')).join('');
 
   openModal(`<h2>Bag</h2>
     <h3>Basket</h3>${basket}

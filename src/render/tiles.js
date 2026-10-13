@@ -172,7 +172,43 @@ function table(g, p, o) {
   if (p.snow) r(g, X, Y + 4, 32, 2, SNOW);
 }
 
-export const OBJECT_ART = { house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table };
+function greenhouse(g, p, o) {
+  const X = o.x * T, Y = o.y * T;
+  r(g, X + 2, Y + 31, 60, 1, 'rgba(0,0,0,.25)');
+  r(g, X + 2, Y + 10, 60, 21, '#bfe0ec');
+  for (let i = 0; i < 6; i++) r(g, X + 2 + i * 12, Y + 10, 1, 21, '#6b5a48');
+  r(g, X + 2, Y + 20, 60, 1, '#6b5a48');
+  for (let j = 0; j < 10; j++) r(g, X + 12 - j, Y + j, 40 + 2 * j, 1, j % 3 === 2 ? '#8fc2d6' : '#d8eef6');
+  for (let j = 0; j < 10; j += 3) r(g, X + 12 - j, Y + j, 40 + 2 * j, 1, '#6b5a48');
+  if (p.snow) for (let j = 0; j < 2; j++) r(g, X + 12 - j, Y + j, 40 + 2 * j, 1, SNOW);
+  r(g, X + 2, Y + 9, 60, 2, '#4e3a26'); r(g, X + 2, Y + 30, 60, 1, '#4e3a26');
+  [[8, 23], [44, 22], [52, 24]].forEach(([a, b]) => { r(g, X + a, Y + b, 3, 6, '#5da34a'); r(g, X + a - 1, Y + b, 5, 2, '#86b86a'); });
+  r(g, X + 18, Y + 18, 12, 13, '#7a4b2a'); r(g, X + 18, Y + 18, 12, 1, '#4e3a26'); r(g, X + 24, Y + 18, 1, 13, '#4e3a26'); r(g, X + 27, Y + 25, 1, 2, '#e9b44c');
+}
+
+function trough(g, p, o) {
+  const X = o.x * T, Y = o.y * T;
+  r(g, X + 1, Y + 6, 14, 9, '#6e4626'); r(g, X + 2, Y + 7, 12, 4, '#3f7fb0'); r(g, X + 3, Y + 8, 5, 1, '#69aedb'); r(g, X + 1, Y + 14, 14, 1, '#4e331f');
+}
+
+export const OBJECT_ART = { house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
+
+// ---- Greenhouse interior (ignores seasons) ----
+export function drawGreenhouseFloor(g, x, y, t) {
+  const X = x * T, Y = y * T, R = rng(x * 37 + y * 113);
+  if (t === 'g') {
+    r(g, X, Y, T, T, '#5a3b24');
+    for (let i = 0; i < 4; i++) r(g, X + (R() * 14 | 0), Y + (R() * 14 | 0), 2, 1, '#6b4a2b');
+    return;
+  }
+  r(g, X, Y, T, T, '#a07a4f'); r(g, X, Y + 7, T, 1, '#8a6640'); r(g, X, Y + 15, T, 1, '#8a6640');
+  r(g, X + (x % 2 ? 4 : 11), Y, 1, 7, '#8a6640'); r(g, X + (x % 2 ? 9 : 2), Y + 8, 1, 7, '#8a6640');
+}
+export function drawGlassWall(g, x, y) {
+  const X = x * T, Y = y * T;
+  r(g, X, Y, T, T, '#bfe0ec'); r(g, X, Y, T, 1, '#6b5a48'); r(g, X, Y + 15, T, 1, '#6b5a48'); r(g, X, Y, 1, T, '#6b5a48');
+  r(g, X + 3, Y + 3, 3, 1, '#e8f6fb'); r(g, X + 3, Y + 4, 1, 3, '#e8f6fb');
+}
 
 // ---- Cave tiles (the mine ignores seasons) ----
 export function drawCaveFloor(g, x, y) {

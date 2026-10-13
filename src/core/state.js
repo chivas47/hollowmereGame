@@ -21,12 +21,13 @@ export function newState() {
     seeds: Object.fromEntries(Object.keys(CROPS).map((k) => [k, STARTING_SEEDS[k] || 0])),
     bag: Object.fromEntries(Object.keys(ITEMS).map((k) => [k, 0])),
     bin: 0,
-    soil: {},           // "x,y" -> { w: watered, crop: { type, age, dead } | null }
+    soil: {},           // farm: "x,y" -> { w: watered, crop: { type, age, dead } | null }
+    greenSoil: {},      // greenhouse beds, same shape
     forage: [], forageDay: 0,
     fishLog: {},        // fish key -> number caught
     upgrades: { can: 0, hoe: 0, rod: 0, house: 0 },   // tier index per upgrade line
     waterBonus: 0, maxEnergy: 270,                      // derived stats, see systems/upgrades.js
-    built: { coop: false, barn: false },                // false | 'pending' | true
+    built: { coop: false, barn: false, greenhouse: false },   // false | 'pending' | true
     chickens: [],                                       // { name, pet: day last petted }
     eggs: 0,                                            // eggs waiting in the coop
     feed: 0,                                            // chicken feed at the coop
@@ -62,6 +63,7 @@ export function merge(saved) {
   // v10: chickens need feed. Existing flocks get a week's worth so they keep laying.
   if (saved.feed === undefined) s.feed = s.chickens.length * 7;
   if (!s.projects || typeof s.projects !== 'object') s.projects = {};
+  if (!s.greenSoil || typeof s.greenSoil !== 'object') s.greenSoil = {};
   s.kit = Object.assign(newState().kit, saved.kit || {});
   s.skills = Object.assign(newState().skills, saved.skills || {});
   s.barnGoods = Object.assign(newState().barnGoods, saved.barnGoods || {});

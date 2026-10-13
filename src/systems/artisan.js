@@ -3,9 +3,10 @@ import { G } from '../core/game.js';
 import { on, changed, notify } from '../core/events.js';
 import { ITEMS } from '../data/items.js';
 import { MACHINES } from '../data/crafting.js';
+import { placeKey } from './world.js';
 
 const machine = (x, y) => {
-  const p = G.S.placed[`${x},${y}`];
+  const p = G.S.placed[placeKey(G.S.map, x, y)];
   return p && MACHINES[p.kind] ? p : null;
 };
 

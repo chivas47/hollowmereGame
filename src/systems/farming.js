@@ -8,15 +8,17 @@ import { CROPS } from '../data/crops.js';
 import { drawSoil, drawCrop } from '../render/sprites.js';
 import { DIRS } from '../core/constants.js';
 import { tier } from '../data/upgrades.js';
-import { useEnergy, tileAt } from './world.js';
+import { useEnergy, tileAt, soilOf } from './world.js';
 import { swingAt } from './effects.js';
 
 const ENERGY = { hoe: 2, wideHoe: 3, water: 2, clear: 1 };
 const isRipe = (crop) => crop.age >= CROPS[crop.type].days;
 
+// Soil lives on the farm and in the greenhouse; greenhouse crops ignore seasons.
 addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
-  if (mapId !== 'farm' || tile !== 'g') return false;
-  const S = G.S, key = `${tx},${ty}`, s = S.soil[key];
+  const soil = soilOf(mapId);
+  if (!soil || tile !== 'g') return false;
+  const S = G.S, key = `${tx},${ty}`, s = soil[key], indoors = mapId === 'greenhouse';
   const seed = item === 'seeds' ? S.seedSel : null;
 
   if (s?.crop?.dead) {
@@ -36,11 +38,11 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
     const reach = tier(S, 'hoe').reach, [dx, dy] = DIRS[S.dir], targets = [];
     for (let i = 0; i < reach; i++) {
       const x = tx + dx * i, y = ty + dy * i;
-      if (tileAt(x, y) === 'g' && !S.soil[`${x},${y}`]) targets.push(`${x},${y}`);
+      if (tileAt(x, y) === 'g' && !soil[`${x},${y}`]) targets.push(`${x},${y}`);
     }
     if (!targets.length) { notify(reach > 1 ? 'Nothing left to till there.' : 'That soil is already tilled.'); return true; }
     if (!useEnergy(reach > 1 ? ENERGY.wideHoe : ENERGY.hoe)) return true;
-    targets.forEach((k) => { S.soil[k] = { w: false, crop: null }; });
+    targets.forEach((k) => { soil[k] = { w: false, crop: null }; });
     swingAt(tx, ty, 'hoe');
   } else if (item === 'can') {
     if (!s) { notify('Till the ground first.'); return true; }
@@ -52,7 +54,7 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
     const c = CROPS[seed], season = today().season;
     if (!s) { notify('Till the ground first.'); return true; }
     if (s.crop) { notify('Something is already growing here.'); return true; }
-    if (!c.seasons.includes(season)) { notify(`${c.name} won't grow in ${season}. Plant it in ${c.seasons.join(' or ')}. Press Q to switch seeds.`); return true; }
+    if (!indoors && !c.seasons.includes(season)) { notify(`${c.name} won't grow in ${season}. Plant it in ${c.seasons.join(' or ')}. Press Q to switch seeds.`); return true; }
     if (S.seeds[seed] <= 0) { notify(`No ${c.name} seeds left. The stall sells them, or press Q to switch.`); return true; }
     S.seeds[seed]--; s.crop = { type: seed, age: 0 };
     swingAt(tx, ty, 'seed');
@@ -62,7 +64,7 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
 });
 
 on('day:end', (report) => {
-  for (const s of Object.values(G.S.soil)) {
+  for (const s of [...Object.values(G.S.soil), ...Object.values(G.S.greenSoil)]) {
     if (s.crop && !s.crop.dead && s.w && !isRipe(s.crop)) { s.crop.age++; report.grown++; }
     s.w = false;
   }
@@ -75,8 +77,9 @@ on('season:changed', ({ to, report }) => {
 });
 
 addLayer(10, (c) => {
-  if (G.S.map !== 'farm') return;
-  for (const [key, s] of Object.entries(G.S.soil)) {
+  const soil = soilOf(G.S.map);
+  if (!soil) return;
+  for (const [key, s] of Object.entries(soil)) {
     const [x, y] = key.split(',').map(Number);
     drawSoil(c, x * T, y * T, s.w);
     if (s.crop) drawCrop(c, x * T, y * T, s.crop);
@@ -85,5 +88,5 @@ addLayer(10, (c) => {
 
 // Used by the debug panel.
 export function ripenAll() {
-  for (const s of Object.values(G.S.soil)) if (s.crop && !s.crop.dead) s.crop.age = CROPS[s.crop.type].days;
+  for (const s of [...Object.values(G.S.soil), ...Object.values(G.S.greenSoil)]) if (s.crop && !s.crop.dead) s.crop.age = CROPS[s.crop.type].days;
 }

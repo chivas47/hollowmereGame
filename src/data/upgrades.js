@@ -35,6 +35,15 @@ export const COOP = {
   names: ['Clementine', 'Pip', 'Marlow', 'Fig'],
 };
 
+// Stardew counterpart: the bought greenhouse (35,000g, no materials).
+export const GREENHOUSE = {
+  cost: 35000,
+  needs: {},
+  desc: 'Glass and timber north of the path. Anything grows inside, in any season, and nothing withers.',
+  footprint: { x: 9, y: 1, w: 4, h: 2 },
+  inside: { x: 12, y: 14, dir: 'up' },
+};
+
 export const BARN = {
   cost: 6000,
   needs: { stone: 250, copper: 10 },

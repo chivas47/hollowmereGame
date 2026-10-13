@@ -32,6 +32,7 @@ import './systems/quests.js';
 import './systems/festivals.js';
 import './systems/village.js';
 import './systems/projects.js';
+import './systems/greenhouse.js';
 
 // UI
 import './ui/toast.js';
