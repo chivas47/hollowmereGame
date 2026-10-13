@@ -5,8 +5,9 @@ Status: `next` (do it now, top first), `queued`, `in progress (PR link)`, `done 
 
 | # | Item | Kind | Status | Scope |
 |---|---|---|---|---|
-| 1 | Sound | feature | in progress | Web Audio effects for tools, pickups and UI, and a generated music loop with a mute toggle. |
-| 2 | Save export and import | feature | next | Download the save as a file and load it back. |
+| 1 | Save export and import | feature | in progress | Download the save as a file and load it back. |
+
+The queue is empty after this item. Nuno adds what comes next.
 
 ## Done
 
@@ -19,3 +20,4 @@ Status: `next` (do it now, top first), `queued`, `in progress (PR link)`, `done 
 | v11: Stardew-scale values | chivas47/hollowmereGame#5 |
 | v12: winter content | chivas47/hollowmereGame#6 |
 | v13: village life | chivas47/hollowmereGame#7 |
+| v14: sound | chivas47/hollowmereGame#8 |

@@ -48,6 +48,7 @@ import { buildHotbar } from './ui/hotbar.js';
 import { initInput } from './ui/input.js';
 import { initDebug } from './ui/debugPanel.js';
 import { initSound } from './ui/sound.js';
+import { initSaveFile } from './ui/saveFile.js';
 import './audio/sfx.js';
 import { $ } from './ui/dom.js';
 
@@ -68,6 +69,7 @@ function start(data) {
   initInput(canvas);
   initDebug();
   initSound();
+  initSaveFile();
   emit('game:loaded');
   changed();
   try { window.claude?.hot?.snapshot?.(() => ({ S: G.S })); } catch (e) { /* not in a viewer */ }
