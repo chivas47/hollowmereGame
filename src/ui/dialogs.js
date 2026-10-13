@@ -11,6 +11,14 @@ import { sleep } from '../systems/days.js';
 import { buy, canBuy, inSeason, buySupply, canBuySupply } from '../systems/economy.js';
 import { SUPPLIES, PLACEABLES } from '../data/crafting.js';
 import { TREES, TREE_DAYS } from '../data/trees.js';
+import { WEATHER } from '../data/weather.js';
+
+const WEATHER_LINES = {
+  rain: 'It is raining. The farm is watered for you today.',
+  storm: 'A storm is rolling in: rain all day, lightning tonight. The farm is watered.',
+  snow: 'Snow is falling.',
+  mist: 'Silvermist: a pale, warm mist over everything. The farm is watered, and mist lilies have opened in the Wilds.',
+};
 import { hearts, heartStr, giftOptions, giveGift, chooseScene } from '../systems/npcs.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
@@ -102,9 +110,13 @@ on('day:report', (r) => {
   if (r.artisan) html += `<p class="gift">${plural(r.artisan, 'machine')} finished overnight.</p>`;
   if (r.fruit) html += `<p class="gift">Your fruit trees grew ${plural(r.fruit, 'fruit')}.</p>`;
   if (r.giants) html += `<p class="gift">Something huge happened in the field overnight: ${plural(r.giants, 'giant crop')}!</p>`;
+  if (r.weather && r.weather !== 'sun') html += `<p class="gift">${WEATHER_LINES[r.weather]}</p>`;
+  if (r.lightning?.caught) html += `<p class="gift">Lightning hit ${plural(r.lightning.caught, 'lightning rod')} in the night. Collect the storm ${r.lightning.caught > 1 ? 'cells' : 'cell'}.</p>`;
+  if (r.lightning?.struck) html += `<p class="role">Lightning struck ${plural(r.lightning.struck, 'crop')} in the night. A lightning rod would have caught it.</p>`;
   if (r.sprinkled) html += `<p>Sprinklers watered ${plural(r.sprinkled, 'tile')}.</p>`;
   if (r.questsPosted) html += '<p class="role">A new request is up on the village quest board.</p>';
   html += `<p>${r.passedOut ? 'You woke up at home with only part of your energy back. ' : ''}`;
+  if (r.forecast) html += `<p class="role">Forecast for tomorrow: ${WEATHER[r.forecast].name.toLowerCase()}.</p>`;
   html += `${r.payout ? `The shipping bin paid out ${r.payout}g.` : 'Nothing was shipped yesterday.'} ${plural(r.grown, 'crop')} grew overnight.</p>`;
   openModal(html, [['Start the day', closeModal, true]]);
 });

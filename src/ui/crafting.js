@@ -34,7 +34,8 @@ function placedDialog() {
     html += '<p>It glows softly once the sun goes down.</p>';
   } else {
     const m = MACHINES[p.kind];
-    if (p.item && p.nights > 0) html += `<p>Working on ${ITEMS[p.item].name}. Ready in ${p.nights} night${p.nights === 1 ? '' : 's'}.</p>`;
+    if (p.kind === 'lightningrod' && !p.item) html += '<p>Waits for a storm. When lightning strikes the farm it hits the rod first and leaves a storm cell (500g) to collect.</p>';
+    else if (p.item && p.nights > 0) html += `<p>Working on ${ITEMS[p.item].name}. Ready in ${p.nights} night${p.nights === 1 ? '' : 's'}.</p>`;
     else if (p.item) html += `<p class="gift">${ITEMS[p.item].name} is ready (sells for ${ITEMS[p.item].sell}g).</p><div class="btns"><button data-collect>Collect</button></div>`;
     else {
       const items = accepted(at.x, at.y);

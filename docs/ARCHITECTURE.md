@@ -23,6 +23,7 @@ src/
     skills.js quests.js festivals.js projects.js quality.js
     trees.js          TREES (saplings, kit keys), FRUIT (items), tree timings
     clearing.js       WOODS (materials), DEBRIS, ALDER, CREEP, START_CLUTTER
+    weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item
     schedules.js      neighbour daily schedules, rest days, map entry points
     scenes.js         heart scenes at 4 and 8 hearts
   systems/            one feature per file
@@ -56,6 +57,7 @@ src/
     greenhouse.js     greenhouse placement on the farm, ordering, entering
     trees.js          fruit trees (placed objects of kind 'tree'): growth, fruit, picking, drawing
     giants.js         giant crops: merging ripe 3x3 blocks, chopping, solid 'Y' tiles
+    weather.js        today's weather and the forecast, rain watering, lightning, the rain/snow/mist overlay
     clearing.js       debris and wild alders (G.S.debris), axe use, creeping debris, alder cones, gates, fences and paths
     quality.js        item quality: counts(), addItem(), valueOf(), takeBest(), quality rolls
     debug.js          DEBUG actions for the debug panel
@@ -129,6 +131,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 60 | effects.js | Tool swing |
 | 90 | fishing.js | Reel bar |
 | 95 | mine.js | Darkness around the player |
+| 96 | weather.js | Rain, storm flashes, snow, mist (outdoor maps) |
 | 97 | placeables.js, festivals.js | Lantern glow after dark |
 
 The night tint is drawn by renderer.js after all layers (not in caves).
@@ -143,9 +146,9 @@ The night tint is drawn by renderer.js after all layers (not in caves).
 | `game:reset` | none | ui/dialogs.js | renderer cache, npcs, coop, fishing |
 | `map:changed` | map id | player.js, days.js, mine.js | fishing, monsters |
 | `world:changed` | none | coop.js, mine.js | renderer (drop background cache) |
-| `day:end` | report | days.js | farming (growth), economy (payout), coop (eggs) |
+| `day:end` | report | days.js | weather (lightning, next forecast), farming (growth), economy (payout), coop (eggs) |
 | `season:changed` | {from, to, report} | days.js | farming (wither), trees (drop fruit), renderer |
-| `day:start` | report | days.js | forage, npcs, coop (build), health, fishing, monsters, trees (age, fruit), giants (merge), clearing (creep, alder growth) |
+| `day:start` | report | days.js | forage, npcs, coop (build), health, fishing, monsters, trees (age, fruit), giants (merge), clearing (creep, alder growth), weather (rain waters soil) |
 | `day:report` | report | days.js | ui/dialogs.js morning summary |
 | `mine:floor` | {floor, rng} | mine.js | monsters (spawn) |
 | `mine:faint` | none | health.js | mine.js (carry out) |

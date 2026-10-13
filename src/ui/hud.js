@@ -5,11 +5,12 @@ import { ITEMS } from '../data/items.js';
 import { NPCS } from '../data/npcs.js';
 import { MAPS } from '../data/maps.js';
 import { hearts, heartStr } from '../systems/npcs.js';
+import { weatherNow } from '../systems/weather.js';
 import { $ } from './dom.js';
 
 function render() {
   const S = G.S, d = today();
-  $('#date').textContent = `${d.season} ${d.d}, Year ${d.year}`;
+  $('#date').textContent = `${d.season} ${d.d}, Year ${d.year}, ${weatherNow().name.toLowerCase()}`;
   $('#place').textContent = MAPS[S.map].name;
   $('#time').textContent = fmtTime(S.time);
   $('#gold').textContent = `${S.gold}g`;

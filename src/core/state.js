@@ -39,6 +39,8 @@ export function newState() {
     kitSel: 'sprinkler',                                // object the kit slot places (see systems/placeables.js)
     placed: {},                                         // "x,y" on the farm -> { kind, item, nights }; fruit trees add { age, fruit }
     giants: {},
+    weather: 'sun', forecast: null,                     // today's and tomorrow's weather (systems/weather.js); forecast rolled on load
+    mist: null,                                         // this year's Silvermist day: { year, d }
     debris: null,                                       // weeds, stones, stumps, alders: "x,y" -> { kind, hp?, stage? }; null until systems/clearing.js scatters the start clutter                                         // giant crops: top-left "x,y" on the farm -> crop type
     animals: [],                                        // barn: { kind, name, pet: day last petted }
     hay: 0,                                             // hay in the barn loft
