@@ -13,8 +13,10 @@ import { ITEMS } from '../data/items.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { COOP, BARN, GREENHOUSE, tier } from '../data/upgrades.js';
 import { DEBRIS, ALDER, CREEP, START_CLUTTER, SWING } from '../data/clearing.js';
+
+const TAP = { item: 'syrup', every: 8 };   // Stardew: a tapper on a maple fills in 9 days
 import { LAYOUTS } from '../data/layouts.js';
-import { drawDebris, drawAlder, drawFence, drawGate, drawFloor } from '../render/sprites.js';
+import { drawDebris, drawAlder, drawFence, drawGate, drawFloor, drawTap } from '../render/sprites.js';
 import { useEnergy, placeKey, parsePlaceKey } from './world.js';
 import { swingAt } from './effects.js';
 import { addItem } from './quality.js';
@@ -91,6 +93,7 @@ on('game:loaded', () => {
 // ---- Overnight: debris creeps in, alders grow and seed ----
 on('day:start', (report) => {
   const S = G.S, winter = today().season === 'Winter', all = Object.entries(S.debris);
+  for (const [, d] of all) if (d.tap && !d.tap.ready && --d.tap.timer <= 0) d.tap.ready = true;   // taps fill in any season
   const trees = all.filter(([, d]) => d.kind === 'alder');
   for (const [k, d] of trees) {
     if (winter) break;
@@ -133,6 +136,19 @@ addInteraction(62, ({ tx, ty, mapId, item }) => {
   const k = `${tx},${ty}`, d = G.S.debris[k];
   if (!d) return false;
   const young = d.kind === 'alder' && d.stage < ALDER.stages;
+  // A tree tap (v27): fix one from the kit, collect syrup with anything but the axe.
+  if (d.kind === 'alder' && !young && item === 'kit' && PLACEABLES[G.S.kitSel]?.kind === 'tap' && G.S.kit[G.S.kitSel] > 0) {
+    if (d.tap) { notify('This alder already has a tap.'); return true; }
+    G.S.kit[G.S.kitSel]--; d.tap = { timer: TAP.every, ready: false };
+    emit('sfx', 'place'); notify(`Fixed a tap to the alder. Syrup in ${TAP.every} nights.`); changed();
+    return true;
+  }
+  if (d.tap && item !== 'axe') {
+    if (!d.tap.ready) { notify(`The tap is filling. Syrup in ${d.tap.timer} night${d.tap.timer === 1 ? '' : 's'}.`); return true; }
+    addItem(TAP.item, 1); d.tap = { timer: TAP.every, ready: false };
+    emit('sfx', 'pickup'); notify(`Collected ${ITEMS[TAP.item].name.toLowerCase()}.`); changed();
+    return true;
+  }
   const def = DEBRIS[d.kind], tools = young ? ['axe', 'hoe', 'pick'] : def.tools;
   if (!tools.includes(item)) { notify(`${young ? 'A young alder' : def.name}: clear it with the ${listOr(tools.map(toolName))}.`); return true; }
   const power = item === 'axe' ? tier(G.S, 'axe').power : 1;
@@ -145,6 +161,7 @@ addInteraction(62, ({ tx, ty, mapId, item }) => {
   const got = drop(d.drops || def.drops);
   if (!got.length) got.push('nothing useful');
   remove(k);
+  if (d.tap) { G.S.kit.treetap = (G.S.kit.treetap || 0) + 1; got.push('the tree tap back'); }
   if (d.kind === 'alder') {
     put(tx, ty, { kind: 'alderstump' });
     if (Math.random() < ALDER.seedChance) { G.S.kit.alderseed++; got.push('an alder cone'); }
@@ -208,7 +225,7 @@ addEntities(() => {
   const bare = today().season === 'Winter';
   for (const [k, d] of Object.entries(G.S.debris)) {
     const [x, y] = k.split(',').map(Number);
-    out.push({ y: (y + 1) * T - 2, draw: d.kind === 'alder' ? (c) => drawAlder(c, x * T, y * T, d.stage, bare) : (c) => drawDebris(c, x * T, y * T, d.kind) });
+    out.push({ y: (y + 1) * T - 2, draw: d.kind === 'alder' ? (c) => { drawAlder(c, x * T, y * T, d.stage, bare); if (d.tap) drawTap(c, x * T, y * T, d.tap.ready); } : (c) => drawDebris(c, x * T, y * T, d.kind) });
   }
   return out;
 });

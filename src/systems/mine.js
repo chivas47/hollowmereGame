@@ -6,7 +6,7 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
 import { ITEMS } from '../data/items.js';
-import { ROCKS, COAL_FROM_STONE } from '../data/minerals.js';
+import { ROCKS, COAL_FROM_STONE, GEM_DROPS } from '../data/minerals.js';
 import { rng } from '../render/pixel.js';
 import { placePlayer, useEnergy } from './world.js';
 import { swingAt } from './effects.js';
@@ -95,6 +95,8 @@ addInteraction(66, ({ tx, ty, tile, item, mapId }) => {
   G.S.bag[rock.item] += n;
   const coal = rock.item === 'stone' && Math.random() < COAL_FROM_STONE;
   if (coal) G.S.bag.coal = (G.S.bag.coal || 0) + 1;
+  const gr = Math.random(), gem = GEM_DROPS.find(([, c], i) => gr < GEM_DROPS.slice(0, i + 1).reduce((a, [, x]) => a + x, 0))?.[0];
+  if (gem) { G.S.bag[gem] = (G.S.bag[gem] || 0) + 1; notify(`You found ${ITEMS[gem].name.toLowerCase()}!`); }
   delete MINE.rocks[key];
   emit('gather', { skill: 'mining', item: rock.item, xp: rock.hp * 2 - 1 });
   if (key === MINE.ladder) { MAPS.mine.grid[ty][tx] = 'L'; notify('You found a ladder down!'); }

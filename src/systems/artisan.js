@@ -4,6 +4,7 @@ import { on, changed, notify } from '../core/events.js';
 import { ITEMS } from '../data/items.js';
 import { MACHINES } from '../data/crafting.js';
 import { placeKey } from './world.js';
+import { today } from '../core/time.js';
 
 const machine = (x, y) => {
   const p = G.S.placed[placeKey(G.S.map, x, y)];
@@ -11,6 +12,7 @@ const machine = (x, y) => {
 };
 
 // What one load of item k uses up (most machines: one of it; the furnace: 5 ore and a coal).
+export const nightsFor = (kind, k) => { const n = MACHINES[kind].nights; return typeof n === 'function' ? n(k) : n; };
 export const takes = (kind, k) => MACHINES[kind].takes?.(k) || { [k]: 1 };
 const enough = (need) => Object.entries(need).every(([k, n]) => (G.S.bag[k] || 0) >= n);
 
@@ -27,7 +29,8 @@ export function loadMachine(x, y, item) {
   if (!enough(need)) return false;
   Object.entries(need).forEach(([k, n]) => { G.S.bag[k] -= n; });
   p.item = MACHINES[p.kind].product(item);
-  p.nights = MACHINES[p.kind].nights;
+  p.nights = nightsFor(p.kind, item);
+  if (MACHINES[p.kind].repeat) p.copy = item;
   notify(p.nights ? `${ITEMS[p.item].name} will be ready in ${p.nights} night${p.nights === 1 ? '' : 's'}.` : `${ITEMS[p.item].name} is ready.`);
   changed();
   return true;
@@ -39,6 +42,7 @@ export function collectMachine(x, y) {
   const item = p.item;
   G.S.bag[item]++;
   p.item = null; p.nights = 0;
+  if (MACHINES[p.kind].repeat && p.copy) { p.item = MACHINES[p.kind].product(p.copy); p.nights = nightsFor(p.kind, p.copy); }   // the gem copier starts again
   notify(`Collected ${ITEMS[item].name}.`);
   changed();
   return item;
@@ -46,7 +50,14 @@ export function collectMachine(x, y) {
 
 on('day:end', (report) => {
   let ready = 0;
+  const winter = today().season === 'Winter';
   for (const p of Object.values(G.S.placed)) {
+    const auto = MACHINES[p.kind]?.auto;
+    if (auto && !p.item && (auto.winter !== false || !winter)) {   // bee boxes and mushroom logs make something by themselves
+      p.timer = (p.timer ?? auto.every) - 1;
+      if (p.timer <= 0) { p.item = auto.item; p.nights = 0; p.timer = auto.every; ready++; }
+      continue;
+    }
     if (!MACHINES[p.kind] || !p.item || p.nights <= 0) continue;
     p.nights--;
     if (p.nights <= 0) ready++;

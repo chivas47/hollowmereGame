@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v27: Artisan machines, part 2
+- Nine new machines: the brew barrel (fruit to wine in 7 nights, vegetables to juice in 4), egg press (egg spread), loom (5 fiber to cloth), oil press (corn oil), bee box (meadow honey every 4 nights outside winter), gem copier (copies a gem again and again), dryer (5 fruit or 5 mushrooms to a dried pack), mushroom log (a mushroom every 4 nights outside winter) and fish smoker (a fish and a coal, smoked at once).
+- The tree tap: fix it to a grown alder for alder syrup every 8 nights. Chop the alder and the tap comes back.
+- Two gems in the Hollow: Hollow quartz and violet stone, found now and then in any rock you break.
+
 ## v26: Smelting and bars
 - The furnace (20 copper ore, 25 stone) smelts 5 ore and 1 coal into a copper or iron bar. The charcoal kiln (20 wood, 2 copper bars) burns 10 wood into a coal. Stone rocks in the Hollow sometimes drop coal, and Bram sells it for 150g.
 - Tool and house upgrades, the barn, the stable, the mine lift and every recipe that took ore now take bars, at 5 ore to a bar. Ore you already have is still good: smelt it.

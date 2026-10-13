@@ -41,7 +41,8 @@ const ORCHARD = ['figtree', 'peartree', 'nectarinetree', 'persimmontree', 'plumt
 const STRATEGIES = {
   full: ['furnace', 'can', 'coop', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'kiln', 'house',
     'barn', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, 'stable', ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'rod', 'can',
-    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'house'],
+    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'house',
+    'brewbarrel', 'brewbarrel', 'eggpress', 'beebox', 'beebox', 'dryer', 'smoker', 'mushroomlog'],   // wood-hungry, so last
   crops: ['furnace', 'can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
 };
 
@@ -86,6 +87,7 @@ const { RECIPES, PLACEABLES, MACHINES } = await load('data/crafting.js');
 const { SKILLS } = await load('data/skills.js');
 const { TREES, FRUIT } = await load('data/trees.js');
 const { DEBRIS } = await load('data/clearing.js');
+const { freeTile } = await load('systems/clearing.js');
 const { WEATHER_ITEMS } = await load('data/weather.js');
 const { act } = await load('systems/interact.js');
 const { sleep } = await load('systems/days.js');
@@ -143,7 +145,7 @@ const GH_CENTRES = []; for (const cy of [5, 8]) for (let cx = 3; cx <= 21; cx +=
 const GH_FIELD = GH_CENTRES.flatMap(([cx, cy]) => [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]].map(([a, b]) => [cx + a, cy + b]));
 const PLOTS = { farm: { field: FIELD, centres: CENTRES, well: [12, 3] }, greenhouse: { field: GH_FIELD, centres: GH_CENTRES, well: [2, 12] } };
 const TREE_SLOTS = [[8, 12], [10, 12], [12, 12], [9, 14], [11, 14], [13, 14]];   // clear of the animal yards
-const MACHINE_SLOTS = []; for (let y = 5; y <= 7; y++) for (let x = 1; x <= 5; x++) MACHINE_SLOTS.push([x, y]);
+const MACHINE_SLOTS = []; for (let y = 5; y <= 9; y++) for (let x = 1; x <= 5; x++) MACHINE_SLOTS.push([x, y]);
 
 // ---- One simulated run ----
 function simulate(runSeed) {
@@ -278,7 +280,15 @@ function simulate(runSeed) {
     const s = S();
     for (const [k, d] of Object.entries(s.debris || {})) {
       if (!missingMats().wood || s.energy < 30 || late()) return;
-      if (['alder', 'alderstump', 'twig'].includes(d.kind)) clear('farm', ...k.split(',').map(Number));
+      if ((d.kind === 'alder' && d.stage >= 4) || d.kind === 'alderstump' || d.kind === 'twig') clear('farm', ...k.split(',').map(Number));   // young alders give no wood
+    }
+  }
+  // Alder cones from felled trees go back into open grass away from the field, so wood keeps coming.
+  function plantCones() {
+    const s = S();
+    for (let y = 13; y >= 6 && s.kit.alderseed > 0; y--) for (let x = 21; x >= 1 && s.kit.alderseed > 0; x--) {
+      if (FIELD.some(([fx, fy]) => fx === x && fy === y) || !freeTile(x, y)) continue;
+      s.kitSel = 'alderseed'; use('farm', x, y, 'kit'); spend(TIME.tile);
     }
   }
 
@@ -500,6 +510,7 @@ function simulate(runSeed) {
     layoutChores();
     getCoal();
     if (missingMats().wood && !late()) chopWood();
+    plantCones();
     if (Object.keys(missingMats()).filter((k) => k !== 'wood').length && !late()) mine();   // saving up for something that needs ore: mine first
     if (!late()) farm('farm', true);
     if (!late() && greenhouseBuilt()) farm('greenhouse', true);
