@@ -1,0 +1,14 @@
+// Shared runtime object. G.S is the saved state; everything else is per-session.
+export const G = {
+  S: null,          // saved game state (see state.js)
+  keys: {},         // held directions
+  paused: false,    // true while a dialog is open
+  lock: false,      // true while a minigame holds the player in place (fishing)
+  fishing: null,    // current fishing attempt, see systems/fishing.js
+  hurtT: 0,         // seconds of invulnerability left after being hit
+  talking: null,    // id of the NPC in conversation
+  swing: null,      // current tool effect {tx, ty, kind, t}
+  moving: false,
+  walkT: 0,
+  clockAcc: 0,
+};

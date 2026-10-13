@@ -1,0 +1,153 @@
+# Hollowmere Farm: architecture
+
+Plain ES modules, no build step. `index.html` loads `styles.css` and `src/main.js`. ES modules do not load from `file://`; serve the folder (`python3 -m http.server 8000`).
+
+## Folder map
+
+```
+index.html            layout: HUD, canvas, basket, hotbar, touch pad, debug panel, modal
+styles.css            single dark "farmhouse at dusk" theme, tokens on :root
+src/
+  main.js             boot: imports every system and UI module, runs the frame loop
+  core/
+    constants.js      T=16 tile px, W=24 x H=16 tiles, START 6:00, END 2:00, TICK, SAVE_KEY, DIRS
+    game.js           G: shared runtime object (G.S is the save; keys, paused, lock, swing, fishing, hurtT)
+    state.js          newState(), merge(saved), load(), save()  (localStorage)
+    events.js         on(event, fn), emit(event, data), changed(), notify(msg)
+    registry.js       addInteraction, addLayer, addEntities, addUpdater (+ run/draw/collect)
+    time.js           dateParts(day), today(), fmtTime(minutes)
+  data/               content only, no logic
+    crops.js forage.js fish.js minerals.js products.js items.js
+    npcs.js maps.js seasons.js hotbar.js upgrades.js
+  systems/            one feature per file
+    world.js          tile queries, collision, facing(), placePlayer(), useEnergy()
+    player.js         movement, map exits, player sprite (respects G.lock)
+    clock.js          advances time, pass out at END
+    days.js           sleep(): day:end -> date++ -> season:changed -> day:start -> day:report
+    interact.js       act(): builds {tx, ty, tile, mapId, item} and runs interactions
+    effects.js        tool swing animation (swingAt)
+    farming.js        till (wide hoe), water, plant, harvest, growth, withering
+    forage.js         daily forage spawns in the Wilds
+    fishing.js        cast, bite, reel minigame, fish log
+    buildings.js      door (sleep), stall (shop), bin (ship), well/pond refill
+    economy.js        ship(), buy(), overnight payout; materials are never shipped
+    npcs.js           routes, talk, gifts, hearts, 3-heart rewards
+    upgrades.js       workbench purchases, material costs, recalcStats()
+    coop.js           coop placement, chickens, petting, eggs
+    mine.js           floor generation, rocks, ladders, lighting
+    health.js         hurtPlayer(), fainting
+    monsters.js       slimes, sword
+    debug.js          DEBUG actions for the debug panel
+  render/
+    pixel.js          r() rectangle primitive, rng(seed), blink()
+    tiles.js          static art: grass, path, trees, water, rocks, buildings, cave tiles
+    sprites.js        per-frame art: soil, crops, forage, people, chickens, slimes, effects
+    icons.js          16x16 hotbar icons
+    renderer.js       composes a frame, caches backgrounds per map + season
+  ui/
+    dom.js toast.js modal.js hud.js hotbar.js dialogs.js inventory.js
+    workshop.js mine.js input.js debugPanel.js
+```
+
+## The four registries (`core/registry.js`)
+
+| Function | Purpose | Notes |
+|---|---|---|
+| `addInteraction(priority, fn)` | What Use does. `fn({tx, ty, tile, mapId, item})` returns `true` to claim the press. | Highest priority runs first. |
+| `addLayer(z, fn)` | Draw something every frame. `fn(ctx)`. | z < 50 under characters, z >= 50 over. |
+| `addEntities(fn)` | Return `[{ y, draw(ctx) }]` for y-sorted things. | Player, NPCs, chickens, slimes. |
+| `addUpdater(fn)` | Per-frame logic, `fn(dt)` in seconds. | Skipped while `G.paused`. |
+
+### Interaction priorities in use
+
+| Priority | Owner | Claims |
+|---|---|---|
+| 200 | fishing.js | Any Use while a line is out |
+| 100 | npcs.js | Facing a neighbour |
+| 95 | coop.js | Facing a chicken (pet) |
+| 72 | upgrades.js / coop.js / mine.js | Workbench K, coop C, mine entrance M, ladders U/L |
+| 70 | buildings.js | Door D, stall S, bin B |
+| 66 | mine.js | Pickaxe on mine rocks |
+| 65 | fishing.js | Rod on water O (cast) |
+| 60 | buildings.js | Well W or pond O (refill can) |
+| 58 | monsters.js | Sword (claims every press while held) |
+| 50 | farming.js | Grass on the farm |
+| 45 | forage.js | Forage items and grass in the Wilds |
+
+### Render layers in use
+
+| z | Owner | Draws |
+|---|---|---|
+| 10 | farming.js, forage.js | Soil, crops, forage |
+| (entities) | player, npcs, coop, monsters | y-sorted characters |
+| 55 | fishing.js | Line and bobber |
+| 60 | effects.js | Tool swing |
+| 90 | fishing.js | Reel bar |
+| 95 | mine.js | Darkness around the player |
+
+The night tint is drawn by renderer.js after all layers (not in caves).
+
+## Events (`core/events.js`)
+
+| Event | Payload | Emitted by | Typical listener |
+|---|---|---|---|
+| `state:changed` | none | everywhere via `changed()` | HUD, hotbar |
+| `toast` | message | `notify()` | ui/toast.js |
+| `game:loaded` | none | main.js, reset | forage, upgrades (recalc), coop (place), mine (eject) |
+| `game:reset` | none | ui/dialogs.js | renderer cache, npcs, coop, fishing |
+| `map:changed` | map id | player.js, days.js, mine.js | fishing, monsters |
+| `world:changed` | none | coop.js, mine.js | renderer (drop background cache) |
+| `day:end` | report | days.js | farming (growth), economy (payout), coop (eggs) |
+| `season:changed` | {from, to, report} | days.js | farming (wither), renderer |
+| `day:start` | report | days.js | forage, npcs, coop (build), health, fishing, monsters |
+| `day:report` | report | days.js | ui/dialogs.js morning summary |
+| `mine:floor` | {floor, rng} | mine.js | monsters (spawn) |
+| `mine:faint` | none | health.js | mine.js (carry out) |
+| `ui:*` | varies | systems | ui modules open dialogs |
+
+The `report` object collects overnight results: `passedOut, grown, payout, withered, newSeason, eggs, built`. Add a field, set it in a `day:end` or `day:start` listener, and show it in the `day:report` handler in ui/dialogs.js.
+
+## State
+
+- `G.S` is the whole save (see `newState()` in core/state.js). It is written to localStorage on sleep and when the tab is hidden.
+- Positions are pixels: `x = tile * 16 + 8`, `y = tile * 16 + 12` (feet).
+- `G.lock` freezes the player for minigames. `G.paused` is set by any open dialog.
+- Derived stats (`maxw`, `maxEnergy`) come from upgrade tiers. Call `recalcStats()` from systems/upgrades.js after changing tiers or bonuses.
+- Mine floors are not saved. A save made underground reloads at the cave entrance.
+
+## Maps
+
+Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
+
+| Code | Meaning | Solid |
+|---|---|---|
+| g | grass (farmable on the farm) | no |
+| P | path | no |
+| E | exit to another map (paired with an `exits` entry) | no |
+| T | tree | yes |
+| R | boulder (overworld) | yes |
+| O | pond water | yes |
+| H, D | house, door | yes |
+| S | seed stall | yes |
+| B | shipping bin | yes |
+| W | well | yes |
+| K | Bram's workbench | yes |
+| C | chicken coop (written at runtime) | yes |
+| M | mine entrance | yes |
+| f, X | cave floor, cave wall | no, yes |
+| r, c, i | stone, copper, iron rock | yes |
+| U, L | ladder up, ladder down | yes |
+
+`objects` on a map draw building art from `OBJECT_ART` in render/tiles.js. Maps with `base: 'cave'` use cave floor art and skip the night tint.
+
+## Recipes
+
+- **Crop:** entry in `data/crops.js` and its key in `data/hotbar.js`.
+- **Fish:** entry in `data/fish.js`.
+- **Forage:** entry in `data/forage.js` plus art in `FORAGE_ART` (render/sprites.js).
+- **Neighbour:** entry in `data/npcs.js`. Paths are walked x first, then y; keep each leg clear.
+- **Upgrade tier:** append to a line in `data/upgrades.js`; read effects with `tier(G.S, 'line')`.
+- **Building:** follow systems/coop.js: order at the workbench, build on `day:start`, write tiles at runtime, emit `world:changed`.
+- **Tool:** key in `data/hotbar.js` (+ `TOOL_NAMES`), icon in `render/icons.js`, an interaction in its system.
+- **Map:** grid and entry in `data/maps.js`, with an `E` tile and `exits` entry on both sides.
+- **Minigame:** follow systems/fishing.js: a priority 200 interaction while active, `G.lock = true`, an updater, and a layer above 80 for its UI.
