@@ -9,7 +9,7 @@ import { CROPS } from '../data/crops.js';
 import { ITEMS } from '../data/items.js';
 import { sleep } from '../systems/days.js';
 import { buy, canBuy, inSeason } from '../systems/economy.js';
-import { hearts, heartStr, giftOptions, giveGift } from '../systems/npcs.js';
+import { hearts, heartStr, giftOptions, giveGift, chooseScene } from '../systems/npcs.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
 
@@ -53,6 +53,17 @@ on('ui:talk', ({ npc, text, extra }) => {
   const actions = gifts.map((k) => [`Give ${ITEMS[k].name}`, () => giveGift(npc, k)]);
   actions.push(['Goodbye', closeModal, true]);
   openModal(html, actions);
+});
+
+// A heart scene: a short scene with a choice, then the neighbour's reply.
+on('ui:scene', ({ npc, at, scene, extra }) => {
+  const d = npc.def;
+  let html = `<h2>${scene.title}</h2><p class="role">${d.name}, ${at} hearts</p>${scene.text.map((t) => `<p>${t}</p>`).join('')}`;
+  if (extra) html += `<p class="gift">${extra}</p>`;
+  openModal(html, scene.choices.map((c, i) => [c.label, () => {
+    const reply = chooseScene(npc, at, i), st = G.S.npcs[npc.id];
+    openModal(`<h2>${d.name}</h2><p>${reply}</p><p class="hearts" aria-label="${hearts(st)} of 10 hearts">${heartStr(st)}</p>`, [['Goodbye', closeModal, true]]);
+  }, i === 0]));
 });
 
 on('day:report', (r) => {
