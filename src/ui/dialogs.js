@@ -21,7 +21,7 @@ const WEATHER_LINES = {
 };
 import { hearts, heartStr, giftOptions, giveGift, chooseScene } from '../systems/npcs.js';
 import { openModal, closeModal } from './modal.js';
-import { $ } from './dom.js';
+import { $, esc } from './dom.js';
 
 const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
@@ -70,7 +70,8 @@ $('#mbody').addEventListener('click', (e) => {
 
 on('ui:talk', ({ npc, text, extra }) => {
   const st = G.S.npcs[npc.id], d = npc.def, gifts = giftOptions(npc);
-  let html = `<h2>${d.name}</h2><p class="role">${d.role}</p><p>“${text}”</p>`;
+  const pr = G.S.profile, said = esc(text).replace(/\{name\}/g, esc(pr?.name || 'friend')).replace(/\{fav\}/g, esc(pr?.favourite || 'a good harvest'));
+  let html = `<h2>${d.name}</h2><p class="role">${d.role}</p><p>“${said}”</p>`;
   if (extra) html += `<p class="gift">${extra}</p>`;
   html += `<p class="hearts" aria-label="${hearts(st)} of 10 hearts">${heartStr(st)}</p>`;
   if (st.gifted === G.S.day) html += `<p class="role">You already gave ${d.name} a gift today.</p>`;
@@ -93,7 +94,8 @@ on('ui:scene', ({ npc, at, scene, extra }) => {
 
 on('day:report', (r) => {
   const d = today();
-  let html = `<h2>${r.passedOut ? 'You passed out' : 'Good morning'}</h2><p>${d.season} ${d.d}, Year ${d.year}.</p>`;
+  const who = G.S.profile ? `, ${esc(G.S.profile.name)}` : '';
+  let html = `<h2>${r.passedOut ? 'You passed out' : `Good morning${who}`}</h2><p>${d.season} ${d.d}, Year ${d.year}.</p>`;
   if (r.newSeason) {
     html += `<p class="gift">${r.newSeason} has arrived.`;
     if (r.withered) html += ` ${plural(r.withered, 'crop')} withered with the change of season.`;
@@ -115,8 +117,8 @@ on('day:report', (r) => {
   if (r.lightning?.struck) html += `<p class="role">Lightning struck ${plural(r.lightning.struck, 'crop')} in the night. A lightning rod would have caught it.</p>`;
   if (r.sprinkled) html += `<p>Sprinklers watered ${plural(r.sprinkled, 'tile')}.</p>`;
   if (r.questsPosted) html += '<p class="role">A new request is up on the village quest board.</p>';
-  html += `<p>${r.passedOut ? 'You woke up at home with only part of your energy back. ' : ''}`;
   if (r.forecast) html += `<p class="role">Forecast for tomorrow: ${WEATHER[r.forecast].name.toLowerCase()}.</p>`;
+  html += `<p>${r.passedOut ? 'You woke up at home with only part of your energy back. ' : ''}`;
   html += `${r.payout ? `The shipping bin paid out ${r.payout}g.` : 'Nothing was shipped yesterday.'} ${plural(r.grown, 'crop')} grew overnight.</p>`;
   openModal(html, [['Start the day', closeModal, true]]);
 });

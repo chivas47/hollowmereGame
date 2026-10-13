@@ -3,7 +3,7 @@ import { G } from '../core/game.js';
 import { emit, changed, notify } from '../core/events.js';
 import { addUpdater, addEntities } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
-import { PLAYER_PAL } from '../data/npcs.js';
+import { playerPal } from '../data/profile.js';
 import { drawPerson } from '../render/sprites.js';
 import { blocked, playerTile, currentMap, placePlayer } from './world.js';
 
@@ -37,6 +37,6 @@ addEntities(() => [{
   y: G.S.y,
   draw: (c) => {
     if (G.hurtT > 0 && Math.floor(performance.now() / 80) % 2) return;   // blink while hurt
-    drawPerson(c, G.S.x, G.S.y, G.S.dir, G.moving, G.walkT, PLAYER_PAL);
+    drawPerson(c, G.S.x, G.S.y, G.S.dir, G.moving, G.walkT, playerPal(G.S.profile));
   },
 }]);

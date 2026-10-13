@@ -12,6 +12,8 @@ import { PLACEABLES } from '../data/crafting.js';
 import { SKILLS, BONUS_PER_LEVEL } from '../data/skills.js';
 import { skillProgress } from '../systems/skills.js';
 import { openModal, closeModal } from './modal.js';
+import { esc } from './dom.js';
+import { PETS } from '../data/profile.js';
 
 const row = (left, right, cls = '') => `<div class="inv-row ${cls}"><span>${left}</span><span>${right}</span></div>`;
 
@@ -48,7 +50,9 @@ on('ui:inventory', () => {
     ? row(f.name, `${S.fishLog[k]} caught`)
     : row('???', f.spot === 'ice' ? 'Winter, ice hole' : f.seasons.length === 4 ? 'All year' : f.seasons.join(', '), 'muted')).join('');
 
-  openModal(`<h2>Bag</h2>
+  const pr = S.profile;
+  const who = pr ? `<p class="role">${esc(pr.name)} of ${esc(pr.farm)} Farm. Favourite thing: ${esc(pr.favourite)}. Pet: ${PETS[pr.pet].toLowerCase()}, waiting to move in.</p>` : '';
+  openModal(`<h2>Bag</h2>${who}
     <h3>Basket</h3>${basket}
     <h3>Materials <span class="role">kept for upgrades</span></h3>${materials}
     <h3>Kit <span class="role">slot 7 places these</span></h3>${kit}

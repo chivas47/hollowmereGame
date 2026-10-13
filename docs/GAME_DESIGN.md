@@ -18,6 +18,10 @@ You take over the overgrown Hollowmere plot. Farm through the seasons, fish and 
 - 28-day seasons: Spring, Summer, Autumn, Winter. Crops not in the new season wither.
 - Passing out at 2:00 (3:00 with street lamps): wake with 60% energy.
 
+## New game (v21)
+
+A new farm starts on a screen that asks for the farmer's name, the farm's name (shown as "<name> Farm"), a favourite thing, colours for skin, hair, shirt and trousers, short or long hair, and a starting pet: cat, dog or turtle. The pet is saved with the profile and moves in when pets arrive (roadmap item 8). Neighbours at 2 hearts or more have a line that uses the name and the favourite thing. Old saves get the default profile: Farmer of Hollowmere Farm, the original look.
+
 ## Controls
 
 - Hotbar: 1 Hoe, 2 Can, 3 Rod, 4 Pick, 5 Sword, 6 Seeds, 7 Kit, 8 Axe (v19, added at the end so no key moved).
@@ -327,6 +331,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Existing recipes still use stone and ore where Stardew uses wood (the v11 substitution). Switching them to wood now that wood exists is Nuno's call; it would raise costs on saves that have no wood yet.
 - Hardwood only comes from the large stumps a farm starts with (2 each). More sources arrive with new areas (roadmap item 21).
 - Debris can creep onto grass the player meant to keep free; paths keep it off.
+- The starting pet is chosen but has nowhere to live until pets and the pet bowl arrive.
 - Weather does not change fishing or neighbours yet (Stardew has rain-only fish and neighbours who stay in). Rain sound and richer effects come with the atmosphere item.
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
