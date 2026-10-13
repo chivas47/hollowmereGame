@@ -9,5 +9,7 @@ export const FORAGE = {
   rosehip:   { name: 'Rosehip',     sell: 80, season: 'Autumn' },
   frostroot: { name: 'Frost root',  sell: 70, season: 'Winter' },
   icemoss:   { name: 'Ice moss',    sell: 100, season: 'Winter' },
+  // Only on Silvermist days (systems/weather.js), never in the daily spawn.
+  mistlily:  { name: 'Mist lily',   sell: 90,  season: null },
 };
 export const FORAGE_PER_DAY = 6;

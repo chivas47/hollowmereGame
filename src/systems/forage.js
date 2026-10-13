@@ -4,6 +4,7 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { FORAGE, FORAGE_PER_DAY } from '../data/forage.js';
+import { MIST } from '../data/weather.js';
 import { MAPS } from '../data/maps.js';
 import { drawForage } from '../render/sprites.js';
 import { addItem, rollSkillQuality } from './quality.js';
@@ -14,11 +15,11 @@ const AREA = 'wilds';
 export function spawnForage() {
   const grid = MAPS[AREA].grid, season = today().season;
   const pool = Object.keys(FORAGE).filter((k) => FORAGE[k].season === season);
-  const out = [];
-  for (let guard = 0; pool.length && out.length < FORAGE_PER_DAY && guard < 600; guard++) {
+  const out = [], lilies = G.S.weather === 'mist' ? MIST.lilies : 0;   // Silvermist days add mist lilies
+  for (let guard = 0; pool.length && out.length < FORAGE_PER_DAY + lilies && guard < 600; guard++) {
     const x = 1 + (Math.random() * (grid[0].length - 2) | 0), y = 1 + (Math.random() * (grid.length - 2) | 0);
     if (grid[y][x] !== 'g' || out.some((f) => f.x === x && f.y === y)) continue;
-    out.push({ x, y, type: pool[Math.random() * pool.length | 0] });
+    out.push({ x, y, type: out.length < lilies ? 'mistlily' : pool[Math.random() * pool.length | 0] });
   }
   G.S.forage = out; G.S.forageDay = G.S.day;
 }

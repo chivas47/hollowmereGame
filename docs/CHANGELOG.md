@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v20: Weather
+- Rain, storms and snow with Stardew's odds; the date line shows today's weather and the morning report gives tomorrow's forecast. Festival days are always fair.
+- Rain, storms and Silvermist water the farm in the morning, and any soil you till that day.
+- Storms send lightning at the farm overnight: a strike kills a crop it lands on. A lightning rod (5 iron, 5 copper, 10 stone) takes the strike first and leaves a storm cell (500g).
+- Silvermist, our own rare weather: one summer day a year, a pale mist waters the farm and 6 mist lilies (90g) open in the Wilds.
+
 ## v19: Clearing, wood and fences
 - The axe, on new hotbar slot 8 (no key moved). 2 energy a swing; Bram sells the copper axe (2000g, 25 copper): twice the damage, and it splits large stumps.
 - New farms start cluttered with alder trees, large stumps, weeds, stones and twigs. Older saves get a lighter grove. Weeds, stones and twigs creep back onto free grass overnight.

@@ -15,6 +15,7 @@ import { addItem, rollCropQuality } from './quality.js';
 import { skillLevel } from './skills.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { QUALITY } from '../data/quality.js';
+import { rainWaters } from './weather.js';
 
 const ENERGY = { hoe: 2, wideHoe: 3, water: 2, clear: 1 };
 const isRipe = (crop) => crop.age >= (crop.need || CROPS[crop.type].days);   // need: days after growth tonics
@@ -52,7 +53,7 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
     }
     if (!targets.length) { notify(reach > 1 ? 'Nothing left to till there.' : 'That soil is already tilled.'); return true; }
     if (!useEnergy(reach > 1 ? ENERGY.wideHoe : ENERGY.hoe)) return true;
-    targets.forEach((k) => { soil[k] = { w: false, crop: null }; });
+    targets.forEach((k) => { soil[k] = { w: rainWaters(mapId), crop: null }; });   // rain soaks fresh soil too
     swingAt(tx, ty, 'hoe');
   } else if (item === 'can') {
     if (!s) { notify('Till the ground first.'); return true; }

@@ -32,6 +32,8 @@ export const PLACEABLES = {
   woodpath:   { name: 'Wood path',      short: 'W. path',   kind: 'floor', color: '#b08a5a' },
   stonepath:  { name: 'Stone path',     short: 'S. path',   kind: 'floor', color: '#a9a49a' },
   alderseed:  { name: 'Alder cone',     short: 'Cone',      kind: 'sprout' },
+  // v20: catches a storm's lightning as a storm cell (systems/weather.js).
+  lightningrod: { name: 'Lightning rod', short: 'L. rod',  kind: 'machine' },
 };
 
 // key -> what it makes (a PLACEABLES key). makes: how many one craft gives (default 1). Lanterns are only sold at the Frostlight Market.
@@ -50,6 +52,8 @@ export const RECIPES = {
   gate:       { cost: 0, needs: { wood: 10 },    desc: 'Opens and closes when you face it. Fits in a fence line.' },
   woodpath:   { cost: 0, needs: { wood: 5 },     makes: 5, desc: 'Five tiles of wooden path. Weeds and stones never grow on paths.' },
   stonepath:  { cost: 0, needs: { stone: 5 },    makes: 5, desc: 'Five tiles of stone path. Weeds and stones never grow on paths.' },
+  // Stardew: 1 iron bar, 1 refined quartz, 5 bat wings. Ours (stone and ore for what we lack): iron for the bar, stone for the quartz, copper for the wings.
+  lightningrod: { cost: 0, needs: { iron: 5, copper: 5, stone: 10 }, desc: 'Catches a lightning strike in a storm and keeps it as a storm cell (500g).' },
 };
 
 // Machines: accepts(itemKey) -> bool, product(itemKey) -> item key, nights to finish.
@@ -57,6 +61,8 @@ export const MACHINES = {
   crock: { accepts: (k) => k in PRODUCE || k in FRUIT || k in FORAGE, product: (k) => JAR_PREFIX + k, nights: 3, hint: 'a crop, fruit or forage item' },
   churn: { accepts: (k) => k === 'cowmilk', product: () => 'butter', nights: 1, hint: 'milk' },
   vat:   { accepts: (k) => k === 'goatmilk', product: () => 'cheese', nights: 1, hint: 'goat milk' },
+  // Nothing goes in: a storm's lightning fills it (systems/weather.js).
+  lightningrod: { accepts: () => false, product: () => 'stormcell', nights: 0, hint: 'lightning, during a storm' },
 };
 
 // Tiles a sprinkler at (x, y) waters.

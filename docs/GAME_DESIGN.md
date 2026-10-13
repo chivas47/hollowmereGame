@@ -176,11 +176,28 @@ Chickens: each eats 1 feed a night (50g, bought at the coop). A fed chicken pett
 | Gate | 0 | 10 wood | Face it to open or close; walkable when open |
 | Wood path x5 | 0 | 5 wood | Walkable floor; nothing creeps onto it |
 | Stone path x5 | 0 | 5 stone | As wood path |
+| Lightning rod | 0 | 5 iron, 5 copper, 10 stone | Catches a storm's lightning as a storm cell (500g) |
 
 - Crafted objects go to the kit (slot 7). Placed on untilled farm grass only; not on the coop or barn footprint. They are solid. Picking one up returns it to the kit (machines only when empty).
 - Sprinklers also water their tiles the moment they are placed.
 - Fences, gates and paths come back to the kit when hit with the axe or pickaxe (2 energy). Stardew ratios: 2 wood, 2 stone or 1 hardwood a fence post, 10 wood a gate, 1 a path tile.
 - Jarred value = 2 x item + 50g. Pumpkin 235g -> 520g over 3 nights (about 95g a day per crock).
+
+### Weather (v20)
+
+Rolled the night before, so the morning report can give tomorrow's forecast; the date line shows today's. Odds are Stardew's.
+
+| Season | Rain | Of which storms | Other |
+|---|---|---|---|
+| Spring | 18.3% | 25% | |
+| Summer | 12% + 0.3% a day of the month | 85% | Silvermist once a year (day 5 to 25) |
+| Autumn | 18.3% | 25% | |
+| Winter | none | | Snow 63% (looks only) |
+
+- Rain, storms and Silvermist water all farm soil in the morning and soil tilled that day. The greenhouse is not affected.
+- Festival days and a new farm's first day are always fair.
+- Storms: 3 lightning strikes overnight. Each hits a lightning rod with no storm cell in it first; otherwise a random farm tile, killing any crop there. A rod's storm cell (500g, Stardew's battery pack) is collected by facing it.
+- Silvermist (ours, in the role of Stardew's rare summer weather): 6 mist lilies (90g forage, jars in the crock) in the Wilds on top of the usual forage.
 
 ### Clearing the farm (v19)
 
@@ -310,6 +327,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Existing recipes still use stone and ore where Stardew uses wood (the v11 substitution). Switching them to wood now that wood exists is Nuno's call; it would raise costs on saves that have no wood yet.
 - Hardwood only comes from the large stumps a farm starts with (2 each). More sources arrive with new areas (roadmap item 21).
 - Debris can creep onto grass the player meant to keep free; paths keep it off.
+- Weather does not change fishing or neighbours yet (Stardew has rain-only fish and neighbours who stay in). Rain sound and richer effects come with the atmosphere item.
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
 - Mine floors have no special floors (treasure, boss, elevator).
