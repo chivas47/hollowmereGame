@@ -47,6 +47,21 @@ Profit per day = (sells - seed) / days, one harvest per seed.
 | Sweet pepper | 45g | 6 | 95g | 8.3g | Summer |
 | Melon | 80g | 7 | 180g | 14.3g | Summer |
 | Pumpkin | 100g | 8 | 235g | 16.9g | Autumn |
+| Carrot | 15g | 3 | 35g | 6.7g | Spring |
+| Frost kale | 50g | 6 | 100g | 8.3g | Winter (outdoors) |
+
+Regrowing crops (the plant stays; regrow = days to the next harvest):
+
+| Crop | Seed | Days | Regrow | Sells | Seasons | Stardew role |
+|---|---|---|---|---|---|---|
+| Snap pea | 60g | 6 | 3 | 40g | Spring | Green bean |
+| Cherry tomato | 50g | 7 | 4 | 60g | Summer | Tomato |
+| Summer squash | 45g | 5 | 3 | 45g | Summer | Summer squash |
+| Sweet corn | 150g | 9 | 4 | 50g | Summer, Autumn | Corn |
+| Broccoli | 60g | 6 | 4 | 70g | Autumn | Broccoli |
+| Lingonberry | 200g | 5 | 4 | 70g x2 | Autumn | Cranberries |
+
+Seed packets: wild seeds (40g, one per season, 6 days) grow one of that season's two forage items; mixed seeds (20g) become a random in-season crop when planted (any crop in the greenhouse).
 
 Melon and pumpkin stay the best crops per tile, as their counterparts are. Start: 500g, 6 turnip seeds, 3 radish seeds.
 

@@ -188,7 +188,7 @@ Soil is per map: `soilOf(mapId)` returns `G.S.soil` (farm) or `G.S.greenSoil` (g
 
 ## Recipes
 
-- **Crop:** entry in `data/crops.js` and its key in `data/hotbar.js`.
+- **Crop:** entry in `data/crops.js` (add `regrow`, `yield` or `packet` as needed). `CROPS` is everything plantable; `PRODUCE` is the crops that are items (no seed packets): use `PRODUCE` for anything about items.
 - **Fish:** entry in `data/fish.js`.
 - **Forage:** entry in `data/forage.js` plus art in `FORAGE_ART` (render/sprites.js).
 - **Neighbour:** entry in `data/npcs.js` (farm path), plus a village path, home and rest day in `data/schedules.js`, and scenes in `data/scenes.js`. Paths are walked x first, then y; keep each leg clear.

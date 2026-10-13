@@ -223,15 +223,22 @@ function simulate(runSeed) {
   }
 
   const tile = (map, x, y) => soilOf(map)[`${x},${y}`];
-  const perDay = (k) => (CROPS[k].sell - CROPS[k].seed) / CROPS[k].days;
+  // Profit per day over the days left; regrowing crops count every harvest they can still make.
+  const perDay = (k, left = 28) => {
+    const c = CROPS[k], y = c.yield || 1;
+    if (!c.regrow) return (c.sell * y - c.seed) / c.days;
+    const harvests = left < c.days ? 0 : 1 + Math.floor((left - c.days) / c.regrow);
+    return (harvests * c.sell * y - c.seed) / Math.max(left, c.days);
+  };
   // Outdoors: the best crop that can still ripen this season. In the greenhouse: the best crop we
   // have seeds for or can buy now, whatever the season.
   function bestCrop(map) {
     const d = today(), left = 28 - d.d, s = S();
     const ok = map === 'greenhouse'
-      ? (k) => s.seeds[k] > 0 || CROPS[k].seasons.includes(d.season)
-      : (k) => CROPS[k].seasons.includes(d.season) && CROPS[k].days <= left;
-    return Object.keys(CROPS).filter(ok).sort((a, b) => perDay(b) - perDay(a))[0] || null;
+      ? (k) => !CROPS[k].packet && (s.seeds[k] > 0 || CROPS[k].seasons.includes(d.season))
+      : (k) => !CROPS[k].packet && CROPS[k].seasons.includes(d.season) && CROPS[k].days <= left;
+    const span = map === 'greenhouse' ? 28 : left;
+    return Object.keys(CROPS).filter(ok).sort((a, b) => perDay(b, span) - perDay(a, span))[0] || null;
   }
   function plant(map, x, y) {
     const s = S(), crop = bestCrop(map);
@@ -257,13 +264,13 @@ function simulate(runSeed) {
       const t = tile(map, x, y);
       if (!t?.crop) continue;
       if (t.crop.dead) { if (s.energy >= 1) { use(map, x, y, 'hoe'); spend(TIME.tile); } continue; }
-      if (t.crop.age >= CROPS[t.crop.type].days) { use(map, x, y, 'hoe'); spend(TIME.tile); }
+      if (t.crop.age >= (t.crop.need || CROPS[t.crop.type].days)) { use(map, x, y, 'hoe'); spend(TIME.tile); }
     }
     for (const [x, y] of field) {
       const t = tile(map, x, y);
       if (t && !t.crop && plant(map, x, y)) spend(TIME.tile);
       const u = tile(map, x, y);
-      if (u?.crop && !u.crop.dead && !u.w && u.crop.age < CROPS[u.crop.type].days) { if (!water(map, x, y)) return; spend(TIME.tile); }
+      if (u?.crop && !u.crop.dead && !u.w && u.crop.age < (u.crop.need || CROPS[u.crop.type].days)) { if (!water(map, x, y)) return; spend(TIME.tile); }
     }
     if (!expand) return;
     for (const [x, y] of field) {   // 4 energy per new tile: till 2, water 2
@@ -279,7 +286,7 @@ function simulate(runSeed) {
   function stockForWinter() {
     const s = S(), d = today();
     if (!greenhouseBuilt() || d.season !== 'Autumn' || d.d !== 28) return;
-    const crop = bestCrop('farm') || Object.keys(CROPS).filter((k) => CROPS[k].seasons.includes('Autumn')).sort((a, b) => perDay(b) - perDay(a))[0];
+    const crop = bestCrop('farm') || Object.keys(CROPS).filter((k) => !CROPS[k].packet && CROPS[k].seasons.includes('Autumn')).sort((a, b) => perDay(b) - perDay(a))[0];
     const want = GH_FIELD.length * Math.floor(28 / CROPS[crop].days) - s.seeds[crop];
     const n = Math.min(want, Math.floor((s.gold * 0.6) / CROPS[crop].seed));
     if (n > 0) track('seeds', () => buy(crop, n));

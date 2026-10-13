@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v17: Crop variety
+- Regrowing crops: snap pea (spring), cherry tomato (summer), sweet corn (summer and autumn), lingonberry (autumn, two per harvest), summer squash and broccoli. The plant stays after picking and fruits again.
+- New crops: carrot (spring), summer squash (summer), broccoli (autumn), frost kale (winter, grows outdoors).
+- Seed packets: wild seeds for each season grow that season's forage; mixed seeds turn into a random in-season crop when planted.
+- The stall says when a crop regrows, how many it yields and which seasons it spans; winter stock is frost kale, wild and mixed seeds.
+- Fix: crops sped up by growth tonic now look ripe when they are ripe.
+
 ## v16: Crop quality and fertilizer
 - Four quality tiers: plain, fine (x1.25), prime (x1.5), heirloom (x2). Crops roll quality at harvest from farming level and soil booster; forage, eggs and milk from foraging and ranching level.
 - Fertilizers in the kit (slot 7), spread on tilled soil: soil boosters (quality, three levels), growth tonics (10% and 25% faster), mulch (33% and 66% chance the soil stays watered). Boosters and tonics go on before planting; fertilizer stays in the soil.

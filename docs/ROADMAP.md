@@ -16,9 +16,9 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 
 | # | Item | Kind | Status | Scope (scaled, original names) |
 |---|---|---|---|---|
-| 1 | Crop quality and fertilizer | feature | in progress | Four quality tiers on crops, forage and animal products (plain, fine, prime, heirloom); quality raises price. Fertilizers: soil boosters for quality, growth tonics for speed, mulch to keep soil watered. |
-| 2 | Crop variety | feature | next | Regrowing crops, crops spanning two seasons, wild seed packs (one per season, grow forage), mixed seed packs (random crop), 4 new crops including carrots, summer squash and broccoli plus an original fourth, and rare crops sold by a travelling vendor later. |
-| 3 | Fruit trees and giant crops | feature | queued | Saplings that grow over 28 days and fruit in their season; three crops that can merge into 3x3 giant versions. |
+| 1 | Crop quality and fertilizer | feature | done (chivas47/hollowmereGame#11) | Four quality tiers on crops, forage and animal products (plain, fine, prime, heirloom); quality raises price. Fertilizers: soil boosters for quality, growth tonics for speed, mulch to keep soil watered. |
+| 2 | Crop variety | feature | in progress | Regrowing crops, crops spanning two seasons, wild seed packs (one per season, grow forage), mixed seed packs (random crop), 4 new crops including carrots, summer squash and broccoli plus an original fourth, and rare crops sold by a travelling vendor later. |
+| 3 | Fruit trees and giant crops | feature | next | Saplings that grow over 28 days and fruit in their season; three crops that can merge into 3x3 giant versions. |
 | 4 | Clearing, wood and fences | feature | queued | Axe tool, choppable trees that regrow from seeds, stumps and logs (hardwood), weeds and stones on a new farm, fences, gates and paths, wood and hardwood as materials. |
 | 5 | Weather | feature | queued | Rain (waters crops), storms with lightning, snow days, an original rare weather event with special forage, a weather forecast. |
 | 6 | New game and character creation | feature | queued | Start screen: name, farm name, favourite thing, appearance colours, starting pet. Saves get a farmer profile. |
