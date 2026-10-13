@@ -51,6 +51,10 @@ export const PLACEABLES = {
   mushroomlog:{ name: 'Mushroom log',     short: 'Mush. log', kind: 'machine' },
   smoker:     { name: 'Fish smoker',      short: 'Smoker',    kind: 'machine' },
   treetap:    { name: 'Tree tap',         short: 'Tap',       kind: 'tap' },
+  // v28: livestock. The incubator hatches eggs into animals; a silo turns cut grass into hay; grass starter plants a tuft.
+  incubator:  { name: 'Incubator',        short: 'Incubator', kind: 'machine' },
+  silo:       { name: 'Silo',             short: 'Silo',      kind: 'decor' },
+  grassstarter: { name: 'Grass starter',  short: 'Grass',     kind: 'grass' },
   // v24: furniture, placed inside the farmhouse (bought from the catalogue there).
   ...Object.fromEntries(Object.entries(FURNITURE).map(([k, f]) => [k, { name: f.name, short: f.name.length > 10 ? f.name.split(' ').pop() : f.name, kind: 'furniture', walk: !!f.walk }])),
 };
@@ -90,8 +94,17 @@ export const RECIPES = {
   gemcopier:  { cost: 0, needs: { stone: 50, ironbar: 3, stormcell: 1 }, desc: 'Copies a gem again and again: quartz every night, violet stone every 2.' },
   dryer:      { cost: 0, needs: { wood: 30, copperbar: 1, stone: 20 }, desc: 'Dries 5 fruit or 5 Hollow caps overnight (worth 7.5 times one, plus 25).' },
   mushroomlog:{ cost: 0, needs: { wood: 15, fiber: 10 }, desc: 'Grows Hollow caps every 4 nights, outside winter.' },
-  smoker:     { cost: 0, needs: { wood: 20, ironbar: 1 }, desc: 'Smokes a fish with 1 coal while you wait: worth twice the fish.' }
+  smoker:     { cost: 0, needs: { wood: 20, ironbar: 1 }, desc: 'Smokes a fish with 1 coal while you wait: worth twice the fish.' },
+  // v28. Stardew: ostrich incubator 50 bone fragments, 50 hardwood, 20 cinder shards (the big coop's own is built in);
+  // silo 100g, 100 stone, 10 clay, 5 copper bars. Stone stands in for the clay and bones, wood for the hardwood.
+  incubator:  { cost: 0, needs: { wood: 50, stone: 50, ironbar: 2 }, desc: 'Hatches an egg into an animal: chicken and duck eggs in 9 nights, Mossback eggs in 12, Strider eggs in 15. It needs room in the coop or barn.' },
+  silo:       { cost: 100, needs: { stone: 110, copperbar: 5 }, desc: 'With a silo on the farm, cutting grass gives hay for the barn loft half the time.' },
 };
+
+// v28: which egg makes which spread, and what hatches from which egg (Stardew: 9 nights, dinosaur 12 here, ostrich 15).
+export const EGG_SPREAD = { egg: 'mayo', duckegg: 'duckmayo', mossegg: 'mossmayo' };
+export const HATCH = { egg: 'chicken', duckegg: 'duck', mossegg: 'mossback', bigegg: 'strider' };
+const HATCH_NIGHTS = { egg: 9, duckegg: 9, mossegg: 12, bigegg: 15 };
 
 // Machines: accepts(itemKey) -> bool, product(itemKey) -> item key, nights to finish.
 export const MACHINES = {
@@ -105,14 +118,16 @@ export const MACHINES = {
   kiln:    { accepts: (k) => k === 'wood', takes: () => ({ wood: 10 }), product: () => 'coal', nights: 0, hint: '10 wood' },
   // v27. nights may depend on the item; auto: makes an item every so many nights with nothing put in; repeat: starts again after collecting.
   brewbarrel: { accepts: (k) => k in FRUIT || k in PRODUCE, product: (k) => (k in FRUIT ? `wine_${k}` : `juice_${k}`), nights: (k) => (k in FRUIT ? 7 : 4), hint: 'a fruit or a vegetable' },
-  eggpress:   { accepts: (k) => k === 'egg', product: () => 'mayo', nights: 1, hint: 'an egg' },
-  loom:       { accepts: (k) => k === 'fiber', takes: () => ({ fiber: 5 }), product: () => 'cloth', nights: 1, hint: '5 fiber' },
-  oilpress:   { accepts: (k) => k === 'corn', product: () => 'oil', nights: 1, hint: 'sweet corn' },
+  eggpress:   { accepts: (k) => k in EGG_SPREAD, product: (k) => EGG_SPREAD[k], nights: 1, hint: 'an egg' },
+  loom:       { accepts: (k) => k === 'fiber' || k === 'wool', takes: (k) => ({ [k]: k === 'wool' ? 1 : 5 }), product: () => 'cloth', nights: 1, hint: '5 fiber or a wool' },
+  oilpress:   { accepts: (k) => k === 'corn' || k === 'truffle', product: (k) => (k === 'truffle' ? 'truffleoil' : 'oil'), nights: 1, hint: 'sweet corn or a truffle' },
   beebox:     { accepts: () => false, auto: { item: 'honey', every: 4, winter: false }, product: () => 'honey', nights: 0, hint: 'nothing: the bees do the work' },
   gemcopier:  { accepts: (k) => !!MINERALS[k]?.gem, product: (k) => k, nights: (k) => (k === 'violet' ? 2 : 1), repeat: true, hint: 'a gem' },
   dryer:      { accepts: (k) => k in FRUIT || k === 'mushroom', takes: (k) => ({ [k]: 5 }), product: (k) => `dried_${k}`, nights: 1, hint: '5 fruit or 5 Hollow caps' },
   mushroomlog:{ accepts: () => false, auto: { item: 'mushroom', every: 4, winter: false }, product: () => 'mushroom', nights: 0, hint: 'nothing: give it time' },
   smoker:     { accepts: (k) => k in FISH, takes: (k) => ({ [k]: 1, coal: 1 }), product: (k) => `smoked_${k}`, nights: 0, hint: 'a fish and 1 coal' },
+  // v28. hatch: egg -> animal kind. Collecting moves the animal into the coop or barn (systems/livestock.js).
+  incubator:  { accepts: (k) => k in HATCH, hatch: HATCH, product: (k) => k, nights: (k) => HATCH_NIGHTS[k], hint: 'an egg' },
 };
 
 // Tiles a sprinkler at (x, y) waters.
@@ -126,6 +141,6 @@ export function sprinklerTiles(def, x, y) {
   return out;
 }
 
-// Sold at the seed stall all year (Stardew scale: basic 100g, quality 150g; saplings at their tree's price).
-export const SUPPLIES = { booster: 100, booster2: 150, tonic: 100, tonic2: 150, mulch: 100, mulch2: 150,
+// Sold at the seed stall all year (Stardew scale: grass starter 100g, basic 100g, quality 150g; saplings at their tree's price).
+export const SUPPLIES = { grassstarter: 100, booster: 100, booster2: 150, tonic: 100, tonic2: 150, mulch: 100, mulch2: 150,
   ...Object.fromEntries(Object.entries(TREES).map(([k, t]) => [k, t.cost])) };

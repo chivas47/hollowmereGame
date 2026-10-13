@@ -136,8 +136,59 @@ export function drawHeart(c, px, py) {
   r(c, x, y, 2, 1, h); r(c, x + 3, y, 2, 1, h); r(c, x, y + 1, 5, 1, h); r(c, x + 1, y + 2, 3, 1, h); r(c, x + 2, y + 3, 1, 1, h);
 }
 
-// Barn animals. kind 'cow' or 'goat'.
+// v28 coop animals besides the chicken: duck, rabbit, mossback (a small mossy lizard-like creature).
+export function drawCoopAnimal(c, px, py, dir, moving, kind) {
+  const x = Math.round(px) - 4, base = Math.round(py), left = dir === 'left';
+  const y = base - 9 - (moving && Math.floor(performance.now() / 160) % 2 ? 1 : 0);
+  r(c, x + 1, base - 1, 7, 1, 'rgba(0,0,0,.25)');
+  if (kind === 'duck') {
+    r(c, x + 1, y + 4, 7, 4, '#f2efe6'); r(c, x + 2, y + 5, 4, 2, '#dcd6c8');
+    r(c, x + 2, y + 8, 1, 1, '#e9933c'); r(c, x + 5, y + 8, 1, 1, '#e9933c');
+    const hx = left ? x : x + 5;
+    r(c, hx, y + 1, 3, 3, '#f2efe6'); r(c, left ? hx - 2 : hx + 3, y + 2, 2, 1, '#e9933c'); r(c, hx + 1, y + 2, 1, 1, '#2b211a');
+  } else if (kind === 'rabbit') {
+    r(c, x + 1, y + 4, 7, 5, '#e9e2d6'); r(c, left ? x + 7 : x, y + 5, 2, 2, '#ffffff');
+    const hx = left ? x : x + 5;
+    r(c, hx, y + 2, 3, 3, '#e9e2d6'); r(c, hx, y - 1, 1, 3, '#e9e2d6'); r(c, hx + 2, y - 1, 1, 3, '#e9e2d6'); r(c, hx + 2, y, 1, 2, '#e8b0b4');
+    r(c, hx + 1, y + 3, 1, 1, '#2b211a');
+  } else {
+    r(c, x, y + 5, 9, 3, '#5f8a4a'); r(c, x + 2, y + 4, 5, 1, '#7fae5c'); r(c, x + 3, y + 3, 1, 1, '#a6cf72'); r(c, x + 5, y + 3, 1, 1, '#a6cf72');
+    r(c, x + 1, y + 8, 1, 1, '#3f5f30'); r(c, x + 7, y + 8, 1, 1, '#3f5f30');
+    const hx = left ? x - 2 : x + 8;
+    r(c, hx, y + 5, 3, 2, '#5f8a4a'); r(c, left ? hx : hx + 2, y + 5, 1, 1, '#e9c46a');
+    r(c, left ? x + 8 : x - 2, y + 6, 2, 1, '#5f8a4a');
+  }
+}
+
+// v28 barn animals: sheep, pig, strider (a tall long-legged bird).
+function drawBigNew(c, x, y, base, left, moving, kind) {
+  r(c, x + 1, base - 1, 13, 1, 'rgba(0,0,0,.25)');
+  const step = (i) => (moving && i % 2 ? -1 : 0);
+  if (kind === 'sheep') {
+    r(c, x + 2, y + 2, 10, 7, '#f1ede4'); r(c, x + 3, y + 1, 8, 1, '#f9f7f1'); r(c, x + 2, y + 8, 10, 1, '#d9d3c6');
+    [3, 5, 9, 11].forEach((lx, i) => r(c, x + lx, y + 9, 1, 2 + step(i), '#3b3430'));
+    const hx = left ? x - 1 : x + 11;
+    r(c, hx, y + 2, 4, 4, '#3b3430'); r(c, left ? hx + 1 : hx + 2, y + 3, 1, 1, '#f1ede4');
+  } else if (kind === 'pig') {
+    r(c, x + 2, y + 4, 10, 5, '#eab0a8'); r(c, x + 3, y + 4, 8, 1, '#f3c6be');
+    [3, 5, 9, 11].forEach((lx, i) => r(c, x + lx, y + 9, 1, 2 + step(i), '#c98d86'));
+    const hx = left ? x - 1 : x + 11;
+    r(c, hx, y + 3, 4, 4, '#eab0a8'); r(c, left ? hx - 1 : hx + 3, y + 5, 2, 2, '#d88d86'); r(c, left ? hx + 1 : hx + 2, y + 4, 1, 1, '#2b211a');
+    r(c, hx + 1, y + 2, 2, 1, '#d88d86'); r(c, left ? x + 12 : x + 1, y + 4, 1, 1, '#d88d86');
+  } else {
+    r(c, x + 3, y + 1, 8, 5, '#4a4038'); r(c, x + 4, y + 2, 6, 3, '#6b5d50'); r(c, left ? x + 9 : x + 2, y + 1, 3, 2, '#f1ede4');
+    r(c, x + 5, y + 6, 1, 5 + step(0), '#d9a46a'); r(c, x + 8, y + 6, 1, 5 + step(1), '#d9a46a');
+    const nx = left ? x + 2 : x + 11;
+    r(c, nx, y - 4, 1, 6, '#e3d6c4'); r(c, left ? nx - 1 : nx, y - 6, 2, 2, '#e3d6c4'); r(c, left ? nx - 2 : nx + 2, y - 5, 1, 1, '#e9933c');
+  }
+}
+
+// Barn animals. kind 'cow' or 'goat' (v28 adds sheep, pig and strider).
 export function drawAnimal(c, px, py, dir, moving, kind) {
+  if (kind === 'sheep' || kind === 'pig' || kind === 'strider') {
+    const x = Math.round(px) - 7, base = Math.round(py);
+    return drawBigNew(c, x, base - 11 - (moving && Math.floor(performance.now() / 220) % 2 ? 1 : 0), base, dir === 'left', moving, kind);
+  }
   const left = dir === 'left', x = Math.round(px) - 7, base = Math.round(py);
   const y = base - 11 - (moving && Math.floor(performance.now() / 220) % 2 ? 1 : 0);
   const body = kind === 'cow' ? '#f4ead2' : '#c9b68e', spot = kind === 'cow' ? '#4a3b2e' : '#a08a64', leg = kind === 'cow' ? '#d9cfb8' : '#8f7a55';
@@ -192,6 +243,17 @@ const PLACED_ART = {
   gemcopier: (c, X, Y) => { r(c, X + 3, Y + 10, 10, 5, '#5f6870'); r(c, X + 4, Y + 2, 8, 8, 'rgba(190,225,240,.55)'); r(c, X + 4, Y + 2, 8, 1, '#dfe3e8'); r(c, X + 7, Y + 5, 2, 3, '#b98ae0'); },
   dryer: (c, X, Y) => { r(c, X + 2, Y + 4, 12, 11, '#a5753f'); [6, 9, 12].forEach((o) => r(c, X + 3, Y + o, 10, 1, '#6e4626')); r(c, X + 4, Y + 7, 2, 2, '#e8862a'); r(c, X + 9, Y + 10, 2, 2, '#7a3f8f'); },
   mushroomlog: (c, X, Y) => { r(c, X + 1, Y + 9, 14, 6, '#6e4626'); r(c, X + 1, Y + 9, 2, 6, '#c9a06a'); r(c, X + 5, Y + 6, 4, 3, '#a0522d'); r(c, X + 6, Y + 8, 2, 1, '#efe6d2'); r(c, X + 10, Y + 7, 3, 2, '#a0522d'); },
+  incubator: (c, X, Y, st) => {
+    r(c, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.25)'); r(c, X + 2, Y + 7, 12, 7, '#a5753f'); r(c, X + 2, Y + 7, 12, 1, '#c9a06a');
+    r(c, X + 4, Y + 3, 8, 5, 'rgba(200,225,240,.55)'); r(c, X + 4, Y + 3, 8, 1, '#dfe9f0');
+    if (st?.item) { r(c, X + 6, Y + 5, 4, 3, st.item === 'mossegg' ? '#7fae5c' : st.item === 'duckegg' ? '#e6e8d8' : st.item === 'bigegg' ? '#e3d6c4' : '#f1e3c8'); }
+    r(c, X + 11, Y + 9, 2, 2, blink(600) ? '#e8862a' : '#8a3a20');
+  },
+  silo: (c, X, Y) => {
+    r(c, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.25)'); r(c, X + 3, Y - 6, 10, 20, '#b8b0a2'); r(c, X + 3, Y - 6, 2, 20, '#d4cdc0');
+    r(c, X + 2, Y - 9, 12, 3, '#8a3a2a'); r(c, X + 4, Y - 11, 8, 2, '#a54a36'); [0, 5, 10].forEach((d) => r(c, X + 3, Y - 2 + d, 10, 1, '#958d80'));
+    r(c, X + 6, Y + 9, 4, 5, '#6e4626');
+  },
   smoker: (c, X, Y) => { r(c, X + 3, Y + 5, 10, 10, '#3f4850'); r(c, X + 5, Y + 8, 6, 4, '#2b211a'); r(c, X + 6, Y + 10, 4, 1, '#e8862a'); r(c, X + 7, Y, 2, 5, '#5f6870'); if (blink(500)) r(c, X + 6, Y - 2, 2, 2, 'rgba(220,220,220,.6)'); },
   furnace: (c, X, Y) => {
     r(c, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.25)'); r(c, X + 3, Y + 3, 10, 11, '#7d7a76'); r(c, X + 2, Y + 6, 12, 8, '#8d8a84');
@@ -213,7 +275,7 @@ const PLACED_ART = {
 };
 
 export function drawPlaced(c, X, Y, kind, state) {
-  (PLACED_ART[kind] || PLACED_ART.crock)(c, X, Y);
+  (PLACED_ART[kind] || PLACED_ART.crock)(c, X, Y, state);
   if (state?.item && state.nights > 0) r(c, X + 12, Y + 1, 3, 3, '#e9b44c');            // working
   if (state?.item && state.nights <= 0 && blink(400, 2)) { r(c, X + 11, Y, 4, 4, '#fffbe8'); r(c, X + 12, Y + 1, 2, 2, '#86b86a'); }   // ready
 }
@@ -296,6 +358,8 @@ export function drawGiant(c, X, Y, type) {
 
 // ---- Clearing (v19) ----
 const DEBRIS_ART = {
+  // v28: a tuft of grass the animals graze; walkable, drawn on the ground.
+  grass: (c, X, Y) => { [[2, 9], [4, 6], [6, 8], [8, 5], [10, 7], [12, 9], [13, 6]].forEach(([a, b]) => { r(c, X + a, Y + b, 1, 15 - b, '#4c9a3c'); r(c, X + a + 1, Y + b + 2, 1, 13 - b, '#6dbb4f'); }); r(c, X + 1, Y + 13, 14, 2, '#57a845'); },
   weeds: (c, X, Y) => { [[3, 8], [6, 5], [9, 7], [12, 9]].forEach(([a, b]) => { r(c, X + a, Y + b, 1, 15 - b, '#4f8f3a'); r(c, X + a - 1, Y + b + 1, 1, 2, '#6fae45'); r(c, X + a + 1, Y + b + 2, 1, 2, '#6fae45'); }); r(c, X + 2, Y + 13, 12, 2, '#5da34a'); },
   stone: (c, X, Y) => { r(c, X + 3, Y + 8, 10, 6, '#8d8a84'); r(c, X + 4, Y + 7, 7, 1, '#8d8a84'); r(c, X + 4, Y + 8, 4, 2, '#b5b1a8'); r(c, X + 3, Y + 13, 10, 1, '#6a6862'); },
   twig: (c, X, Y) => { for (let i = 0; i < 10; i++) r(c, X + 3 + i, Y + 12 - Math.floor(i / 2), 1, 2, '#7a5a3a'); r(c, X + 7, Y + 7, 1, 3, '#7a5a3a'); r(c, X + 6, Y + 6, 2, 1, '#5da34a'); },

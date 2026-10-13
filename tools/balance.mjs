@@ -39,10 +39,13 @@ const ORCHARD = ['figtree', 'peartree', 'nectarinetree', 'persimmontree', 'plumt
 
 // What the bot saves up for, in order. Upgrade lines (can, hoe, rod, house) buy their next tier.
 const STRATEGIES = {
-  full: ['furnace', 'can', 'coop', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'kiln', 'house',
-    'barn', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, 'stable', ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'rod', 'can',
+  full: ['furnace', 'can', 'coop', 'grassstarter', 'grassstarter', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'kiln', 'house',
+    'barn', 'pail', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'silo', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, 'stable', 'bigcoop', 'duck', 'duck', 'duck', 'duck', ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'rod', 'can',
     'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'house',
-    'brewbarrel', 'brewbarrel', 'eggpress', 'beebox', 'beebox', 'dryer', 'smoker', 'mushroomlog'],   // wood-hungry, so last
+    'brewbarrel', 'brewbarrel', 'eggpress', 'beebox', 'beebox', 'dryer', 'smoker', 'mushroomlog',   // wood-hungry, so last
+    // v28: more livestock. The big coop comes in year one like a player's; the rest take hundreds of wood, so they come last.
+    'bigbarn', 'cow', 'cow', 'goat', 'goat',
+    'deluxecoop', 'rabbit', 'rabbit', 'deluxebarn', 'shears', 'sheep', 'sheep', 'pig', 'pig'],
   crops: ['furnace', 'can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
 };
 
@@ -65,7 +68,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['layouts', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing'];
+  'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -83,11 +86,11 @@ const { ARTISAN } = await load('data/artisan.js');
 const { ITEMS } = await load('data/items.js');
 const { HOTBAR } = await load('data/hotbar.js');
 const { COOP, BARN, GREENHOUSE } = await load('data/upgrades.js');
-const { RECIPES, PLACEABLES, MACHINES } = await load('data/crafting.js');
+const { RECIPES, PLACEABLES, MACHINES, SUPPLIES } = await load('data/crafting.js');
 const { SKILLS } = await load('data/skills.js');
 const { TREES, FRUIT } = await load('data/trees.js');
 const { DEBRIS } = await load('data/clearing.js');
-const { freeTile } = await load('systems/clearing.js');
+const { freeTile, grassTile } = await load('systems/clearing.js');
 const { WEATHER_ITEMS } = await load('data/weather.js');
 const { act } = await load('systems/interact.js');
 const { sleep } = await load('systems/days.js');
@@ -100,6 +103,7 @@ const { buyChicken, collectEggs, buyFeed, flock } = await load('systems/coop.js'
 const { PROJECTS } = await load('data/projects.js');
 const { funded, fundProject } = await load('systems/projects.js');
 const { orderBarn, buyAnimal, buyHay, collectMilk, herd } = await load('systems/barn.js');
+const { HOMES, homeOf, level, noRoom, buyLivestock, orderLevel, buyTool } = await load('systems/livestock.js');
 const { craft } = await load('systems/crafting.js');
 const { startLayout } = await load('systems/layouts.js');
 const { patPet, fillBowl } = await load('systems/pets.js');
@@ -170,10 +174,20 @@ function simulate(runSeed) {
     barn: { cost: () => BARN.cost, needs: () => BARN.needs, ok: () => !S().built.barn, buy: () => track('buildings', orderBarn) },
     stable: { cost: () => STABLE.cost, needs: () => STABLE.needs, ok: () => !S().built.stable, buy: () => track('buildings', orderStable) },
     greenhouse: { cost: () => GREENHOUSE.cost, needs: () => GREENHOUSE.needs, ok: () => !S().built.greenhouse, buy: () => track('buildings', orderGreenhouse) },
-    chicken: { cost: () => COOP.chickenCost, needs: () => ({}), wait: () => S().built.coop !== true, ok: () => S().chickens.length < COOP.maxChickens, buy: () => track('animals', buyChicken) },
-    cow: { cost: () => BARN.animals.cow.cost, needs: () => ({}), wait: () => S().built.barn !== true, ok: () => S().animals.length < BARN.maxAnimals, buy: () => track('animals', () => buyAnimal('cow')) },
-    goat: { cost: () => BARN.animals.goat.cost, needs: () => ({}), wait: () => S().built.barn !== true, ok: () => S().animals.length < BARN.maxAnimals, buy: () => track('animals', () => buyAnimal('goat')) },
   };
+  // v28: every animal for sale waits for its building and level, and is skipped when there is no room.
+  for (const [k, d] of [...Object.entries(COOP.animals), ...Object.entries(BARN.animals)].filter(([, d]) => !d.hatched)) {
+    const home = homeOf(k);
+    GOAL[k] = { cost: () => d.cost, needs: () => ({}), wait: () => S().built[home] !== true || level(home) < d.level || S().levelUp[home],
+      ok: () => !noRoom(k) || S().built[home] !== true || level(home) < d.level || S().levelUp[home], buy: () => track('animals', () => buyLivestock(k)) };
+  }
+  for (const [key, home, lv] of [['bigcoop', 'coop', 1], ['deluxecoop', 'coop', 2], ['bigbarn', 'barn', 1], ['deluxebarn', 'barn', 2]]) {
+    const def = HOMES[home].def.levels[lv];
+    GOAL[key] = { cost: () => def.cost, needs: () => def.needs, wait: () => S().built[home] !== true || level(home) < lv - 1 || S().levelUp[home],
+      ok: () => level(home) < lv, buy: () => track('buildings', () => orderLevel(home)) };
+  }
+  for (const k of Object.keys(BARN.tools)) GOAL[k] = { cost: () => BARN.tools[k].cost, needs: () => ({}), ok: () => !S().ranch[k], buy: () => track('upgrades', () => buyTool(k)) };
+  GOAL.grassstarter = { cost: () => SUPPLIES.grassstarter, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply('grassstarter', 1)) };
   for (const k of Object.keys(PROJECTS)) GOAL[k] = { cost: () => PROJECTS[k].cost, needs: () => PROJECTS[k].needs, ok: () => !funded(k), buy: () => track('projects', () => fundProject(k)) };
   for (const k of Object.keys(TREES)) GOAL[k] = { cost: () => TREES[k].cost, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply(k, 1)) };
   for (const k of Object.keys(RECIPES)) GOAL[k] = { cost: () => RECIPES[k].cost, needs: () => RECIPES[k].needs, ok: () => true, buy: () => track('crafting', () => craft(k)) };
@@ -241,7 +255,7 @@ function simulate(runSeed) {
         s.kitSel = kind; use('farm', x, y, 'kit');
       }
     }
-    for (const kind of Object.keys(MACHINES)) {
+    for (const kind of [...Object.keys(MACHINES), 'silo']) {
       for (const [x, y] of MACHINE_SLOTS) {
         if (s.kit[kind] <= 0) break;
         if (s.placed[`${x},${y}`] || !clear('farm', x, y)) continue;
@@ -256,6 +270,11 @@ function simulate(runSeed) {
     collectEggs(); collectMilk();
     if (s.chickens.length && s.feed < s.chickens.length * 2) track('feed', () => buyFeed(Math.min(Math.floor(s.gold / COOP.feedCost), s.chickens.length * 7)));
     if (s.animals.length && s.hay < s.animals.length * 2) track('hay', () => buyHay(Math.min(Math.floor(s.gold / BARN.hayCost), s.animals.length * 7)));
+    // Grass starters go into the animal yards, where the animals graze them instead of eating bought feed and hay.
+    for (const yard of [COOP.yard, BARN.yard]) for (let y = yard.y0; y <= yard.y1 && s.kit.grassstarter > 0; y++) for (let x = yard.x0; x <= yard.x1 && s.kit.grassstarter > 0; x++) {
+      if (!grassTile(x, y)) continue;
+      s.kitSel = 'grassstarter'; use('farm', x, y, 'kit'); spend(TIME.tile);
+    }
     runUpdaters(0);   // places chickens and animals in their yards
     // The bot never lets animals wander, so two can share a tile and hide one from petting. Spread them out first.
     for (const [group, yard] of [[flock, COOP.yard], [herd, BARN.yard]]) {

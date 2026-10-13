@@ -51,7 +51,8 @@ src/
     economy.js        ship(), buy(), overnight payout; materials are never shipped
     npcs.js           schedules across farm and village, talk, gifts, hearts, 3-heart rewards, heart scenes
     upgrades.js       workbench purchases, material costs, recalcStats()
-    coop.js           coop placement, chickens, petting, eggs
+    livestock.js      shared animal rules: coop and barn levels, room, buying and hatching, friendship, grazing, products, quality
+    coop.js           coop placement, coop animals, petting, feed
     mine.js           floor generation, rocks, ladders, lighting
     health.js         hurtPlayer(), fainting
     monsters.js       slimes, sword
@@ -59,7 +60,7 @@ src/
     crafting.js       craft(): gold + materials -> kit
     sprinklers.js     water soil on day:start and on placement
     artisan.js        load / collect machines, overnight processing
-    barn.js           barn placement, cows and goats, hay, milk
+    barn.js           barn placement, barn animals, hay
     skills.js         XP from 'gather' events, bonus items, energy milestones
     quests.js         quest board requests, deliver()
     festivals.js      festival day logic, contests, market stall, decorations
@@ -116,8 +117,8 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 100 | npcs.js | Facing a neighbour |
 | 97 | stable.js | Facing the horse (get on) |
 | 96 | pets.js | Facing the pet (pat, then its dialog) |
-| 95 | coop.js | Facing a chicken (pet) |
-| 94 | barn.js | Facing a cow or goat (pet) |
+| 95 | coop.js | Facing a coop animal (pet) |
+| 94 | barn.js | Facing a barn animal (pet) |
 | 73 | clothing.js | Facing a sewing machine, dye pots or mannequin in the farmhouse |
 | 74 | clearing.js | Facing a fence, gate or path (gate opens; axe or pickaxe takes it up) |
 | 73 | trees.js | Facing a fruit tree (pick fruit) |
@@ -237,7 +238,9 @@ Soil is per map: `soilOf(mapId)` returns `G.S.soil` (farm) or `G.S.greenSoil` (g
 - **Building:** follow systems/coop.js: order at the workbench, build on `day:start`, write tiles at runtime, emit `world:changed`.
 - **Tool:** key in `data/hotbar.js` (+ `TOOL_NAMES`), icon in `render/icons.js`, an interaction in its system.
 - **Map:** grid and entry in `data/maps.js`, with an `E` tile and `exits` entry on both sides.
-- **Craftable object:** entry in `PLACEABLES` and `RECIPES` (data/crafting.js) plus art in `PLACED_ART` (render/sprites.js). A machine also needs a `MACHINES` entry; its products go in data/artisan.js. A machine that uses up more than one item a load (the furnace) gives `takes(k)`, and one with `nights: 0` is ready at once. `nights` can be a function of the item (the brew barrel). `repeat: true` restarts the same load after collecting (the gem copier); `auto: {item, every, winter}` produces on its own with a `timer` field (bee box, mushroom log). Tree taps live on alder debris as `d.tap` in clearing.js, not in G.S.placed.
+- **Craftable object:** entry in `PLACEABLES` and `RECIPES` (data/crafting.js) plus art in `PLACED_ART` (render/sprites.js). A machine also needs a `MACHINES` entry; its products go in data/artisan.js. A machine that uses up more than one item a load (the furnace) gives `takes(k)`, and one with `nights: 0` is ready at once. `nights` can be a function of the item (the brew barrel). `repeat: true` restarts the same load after collecting (the gem copier); `auto: {item, every, winter}` produces on its own with a `timer` field (bee box, mushroom log). Tree taps live on alder debris as `d.tap` in clearing.js, not in G.S.placed. `hatch: {egg: animal}` (the incubator) moves an animal in through systems/livestock.js `adopt()` instead of giving an item.
+- **Animal:** an entry in `COOP.animals` or `BARN.animals` (data/upgrades.js) with product, every, level and optional tool, deluxe, outdoors or hatched; its product in data/products.js; art in render/sprites.js (drawCoopAnimal or drawAnimal). systems/livestock.js does the rest.
+- **Walkable debris:** `walk: true` in DEBRIS (grass) keeps the tile walkable; clearing.js skips the 'Y' and draws it on layer 9.
 - **Skill XP source:** `emit('gather', { skill, xp, item, n })` where the player gathers. Pass `item` only if a bonus copy makes sense.
 - **Festival:** entry in data/festivals.js (contest or market). The table, decorations and NPC gathering pick it up.
 - **Minigame:** follow systems/fishing.js: a priority 200 interaction while active, `G.lock = true`, an updater, and a layer above 80 for its UI.

@@ -31,8 +31,12 @@ export function newState() {
     upgrades: { can: 0, hoe: 0, axe: 0, rod: 0, house: 0 },   // tier index per upgrade line
     waterBonus: 0, maxEnergy: 270,                      // derived stats, see systems/upgrades.js
     built: { coop: false, barn: false, greenhouse: false, stable: false },   // false | 'pending' | true
-    chickens: [],                                       // { name, pet: day last petted }
-    eggs: 0,                                            // eggs waiting in the coop
+    chickens: [],                                       // coop animals: { kind, name, pet: day last petted, love, days } (systems/livestock.js)
+    eggs: 0,                                            // before v28: eggs waiting in the coop (moved into coopGoods on load)
+    coopGoods: {},                                      // v28: item -> how many wait in the coop
+    goodsTier: {},                                      // v28: item -> [plain, fine, prime, heirloom] of what waits in the coop and barn
+    levels: { coop: 0, barn: 0 }, levelUp: { coop: false, barn: false },   // v28: big and deluxe coop and barn; levelUp: Bram builds it tonight
+    ranch: { pail: false, shears: false },              // v28: tools bought at the barn
     feed: 0,                                            // chicken feed at the coop
     projects: {},                                       // village projects funded: key -> true
     hp: 100, maxHp: 100,                                // health, only lost in the mine
@@ -51,7 +55,7 @@ export function newState() {
     weather: 'sun', forecast: null,                     // today's and tomorrow's weather (systems/weather.js); forecast rolled on load
     mist: null,                                         // this year's Silvermist day: { year, d }
     debris: null,                                       // weeds, stones, stumps, alders: "x,y" -> { kind, hp?, stage? }; null until systems/clearing.js scatters the start clutter                                         // giant crops: top-left "x,y" on the farm -> crop type
-    animals: [],                                        // barn: { kind, name, pet: day last petted }
+    animals: [],                                        // barn: { kind, name, pet: day last petted, love, days }
     hay: 0,                                             // hay in the barn loft
     barnGoods: { cowmilk: 0, goatmilk: 0 },             // milk waiting in the barn
     skills: Object.fromEntries(Object.keys(SKILLS).map((k) => [k, 0])),    // XP per skill
@@ -83,6 +87,13 @@ export function merge(saved) {
   s.skills = Object.assign(newState().skills, saved.skills || {});
   s.barnGoods = Object.assign(newState().barnGoods, saved.barnGoods || {});
   if (!s.placed || typeof s.placed !== 'object') s.placed = {};
+  // v28: eggs moved into coopGoods; barns built before the milk pail keep milking.
+  s.coopGoods = Object.assign({}, saved.coopGoods || {});
+  if (saved.eggs > 0) { s.coopGoods.egg = (s.coopGoods.egg || 0) + saved.eggs; s.eggs = 0; }
+  if (!s.goodsTier || typeof s.goodsTier !== 'object') s.goodsTier = {};
+  s.levels = Object.assign(newState().levels, saved.levels || {});
+  s.levelUp = Object.assign(newState().levelUp, saved.levelUp || {});
+  s.ranch = Object.assign(newState().ranch, saved.ranch || (saved.built?.barn ? { pail: true } : {}));
   if (!s.giants || typeof s.giants !== 'object') s.giants = {};
   if (!LAYOUTS[s.layout]) s.layout = 'open';
   s.house = Object.assign(newState().house, saved.house || {});   // pre-v22 saves keep the original farm

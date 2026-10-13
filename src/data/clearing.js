@@ -23,7 +23,12 @@ export const DEBRIS = {
   copperrock: { name: 'Copper rock', tools: ['pick'], hp: 1, drops: { copper: [1, 2], stone: [0, 1] } },
   ironrock:   { name: 'Iron rock',   tools: ['pick'], hp: 1, drops: { iron: [1, 2], stone: [0, 1] } },
   crate:      { name: 'Supply crate', tools: ['axe', 'pick', 'hoe', 'sword'], hp: 1, drops: {} },
+  // v28: grass tufts are walkable (walk: true), spread, feed grazing animals and give hay when cut if there is a silo.
+  grass:      { name: 'Grass', tools: ['sword', 'hoe', 'axe', 'pick'], hp: 1, drops: {}, walk: true },
 };
+
+// Stardew: grass spreads to free neighbours, cutting it gives hay half the time with a silo; animals eat it outside.
+export const GRASS = { spread: 0.1, max: 40, hay: 0.5 };
 
 export const ALDER = {
   stages: 4,          // nights of luck to grow up: each night a young tree has GROW chance to grow a stage
@@ -38,6 +43,6 @@ export const CREEP = { perNight: 2, chance: 0.6, cap: 30, weights: { weeds: 6, s
 
 // Starting clutter. new: a new farm. old: saves from before v19 get a lighter grove.
 export const START_CLUTTER = {
-  new: { alder: 8, stump: 3, weeds: 25, stone: 15, twig: 10 },
+  new: { alder: 8, stump: 3, weeds: 25, stone: 15, twig: 10, grass: 10 },
   old: { alder: 4, stump: 1, weeds: 6, stone: 4, twig: 4 },
 };

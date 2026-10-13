@@ -30,4 +30,8 @@ export const ARTISAN = {
   oil:    { name: 'Corn oil',     sell: 100, artisan: true },
   honey:  { name: 'Meadow honey', sell: 100, artisan: true },   // Stardew: wild honey
   syrup:  { name: 'Alder syrup',  sell: 180, artisan: true },   // Stardew: maple syrup 200g, oak resin 150g
+  // v28. Stardew: duck mayonnaise 375g, dinosaur mayonnaise 800g, truffle oil 1,065g.
+  duckmayo:   { name: 'Duck egg spread', sell: 375, artisan: true },
+  mossmayo:   { name: 'Mossback spread', sell: 800, artisan: true },
+  truffleoil: { name: 'Truffle oil',     sell: 1065, artisan: true },
 };

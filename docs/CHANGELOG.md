@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v28: More livestock
+- New animals: ducks, rabbits, sheep and pigs, plus two you can only hatch, the Mossback and the Strider. Their eggs turn up in Hollow rocks now and then.
+- Big and deluxe coops and barns at Bram's workbench: more room, and the bigger animals.
+- Animals now have friendship (five hearts in the coop and barn). Loved animals give better products, and ducks and rabbits sometimes give a rarer one.
+- Grass: buy a grass starter at the seed stall. Animals graze the grass in their yards instead of eating feed or hay, outside winter and rain. With a silo on the farm, cutting grass gives hay.
+- The milk pail and shears at the barn. Barns from older saves keep milking.
+- An incubator hatches eggs into animals. The egg press, loom and oil press take the new products.
+
 ## v27: Artisan machines, part 2
 - Nine new machines: the brew barrel (fruit to wine in 7 nights, vegetables to juice in 4), egg press (egg spread), loom (5 fiber to cloth), oil press (corn oil), bee box (meadow honey every 4 nights outside winter), gem copier (copies a gem again and again), dryer (5 fruit or 5 mushrooms to a dried pack), mushroom log (a mushroom every 4 nights outside winter) and fish smoker (a fish and a coal, smoked at once).
 - The tree tap: fix it to a grown alder for alder syrup every 8 nights. Chop the alder and the tap comes back.

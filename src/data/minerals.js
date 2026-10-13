@@ -12,7 +12,8 @@ export const MINERALS = {
   quartz:    { name: 'Hollow quartz', sell: 25,  gem: true },
   violet:    { name: 'Violet stone',  sell: 100, gem: true },
 };
-export const GEM_DROPS = [['violet', 0.007], ['quartz', 0.02]];   // chance per broken rock, rarest first
+// v28: the two hatch-only eggs turn up in rocks too (Stardew finds them as island and mine treasures).
+export const GEM_DROPS = [['mossegg', 0.001], ['bigegg', 0.003], ['violet', 0.007], ['quartz', 0.02]];   // chance per broken rock, rarest first
 // Each stone rock has this chance of giving a piece of coal too.
 export const COAL_FROM_STONE = 0.06;
 

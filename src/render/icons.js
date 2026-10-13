@@ -2,7 +2,7 @@
 import { CROPS } from '../data/crops.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { r } from './pixel.js';
-import { drawFurniture, drawTap } from './sprites.js';
+import { drawFurniture, drawTap, drawDebris } from './sprites.js';
 import { FURNITURE } from '../data/furniture.js';
 import { drawPlaced, drawFruitTree, drawFence, drawGate, drawFloor, drawAlder } from './sprites.js';
 import { TREES, FRUIT } from '../data/trees.js';
@@ -43,6 +43,7 @@ export function drawIcon(g, kind, sel) {
     if (d?.kind === 'gate') return drawGate(g, 0, 0, false, true);
     if (d?.kind === 'floor') return drawFloor(g, 0, 0, sel, d.color);
     if (d?.kind === 'sprout') return drawAlder(g, 0, -2, 0, false);
+    if (d?.kind === 'grass') return drawDebris(g, 0, 0, 'grass');
     if (d?.kind === 'tap') return drawTap(g, -4, 0, false);
     if (d?.kind === 'furniture') return drawFurniture(g, 0, 2, FURNITURE[sel]);
     if (d) return drawPlaced(g, 0, 0, sel, null);

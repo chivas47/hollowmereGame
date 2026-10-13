@@ -44,7 +44,8 @@ function refreshShop() {
 const seedNote = (c) => (c.packet === 'wild' ? `grows a wild ${c.produce.map((k) => ITEMS[k].name.toLowerCase()).join(' or ')} in ${c.days} days`
   : c.packet === 'mixed' ? 'grows a random crop of the season'
     : `ready in ${c.days} days, sells for ${c.sell}g${c.yield ? ` x${c.yield}` : ''}${c.regrow ? `, then again every ${c.regrow} days` : ''}${c.seasons.length > 1 ? ` (${c.seasons.join(' and ')})` : ''}`);
-const supplyText = (d) => (d.quality ? `Raises harvest quality (level ${d.quality}). Before planting.`
+const supplyText = (d) => (d.kind === 'grass' ? 'A tuft of grass for open farm grass or an animal yard. It spreads; animals graze it instead of eating feed or hay, and with a silo cutting it gives hay.'
+  : d.quality ? `Raises harvest quality (level ${d.quality}). Before planting.`
   : d.speed ? `Crops grow ${Math.round(d.speed * 100)}% faster. Before planting.` : `${Math.round(d.retain * 100)}% chance the soil stays watered overnight.`);
 
 on('ui:shop', () => {
@@ -54,7 +55,7 @@ on('ui:shop', () => {
     <div class="btns"><button data-buy="${k}" data-n="1">Buy 1</button><button data-buy="${k}" data-n="5">Buy 5</button></div></div>`).join('');
   const note = season === 'Winter' ? '<p class="role">Winter stock is thin: frost kale, wild seeds and mixed seeds. The rest is back in spring.</p>' : '';
   const supplies = Object.entries(SUPPLIES).filter(([k]) => !TREES[k]).map(([k, cost]) => `
-    <div class="shoprow"><div><b>${PLACEABLES[k].name}</b><span>${supplyText(PLACEABLES[k])} ${cost}g. Goes to slot 7; face tilled soil to spread it.</span></div>
+    <div class="shoprow"><div><b>${PLACEABLES[k].name}</b><span>${supplyText(PLACEABLES[k])} ${cost}g. Goes to slot 7; ${PLACEABLES[k].kind === 'grass' ? 'face open grass to plant it' : 'face tilled soil to spread it'}.</span></div>
     <div class="btns"><button data-supply="${k}" data-n="1">Buy 1</button><button data-supply="${k}" data-n="10">Buy 10</button></div></div>`).join('');
   const saplings = Object.entries(TREES).map(([k, t]) => `
     <div class="shoprow"><div><b>${t.name}</b><span>${t.cost}g. Grows for ${TREE_DAYS} days, then a ${ITEMS[t.fruit].name.toLowerCase()} (${ITEMS[t.fruit].sell}g) every ${t.season} morning. Slot 7; plant on open grass with a free tile around it.</span></div>
@@ -112,10 +113,13 @@ on('day:report', (r) => {
   if (r.festival) html += `<p class="gift">Today is the ${r.festival.name}! Head to the village square, ${fmtTime(FESTIVAL_HOURS.from)} to ${fmtTime(FESTIVAL_HOURS.to)}. Your neighbours will be there instead of the farm.</p>`;
   if (r.festivalSoon) html += `<p class="role">The ${r.festivalSoon.f.name} is in ${plural(r.festivalSoon.inDays, 'day')} (${r.festivalSoon.f.season} ${r.festivalSoon.f.day}).</p>`;
   if (r.built) html += `<p class="gift">Bram finished your ${r.built}.</p>`;
-  if (r.eggs) html += `<p class="gift">Your chickens laid ${plural(r.eggs, 'egg')}. Collect them at the coop.</p>`;
-  if (r.milk) html += `<p class="gift">Your animals gave ${plural(r.milk, 'pail')} of milk. Collect it at the barn.</p>`;
-  if (r.hungryHens) html += `<p class="role">${plural(r.hungryHens, 'chicken')} went hungry: the coop ran out of feed. Buy more at the coop.</p>`;
-  if (r.hungry) html += `<p class="role">${plural(r.hungry, 'animal')} went hungry: the loft ran out of hay. Buy more at the barn.</p>`;
+  const made = (m) => Object.entries(m || {}).map(([k, n]) => `${n} ${ITEMS[k].name.toLowerCase()}`).join(', ');
+  if (made(r.coop)) html += `<p class="gift">The coop has ${made(r.coop)} waiting for you.</p>`;
+  if (made(r.barn)) html += `<p class="gift">The barn has ${made(r.barn)} waiting for you.</p>`;
+  if (r.grazed) html += `<p class="role">Your animals grazed ${plural(r.grazed, 'tuft')} of grass in their yards.</p>`;
+  if (r.noTool) html += `<p class="role">${r.noTool === 'pail' ? 'A cow or goat had milk for you, but you need a milk pail' : 'A sheep had wool for you, but you need shears'} from the barn.</p>`;
+  if (r.hungryHens) html += `<p class="role">${plural(r.hungryHens, 'coop animal')} went hungry: the coop ran out of feed and grass. Buy more at the coop.</p>`;
+  if (r.hungry) html += `<p class="role">${plural(r.hungry, 'animal')} went hungry: the loft ran out of hay and the yard of grass. Buy more at the barn.</p>`;
   if (r.artisan) html += `<p class="gift">${plural(r.artisan, 'machine')} finished overnight.</p>`;
   if (r.fruit) html += `<p class="gift">Your fruit trees grew ${plural(r.fruit, 'fruit')}.</p>`;
   if (r.giants) html += `<p class="gift">Something huge happened in the field overnight: ${plural(r.giants, 'giant crop')}!</p>`;
