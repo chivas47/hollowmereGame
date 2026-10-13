@@ -28,6 +28,8 @@ export const UPGRADES = {
 
 // Coal from Bram (Stardew's blacksmith sells it for 150g).
 export const COAL_COST = 150;
+// Materials from Bram (Stardew's carpenter sells wood for 10g and stone for 20g).
+export const MATERIAL_COST = { wood: 10, stone: 20 };
 
 export const tier = (S, key) => UPGRADES[key].tiers[S.upgrades[key]];
 

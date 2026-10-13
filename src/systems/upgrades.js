@@ -2,7 +2,8 @@
 import { G } from '../core/game.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction } from '../core/registry.js';
-import { UPGRADES, COOP, COAL_COST, tier } from '../data/upgrades.js';
+import { UPGRADES, COOP, COAL_COST, MATERIAL_COST, tier } from '../data/upgrades.js';
+import { ITEMS } from '../data/items.js';
 
 // Derived stats come from upgrade tiers plus bonuses. Call after anything that changes them.
 export function recalcStats() {
@@ -46,6 +47,16 @@ export function buyCoal(n) {
   if (S.gold < cost) return false;
   S.gold -= cost; S.bag.coal = (S.bag.coal || 0) + n;
   notify(`Bought ${n} coal.`);
+  changed();
+  return true;
+}
+
+// Wood and stone from Bram's workbench.
+export function buyMaterial(k, n) {
+  const S = G.S, cost = (MATERIAL_COST[k] || 0) * n;
+  if (!cost || S.gold < cost) return false;
+  S.gold -= cost; S.bag[k] = (S.bag[k] || 0) + n;
+  notify(`Bought ${n} ${ITEMS[k].name.toLowerCase()}.`);
   changed();
   return true;
 }
