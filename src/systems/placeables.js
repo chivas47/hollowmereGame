@@ -67,6 +67,9 @@ export function pickUp(tx, ty) {
   return true;
 }
 
+const isTreeAt = (map, x, y) => PLACEABLES[G.S.placed[placeKey(map, x, y)]?.kind]?.kind === 'tree';
+const treeNear = (map, x, y) => [-1, 0, 1].some((dy) => [-1, 0, 1].some((dx) => (dx || dy) && isTreeAt(map, x + dx, y + dy)));
+
 // Priority 55: above farming (50) so the kit claims plain grass; below the sword (58).
 addInteraction(55, ({ tx, ty, tile, mapId, item }) => {
   if (item !== 'kit' || !soilOf(mapId) || tile !== 'g') return false;
@@ -87,6 +90,7 @@ addInteraction(55, ({ tx, ty, tile, mapId, item }) => {
   if (soil) { notify(mapId === 'farm' ? 'Place it on untilled grass.' : 'Place it on an untilled bed.'); return true; }
   if (reserved(mapId, tx, ty)) { notify('Bram keeps that ground clear for a building.'); return true; }
   if (!owned(S.kitSel)) { announceKit(); return true; }
+  if (def.kind === 'tree' && treeNear(mapId, tx, ty)) { notify('Fruit trees need a free tile between them.'); return true; }
   S.kit[S.kitSel]--;
   S.placed[key] = { kind: S.kitSel, item: null, nights: 0 };
   MAPS[mapId].grid[ty][tx] = TILE; written.add(key);
@@ -108,7 +112,7 @@ addInteraction(72, ({ tx, ty, tile, mapId }) => {
 addLayer(20, (c) => {
   for (const [k, p] of Object.entries(G.S.placed)) {
     const { map, x, y } = parsePlaceKey(k);
-    if (map !== G.S.map) continue;
+    if (map !== G.S.map || PLACEABLES[p.kind].kind === 'tree') continue;   // systems/trees.js draws trees
     drawPlaced(c, x * T, y * T, p.kind, PLACEABLES[p.kind].kind === 'machine' ? p : null);
   }
 });

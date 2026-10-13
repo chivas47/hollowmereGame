@@ -33,6 +33,8 @@ import './systems/festivals.js';
 import './systems/village.js';
 import './systems/projects.js';
 import './systems/greenhouse.js';
+import './systems/trees.js';
+import './systems/giants.js';
 
 // UI
 import './ui/toast.js';

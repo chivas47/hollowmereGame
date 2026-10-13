@@ -63,6 +63,23 @@ Regrowing crops (the plant stays; regrow = days to the next harvest):
 
 Seed packets: wild seeds (40g, one per season, 6 days) grow one of that season's two forage items; mixed seeds (20g) become a random in-season crop when planted (any crop in the greenhouse).
 
+Giant crops: melon, pumpkin and fava bean (Stardew role: melon, pumpkin, cauliflower). A ripe 3x3 block on the farm has a 1% chance each night to merge into a giant crop; chopping it (hoe, pickaxe or sword, 6 energy, Stardew's 3 axe swings) gives 15 to 21 plain crops. Not in the greenhouse.
+
+### Fruit trees (stall, slot 7)
+
+Saplings grow 28 days in any season, then grow one fruit each morning of their season (every morning in the greenhouse), holding up to 3. Fruit quality rises one tier a year after the tree matures (fine, prime, heirloom). Trees need a free tile between them. Fruit left on a tree drops when its season ends.
+
+| Sapling | Price | Season | Fruit sells | Stardew role |
+|---|---|---|---|---|
+| Plum | 2000g | Spring | 50g | Apricot |
+| Loquat | 3400g | Spring | 80g | Cherry |
+| Fig | 4000g | Summer | 100g | Orange |
+| Nectarine | 6000g | Summer | 140g | Peach |
+| Pear | 4000g | Autumn | 100g | Apple |
+| Persimmon | 6000g | Autumn | 140g | Pomegranate |
+
+A tree pays back in about a year and a half outdoors, as in Stardew.
+
 Melon and pumpkin stay the best crops per tile, as their counterparts are. Start: 500g, 6 turnip seeds, 3 radish seeds.
 
 ### Forage (6 per day in the Wilds, each spot picks one of the season's two items)
@@ -266,6 +283,8 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Two placed objects can wall the player in; picking one up from the inside fixes it, but nothing prevents it.
 - Neighbours walk straight through trees and the coop on their way out; they have no collision.
 - Chickens never leave the yard.
+- Fruit trees cannot be moved or removed yet; the axe comes with roadmap item 4. Plant them where they can stay.
+- Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
 - Mine floors have no special floors (treasure, boss, elevator).
 
 ## Roadmap

@@ -33,12 +33,15 @@ const COST = { newTile: 4, cast: 8 };
 const TIME = { tile: 1, travel: 6, forage: 3, cast: 10, rock: 1.5, pet: 1, chore: 2 };
 const BEDTIME = 24 * 60;
 
+// Fruit saplings, best return first; planted south of the field (TREE_SLOTS).
+const ORCHARD = ['figtree', 'peartree', 'nectarinetree', 'persimmontree', 'plumtree', 'loquattree'];
+
 // What the bot saves up for, in order. Upgrade lines (can, hoe, rod, house) buy their next tier.
 const STRATEGIES = {
   full: ['can', 'coop', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'house',
-    'barn', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', ...Array(9).fill('sprinkler2'), 'greenhouse', ...Array(14).fill('sprinkler2'), 'hoe', 'rod', 'can',
+    'barn', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'hoe', 'rod', 'can',
     'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift'],
-  crops: ['can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'greenhouse', ...Array(14).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
+  crops: ['can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
 };
 
 // Warnings when the economy drifts from the design. Each returns a message or null.
@@ -60,7 +63,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'barn', 'skills', 'quests', 'festivals', 'village'];
+  'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'trees', 'giants'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -80,6 +83,7 @@ const { HOTBAR } = await load('data/hotbar.js');
 const { COOP, BARN, GREENHOUSE } = await load('data/upgrades.js');
 const { RECIPES, PLACEABLES, MACHINES } = await load('data/crafting.js');
 const { SKILLS } = await load('data/skills.js');
+const { TREES, FRUIT } = await load('data/trees.js');
 const { act } = await load('systems/interact.js');
 const { sleep } = await load('systems/days.js');
 const { placePlayer, tileAt, tileOf, soilOf, placeKey, parsePlaceKey } = await load('systems/world.js');
@@ -130,6 +134,7 @@ const FIELD = CENTRES.flatMap(([cx, cy]) => [[-1, -1], [0, -1], [1, -1], [-1, 0]
 const GH_CENTRES = []; for (const cy of [5, 8]) for (let cx = 3; cx <= 21; cx += 3) GH_CENTRES.push([cx, cy]);
 const GH_FIELD = GH_CENTRES.flatMap(([cx, cy]) => [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]].map(([a, b]) => [cx + a, cy + b]));
 const PLOTS = { farm: { field: FIELD, centres: CENTRES, well: [12, 3] }, greenhouse: { field: GH_FIELD, centres: GH_CENTRES, well: [2, 12] } };
+const TREE_SLOTS = [[8, 12], [10, 12], [12, 12], [9, 14], [11, 14], [13, 14]];   // clear of the animal yards
 const MACHINE_SLOTS = []; for (let y = 5; y <= 7; y++) for (let x = 1; x <= 5; x++) MACHINE_SLOTS.push([x, y]);
 
 // ---- One simulated run ----
@@ -157,6 +162,7 @@ function simulate(runSeed) {
     goat: { cost: () => BARN.animals.goat.cost, needs: () => ({}), wait: () => S().built.barn !== true, ok: () => S().animals.length < BARN.maxAnimals, buy: () => track('animals', () => buyAnimal('goat')) },
   };
   for (const k of Object.keys(PROJECTS)) GOAL[k] = { cost: () => PROJECTS[k].cost, needs: () => PROJECTS[k].needs, ok: () => !funded(k), buy: () => track('projects', () => fundProject(k)) };
+  for (const k of Object.keys(TREES)) GOAL[k] = { cost: () => TREES[k].cost, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply(k, 1)) };
   for (const k of Object.keys(RECIPES)) GOAL[k] = { cost: () => RECIPES[k].cost, needs: () => RECIPES[k].needs, ok: () => true, buy: () => track('crafting', () => craft(k)) };
 
   const missingMats = () => {
@@ -188,6 +194,13 @@ function simulate(runSeed) {
         s.kitSel = kind; use(map, cx, cy, 'kit');
       }
     }
+    for (const kind of Object.keys(TREES)) {
+      for (const [x, y] of TREE_SLOTS) {
+        if (s.kit[kind] <= 0) break;
+        if (s.placed[`${x},${y}`]) continue;
+        s.kitSel = kind; use('farm', x, y, 'kit');
+      }
+    }
     for (const kind of Object.keys(MACHINES)) {
       for (const [x, y] of MACHINE_SLOTS) {
         if (s.kit[kind] <= 0) break;
@@ -205,6 +218,20 @@ function simulate(runSeed) {
     if (s.animals.length && s.hay < s.animals.length * 2) track('hay', () => buyHay(Math.min(Math.floor(s.gold / BARN.hayCost), s.animals.length * 7)));
     runUpdaters(0);   // places chickens and animals in their yards
     [...flock, ...herd].forEach((a) => { const t = tileOf(a.x, a.y); use('farm', t.tx, t.ty, 'hoe'); spend(TIME.pet); });
+  }
+
+  // Pick ripe fruit; chop giant crops so their tiles can be replanted.
+  function orchard() {
+    const s = S();
+    for (const [k, p] of Object.entries(s.placed)) {
+      if (!TREES[p.kind] || !p.fruit) continue;
+      const { map, x, y } = parsePlaceKey(k);
+      use(map, x, y, 'hoe'); spend(TIME.pet);
+    }
+    for (const k of Object.keys(s.giants)) {
+      const [x, y] = k.split(',').map(Number);
+      if (s.energy >= 6) { use('farm', x, y, 'hoe'); spend(TIME.chore); }
+    }
   }
 
   function machines(reserved) {
@@ -367,7 +394,7 @@ function simulate(runSeed) {
     for (const [k, n] of Object.entries(reserved)) { held[k] = Math.min(n, s.bag[k]); s.bag[k] -= held[k]; }
     for (const [k, n] of Object.entries(s.bag)) {
       if (!n || ITEMS[k].material) continue;
-      const src = k in CROPS ? 'crops' : k in FORAGE ? 'forage' : k in FISH ? 'fish' : k in PRODUCTS ? 'animal products' : k in ARTISAN ? 'artisan goods' : 'mining';
+      const src = k in CROPS ? 'crops' : k in FORAGE ? 'forage' : k in FRUIT ? 'fruit' : k in FISH ? 'fish' : k in PRODUCTS ? 'animal products' : k in ARTISAN ? 'artisan goods' : 'mining';
       add(log.income, src, valueOf(k));
     }
     ship();
@@ -379,6 +406,7 @@ function simulate(runSeed) {
     const s = S();
     const spent0 = Object.values(log.spend).reduce((a, x) => a + x, 0);
     animals();
+    orchard();
     let reserved = reserves();
     machines(reserved);
     purchases(today().season === 'Winter' ? 0 : 150);

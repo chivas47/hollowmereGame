@@ -10,6 +10,7 @@ import { ITEMS } from '../data/items.js';
 import { sleep } from '../systems/days.js';
 import { buy, canBuy, inSeason, buySupply, canBuySupply } from '../systems/economy.js';
 import { SUPPLIES, PLACEABLES } from '../data/crafting.js';
+import { TREES, TREE_DAYS } from '../data/trees.js';
 import { hearts, heartStr, giftOptions, giveGift, chooseScene } from '../systems/npcs.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
@@ -42,10 +43,13 @@ on('ui:shop', () => {
     <div class="shoprow"><div><b>${c.packet ? c.name : `${c.name} seeds`}</b><span>${inSeason(k) ? `${c.seed}g each, ${seedNote(c)}` : `Back in ${c.seasons.join(' and ')}`}</span></div>
     <div class="btns"><button data-buy="${k}" data-n="1">Buy 1</button><button data-buy="${k}" data-n="5">Buy 5</button></div></div>`).join('');
   const note = season === 'Winter' ? '<p class="role">Winter stock is thin: frost kale, wild seeds and mixed seeds. The rest is back in spring.</p>' : '';
-  const supplies = Object.entries(SUPPLIES).map(([k, cost]) => `
+  const supplies = Object.entries(SUPPLIES).filter(([k]) => !TREES[k]).map(([k, cost]) => `
     <div class="shoprow"><div><b>${PLACEABLES[k].name}</b><span>${supplyText(PLACEABLES[k])} ${cost}g. Goes to slot 7; face tilled soil to spread it.</span></div>
     <div class="btns"><button data-supply="${k}" data-n="1">Buy 1</button><button data-supply="${k}" data-n="10">Buy 10</button></div></div>`).join('');
-  openModal(`<h2>Seed stall</h2><p>You have <b id="shopGold">${G.S.gold}g</b>.</p>${note}${rows}<h3>Farm supplies</h3>${supplies}`, [['Leave', closeModal, true]]);
+  const saplings = Object.entries(TREES).map(([k, t]) => `
+    <div class="shoprow"><div><b>${t.name}</b><span>${t.cost}g. Grows for ${TREE_DAYS} days, then a ${ITEMS[t.fruit].name.toLowerCase()} (${ITEMS[t.fruit].sell}g) every ${t.season} morning. Slot 7; plant on open grass with a free tile around it.</span></div>
+    <div class="btns"><button data-supply="${k}" data-n="1">Buy 1</button></div></div>`).join('');
+  openModal(`<h2>Seed stall</h2><p>You have <b id="shopGold">${G.S.gold}g</b>.</p>${note}${rows}<h3>Farm supplies</h3>${supplies}<h3>Fruit saplings</h3>${saplings}`, [['Leave', closeModal, true]]);
   refreshShop();
 });
 
@@ -96,6 +100,8 @@ on('day:report', (r) => {
   if (r.hungryHens) html += `<p class="role">${plural(r.hungryHens, 'chicken')} went hungry: the coop ran out of feed. Buy more at the coop.</p>`;
   if (r.hungry) html += `<p class="role">${plural(r.hungry, 'animal')} went hungry: the loft ran out of hay. Buy more at the barn.</p>`;
   if (r.artisan) html += `<p class="gift">${plural(r.artisan, 'machine')} finished overnight.</p>`;
+  if (r.fruit) html += `<p class="gift">Your fruit trees grew ${plural(r.fruit, 'fruit')}.</p>`;
+  if (r.giants) html += `<p class="gift">Something huge happened in the field overnight: ${plural(r.giants, 'giant crop')}!</p>`;
   if (r.sprinkled) html += `<p>Sprinklers watered ${plural(r.sprinkled, 'tile')}.</p>`;
   if (r.questsPosted) html += '<p class="role">A new request is up on the village quest board.</p>';
   html += `<p>${r.passedOut ? 'You woke up at home with only part of your energy back. ' : ''}`;

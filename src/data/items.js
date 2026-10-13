@@ -5,5 +5,6 @@ import { FISH } from './fish.js';
 import { PRODUCTS } from './products.js';
 import { MINERALS } from './minerals.js';
 import { ARTISAN } from './artisan.js';
+import { FRUIT } from './trees.js';
 
-export const ITEMS = { ...PRODUCE, ...FORAGE, ...FISH, ...PRODUCTS, ...MINERALS, ...ARTISAN };
+export const ITEMS = { ...PRODUCE, ...FORAGE, ...FISH, ...PRODUCTS, ...MINERALS, ...ARTISAN, ...FRUIT };

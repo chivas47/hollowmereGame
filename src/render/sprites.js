@@ -216,3 +216,44 @@ export function drawSwing(c, s) {
   else if (s.kind === 'hoe') { for (let i = 0; i < 4; i++) r(c, X + 3 + i * 3, Y + 10 - k * 6 - (i % 2) * 2, 2, 2, '#a87a4f'); }
   else r(c, X + 7, Y + 4 + k * 6, 2, 2, '#e3cf8a');
 }
+
+// Fruit trees. stage 0 to 3 while growing, 4 mature; bare in winter outdoors. The canopy reaches a tile up.
+const FRUIT_SPOTS = [[1, -6], [10, -8], [5, 0]];
+export function drawFruitTree(c, X, Y, fruit, stage, count, bare) {
+  const cx = X + 8, trunk = '#7a5a3a';
+  r(c, X + 2, Y + 14, 12, 2, 'rgba(0,0,0,.2)');
+  if (stage === 0) { r(c, cx, Y + 8, 1, 6, trunk); r(c, cx - 3, Y + 8, 3, 2, fruit.leaf); r(c, cx + 1, Y + 6, 3, 2, fruit.leaf); return; }
+  if (stage === 1) { r(c, cx, Y + 6, 1, 8, trunk); r(c, cx - 3, Y + 2, 7, 5, fruit.leaf); r(c, cx - 2, Y + 1, 5, 1, fruit.leaf); return; }
+  if (stage === 2) { r(c, cx - 1, Y + 6, 2, 8, trunk); r(c, cx - 5, Y - 2, 10, 8, fruit.leaf); r(c, cx - 4, Y - 3, 8, 1, fruit.leaf); r(c, cx - 4, Y - 1, 3, 2, 'rgba(255,255,255,.15)'); return; }
+  r(c, cx - 1, Y + 4, 3, 10, trunk); r(c, cx - 2, Y + 12, 5, 2, trunk);
+  if (bare) {
+    r(c, cx - 6, Y - 2, 13, 1, trunk); r(c, cx - 6, Y - 6, 1, 4, trunk); r(c, cx + 6, Y - 7, 1, 5, trunk); r(c, cx, Y - 9, 1, 13, trunk);
+    r(c, cx - 4, Y - 7, 9, 1, '#f4f8fb');
+    return;
+  }
+  const w = stage === 3 ? 14 : 18, h = stage === 3 ? 11 : 15, top = Y + 6 - h;
+  r(c, cx - w / 2, top, w, h, fruit.leaf); r(c, cx - w / 2 + 2, top - 2, w - 4, 2, fruit.leaf); r(c, cx - w / 2 - 1, top + 3, w + 2, h - 6, fruit.leaf);
+  r(c, cx - w / 2 + 2, top + 1, 4, 3, 'rgba(255,255,255,.15)'); r(c, cx + 2, top + h - 4, 5, 3, 'rgba(0,0,0,.12)');
+  FRUIT_SPOTS.slice(0, stage === 4 ? count : 0).forEach(([a, b]) => { r(c, X + a, Y + b, 3, 3, fruit.color); r(c, X + a, Y + b, 1, 1, 'rgba(255,255,255,.45)'); });
+}
+
+// A giant crop over a 3x3 block; X, Y is its top-left tile.
+export function drawGiant(c, X, Y, type) {
+  const d = CROPS[type], cx = X + 24;
+  r(c, X + 3, Y + 42, 42, 4, 'rgba(0,0,0,.25)');
+  if (d.shape === 'pod') {
+    r(c, cx - 1, Y + 6, 3, 38, '#4f9440');
+    [[-18, 8], [4, 4], [-14, 22], [6, 20], [-6, 32]].forEach(([a, b]) => { r(c, cx + a, Y + b, 13, 6, '#6fb552'); r(c, cx + a + 2, Y + b + 6, 9, 2, '#5da34a'); });
+    [[-15, 14], [9, 10], [-10, 28], [10, 26]].forEach(([a, b]) => { r(c, cx + a, Y + b, 6, 13, d.color); r(c, cx + a, Y + b, 2, 4, 'rgba(255,255,255,.4)'); });
+    return;
+  }
+  r(c, X + 5, Y + 12, 38, 30, d.color); r(c, X + 2, Y + 17, 44, 21, d.color); r(c, X + 9, Y + 9, 30, 3, d.color);
+  if (d.shape === 'leafy') {
+    r(c, X + 12, Y + 10, 24, 6, 'rgba(255,255,255,.28)');
+    r(c, cx - 1, Y + 12, 2, 28, d.line || '#4f9440'); r(c, X + 10, Y + 22, 10, 2, d.line || '#4f9440'); r(c, X + 28, Y + 26, 10, 2, d.line || '#4f9440');
+    return;
+  }
+  [-12, -4, 4, 12].forEach((o) => r(c, cx + o, Y + 11, 2, 30, d.line));
+  r(c, X + 8, Y + 15, 6, 6, 'rgba(255,255,255,.3)');
+  r(c, cx - 2, Y + 4, 4, 6, '#5d7a2e'); r(c, cx + 2, Y + 2, 9, 4, '#6fb552');
+}
