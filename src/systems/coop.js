@@ -96,6 +96,7 @@ addInteraction(95, ({ tx, ty, mapId }) => {
   hen.pet = G.S.day;
   notify(`You pet ${hen.name}. She clucks happily.`);
   emit('gather', { skill: 'ranching', xp: 2 });
+  emit('sfx', 'pet');
   changed();
   return true;
 });

@@ -96,6 +96,7 @@ addInteraction(94, ({ tx, ty, mapId }) => {
   st.pet = G.S.day;
   notify(`You pet ${st.name}. ${G.S.hay > 0 ? '' : 'The loft is out of hay, so no milk tomorrow.'}`.trim());
   emit('gather', { skill: 'ranching', xp: 2 });
+  emit('sfx', 'pet');
   changed();
   return true;
 });

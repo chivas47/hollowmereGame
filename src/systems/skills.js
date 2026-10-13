@@ -1,7 +1,7 @@
 // Skills: gathering systems emit 'gather' ({ skill, xp, item?, n? }) and this file does the rest.
 // Each level gives a 5% chance per item of a bonus item; levels 5 and 10 add max energy.
 import { G } from '../core/game.js';
-import { on, changed, notify } from '../core/events.js';
+import { on, emit, changed, notify } from '../core/events.js';
 import { ITEMS } from '../data/items.js';
 import { SKILLS, LEVEL_XP, BONUS_PER_LEVEL, MILESTONES, ENERGY_PER_MILESTONE, levelFor } from '../data/skills.js';
 import { recalcStats } from './upgrades.js';
@@ -42,6 +42,7 @@ on('gather', ({ skill, xp = 0, item, n = 1 }) => {
     syncEnergyBonus();
     if (gain) S.energy = Math.min(S.maxEnergy, S.energy + ENERGY_PER_MILESTONE);
     notify(`${SKILLS[skill].name} reached level ${after}!${gain}`);
+    emit('sfx', 'levelup');
   }
   changed();
 });

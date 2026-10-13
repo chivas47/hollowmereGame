@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v14: Sound
+- Generated sound effects (Web Audio, no files) for the hoe, can, seeds, pickaxe, sword, pickups, fishing bite, catch and miss, getting hurt, coins, level-ups, petting, placing objects, doors, dialogs and the morning chime.
+- A generated music loop with a melody and bass line: one mood per season, a darker one in the Hollow and a bright one on festival days in the village. Quieter after 8 pm.
+- Sound and Music toggles in the footer; M mutes both. The choice is remembered in this browser.
+- Audio starts on the first key press or tap, as browsers require.
+
 ## v13: Village life
 - Neighbours keep a daily schedule: the village square 8:00 to 11:00, your farm 11:00 to 18:00, then home to their cottage door until 21:00. They now reach the farm from the village road on the west.
 - One rest day a week each (Ines, Bram, Odile, Tavi on different days): they stay in the village all day.

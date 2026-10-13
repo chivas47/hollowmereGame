@@ -1,6 +1,6 @@
 // Shipping, buying and the overnight payout.
 import { G } from '../core/game.js';
-import { on, changed, notify } from '../core/events.js';
+import { on, emit, changed, notify } from '../core/events.js';
 import { today } from '../core/time.js';
 import { CROPS } from '../data/crops.js';
 import { ITEMS } from '../data/items.js';
@@ -12,6 +12,7 @@ export function buy(crop, n) {
   if (!canBuy(crop, n)) return false;
   G.S.gold -= CROPS[crop].seed * n;
   G.S.seeds[crop] += n;
+  emit('sfx', 'coin');
   changed();
   return true;
 }
@@ -29,6 +30,7 @@ export function ship() {
     return;
   }
   S.bin += value;
+  emit('sfx', 'coin');
   notify(`Shipped ${count} item${count > 1 ? 's' : ''} for ${value}g. Paid while you sleep.`);
   changed();
 }

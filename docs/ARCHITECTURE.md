@@ -59,7 +59,12 @@ src/
     sprites.js        per-frame art: soil, crops, forage, people, chickens, slimes, effects
     icons.js          16x16 hotbar icons
     renderer.js       composes a frame, caches backgrounds per map + season
+  audio/              Web Audio output (like render/, but for sound); imported only by main.js and ui/
+    engine.js         context, buses, settings (localStorage), tone() and noise()
+    sfx.js            listens for 'sfx' and other events, plays effects
+    music.js          generated loop per mood (data/music.js)
   ui/
+    sound.js          footer toggles, M key, unlock on first input
     dom.js toast.js modal.js hud.js hotbar.js dialogs.js inventory.js
     workshop.js mine.js input.js debugPanel.js
     crafting.js (craft menu, placed-object dialog) barn.js village.js (board, festival)
@@ -68,7 +73,7 @@ tools/
   balance.mjs         headless balance simulator (Node 22+); imports src/systems/* directly
 ```
 
-Systems must stay importable without a DOM: keep `document` and `window` inside functions or in `ui/`, never at module top level in `core/`, `data/`, `systems/` or `render/`. tools/balance.mjs depends on it.
+Systems must stay importable without a DOM (and without audio: systems only emit `sfx`, never import `src/audio/`): keep `document` and `window` inside functions or in `ui/`, never at module top level in `core/`, `data/`, `systems/` or `render/`. tools/balance.mjs depends on it.
 
 ## The four registries (`core/registry.js`)
 
@@ -132,7 +137,8 @@ The night tint is drawn by renderer.js after all layers (not in caves).
 | `mine:floor` | {floor, rng} | mine.js | monsters (spawn) |
 | `mine:faint` | none | health.js | mine.js (carry out) |
 | `gather` | {skill, xp, item?, n?} | farming, forage, fishing, mine, monsters, coop, barn | skills.js (XP, bonus item) |
-| `placed` | {x, y, kind} | placeables.js | sprinklers.js (water now) |
+| `placed` | {map, x, y, kind} | placeables.js | sprinklers.js (water now), audio/sfx.js |
+| `sfx` | name | effects, monsters, fishing, health, economy, skills, coop, barn, ui/modal | audio/sfx.js |
 | `ui:scene` | {npc, at, scene, extra} | npcs.js | ui/dialogs.js heart scene with choices |
 | `ui:*` | varies | systems | ui modules open dialogs |
 

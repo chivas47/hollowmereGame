@@ -47,6 +47,7 @@ function land(f) {
   S.fishLog[f.fish] = (S.fishLog[f.fish] || 0) + 1;
   notify(first ? `New species! You caught a ${fish.name}.` : `You caught a ${fish.name}.`);
   end();
+  emit('sfx', 'catch');
   emit('gather', { skill: 'fishing', item: f.fish, xp: 4 + fish.difficulty * 3 });
   changed();
 }
@@ -55,10 +56,10 @@ function land(f) {
 addInteraction(200, () => {
   const f = G.fishing;
   if (!f) return false;
-  if (f.phase === 'wait') { notify('You reeled in too early.'); end(); }
+  if (f.phase === 'wait') { notify('You reeled in too early.'); emit('sfx', 'miss'); end(); }
   else if (f.phase === 'bite') startReel(f);
   else if (f.marker >= f.zone && f.marker <= f.zone + f.zw) land(f);
-  else { notify(`The ${FISH[f.fish].name} slipped away.`); end(); }
+  else { notify(`The ${FISH[f.fish].name} slipped away.`); emit('sfx', 'miss'); end(); }
   return true;
 });
 
@@ -79,10 +80,10 @@ addUpdater((dt) => {
   if (!f) return;
   if (f.phase === 'wait') {
     f.t -= dt;
-    if (f.t <= 0) { f.phase = 'bite'; f.t = BITE_WINDOW; f.fish = pickFish(f.ice); notify('A bite! Press Use.'); }
+    if (f.t <= 0) { f.phase = 'bite'; f.t = BITE_WINDOW; f.fish = pickFish(f.ice); notify('A bite! Press Use.'); emit('sfx', 'bite'); }
   } else if (f.phase === 'bite') {
     f.t -= dt;
-    if (f.t <= 0) { notify('Something nibbled, then got away.'); end(); }
+    if (f.t <= 0) { notify('Something nibbled, then got away.'); emit('sfx', 'miss'); end(); }
   } else {
     f.marker += f.vel * dt;
     if (f.marker <= 0) { f.marker = 0; f.vel = Math.abs(f.vel); }

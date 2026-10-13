@@ -201,6 +201,12 @@ One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up 
 
 Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (wide 3), water 2, clear withered crop 1, cast 8, pickaxe 2. Warm cider restores 60.
 
+## Sound
+
+- Every sound is generated with Web Audio at runtime: oscillators and filtered noise, no audio files.
+- Effects follow game events (tools, pickups, fishing, coins, level-ups, doors, dialogs). Music is a melody and bass loop generated from a fixed seed per mood (data/music.js): Spring, Summer, Autumn, Winter, the mine and festival days. Music drops to 55% after 8 pm.
+- Footer toggles for sound and music, M mutes both; stored per browser, not in the save.
+
 ## Known issues and open questions
 
 ### Simulated balance (advisory)
@@ -214,7 +220,6 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - The week has no names; rest days are only visible by where neighbours are.
 - Two placed objects can wall the player in; picking one up from the inside fixes it, but nothing prevents it.
 - Neighbours walk straight through trees and the coop on their way out; they have no collision.
-- No sound.
 - Chickens never leave the yard.
 - Mine floors have no special floors (treasure, boss, elevator).
 

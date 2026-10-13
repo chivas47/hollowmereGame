@@ -1,9 +1,10 @@
 // Short visual feedback when a tool is used.
 import { G } from '../core/game.js';
+import { emit } from '../core/events.js';
 import { addUpdater, addLayer } from '../core/registry.js';
 import { drawSwing } from '../render/sprites.js';
 
-export function swingAt(tx, ty, kind) { G.swing = { tx, ty, kind, t: 0.3 }; }
+export function swingAt(tx, ty, kind) { G.swing = { tx, ty, kind, t: 0.3 }; emit('sfx', kind); }
 
 addUpdater((dt) => {
   if (!G.swing) return;

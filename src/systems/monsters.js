@@ -64,6 +64,7 @@ addInteraction(58, ({ item, mapId }) => {
   if (item !== 'sword') return false;
   const [dx, dy] = DIRS[G.S.dir], px = G.S.x + dx * 12, py = G.S.y - 4 + dy * 12;
   G.swing = { tx: Math.floor(px / T), ty: Math.floor(py / T), kind: 'sword', t: 0.3 };
+  emit('sfx', 'sword');
   if (mapId !== 'mine') return true;
   for (const m of [...slimes]) {
     if (Math.hypot(m.x - px, m.y - 4 - py) > REACH) continue;

@@ -11,6 +11,7 @@ export function hurtPlayer(dmg, fromX, fromY) {
   const S = G.S;
   S.hp = Math.max(0, S.hp - dmg);
   G.hurtT = INVULNERABLE;
+  emit('sfx', 'hurt');
   const dx = S.x - fromX, dy = S.y - fromY, d = Math.hypot(dx, dy) || 1;
   const nx = S.x + (dx / d) * KNOCKBACK, ny = S.y + (dy / d) * KNOCKBACK;
   if (!blocked(nx, S.y)) S.x = nx;
