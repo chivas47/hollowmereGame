@@ -40,6 +40,10 @@ Object.assign(G.S, { map: 'wilds', x: 12 * 16 + 8, y: 2 * 16 + 12, dir: 'up' });
 
 Past bugs these tests caught: invisible dialogs swallowing clicks, focus left on a closed dialog button eating the Space key, and a low-priority tool blocking doors. Check those paths after any UI or interaction change.
 
+## Balance gate
+
+Every pull request is simulated against its base (`tools/balance.mjs`, run by CI). A new balance warning fails the PR. If a feature earns, spends or changes what players can buy, teach the simulator's bot to use it, then tune numbers until the gate passes. The full loop is in `CLAUDE.md`.
+
 ## Pushback
 
 When I ask for something, check it against GAME_DESIGN.md. If it adds an activity while the economy has no sink for its rewards, or adds content on top of untested balance, say so with a reason, an alternative and the risk, then do what I decide.

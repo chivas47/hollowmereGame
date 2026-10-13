@@ -1,6 +1,8 @@
-# Runs the balance simulator on every change to game code or data.
-# Fails only if the simulation crashes (it plays every system, so that is a real regression).
-# Balance warnings show in the job summary; the full report is attached as an artifact.
+# Automatic balance review.
+# On a pull request: simulates the base branch and the PR head, posts a before/after report as a
+# PR comment (updated on every push), and fails if the PR introduces a NEW balance warning.
+# Also fails if the simulation crashes (it plays every system, so that is a real regression).
+# On main: simulates and puts the report in the job summary.
 name: Balance
 
 on:
@@ -10,6 +12,13 @@ on:
     branches: [main]
     paths: ['src/**', 'tools/balance.mjs', '.github/workflows/balance.yml']
 
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  SIM: --days 224 --runs 5
+
 jobs:
   simulate:
     runs-on: ubuntu-latest
@@ -18,13 +27,53 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Simulate two years
-        run: node tools/balance.mjs --days 224 --runs 5 --out balance.md --json balance.json
+
+      - name: Check out the base branch
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+
+      - name: Simulate the base branch
+        if: github.event_name == 'pull_request'
+        run: |
+          if [ -f base/tools/balance.mjs ]; then node base/tools/balance.mjs $SIM --json base.json --out base.md || echo "Base simulation failed; comparing against nothing"; else echo "Base has no simulator"; fi
+
+      - name: Simulate this branch
+        id: head
+        run: |
+          set +e
+          if [ "${{ github.event_name }}" = "pull_request" ]; then GATE="--compare base.json --gate"; fi
+          node tools/balance.mjs $SIM --out balance.md --json balance.json $GATE
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+
       - name: Job summary
-        run: cat balance.md >> "$GITHUB_STEP_SUMMARY"
+        if: always()
+        run: '[ -f balance.md ] && cat balance.md >> "$GITHUB_STEP_SUMMARY" || true'
+
+      - name: Comment on the pull request
+        if: github.event_name == 'pull_request' && always() && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -f balance.md ] || exit 0
+          { echo '<!-- balance-report -->'; cat balance.md; } > comment.md
+          gh pr comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --edit-last --create-if-none --body-file comment.md \
+            || gh pr comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --body-file comment.md
+
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: balance-report
           path: |
             balance.md
             balance.json
+            base.json
+          if-no-files-found: ignore
+
+      - name: Balance gate
+        if: steps.head.outputs.code != '0'
+        run: |
+          echo "::error::The simulation crashed or this PR adds a new balance warning. See the PR comment or job summary."
+          exit 1

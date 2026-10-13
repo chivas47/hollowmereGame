@@ -102,7 +102,13 @@ node tools/balance.mjs --fish-skill 0.7          a weaker fisher
 node tools/balance.mjs --out balance.md --check  write the report; exit 1 on any warning
 ```
 
-The bot teleports (but pays game time per action), never gets hurt in the mine and ignores gifts. Its shopping lists and the checks are at the top of the file. GitHub Actions runs it on every pull request that touches `src/` and puts the report in the job summary.
+The bot teleports (but pays game time per action), never gets hurt in the mine and ignores gifts. Its shopping lists and the checks are at the top of the file.
+
+**Automatic balance review:** on every pull request that touches `src/`, GitHub Actions simulates the base branch and the PR, posts the before/after comparison as a PR comment, and fails if the PR adds a new balance warning. Locally: `node tools/balance.mjs --json base.json` on `main`, then `node tools/balance.mjs --compare base.json --gate` on your branch.
+
+## How features get made
+
+`CLAUDE.md` describes the loop Claude follows: take the next item from `docs/ROADMAP.md`, build it on its own branch, teach the simulator's bot about it, tune numbers until the balance gate passes, open a PR with the report, and keep it green until you merge.
 
 ## Debug tools
 
