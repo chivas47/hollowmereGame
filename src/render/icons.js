@@ -2,7 +2,8 @@
 import { CROPS } from '../data/crops.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { r } from './pixel.js';
-import { drawPlaced } from './sprites.js';
+import { drawPlaced, drawFruitTree, drawFence, drawGate, drawFloor, drawAlder } from './sprites.js';
+import { TREES, FRUIT } from '../data/trees.js';
 
 const TOOL_ICONS = {
   hoe: (g) => { for (let i = 0; i < 9; i++) r(g, 3 + i, 13 - i, 2, 2, '#8a5a32'); r(g, 10, 2, 5, 3, '#a9b4bd'); r(g, 10, 4, 2, 2, '#7f8a93'); },
@@ -19,6 +20,10 @@ const TOOL_ICONS = {
     for (let i = 0; i < 9; i++) r(g, 5 + i, 10 - i, 2, 2, '#d7dce2');
     r(g, 13, 1, 1, 1, '#ffffff'); r(g, 3, 9, 5, 2, '#8a5a32'); r(g, 4, 11, 2, 2, '#6e4626'); r(g, 2, 13, 2, 2, '#e9b44c');
   },
+  axe: (g) => {
+    for (let i = 0; i < 10; i++) r(g, 4 + i, 14 - i, 2, 2, '#8a5a32');
+    r(g, 9, 1, 5, 6, '#9aa3ab'); r(g, 8, 2, 1, 4, '#9aa3ab'); r(g, 13, 2, 2, 4, '#c9ccd6'); r(g, 10, 3, 2, 2, '#7f8a93');
+  },
   can: (g) => {
     r(g, 3, 6, 8, 7, '#7d9bb3'); r(g, 3, 6, 8, 1, '#a3bfd3'); r(g, 11, 7, 3, 2, '#7d9bb3'); r(g, 13, 5, 2, 2, '#7d9bb3');
     r(g, 5, 3, 4, 1, '#5d7a90'); r(g, 4, 4, 1, 2, '#5d7a90'); r(g, 9, 4, 1, 2, '#5d7a90'); r(g, 4, 12, 6, 1, '#5d7a90');
@@ -30,7 +35,13 @@ export function drawIcon(g, kind, sel) {
   g.clearRect(0, 0, 16, 16);
   if (TOOL_ICONS[kind]) return TOOL_ICONS[kind](g);
   if (kind === 'kit') {
-    if (PLACEABLES[sel]) return drawPlaced(g, 0, 0, sel, null);
+    const d = PLACEABLES[sel];
+    if (d?.kind === 'tree') return drawFruitTree(g, 0, 0, FRUIT[TREES[sel].fruit], 1, 0, false);
+    if (d?.kind === 'fence') return drawFence(g, 0, 0, d.color, [false, true, false, true]);
+    if (d?.kind === 'gate') return drawGate(g, 0, 0, false, true);
+    if (d?.kind === 'floor') return drawFloor(g, 0, 0, sel, d.color);
+    if (d?.kind === 'sprout') return drawAlder(g, 0, -2, 0, false);
+    if (d) return drawPlaced(g, 0, 0, sel, null);
     r(g, 2, 6, 12, 8, '#8a5a32'); r(g, 2, 6, 12, 1, '#a5753f'); r(g, 2, 9, 12, 1, '#6e4626'); r(g, 7, 6, 2, 8, '#6e4626');   // empty crate
     return;
   }

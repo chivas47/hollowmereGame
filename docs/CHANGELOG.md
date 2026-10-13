@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v19: Clearing, wood and fences
+- The axe, on new hotbar slot 8 (no key moved). 2 energy a swing; Bram sells the copper axe (2000g, 25 copper): twice the damage, and it splits large stumps.
+- New farms start cluttered with alder trees, large stumps, weeds, stones and twigs. Older saves get a lighter grove. Weeds, stones and twigs creep back onto free grass overnight.
+- Alder trees: 10 swings for 10 to 14 wood, sometimes an alder cone; the stump gives a little more. Plant cones from the kit and they grow over a few weeks and seed themselves.
+- New materials: wood, hardwood and fiber. The sword cuts weeds for free.
+- Crafting: wood, stone and hardwood fences (5 a craft, they join up), a gate you open by facing it, wood and stone paths (walkable, keep debris off). Hit them with the axe or pickaxe to take them back.
+- Fix: fruit saplings showed a crock in the kit slot icon.
+
 ## v18: Fruit trees and giant crops
 - Fruit saplings at the stall: plum and loquat (spring), fig and nectarine (summer), pear and persimmon (autumn). They go to slot 7, are planted on open grass with a free tile between trees, grow for 28 days in any season, then grow one fruit each morning of their season, up to 3. Face a tree to pick. In the greenhouse they fruit all year.
 - Fruit gets better with age: one quality tier a year after the tree matures, up to heirloom. Fruit left on a tree drops when its season ends.

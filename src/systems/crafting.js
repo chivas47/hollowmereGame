@@ -9,9 +9,10 @@ export function craft(key) {
   if (!rc || !affordable(rc.cost, rc.needs)) return false;
   S.gold -= rc.cost;
   Object.entries(rc.needs).forEach(([k, n]) => { S.bag[k] -= n; });
-  S.kit[key]++;
+  const n = rc.makes || 1;
+  S.kit[key] += n;
   if (S.kit[S.kitSel] <= 0) S.kitSel = key;
-  notify(`Crafted a ${PLACEABLES[key].name}. Select slot 7 to place it.`);
+  notify(`Crafted ${n > 1 ? `${n} x ` : 'a '}${PLACEABLES[key].name}. Select slot 7 to place it.`);
   changed();
   return true;
 }

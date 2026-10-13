@@ -6,6 +6,7 @@ const SFX = {
   hoe:     () => noise({ dur: 0.14, vol: 0.22, freq: 500, sweep: 150 }),
   can:     () => { noise({ dur: 0.28, vol: 0.12, filter: 'highpass', freq: 2500, sweep: 1200 }); noise({ dur: 0.2, vol: 0.06, filter: 'bandpass', freq: 900, at: 0.05 }); },
   seed:    () => tone({ freq: 1200, dur: 0.05, type: 'triangle', vol: 0.08 }),
+  axe:     () => { noise({ dur: 0.12, vol: 0.2, freq: 400, filter: 'bandpass', sweep: 200 }); tone({ freq: 180, dur: 0.08, type: 'square', vol: 0.05 }); },
   pick:    () => { tone({ freq: 1600, dur: 0.06, type: 'square', vol: 0.06 }); noise({ dur: 0.08, vol: 0.15, freq: 2000, filter: 'bandpass' }); },
   sword:   () => noise({ dur: 0.18, vol: 0.12, filter: 'bandpass', freq: 600, sweep: 3000 }),
   pickup:  () => { tone({ freq: 660, dur: 0.07, type: 'triangle' }); tone({ freq: 990, dur: 0.1, type: 'triangle', at: 0.06 }); },

@@ -39,7 +39,7 @@ const ORCHARD = ['figtree', 'peartree', 'nectarinetree', 'persimmontree', 'plumt
 // What the bot saves up for, in order. Upgrade lines (can, hoe, rod, house) buy their next tier.
 const STRATEGIES = {
   full: ['can', 'coop', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'house',
-    'barn', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'hoe', 'rod', 'can',
+    'barn', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'rod', 'can',
     'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift'],
   crops: ['can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
 };
@@ -63,7 +63,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'trees', 'giants'];
+  'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'trees', 'giants', 'clearing'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -84,6 +84,7 @@ const { COOP, BARN, GREENHOUSE } = await load('data/upgrades.js');
 const { RECIPES, PLACEABLES, MACHINES } = await load('data/crafting.js');
 const { SKILLS } = await load('data/skills.js');
 const { TREES, FRUIT } = await load('data/trees.js');
+const { DEBRIS } = await load('data/clearing.js');
 const { act } = await load('systems/interact.js');
 const { sleep } = await load('systems/days.js');
 const { placePlayer, tileAt, tileOf, soilOf, placeKey, parsePlaceKey } = await load('systems/world.js');
@@ -151,6 +152,7 @@ function simulate(runSeed) {
   // -- purchases --
   const GOAL = {
     can: { cost: () => nextTier('can')?.cost, needs: () => nextTier('can')?.needs, ok: () => !!nextTier('can'), buy: () => track('upgrades', () => buyUpgrade('can')) },
+    axe: { cost: () => nextTier('axe')?.cost, needs: () => nextTier('axe')?.needs, ok: () => !!nextTier('axe'), buy: () => track('upgrades', () => buyUpgrade('axe')) },
     hoe: { cost: () => nextTier('hoe')?.cost, needs: () => nextTier('hoe')?.needs, ok: () => !!nextTier('hoe'), buy: () => track('upgrades', () => buyUpgrade('hoe')) },
     rod: { cost: () => nextTier('rod')?.cost, needs: () => nextTier('rod')?.needs, ok: () => !!nextTier('rod'), buy: () => track('upgrades', () => buyUpgrade('rod')) },
     house: { cost: () => nextTier('house')?.cost, needs: () => nextTier('house')?.needs, ok: () => !!nextTier('house'), buy: () => track('upgrades', () => buyUpgrade('house')) },
@@ -182,6 +184,20 @@ function simulate(runSeed) {
     if (log.goalsDone === null) log.goalsDone = S().day;
   }
 
+  // Clears debris or a wild tree from a farm tile with the right tool. False if it cannot (yet).
+  function clear(map, x, y) {
+    const s = S(), k = `${x},${y}`;
+    if (map !== 'farm') return true;
+    for (let guard = 0; s.debris[k] && guard < 20; guard++) {
+      const d = s.debris[k], def = DEBRIS[d.kind], young = d.kind === 'alder' && d.stage < 4;
+      if (def.axe && s.upgrades.axe < def.axe) return false;
+      const tool = young ? 'axe' : def.tools.includes('sword') ? 'sword' : def.tools[0];
+      if (tool !== 'sword' && s.energy < 2) return false;
+      use(map, x, y, tool); spend(TIME.tile);
+    }
+    return !s.debris[k];
+  }
+
   // -- placing crafted things --
   function placeKit() {
     const s = S(), maps = greenhouseBuilt() ? ['farm', 'greenhouse'] : ['farm'];
@@ -191,20 +207,21 @@ function simulate(runSeed) {
         const here = s.placed[placeKey(map, cx, cy)];
         if (here && (here.kind === 'sprinkler2' || kind === 'sprinkler')) continue;
         if (here) { standFacing(map, cx, cy); pickUp(cx, cy); }   // swap a copper sprinkler for an iron one
+        if (!clear(map, cx, cy)) continue;
         s.kitSel = kind; use(map, cx, cy, 'kit');
       }
     }
     for (const kind of Object.keys(TREES)) {
       for (const [x, y] of TREE_SLOTS) {
         if (s.kit[kind] <= 0) break;
-        if (s.placed[`${x},${y}`]) continue;
+        if (s.placed[`${x},${y}`] || !clear('farm', x, y)) continue;
         s.kitSel = kind; use('farm', x, y, 'kit');
       }
     }
     for (const kind of Object.keys(MACHINES)) {
       for (const [x, y] of MACHINE_SLOTS) {
         if (s.kit[kind] <= 0) break;
-        if (s.placed[`${x},${y}`]) continue;
+        if (s.placed[`${x},${y}`] || !clear('farm', x, y)) continue;
         s.kitSel = kind; use('farm', x, y, 'kit');
       }
     }
@@ -217,6 +234,18 @@ function simulate(runSeed) {
     if (s.chickens.length && s.feed < s.chickens.length * 2) track('feed', () => buyFeed(Math.min(Math.floor(s.gold / COOP.feedCost), s.chickens.length * 7)));
     if (s.animals.length && s.hay < s.animals.length * 2) track('hay', () => buyHay(Math.min(Math.floor(s.gold / BARN.hayCost), s.animals.length * 7)));
     runUpdaters(0);   // places chickens and animals in their yards
+    // The bot never lets animals wander, so two can share a tile and hide one from petting. Spread them out first.
+    for (const [group, yard] of [[flock, COOP.yard], [herd, BARN.yard]]) {
+      const taken = new Set();
+      group.forEach((a, i) => {
+        let t = tileOf(a.x, a.y);
+        if (taken.has(`${t.tx},${t.ty}`)) {
+          const w = yard.x1 - yard.x0 + 1, spot = [...Array(w * (yard.y1 - yard.y0 + 1)).keys()].map((n) => [yard.x0 + (n % w), yard.y0 + Math.floor(n / w)]).find(([x, y]) => !taken.has(`${x},${y}`));
+          if (spot) { a.x = spot[0] * 16 + 8; a.y = spot[1] * 16 + 12; t = tileOf(a.x, a.y); }
+        }
+        taken.add(`${t.tx},${t.ty}`);
+      });
+    }
     [...flock, ...herd].forEach((a) => { const t = tileOf(a.x, a.y); use('farm', t.tx, t.ty, 'hoe'); spend(TIME.pet); });
   }
 
@@ -304,6 +333,7 @@ function simulate(runSeed) {
       if (tile(map, x, y) || late()) continue;
       const crop = bestCrop(map);
       if (!crop || s.energy < COST.newTile || (s.seeds[crop] <= 0 && s.gold < CROPS[crop].seed + 50)) return;
+      if (!clear(map, x, y)) continue;
       use(map, x, y, 'hoe');
       if (!tile(map, x, y)) return;
       plant(map, x, y); water(map, x, y); spend(TIME.tile * 2);

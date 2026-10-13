@@ -15,9 +15,9 @@ const needsText = (needs) => Object.entries(needs).map(([k, n]) => `${n} ${ITEMS
 function craftMenu() {
   const S = G.S;
   const rows = Object.entries(RECIPES).map(([k, rc]) => `
-    <div class="shoprow"><div><b>${PLACEABLES[k].name}</b><span>${rc.desc} ${rc.cost}g<br>Needs ${needsText(rc.needs)}${S.kit[k] ? `<br>In your kit: ${S.kit[k]}` : ''}</span></div>
+    <div class="shoprow"><div><b>${PLACEABLES[k].name}</b><span>${rc.desc}${rc.cost ? ` ${rc.cost}g` : ''}<br>Needs ${needsText(rc.needs)}${S.kit[k] ? `<br>In your kit: ${S.kit[k]}` : ''}</span></div>
     <div class="btns"><button data-craft="${k}" ${affordable(rc.cost, rc.needs) ? '' : 'disabled'}>Craft</button></div></div>`).join('');
-  openModal(`<h2>Crafting</h2><p class="role">Stone and ore from the Hollow, plus Bram's fittings. You have <b>${S.gold}g</b>. Crafted things go to slot 7; face untilled farm grass or a greenhouse bed and press Use to place one.</p>${rows}`,
+  openModal(`<h2>Crafting</h2><p class="role">Stone and ore from the Hollow, wood from the farm, plus Bram's fittings. You have <b>${S.gold}g</b>. Crafted things go to slot 7; face untilled farm grass or a greenhouse bed and press Use to place one.</p>${rows}`,
     [['Close', closeModal, true]]);
 }
 

@@ -26,7 +26,7 @@ export function newState() {
     greenSoil: {},      // greenhouse beds, same shape
     forage: [], forageDay: 0,
     fishLog: {},        // fish key -> number caught
-    upgrades: { can: 0, hoe: 0, rod: 0, house: 0 },   // tier index per upgrade line
+    upgrades: { can: 0, hoe: 0, axe: 0, rod: 0, house: 0 },   // tier index per upgrade line
     waterBonus: 0, maxEnergy: 270,                      // derived stats, see systems/upgrades.js
     built: { coop: false, barn: false, greenhouse: false },   // false | 'pending' | true
     chickens: [],                                       // { name, pet: day last petted }
@@ -38,7 +38,8 @@ export function newState() {
     kit: Object.fromEntries(Object.keys(PLACEABLES).map((k) => [k, 0])),   // crafted objects not yet placed
     kitSel: 'sprinkler',                                // object the kit slot places (see systems/placeables.js)
     placed: {},                                         // "x,y" on the farm -> { kind, item, nights }; fruit trees add { age, fruit }
-    giants: {},                                         // giant crops: top-left "x,y" on the farm -> crop type
+    giants: {},
+    debris: null,                                       // weeds, stones, stumps, alders: "x,y" -> { kind, hp?, stage? }; null until systems/clearing.js scatters the start clutter                                         // giant crops: top-left "x,y" on the farm -> crop type
     animals: [],                                        // barn: { kind, name, pet: day last petted }
     hay: 0,                                             // hay in the barn loft
     barnGoods: { cowmilk: 0, goatmilk: 0 },             // milk waiting in the barn
@@ -72,6 +73,7 @@ export function merge(saved) {
   s.barnGoods = Object.assign(newState().barnGoods, saved.barnGoods || {});
   if (!s.placed || typeof s.placed !== 'object') s.placed = {};
   if (!s.giants || typeof s.giants !== 'object') s.giants = {};
+  if (!s.debris || typeof s.debris !== 'object') s.debris = null;   // pre-v19 saves get a lighter grove on load
   if (!s.festivals || typeof s.festivals !== 'object') s.festivals = {};
   if (!Array.isArray(s.animals)) s.animals = [];
   if (!Array.isArray(s.quests)) s.quests = [];

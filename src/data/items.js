@@ -6,5 +6,6 @@ import { PRODUCTS } from './products.js';
 import { MINERALS } from './minerals.js';
 import { ARTISAN } from './artisan.js';
 import { FRUIT } from './trees.js';
+import { WOODS } from './clearing.js';
 
-export const ITEMS = { ...PRODUCE, ...FORAGE, ...FISH, ...PRODUCTS, ...MINERALS, ...ARTISAN, ...FRUIT };
+export const ITEMS = { ...PRODUCE, ...FORAGE, ...FISH, ...PRODUCTS, ...MINERALS, ...ARTISAN, ...FRUIT, ...WOODS };
