@@ -24,6 +24,7 @@ src/
     trees.js          TREES (saplings, kit keys), FRUIT (items), tree timings
     clearing.js       WOODS (materials), DEBRIS, ALDER, CREEP, START_CLUTTER
     layouts.js        LAYOUTS (grid edits and perks per farm type), CRATE contents
+    furniture.js      FURNITURE, WALLPAPERS, FLOORS, RENOVATIONS, catalogue prices
     pets.js           PET friendship numbers, PET_LOOKS, PET_NAMES, PET_HATS
     profile.js        farmer profile: LOOKS, PETS, DEFAULT_PROFILE, playerPal()
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item
@@ -32,6 +33,7 @@ src/
   systems/            one feature per file
     layouts.js        rebuilds the farm grid for G.S.layout on game:loaded (imported first), startLayout()
     farmPerks.js      layout perks: quarry rocks, crates, regrowing stumps, farm forage, farm slimes
+    house.js          the farmhouse: door, bed, catalogue sales, decor, renovations, furniture drawing
     pets.js           the farm pet: wandering, pats, the water bowl, gifts, hats
     stable.js         stable building, horse riding, following between maps, whistle
     world.js          tile queries, collision, facing(), placePlayer(), useEnergy(), soilOf(map), placeKey()/parsePlaceKey()
@@ -81,6 +83,7 @@ src/
   ui/
     sound.js          footer toggles, M key, unlock on first input
     saveFile.js       Export save / Import save buttons, file download and upload
+    house.js          the catalogue dialog
     creation.js       the new game screen (opens when G.S.profile is null)
     dom.js toast.js modal.js hud.js hotbar.js dialogs.js inventory.js
     workshop.js mine.js input.js debugPanel.js
@@ -117,7 +120,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 72 | pets.js | The water bowl b (the can fills it) |
 | 72 | upgrades.js / coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Workbench K, coop C, barn A, greenhouse G, mine entrance M, ladders U/L, placed object Y, quest board Q, festival table J |
 | 71 | village.js | Fountain F, cottage V (flavour text) |
-| 70 | buildings.js | Door D, stall S, bin B |
+| 70 | buildings.js, house.js | Stall S, bin B; farm door D (enter), bed Z, lectern l, kitchen and cellar fittings |
 | 66 | mine.js | Pickaxe on mine rocks |
 | 65 | fishing.js | Rod on water O (cast) |
 | 60 | buildings.js | Well W or pond O (refill can) |
@@ -134,12 +137,12 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 
 | z | Owner | Draws |
 |---|---|---|
-| 9 | clearing.js | Paths |
+| 9 | clearing.js, house.js | Paths, rugs |
 | 10 | farming.js, forage.js | Soil, crops, forage (soil of the current map) |
 | 12 | fishing.js | Ice hole in winter |
 | 20 | placeables.js | Sprinklers, machines, lanterns |
 | 30 | festivals.js | Bunting on festival days |
-| (entities) | player, npcs, coop, barn, monsters, trees, giants, clearing | y-sorted characters, fruit trees, giant crops, debris, alders, fences, gates |
+| (entities) | player, npcs, coop, barn, monsters, trees, giants, clearing, house (furniture) | y-sorted characters, fruit trees, giant crops, debris, alders, fences, gates |
 | 55 | fishing.js | Line and bobber |
 | 60 | effects.js | Tool swing |
 | 90 | fishing.js | Reel bar |
@@ -166,6 +169,7 @@ The night tint is drawn by renderer.js after all layers (not in caves).
 | `mine:floor` | {floor, rng} | mine.js | monsters (spawn) |
 | `mine:faint` | none | health.js | mine.js (carry out) |
 | `gather` | {skill, xp, item?, n?} | farming, giants, clearing, forage, fishing, mine, monsters, coop, barn | skills.js (XP, bonus item) |
+| `upgraded` | key | upgrades.js | house.js (rebuild the farmhouse rooms) |
 | `placed` | {map, x, y, kind} | placeables.js | sprinklers.js (water now), audio/sfx.js |
 | `sfx` | name | effects, monsters, fishing, health, economy, skills, coop, barn, ui/modal | audio/sfx.js |
 | `ui:scene` | {npc, at, scene, extra} | npcs.js | ui/dialogs.js heart scene with choices |
@@ -192,6 +196,8 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | E | exit to another map (paired with an `exits` entry) | no |
 | T | tree | yes |
 | q | quarry floor (farm layouts) | no |
+| h, I, . | farmhouse floor, wall, nothing (houseGrid in data/maps.js) | no, yes, yes |
+| Z, l, n, o, x, v | farmhouse bed, catalogue lectern, counter, stove, crib, cask | yes |
 | b | pet water bowl (farm, 6,5) | yes |
 | N | stable (written at runtime by stable.js) | yes |
 | z | sand (farm layouts) | no |

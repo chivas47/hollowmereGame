@@ -19,10 +19,10 @@ export function sleep(passedOut) {
   if (after !== before) { report.newSeason = after; emit('season:changed', { from: before, to: after, report }); }
   emit('day:start', report);
 
-  const sp = MAPS.farm.spawn;
-  placePlayer('farm', sp.x, sp.y, sp.dir);
+  const sp = MAPS.house.spawn;   // you wake by your bed
+  placePlayer('house', sp.x, sp.y, sp.dir);
   save();
-  emit('map:changed', 'farm');
+  emit('map:changed', 'house');
   changed();
   emit('day:report', report);
 }

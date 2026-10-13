@@ -3,6 +3,8 @@ import { G } from '../core/game.js';
 import { on, notify } from '../core/events.js';
 import { UPGRADES, COOP, BARN, GREENHOUSE, STABLE, tier } from '../data/upgrades.js';
 import { orderStable } from '../systems/stable.js';
+import { RENOVATIONS } from '../data/furniture.js';
+import { buyRenovation } from '../systems/house.js';
 import { ITEMS } from '../data/items.js';
 import { nextTier, buyUpgrade, orderCoop, affordable } from '../systems/upgrades.js';
 import { buyChicken, collectEggs, buyFeed } from '../systems/coop.js';
@@ -38,7 +40,9 @@ function workbench() {
   const st = S.built.stable === true ? offer('Stable', 'Built')
     : S.built.stable === 'pending' ? offer('Stable', 'Bram builds it tonight')
       : offer('Stable', `${STABLE.desc} ${STABLE.cost.toLocaleString('en-US')}g`, 'data-upgrade="stable"', STABLE.cost, STABLE.needs);
-  openModal(`<h2>Bram's workbench</h2><p class="role">Bram takes orders here. You have <b>${S.gold}g</b>. Press C anywhere to craft sprinklers and machines.</p>${rows}${coop}${barn}${gh}${st}`,
+  const renos = Object.entries(RENOVATIONS).map(([k, r]) => (S.house.renos.includes(k) ? offer(r.name, 'Done')
+    : offer(r.name, `${r.desc} ${r.cost.toLocaleString('en-US')}g`, `data-reno="${k}"`, r.cost))).join('');
+  openModal(`<h2>Bram's workbench</h2><p class="role">Bram takes orders here. You have <b>${S.gold}g</b>. Press C anywhere to craft sprinklers and machines.</p>${rows}${coop}${barn}${gh}${st}<h3>Farmhouse renovations</h3>${renos}`,
     [['Leave', closeModal, true]]);
 }
 
@@ -69,6 +73,8 @@ $('#mbody').addEventListener('click', (e) => {
     if (ok) workbench();
     return;
   }
+  const rn = e.target.closest('[data-reno]');
+  if (rn && !rn.disabled) { if (buyRenovation(rn.dataset.reno)) workbench(); return; }
   const cp = e.target.closest('[data-coop]');
   if (!cp || cp.disabled) return;
   if (cp.dataset.coop === 'feed1') buyFeed(1);

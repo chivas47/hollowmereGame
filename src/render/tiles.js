@@ -272,3 +272,38 @@ export function drawSand(g, x, y, p) {
   r(g, X, Y, T, T, p.snow ? '#e6e2d6' : '#e3cf9a');
   for (let i = 0; i < 5; i++) r(g, X + (R() * 15 | 0), Y + (R() * 15 | 0), 1, 1, R() < 0.5 ? '#cdb77f' : '#f0e2b8');
 }
+
+// ---- The farmhouse inside (v24). decor: { wall, floor } indexes into WALLPAPERS and FLOORS. ----
+function pattern(g, X, Y, d, wall) {
+  r(g, X, Y, T, T, d.base);
+  const a = d.accent;
+  if (d.pattern === 'stripe') { r(g, X + 3, Y, 2, T, a); r(g, X + 11, Y, 2, T, a); }
+  else if (d.pattern === 'dots') { r(g, X + 3, Y + 3, 2, 2, a); r(g, X + 11, Y + 11, 2, 2, a); r(g, X + 11, Y + 3, 1, 1, a); r(g, X + 3, Y + 11, 1, 1, a); }
+  else if (d.pattern === 'check') { r(g, X, Y, 8, 8, a); r(g, X + 8, Y + 8, 8, 8, a); }
+  else if (d.pattern === 'boards') { [0, 5, 10].forEach((o) => r(g, X, Y + o + 4, T, 1, a)); r(g, X + (wall ? 7 : 5), Y, 1, 5, a); r(g, X + 11, Y + 5, 1, 5, a); }
+  else if (d.pattern === 'tiles') { r(g, X, Y + 7, T, 1, a); r(g, X + 7, Y, 1, T, a); r(g, X + 1, Y + 1, 5, 5, 'rgba(255,255,255,.08)'); }
+  else if (d.pattern === 'weave') { for (let i = 0; i < 4; i++) r(g, X + i * 4, Y + (i % 2) * 4, 3, 8, a); r(g, X, Y + 8, T, 1, a); }
+  else if (d.pattern === 'sprig') { r(g, X + 5, Y + 4, 1, 6, a); r(g, X + 3, Y + 5, 2, 1, a); r(g, X + 6, Y + 7, 2, 1, a); }
+  else if (d.pattern === 'brick') { [0, 5, 10].forEach((o, i) => { r(g, X, Y + o + 4, T, 1, a); r(g, X + (i % 2 ? 4 : 10), Y + o, 1, 4, a); }); }
+}
+export function drawHouseTile(g, x, y, t, below, walls, floors, decor) {
+  const X = x * T, Y = y * T;
+  if (t === '.') { r(g, X, Y, T, T, '#14100c'); return; }
+  if (t === 'I') {
+    if (below && below !== 'I' && below !== '.') { pattern(g, X, Y, walls[decor.wall] || walls[0], true); r(g, X, Y + 14, T, 2, '#3f3226'); return; }   // the wall's face
+    r(g, X, Y, T, T, '#4a3828'); r(g, X, Y, T, 1, '#5c4632'); r(g, X, Y + 15, T, 1, '#2b2018');   // wall tops
+    return;
+  }
+  pattern(g, X, Y, floors[decor.floor] || floors[0], false);
+  if (t === 'E') { r(g, X + 2, Y + 3, 12, 10, '#8a5a32'); r(g, X + 3, Y + 4, 10, 8, '#b5452f'); }   // doormat
+}
+const bed = (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 1, Y, 14, T, '#7a4a2a'); r(g, X + 2, Y + 1, 12, 14, '#f4ead2'); r(g, X + 2, Y + 6, 12, 9, '#5f8fb5'); r(g, X + 2, Y + 6, 12, 1, '#3d6a8f'); };
+const bedHead = (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 1, Y, 14, T, '#7a4a2a'); r(g, X + 2, Y + 3, 12, 13, '#f4ead2'); r(g, X + 4, Y + 4, 8, 4, '#ffffff'); r(g, X + 1, Y, 14, 3, '#5c371e'); };
+export const HOUSE_ART = {
+  Z: (g, x, y, m) => (m[y - 1]?.[x] === 'Z' ? bed(g, x, y) : bedHead(g, x, y)),
+  l: (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 6, Y + 8, 4, 7, '#6e4626'); r(g, X + 2, Y + 3, 12, 6, '#8a5a32'); r(g, X + 3, Y + 3, 5, 5, '#f4ead2'); r(g, X + 8, Y + 3, 5, 5, '#e8dcc0'); r(g, X + 7, Y + 3, 1, 5, '#b5452f'); },
+  n: (g, x, y) => { const X = x * T, Y = y * T; r(g, X, Y + 2, T, 14, '#a5753f'); r(g, X, Y + 2, T, 3, '#d9caa6'); r(g, X + 3, Y + 8, 10, 6, '#8a5a32'); r(g, X + 7, Y + 10, 2, 1, '#e9c46a'); },
+  o: (g, x, y) => { const X = x * T, Y = y * T; r(g, X, Y + 2, T, 14, '#5f6870'); r(g, X + 2, Y + 3, 4, 2, '#2b211a'); r(g, X + 9, Y + 3, 4, 2, '#2b211a'); r(g, X + 3, Y + 8, 10, 6, '#3f4850'); r(g, X + 4, Y + 9, 8, 1, '#e8862a'); },
+  x: (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 1, Y + 4, 14, 10, '#c9955a'); r(g, X + 3, Y + 6, 10, 6, '#f4ead2'); [3, 6, 9, 12].forEach((o) => r(g, X + o, Y + 4, 1, 10, '#a5753f')); },
+  v: (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 2, Y + 3, 12, 12, '#8a5a32'); r(g, X + 1, Y + 6, 14, 6, '#8a5a32'); r(g, X + 1, Y + 5, 14, 1, '#5c371e'); r(g, X + 1, Y + 12, 14, 1, '#5c371e'); r(g, X + 7, Y + 8, 2, 2, '#3f3226'); },
+};

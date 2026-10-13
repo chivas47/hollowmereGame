@@ -1,11 +1,10 @@
-// Things you interact with by facing a tile: bed, stall, bin, well and pond.
+// Things you interact with by facing a tile: stall, bin, well and pond. The door and bed are in systems/house.js.
 import { G } from '../core/game.js';
 import { emit, changed, notify } from '../core/events.js';
 import { addInteraction } from '../core/registry.js';
 import { ship } from './economy.js';
 
 addInteraction(70, ({ tile }) => {
-  if (tile === 'D') { emit('ui:sleep'); return true; }
   if (tile === 'S') { emit('ui:shop'); return true; }
   if (tile === 'B') { ship(); return true; }
   return false;

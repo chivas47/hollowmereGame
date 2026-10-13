@@ -13,7 +13,7 @@
 // exits: "x,y" of an E tile -> where it leads.
 import { W, H } from '../core/constants.js';
 
-export const SOLID = new Set(['b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
+export const SOLID = new Set(['.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
 
 function emptyGrid() {
   return Array.from({ length: H }, (_, y) =>
@@ -68,6 +68,23 @@ function greenhouseGrid() {
   return m;
 }
 
+// The farmhouse inside (v24). tier: the house upgrade (0 cottage, 1 adds the kitchen, 2 the nursery,
+// 3 the cellar); renos: renovation keys (data/furniture.js). Tiles: . nothing (solid), I wall, h floor,
+// Z bed, l catalogue lectern, n kitchen counter, o stove, x crib, v cask, E the front door.
+export function houseGrid(tier = 0, renos = []) {
+  const m = Array.from({ length: H }, () => Array.from({ length: W }, () => '.'));
+  const room = (x0, y0, x1, y1) => { fill(m, x0 - 1, y0 - 2, x1 + 1, y1 + 1, 'I'); fill(m, x0, y0, x1, y1, 'h'); };
+  room(6, 3, 17, 11);
+  if (tier >= 1) { room(19, 3, 22, 8); fill(m, 18, 6, 18, 7, 'h'); put(m, [[19, 3], [20, 3], [22, 3]], 'n'); m[3][21] = 'o'; }
+  if (tier >= 2) { room(1, 3, 4, 8); fill(m, 5, 6, 5, 7, 'h'); m[3][2] = 'x'; }
+  if (tier >= 3) { fill(m, 18, 9, 23, 15, 'I'); fill(m, 19, 10, 22, 14, 'h'); m[9][20] = 'h'; put(m, [[19, 14], [21, 14], [22, 14]], 'v'); }
+  if (!renos.includes('openplan')) fill(m, 10, 3, 10, 5, 'I');   // the bed corner's wall
+  if (renos.includes('nook')) fill(m, 12, 2, 13, 2, 'h');
+  put(m, [[7, 3], [7, 4]], 'Z'); m[3][16] = 'l';
+  m[12][11] = 'E';
+  return m;
+}
+
 export const MAPS = {
   farm: {
     name: 'Farm', salt: 11, grid: farmGrid(),
@@ -91,6 +108,14 @@ export const MAPS = {
       { art: 'board', x: 11, y: 5 }, { art: 'fountain', x: 11, y: 8 }, { art: 'table', x: 13, y: 11 },
     ],
     exits: { [`${W - 1},8`]: { to: 'farm', x: 1, y: 4, dir: 'right' } },
+  },
+  house: {
+    name: 'Farmhouse', salt: 3, base: 'house', grid: houseGrid(),
+    decor: { wall: 0, floor: 0 },   // set by systems/layouts.js from G.S.house
+    objects: [],
+    exits: { '11,12': { to: 'farm', x: 3, y: 4, dir: 'down' } },
+    spawn: { x: 8, y: 4, dir: 'down' },
+    keepClear: ['11,11', '18,6', '18,7', '5,6', '5,7', '20,9'],   // doorways furniture may not block
   },
   greenhouse: {
     name: 'Greenhouse', salt: 5, base: 'greenhouse', grid: greenhouseGrid(),

@@ -364,3 +364,32 @@ export function drawHorse(c, px, py, dir, moving) {
   r(c, left ? hx + 3 : hx, y - 1, 1, 6, dark);   // mane
   r(c, left ? x + 15 : x + 2, y + 5, 1, 6, dark);   // tail
 }
+
+// ---- Furniture (v24): one tile each, colors [main, second] from data/furniture.js ----
+const FURN_ART = {
+  chair: (c, X, Y, a, b) => { r(c, X + 4, Y + 2, 8, 7, b); r(c, X + 5, Y + 3, 6, 5, a); r(c, X + 3, Y + 8, 10, 3, a); r(c, X + 4, Y + 11, 1, 4, b); r(c, X + 11, Y + 11, 1, 4, b); },
+  armchair: (c, X, Y, a, b) => { r(c, X + 2, Y + 2, 12, 7, b); r(c, X + 1, Y + 6, 3, 8, a); r(c, X + 12, Y + 6, 3, 8, a); r(c, X + 4, Y + 8, 8, 5, a); r(c, X + 3, Y + 3, 10, 4, a); },
+  sofa: (c, X, Y, a, b) => { r(c, X, Y + 3, 16, 6, b); r(c, X, Y + 8, 16, 6, a); r(c, X + 1, Y + 4, 6, 4, a); r(c, X + 9, Y + 4, 6, 4, a); r(c, X + 7, Y + 9, 1, 4, b); },
+  stool: (c, X, Y, a, b) => { r(c, X + 4, Y + 7, 8, 3, a); r(c, X + 5, Y + 10, 1, 5, b); r(c, X + 10, Y + 10, 1, 5, b); },
+  table: (c, X, Y, a, b) => { r(c, X + 1, Y + 5, 14, 4, a); r(c, X + 1, Y + 5, 14, 1, 'rgba(255,255,255,.25)'); r(c, X + 2, Y + 9, 2, 6, b); r(c, X + 12, Y + 9, 2, 6, b); },
+  roundtable: (c, X, Y, a, b) => { r(c, X + 2, Y + 5, 12, 5, a); r(c, X + 4, Y + 4, 8, 1, a); r(c, X + 7, Y + 10, 2, 5, b); r(c, X + 4, Y + 14, 8, 1, b); },
+  desk: (c, X, Y, a, b) => { r(c, X + 1, Y + 4, 14, 4, a); r(c, X + 9, Y + 8, 5, 7, b); r(c, X + 2, Y + 8, 1, 7, b); r(c, X + 10, Y + 10, 3, 1, '#e9c46a'); r(c, X + 3, Y + 2, 4, 2, '#f4ead2'); },
+  endtable: (c, X, Y, a, b) => { r(c, X + 4, Y + 6, 8, 3, a); r(c, X + 5, Y + 9, 6, 6, b); r(c, X + 7, Y + 11, 2, 1, '#e9c46a'); },
+  tablelamp: (c, X, Y, a, b) => { r(c, X + 4, Y + 9, 8, 6, b); r(c, X + 7, Y + 6, 2, 3, '#3f3226'); r(c, X + 4, Y + 1, 8, 5, a); r(c, X + 5, Y + 2, 6, 3, '#fff3c4'); },
+  floorlamp: (c, X, Y, a, b) => { r(c, X + 7, Y + 5, 2, 9, b); r(c, X + 5, Y + 14, 6, 1, b); r(c, X + 4, Y, 8, 5, a); r(c, X + 5, Y + 1, 6, 3, '#fff3c4'); },
+  plant: (c, X, Y, a, b) => { r(c, X + 5, Y + 10, 6, 5, b); r(c, X + 3, Y + 4, 4, 6, a); r(c, X + 9, Y + 3, 4, 7, a); r(c, X + 6, Y + 2, 4, 8, a); },
+  cactus: (c, X, Y, a, b) => { r(c, X + 5, Y + 11, 6, 4, b); r(c, X + 7, Y + 3, 3, 8, a); r(c, X + 4, Y + 6, 2, 3, a); r(c, X + 11, Y + 5, 2, 3, a); r(c, X + 8, Y + 2, 1, 1, '#e2707a'); },
+  flowers: (c, X, Y, a, b) => { r(c, X + 5, Y + 10, 6, 5, b); r(c, X + 4, Y + 6, 8, 4, '#5da34a'); [[4, 4], [8, 3], [11, 5], [6, 6]].forEach(([p, q]) => r(c, X + p, Y + q, 2, 2, a)); },
+  tallplant: (c, X, Y, a, b) => { r(c, X + 5, Y + 11, 6, 4, b); r(c, X + 7, Y + 4, 2, 7, '#5c371e'); r(c, X + 2, Y - 4, 12, 9, a); r(c, X + 4, Y - 6, 8, 2, a); },
+  rug: (c, X, Y, a, b) => { r(c, X + 1, Y + 2, 14, 12, a); r(c, X + 3, Y + 4, 10, 8, b); r(c, X + 5, Y + 6, 6, 4, a); },
+  roundrug: (c, X, Y, a, b) => { r(c, X + 3, Y + 2, 10, 12, a); r(c, X + 1, Y + 4, 14, 8, a); r(c, X + 5, Y + 5, 6, 6, b); },
+  bookcase: (c, X, Y, a, b) => { r(c, X + 1, Y - 4, 14, 19, a); [0, 6, 12].forEach((o, i) => { r(c, X + 2, Y - 3 + o, 12, 5, b); [2, 4, 7, 9, 11].forEach((p, j) => r(c, X + p, Y - 2 + o, 2, 4, ['#b5452f', '#5f8fb5', '#e9c46a', '#5d8a4a', '#8a5aa8'][(i + j) % 5])); }); },
+  dresser: (c, X, Y, a, b) => { r(c, X + 1, Y + 2, 14, 13, a); [4, 8, 12].forEach((o) => { r(c, X + 2, Y + o, 12, 1, b); r(c, X + 7, Y + o - 2, 2, 1, '#e9c46a'); }); },
+  clock: (c, X, Y, a, b) => { r(c, X + 4, Y - 6, 8, 21, a); r(c, X + 5, Y - 5, 6, 6, '#f4ead2'); r(c, X + 8, Y - 3, 1, 3, '#2b211a'); r(c, X + 6, Y + 3, 4, 8, '#3f3226'); r(c, X + 7, Y + 6, 2, 3, b); },
+  hearth: (c, X, Y, a, b) => { r(c, X, Y + 1, 16, 14, a); r(c, X, Y + 1, 16, 2, '#a9a49a'); r(c, X + 3, Y + 6, 10, 9, '#2b211a'); r(c, X + 5, Y + 10, 6, 4, b); r(c, X + 6, Y + 8, 4, 3, '#e9c46a'); },
+  globe: (c, X, Y, a, b) => { r(c, X + 7, Y + 11, 2, 3, '#a5753f'); r(c, X + 5, Y + 14, 6, 1, '#6e4626'); r(c, X + 4, Y + 3, 8, 8, a); r(c, X + 5, Y + 4, 3, 3, b); r(c, X + 9, Y + 7, 2, 2, b); },
+  barrel: (c, X, Y, a, b) => { r(c, X + 3, Y + 3, 10, 12, a); r(c, X + 2, Y + 6, 12, 6, a); r(c, X + 2, Y + 5, 12, 1, b); r(c, X + 2, Y + 12, 12, 1, b); },
+  easel: (c, X, Y, a, b) => { r(c, X + 3, Y + 6, 1, 9, a); r(c, X + 12, Y + 6, 1, 9, a); r(c, X + 2, Y - 2, 12, 10, '#f4ead2'); r(c, X + 4, Y, 8, 6, b); r(c, X + 5, Y + 3, 3, 2, '#5d8a4a'); },
+  chest: (c, X, Y, a, b) => { r(c, X + 2, Y + 5, 12, 10, a); r(c, X + 2, Y + 5, 12, 3, b); r(c, X + 7, Y + 7, 2, 3, '#3f3226'); },
+};
+export function drawFurniture(c, X, Y, def) { (FURN_ART[def.shape] || FURN_ART.chest)(c, X, Y, ...def.colors); }
