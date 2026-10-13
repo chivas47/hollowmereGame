@@ -21,6 +21,7 @@ export function newState() {
     seeds: Object.fromEntries(Object.keys(CROPS).map((k) => [k, STARTING_SEEDS[k] || 0])),
     bag: Object.fromEntries(Object.keys(ITEMS).map((k) => [k, 0])),
     bin: 0,
+    qbag: {},           // item -> [fine, prime, heirloom] counts within bag (see systems/quality.js)
     soil: {},           // farm: "x,y" -> { w: watered, crop: { type, age, dead } | null }
     greenSoil: {},      // greenhouse beds, same shape
     forage: [], forageDay: 0,
@@ -64,6 +65,7 @@ export function merge(saved) {
   if (saved.feed === undefined) s.feed = s.chickens.length * 7;
   if (!s.projects || typeof s.projects !== 'object') s.projects = {};
   if (!s.greenSoil || typeof s.greenSoil !== 'object') s.greenSoil = {};
+  if (!s.qbag || typeof s.qbag !== 'object') s.qbag = {};
   s.kit = Object.assign(newState().kit, saved.kit || {});
   s.skills = Object.assign(newState().skills, saved.skills || {});
   s.barnGoods = Object.assign(newState().barnGoods, saved.barnGoods || {});

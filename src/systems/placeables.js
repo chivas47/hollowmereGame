@@ -71,6 +71,18 @@ export function pickUp(tx, ty) {
 addInteraction(55, ({ tx, ty, tile, mapId, item }) => {
   if (item !== 'kit' || !soilOf(mapId) || tile !== 'g') return false;
   const S = G.S, key = placeKey(mapId, tx, ty), soil = soilOf(mapId)[`${tx},${ty}`];
+  const def = PLACEABLES[S.kitSel];
+  if (def?.kind === 'fertilizer' && owned(S.kitSel)) {
+    if (!soil) { notify('Fertilizer goes on tilled soil.'); return true; }
+    if (soil.crop?.dead) return false;   // farming clears it
+    if (soil.fert) { notify(`This soil already has ${PLACEABLES[soil.fert].name.toLowerCase()}.`); return true; }
+    if (soil.crop && !def.retain) { notify(`${def.name} goes on before planting.`); return true; }
+    S.kit[S.kitSel]--; soil.fert = S.kitSel;
+    emit('sfx', 'seed');
+    notify(`Spread ${def.name.toLowerCase()}.`);
+    changed();
+    return true;
+  }
   if (soil?.crop) return false;   // farming harvests, clears or ignores it
   if (soil) { notify(mapId === 'farm' ? 'Place it on untilled grass.' : 'Place it on an untilled bed.'); return true; }
   if (reserved(mapId, tx, ty)) { notify('Bram keeps that ground clear for a building.'); return true; }

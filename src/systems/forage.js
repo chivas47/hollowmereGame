@@ -6,6 +6,8 @@ import { today } from '../core/time.js';
 import { FORAGE, FORAGE_PER_DAY } from '../data/forage.js';
 import { MAPS } from '../data/maps.js';
 import { drawForage } from '../render/sprites.js';
+import { addItem, rollSkillQuality } from './quality.js';
+import { skillLevel } from './skills.js';
 
 const AREA = 'wilds';
 
@@ -29,7 +31,7 @@ addInteraction(45, ({ tx, ty, tile, mapId, item }) => {
   const i = G.S.forage.findIndex((f) => f.x === tx && f.y === ty);
   if (i >= 0) {
     const f = G.S.forage[i];
-    G.S.bag[f.type]++; G.S.forage.splice(i, 1);
+    addItem(f.type, 1, rollSkillQuality(skillLevel('foraging'))); G.S.forage.splice(i, 1);
     notify(`Found a ${FORAGE[f.type].name}.`);
     emit('gather', { skill: 'foraging', item: f.type, xp: 5 });
     changed();

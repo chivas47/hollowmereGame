@@ -20,7 +20,7 @@ src/
     crops.js forage.js fish.js minerals.js products.js artisan.js items.js
     npcs.js maps.js seasons.js hotbar.js upgrades.js (incl. COOP, BARN)
     crafting.js       PLACEABLES, RECIPES, MACHINES, sprinklerTiles()
-    skills.js quests.js festivals.js projects.js
+    skills.js quests.js festivals.js projects.js quality.js
     schedules.js      neighbour daily schedules, rest days, map entry points
     scenes.js         heart scenes at 4 and 8 hearts
   systems/            one feature per file
@@ -52,6 +52,7 @@ src/
     village.js        fountain and cottage flavour text
     projects.js       village projects: fundProject(), funded()
     greenhouse.js     greenhouse placement on the farm, ordering, entering
+    quality.js        item quality: counts(), addItem(), valueOf(), takeBest(), quality rolls
     debug.js          DEBUG actions for the debug panel
   render/
     pixel.js          r() rectangle primitive, rng(seed), blink()

@@ -3,9 +3,11 @@ import { T } from '../core/constants.js';
 import { CROPS } from '../data/crops.js';
 import { r, blink } from './pixel.js';
 
-export function drawSoil(c, X, Y, wet) {
+const FERT_DOT = { booster: '#c9b68e', booster2: '#e9b44c', booster3: '#b98ae0', tonic: '#86b86a', tonic2: '#5fd36a', mulch: '#a0805a', mulch2: '#7a5a3a' };
+export function drawSoil(c, X, Y, wet, fert) {
   r(c, X + 1, Y + 1, 14, 14, wet ? '#5a3b24' : '#8b5e3c');
   [4, 8, 12].forEach((o) => r(c, X + 2, Y + o, 12, 1, wet ? '#452c1a' : '#734c30'));
+  if (fert) [[3, 2], [10, 6], [5, 10], [12, 13]].forEach(([a, b]) => r(c, X + a, Y + b, 1, 1, FERT_DOT[fert] || '#ffffff'));
 }
 
 // Ripe art per crop shape (see data/crops.js).

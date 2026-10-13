@@ -10,6 +10,8 @@ import { funded, fundProject } from '../systems/projects.js';
 import { affordable } from '../systems/upgrades.js';
 import { nextFestival, contestItems, enterContest, buyStall, entry, festivalToday, hoursText, ACCEPT_TEXT } from '../systems/festivals.js';
 import { openModal, closeModal } from './modal.js';
+import { counts, unitValue } from '../systems/quality.js';
+import { QUALITY } from '../data/quality.js';
 import { $ } from './dom.js';
 
 const npcName = (id) => NPCS.find((d) => d.id === id).name;
@@ -39,9 +41,10 @@ function festival() {
     html += `<p class="role">Prizes: ${f.ranks.map((rk) => `${rk.label} ${rk.gold}g${rk.min ? ` (worth ${rk.min}g or more)` : ''}`).join(', ')}.</p>`;
     if (done) html += `<p class="gift">You entered your ${ITEMS[done.item].name.toLowerCase()}. ${done.rank}! See you next year.</p>`;
     else {
-      const items = contestItems(f).sort((a, b) => ITEMS[b].sell - ITEMS[a].sell);
+      const best = (k) => { const c = counts(k); let t = 3; while (t > 0 && !c[t]) t--; return t; };
+      const items = contestItems(f).sort((a, b) => unitValue(b, best(b)) - unitValue(a, best(a)));
       html += items.length
-        ? items.map((k) => `<div class="shoprow"><div><b>${ITEMS[k].name}</b><span>Worth ${ITEMS[k].sell}g</span></div><div class="btns"><button data-enter="${k}">Enter</button></div></div>`).join('')
+        ? items.map((k) => `<div class="shoprow"><div><b>${best(k) ? `${QUALITY[best(k)].name} ` : ''}${ITEMS[k].name}</b><span>Worth ${unitValue(k, best(k))}g. Your best one is entered.</span></div><div class="btns"><button data-enter="${k}">Enter</button></div></div>`).join('')
         : `<p class="role">Bring ${ACCEPT_TEXT[f.accepts]} to enter. One entry per year.</p>`;
     }
   } else {

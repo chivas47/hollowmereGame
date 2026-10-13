@@ -8,7 +8,8 @@ import { newState, save } from '../core/state.js';
 import { CROPS } from '../data/crops.js';
 import { ITEMS } from '../data/items.js';
 import { sleep } from '../systems/days.js';
-import { buy, canBuy, inSeason } from '../systems/economy.js';
+import { buy, canBuy, inSeason, buySupply, canBuySupply } from '../systems/economy.js';
+import { SUPPLIES, PLACEABLES } from '../data/crafting.js';
 import { hearts, heartStr, giftOptions, giveGift, chooseScene } from '../systems/npcs.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
@@ -26,7 +27,11 @@ on('ui:sleep', () => {
 function refreshShop() {
   const g = $('#shopGold'); if (g) g.textContent = `${G.S.gold}g`;
   document.querySelectorAll('[data-buy]').forEach((b) => { b.disabled = !canBuy(b.dataset.buy, +b.dataset.n); });
+  document.querySelectorAll('[data-supply]').forEach((b) => { b.disabled = !canBuySupply(b.dataset.supply, +b.dataset.n); });
 }
+
+const supplyText = (d) => (d.quality ? `Raises harvest quality (level ${d.quality}). Before planting.`
+  : d.speed ? `Crops grow ${Math.round(d.speed * 100)}% faster. Before planting.` : `${Math.round(d.retain * 100)}% chance the soil stays watered overnight.`);
 
 on('ui:shop', () => {
   const season = today().season;
@@ -34,13 +39,18 @@ on('ui:shop', () => {
     <div class="shoprow"><div><b>${c.name} seeds</b><span>${inSeason(k) ? `${c.seed}g each, ready in ${c.days} days, sells for ${c.sell}g` : `Back in ${c.seasons.join(' and ')}`}</span></div>
     <div class="btns"><button data-buy="${k}" data-n="1">Buy 1</button><button data-buy="${k}" data-n="5">Buy 5</button></div></div>`).join('');
   const note = season === 'Winter' ? '<p class="role">The stall is quiet in winter. Seeds are back in spring.</p>' : '';
-  openModal(`<h2>Seed stall</h2><p>You have <b id="shopGold">${G.S.gold}g</b>.</p>${note}${rows}`, [['Leave', closeModal, true]]);
+  const supplies = Object.entries(SUPPLIES).map(([k, cost]) => `
+    <div class="shoprow"><div><b>${PLACEABLES[k].name}</b><span>${supplyText(PLACEABLES[k])} ${cost}g. Goes to slot 7; face tilled soil to spread it.</span></div>
+    <div class="btns"><button data-supply="${k}" data-n="1">Buy 1</button><button data-supply="${k}" data-n="10">Buy 10</button></div></div>`).join('');
+  openModal(`<h2>Seed stall</h2><p>You have <b id="shopGold">${G.S.gold}g</b>.</p>${note}${rows}<h3>Farm supplies</h3>${supplies}`, [['Leave', closeModal, true]]);
   refreshShop();
 });
 
 $('#mbody').addEventListener('click', (e) => {
   const b = e.target.closest('[data-buy]');
   if (b && !b.disabled && buy(b.dataset.buy, +b.dataset.n)) refreshShop();
+  const sp = e.target.closest('[data-supply]');
+  if (sp && !sp.disabled && buySupply(sp.dataset.supply, +sp.dataset.n)) refreshShop();
 });
 
 on('ui:talk', ({ npc, text, extra }) => {

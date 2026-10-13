@@ -8,6 +8,8 @@ import { COOP } from '../data/upgrades.js';
 import { MAPS } from '../data/maps.js';
 import { drawChicken, drawHeart } from '../render/sprites.js';
 import { tileOf } from './world.js';
+import { addItem, rollSkillQuality } from './quality.js';
+import { skillLevel } from './skills.js';
 
 const farm = MAPS.farm, fp = COOP.footprint, yard = COOP.yard, SPEED = 14;
 
@@ -127,7 +129,8 @@ export function buyFeed(n) {
 export function collectEggs() {
   const n = G.S.eggs;
   if (!n) return 0;
-  G.S.bag.egg += n; G.S.eggs = 0;
+  for (let i = 0; i < n; i++) addItem('egg', 1, rollSkillQuality(skillLevel('ranching')));
+  G.S.eggs = 0;
   emit('gather', { skill: 'ranching', item: 'egg', n, xp: 3 * n });
   changed();
   return n;
