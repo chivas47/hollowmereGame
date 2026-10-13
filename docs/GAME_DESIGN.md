@@ -96,7 +96,11 @@ Five fish per season. Bite odds are weighted toward easy fish (weight 6 minus di
 | Odile | Net mender who fishes the Wilds pond | Dusk grayling | Spotted dace, copper rudd, frost char, sweet pepper, wild thyme, cucumber | 6 cucumber seeds |
 | Tavi | Young mapmaker | Rosehip | Wood sorrel, fava bean, celeriac, melon, copper ore, egg | 5 fava bean seeds |
 
-Points: talk 20/day, gift 80 loved, 45 liked, 20 other (1 gift/day). 100 points per heart, 10 hearts max. Dialogue changes at 2 and 5 hearts. They visit the farm 8:00 to 20:00.
+Points: talk 20/day, gift 80 loved, 45 liked, 20 other (1 gift/day). 100 points per heart, 10 hearts max. Dialogue changes at 2 and 5 hearts.
+
+Schedule (data/schedules.js): village square 8:00 to 11:00, the farm 11:00 to 18:00 (entering from the village road on the west), their cottage door 18:00 to 21:00, then indoors. One rest day a week in the village all day: Ines on day 1 of each week, Bram day 3, Odile day 5, Tavi day 7. Festival days override the schedule.
+
+Heart scenes (data/scenes.js): the first talk after reaching 4 and 8 hearts plays a scene with two choices. The warmer choice gives 60 points at 4 hearts and 80 at 8; the other gives 25 and 50. Scenes: Ines, a swarm in the hedge and the honey ledger; Bram, the bin hinge and the old porch plans; Odile, mending nets at dawn and the boat south; Tavi, a runaway map page and the finished map.
 
 ### Bram's workbench
 
@@ -206,8 +210,8 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Sprinklers make watering free once you have the ore. That is intended, but it removes a daily energy cost; watch whether energy still matters by mid-summer.
 - Hotbar changed in v8: crops moved from keys 6 to 9 into one seed slot on key 6. Old saves keep the crop they had selected. v9 adds slot 7 (kit) at the end, so no key moved.
 - Winter crops only grow in the greenhouse; outdoors winter has 2 forage items, 5 pond fish and 2 ice-hole fish.
-- Four neighbours; festivals now, but no heart-level scenes. Quest friendship can pass 3 hearts; the reward then arrives on the next talk or gift.
-- On non-festival days the village is empty: neighbours still only walk the farm.
+- Four neighbours with scenes at 4 and 8 hearts only. Quest friendship can pass 3 hearts; the reward then arrives on the next talk or gift.
+- The week has no names; rest days are only visible by where neighbours are.
 - Two placed objects can wall the player in; picking one up from the inside fixes it, but nothing prevents it.
 - Neighbours walk straight through trees and the coop on their way out; they have no collision.
 - No sound.

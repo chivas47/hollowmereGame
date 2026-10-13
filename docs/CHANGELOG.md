@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v13: Village life
+- Neighbours keep a daily schedule: the village square 8:00 to 11:00, your farm 11:00 to 18:00, then home to their cottage door until 21:00. They now reach the farm from the village road on the west.
+- One rest day a week each (Ines, Bram, Odile, Tavi on different days): they stay in the village all day.
+- Heart scenes: the first talk after reaching 4 and 8 hearts with a neighbour plays a short scene with two choices (8 scenes in all). Each choice adds friendship and gets its own reply.
+- Festivals unchanged: neighbours still gather in the square on festival days.
+
 ## v12: Winter content
 - Greenhouse, ordered at Bram's workbench (35,000g, built overnight north of the path). Face it to walk inside: 126 bed tiles where any crop grows in any season and nothing withers, plus a water trough. Sprinklers, machines and lanterns can be placed inside.
 - Ice fishing: in winter the Wilds pond freezes and only the ice hole on its west edge can be fished. Two ice-only fish: Snow eel (85g) and Rime whitefish (120g).

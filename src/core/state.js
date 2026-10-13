@@ -45,7 +45,7 @@ export function newState() {
     quests: [],                                         // open board requests, see systems/quests.js
     questsDone: 0, questDay: 0,                         // requests completed, last day one was posted
     festivals: {},                                      // "key-year" -> { item, rank } once entered
-    npcs: Object.fromEntries(NPCS.map((d) => [d.id, { pts: 0, talked: 0, gifted: 0, reward: false }])),
+    npcs: Object.fromEntries(NPCS.map((d) => [d.id, { pts: 0, talked: 0, gifted: 0, reward: false, scenes: [] }])),
   };
 }
 
