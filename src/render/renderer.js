@@ -6,7 +6,7 @@ import { drawLayers, collectEntities } from '../core/registry.js';
 import { today, dayEnd } from '../core/time.js';
 import { MAPS } from '../data/maps.js';
 import { PAL } from '../data/seasons.js';
-import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, OBJECT_ART, CAVE_ART } from './tiles.js';
+import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, drawQuarry, drawSand, OBJECT_ART, CAVE_ART } from './tiles.js';
 import { facing, tileAt } from '../systems/world.js';
 
 let cache = {};
@@ -24,6 +24,8 @@ function renderBackground(mapId, season) {
     if (map.base === 'cave') drawCaveFloor(g, x, y);
     else if (map.base === 'greenhouse' && t !== 'E') drawGreenhouseFloor(g, x, y, t);
     else if (t === 'P' || t === 'E') drawPath(g, x, y, p);
+    else if (t === 'q') drawQuarry(g, x, y, p);
+    else if (t === 'z') drawSand(g, x, y, p);
     else drawGrass(g, x, y, p, map.salt);
   }
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {

@@ -13,6 +13,7 @@ import { ITEMS } from '../data/items.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { COOP, BARN, GREENHOUSE, tier } from '../data/upgrades.js';
 import { DEBRIS, ALDER, CREEP, START_CLUTTER, SWING } from '../data/clearing.js';
+import { LAYOUTS } from '../data/layouts.js';
 import { drawDebris, drawAlder, drawFence, drawGate, drawFloor } from '../render/sprites.js';
 import { useEnergy, placeKey, parsePlaceKey } from './world.js';
 import { swingAt } from './effects.js';
@@ -41,9 +42,22 @@ function randomFree(near = null) {
 }
 
 // ---- Keeping the grid in step with G.S.debris ----
-const written = new Set();
-function put(x, y, d) { const k = `${x},${y}`; G.S.debris[k] = d; grid()[y][x] = 'Y'; written.add(k); }
-function remove(k) { const [x, y] = k.split(',').map(Number); delete G.S.debris[k]; if (written.delete(k)) grid()[y][x] = 'g'; }
+// written: "x,y" -> the tile under it (grass, or quarry floor and sand on some farm layouts).
+const written = new Map();
+const GROUND = new Set(['g', 'q', 'z']);
+function put(x, y, d) {
+  const k = `${x},${y}`;
+  G.S.debris[k] = d;
+  if (!written.has(k)) written.set(k, grid()[y][x] === 'Y' ? 'g' : grid()[y][x]);
+  grid()[y][x] = 'Y';
+}
+function remove(k) {
+  const [x, y] = k.split(',').map(Number);
+  delete G.S.debris[k];
+  if (written.has(k)) { grid()[y][x] = written.get(k); written.delete(k); }
+}
+// For farm layouts (systems/farmPerks.js): puts debris on a free ground tile.
+export function addDebris(x, y, d) { if (GROUND.has(grid()[y]?.[x]) && !G.S.debris[`${x},${y}`]) put(x, y, d); }
 function scatter(counts) {
   for (const [kind, n] of Object.entries(counts)) for (let i = 0; i < n; i++) {
     const t = randomFree(); if (!t) return;
@@ -53,7 +67,7 @@ function scatter(counts) {
 
 // Undo this module's tiles before another save loads (other modules check the grid on game:loaded).
 function unmark() {
-  written.forEach((k) => { const [x, y] = k.split(',').map(Number); if (grid()[y][x] === 'Y') grid()[y][x] = 'g'; });
+  written.forEach((t, k) => { const [x, y] = k.split(',').map(Number); if (grid()[y][x] === 'Y') grid()[y][x] = t; });
   written.clear();
 }
 on('game:reset', unmark);
@@ -62,13 +76,14 @@ on('game:loaded', () => {
   const S = G.S;
   if (!S.debris) {   // a new farm, or a save from before v19
     S.debris = {};
-    scatter(S.day === 1 && !Object.keys(S.soil).length ? START_CLUTTER.new : START_CLUTTER.old);
+    const fresh = S.day === 1 && !Object.keys(S.soil).length, extra = fresh ? LAYOUTS[S.layout]?.perks?.alders || 0 : 0;
+    scatter(fresh ? { ...START_CLUTTER.new, alder: START_CLUTTER.new.alder + extra } : START_CLUTTER.old);
   }
   for (const k of Object.keys(S.debris)) {
     if (written.has(k)) continue;   // just scattered
     const [x, y] = k.split(',').map(Number);
-    if (grid()[y]?.[x] !== 'g' || S.soil[k] || S.placed[k]) { delete S.debris[k]; continue; }
-    grid()[y][x] = 'Y'; written.add(k);
+    if (!GROUND.has(grid()[y]?.[x]) || S.soil[k] || S.placed[k]) { delete S.debris[k]; continue; }
+    written.set(k, grid()[y][x]); grid()[y][x] = 'Y';
   }
 });
 
@@ -99,15 +114,17 @@ on('day:start', (report) => {
 // ---- Clearing ----
 const toolName = (k) => (k === 'pick' ? 'pickaxe' : k);
 const listOr = (a) => (a.length > 1 ? `${a.slice(0, -1).join(', ')} or ${a[a.length - 1]}` : a[0]);
-function drop(def) {
+function drop(drops) {
   const got = [];
-  for (const [item, [lo, hi]] of Object.entries(def.drops)) {
+  for (const [item, [lo, hi]] of Object.entries(drops)) {
     const n = lo + Math.floor(Math.random() * (hi - lo + 1));
+    if (!n) continue;
     addItem(item, n); got.push(`${ITEMS[item].name} x${n}`);
   }
   return got;
 }
-const XP = { weeds: ['foraging', 1], stone: ['mining', 1], twig: ['foraging', 1], stump: ['foraging', 25], alder: ['foraging', 12], alderstump: ['foraging', 2] };
+const XP = { weeds: ['foraging', 1], stone: ['mining', 1], twig: ['foraging', 1], stump: ['foraging', 25], alder: ['foraging', 12], alderstump: ['foraging', 2],
+  copperrock: ['mining', 5], ironrock: ['mining', 10], crate: ['foraging', 2] };
 
 // Priority 62: above the sword (58) and the well (60), so any tool aimed at debris reaches it.
 addInteraction(62, ({ tx, ty, mapId, item }) => {
@@ -124,7 +141,8 @@ addInteraction(62, ({ tx, ty, mapId, item }) => {
   if (young) { remove(k); notify('Cleared the young alder.'); changed(); return true; }
   d.hp = (d.hp ?? def.hp) - power;
   if (d.hp > 0) { changed(); return true; }
-  const got = drop(def);
+  const got = drop(d.drops || def.drops);
+  if (!got.length) got.push('nothing useful');
   remove(k);
   if (d.kind === 'alder') {
     put(tx, ty, { kind: 'alderstump' });

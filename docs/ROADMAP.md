@@ -22,8 +22,8 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 4 | Clearing, wood and fences | feature | done (chivas47/hollowmereGame#14) | Axe tool, choppable trees that regrow from seeds, stumps and logs (hardwood), weeds and stones on a new farm, fences, gates and paths, wood and hardwood as materials. |
 | 5 | Weather | feature | done (chivas47/hollowmereGame#15) | Rain (waters crops), storms with lightning, snow days, an original rare weather event with special forage, a weather forecast. |
 | 6 | New game and character creation | feature | done (chivas47/hollowmereGame#16) | Start screen: name, farm name, favourite thing, appearance colours, starting pet. Saves get a farmer profile. |
-| 7 | Farm layouts | feature | next | Choose a farm map at creation: open field, river, woodland, hill quarry, wild (night monsters), four corners, beach, meadow (starts with a coop and two hens). |
-| 8 | Pets and horse | feature | queued | Cat, dog or turtle, several looks each, pet bowl, friendship and pet gifts, hats; stable and horse with faster travel and a whistle to call it. |
+| 7 | Farm layouts | feature | in progress | Choose a farm map at creation: open field, river, woodland, hill quarry, wild (night monsters), four corners, beach, meadow (starts with a coop and two hens). |
+| 8 | Pets and horse | feature | next | Cat, dog or turtle, several looks each, pet bowl, friendship and pet gifts, hats; stable and horse with faster travel and a whistle to call it. |
 | 9 | Farmhouse interior and furniture | feature | queued | Walk-in farmhouse map, furniture placement (about 30 pieces), wallpaper and flooring (about 12 each), house upgrades add kitchen, nursery and cellar rooms, renovations, a catalogue. |
 | 10 | Clothing and tailoring | feature | queued | Shirts, trousers, hats (about 20), shoes; a sewing machine and dye pots; mannequins. |
 | 11 | Smelting and bars | feature | queued | Furnace (ore and coal to bars), charcoal kiln, coal in the mine; tool and building upgrades switch from ore to bars. |

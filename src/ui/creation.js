@@ -1,14 +1,16 @@
 // The new game screen: name, farm name, favourite thing, look and starting pet. It opens whenever
 // a game loads without a farmer profile (a new farm); older saves get DEFAULT_PROFILE in merge().
 import { G } from '../core/game.js';
-import { on, changed } from '../core/events.js';
+import { on, emit, changed } from '../core/events.js';
 import { save } from '../core/state.js';
 import { LOOKS, PETS, NAME_MAX, DEFAULT_PROFILE, playerPal } from '../data/profile.js';
+import { LAYOUTS } from '../data/layouts.js';
 import { drawPerson } from '../render/sprites.js';
+import { startLayout } from '../systems/layouts.js';
 import { openModal, closeModal } from './modal.js';
 import { $, $$, esc } from './dom.js';
 
-let draft = null;
+let draft = null, farmKind = 'open';
 
 function preview() {
   const c = $('#cPreview'); if (!c) return;
@@ -20,6 +22,8 @@ function pressed() {
   $$('[data-look]').forEach((b) => b.setAttribute('aria-pressed', String(draft.look[b.dataset.look] === b.dataset.v)));
   $$('[data-hair-style]').forEach((b) => b.setAttribute('aria-pressed', String(draft.look.long === (b.dataset.hairStyle === 'long'))));
   $$('[data-pet]').forEach((b) => b.setAttribute('aria-pressed', String(draft.pet === b.dataset.pet)));
+  $$('[data-layout]').forEach((b) => b.setAttribute('aria-pressed', String(farmKind === b.dataset.layout)));
+  const d = $('#cLayoutDesc'); if (d) d.textContent = LAYOUTS[farmKind].desc;
   preview();
 }
 
@@ -35,12 +39,17 @@ function finish() {
     favourite: val('#cFav', DEFAULT_PROFILE.favourite),
   };
   closeModal();
+  // The farm was built as an open field when it loaded; lay out the chosen kind and start over on it.
+  G.S.layout = farmKind;
+  startLayout(G.S);
+  G.S.debris = null;
+  emit('game:reset'); emit('game:loaded');
   save();
   changed();
 }
 
 export function openCreation() {
-  draft = structuredClone(DEFAULT_PROFILE);
+  draft = structuredClone(DEFAULT_PROFILE); farmKind = 'open';
   openModal(`<h2>A new farm</h2>
     <p class="role">The old plot below Hollowmere is yours now. Tell the village who is moving in.</p>
     <div class="create">
@@ -54,7 +63,9 @@ export function openCreation() {
     ${swatches('skin', 'Skin')}${swatches('hair', 'Hair')}
     <div class="pick"><span>Hair style</span><button data-hair-style="short">Short</button><button data-hair-style="long">Long</button></div>
     ${swatches('shirt', 'Shirt')}${swatches('pants', 'Trousers')}
-    <div class="pick"><span>Starting pet</span>${Object.entries(PETS).map(([k, n]) => `<button data-pet="${k}">${n}</button>`).join('')}</div>`,
+    <div class="pick"><span>Starting pet</span>${Object.entries(PETS).map(([k, n]) => `<button data-pet="${k}">${n}</button>`).join('')}</div>
+    <div class="pick"><span>Farm</span>${Object.entries(LAYOUTS).map(([k, l]) => `<button data-layout="${k}">${l.name}</button>`).join('')}</div>
+    <p class="role" id="cLayoutDesc"></p>`,
   [['Start farming', finish, true]]);
   $('#cName')?.focus({ preventScroll: true });
   $$('#modal, #modal *').forEach((el) => { if (el.scrollTop) el.scrollTop = 0; });   // keep the title in view
@@ -65,10 +76,11 @@ on('game:loaded', () => { if (!G.S.profile) openCreation(); });
 
 $('#mbody').addEventListener('click', (e) => {
   if (!draft || !$('#cPreview')) return;
-  const look = e.target.closest('[data-look]'), style = e.target.closest('[data-hair-style]'), pet = e.target.closest('[data-pet]');
+  const look = e.target.closest('[data-look]'), style = e.target.closest('[data-hair-style]'), pet = e.target.closest('[data-pet]'), lay = e.target.closest('[data-layout]');
   if (look) draft.look[look.dataset.look] = look.dataset.v;
   else if (style) draft.look.long = style.dataset.hairStyle === 'long';
   else if (pet) draft.pet = pet.dataset.pet;
+  else if (lay) farmKind = lay.dataset.layout;
   else return;
   pressed();
 });

@@ -7,6 +7,7 @@ import { START } from './core/constants.js';
 import { draw } from './render/renderer.js';
 
 // Systems (order of import does not matter; priorities live in each file)
+import './systems/layouts.js';   // first: rebuilds the farm grid before other systems write into it
 import './systems/player.js';
 import './systems/clock.js';
 import './systems/effects.js';
@@ -37,6 +38,7 @@ import './systems/trees.js';
 import './systems/giants.js';
 import './systems/clearing.js';
 import './systems/weather.js';
+import './systems/farmPerks.js';
 
 // UI
 import './ui/toast.js';

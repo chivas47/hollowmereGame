@@ -23,11 +23,14 @@ src/
     skills.js quests.js festivals.js projects.js quality.js
     trees.js          TREES (saplings, kit keys), FRUIT (items), tree timings
     clearing.js       WOODS (materials), DEBRIS, ALDER, CREEP, START_CLUTTER
+    layouts.js        LAYOUTS (grid edits and perks per farm type), CRATE contents
     profile.js        farmer profile: LOOKS, PETS, DEFAULT_PROFILE, playerPal()
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item
     schedules.js      neighbour daily schedules, rest days, map entry points
     scenes.js         heart scenes at 4 and 8 hearts
   systems/            one feature per file
+    layouts.js        rebuilds the farm grid for G.S.layout on game:loaded (imported first), startLayout()
+    farmPerks.js      layout perks: quarry rocks, crates, regrowing stumps, farm forage, farm slimes
     world.js          tile queries, collision, facing(), placePlayer(), useEnergy(), soilOf(map), placeKey()/parsePlaceKey()
     player.js         movement, map exits, player sprite (respects G.lock)
     clock.js          advances time, pass out at END
@@ -116,6 +119,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 58 | monsters.js | Sword (claims every press while held) |
 | 56 | clearing.js | Kit slot with an alder cone (plant) |
 | 55 | placeables.js | Kit slot on untilled farm grass (place) |
+| 51 | farmPerks.js | Forage in the woodland farm's wood |
 | 50 | farming.js | Grass on the farm |
 | 45 | forage.js | Forage items and grass in the Wilds |
 
@@ -180,6 +184,8 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | P | path; also crafted paths and open gates, written at runtime from `G.S.placed` | no |
 | E | exit to another map (paired with an `exits` entry) | no |
 | T | tree | yes |
+| q | quarry floor (farm layouts) | no |
+| z | sand (farm layouts) | no |
 | R | boulder (overworld) | yes |
 | O | pond water | yes |
 | H, D | house, door | yes |

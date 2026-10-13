@@ -19,6 +19,10 @@ export const DEBRIS = {
   // Wild trees (kind 'alder'): stage 0 seed, 1 to 3 young, 4 grown. A felled tree leaves a stump.
   alder: { name: 'Alder',       tools: ['axe'],  hp: 10, drops: { wood: [10, 14] } },
   alderstump: { name: 'Alder stump', tools: ['axe'], hp: 5, drops: { wood: [2, 4] } },
+  // v22, farm layouts: quarry rocks and washed-up crates (a crate's contents are rolled when it lands, in d.drops).
+  copperrock: { name: 'Copper rock', tools: ['pick'], hp: 1, drops: { copper: [1, 2], stone: [0, 1] } },
+  ironrock:   { name: 'Iron rock',   tools: ['pick'], hp: 1, drops: { iron: [1, 2], stone: [0, 1] } },
+  crate:      { name: 'Supply crate', tools: ['axe', 'pick', 'hoe', 'sword'], hp: 1, drops: {} },
 };
 
 export const ALDER = {
