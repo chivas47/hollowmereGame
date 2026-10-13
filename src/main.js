@@ -42,6 +42,7 @@ import './systems/farmPerks.js';
 import './systems/pets.js';
 import './systems/stable.js';
 import './systems/house.js';
+import './systems/clothing.js';
 
 // UI
 import './ui/toast.js';
@@ -55,6 +56,7 @@ import './ui/barn.js';
 import './ui/village.js';
 import './ui/creation.js';
 import './ui/house.js';
+import './ui/clothing.js';
 import { buildHotbar } from './ui/hotbar.js';
 import { initInput } from './ui/input.js';
 import { initDebug } from './ui/debugPanel.js';

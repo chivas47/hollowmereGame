@@ -24,6 +24,7 @@ src/
     trees.js          TREES (saplings, kit keys), FRUIT (items), tree timings
     clearing.js       WOODS (materials), DEBRIS, ALDER, CREEP, START_CLUTTER
     layouts.js        LAYOUTS (grid edits and perks per farm type), CRATE contents
+    clothing.js       CLOTHES (slot, colour, tailoring item, defense), cloth
     furniture.js      FURNITURE, WALLPAPERS, FLOORS, RENOVATIONS, catalogue prices
     pets.js           PET friendship numbers, PET_LOOKS, PET_NAMES, PET_HATS
     profile.js        farmer profile: LOOKS, PETS, DEFAULT_PROFILE, playerPal()
@@ -33,6 +34,7 @@ src/
   systems/            one feature per file
     layouts.js        rebuilds the farm grid for G.S.layout on game:loaded (imported first), startLayout()
     farmPerks.js      layout perks: quarry rocks, crates, regrowing stumps, farm forage, farm slimes
+    clothing.js       wardrobe, outfit, tailoring, dyeing, mannequins, shoe defense
     house.js          the farmhouse: door, bed, catalogue sales, decor, renovations, furniture drawing
     pets.js           the farm pet: wandering, pats, the water bowl, gifts, hats
     stable.js         stable building, horse riding, following between maps, whistle
@@ -84,6 +86,7 @@ src/
     sound.js          footer toggles, M key, unlock on first input
     saveFile.js       Export save / Import save buttons, file download and upload
     house.js          the catalogue dialog
+    clothing.js       sewing machine, dye pots and mannequin dialogs; the wardrobe in the bag
     creation.js       the new game screen (opens when G.S.profile is null)
     dom.js toast.js modal.js hud.js hotbar.js dialogs.js inventory.js
     workshop.js mine.js input.js debugPanel.js
@@ -115,6 +118,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 96 | pets.js | Facing the pet (pat, then its dialog) |
 | 95 | coop.js | Facing a chicken (pet) |
 | 94 | barn.js | Facing a cow or goat (pet) |
+| 73 | clothing.js | Facing a sewing machine, dye pots or mannequin in the farmhouse |
 | 74 | clearing.js | Facing a fence, gate or path (gate opens; axe or pickaxe takes it up) |
 | 73 | trees.js | Facing a fruit tree (pick fruit) |
 | 72 | pets.js | The water bowl b (the can fills it) |

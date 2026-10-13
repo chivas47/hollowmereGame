@@ -34,6 +34,11 @@ export const FURNITURE = {
   easel:      { name: 'Painting easel',   shape: 'easel',     cost: 1000, colors: ['#a5753f', '#e2707a'] },
   toybox:     { name: 'Toy box',          shape: 'chest',     cost: 750,  colors: ['#e9c46a', '#b5452f'] },
   seachest:   { name: 'Sea chest',        shape: 'chest',     cost: 900,  colors: ['#5c371e', '#c9ccd6'] },
+  // v25 stations (systems/clothing.js). Stardew lets you use Emily's for free; here they live in your house,
+  // priced like mid-range furniture.
+  sewing:     { name: 'Sewing machine',   shape: 'sewing',    cost: 2500, colors: ['#3f4850', '#c9ccd6'], station: 'tailor' },
+  dyepots:    { name: 'Dye pots',         shape: 'dyepots',   cost: 1000, colors: ['#8d8a84', '#5f8fb5'], station: 'dye' },
+  mannequin:  { name: 'Mannequin',        shape: 'mannequin', cost: 2000, colors: ['#c9b68e', '#6e4626'], station: 'mannequin' },
 };
 
 // Wallpaper and flooring: base colour, accent colour, pattern. 100g each.
