@@ -80,3 +80,6 @@ button:focus-visible{outline:3px solid var(--water);outline-offset:2px}
 .pick span{width:100%;font-size:16px;color:var(--straw)}
 .pick button[aria-pressed="true"]{outline:3px solid var(--water);outline-offset:1px}
 .swatch{width:32px;height:32px;padding:0;border:2px solid rgba(0,0,0,.35);border-radius:4px}
+#cPetPreview{width:48px;height:48px;image-rendering:pixelated;background:var(--seam);border-radius:4px}
+.pick .petname{display:flex;flex-direction:column;font-size:16px;color:var(--straw);flex:1;min-width:160px}
+.pick .petname input{font:inherit;font-size:18px;padding:6px 8px;border:2px solid var(--seam);border-radius:4px;background:#fffbe8;color:#2b211a}

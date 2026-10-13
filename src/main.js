@@ -39,6 +39,8 @@ import './systems/giants.js';
 import './systems/clearing.js';
 import './systems/weather.js';
 import './systems/farmPerks.js';
+import './systems/pets.js';
+import './systems/stable.js';
 
 // UI
 import './ui/toast.js';

@@ -12,6 +12,8 @@ import { buy, canBuy, inSeason, buySupply, canBuySupply } from '../systems/econo
 import { SUPPLIES, PLACEABLES } from '../data/crafting.js';
 import { TREES, TREE_DAYS } from '../data/trees.js';
 import { WEATHER } from '../data/weather.js';
+import { PET, PET_HATS } from '../data/pets.js';
+import { buyHat, hearts as petHearts } from '../systems/pets.js';
 
 const WEATHER_LINES = {
   rain: 'It is raining. The farm is watered for you today.',
@@ -57,13 +59,18 @@ on('ui:shop', () => {
   const saplings = Object.entries(TREES).map(([k, t]) => `
     <div class="shoprow"><div><b>${t.name}</b><span>${t.cost}g. Grows for ${TREE_DAYS} days, then a ${ITEMS[t.fruit].name.toLowerCase()} (${ITEMS[t.fruit].sell}g) every ${t.season} morning. Slot 7; plant on open grass with a free tile around it.</span></div>
     <div class="btns"><button data-supply="${k}" data-n="1">Buy 1</button></div></div>`).join('');
-  openModal(`<h2>Seed stall</h2><p>You have <b id="shopGold">${G.S.gold}g</b>.</p>${note}${rows}<h3>Farm supplies</h3>${supplies}<h3>Fruit saplings</h3>${saplings}`, [['Leave', closeModal, true]]);
+  const pet = G.S.pet, hats = pet ? Object.entries(PET_HATS).map(([k, h]) => `
+    <div class="shoprow"><div><b>${h.name}</b><span>${h.cost}g. For ${esc(pet.name)}.${pet.hats.includes(k) ? ' You have it.' : ''}</span></div>
+    <div class="btns"><button data-hat="${k}" ${pet.hats.includes(k) || G.S.gold < h.cost ? 'disabled' : ''}>Buy</button></div></div>`).join('') : '';
+  openModal(`<h2>Seed stall</h2><p>You have <b id="shopGold">${G.S.gold}g</b>.</p>${note}${rows}<h3>Farm supplies</h3>${supplies}<h3>Fruit saplings</h3>${saplings}${hats ? `<h3>Pet hats</h3>${hats}` : ''}`, [['Leave', closeModal, true]]);
   refreshShop();
 });
 
 $('#mbody').addEventListener('click', (e) => {
   const b = e.target.closest('[data-buy]');
   if (b && !b.disabled && buy(b.dataset.buy, +b.dataset.n)) refreshShop();
+  const hat = e.target.closest('[data-hat]');
+  if (hat && !hat.disabled && buyHat(hat.dataset.hat)) { notify(`${PET_HATS[hat.dataset.hat].name} bought. ${G.S.pet.name} is wearing it.`); emit('ui:shop'); return; }
   const sp = e.target.closest('[data-supply]');
   if (sp && !sp.disabled && buySupply(sp.dataset.supply, +sp.dataset.n)) refreshShop();
 });
@@ -112,6 +119,7 @@ on('day:report', (r) => {
   if (r.artisan) html += `<p class="gift">${plural(r.artisan, 'machine')} finished overnight.</p>`;
   if (r.fruit) html += `<p class="gift">Your fruit trees grew ${plural(r.fruit, 'fruit')}.</p>`;
   if (r.giants) html += `<p class="gift">Something huge happened in the field overnight: ${plural(r.giants, 'giant crop')}!</p>`;
+  if (r.petGift) html += `<p class="gift">${esc(r.petGift.name)} left something by the water bowl: ${r.petGift.item}.</p>`;
   if (r.weather && r.weather !== 'sun') html += `<p class="gift">${WEATHER_LINES[r.weather]}</p>`;
   if (r.lightning?.caught) html += `<p class="gift">Lightning hit ${plural(r.lightning.caught, 'lightning rod')} in the night. Collect the storm ${r.lightning.caught > 1 ? 'cells' : 'cell'}.</p>`;
   if (r.lightning?.struck) html += `<p class="role">Lightning struck ${plural(r.lightning.struck, 'crop')} in the night. A lightning rod would have caught it.</p>`;
@@ -136,3 +144,20 @@ export function confirmReset() {
     }],
   ]);
 }
+
+// The pet: hearts, and a hat to wear.
+function petDialog() {
+  const p = G.S.pet; if (!p) return;
+  const h = petHearts(p), hats = p.hats.map((k) => `<button data-wear="${k}" ${p.hat === k ? 'aria-pressed="true"' : ''}>${PET_HATS[k].name}</button>`).join('');
+  let html = `<h2>${esc(p.name)}</h2><p class="role">Your ${p.kind}. ${p.patDay === G.S.day ? 'Patted today.' : 'Wants a pat.'} ${p.bowlDay === G.S.day ? 'The water bowl is full.' : 'The water bowl is empty: fill it with the watering can.'}</p>`;
+  html += `<p class="hearts" aria-label="${h} of ${PET.max / PET.heart} hearts">${'♥'.repeat(h)}${'♡'.repeat(PET.max / PET.heart - h)}</p>`;
+  if (p.friend >= PET.giftFrom) html += `<p class="gift">${esc(p.name)} adores you and sometimes leaves gifts by the bowl.</p>`;
+  html += p.hats.length ? `<h3>Hat</h3><div class="pick">${hats}<button data-wear="">No hat</button></div>` : '<p class="role">The seed stall sells pet hats.</p>';
+  openModal(html, [['Goodbye', closeModal, true]]);
+}
+on('ui:pet', petDialog);
+$('#mbody').addEventListener('click', (e) => {
+  const w = e.target.closest('[data-wear]');
+  if (!w || !G.S.pet) return;
+  G.S.pet.hat = w.dataset.wear || null; changed(); petDialog();
+});

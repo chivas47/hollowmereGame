@@ -4,7 +4,8 @@ import { emit, changed, notify } from '../core/events.js';
 import { addUpdater, addEntities } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
 import { playerPal } from '../data/profile.js';
-import { drawPerson } from '../render/sprites.js';
+import { drawPerson, drawHorse } from '../render/sprites.js';
+import { STABLE } from '../data/upgrades.js';
 import { blocked, playerTile, currentMap, placePlayer } from './world.js';
 
 const SPEED = 62; // pixels per second
@@ -17,7 +18,7 @@ addUpdater((dt) => {
   G.moving = !!(dx || dy);
   if (!G.moving) return;
   S.dir = dx && !dy ? (dx < 0 ? 'left' : 'right') : (dy < 0 ? 'up' : 'down');
-  const step = SPEED * dt * (dx && dy ? 0.7071 : 1);
+  const step = SPEED * (G.riding ? STABLE.speed : 1) * dt * (dx && dy ? 0.7071 : 1);
   const nx = S.x + dx * step; if (!blocked(nx, S.y)) S.x = nx;
   const ny = S.y + dy * step; if (!blocked(S.x, ny)) S.y = ny;
   G.walkT += dt;
@@ -37,6 +38,7 @@ addEntities(() => [{
   y: G.S.y,
   draw: (c) => {
     if (G.hurtT > 0 && Math.floor(performance.now() / 80) % 2) return;   // blink while hurt
+    if (G.riding) { drawHorse(c, G.S.x, G.S.y, G.S.dir, G.moving); drawPerson(c, G.S.x, G.S.y - 7, G.S.dir, false, 0, playerPal(G.S.profile)); return; }
     drawPerson(c, G.S.x, G.S.y, G.S.dir, G.moving, G.walkT, playerPal(G.S.profile));
   },
 }]);

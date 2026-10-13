@@ -24,6 +24,7 @@ src/
     trees.js          TREES (saplings, kit keys), FRUIT (items), tree timings
     clearing.js       WOODS (materials), DEBRIS, ALDER, CREEP, START_CLUTTER
     layouts.js        LAYOUTS (grid edits and perks per farm type), CRATE contents
+    pets.js           PET friendship numbers, PET_LOOKS, PET_NAMES, PET_HATS
     profile.js        farmer profile: LOOKS, PETS, DEFAULT_PROFILE, playerPal()
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item
     schedules.js      neighbour daily schedules, rest days, map entry points
@@ -31,6 +32,8 @@ src/
   systems/            one feature per file
     layouts.js        rebuilds the farm grid for G.S.layout on game:loaded (imported first), startLayout()
     farmPerks.js      layout perks: quarry rocks, crates, regrowing stumps, farm forage, farm slimes
+    pets.js           the farm pet: wandering, pats, the water bowl, gifts, hats
+    stable.js         stable building, horse riding, following between maps, whistle
     world.js          tile queries, collision, facing(), placePlayer(), useEnergy(), soilOf(map), placeKey()/parsePlaceKey()
     player.js         movement, map exits, player sprite (respects G.lock)
     clock.js          advances time, pass out at END
@@ -103,11 +106,15 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | Priority | Owner | Claims |
 |---|---|---|
 | 200 | fishing.js | Any Use while a line is out |
+| 199 | stable.js | Any Use while riding (get off) |
 | 100 | npcs.js | Facing a neighbour |
+| 97 | stable.js | Facing the horse (get on) |
+| 96 | pets.js | Facing the pet (pat, then its dialog) |
 | 95 | coop.js | Facing a chicken (pet) |
 | 94 | barn.js | Facing a cow or goat (pet) |
 | 74 | clearing.js | Facing a fence, gate or path (gate opens; axe or pickaxe takes it up) |
 | 73 | trees.js | Facing a fruit tree (pick fruit) |
+| 72 | pets.js | The water bowl b (the can fills it) |
 | 72 | upgrades.js / coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Workbench K, coop C, barn A, greenhouse G, mine entrance M, ladders U/L, placed object Y, quest board Q, festival table J |
 | 71 | village.js | Fountain F, cottage V (flavour text) |
 | 70 | buildings.js | Door D, stall S, bin B |
@@ -185,6 +192,8 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | E | exit to another map (paired with an `exits` entry) | no |
 | T | tree | yes |
 | q | quarry floor (farm layouts) | no |
+| b | pet water bowl (farm, 6,5) | yes |
+| N | stable (written at runtime by stable.js) | yes |
 | z | sand (farm layouts) | no |
 | R | boulder (overworld) | yes |
 | O | pond water | yes |
