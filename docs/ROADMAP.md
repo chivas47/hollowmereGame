@@ -5,8 +5,7 @@ Status: `next` (do it now, top first), `queued`, `in progress (PR link)`, `done 
 
 | # | Item | Kind | Status | Scope |
 |---|---|---|---|---|
-| 1 | Sound | feature | in progress | Neighbours spend non-festival days in the village on schedules; heart-level scenes at 4 and 8 hearts. |
- Web Audio effects for tools, pickups and UI, and a generated music loop with a mute toggle. |
+| 1 | Sound | feature | in progress | Web Audio effects for tools, pickups and UI, and a generated music loop with a mute toggle. |
 | 2 | Save export and import | feature | next | Download the save as a file and load it back. |
 
 ## Done
