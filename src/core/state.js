@@ -14,7 +14,7 @@ const STARTING_SEEDS = { turnip: 6, radish: 3 };
 export function newState() {
   const sp = MAPS.farm.spawn;
   return {
-    day: 1, time: START, gold: 300, energy: 100,
+    day: 1, time: START, gold: 500, energy: 270,
     water: MAXW, maxw: MAXW,
     map: 'farm', x: sp.x * T + 8, y: sp.y * T + 12, dir: sp.dir, slot: 0,
     seedSel: 'turnip',  // crop the seed slot plants (see systems/seeds.js)
@@ -25,7 +25,7 @@ export function newState() {
     forage: [], forageDay: 0,
     fishLog: {},        // fish key -> number caught
     upgrades: { can: 0, hoe: 0, rod: 0, house: 0 },   // tier index per upgrade line
-    waterBonus: 0, maxEnergy: 100,                      // derived stats, see systems/upgrades.js
+    waterBonus: 0, maxEnergy: 270,                      // derived stats, see systems/upgrades.js
     built: { coop: false, barn: false },                // false | 'pending' | true
     chickens: [],                                       // { name, pet: day last petted }
     eggs: 0,                                            // eggs waiting in the coop

@@ -13,7 +13,7 @@ import { r } from '../render/pixel.js';
 import { drawBubble } from '../render/sprites.js';
 import { useEnergy } from './world.js';
 
-const ENERGY = 3, BITE_WINDOW = 1.1, BAR = 160;
+const ENERGY = 8, BITE_WINDOW = 1.1, BAR = 160;
 const WATER = new Set(['O']);
 
 function end() { G.fishing = null; G.lock = false; }

@@ -16,7 +16,7 @@ You take over the overgrown Hollowmere plot. Farm through the seasons, fish and 
 
 - A day runs 6:00 to 2:00. Each 10 game minutes takes 5 real seconds (about 10 real minutes per day).
 - 28-day seasons: Spring, Summer, Autumn, Winter. Crops not in the new season wither.
-- Passing out at 2:00: wake with 60% energy.
+- Passing out at 2:00 (3:00 with street lamps): wake with 60% energy.
 
 ## Controls
 
@@ -24,6 +24,10 @@ You take over the overgrown Hollowmere plot. Farm through the seasons, fish and 
 - The seed slot plants the selected seed type. Press 6 or Q again (or tap the slot again) to switch to the next type you own, in-season types first.
 - The kit slot places the selected crafted object on untilled farm grass. Press 7 again to switch. Face a placed object and press Use to open it (load, collect, pick up).
 - I opens the bag, C opens crafting.
+
+## Values: the Stardew scale
+
+Numbers follow Stardew Valley's tested economy by role (v11): each item uses the scale and ratios of its closest Stardew counterpart, refitted to our growth times, with our own names. Energy is Stardew's model: 270 base, 2 per hoe, watering and pickaxe use, 8 per fishing cast. See CLAUDE.md.
 
 ## Content
 
@@ -33,44 +37,44 @@ Profit per day = (sells - seed) / days, one harvest per seed.
 
 | Crop | Seed | Days | Sells | Profit/day | Seasons |
 |---|---|---|---|---|---|
-| Lettuce | 10g | 3 | 28g | 6.0g | Spring |
-| Radish | 15g | 3 | 30g | 5.0g | Spring, Summer |
-| Red onion | 15g | 3 | 34g | 6.3g | Autumn |
-| Turnip | 20g | 4 | 45g | 6.3g | Spring, Autumn |
-| Cucumber | 30g | 5 | 85g | 11.0g | Summer |
-| Celeriac | 35g | 6 | 100g | 10.8g | Autumn |
-| Fava bean | 40g | 6 | 110g | 11.7g | Spring |
-| Sweet pepper | 45g | 6 | 125g | 13.3g | Summer |
-| Melon | 50g | 7 | 170g | 17.1g | Summer |
-| Pumpkin | 60g | 8 | 200g | 17.5g | Autumn |
+| Lettuce | 30g | 3 | 45g | 5.0g | Spring |
+| Radish | 20g | 3 | 45g | 8.3g | Spring, Summer |
+| Red onion | 30g | 3 | 52g | 7.3g | Autumn |
+| Turnip | 25g | 4 | 40g | 3.8g | Spring, Autumn |
+| Cucumber | 35g | 5 | 60g | 5.0g | Summer |
+| Celeriac | 50g | 6 | 110g | 10.0g | Autumn |
+| Fava bean | 65g | 6 | 105g | 6.7g | Spring |
+| Sweet pepper | 45g | 6 | 95g | 8.3g | Summer |
+| Melon | 80g | 7 | 180g | 14.3g | Summer |
+| Pumpkin | 100g | 8 | 235g | 16.9g | Autumn |
 
-Every new crop sits at or below the melon and pumpkin rate, so the best plan per tile is unchanged. Start: 300g, 6 turnip seeds, 3 radish seeds.
+Melon and pumpkin stay the best crops per tile, as their counterparts are. Start: 500g, 6 turnip seeds, 3 radish seeds.
 
 ### Forage (6 per day in the Wilds, each spot picks one of the season's two items)
 
 | Season | Items |
 |---|---|
-| Spring | Wild leek 30g, Wood sorrel 35g |
-| Summer | Sunberry 40g, Wild thyme 45g |
-| Autumn | Hollow cap 45g, Rosehip 50g |
-| Winter | Frost root 50g, Ice moss 55g |
+| Spring | Wild leek 60g, Wood sorrel 40g |
+| Summer | Sunberry 80g, Wild thyme 50g |
+| Autumn | Hollow cap 40g, Rosehip 80g |
+| Winter | Frost root 70g, Ice moss 100g |
 
-### Fish (pond in the Wilds, 3 energy per cast)
+### Fish (pond in the Wilds, 8 energy per cast)
 
 | Fish | Sells | Difficulty | Seasons |
 |---|---|---|---|
-| Silver minnow | 25g | 1 | All |
+| Silver minnow | 35g | 1 | All |
 | Stone gudgeon | 30g | 1 | Spring, Summer |
-| Mud loach | 40g | 2 | Autumn, Winter |
-| Spotted dace | 45g | 2 | Spring, Autumn |
-| Reed perch | 60g | 2 | Spring, Summer |
+| Mud loach | 45g | 2 | Autumn, Winter |
+| Spotted dace | 50g | 2 | Spring, Autumn |
+| Reed perch | 55g | 2 | Spring, Summer |
 | Copper rudd | 75g | 3 | Summer |
-| Brook trout | 90g | 3 | Spring, Autumn |
-| Frost char | 110g | 3 | Winter |
-| Ice pike | 140g | 4 | Winter |
-| Dusk grayling | 160g | 4 | Autumn |
-| Golden carp | 220g | 5 | Summer |
-| Lantern koi | 240g | 5 | Winter |
+| Brook trout | 100g | 3 | Spring, Autumn |
+| Frost char | 105g | 3 | Winter |
+| Ice pike | 150g | 4 | Winter |
+| Dusk grayling | 200g | 4 | Autumn |
+| Golden carp | 300g | 5 | Summer |
+| Lantern koi | 300g | 5 | Winter |
 
 Five fish per season. Bite odds are weighted toward easy fish (weight 6 minus difficulty). The green zone shrinks and the marker speeds up with difficulty.
 
@@ -78,7 +82,7 @@ Five fish per season. Bite odds are weighted toward easy fish (weight 6 minus di
 
 - Pickaxe costs 2 energy per hit. Stone takes 1 hit, copper 2, iron 3. Iron appears from floor 6.
 - One rock per floor hides the ladder down. Checkpoints at floor 1 and every fifth floor reached.
-- Slimes: health 3 + floor/3, damage 6 + floor, count up to 8. Sword does 3 damage. Gel drops 60% (15g).
+- Slimes: health 3 + floor/3, damage 6 + floor, count up to 8. Sword does 3 damage. Gel drops 60% (5g). Ore sells for little (stone 2g, copper 5g, iron 10g) but the bin keeps it for upgrades anyway.
 - Player health 100, lost only in the mine, refilled by sleep. Fainting costs 15% of gold (max 500g) and leaves you at the entrance with half health.
 
 ### Neighbours
@@ -96,24 +100,24 @@ Points: talk 20/day, gift 80 loved, 45 liked, 20 other (1 gift/day). 100 points 
 
 | Purchase | Gold | Materials | Effect |
 |---|---|---|---|
-| Copper can | 600 | 5 copper | Holds 45 |
-| Steel can | 1500 | 5 iron | Holds 80 |
-| Wide hoe | 800 | 8 copper | Tills 3 tiles for 3 energy |
-| Ashwood rod | 700 | none | Green zone +14 px |
-| Extended farmhouse | 2500 | 60 stone | Max energy 140 |
-| Hillside manor | 12000 | 120 stone, 25 iron | Max energy 170 |
-| Chicken coop | 1200 | 30 stone | Up to 4 chickens at 300g |
+| Copper can | 2000 | 25 copper | Holds 55 |
+| Steel can | 5000 | 25 iron | Holds 70 |
+| Wide hoe | 2000 | 25 copper | Tills 3 tiles for 3 energy |
+| Ashwood rod | 1800 | none | Green zone +14 px |
+| Extended farmhouse | 10000 | 150 stone | Max energy 300 |
+| Hillside manor | 50000 | 200 stone, 50 iron | Max energy 340 |
+| Chicken coop | 4000 | 150 stone | Up to 4 chickens at 800g |
+| Barn | 6000 | 250 stone, 10 copper | Up to 4 cows (1500g) or goats (4000g) |
 
-| Barn | 3000 | 50 stone, 10 copper | Up to 4 cows (900g) or goats (1100g) |
 
-Chickens: each eats 1 feed a night (5g, bought at the coop). A fed chicken petted that day lays one egg (50g) next morning, collected at the coop.
+Chickens: each eats 1 feed a night (50g, bought at the coop). A fed chicken petted that day lays one egg (50g) next morning, collected at the coop.
 
 ### Barn
 
 - Built overnight by the west fence (footprint 2,11 to 5,12; yard 2,13 to 8,14). Holds 4 animals in any mix.
-- Each night every animal eats 1 hay (10g, bought at the barn). An animal that was fed and petted that day gives milk next morning, collected at the barn. No hay: no milk, and the morning report says so.
-- Cow: milk 80g. Goat: goat milk 100g.
-- Per animal per day with hay: cow 70g net, goat 90g net; with a churn or vat, 180g and 230g.
+- Each night every animal eats 1 hay (50g, bought at the barn). An animal that was fed and petted that day gives milk next morning, collected at the barn. No hay: no milk, and the morning report says so.
+- Cow: milk 125g. Goat: goat milk 225g.
+- Per animal per day with hay: cow 75g net, goat 175g net; with a churn or vat, 180g and 350g.
 
 ### Crafting (C key; costs gold plus materials)
 
@@ -123,13 +127,13 @@ Chickens: each eats 1 feed a night (5g, bought at the coop). A fed chicken pette
 | Iron sprinkler | 200 | 3 iron, 2 copper | Waters the 8 tiles around it every morning |
 | Steel sprinkler | 900 | 5 iron, 5 slime gel | Waters the 24 tiles in a 5 by 5 square every morning |
 | Brine crock | 500 | 30 stone, 4 copper | Any crop or forage item -> jarred version in 3 nights |
-| Butter churn | 400 | 6 copper | Milk -> butter (190g) overnight |
-| Cheese vat | 600 | 4 iron | Goat milk -> soft cheese (240g) overnight |
+| Butter churn | 400 | 6 copper | Milk -> butter (230g) overnight |
+| Cheese vat | 600 | 4 iron | Goat milk -> soft cheese (400g) overnight |
 | Frost lantern | 350 | Frostlight Market only | Decoration, glows after 6 pm |
 
 - Crafted objects go to the kit (slot 7). Placed on untilled farm grass only; not on the coop or barn footprint. They are solid. Picking one up returns it to the kit (machines only when empty).
 - Sprinklers also water their tiles the moment they are placed.
-- Jarred value = 2 x item + 20g. Pumpkin 200g -> 420g over 3 nights (about 73g a day per crock).
+- Jarred value = 2 x item + 50g. Pumpkin 235g -> 520g over 3 nights (about 95g a day per crock).
 
 ### Skills
 
@@ -142,7 +146,7 @@ Chickens: each eats 1 feed a night (5g, bought at the coop). A fed chicken pette
 | Ranching | Petting 2, each egg 3, each milk 4 |
 
 - Levels 0 to 10 at 50, 130, 250, 420, 650, 950, 1330, 1800, 2380, 3100 XP.
-- Each level: +5% chance per item of a bonus item when you gather with that skill (level 10 = 50%).
+- Each level: +2% chance per item of a bonus item when you gather with that skill (level 10 = 20%).
 - Levels 5 and 10 each add +5 max energy (up to +50 across all skills).
 
 ### Village and quest board
@@ -150,7 +154,7 @@ Chickens: each eats 1 feed a night (5g, bought at the coop). A fed chicken pette
 - West exit of the farm (path row, left edge) leads to Hollowmere Village: four cottages, a quest board, a fountain and the festival table.
 - Up to 3 requests at once; one new request most mornings; each lasts 5 days.
 - A request asks for 1 to 5 of an item you can get this season (in-season crops, forage, fish up to difficulty 3, stone, copper; iron after floor 6; eggs and milk once you own the animals). Materials ask for 3 to 25.
-- Reward: sell value x quantity x 1.4 + 25g, rounded to 5g, paid at once, plus 50 friendship points with the neighbour who asked.
+- Reward: sell value x quantity x 3, rounded to 5g, paid at once, plus 50 friendship points with the neighbour who asked.
 
 ### Village projects (quest board)
 
@@ -176,25 +180,14 @@ One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up 
 
 ### Energy costs
 
-Hoe 2 (wide 3), water 1, clear withered crop 1, cast 3, pickaxe 2. Warm cider restores 60.
+Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (wide 3), water 2, clear withered crop 1, cast 8, pickaxe 2. Warm cider restores 60.
 
 ## Known issues and open questions
 
-### Simulated balance (tools/balance.mjs, strategy full, 2 years, 5 runs)
+### Simulated balance (advisory)
 
-The bot plays efficiently (teleporting, no mine damage), so treat these as an upper bound, but the shape is clear:
+Balance warnings from tools/balance.mjs are information only since v11: values follow the Stardew scale instead of being tuned to the checks. Latest run (strategy full, 2 years, 5 runs): about 704,000g unspent at the end; the shopping list is finished by day 63 because 270 energy leaves plenty for mining iron. Quests pay 3x and artisan goods roughly doubled their share of income.
 
-- **Income outruns every sink by about 8 to 1.** Year 1 earns roughly 1,400 to 3,600g a day; total spending over two years is about 110,000g against about 880,000g earned. About 770,000g ends unspent with nothing left to buy.
-- **Energy allows a full 72-tile field by Spring 9.** Tilling, planting and watering costs 3 energy a tile, so 100 energy covers about 30 new tiles a day. Fava beans then carry spring.
-- **Skill bonuses compound.** Farming, foraging and mining reach level 10 in year 1, and level 10 means 50% bonus items.
-- **Finding a ladder costs about 45 rocks a floor.** Iron (floor 6) arrives anywhere from Winter Y1 to Summer Y2, so the cheese vat and iron sprinklers stall the shopping list.
-- **Late fishing is very strong** (26% of income over two years): sprinklers free up all the energy, and 190 max energy is about 60 casts a day.
-- **v10 sinks barely move it.** The manor, projects and feed absorb about 47,000g over two years, but the manor's extra energy feeds more fishing, so end gold drops only 4% (770,322g to 740,761g). Closing the gap needs income cuts (roadmap: economy pass), not just more things to buy.
-- The bot never buys the steel sprinkler: its 3 by 3 field blocks are already fully watered by iron sprinklers.
-
-- **Balance is untested, and v9 makes that worse.** All prices were set by feel. Nobody has played a full season without debug tools. v9 adds three new income streams (barn, artisan goods, quest rewards) and contest prizes on top of untested crop prices. A real playthrough is now the top priority.
-- **Artisan goods may be too strong.** A crock roughly doubles any crop's value and pays for itself in under two weeks. If a playthrough shows crocks replacing shipping, raise the crock to 4 nights or lower jars to 1.75x.
-- Lanterns are the only uncapped gold sink and are purely cosmetic. A late-game sink with an effect is still missing.
 - Sprinklers make watering free once you have the ore. That is intended, but it removes a daily energy cost; watch whether energy still matters by mid-summer.
 - Hotbar changed in v8: crops moved from keys 6 to 9 into one seed slot on key 6. Old saves keep the crop they had selected. v9 adds slot 7 (kit) at the end, so no key moved.
 - Winter still has no crops; it now has 2 forage items and 5 fish.
@@ -206,10 +199,6 @@ The bot plays efficiently (teleporting, no mine damage), so treat these as an up
 - Chickens never leave the yard.
 - Mine floors have no special floors (treasure, boss, elevator).
 
-## Roadmap candidates (not committed)
+## Roadmap
 
-1. Balance pass from a real playthrough.
-2. Winter content (greenhouse, ice fishing spot).
-3. Neighbours who spend non-festival days in the village.
-4. Sound effects and a simple music loop (Web Audio, generated).
-5. Save export and import (a downloadable save file).
+The committed queue lives in `docs/ROADMAP.md`.

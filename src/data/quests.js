@@ -2,8 +2,8 @@
 export const QUEST = {
   max: 3,              // open requests on the board at once
   lasts: 5,            // days a request stays up
-  markup: 1.4,         // reward = sell value x n x markup + base, rounded to 5g
-  base: 25,
+  markup: 3,         // reward = sell value x n x markup + base, rounded to 5g
+  base: 0,
   friendship: 50,      // points for the neighbour who asked
   maxFishDifficulty: 3,
 };

@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v11: Stardew-scale values
+- Every price, cost and yield now follows the Stardew Valley scale by role (closest counterpart's ratios, refitted to our growth times; our names kept). Tables in GAME_DESIGN.md.
+- Energy model: 270 base energy (300 and 340 with house upgrades); watering 2, fishing cast 8.
+- Buildings and animals cost more (coop 4000g, barn 6000g, chicken 800g, cow 1500g, goat 4000g); hay and chicken feed 50g a night.
+- Artisan goods: jars 2x + 50g, butter 230g, soft cheese 400g. Quests pay 3x the items' value. Skill bonus 2% per level.
+- Watering can holds 40 (55, 70 upgraded). Start with 500g.
+- Balance warnings are now report-only; CI fails only if the simulation crashes. CLAUDE.md describes the value rules.
+
 ## v10: Sinks and upkeep
 - Chickens eat 1 feed a night (5g, bought at the coop); unfed chickens do not lay. Saves from before v10 get 7 nights of feed per chicken.
 - Steel sprinkler: waters a 5 by 5 square (24 tiles). 900g, 5 iron, 5 slime gel.
