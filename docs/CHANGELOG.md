@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v25: Clothing and tailoring
+- 25 pieces of clothing: 8 shirts, 5 trousers, 8 hats (you start in the straw hat) and 4 pairs of shoes. Shoes give defense: each point takes 1 off a monster's hit.
+- New for the farmhouse catalogue: a sewing machine (2,500g), dye pots (1,000g) and a mannequin (2,000g).
+- At the sewing machine, weave cloth from 5 fiber, then sew: one cloth plus the right item makes a piece (a pumpkin makes the harvest jumper, a radish the red cap, copper the work boots).
+- Dye shirts and trousers with any crop, fruit or fish at the dye pots. Dress a mannequin in what you are wearing.
+- Change clothes in the bag (I). Without a piece on, you wear the colours you chose on the new game screen.
+
 ## v24: The farmhouse
 - Walk into the farmhouse through its door. Sleep in the bed; you wake beside it.
 - House upgrades add rooms: a kitchen, a nursery, and with the new third upgrade (100,000g) a cellar with casks.

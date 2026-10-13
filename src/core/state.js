@@ -46,6 +46,7 @@ export function newState() {
     pet: null,                                          // the farm pet (systems/pets.js), made from the profile on load
     horse: null,                                        // { name, map, x, y } once the stable is built (systems/stable.js)
     house: { wall: 0, floor: 0, renos: [], catalogue: false },   // farmhouse decor (systems/house.js)
+    wardrobe: { straw: true }, outfit: { shirt: null, pants: null, hat: 'straw', shoes: null }, dyes: {},   // clothing (systems/clothing.js)
     profile: null,                                      // farmer profile from the new game screen (data/profile.js); null until chosen
     weather: 'sun', forecast: null,                     // today's and tomorrow's weather (systems/weather.js); forecast rolled on load
     mist: null,                                         // this year's Silvermist day: { year, d }

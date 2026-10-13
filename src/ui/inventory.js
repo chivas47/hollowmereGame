@@ -13,6 +13,7 @@ import { SKILLS, BONUS_PER_LEVEL } from '../data/skills.js';
 import { skillProgress } from '../systems/skills.js';
 import { openModal, closeModal } from './modal.js';
 import { esc } from './dom.js';
+import { wardrobeHtml } from './clothing.js';
 import { PETS } from '../data/profile.js';
 
 const row = (left, right, cls = '') => `<div class="inv-row ${cls}"><span>${left}</span><span>${right}</span></div>`;
@@ -57,6 +58,7 @@ on('ui:inventory', () => {
     <h3>Materials <span class="role">kept for upgrades</span></h3>${materials}
     <h3>Kit <span class="role">slot 7 places these</span></h3>${kit}
     <h3>Skills <span class="role">each level: ${Math.round(BONUS_PER_LEVEL * 100)}% chance of a bonus item</span></h3>${skills}
+    <h3>Wardrobe <span class="role">sew clothes at a sewing machine</span></h3>${wardrobeHtml()}
     <h3>Seeds</h3>${seeds}
     <h3>Tools</h3>${tools}
     <h3>Fish log <span class="role">${known} of ${Object.keys(FISH).length}</span></h3>${fish}`,

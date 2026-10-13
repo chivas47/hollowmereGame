@@ -59,6 +59,19 @@ The catalogue lectern sells 30 pieces of furniture, 12 wallpapers and 12 floorin
 
 Renovations at Bram's workbench: open-plan living room (10,000g, removes the bed corner's wall) and a reading nook (5,000g, a bay in the north wall).
 
+## Clothing (v25)
+
+Tailoring as in Stardew: at the sewing machine one cloth plus one item makes the piece that item belongs to. Cloth is woven there from 5 fiber (Stardew weaves cloth from wool; sheep come with roadmap item 13). Cloth is a material: kept, never shipped.
+
+| Slot | Pieces (item that makes it) |
+|---|---|
+| Shirts | Linen shirt (cloth), berry smock (sunberry), harvest jumper (pumpkin), fern-green shirt (wild leek), sailor shirt (carp), frost knit (ice moss), rose blouse (rosehip), honey vest (melon) |
+| Trousers | Canvas (wood), blue work (cucumber), moss (wild thyme), rust (iron ore), cream (egg) |
+| Hats | Straw hat (you start with it), red cap (radish), Hollow beanie (Hollow cap), sorrel garland (wood sorrel), gel top hat (slime gel), bucket hat (snap pea), ranger hat (hardwood), angler hat (trout) |
+| Shoes (defense) | Rope sandals 1 (fiber), work boots 2 (copper ore), field boots 3 (stone), iron-toe boots 4 (storm cell) |
+
+Defense: each point takes 1 off a hit, to a minimum of 1 (Stardew's boots give 1 to 4). Dye pots recolour a shirt or trousers with any crop, fruit or fish, used up. A mannequin wears a copy of your outfit. Stations come from the farmhouse catalogue: sewing machine 2,500g, dye pots 1,000g, mannequin 2,000g (Stardew has no price for these: you use Emily's for free, so they are priced as mid-range furniture).
+
 ## Controls
 
 - H whistles for the horse.

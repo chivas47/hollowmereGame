@@ -8,5 +8,6 @@ import { ARTISAN } from './artisan.js';
 import { FRUIT } from './trees.js';
 import { WOODS } from './clearing.js';
 import { WEATHER_ITEMS } from './weather.js';
+import { CLOTH_ITEMS } from './clothing.js';
 
-export const ITEMS = { ...PRODUCE, ...FORAGE, ...FISH, ...PRODUCTS, ...MINERALS, ...ARTISAN, ...FRUIT, ...WOODS, ...WEATHER_ITEMS };
+export const ITEMS = { ...PRODUCE, ...FORAGE, ...FISH, ...PRODUCTS, ...MINERALS, ...ARTISAN, ...FRUIT, ...WOODS, ...WEATHER_ITEMS, ...CLOTH_ITEMS };

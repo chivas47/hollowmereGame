@@ -80,11 +80,21 @@ export function drawForage(c, f) {
   if (blink(500, 4)) r(c, X + 13, Y + 3, 1, 1, '#fffbe8');
 }
 
+// Hat shapes (data/clothing.js style). x, y: the person's top-left.
+const HATS = {
+  straw: (c, x, y, h, b) => { r(c, x, y + 1, 10, 2, h); r(c, x + 2, y - 1, 6, 2, h); r(c, x + 2, y + 1, 6, 1, b); },
+  cap: (c, x, y, h) => { r(c, x + 2, y - 1, 6, 3, h); r(c, x + 1, y + 2, 8, 1, h); r(c, x + 4, y - 1, 2, 1, 'rgba(255,255,255,.35)'); },
+  beanie: (c, x, y, h, b) => { r(c, x + 2, y - 1, 6, 3, h); r(c, x + 2, y + 1, 6, 1, b === h ? 'rgba(0,0,0,.25)' : b); r(c, x + 4, y - 2, 2, 1, h); },
+  garland: (c, x, y, h, b, hair) => { r(c, x + 2, y + 1, 6, 1, hair); r(c, x + 1, y + 1, 8, 1, h); r(c, x + 2, y + 1, 1, 1, b); r(c, x + 5, y + 1, 1, 1, b); r(c, x + 8, y + 1, 1, 1, b); },
+  top: (c, x, y, h, b) => { r(c, x + 1, y + 1, 8, 1, h); r(c, x + 2, y - 4, 6, 5, h); r(c, x + 2, y - 1, 6, 1, b); },
+  bucket: (c, x, y, h, b) => { r(c, x + 1, y + 1, 8, 2, h); r(c, x + 2, y - 1, 6, 2, h); r(c, x + 1, y + 2, 8, 1, b === h ? 'rgba(0,0,0,.2)' : b); },
+};
+
 export function drawPerson(c, px, py, dir, moving, walkT, p) {
   const x = Math.round(px) - 5, y = Math.round(py) - 15, st = moving ? Math.floor(walkT * 8) % 2 : 0, eye = '#2b211a';
   r(c, x + 1, y + 14, 8, 2, 'rgba(0,0,0,.25)');
   r(c, x + 2, y + 11, 2, st ? 2 : 3, p.pants); r(c, x + 6, y + 11, 2, st ? 3 : 2, p.pants);
-  r(c, x + 2, y + 13 - (st ? 1 : 0), 2, 1, eye); r(c, x + 6, y + 13 - (st ? 0 : 1), 2, 1, eye);
+  r(c, x + 2, y + 13 - (st ? 1 : 0), 2, 1, p.shoes || eye); r(c, x + 6, y + 13 - (st ? 0 : 1), 2, 1, p.shoes || eye);
   r(c, x + 1, y + 6, 8, 5, p.shirt); r(c, x + 1, y + 10, 8, 1, 'rgba(0,0,0,.22)');
   r(c, x, y + 7, 1, 3, p.skin); r(c, x + 9, y + 7, 1, 3, p.skin);
   r(c, x + 2, y + 2, 6, 5, p.skin);
@@ -100,7 +110,7 @@ export function drawPerson(c, px, py, dir, moving, walkT, p) {
     r(c, x + 2, y + 2, 3, 4, p.hair); r(c, x + 6, y + 4, 1, 1, eye);
     if (p.long) r(c, x + 1, y + 6, 3, 3, p.hair); if (p.beard) r(c, x + 4, y + 5, 4, 2, p.hair);
   }
-  if (p.hat) { r(c, x, y + 1, 10, 2, p.hat); r(c, x + 2, y - 1, 6, 2, p.hat); r(c, x + 2, y + 1, 6, 1, p.band || p.hat); }
+  if (p.hat) (HATS[p.hatStyle] || HATS.straw)(c, x, y, p.hat, p.band || p.hat, p.hair);
   else r(c, x + 2, y + 1, 6, 1, p.hair);
 }
 
@@ -390,6 +400,9 @@ const FURN_ART = {
   globe: (c, X, Y, a, b) => { r(c, X + 7, Y + 11, 2, 3, '#a5753f'); r(c, X + 5, Y + 14, 6, 1, '#6e4626'); r(c, X + 4, Y + 3, 8, 8, a); r(c, X + 5, Y + 4, 3, 3, b); r(c, X + 9, Y + 7, 2, 2, b); },
   barrel: (c, X, Y, a, b) => { r(c, X + 3, Y + 3, 10, 12, a); r(c, X + 2, Y + 6, 12, 6, a); r(c, X + 2, Y + 5, 12, 1, b); r(c, X + 2, Y + 12, 12, 1, b); },
   easel: (c, X, Y, a, b) => { r(c, X + 3, Y + 6, 1, 9, a); r(c, X + 12, Y + 6, 1, 9, a); r(c, X + 2, Y - 2, 12, 10, '#f4ead2'); r(c, X + 4, Y, 8, 6, b); r(c, X + 5, Y + 3, 3, 2, '#5d8a4a'); },
+  sewing: (c, X, Y, a, b) => { r(c, X + 1, Y + 7, 14, 8, '#7a4a2a'); r(c, X + 2, Y + 2, 11, 5, a); r(c, X + 9, Y + 2, 4, 8, a); r(c, X + 3, Y + 3, 3, 2, b); r(c, X + 10, Y + 9, 1, 2, b); },
+  dyepots: (c, X, Y, a) => { [[0, '#5f8fb5'], [5, '#c8352f'], [10, '#e9c46a']].forEach(([o, col]) => { r(c, X + o, Y + 5, 6, 10, a); r(c, X + o, Y + 15, 6, 1, 'rgba(0,0,0,.3)'); r(c, X + o + 1, Y + 5, 4, 2, col); r(c, X + o, Y + 5, 6, 1, '#b5b1a8'); }); },
+  mannequin: (c, X, Y, a, b) => { r(c, X + 7, Y + 9, 2, 6, b); r(c, X + 4, Y + 14, 8, 1, b); r(c, X + 5, Y + 1, 6, 8, a); r(c, X + 6, Y - 3, 4, 4, a); },
   chest: (c, X, Y, a, b) => { r(c, X + 2, Y + 5, 12, 10, a); r(c, X + 2, Y + 5, 12, 3, b); r(c, X + 7, Y + 7, 2, 3, '#3f3226'); },
 };
 export function drawFurniture(c, X, Y, def) { (FURN_ART[def.shape] || FURN_ART.chest)(c, X, Y, ...def.colors); }
