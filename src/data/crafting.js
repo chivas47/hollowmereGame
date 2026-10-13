@@ -1,8 +1,9 @@
 // Things you craft and place on the farm. Crafting costs materials and gold (Bram supplies the fittings).
-// kind: 'sprinkler' waters soil every morning, 'machine' turns an item into an artisan good, 'decor' just looks nice.
+// kind: 'tree' a fruit tree sapling (data/trees.js), 'sprinkler' waters soil every morning, 'machine' turns an item into an artisan good, 'decor' just looks nice.
 import { PRODUCE } from './crops.js';
 import { FORAGE } from './forage.js';
 import { JAR_PREFIX } from './artisan.js';
+import { TREES, FRUIT } from './trees.js';
 
 export const PLACEABLES = {
   sprinkler:  { name: 'Copper sprinkler', short: 'Sprinkler', kind: 'sprinkler', reach: 1, square: false },
@@ -21,6 +22,7 @@ export const PLACEABLES = {
   tonic2:     { name: 'Strong growth tonic', short: 'Strong tn.', kind: 'fertilizer', speed: 0.25 },
   mulch:      { name: 'Mulch',               short: 'Mulch',     kind: 'fertilizer', retain: 0.33 },
   mulch2:     { name: 'Thick mulch',         short: 'Th. mulch', kind: 'fertilizer', retain: 0.66 },
+  ...Object.fromEntries(Object.entries(TREES).map(([k, t]) => [k, { name: t.name, short: t.short, kind: 'tree' }])),
 };
 
 // key -> what it makes (a PLACEABLES key). Lanterns are only sold at the Frostlight Market.
@@ -28,7 +30,7 @@ export const RECIPES = {
   sprinkler:  { cost: 75,  needs: { copper: 3, stone: 5 }, desc: 'Waters the 4 tiles next to it every morning.' },
   sprinkler2: { cost: 200, needs: { iron: 3, copper: 2 },  desc: 'Waters all 8 tiles around it every morning.' },
   sprinkler3: { cost: 900, needs: { iron: 5, gel: 5 },     desc: 'Waters the 24 tiles in a 5 by 5 square around it every morning.' },
-  crock:      { cost: 500, needs: { stone: 30, copper: 4 }, desc: 'Jars a crop or forage item over 3 nights. Worth twice the item plus 50g.' },
+  crock:      { cost: 500, needs: { stone: 30, copper: 4 }, desc: 'Jars a crop, fruit or forage item over 3 nights. Worth twice the item plus 50g.' },
   churn:      { cost: 400, needs: { copper: 6 },            desc: 'Turns milk into butter overnight.' },
   vat:        { cost: 600, needs: { iron: 4 },              desc: 'Turns goat milk into soft cheese overnight.' },
   booster3:   { cost: 0,   needs: { iron: 5, gel: 10 },     desc: 'Highest soil booster: crops can come out heirloom quality.' },
@@ -36,7 +38,7 @@ export const RECIPES = {
 
 // Machines: accepts(itemKey) -> bool, product(itemKey) -> item key, nights to finish.
 export const MACHINES = {
-  crock: { accepts: (k) => k in PRODUCE || k in FORAGE, product: (k) => JAR_PREFIX + k, nights: 3, hint: 'a crop or forage item' },
+  crock: { accepts: (k) => k in PRODUCE || k in FRUIT || k in FORAGE, product: (k) => JAR_PREFIX + k, nights: 3, hint: 'a crop, fruit or forage item' },
   churn: { accepts: (k) => k === 'cowmilk', product: () => 'butter', nights: 1, hint: 'milk' },
   vat:   { accepts: (k) => k === 'goatmilk', product: () => 'cheese', nights: 1, hint: 'goat milk' },
 };
@@ -52,5 +54,6 @@ export function sprinklerTiles(def, x, y) {
   return out;
 }
 
-// Sold at the seed stall all year (Stardew scale: basic 100g, quality 150g).
-export const SUPPLIES = { booster: 100, booster2: 150, tonic: 100, tonic2: 150, mulch: 100, mulch2: 150 };
+// Sold at the seed stall all year (Stardew scale: basic 100g, quality 150g; saplings at their tree's price).
+export const SUPPLIES = { booster: 100, booster2: 150, tonic: 100, tonic2: 150, mulch: 100, mulch2: 150,
+  ...Object.fromEntries(Object.entries(TREES).map(([k, t]) => [k, t.cost])) };

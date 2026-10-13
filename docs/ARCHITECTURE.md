@@ -21,6 +21,7 @@ src/
     npcs.js maps.js seasons.js hotbar.js upgrades.js (incl. COOP, BARN)
     crafting.js       PLACEABLES, RECIPES, MACHINES, sprinklerTiles()
     skills.js quests.js festivals.js projects.js quality.js
+    trees.js          TREES (saplings, kit keys), FRUIT (items), tree timings
     schedules.js      neighbour daily schedules, rest days, map entry points
     scenes.js         heart scenes at 4 and 8 hearts
   systems/            one feature per file
@@ -52,12 +53,14 @@ src/
     village.js        fountain and cottage flavour text
     projects.js       village projects: fundProject(), funded()
     greenhouse.js     greenhouse placement on the farm, ordering, entering
+    trees.js          fruit trees (placed objects of kind 'tree'): growth, fruit, picking, drawing
+    giants.js         giant crops: merging ripe 3x3 blocks, chopping, solid 'Y' tiles
     quality.js        item quality: counts(), addItem(), valueOf(), takeBest(), quality rolls
     debug.js          DEBUG actions for the debug panel
   render/
     pixel.js          r() rectangle primitive, rng(seed), blink()
     tiles.js          static art: grass, path, trees, water, rocks, buildings, cave tiles
-    sprites.js        per-frame art: soil, crops, forage, people, chickens, slimes, effects
+    sprites.js        per-frame art: soil, crops, forage, people, chickens, slimes, fruit trees, giant crops, effects
     icons.js          16x16 hotbar icons
     renderer.js       composes a frame, caches backgrounds per map + season
   audio/              Web Audio output (like render/, but for sound); imported only by main.js and ui/
@@ -94,12 +97,14 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 100 | npcs.js | Facing a neighbour |
 | 95 | coop.js | Facing a chicken (pet) |
 | 94 | barn.js | Facing a cow or goat (pet) |
+| 73 | trees.js | Facing a fruit tree (pick fruit) |
 | 72 | upgrades.js / coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Workbench K, coop C, barn A, greenhouse G, mine entrance M, ladders U/L, placed object Y, quest board Q, festival table J |
 | 71 | village.js | Fountain F, cottage V (flavour text) |
 | 70 | buildings.js | Door D, stall S, bin B |
 | 66 | mine.js | Pickaxe on mine rocks |
 | 65 | fishing.js | Rod on water O (cast) |
 | 60 | buildings.js | Well W or pond O (refill can) |
+| 59 | giants.js | Any tool aimed at a giant crop (chop with hoe, pickaxe or sword) |
 | 58 | monsters.js | Sword (claims every press while held) |
 | 55 | placeables.js | Kit slot on untilled farm grass (place) |
 | 50 | farming.js | Grass on the farm |
@@ -113,7 +118,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 12 | fishing.js | Ice hole in winter |
 | 20 | placeables.js | Sprinklers, machines, lanterns |
 | 30 | festivals.js | Bunting on festival days |
-| (entities) | player, npcs, coop, barn, monsters | y-sorted characters |
+| (entities) | player, npcs, coop, barn, monsters, trees, giants | y-sorted characters, fruit trees and giant crops |
 | 55 | fishing.js | Line and bobber |
 | 60 | effects.js | Tool swing |
 | 90 | fishing.js | Reel bar |
@@ -133,12 +138,12 @@ The night tint is drawn by renderer.js after all layers (not in caves).
 | `map:changed` | map id | player.js, days.js, mine.js | fishing, monsters |
 | `world:changed` | none | coop.js, mine.js | renderer (drop background cache) |
 | `day:end` | report | days.js | farming (growth), economy (payout), coop (eggs) |
-| `season:changed` | {from, to, report} | days.js | farming (wither), renderer |
-| `day:start` | report | days.js | forage, npcs, coop (build), health, fishing, monsters |
+| `season:changed` | {from, to, report} | days.js | farming (wither), trees (drop fruit), renderer |
+| `day:start` | report | days.js | forage, npcs, coop (build), health, fishing, monsters, trees (age, fruit), giants (merge) |
 | `day:report` | report | days.js | ui/dialogs.js morning summary |
 | `mine:floor` | {floor, rng} | mine.js | monsters (spawn) |
 | `mine:faint` | none | health.js | mine.js (carry out) |
-| `gather` | {skill, xp, item?, n?} | farming, forage, fishing, mine, monsters, coop, barn | skills.js (XP, bonus item) |
+| `gather` | {skill, xp, item?, n?} | farming, giants, forage, fishing, mine, monsters, coop, barn | skills.js (XP, bonus item) |
 | `placed` | {map, x, y, kind} | placeables.js | sprinklers.js (water now), audio/sfx.js |
 | `sfx` | name | effects, monsters, fishing, health, economy, skills, coop, barn, ui/modal | audio/sfx.js |
 | `ui:scene` | {npc, at, scene, extra} | npcs.js | ui/dialogs.js heart scene with choices |
@@ -175,7 +180,7 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | A | barn (written at runtime) | yes |
 | G | greenhouse building on the farm (written at runtime) | yes |
 | w, p | greenhouse glass wall, greenhouse floor | yes, no |
-| Y | crafted object (written at runtime from `G.S.placed`) | yes |
+| Y | crafted object or fruit tree (written at runtime from `G.S.placed`), giant crop (from `G.S.giants`) | yes |
 | V, Q, F, J | village cottage, quest board, fountain, festival table | yes |
 | M | mine entrance | yes |
 | f, X | cave floor, cave wall | no, yes |

@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v18: Fruit trees and giant crops
+- Fruit saplings at the stall: plum and loquat (spring), fig and nectarine (summer), pear and persimmon (autumn). They go to slot 7, are planted on open grass with a free tile between trees, grow for 28 days in any season, then grow one fruit each morning of their season, up to 3. Face a tree to pick. In the greenhouse they fruit all year.
+- Fruit gets better with age: one quality tier a year after the tree matures, up to heirloom. Fruit left on a tree drops when its season ends.
+- Giant crops: a ripe 3x3 block of melon, pumpkin or fava bean on the farm can merge overnight (1% a night) into one giant crop. Chop it with the hoe, pickaxe or sword (6 energy) for 15 to 21 crops. It blocks its tiles and lasts through season changes until chopped.
+- The brine crock jars fruit. The morning report mentions new fruit and giant crops.
+
 ## v17: Crop variety
 - Regrowing crops: snap pea (spring), cherry tomato (summer), sweet corn (summer and autumn), lingonberry (autumn, two per harvest), summer squash and broccoli. The plant stays after picking and fruits again.
 - New crops: carrot (spring), summer squash (summer), broccoli (autumn), frost kale (winter, grows outdoors).

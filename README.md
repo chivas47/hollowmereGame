@@ -64,6 +64,8 @@ Systems never call each other's internals. They plug into four registries and an
 
 **New crop:** add an entry to `data/crops.js` and its key to `data/hotbar.js`. The shop, planting, growth and withering pick it up automatically.
 
+**New fruit tree:** add a sapling to `TREES` and its fruit to `FRUIT` in `data/trees.js`. The stall, the kit slot, the fruit item and its jar pick it up automatically.
+
 **New forage item:** add it to `data/forage.js` and an art function in `render/sprites.js` (`FORAGE_ART`).
 
 **New neighbour:** add an entry to `data/npcs.js`. Check that each leg of their `path` (walked x first, then y) is clear.
