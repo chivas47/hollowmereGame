@@ -1,0 +1,30 @@
+# Runs the balance simulator on every change to game code or data.
+# Fails only if the simulation crashes (it plays every system, so that is a real regression).
+# Balance warnings show in the job summary; the full report is attached as an artifact.
+name: Balance
+
+on:
+  pull_request:
+    paths: ['src/**', 'tools/balance.mjs', '.github/workflows/balance.yml']
+  push:
+    branches: [main]
+    paths: ['src/**', 'tools/balance.mjs', '.github/workflows/balance.yml']
+
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Simulate two years
+        run: node tools/balance.mjs --days 224 --runs 5 --out balance.md --json balance.json
+      - name: Job summary
+        run: cat balance.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: balance-report
+          path: |
+            balance.md
+            balance.json
