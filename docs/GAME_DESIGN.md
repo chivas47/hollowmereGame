@@ -22,6 +22,23 @@ You take over the overgrown Hollowmere plot. Farm through the seasons, fish and 
 
 A new farm starts on a screen that asks for the farmer's name, the farm's name (shown as "<name> Farm"), a favourite thing, colours for skin, hair, shirt and trousers, short or long hair, and a starting pet: cat, dog or turtle. The pet is saved with the profile and moves in when pets arrive (roadmap item 8). Neighbours at 2 hearts or more have a line that uses the name and the favourite thing. Old saves get the default profile: Farmer of Hollowmere Farm, the original look.
 
+## Farm layouts (v22)
+
+Chosen on the new game screen. The top of the farm (house, path, bin, well, workbench, stall, greenhouse plot) and the coop and barn plots with their yards are the same on every layout.
+
+| Layout | Stardew role | Land | Perk |
+|---|---|---|---|
+| Open field | Standard | All grass | Most room to farm |
+| River farm | Riverland | A stream and two pools (32 water tiles) | Fish and refill at home |
+| Woodland farm | Forest | Old trees on the west edge | 6 more alders at start, 2 forage a day in the wood, up to 4 large stumps regrow each season |
+| Hill quarry | Hill-top | 6 x 5 quarry floor | Up to 3 rocks a night, at most 10: stone 60%, copper 30%, iron 10% |
+| Wild farm | Wilderness | A few extra trees | 2 to 4 first-floor slimes after 8 pm (once a night, while you are on the farm) |
+| Four corners | Four Corners | Small pond, small quarry, a few trees | Fishing, 1 rock a night (cap 4), 2 stumps regrow each season |
+| Beach farm | Beach | Sand and a strip of sea on the east | Sea fishing; a supply crate washes up on 60% of mornings (cap 3): wood, stone, copper, iron, fiber or hardwood |
+| Meadow farm | Meadowlands | All grass | Starts with the coop built, 2 hens and 14 feed |
+
+Fainting on the farm (wild farm) wakes you on the doorstep and costs gold as in the mine.
+
 ## Controls
 
 - Hotbar: 1 Hoe, 2 Can, 3 Rod, 4 Pick, 5 Sword, 6 Seeds, 7 Kit, 8 Axe (v19, added at the end so no key moved).
@@ -331,6 +348,8 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Existing recipes still use stone and ore where Stardew uses wood (the v11 substitution). Switching them to wood now that wood exists is Nuno's call; it would raise costs on saves that have no wood yet.
 - Hardwood only comes from the large stumps a farm starts with (2 each). More sources arrive with new areas (roadmap item 21).
 - Debris can creep onto grass the player meant to keep free; paths keep it off.
+- Farm water uses the pond's fish; sea and river fish of their own come with the fishing overhaul (roadmap item 20). It freezes in winter like the pond.
+- The balance bot farms the same field on every layout, so `--layout` runs show what the layout costs or adds to that field, not a tuned strategy for it.
 - The starting pet is chosen but has nowhere to live until pets and the pet bowl arrive.
 - Weather does not change fishing or neighbours yet (Stardew has rain-only fish and neighbours who stay in). Rain sound and richer effects come with the atmosphere item.
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.

@@ -100,6 +100,7 @@ A new tool also needs its key in `data/hotbar.js`, a label in `ui/hotbar.js` and
 ```
 node tools/balance.mjs --days 224 --runs 10      two years, 10 runs
 node tools/balance.mjs --strategy crops          farming, forage and fishing only
+node tools/balance.mjs --layout quarry           play another farm layout
 node tools/balance.mjs --fish-skill 0.7          a weaker fisher
 node tools/balance.mjs --out balance.md --check  write the report; exit 1 on any warning
 ```

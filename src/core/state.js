@@ -9,6 +9,7 @@ import { HOTBAR, SEED_SLOT, OLD_SEED_SLOTS, OLD_FIRST_SEED_SLOT } from '../data/
 import { PLACEABLES } from '../data/crafting.js';
 import { SKILLS } from '../data/skills.js';
 import { DEFAULT_PROFILE } from '../data/profile.js';
+import { LAYOUTS } from '../data/layouts.js';
 
 const STARTING_SEEDS = { turnip: 6, radish: 3 };
 
@@ -40,6 +41,8 @@ export function newState() {
     kitSel: 'sprinkler',                                // object the kit slot places (see systems/placeables.js)
     placed: {},                                         // "x,y" on the farm -> { kind, item, nights }; fruit trees add { age, fruit }
     giants: {},
+    layout: 'open',                                     // farm layout (data/layouts.js), chosen on the new game screen
+    farmForage: [],                                     // woodland layout: forage in the farm's wood today
     profile: null,                                      // farmer profile from the new game screen (data/profile.js); null until chosen
     weather: 'sun', forecast: null,                     // today's and tomorrow's weather (systems/weather.js); forecast rolled on load
     mist: null,                                         // this year's Silvermist day: { year, d }
@@ -77,6 +80,8 @@ export function merge(saved) {
   s.barnGoods = Object.assign(newState().barnGoods, saved.barnGoods || {});
   if (!s.placed || typeof s.placed !== 'object') s.placed = {};
   if (!s.giants || typeof s.giants !== 'object') s.giants = {};
+  if (!LAYOUTS[s.layout]) s.layout = 'open';   // pre-v22 saves keep the original farm
+  if (!Array.isArray(s.farmForage)) s.farmForage = [];
   // v21: saves from before character creation keep the look they had. A null profile is a new farm
   // that has not finished the new game screen yet, so it stays null and the screen opens again.
   if (saved.profile === undefined || (saved.profile !== null && typeof saved.profile !== 'object')) s.profile = structuredClone(DEFAULT_PROFILE);

@@ -244,3 +244,15 @@ export const CAVE_ART = {
   X: caveWall, U: ladderUp, L: ladderDown,
   r: mineRock(null), c: mineRock('#d0874a'), i: mineRock('#c9ccd6'),
 };
+
+// v22 farm layouts: quarry floor and sand.
+export function drawQuarry(g, x, y, p) {
+  const X = x * T, Y = y * T, R = rng(x * 613 + y * 211 + 3);
+  r(g, X, Y, T, T, p.snow ? '#c9cdd0' : '#9a9286');
+  for (let i = 0; i < 6; i++) r(g, X + (R() * 14 | 0), Y + (R() * 14 | 0), 2, 1, R() < 0.5 ? '#857d72' : '#b3ab9e');
+}
+export function drawSand(g, x, y, p) {
+  const X = x * T, Y = y * T, R = rng(x * 457 + y * 883 + 9);
+  r(g, X, Y, T, T, p.snow ? '#e6e2d6' : '#e3cf9a');
+  for (let i = 0; i < 5; i++) r(g, X + (R() * 15 | 0), Y + (R() * 15 | 0), 1, 1, R() < 0.5 ? '#cdb77f' : '#f0e2b8');
+}

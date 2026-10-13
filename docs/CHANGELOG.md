@@ -2,6 +2,15 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v22: Farm layouts
+- Choose your farm on the new game screen: open field, river farm, woodland farm, hill quarry, wild farm, four corners, beach farm or meadow farm. Every layout keeps the house, path and building plots where they were; the open ground differs.
+- River farm, four corners and beach farm have water you can fish and refill the can from. The beach farm gets a crate of supplies on its sand most mornings.
+- Hill quarry (and a small one on four corners): stone, copper and iron rocks turn up on the quarry floor every night.
+- Woodland farm: more alders, two forage items a day in the old wood, and large stumps grow back each season (a steady source of hardwood). Four corners regrows two.
+- Wild farm: slimes come onto the farm after 8 pm. Blacking out on the farm wakes you on your doorstep.
+- Meadow farm: starts with a chicken coop, two hens and a week of feed.
+- Saves from before v22 keep the open field. The balance simulator takes `--layout`.
+
 ## v21: New game and character creation
 - A new farm opens on a new game screen: your name, your farm's name, a favourite thing, skin, hair, shirt and trouser colours, short or long hair, and a starting pet (cat, dog or turtle).
 - The header and page title show your farm's name, the morning report greets you by name, and neighbours who like you mention your name and favourite thing. The bag shows your profile.

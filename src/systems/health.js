@@ -2,7 +2,8 @@
 import { G } from '../core/game.js';
 import { on, emit, changed } from '../core/events.js';
 import { addUpdater } from '../core/registry.js';
-import { blocked } from './world.js';
+import { MAPS } from '../data/maps.js';
+import { blocked, placePlayer } from './world.js';
 
 const INVULNERABLE = 1, KNOCKBACK = 10, FAINT_GOLD_SHARE = 0.15, FAINT_GOLD_MAX = 500;
 
@@ -25,10 +26,12 @@ function faint() {
   S.gold -= lost;
   S.hp = Math.round(S.maxHp / 2);
   G.hurtT = 0;
-  emit('mine:faint');
+  const inMine = S.map === 'mine';
+  if (inMine) emit('mine:faint');
+  else { const sp = MAPS.farm.spawn; placePlayer('farm', sp.x, sp.y, sp.dir); emit('map:changed', 'farm'); }
   emit('ui:message', {
     title: 'You blacked out',
-    text: `Ines found you at the mouth of the Hollow and helped you out.${lost ? ` You lost ${lost}g along the way.` : ''}`,
+    text: `${inMine ? 'Ines found you at the mouth of the Hollow and helped you out.' : 'You came to on your doorstep, sore and muddy.'}${lost ? ` You lost ${lost}g along the way.` : ''}`,
   });
   changed();
 }

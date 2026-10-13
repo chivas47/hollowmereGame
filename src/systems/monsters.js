@@ -1,4 +1,4 @@
-// Slimes in the mine, and the sword.
+// Slimes in the mine (and on the wild farm after dark, systems/farmPerks.js), and the sword.
 import { G } from '../core/game.js';
 import { T, W, H, DIRS } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
@@ -11,11 +11,12 @@ import { hurtPlayer } from './health.js';
 
 const AGGRO = 110, HOP = 1.2, HOP_ACTIVE = 0.5, TOUCH = 11, REACH = 16;
 export const slimes = [];   // exported for debugging and tests
+let slimeMap = 'mine';     // the map the current slimes live on
 
 const blockedAt = (x, y) => solidAt(x - 4, y - 3) || solidAt(x + 3.99, y - 3) || solidAt(x - 4, y) || solidAt(x + 3.99, y);
 
 on('mine:floor', ({ floor, rng: R }) => {
-  slimes.length = 0;
+  slimes.length = 0; slimeMap = 'mine';
   const g = MAPS.mine.grid, color = SLIME.colors[floor > 10 ? 2 : floor > 5 ? 1 : 0];
   for (let guard = 0; slimes.length < SLIME.count(floor) && guard < 500; guard++) {
     const x = 1 + Math.floor(R() * (W - 2)), y = 1 + Math.floor(R() * (H - 2));
@@ -25,7 +26,19 @@ on('mine:floor', ({ floor, rng: R }) => {
       hp: SLIME.hp(floor), dmg: SLIME.damage(floor), speed: SLIME.speed(floor), color });
   }
 });
-on('map:changed', (id) => { if (id !== 'mine') slimes.length = 0; });
+on('map:changed', (id) => { if (id !== slimeMap) slimes.length = 0; });
+
+// n first-floor slimes on open grass of a map, away from the player.
+export function spawnSlimes(map, n) {
+  slimes.length = 0; slimeMap = map;
+  const g = MAPS[map].grid, color = SLIME.colors[0];
+  for (let guard = 0; slimes.length < n && guard < 500; guard++) {
+    const x = 1 + Math.floor(Math.random() * (W - 2)), y = 5 + Math.floor(Math.random() * (H - 6));
+    if (g[y][x] !== 'g' || Math.hypot(x * T - G.S.x, y * T - G.S.y) < 5 * T) continue;
+    const px = x * T + 8, py = y * T + 12;
+    slimes.push({ x: px, y: py, tx: px, ty: py, kx: 0, ky: 0, hurt: 0, hop: Math.random() * HOP, hp: SLIME.hp(1), dmg: SLIME.damage(1), speed: SLIME.speed(1), color });
+  }
+}
 on('day:start', () => { slimes.length = 0; });
 
 function step(m, vx, vy, dist) {
@@ -34,7 +47,7 @@ function step(m, vx, vy, dist) {
 }
 
 addUpdater((dt) => {
-  if (G.S.map !== 'mine') return;
+  if (G.S.map !== slimeMap || !slimes.length) return;
   for (const m of [...slimes]) {
     if (m.hurt > 0) m.hurt -= dt;
     m.hop += dt;
@@ -54,7 +67,7 @@ addUpdater((dt) => {
       if (Math.abs(m.kx) < 1) m.kx = 0; if (Math.abs(m.ky) < 1) m.ky = 0;
     }
     if (d < TOUCH) hurtPlayer(m.dmg, m.x, m.y);
-    if (G.S.map !== 'mine') return;   // fainting moved us out
+    if (G.S.map !== slimeMap) return;   // fainting moved us out
   }
 });
 
@@ -65,7 +78,7 @@ addInteraction(58, ({ item, mapId }) => {
   const [dx, dy] = DIRS[G.S.dir], px = G.S.x + dx * 12, py = G.S.y - 4 + dy * 12;
   G.swing = { tx: Math.floor(px / T), ty: Math.floor(py / T), kind: 'sword', t: 0.3 };
   emit('sfx', 'sword');
-  if (mapId !== 'mine') return true;
+  if (mapId !== slimeMap) return true;
   for (const m of [...slimes]) {
     if (Math.hypot(m.x - px, m.y - 4 - py) > REACH) continue;
     m.hp -= SWORD_DAMAGE; m.hurt = 0.25; m.kx = dx * 160; m.ky = dy * 160;
@@ -79,6 +92,6 @@ addInteraction(58, ({ item, mapId }) => {
   return true;
 });
 
-addEntities(() => (G.S.map !== 'mine' ? [] : slimes.map((m) => ({
+addEntities(() => (G.S.map !== slimeMap ? [] : slimes.map((m) => ({
   y: m.y, draw: (c) => drawSlime(c, m.x, m.y, m.color, m.hurt > 0, m.hop % HOP < HOP_ACTIVE ? (m.hop % HOP) / HOP_ACTIVE : 0),
 }))));

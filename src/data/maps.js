@@ -1,6 +1,7 @@
 // Maps are data. Tile legend:
 //   g grass (farmable on the farm)   P path   E exit to another map
-//   T tree   R rock   O pond water   H house   D door   S shop stall   B shipping bin   W well
+//   T tree   R rock   O pond water   q quarry floor   z sand (farm layouts, data/layouts.js)
+//   H house   D door   S shop stall   B shipping bin   W well
 //   K workbench   C chicken coop (placed at runtime by systems/coop.js)   M mine entrance
 //   A barn (placed at runtime by systems/barn.js)   Y crafted object (placed at runtime by systems/placeables.js)
 //   V village cottage   Q quest board   F fountain   J festival table
@@ -20,7 +21,7 @@ function emptyGrid() {
 const put = (m, list, t) => list.forEach(([x, y]) => { m[y][x] = t; });
 const fill = (m, x0, y0, x1, y1, t) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) m[y][x] = t; };
 
-function farmGrid() {
+export function farmGrid() {
   const m = emptyGrid();
   fill(m, 1, 1, 5, 3, 'H'); m[3][3] = 'D';
   fill(m, 19, 1, 21, 3, 'S');

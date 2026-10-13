@@ -276,6 +276,9 @@ const DEBRIS_ART = {
     r(c, X + 1, Y + 14, 14, 2, 'rgba(0,0,0,.25)'); r(c, X + 2, Y + 5, 12, 10, '#6e4626'); r(c, X, Y + 12, 16, 3, '#6e4626');
     r(c, X + 2, Y + 4, 12, 3, '#c9a06a'); r(c, X + 5, Y + 5, 6, 1, '#a07a4a'); r(c, X + 4, Y + 8, 1, 6, '#5c371e'); r(c, X + 10, Y + 8, 1, 5, '#5c371e');
   },
+  copperrock: (c, X, Y) => { r(c, X + 2, Y + 6, 12, 8, '#8d8a84'); r(c, X + 3, Y + 5, 9, 1, '#8d8a84'); r(c, X + 4, Y + 8, 2, 2, '#d98a4a'); r(c, X + 9, Y + 7, 2, 2, '#d98a4a'); r(c, X + 7, Y + 11, 2, 1, '#e8a35e'); r(c, X + 2, Y + 13, 12, 1, '#6a6862'); },
+  ironrock: (c, X, Y) => { r(c, X + 2, Y + 6, 12, 8, '#7d7a76'); r(c, X + 3, Y + 5, 9, 1, '#7d7a76'); r(c, X + 4, Y + 8, 2, 2, '#c9ccd6'); r(c, X + 9, Y + 7, 2, 2, '#e8ecf2'); r(c, X + 7, Y + 11, 2, 1, '#c9ccd6'); r(c, X + 2, Y + 13, 12, 1, '#5a5856'); },
+  crate: (c, X, Y) => { r(c, X + 2, Y + 5, 12, 10, '#a5753f'); r(c, X + 2, Y + 5, 12, 1, '#c9955a'); r(c, X + 2, Y + 9, 12, 1, '#6e4626'); r(c, X + 7, Y + 5, 2, 10, '#6e4626'); r(c, X + 3, Y + 13, 3, 1, '#5fa8d3'); },
   alderstump: (c, X, Y) => { r(c, X + 4, Y + 9, 8, 6, '#7a5a3a'); r(c, X + 4, Y + 8, 8, 2, '#c9a06a'); r(c, X + 6, Y + 8, 4, 1, '#a07a4a'); r(c, X + 3, Y + 14, 10, 1, 'rgba(0,0,0,.2)'); },
 };
 export function drawDebris(c, X, Y, kind) { (DEBRIS_ART[kind] || DEBRIS_ART.stone)(c, X, Y); }
