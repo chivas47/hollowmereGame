@@ -5,10 +5,9 @@ Status: `next` (do it now, top first), `queued`, `in progress (PR link)`, `done 
 
 | # | Item | Kind | Status | Scope |
 |---|---|---|---|---|
-| 1 | Winter content | feature | in progress | Greenhouse (grows any crop in winter), ice-fishing spot. |
-| 2 | Village life | feature | next | Neighbours spend non-festival days in the village on schedules; heart-level scenes at 4 and 8 hearts. |
-| 3 | Sound | feature | queued | Web Audio effects for tools, pickups and UI, and a generated music loop with a mute toggle. |
-| 4 | Save export and import | feature | queued | Download the save as a file and load it back. |
+| 1 | Village life | feature | in progress | Neighbours spend non-festival days in the village on schedules; heart-level scenes at 4 and 8 hearts. |
+| 2 | Sound | feature | next | Web Audio effects for tools, pickups and UI, and a generated music loop with a mute toggle. |
+| 3 | Save export and import | feature | queued | Download the save as a file and load it back. |
 
 ## Done
 
@@ -19,3 +18,4 @@ Status: `next` (do it now, top first), `queued`, `in progress (PR link)`, `done 
 | Automatic balance review, feature loop, roadmap | chivas47/hollowmereGame#3 |
 | v10: sinks and upkeep | chivas47/hollowmereGame#4 |
 | v11: Stardew-scale values | chivas47/hollowmereGame#5 |
+| v12: winter content | chivas47/hollowmereGame#6 |

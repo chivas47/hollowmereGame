@@ -21,6 +21,8 @@ src/
     npcs.js maps.js seasons.js hotbar.js upgrades.js (incl. COOP, BARN)
     crafting.js       PLACEABLES, RECIPES, MACHINES, sprinklerTiles()
     skills.js quests.js festivals.js projects.js
+    schedules.js      neighbour daily schedules, rest days, map entry points
+    scenes.js         heart scenes at 4 and 8 hearts
   systems/            one feature per file
     world.js          tile queries, collision, facing(), placePlayer(), useEnergy(), soilOf(map), placeKey()/parsePlaceKey()
     player.js         movement, map exits, player sprite (respects G.lock)
@@ -33,7 +35,7 @@ src/
     fishing.js        cast, bite, reel minigame, fish log
     buildings.js      door (sleep), stall (shop), bin (ship), well/pond refill
     economy.js        ship(), buy(), overnight payout; materials are never shipped
-    npcs.js           routes, talk, gifts, hearts, 3-heart rewards
+    npcs.js           schedules across farm and village, talk, gifts, hearts, 3-heart rewards, heart scenes
     upgrades.js       workbench purchases, material costs, recalcStats()
     coop.js           coop placement, chickens, petting, eggs
     mine.js           floor generation, rocks, ladders, lighting
@@ -131,6 +133,7 @@ The night tint is drawn by renderer.js after all layers (not in caves).
 | `mine:faint` | none | health.js | mine.js (carry out) |
 | `gather` | {skill, xp, item?, n?} | farming, forage, fishing, mine, monsters, coop, barn | skills.js (XP, bonus item) |
 | `placed` | {x, y, kind} | placeables.js | sprinklers.js (water now) |
+| `ui:scene` | {npc, at, scene, extra} | npcs.js | ui/dialogs.js heart scene with choices |
 | `ui:*` | varies | systems | ui modules open dialogs |
 
 The `report` object collects overnight results: `passedOut, grown, payout, withered, newSeason, eggs, built, milk, hungry, artisan, sprinkled, questsPosted, questsExpired, festival, festivalSoon`. Add a field, set it in a `day:end` or `day:start` listener, and show it in the `day:report` handler in ui/dialogs.js.
@@ -180,7 +183,7 @@ Soil is per map: `soilOf(mapId)` returns `G.S.soil` (farm) or `G.S.greenSoil` (g
 - **Crop:** entry in `data/crops.js` and its key in `data/hotbar.js`.
 - **Fish:** entry in `data/fish.js`.
 - **Forage:** entry in `data/forage.js` plus art in `FORAGE_ART` (render/sprites.js).
-- **Neighbour:** entry in `data/npcs.js`. Paths are walked x first, then y; keep each leg clear.
+- **Neighbour:** entry in `data/npcs.js` (farm path), plus a village path, home and rest day in `data/schedules.js`, and scenes in `data/scenes.js`. Paths are walked x first, then y; keep each leg clear.
 - **Upgrade tier:** append to a line in `data/upgrades.js`; read effects with `tier(G.S, 'line')`.
 - **Building:** follow systems/coop.js: order at the workbench, build on `day:start`, write tiles at runtime, emit `world:changed`.
 - **Tool:** key in `data/hotbar.js` (+ `TOOL_NAMES`), icon in `render/icons.js`, an interaction in its system.
