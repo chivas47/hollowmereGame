@@ -59,7 +59,12 @@ src/
     dom.js toast.js modal.js hud.js hotbar.js dialogs.js inventory.js
     workshop.js mine.js input.js debugPanel.js
     crafting.js (craft menu, placed-object dialog) barn.js village.js (board, festival)
+tools/
+  bundle.py           CODEBASE.md for a Claude Project
+  balance.mjs         headless balance simulator (Node 22+); imports src/systems/* directly
 ```
+
+Systems must stay importable without a DOM: keep `document` and `window` inside functions or in `ui/`, never at module top level in `core/`, `data/`, `systems/` or `render/`. tools/balance.mjs depends on it.
 
 ## The four registries (`core/registry.js`)
 

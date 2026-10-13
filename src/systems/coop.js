@@ -32,7 +32,7 @@ const randomYardPoint = () => ({
 });
 
 // Runtime positions, one per chicken in the save.
-const flock = [];
+export const flock = [];   // exported for tools/balance.mjs and tests
 function syncFlock() {
   while (flock.length < G.S.chickens.length) {
     const p = randomYardPoint();

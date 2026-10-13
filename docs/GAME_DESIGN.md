@@ -171,6 +171,16 @@ Hoe 2 (wide 3), water 1, clear withered crop 1, cast 3, pickaxe 2. Warm cider re
 
 ## Known issues and open questions
 
+### Simulated balance (tools/balance.mjs, strategy full, 2 years, 5 runs)
+
+The bot plays efficiently (teleporting, no mine damage), so treat these as an upper bound, but the shape is clear:
+
+- **Income outruns every sink by about 8 to 1.** Year 1 earns roughly 1,400 to 3,600g a day; total spending over two years is about 110,000g against about 880,000g earned. About 770,000g ends unspent with nothing left to buy.
+- **Energy allows a full 72-tile field by Spring 9.** Tilling, planting and watering costs 3 energy a tile, so 100 energy covers about 30 new tiles a day. Fava beans then carry spring.
+- **Skill bonuses compound.** Farming, foraging and mining reach level 10 in year 1, and level 10 means 50% bonus items.
+- **Finding a ladder costs about 45 rocks a floor.** Iron (floor 6) arrives anywhere from Winter Y1 to Summer Y2, so the cheese vat and iron sprinklers stall the shopping list.
+- **Late fishing is very strong** (26% of income over two years): sprinklers free up all the energy, and 190 max energy is about 60 casts a day.
+
 - **Balance is untested, and v9 makes that worse.** All prices were set by feel. Nobody has played a full season without debug tools. v9 adds three new income streams (barn, artisan goods, quest rewards) and contest prizes on top of untested crop prices. A real playthrough is now the top priority.
 - **Artisan goods may be too strong.** A crock roughly doubles any crop's value and pays for itself in under two weeks. If a playthrough shows crocks replacing shipping, raise the crock to 4 nights or lower jars to 1.75x.
 - Lanterns are the only uncapped gold sink and are purely cosmetic. A late-game sink with an effect is still missing.

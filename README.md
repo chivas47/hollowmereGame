@@ -91,6 +91,19 @@ A new tool also needs its key in `data/hotbar.js`, a label in `ui/hotbar.js` and
 
 **New saved field:** add it to `newState()` in `core/state.js`. `merge()` keeps old saves working.
 
+## Balance simulator
+
+`node tools/balance.mjs` (Node 22+) plays the real game systems headlessly with a bot for a year and prints a report: gold per day by season, income by source, spending by sink, when each purchase becomes affordable, and warnings when the economy drifts from the design (one source dominating, gold piling up, a dead winter). Runs are seeded, so the same data gives the same report: change a number in `src/data/`, rerun, compare.
+
+```
+node tools/balance.mjs --days 224 --runs 10      two years, 10 runs
+node tools/balance.mjs --strategy crops          farming, forage and fishing only
+node tools/balance.mjs --fish-skill 0.7          a weaker fisher
+node tools/balance.mjs --out balance.md --check  write the report; exit 1 on any warning
+```
+
+The bot teleports (but pays game time per action), never gets hurt in the mine and ignores gifts. Its shopping lists and the checks are at the top of the file. GitHub Actions runs it on every pull request that touches `src/` and puts the report in the job summary.
+
 ## Debug tools
 
 Press the backquote key or the Debug tools button: skip a day, skip to the next season, skip to the next festival, ripen all crops, add gold, stone and ore, seeds, refill energy and water, heal, build the coop and barn, add skill XP.

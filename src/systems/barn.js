@@ -34,7 +34,7 @@ const randomYardPoint = () => ({
   y: (yard.y0 + Math.random() * (yard.y1 - yard.y0)) * T + 12,
 });
 
-const herd = [];
+export const herd = [];   // exported for tools/balance.mjs and tests
 function syncHerd() {
   while (herd.length < G.S.animals.length) {
     const p = randomYardPoint();

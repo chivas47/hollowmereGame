@@ -13,6 +13,7 @@ Newest first. Version numbers match published versions of the playable page.
 - Four festivals: Blossom Show (Spring 9), Midsummer Catch (Summer 20), Harvest Weigh-in (Autumn 21), Frostlight Market (Winter 12). Neighbours gather in the square on festival days.
 - Debug: build coop and barn, +100 XP every skill, skip to next festival.
 - Old saves load: all new fields default in. No hotbar key moved.
+- Balance simulator: `node tools/balance.mjs` plays the real systems headlessly and reports income by source, sinks, purchase timing and design checks. A GitHub Actions job runs it on every pull request.
 - Docs: `docs/GAME_DESIGN.md` is now the only design doc (the stale root copy is gone; its v8 content was carried over).
 
 ## v7: The Hollow

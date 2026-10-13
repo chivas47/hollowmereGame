@@ -1,0 +1,446 @@
+#!/usr/bin/env node
+// Balance simulator. Plays the real game systems headlessly with a simple bot and reports
+// where gold comes from, where it goes, and when each purchase becomes affordable.
+//
+// Usage (from the repo root, Node 22+):
+//   node tools/balance.mjs                       112 days (one year), strategy "full", 5 runs
+//   node tools/balance.mjs --days 224 --runs 10  two years, more runs
+//   node tools/balance.mjs --strategy crops      farming, forage and fishing only
+//   node tools/balance.mjs --fish-skill 0.7      a worse fisher (1 = average)
+//   node tools/balance.mjs --out balance.md --json balance.json
+//   node tools/balance.mjs --check               exit code 1 if any balance check warns
+//
+// The bot teleports instead of walking and never gets hurt in the mine, but pays game time for
+// every action (TIME below) and spends energy through the real interactions. It ignores gifts
+// and friendship rewards. Change data/*.js, rerun, compare.
+import { pathToFileURL } from 'node:url';
+import { writeFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+
+// ---- Options ----
+const argv = process.argv.slice(2);
+const opt = (name, dflt) => { const i = argv.indexOf(`--${name}`); return i < 0 ? dflt : argv[i + 1]; };
+const flag = (name) => argv.includes(`--${name}`);
+const DAYS = +opt('days', 112), RUNS = +opt('runs', 5), STRATEGY = opt('strategy', 'full');
+const FISH_SKILL = +opt('fish-skill', 1), OUT = opt('out', null), JSON_OUT = opt('json', null), CHECK = flag('check');
+
+// Game minutes each bot action costs, walking included.
+const TIME = { tile: 1, travel: 6, forage: 3, cast: 10, rock: 1.5, pet: 1, chore: 2 };
+const BEDTIME = 24 * 60;
+
+// What the bot saves up for, in order. Upgrade lines (can, hoe, rod, house) buy their next tier.
+const STRATEGIES = {
+  full: ['can', 'coop', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'house',
+    'barn', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', ...Array(9).fill('sprinkler2'), 'hoe', 'rod', 'can',
+    'chicken', 'chicken', 'crock', 'crock', 'crock'],
+  crops: ['can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'rod', 'can'],
+};
+
+// Warnings when the economy drifts from the design. Each returns a message or null.
+const CHECKS = [
+  ['One income source carries the game', (R) => { const top = R.sources[0]; return top && top.share > 0.5 ? `${top.name} is ${pct(top.share)} of all income (limit 50%).` : null; }],
+  ['Quests and contests stay a side income', (R) => { const s = R.sources.filter((x) => x.name === 'quests' || x.name === 'contests').reduce((a, x) => a + x.share, 0); return s > 0.15 ? `Quests and contests are ${pct(s)} of income (limit 15%).` : null; }],
+  ['Purchases last past year one', (R) => (R.goalsDone !== null && R.goalsDone <= 112 ? `Everything on the shopping list is bought by day ${R.goalsDone}; nothing is left to save for in year two.` : null)],
+  ['Gold does not pile up', (R) => (R.goalsDone !== null && R.endGold > 20000 ? `${fmt(R.endGold)} unspent at the end with nothing left to buy.` : null)],
+  ['Winter is worth playing', (R) => { const w = R.seasons.filter((s) => s.season === 'Winter'), su = R.seasons.filter((s) => s.season === 'Summer'); if (!w.length || !su.length) return null; const wi = avg(w.map((s) => s.incomePerDay)), si = avg(su.map((s) => s.incomePerDay)); return wi < si * 0.3 ? `Winter earns ${fmt(wi)}/day, ${pct(wi / si)} of summer (limit 30%).` : null; }],
+  ['Energy is a real limit', (R) => (R.energyLimited < 0.3 ? `Only ${pct(R.energyLimited)} of days end out of energy; energy may be too generous.` : null)],
+  ['The first season is not a grind', (R) => { const sp = R.seasons[0]; return sp && sp.incomePerDay < 60 ? `Spring year 1 earns only ${fmt(sp.incomePerDay)}/day.` : null; }],
+];
+
+// ---- Load the game without a browser ----
+let seed = 1;
+Math.random = () => { seed |= 0; seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+globalThis.performance ??= { now: () => Date.now() };
+
+const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
+const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
+const SYSTEMS = ['player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
+  'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'barn', 'skills', 'quests', 'festivals', 'village'];
+for (const s of SYSTEMS) await load(`systems/${s}.js`);
+
+const { G } = await load('core/game.js');
+const { emit } = await load('core/events.js');
+const { runUpdaters } = await load('core/registry.js');
+const { newState } = await load('core/state.js');
+const { dateParts, today } = await load('core/time.js');
+const { DIRS } = await load('core/constants.js');
+const { SOLID, MAPS } = await load('data/maps.js');
+const { CROPS } = await load('data/crops.js');
+const { FORAGE } = await load('data/forage.js');
+const { FISH } = await load('data/fish.js');
+const { PRODUCTS } = await load('data/products.js');
+const { ARTISAN } = await load('data/artisan.js');
+const { ITEMS } = await load('data/items.js');
+const { HOTBAR } = await load('data/hotbar.js');
+const { COOP, BARN } = await load('data/upgrades.js');
+const { RECIPES, PLACEABLES, MACHINES } = await load('data/crafting.js');
+const { SKILLS } = await load('data/skills.js');
+const { act } = await load('systems/interact.js');
+const { sleep } = await load('systems/days.js');
+const { placePlayer, tileAt, tileOf } = await load('systems/world.js');
+const { buy, ship } = await load('systems/economy.js');
+const { nextTier, buyUpgrade, orderCoop, affordable } = await load('systems/upgrades.js');
+const { buyChicken, collectEggs, flock } = await load('systems/coop.js');
+const { orderBarn, buyAnimal, buyHay, collectMilk, herd } = await load('systems/barn.js');
+const { craft } = await load('systems/crafting.js');
+const { pickUp } = await load('systems/placeables.js');
+const { accepted, loadMachine, collectMachine } = await load('systems/artisan.js');
+const { canDeliver, deliver } = await load('systems/quests.js');
+const { festivalToday, festivalOpen, contestItems, enterContest, nextFestival } = await load('systems/festivals.js');
+const { MINE, enterMine, leaveMine, checkpoints } = await load('systems/mine.js');
+const { skillLevel } = await load('systems/skills.js');
+
+// ---- Helpers ----
+const S = () => G.S;
+const fmt = (n) => `${Math.round(n).toLocaleString('en-US')}g`;
+const pct = (x) => `${Math.round(x * 100)}%`;
+const avg = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : 0);
+const median = (a) => { const b = [...a].sort((x, y) => x - y); return b.length ? b[Math.floor(b.length / 2)] : null; };
+const dayName = (d) => { const p = dateParts(d); return `${p.season} ${p.d}${p.year > 1 ? `, Y${p.year}` : ''}`; };
+const spend = (m) => { S().time += m; };
+const late = () => S().time >= BEDTIME;
+
+function standFacing(map, tx, ty) {
+  for (const [dir, [dx, dy]] of Object.entries(DIRS)) {
+    const sx = tx - dx, sy = ty - dy, t = tileAt(sx, sy, map);
+    if (t && !SOLID.has(t)) { placePlayer(map, sx, sy, dir); return true; }
+  }
+  return false;
+}
+function use(map, tx, ty, item) {
+  if (!standFacing(map, tx, ty)) return false;
+  S().slot = HOTBAR.indexOf(item);
+  act();
+  G.talking = null;   // bumping into a neighbour opens a talk; there is no dialog to close it
+  return true;
+}
+
+// Field: 3x3 blocks; the centre of each block is kept free for a sprinkler.
+const CENTRES = [[7, 7], [10, 7], [13, 7], [16, 7], [19, 7], [7, 10], [10, 10], [13, 10], [16, 10]];
+const FIELD = CENTRES.flatMap(([cx, cy]) => [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]].map(([a, b]) => [cx + a, cy + b]));
+const MACHINE_SLOTS = []; for (let y = 5; y <= 7; y++) for (let x = 1; x <= 5; x++) MACHINE_SLOTS.push([x, y]);
+
+// ---- One simulated run ----
+function simulate(runSeed) {
+  seed = runSeed;
+  G.S = newState(); G.paused = false; G.lock = false; G.fishing = null;
+  emit('game:reset'); emit('game:loaded');
+
+  const goals = [...STRATEGIES[STRATEGY]];
+  const log = { income: {}, spend: {}, purchases: [], days: [], goalsDone: null };
+  const add = (book, k, v) => { if (v > 0) book[k] = (book[k] || 0) + v; };
+  const track = (k, fn) => { const g0 = S().gold; const r = fn(); add(log.spend, k, g0 - S().gold); add(log.income, k, S().gold - g0); return r; };
+
+  // -- purchases --
+  const GOAL = {
+    can: { cost: () => nextTier('can')?.cost, needs: () => nextTier('can')?.needs, ok: () => !!nextTier('can'), buy: () => track('upgrades', () => buyUpgrade('can')) },
+    hoe: { cost: () => nextTier('hoe')?.cost, needs: () => nextTier('hoe')?.needs, ok: () => !!nextTier('hoe'), buy: () => track('upgrades', () => buyUpgrade('hoe')) },
+    rod: { cost: () => nextTier('rod')?.cost, needs: () => nextTier('rod')?.needs, ok: () => !!nextTier('rod'), buy: () => track('upgrades', () => buyUpgrade('rod')) },
+    house: { cost: () => nextTier('house')?.cost, needs: () => nextTier('house')?.needs, ok: () => !!nextTier('house'), buy: () => track('upgrades', () => buyUpgrade('house')) },
+    coop: { cost: () => COOP.cost, needs: () => COOP.needs, ok: () => !S().built.coop, buy: () => track('buildings', orderCoop) },
+    barn: { cost: () => BARN.cost, needs: () => BARN.needs, ok: () => !S().built.barn, buy: () => track('buildings', orderBarn) },
+    chicken: { cost: () => COOP.chickenCost, needs: () => ({}), wait: () => S().built.coop !== true, ok: () => S().chickens.length < COOP.maxChickens, buy: () => track('animals', buyChicken) },
+    cow: { cost: () => BARN.animals.cow.cost, needs: () => ({}), wait: () => S().built.barn !== true, ok: () => S().animals.length < BARN.maxAnimals, buy: () => track('animals', () => buyAnimal('cow')) },
+    goat: { cost: () => BARN.animals.goat.cost, needs: () => ({}), wait: () => S().built.barn !== true, ok: () => S().animals.length < BARN.maxAnimals, buy: () => track('animals', () => buyAnimal('goat')) },
+  };
+  for (const k of Object.keys(RECIPES)) GOAL[k] = { cost: () => RECIPES[k].cost, needs: () => RECIPES[k].needs, ok: () => true, buy: () => track('crafting', () => craft(k)) };
+
+  const missingMats = () => {
+    const g = goals[0] && GOAL[goals[0]];
+    if (!g || !g.ok()) return {};
+    return Object.fromEntries(Object.entries(g.needs() || {}).filter(([k, n]) => S().bag[k] < n).map(([k, n]) => [k, n - S().bag[k]]));
+  };
+  function purchases(reserve) {
+    while (goals.length) {
+      const key = goals[0], g = GOAL[key];
+      if (!g.ok()) { goals.shift(); continue; }
+      if (g.wait?.()) return;
+      if (!affordable(g.cost() + reserve, g.needs()) || !g.buy()) return;
+      log.purchases.push({ goal: key, day: S().day });
+      goals.shift();
+    }
+    if (log.goalsDone === null) log.goalsDone = S().day;
+  }
+
+  // -- placing crafted things --
+  function placeKit() {
+    const s = S();
+    for (const kind of ['sprinkler2', 'sprinkler']) {
+      for (const [cx, cy] of CENTRES) {
+        if (s.kit[kind] <= 0) break;
+        const here = s.placed[`${cx},${cy}`];
+        if (here && (here.kind === 'sprinkler2' || kind === 'sprinkler')) continue;
+        if (here) pickUp(cx, cy);   // swap a copper sprinkler for an iron one
+        s.kitSel = kind; use('farm', cx, cy, 'kit');
+      }
+    }
+    for (const kind of Object.keys(MACHINES)) {
+      for (const [x, y] of MACHINE_SLOTS) {
+        if (s.kit[kind] <= 0) break;
+        if (s.placed[`${x},${y}`]) continue;
+        s.kitSel = kind; use('farm', x, y, 'kit');
+      }
+    }
+  }
+
+  // -- daily chores --
+  function animals() {
+    const s = S();
+    collectEggs(); collectMilk();
+    if (s.animals.length && s.hay < s.animals.length * 2) track('hay', () => buyHay(Math.min(Math.floor(s.gold / BARN.hayCost), s.animals.length * 7)));
+    runUpdaters(0);   // places chickens and animals in their yards
+    [...flock, ...herd].forEach((a) => { const t = tileOf(a.x, a.y); use('farm', t.tx, t.ty, 'hoe'); spend(TIME.pet); });
+  }
+
+  function machines(reserved) {
+    const s = S();
+    for (const [k, p] of Object.entries(s.placed)) {
+      if (!MACHINES[p.kind]) continue;
+      const [x, y] = k.split(',').map(Number);
+      if (p.item && p.nights <= 0) collectMachine(x, y);
+      if (!p.item) {
+        const options = accepted(x, y).filter((it) => s.bag[it] > (reserved[it] || 0)).sort((a, b) => ITEMS[b].sell - ITEMS[a].sell);
+        if (options.length) loadMachine(x, y, options[0]);
+      }
+      spend(TIME.pet);
+    }
+  }
+
+  const tile = (x, y) => S().soil[`${x},${y}`];
+  function bestCrop() {
+    const d = today(), left = 28 - d.d;
+    return Object.keys(CROPS).filter((k) => CROPS[k].seasons.includes(d.season) && CROPS[k].days <= left)
+      .sort((a, b) => (CROPS[b].sell - CROPS[b].seed) / CROPS[b].days - (CROPS[a].sell - CROPS[a].seed) / CROPS[a].days)[0] || null;
+  }
+  function plant(x, y) {
+    const s = S(), crop = bestCrop();
+    if (!crop) return false;
+    if (s.seeds[crop] <= 0 && !track('seeds', () => buy(crop, 1))) return false;
+    s.seedSel = crop; use('farm', x, y, 'seeds');
+    return !!tile(x, y)?.crop;
+  }
+  function water(x, y) {
+    const s = S();
+    if (s.water <= 0) { use('farm', 12, 3, 'can'); spend(TIME.travel); }
+    if (s.energy < 1) return false;
+    use('farm', x, y, 'can');
+    return true;
+  }
+  // Harvest, clear, replant and water. With expand, also till new tiles while energy and gold allow.
+  function farm(expand) {
+    const s = S();
+    for (const [x, y] of FIELD) {
+      const t = tile(x, y);
+      if (!t?.crop) continue;
+      if (t.crop.dead) { if (s.energy >= 1) { use('farm', x, y, 'hoe'); spend(TIME.tile); } continue; }
+      if (t.crop.age >= CROPS[t.crop.type].days) { use('farm', x, y, 'hoe'); spend(TIME.tile); }
+    }
+    for (const [x, y] of FIELD) {
+      const t = tile(x, y);
+      if (t && !t.crop && plant(x, y)) spend(TIME.tile);
+      const u = tile(x, y);
+      if (u?.crop && !u.crop.dead && !u.w && u.crop.age < CROPS[u.crop.type].days) { if (!water(x, y)) return; spend(TIME.tile); }
+    }
+    if (!expand) return;
+    for (const [x, y] of FIELD) {   // 3 energy per new tile: till, plant, water
+      if (tile(x, y) || late()) continue;
+      const crop = bestCrop();
+      if (!crop || s.energy < 3 || (s.seeds[crop] <= 0 && s.gold < CROPS[crop].seed + 50)) return;
+      use('farm', x, y, 'hoe');
+      if (!tile(x, y)) return;
+      plant(x, y); water(x, y); spend(TIME.tile * 2);
+    }
+  }
+
+  function forage() {
+    const s = S();
+    if (!s.forage.length) return;
+    spend(TIME.travel);
+    for (const f of [...s.forage]) { use('wilds', f.x, f.y, 'hoe'); spend(TIME.forage); }
+  }
+
+  function fish(stopAt) {
+    const s = S();
+    spend(TIME.travel);
+    while (s.energy >= 3 + stopAt && !late()) {
+      use('wilds', 15, 10, 'rod');
+      const f = G.fishing; if (!f) break;
+      f.t = 0; runUpdaters(0.001);                 // the bite
+      act();                                       // start reeling
+      const d = FISH[f.fish].difficulty;
+      const p = Math.max(0.05, Math.min(0.95, (1.3 * f.zw / 160 + 0.25 - 0.06 * d) * FISH_SKILL));
+      f.marker = Math.random() < p ? f.zone + f.zw / 2 : (f.zone > 1 ? 0 : 160);
+      act();
+      spend(TIME.cast);
+    }
+  }
+
+  // Mines until the next purchase has its materials or energy runs out. Every rock gives stone.
+  function mine() {
+    const s = S();
+    enterMine(Math.max(...checkpoints())); spend(TIME.travel * 2);
+    let need = missingMats();
+    while (Object.keys(need).length && s.energy >= 2 && !late()) {
+      const grid = MAPS.mine.grid, free = (x, y) => [[0, 1], [0, -1], [1, 0], [-1, 0]].some(([a, b]) => grid[y + b]?.[x + a] && !SOLID.has(grid[y + b][x + a]));
+      const rocks = Object.keys(MINE.rocks).map((k) => k.split(',').map(Number)).filter(([x, y]) => free(x, y));
+      const ore = rocks.filter(([x, y]) => (grid[y][x] === 'i' && need.iron) || (grid[y][x] === 'c' && need.copper));
+      if (grid.flat().includes('L') && (!ore.length || (need.iron && MINE.floor < 6))) { enterMine(MINE.floor + 1); spend(TIME.travel); continue; }
+      const pickFrom = ore.length ? ore : rocks;
+      if (!pickFrom.length) break;
+      const [x, y] = pickFrom[Math.floor(Math.random() * pickFrom.length)];
+      while (MINE.rocks[`${x},${y}`] && s.energy >= 2) { if (!use('mine', x, y, 'pick')) break; spend(TIME.rock); }
+      need = missingMats();
+    }
+    leaveMine();
+    return !Object.keys(need).length;
+  }
+
+  function village() {
+    const s = S(), f = festivalToday(), ready = s.quests.filter(canDeliver);
+    const contest = f && f.kind === 'contest' && contestItems(f).length && !s.festivals[`${f.key}-${today().year}`];
+    if (!ready.length && !contest) return;
+    spend(TIME.travel * 2);
+    ready.forEach((q) => track('quests', () => deliver(q.id)));
+    if (contest) {
+      if (s.time < 9 * 60) s.time = 9 * 60;
+      if (festivalOpen()) {
+        const best = contestItems(f).sort((a, b) => ITEMS[b].sell - ITEMS[a].sell)[0];
+        track('contests', () => enterContest(best));
+      }
+    }
+  }
+
+  function reserves() {
+    const s = S(), out = {};
+    s.quests.forEach((q) => { out[q.item] = (out[q.item] || 0) + q.n; });
+    const n = nextFestival();
+    if (n && n.inDays <= 7 && n.f.kind === 'contest') {
+      const items = Object.keys(s.bag).filter((k) => s.bag[k] > 0 && contestItemsFor(n.f, k)).sort((a, b) => ITEMS[b].sell - ITEMS[a].sell);
+      if (items[0]) out[items[0]] = (out[items[0]] || 0) + 1;
+    }
+    return out;
+  }
+  const contestItemsFor = (f, k) => (f.accepts === 'fish' ? k in FISH : f.accepts === 'crop' ? k in CROPS : k in CROPS || k in FORAGE);
+
+  function shipAll(reserved) {
+    const s = S(), held = {};
+    for (const [k, n] of Object.entries(reserved)) { held[k] = Math.min(n, s.bag[k]); s.bag[k] -= held[k]; }
+    for (const [k, n] of Object.entries(s.bag)) {
+      if (!n || ITEMS[k].material) continue;
+      const src = k in CROPS ? 'crops' : k in FORAGE ? 'forage' : k in FISH ? 'fish' : k in PRODUCTS ? 'animal products' : k in ARTISAN ? 'artisan goods' : 'mining';
+      add(log.income, src, n * ITEMS[k].sell);
+    }
+    ship();
+    for (const [k, n] of Object.entries(held)) s.bag[k] += n;
+  }
+
+  // -- the day loop --
+  for (let day = 1; day <= DAYS; day++) {
+    const s = S();
+    const spent0 = Object.values(log.spend).reduce((a, x) => a + x, 0);
+    animals();
+    let reserved = reserves();
+    machines(reserved);
+    purchases(today().season === 'Winter' ? 0 : 150);
+    placeKit();
+    farm(false);
+    village();
+    reserved = reserves();
+    forage();
+    if (Object.keys(missingMats()).length && !late()) mine();   // saving up for something that needs ore: mine first
+    if (!late()) farm(true);
+    if (!late()) fish(0);
+    machines(reserved);
+    shipAll(reserves());
+    const energyLeft = s.energy;
+    sleep(false);
+    G.paused = false;
+    const spentToday = Object.values(log.spend).reduce((a, x) => a + x, 0) - spent0;
+    log.days.push({ day, gold: s.gold, spent: spentToday, energyLeft });
+  }
+  log.endGold = S().gold;
+  log.skills = Object.fromEntries(Object.keys(SKILLS).map((k) => [k, skillLevel(k)]));
+  log.deepest = S().mineDeepest;
+  log.tiles = Object.keys(S().soil).length;
+  log.goalsLeft = goals.length;
+  return log;
+}
+
+// ---- Run and summarise ----
+const runs = Array.from({ length: RUNS }, (_, i) => simulate(1000 + i * 7919));
+
+const totalIncome = (log) => Object.values(log.income).reduce((a, x) => a + x, 0);
+const sources = Object.keys(Object.assign({}, ...runs.map((r) => r.income)))
+  .map((name) => ({ name, total: avg(runs.map((r) => r.income[name] || 0)) }))
+  .sort((a, b) => b.total - a.total);
+const allIncome = avg(runs.map(totalIncome));
+sources.forEach((s) => { s.share = allIncome ? s.total / allIncome : 0; });
+const sinks = Object.keys(Object.assign({}, ...runs.map((r) => r.spend)))
+  .map((name) => ({ name, total: avg(runs.map((r) => r.spend[name] || 0)) })).sort((a, b) => b.total - a.total);
+
+// Income per season: shipping that night plus quest and contest gold, from the daily log.
+const seasons = [];
+for (let start = 1; start <= DAYS; start += 28) {
+  const end = Math.min(DAYS, start + 27), p = dateParts(start);
+  const per = runs.map((r) => {
+    const ds = r.days.filter((d) => d.day >= start && d.day <= end);
+    const before = r.days.find((d) => d.day === start - 1)?.gold ?? 300;
+    const last = ds[ds.length - 1].gold;
+    const spent = ds.reduce((a, d) => a + d.spent, 0);
+    return { income: (last - before + spent) / ds.length, spent: spent / ds.length, gold: last };
+  });
+  seasons.push({ season: p.season, year: p.year, incomePerDay: avg(per.map((x) => x.income)), spendPerDay: avg(per.map((x) => x.spent)), gold: avg(per.map((x) => x.gold)) });
+}
+
+const timeline = [];
+for (const r of runs) r.purchases.forEach((p, i) => { (timeline[i] ??= { goal: p.goal, days: [] }).days.push(p.day); });
+const doneDays = runs.map((r) => r.goalsDone).filter((d) => d !== null);
+
+const R = {
+  strategy: STRATEGY, days: DAYS, runs: RUNS, fishSkill: FISH_SKILL,
+  sources, sinks, seasons,
+  endGold: avg(runs.map((r) => r.endGold)),
+  goalsDone: doneDays.length === runs.length ? median(doneDays) : null,
+  goalsLeft: avg(runs.map((r) => r.goalsLeft)),
+  energyLimited: avg(runs.map((r) => r.days.filter((d) => d.energyLeft < 3).length / r.days.length)),
+  skills: Object.fromEntries(Object.keys(SKILLS).map((k) => [k, avg(runs.map((r) => r.skills[k]))])),
+  deepest: avg(runs.map((r) => r.deepest)),
+  tiles: avg(runs.map((r) => r.tiles)),
+  timeline: timeline.map((t) => ({ goal: t.goal, median: median(t.days), min: Math.min(...t.days), max: Math.max(...t.days), runs: t.days.length })),
+};
+const warnings = CHECKS.map(([name, fn]) => [name, fn(R)]);
+
+const lines = [
+  '# Hollowmere balance report', '',
+  `Strategy **${STRATEGY}**, ${DAYS} days, ${RUNS} runs, fish skill ${FISH_SKILL}. Generated by \`tools/balance.mjs\` from the current data files.`, '',
+  '## Checks', '',
+  ...warnings.map(([name, w]) => `- ${w ? 'WARN' : 'ok'}: ${name}${w ? `. ${w}` : ''}`), '',
+  '## Gold by season (average per day)', '',
+  '| Season | Earned | Spent | Gold at end |', '|---|---|---|---|',
+  ...seasons.map((s) => `| ${s.season} Y${s.year} | ${fmt(s.incomePerDay)} | ${fmt(s.spendPerDay)} | ${fmt(s.gold)} |`), '',
+  '## Where gold comes from (whole run)', '',
+  '| Source | Total | Share |', '|---|---|---|',
+  ...sources.map((s) => `| ${s.name} | ${fmt(s.total)} | ${pct(s.share)} |`), '',
+  '## Where gold goes', '',
+  '| Sink | Total |', '|---|---|',
+  ...sinks.map((s) => `| ${s.name} | ${fmt(s.total)} |`), '',
+  '## When things get bought', '',
+  `Shopping list: ${STRATEGIES[STRATEGY].length} items. ${R.goalsDone ? `All bought by day ${R.goalsDone} (${dayName(R.goalsDone)}, median).` : `Not finished in ${DAYS} days; ${R.goalsLeft.toFixed(1)} items left on average.`}`, '',
+  '| # | Purchase | Median day | Range | Runs |', '|---|---|---|---|---|',
+  ...R.timeline.map((t, i) => `| ${i + 1} | ${t.goal} | ${dayName(t.median)} | ${t.min} to ${t.max} | ${t.runs}/${RUNS} |`), '',
+  '## End state', '',
+  `- Gold: ${fmt(R.endGold)}. Tilled tiles: ${Math.round(R.tiles)}. Deepest mine floor: ${R.deepest.toFixed(1)}.`,
+  `- Days ending out of energy: ${pct(R.energyLimited)}.`,
+  `- Skill levels: ${Object.entries(R.skills).map(([k, v]) => `${SKILLS[k].name} ${v.toFixed(1)}`).join(', ')}.`, '',
+  '## Bot assumptions', '',
+  '- Teleports between tiles but pays game time per action; never hurt in the mine; ignores gifts and friendship rewards.',
+  '- Plants the best profit-per-day crop that can still ripen this season, waters what sprinklers miss, expands the field while energy and gold allow.',
+  '- Forages every day, delivers quests it can fill, enters every contest with its most valuable eligible item.',
+  '- Spends leftover energy mining when the next purchase needs materials, otherwise fishing.',
+  '- Fishing success: zone width and difficulty based, scaled by --fish-skill.', '',
+];
+const md = lines.join('\n');
+if (OUT) writeFileSync(OUT, md); else console.log(md);
+if (JSON_OUT) writeFileSync(JSON_OUT, JSON.stringify(R, null, 2));
+if (OUT) console.log(`Wrote ${OUT}. ${warnings.filter(([, w]) => w).length} warning(s).`);
+if (CHECK && warnings.some(([, w]) => w)) process.exit(1);
