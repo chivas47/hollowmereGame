@@ -7,7 +7,8 @@ import { RENOVATIONS } from '../data/furniture.js';
 import { buyRenovation } from '../systems/house.js';
 import { ITEMS } from '../data/items.js';
 import { nextTier, buyUpgrade, orderCoop, affordable, buyCoal } from '../systems/upgrades.js';
-import { buyChicken, collectEggs, buyFeed } from '../systems/coop.js';
+import { collectEggs, buyFeed } from '../systems/coop.js';
+import { HOMES, nextLevel, orderLevel, buyLivestock, noRoom, kindOf, hearts, room, level } from '../systems/livestock.js';
 import { orderBarn } from '../systems/barn.js';
 import { orderGreenhouse } from '../systems/greenhouse.js';
 import { openModal, closeModal } from './modal.js';
@@ -40,26 +41,43 @@ function workbench() {
   const st = S.built.stable === true ? offer('Stable', 'Built')
     : S.built.stable === 'pending' ? offer('Stable', 'Bram builds it tonight')
       : offer('Stable', `${STABLE.desc} ${STABLE.cost.toLocaleString('en-US')}g`, 'data-upgrade="stable"', STABLE.cost, STABLE.needs);
+  // v28: big and deluxe coop and barn, once the building stands.
+  const ups = Object.entries(HOMES).map(([home, H]) => {
+    if (S.built[H.place] !== true) return '';
+    const next = nextLevel(home);
+    if (S.levelUp[home]) return offer(next.label, 'Bram builds it tonight');
+    if (!next) return offer(H.def.levels[level(home)].label, 'Fully upgraded');
+    return offer(next.label, `${next.desc} ${next.cost.toLocaleString('en-US')}g`, `data-level="${home}"`, next.cost, next.needs);
+  }).join('');
   const renos = Object.entries(RENOVATIONS).map(([k, r]) => (S.house.renos.includes(k) ? offer(r.name, 'Done')
     : offer(r.name, `${r.desc} ${r.cost.toLocaleString('en-US')}g`, `data-reno="${k}"`, r.cost))).join('');
-  openModal(`<h2>Bram's workbench</h2><p class="role">Bram takes orders here. You have <b>${S.gold}g</b>. Press C anywhere to craft sprinklers and machines; a furnace smelts ore into the bars upgrades need.</p>${rows}${coop}${barn}${gh}${st}<h3>Farmhouse renovations</h3>${renos}<h3>Coal</h3><div class="shoprow"><div><b>Coal</b><span>${COAL_COST}g each. You have ${S.bag.coal || 0}. The furnace needs 1 per bar.</span></div><div class="btns"><button data-coal="1" ${S.gold < COAL_COST ? 'disabled' : ''}>Buy 1</button><button data-coal="5" ${S.gold < COAL_COST * 5 ? 'disabled' : ''}>Buy 5</button></div></div>`,
+  openModal(`<h2>Bram's workbench</h2><p class="role">Bram takes orders here. You have <b>${S.gold}g</b>. Press C anywhere to craft sprinklers and machines; a furnace smelts ore into the bars upgrades need.</p>${rows}${coop}${barn}${ups}${gh}${st}<h3>Farmhouse renovations</h3>${renos}<h3>Coal</h3><div class="shoprow"><div><b>Coal</b><span>${COAL_COST}g each. You have ${S.bag.coal || 0}. The furnace needs 1 per bar.</span></div><div class="btns"><button data-coal="1" ${S.gold < COAL_COST ? 'disabled' : ''}>Buy 1</button><button data-coal="5" ${S.gold < COAL_COST * 5 ? 'disabled' : ''}>Buy 5</button></div></div>`,
     [['Leave', closeModal, true]]);
 }
 
+// Shared by the coop and barn dialogs: the animals living there, with hearts, and what can be bought.
+export function herdRows(home) {
+  const S = G.S, H = HOMES[home], list = H.list();
+  const rows = list.length
+    ? list.map((a) => { const def = H.def.animals[kindOf(a)]; return `<div class="inv-row"><span>${a.name} <span class="role">${def.name}, ${'♥'.repeat(hearts(a))}${'♡'.repeat(5 - hearts(a))}</span></span><span>${a.pet === S.day ? 'Petted today' : 'Wants a pet'}</span></div>`; }).join('')
+    : '<p class="role">No animals yet.</p>';
+  const buy = Object.entries(H.def.animals).filter(([, d]) => !d.hatched).map(([k, d]) => {
+    const why = noRoom(k);
+    return `<button data-animal="${k}" ${why || S.gold < d.cost ? 'disabled' : ''} title="${why || ''}">Buy a ${d.name.toLowerCase()} (${d.cost.toLocaleString('en-US')}g)</button>`;
+  }).join('');
+  const locked = Object.values(H.def.animals).filter((d) => d.level > level(home) && !d.hatched).map((d) => `${d.name === 'Sheep' ? 'sheep' : `${d.name.toLowerCase()}s`} need a ${H.def.levels[d.level].label.toLowerCase()}`);
+  return `${rows}<p class="role" style="margin-top:8px">${list.length} of ${room(home)} places taken.${locked.length ? ` ${locked.join('; ')} (Bram's workbench).` : ''}</p><div class="btns">${buy}</div>`;
+}
+
 function coopDialog() {
-  const S = G.S;
-  const hens = S.chickens.length
-    ? S.chickens.map((c) => `<div class="inv-row"><span>${c.name}</span><span>${c.pet === S.day ? 'Petted today' : 'Wants a pet'}</span></div>`).join('')
-    : '<p class="role">No chickens yet.</p>';
-  const nights = S.chickens.length ? Math.floor(S.feed / S.chickens.length) : 0;
-  let html = `<h2>Chicken coop</h2><p class="role">Each chicken eats 1 feed a night. Pet a fed chicken today and she lays an egg tomorrow morning. You have <b>${S.gold}g</b>.</p>${hens}`;
-  html += `<p style="margin-top:12px">Feed: <b>${S.feed}</b>${S.chickens.length ? ` (${nights} night${nights === 1 ? '' : 's'})` : ''}.</p>`;
+  const S = G.S, n = S.chickens.length;
+  const nights = n ? Math.floor(S.feed / n) : 0;
+  const waiting = Object.entries(S.coopGoods).filter(([, c]) => c).map(([k, c]) => `${c} ${ITEMS[k].name}`);
+  let html = `<h2>${COOP.levels[level('coop')].label}</h2><p class="role">Each animal eats 1 feed a night, or grazes a tuft of grass in the yard outside winter and rain. Pet a fed animal on the day it is due and it gives its product the next morning; a loved animal gives better ones. You have <b>${S.gold}g</b>.</p>${herdRows('coop')}`;
+  html += `<p style="margin-top:12px">Feed: <b>${S.feed}</b>${n ? ` (${nights} night${nights === 1 ? '' : 's'})` : ''}.</p>`;
   html += `<div class="btns"><button data-coop="feed1" ${S.gold < COOP.feedCost ? 'disabled' : ''}>Buy 1 feed (${COOP.feedCost}g)</button><button data-coop="feed10" ${S.gold < COOP.feedCost * 10 ? 'disabled' : ''}>Buy 10 (${COOP.feedCost * 10}g)</button></div>`;
-  html += `<p style="margin-top:12px">${S.eggs ? `${S.eggs} egg${S.eggs === 1 ? '' : 's'} waiting.` : 'No eggs waiting.'}</p>`;
-  html += '<div class="btns">';
-  if (S.eggs) html += '<button data-coop="collect">Collect eggs</button>';
-  if (S.chickens.length < COOP.maxChickens) html += `<button data-coop="buy" ${S.gold < COOP.chickenCost ? 'disabled' : ''}>Buy a chicken (${COOP.chickenCost}g)</button>`;
-  html += '</div>';
+  html += `<p style="margin-top:12px">${waiting.length ? `Waiting: ${waiting.join(', ')}.` : 'Nothing waiting.'}</p>`;
+  if (waiting.length) html += '<div class="btns"><button data-coop="collect">Collect</button></div>';
   openModal(html, [['Leave', closeModal, true]]);
 }
 
@@ -75,13 +93,19 @@ $('#mbody').addEventListener('click', (e) => {
   }
   const cl = e.target.closest('[data-coal]');
   if (cl && !cl.disabled) { if (buyCoal(+cl.dataset.coal)) workbench(); return; }
+  const lv = e.target.closest('[data-level]');
+  if (lv && !lv.disabled) { if (orderLevel(lv.dataset.level)) workbench(); return; }
   const rn = e.target.closest('[data-reno]');
   if (rn && !rn.disabled) { if (buyRenovation(rn.dataset.reno)) workbench(); return; }
+  const an = e.target.closest('[data-animal]');
+  if (an && !an.disabled && HOMES.coop.def.animals[an.dataset.animal]) {
+    const name = buyLivestock(an.dataset.animal); if (name) notify(`${name} joined the flock.`);
+    coopDialog(); return;
+  }
   const cp = e.target.closest('[data-coop]');
   if (!cp || cp.disabled) return;
   if (cp.dataset.coop === 'feed1') buyFeed(1);
   if (cp.dataset.coop === 'feed10') buyFeed(10);
-  if (cp.dataset.coop === 'collect') { const n = collectEggs(); notify(`Collected ${n} egg${n === 1 ? '' : 's'}.`); }
-  if (cp.dataset.coop === 'buy' && buyChicken()) notify(`${G.S.chickens[G.S.chickens.length - 1].name} joined the flock.`);
+  if (cp.dataset.coop === 'collect') { const got = collectEggs(); if (got.length) notify(`Collected ${got.join(' and ')}.`); }
   coopDialog();
 });

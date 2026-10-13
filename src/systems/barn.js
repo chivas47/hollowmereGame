@@ -1,18 +1,17 @@
 // Barn: ordered at Bram's workbench, built overnight by the west fence.
-// Cows and goats wander the yard. Each night every animal eats 1 hay from the loft;
-// a fed animal that was petted that day gives milk the next morning, collected at the barn.
+// Barn animals wander the yard. Each night every animal eats 1 hay from the loft or grazes;
+// a fed animal petted on the day its product is due gives it the next morning, collected at the barn.
+// The shared rules (levels, friendship, grazing, quality, pail and shears) are in systems/livestock.js.
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addUpdater, addEntities } from '../core/registry.js';
 import { BARN } from '../data/upgrades.js';
-import { ITEMS } from '../data/items.js';
 import { MAPS } from '../data/maps.js';
 import { drawAnimal, drawHeart } from '../render/sprites.js';
 import { tileOf } from './world.js';
 import { affordable } from './upgrades.js';
-import { addItem, rollSkillQuality } from './quality.js';
-import { skillLevel } from './skills.js';
+import { night, collect, buyLivestock, pet, animalDef } from './livestock.js';
 
 const farm = MAPS.farm, fp = BARN.footprint, yard = BARN.yard, SPEED = 10;
 
@@ -49,14 +48,8 @@ on('game:loaded', () => { herd.length = 0; placeBarn(); });
 on('game:reset', () => { herd.length = 0; });
 
 on('day:end', (report) => {
-  const S = G.S;
-  let milk = 0, hungry = 0;
-  for (const a of S.animals) {
-    if (S.hay <= 0) { hungry++; continue; }
-    S.hay--;
-    if (a.pet === S.day) { S.barnGoods[BARN.animals[a.kind].product]++; milk++; }
-  }
-  report.milk = milk; report.hungry = hungry;
+  const out = night('barn');
+  report.barn = out.made; report.hungry = out.hungry; report.noTool = out.noTool; report.grazed = (report.grazed || 0) + out.grazed;
 });
 
 on('day:start', (report) => {
@@ -95,8 +88,11 @@ addInteraction(94, ({ tx, ty, mapId }) => {
   if (i < 0) return false;
   const st = G.S.animals[i];
   if (st.pet === G.S.day) { notify(`${st.name} is already content today.`); return true; }
-  st.pet = G.S.day;
-  notify(`You pet ${st.name}. ${G.S.hay > 0 ? '' : 'The loft is out of hay, so no milk tomorrow.'}`.trim());
+  pet(st);
+  const tool = animalDef(st.kind).tool;
+  const note = tool && !G.S.ranch[tool] ? `It has nothing for you without ${tool === 'pail' ? 'a milk pail' : 'shears'} from the barn.`
+    : G.S.hay > 0 ? '' : 'The loft is out of hay: it needs hay or grass tonight.';
+  notify(`You pet ${st.name}. ${note}`.trim());
   emit('gather', { skill: 'ranching', xp: 2 });
   emit('sfx', 'pet');
   changed();
@@ -120,15 +116,7 @@ export function orderBarn() {
   return true;
 }
 
-export function buyAnimal(kind) {
-  const S = G.S, def = BARN.animals[kind];
-  if (!def || S.animals.length >= BARN.maxAnimals || S.gold < def.cost) return null;
-  S.gold -= def.cost;
-  const name = def.names.find((n) => !S.animals.some((a) => a.name === n)) || def.name;
-  S.animals.push({ kind, name, pet: 0 });
-  changed();
-  return name;
-}
+export const buyAnimal = (kind) => buyLivestock(kind);
 
 export function buyHay(n) {
   const S = G.S, cost = BARN.hayCost * n;
@@ -138,15 +126,4 @@ export function buyHay(n) {
   return true;
 }
 
-export function collectMilk() {
-  const S = G.S, got = [];
-  for (const [k, n] of Object.entries(S.barnGoods)) {
-    if (!n) continue;
-    for (let i = 0; i < n; i++) addItem(k, 1, rollSkillQuality(skillLevel('ranching')));
-    S.barnGoods[k] = 0;
-    got.push(`${n} ${ITEMS[k].name}`);
-    emit('gather', { skill: 'ranching', item: k, n, xp: 4 * n });
-  }
-  changed();
-  return got;
-}
+export const collectMilk = () => collect('barn');

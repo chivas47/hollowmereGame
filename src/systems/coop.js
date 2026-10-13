@@ -1,15 +1,15 @@
-// Chicken coop: placed on the farm once built, chickens wander the yard,
-// petted chickens lay an egg the next morning, eggs wait in the coop.
+// Chicken coop: placed on the farm once built, coop animals wander the yard,
+// a fed animal petted on the day its product is due gives it the next morning; products wait in the coop.
+// The shared rules (levels, friendship, grazing, quality) are in systems/livestock.js.
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addUpdater, addEntities } from '../core/registry.js';
 import { COOP } from '../data/upgrades.js';
 import { MAPS } from '../data/maps.js';
-import { drawChicken, drawHeart } from '../render/sprites.js';
+import { drawChicken, drawCoopAnimal, drawHeart } from '../render/sprites.js';
 import { tileOf } from './world.js';
-import { addItem, rollSkillQuality } from './quality.js';
-import { skillLevel } from './skills.js';
+import { night, collect, buyLivestock, pet, kindOf } from './livestock.js';
 
 const farm = MAPS.farm, fp = COOP.footprint, yard = COOP.yard, SPEED = 14;
 
@@ -46,17 +46,10 @@ function syncFlock() {
 on('game:loaded', () => { flock.length = 0; placeCoop(); });
 on('game:reset', () => { flock.length = 0; });
 
-// Each chicken eats 1 feed a night; a fed chicken petted that day lays an egg.
+// Each coop animal eats 1 feed a night, or grazes a grass tuft in the yard (systems/livestock.js).
 on('day:end', (report) => {
-  const S = G.S;
-  let laid = 0, hungry = 0;
-  for (const c of S.chickens) {
-    if (S.feed <= 0) { hungry++; continue; }
-    S.feed--;
-    if (c.pet === S.day) laid++;
-  }
-  S.eggs += laid;
-  report.eggs = laid; report.hungryHens = hungry;
+  const out = night('coop');
+  report.coop = out.made; report.hungryHens = out.hungry; report.grazed = (report.grazed || 0) + out.grazed;
 });
 
 on('day:start', (report) => {
@@ -83,8 +76,9 @@ addUpdater((dt) => {
 addEntities(() => (G.S.map !== 'farm' || !built() ? [] : flock.map((c, i) => ({
   y: c.y,
   draw: (ctx) => {
-    drawChicken(ctx, c.x, c.y, c.dir, c.moving);
-    if (G.S.chickens[i] && G.S.chickens[i].pet !== G.S.day) drawHeart(ctx, c.x, c.y);
+    const st = G.S.chickens[i], kind = st ? kindOf(st) : 'chicken';
+    if (kind === 'chicken') drawChicken(ctx, c.x, c.y, c.dir, c.moving); else drawCoopAnimal(ctx, c.x, c.y, c.dir, c.moving, kind);
+    if (st && st.pet !== G.S.day) drawHeart(ctx, c.x, c.y);
   },
 }))));
 
@@ -95,8 +89,8 @@ addInteraction(95, ({ tx, ty, mapId }) => {
   if (i < 0) return false;
   const hen = G.S.chickens[i];
   if (hen.pet === G.S.day) { notify(`${hen.name} is already content today.`); return true; }
-  hen.pet = G.S.day;
-  notify(`You pet ${hen.name}. She clucks happily.`);
+  pet(hen);
+  notify(`You pet ${hen.name}. ${kindOf(hen) === 'rabbit' ? 'Its nose twitches.' : 'It chirps happily.'}`);
   emit('gather', { skill: 'ranching', xp: 2 });
   emit('sfx', 'pet');
   changed();
@@ -109,14 +103,8 @@ addInteraction(72, ({ tile }) => {
   return true;
 });
 
-export function buyChicken() {
-  const S = G.S;
-  if (S.chickens.length >= COOP.maxChickens || S.gold < COOP.chickenCost) return false;
-  S.gold -= COOP.chickenCost;
-  S.chickens.push({ name: COOP.names[S.chickens.length], pet: 0 });
-  changed();
-  return true;
-}
+// Kept for tools/balance.mjs and older callers: buying a chicken and collecting the coop.
+export const buyChicken = () => !!buyLivestock('chicken');
 
 export function buyFeed(n) {
   const S = G.S, cost = COOP.feedCost * n;
@@ -126,12 +114,4 @@ export function buyFeed(n) {
   return true;
 }
 
-export function collectEggs() {
-  const n = G.S.eggs;
-  if (!n) return 0;
-  for (let i = 0; i < n; i++) addItem('egg', 1, rollSkillQuality(skillLevel('ranching')));
-  G.S.eggs = 0;
-  emit('gather', { skill: 'ranching', item: 'egg', n, xp: 3 * n });
-  changed();
-  return n;
-}
+export const collectEggs = () => collect('coop');

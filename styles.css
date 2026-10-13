@@ -65,7 +65,7 @@ button:focus-visible{outline:3px solid var(--water);outline-offset:2px}
 .shoprow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:2px solid var(--seam);flex-wrap:wrap}
 .shoprow div:first-child{display:flex;flex-direction:column;min-width:0}
 .shoprow span{font-size:16px;color:var(--straw)}
-.btns{display:flex;gap:6px}
+.btns{display:flex;gap:6px;flex-wrap:wrap}
 .card button{background:var(--plank);border:2px solid var(--seam);color:var(--cream);font:inherit;font-size:18px;padding:6px 12px;cursor:pointer}
 .card button.primary{background:var(--harvest);color:var(--soil);border-color:#b8862b;font-weight:600}
 .card button:disabled{opacity:.45;cursor:not-allowed}

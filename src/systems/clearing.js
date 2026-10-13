@@ -12,7 +12,7 @@ import { MAPS } from '../data/maps.js';
 import { ITEMS } from '../data/items.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { COOP, BARN, GREENHOUSE, tier } from '../data/upgrades.js';
-import { DEBRIS, ALDER, CREEP, START_CLUTTER, SWING } from '../data/clearing.js';
+import { DEBRIS, ALDER, CREEP, START_CLUTTER, SWING, GRASS } from '../data/clearing.js';
 
 const TAP = { item: 'syrup', every: 8 };   // Stardew: a tapper on a maple fills in 9 days
 import { LAYOUTS } from '../data/layouts.js';
@@ -34,6 +34,16 @@ export function freeTile(x, y) {
   const k = `${x},${y}`;
   return grid()[y]?.[x] === 'g' && !kept(x, y) && !G.S.soil[k] && !G.S.placed[k] && !G.S.debris[k] && !giantAt(x, y);
 }
+// v28: grass may also grow in the animal yards, where the animals graze it.
+export function grassTile(x, y) {
+  const k = `${x},${y}`;
+  if (freeTile(x, y)) return true;
+  return grid()[y]?.[x] === 'g' && (inYard(x, y, COOP.yard) || inYard(x, y, BARN.yard)) && ![COOP, BARN].some((b) => inRect(x, y, b.footprint))
+    && !G.S.soil[k] && !G.S.placed[k] && !G.S.debris[k];
+}
+const walkable = (d) => !!DEBRIS[d.kind]?.walk;
+const hasSilo = () => Object.values(G.S.placed).some((p) => p.kind === 'silo');
+
 function randomFree(near = null) {
   const out = [];
   const g = grid();
@@ -51,6 +61,7 @@ const GROUND = new Set(['g', 'q', 'z']);
 function put(x, y, d) {
   const k = `${x},${y}`;
   G.S.debris[k] = d;
+  if (walkable(d)) return;   // grass leaves the tile as it is
   if (!written.has(k)) written.set(k, grid()[y][x] === 'Y' ? 'g' : grid()[y][x]);
   grid()[y][x] = 'Y';
 }
@@ -80,12 +91,17 @@ on('game:loaded', () => {
   if (!S.debris) {   // a new farm, or a save from before v19
     S.debris = {};
     const fresh = S.day === 1 && !Object.keys(S.soil).length, extra = fresh ? LAYOUTS[S.layout]?.perks?.alders || 0 : 0;
-    scatter(fresh ? { ...START_CLUTTER.new, alder: START_CLUTTER.new.alder + extra } : START_CLUTTER.old);
+    const { grass = 0, ...rest } = fresh ? { ...START_CLUTTER.new, alder: START_CLUTTER.new.alder + extra } : START_CLUTTER.old;
+    scatter(rest);
+    // v28: a new farm's grass grows in the animal yards, ready for the first animals to graze.
+    const yards = [COOP.yard, BARN.yard].flatMap((yd) => { const t = []; for (let y = yd.y0; y <= yd.y1; y++) for (let x = yd.x0; x <= yd.x1; x++) if (grassTile(x, y)) t.push([x, y]); return t; });
+    for (let i = 0; i < grass && yards.length; i++) put(...yards.splice(Math.floor(Math.random() * yards.length), 1)[0], { kind: 'grass' });
   }
   for (const k of Object.keys(S.debris)) {
     if (written.has(k)) continue;   // just scattered
     const [x, y] = k.split(',').map(Number);
     if (!GROUND.has(grid()[y]?.[x]) || S.soil[k] || S.placed[k]) { delete S.debris[k]; continue; }
+    if (walkable(S.debris[k])) continue;
     written.set(k, grid()[y][x]); grid()[y][x] = 'Y';
   }
 });
@@ -102,6 +118,13 @@ on('day:start', (report) => {
       const t = randomFree(k.split(',').map(Number));
       if (t) put(...t, { kind: 'alder', stage: 0 });
     }
+  }
+  const grass = all.filter(([, d]) => d.kind === 'grass');
+  if (!winter) for (const [k] of grass) {
+    if (Object.values(S.debris).filter((d) => d.kind === 'grass').length >= GRASS.max) break;
+    if (Math.random() >= GRASS.spread) continue;
+    const [x, y] = k.split(',').map(Number), n = [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([dx, dy]) => [x + dx, y + dy]).filter(([a, b]) => grassTile(a, b));
+    if (n.length) put(...n[Math.floor(Math.random() * n.length)], { kind: 'grass' });
   }
   let crept = 0;
   const loose = all.filter(([, d]) => CREEP.weights[d.kind]).length, total = Object.values(CREEP.weights).reduce((a, b) => a + b, 0);
@@ -128,7 +151,7 @@ function drop(drops) {
   return got;
 }
 const XP = { weeds: ['foraging', 1], stone: ['mining', 1], twig: ['foraging', 1], stump: ['foraging', 25], alder: ['foraging', 12], alderstump: ['foraging', 2],
-  copperrock: ['mining', 5], ironrock: ['mining', 10], crate: ['foraging', 2] };
+  copperrock: ['mining', 5], ironrock: ['mining', 10], crate: ['foraging', 2], grass: ['foraging', 0] };
 
 // Priority 62: above the sword (58) and the well (60), so any tool aimed at debris reaches it.
 addInteraction(62, ({ tx, ty, mapId, item }) => {
@@ -156,6 +179,14 @@ addInteraction(62, ({ tx, ty, mapId, item }) => {
   if (item !== 'sword' && !useEnergy(SWING)) return true;
   swingAt(tx, ty, item);
   if (young) { remove(k); notify('Cleared the young alder.'); changed(); return true; }
+  if (d.kind === 'grass') {
+    remove(k);
+    const hay = hasSilo() && Math.random() < GRASS.hay;
+    if (hay) G.S.hay++;
+    notify(hay ? `Cut the grass: +1 hay to the silo (${G.S.hay} in the loft).` : hasSilo() ? 'Cut the grass.' : 'Cut the grass. With a silo on the farm it would give hay.');
+    changed();
+    return true;
+  }
   d.hp = (d.hp ?? def.hp) - power;
   if (d.hp > 0) { changed(); return true; }
   const got = drop(d.drops || def.drops);
@@ -173,8 +204,17 @@ addInteraction(62, ({ tx, ty, mapId, item }) => {
   return true;
 });
 
-// Planting an alder cone from the kit. Priority 56: just above placing crafted objects (55).
+// Planting an alder cone or a grass starter from the kit. Priority 56: just above placing crafted objects (55).
 addInteraction(56, ({ tx, ty, tile, mapId, item }) => {
+  if (item === 'kit' && PLACEABLES[G.S.kitSel]?.kind === 'grass' && G.S.kit[G.S.kitSel] > 0 && tile === 'g') {
+    if (mapId !== 'farm' || !grassTile(tx, ty)) { notify('Grass grows on open farm grass and in the animal yards.'); return true; }
+    G.S.kit[G.S.kitSel]--;
+    put(tx, ty, { kind: 'grass' });
+    emit('sfx', 'seed');
+    notify('Planted a tuft of grass. It spreads, and animals graze it in their yard.');
+    changed();
+    return true;
+  }
   if (item !== 'kit' || PLACEABLES[G.S.kitSel]?.kind !== 'sprout' || !(G.S.kit[G.S.kitSel] > 0) || tile !== 'g') return false;
   if (mapId !== 'farm' || !freeTile(tx, ty)) { notify('Alder cones grow on open farm grass, away from buildings and the path.'); return true; }
   G.S.kit[G.S.kitSel]--;
@@ -206,6 +246,7 @@ addInteraction(74, ({ tx, ty, mapId, item }) => {
 const builtHere = () => Object.entries(G.S.placed).map(([k, p]) => ({ p, kind: PLACEABLES[p.kind].kind, ...parsePlaceKey(k) })).filter((e) => e.map === G.S.map);
 
 addLayer(9, (c) => {
+  if (G.S.map === 'farm') for (const [k, d] of Object.entries(G.S.debris || {})) if (walkable(d)) { const [x, y] = k.split(',').map(Number); drawDebris(c, x * T, y * T, d.kind); }
   for (const e of builtHere()) if (e.kind === 'floor') drawFloor(c, e.x * T, e.y * T, e.p.kind, PLACEABLES[e.p.kind].color);
 });
 
@@ -224,6 +265,7 @@ addEntities(() => {
   if (G.S.map !== 'farm') return out;
   const bare = today().season === 'Winter';
   for (const [k, d] of Object.entries(G.S.debris)) {
+    if (walkable(d)) continue;
     const [x, y] = k.split(',').map(Number);
     out.push({ y: (y + 1) * T - 2, draw: d.kind === 'alder' ? (c) => { drawAlder(c, x * T, y * T, d.stage, bare); if (d.tap) drawTap(c, x * T, y * T, d.tap.ready); } : (c) => drawDebris(c, x * T, y * T, d.kind) });
   }

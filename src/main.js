@@ -19,6 +19,7 @@ import './systems/economy.js';
 import './systems/npcs.js';
 import './systems/fishing.js';
 import './systems/upgrades.js';
+import './systems/livestock.js';
 import './systems/coop.js';
 import './systems/mine.js';
 import './systems/health.js';

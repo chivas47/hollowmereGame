@@ -5,6 +5,7 @@ import { ITEMS } from '../data/items.js';
 import { MACHINES } from '../data/crafting.js';
 import { placeKey } from './world.js';
 import { today } from '../core/time.js';
+import { adopt, animalDef, homeOf } from './livestock.js';
 
 const machine = (x, y) => {
   const p = G.S.placed[placeKey(G.S.map, x, y)];
@@ -31,7 +32,8 @@ export function loadMachine(x, y, item) {
   p.item = MACHINES[p.kind].product(item);
   p.nights = nightsFor(p.kind, item);
   if (MACHINES[p.kind].repeat) p.copy = item;
-  notify(p.nights ? `${ITEMS[p.item].name} will be ready in ${p.nights} night${p.nights === 1 ? '' : 's'}.` : `${ITEMS[p.item].name} is ready.`);
+  if (MACHINES[p.kind].hatch) notify(`The ${ITEMS[item].name.toLowerCase()} hatches in ${p.nights} nights.`);
+  else notify(p.nights ? `${ITEMS[p.item].name} will be ready in ${p.nights} night${p.nights === 1 ? '' : 's'}.` : `${ITEMS[p.item].name} is ready.`);
   changed();
   return true;
 }
@@ -39,7 +41,15 @@ export function loadMachine(x, y, item) {
 export function collectMachine(x, y) {
   const p = machine(x, y);
   if (!p || !p.item || p.nights > 0) return null;
-  const item = p.item;
+  const item = p.item, hatch = MACHINES[p.kind].hatch?.[item];
+  if (hatch) {   // the incubator (v28): the animal moves into its coop or barn, if there is room
+    const name = adopt(hatch);
+    if (!name) return null;
+    p.item = null; p.nights = 0;
+    notify(`${name} the ${animalDef(hatch).name.toLowerCase()} hatched and moved into the ${homeOf(hatch)}.`);
+    changed();
+    return hatch;
+  }
   G.S.bag[item]++;
   p.item = null; p.nights = 0;
   if (MACHINES[p.kind].repeat && p.copy) { p.item = MACHINES[p.kind].product(p.copy); p.nights = nightsFor(p.kind, p.copy); }   // the gem copier starts again

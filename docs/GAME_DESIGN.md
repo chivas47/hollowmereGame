@@ -213,6 +213,10 @@ Heart scenes (data/scenes.js): the first talk after reaching 4 and 8 hearts play
 | Barn | 6000 | 250 stone, 2 copper bars | Up to 4 cows (1500g) or goats (4000g) |
 | Greenhouse | 35000 | none | 126 beds; any crop, any season |
 | Stable | 10000 | 100 wood, 5 iron bars | A horse: ride at 1.6 x walking speed, H to whistle |
+| Big coop | 10000 | 400 wood, 150 stone | Room for 8; ducks (Stardew's price) |
+| Deluxe coop | 20000 | 500 wood, 200 stone | Room for 12; rabbits |
+| Big barn | 12000 | 450 wood, 200 stone | Room for 8 |
+| Deluxe barn | 25000 | 550 wood, 300 stone | Room for 12; sheep and pigs |
 
 
 Chickens: each eats 1 feed a night (50g, bought at the coop). A fed chicken petted that day lays one egg (50g) next morning, collected at the coop.
@@ -223,6 +227,31 @@ Chickens: each eats 1 feed a night (50g, bought at the coop). A fed chicken pett
 - Each night every animal eats 1 hay (50g, bought at the barn). An animal that was fed and petted that day gives milk next morning, collected at the barn. No hay: no milk, and the morning report says so.
 - Cow: milk 125g. Goat: goat milk 225g.
 - Per animal per day with hay: cow 75g net, goat 175g net; with a churn or vat, 180g and 350g.
+
+### Livestock (v28)
+
+Animals and products follow Stardew by role. Every animal eats 1 feed (coop) or 1 hay (barn) a night, or grazes a grass tuft in its yard instead outside winter and rain. A fed animal petted on the day its product is due gives it the next morning.
+
+| Animal | Home, level | Cost | Product (every) | Notes |
+|---|---|---|---|---|
+| Chicken | Coop | 800 | Egg 50g (1 night) | |
+| Duck | Big coop | 1,200 | Duck egg 95g (2) | Sometimes a duck feather (250g) instead |
+| Rabbit | Deluxe coop | 8,000 | Wool 340g (4) | Sometimes a lucky paw (565g) instead |
+| Mossback | Coop, hatched | none | Mossback egg 350g (7) | Stardew role: the dinosaur |
+| Cow | Barn | 1,500 | Milk 125g (1) | Needs the milk pail |
+| Goat | Barn | 4,000 | Goat milk 225g (1) | Needs the milk pail; daily as before v28 (Stardew: every 2) |
+| Sheep | Deluxe barn | 8,000 | Wool 340g (3) | Needs the shears |
+| Pig | Deluxe barn | 16,000 | Truffle 625g (1) | Only outside winter and rain |
+| Strider | Barn, hatched | none | Strider egg 600g (7) | Stardew role: the ostrich |
+
+- Milk pail and shears: 1,000g each at the barn, bought once. Barns built before v28 come with the pail.
+- Friendship: petting gives 15 (of 1,000), a day without loses 10 minus friendship / 200, a hungry night loses 20. Five hearts at 1,000. Quality chance is Stardew's: friendship / 1000 minus (1 minus mood / 225), half of it prime; the ranching skill roll still applies, whichever is better. Mood: 200 fed and petted, 100 fed only, plus 40 for grazing.
+- Deluxe products (feather, paw) need friendship 200 or more; chance (friendship + mood) / 5000.
+- Grass: grass starter 100g at the seed stall (slot 7). A tuft spreads to a free neighbour 10% of nights (up to 40 on the farm), never in winter. It is walkable. A new farm starts with 10 tufts in the yards. Cutting a tuft with any clearing tool gives 1 hay half the time while a silo stands on the farm.
+- Silo: 100g, 110 stone, 5 copper bars (Stardew: 100g, 100 stone, 10 clay, 5 copper bars).
+- Incubator: 50 wood, 50 stone, 2 iron bars (Stardew's ostrich incubator, materials substituted). Egg or duck egg 9 nights, Mossback egg 12, Strider egg 15. The animal moves in only if its home has room and the right level.
+- Mossback and Strider eggs come from rocks in the Hollow: 0.1% and 0.3% a rock.
+- Machines: the egg press takes duck eggs (duck egg spread 375g) and Mossback eggs (Mossback spread 800g); the loom takes 1 wool for a cloth; the oil press turns a truffle into truffle oil (1,065g).
 
 ### Crafting (C key; costs gold plus materials)
 
@@ -413,6 +442,9 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Wood is the bottleneck for v27 machines (15 to 60 wood each) while alders are the only steady supply. In the simulator the bot finishes its shopping list later (the smoker and mushroom log are not reached in every run). Advisory: numbers stay on the Stardew scale.
 - The recycler, worm bin and bait maker wait for the fishing overhaul (roadmap item 20), which brings trash and bait.
 - Honey has one flavour; Stardew's flower honey is not modelled.
+- v28 makes wood scarcer: the big coop and barn take 400 to 550 wood. In the simulator the bot saves for the big coop from autumn of year 1 and gets it in year 2 (4 of 5 runs), mining and chopping instead of fishing meanwhile (fish income -42%). Stardew's carpenter sells wood; adding that is a roadmap call for Nuno.
+- Coop and barn upgrades do not change the buildings' size or art.
+- Grazing animals stay in their yards (Stardew's roam the farm). The silo does not cap the hay loft.
 - Mine floors have no special floors (treasure, boss, elevator).
 
 ## Roadmap
