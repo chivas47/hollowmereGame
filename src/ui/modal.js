@@ -1,5 +1,6 @@
 // One dialog at a time. Opening it pauses the game.
 import { G } from '../core/game.js';
+import { emit } from '../core/events.js';
 import { $ } from './dom.js';
 
 // actions: [[label, onClick, isPrimary], ...]
@@ -12,6 +13,7 @@ export function openModal(html, actions) {
     b.addEventListener('click', fn);
     box.append(b);
   });
+  if ($('#modal').hidden) emit('sfx', 'ui');
   $('#modal').hidden = false;
   G.paused = true; G.keys = {};
   (box.querySelector('.primary') || box.querySelector('button'))?.focus();

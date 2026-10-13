@@ -10,6 +10,7 @@ import { closeModal, modalOpen } from './modal.js';
 import { selectSlot } from './hotbar.js';
 import { confirmReset } from './dialogs.js';
 import { toggleDebug } from './debugPanel.js';
+import { toggleAll } from './sound.js';
 import { $, $$ } from './dom.js';
 
 const KEYMAP = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right' };
@@ -20,6 +21,7 @@ export function initInput(canvas) {
     if (e.code === 'Backquote') { toggleDebug(); return; }
     if (e.code === 'KeyI') { emit('ui:inventory'); return; }
     if (e.code === 'KeyC') { emit('ui:craft'); return; }
+    if (e.code === 'KeyM') { toggleAll(); return; }
     if (e.code === 'KeyQ') { if (!e.repeat) selectSlot(SEED_SLOT); return; }   // pick seeds, again to switch type
     if (KEYMAP[e.code]) { G.keys[KEYMAP[e.code]] = true; e.preventDefault(); return; }
     if (e.code === 'Space' || e.code === 'KeyE') {

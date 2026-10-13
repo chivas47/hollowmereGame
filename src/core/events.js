@@ -13,6 +13,7 @@
 //   day:report (report)  UI shows the morning summary
 //   mine:floor ({floor, rng})  a mine floor was generated
 //   mine:faint           health hit zero
+//   sfx (name)           play a sound effect (audio/sfx.js listens)
 //   ui:sleep, ui:shop, ui:talk ({npc, text, extra}), ui:inventory, ui:upgrades,
 //   ui:coop, ui:mineEntrance, ui:message ({title, text}), ui:scene ({npc, at, scene, extra})
 const handlers = {};

@@ -47,6 +47,8 @@ import './ui/village.js';
 import { buildHotbar } from './ui/hotbar.js';
 import { initInput } from './ui/input.js';
 import { initDebug } from './ui/debugPanel.js';
+import { initSound } from './ui/sound.js';
+import './audio/sfx.js';
 import { $ } from './ui/dom.js';
 
 const canvas = $('#game'), ctx = canvas.getContext('2d');
@@ -65,6 +67,7 @@ function start(data) {
   buildHotbar();
   initInput(canvas);
   initDebug();
+  initSound();
   emit('game:loaded');
   changed();
   try { window.claude?.hot?.snapshot?.(() => ({ S: G.S })); } catch (e) { /* not in a viewer */ }
