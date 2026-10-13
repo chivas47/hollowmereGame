@@ -93,6 +93,23 @@ export function load() {
   return newState();
 }
 
+// Save files: a small envelope around the state, so a file says what it is.
+export const SAVE_FILE_TAG = 'hollowmere-farm';
+
+export function exportSave(S) {
+  return JSON.stringify({ game: SAVE_FILE_TAG, version: 1, saved: new Date().toISOString(), S }, null, 1);
+}
+
+// Returns a merged state from a save file's text, or throws an Error with a reason players can read.
+// Also accepts a bare state object (an older export or a copied localStorage value).
+export function importSave(text) {
+  let d;
+  try { d = JSON.parse(text); } catch (e) { throw new Error('That file is not a Hollowmere save (it is not valid JSON).'); }
+  const S = d && d.game === SAVE_FILE_TAG ? d.S : d;
+  if (!S || typeof S !== 'object' || !(S.day >= 1) || typeof S.gold !== 'number') throw new Error('That file does not contain a Hollowmere farm.');
+  return merge(S);
+}
+
 export function save() {
   try { localStorage.setItem(SAVE_KEY, JSON.stringify(G.S)); } catch (e) { /* storage unavailable */ }
 }

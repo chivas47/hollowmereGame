@@ -207,6 +207,11 @@ Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (
 - Effects follow game events (tools, pickups, fishing, coins, level-ups, doors, dialogs). Music is a melody and bass loop generated from a fixed seed per mood (data/music.js): Spring, Summer, Autumn, Winter, the mine and festival days. Music drops to 55% after 8 pm.
 - Footer toggles for sound and music, M mutes both; stored per browser, not in the save.
 
+## Save files
+
+- The game autosaves to this browser on sleep and when the tab is hidden.
+- Export save downloads `hollowmere-<season>-<day>-year-<n>.json` ({ game, version, saved, S }). Import save reads one back, shows its date and gold, and replaces the current farm only after confirmation. Files from older versions load like old saves.
+
 ## Known issues and open questions
 
 ### Simulated balance (advisory)

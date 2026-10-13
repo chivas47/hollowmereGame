@@ -12,7 +12,7 @@ src/
   core/
     constants.js      T=16 tile px, W=24 x H=16 tiles, START 6:00, END 2:00, TICK, SAVE_KEY, DIRS
     game.js           G: shared runtime object (G.S is the save; keys, paused, lock, swing, fishing, hurtT)
-    state.js          newState(), merge(saved), load(), save()  (localStorage)
+    state.js          newState(), merge(saved), load(), save() (localStorage), exportSave(), importSave(text)
     events.js         on(event, fn), emit(event, data), changed(), notify(msg)
     registry.js       addInteraction, addLayer, addEntities, addUpdater (+ run/draw/collect)
     time.js           dateParts(day), today(), fmtTime(minutes), dayEnd() (END, later with street lamps)
@@ -65,6 +65,7 @@ src/
     music.js          generated loop per mood (data/music.js)
   ui/
     sound.js          footer toggles, M key, unlock on first input
+    saveFile.js       Export save / Import save buttons, file download and upload
     dom.js toast.js modal.js hud.js hotbar.js dialogs.js inventory.js
     workshop.js mine.js input.js debugPanel.js
     crafting.js (craft menu, placed-object dialog) barn.js village.js (board, festival)

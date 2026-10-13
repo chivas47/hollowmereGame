@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v15: Save export and import
+- Export save (footer) downloads the farm as a JSON file named after the in-game date.
+- Import save loads a file back after a confirmation showing its date and gold. Older saves and bare state files are filled in like any old save. Invalid files get a plain error and change nothing.
+
 ## v14: Sound
 - Generated sound effects (Web Audio, no files) for the hoe, can, seeds, pickaxe, sword, pickups, fishing bite, catch and miss, getting hurt, coins, level-ups, petting, placing objects, doors, dialogs and the morning chime.
 - A generated music loop with a melody and bass line: one mood per season, a darker one in the Hollow and a bright one on festival days in the village. Quieter after 8 pm.
