@@ -39,10 +39,10 @@ const ORCHARD = ['figtree', 'peartree', 'nectarinetree', 'persimmontree', 'plumt
 
 // What the bot saves up for, in order. Upgrade lines (can, hoe, rod, house) buy their next tier.
 const STRATEGIES = {
-  full: ['can', 'coop', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'house',
+  full: ['furnace', 'can', 'coop', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'kiln', 'house',
     'barn', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, 'stable', ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'rod', 'can',
     'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'house'],
-  crops: ['can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
+  crops: ['furnace', 'can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
 };
 
 // Warnings when the economy drifts from the design. Each returns a message or null.
@@ -93,7 +93,7 @@ const { placePlayer, tileAt, tileOf, soilOf, placeKey, parsePlaceKey } = await l
 const { greenhouseBuilt, orderGreenhouse } = await load('systems/greenhouse.js');
 const { buy, ship, buySupply } = await load('systems/economy.js');
 const { valueOf } = await load('systems/quality.js');
-const { nextTier, buyUpgrade, orderCoop, affordable } = await load('systems/upgrades.js');
+const { nextTier, buyUpgrade, orderCoop, affordable, buyCoal } = await load('systems/upgrades.js');
 const { buyChicken, collectEggs, buyFeed, flock } = await load('systems/coop.js');
 const { PROJECTS } = await load('data/projects.js');
 const { funded, fundProject } = await load('systems/projects.js');
@@ -102,7 +102,8 @@ const { craft } = await load('systems/crafting.js');
 const { startLayout } = await load('systems/layouts.js');
 const { patPet, fillBowl } = await load('systems/pets.js');
 const { orderStable } = await load('systems/stable.js');
-const { STABLE } = await load('data/upgrades.js');
+const { STABLE, COAL_COST } = await load('data/upgrades.js');
+const BAR_ORE = { copperbar: 'copper', ironbar: 'iron' };
 const { pickUp } = await load('systems/placeables.js');
 const { accepted, loadMachine, collectMachine } = await load('systems/artisan.js');
 const { canDeliver, deliver } = await load('systems/quests.js');
@@ -178,8 +179,20 @@ function simulate(runSeed) {
   const missingMats = () => {
     const g = goals[0] && GOAL[goals[0]];
     if (!g || !g.ok()) return {};
-    return Object.fromEntries(Object.entries(g.needs() || {}).filter(([k, n]) => S().bag[k] < n).map(([k, n]) => [k, n - S().bag[k]]));
+    // Bars the bot does not have yet become the 5 ore and 1 coal each takes at the furnace.
+    const raw = {};
+    for (const [k, n] of Object.entries(g.needs() || {})) {
+      const ore = BAR_ORE[k], short = Math.max(0, n - (S().bag[k] || 0));
+      if (!ore) { raw[k] = (raw[k] || 0) + n; continue; }
+      if (short) { raw[ore] = (raw[ore] || 0) + short * 5; raw.coal = (raw.coal || 0) + short; }
+    }
+    return Object.fromEntries(Object.entries(raw).filter(([k, n]) => (S().bag[k] || 0) < n).map(([k, n]) => [k, n - (S().bag[k] || 0)]));
   };
+  // Coal: buy it from Bram when the gold is there (the kiln makes more from wood once it is built).
+  function getCoal() {
+    const need = missingMats().coal || 0, s = S();
+    if (need && s.gold > COAL_COST * need + 500) track('coal', () => buyCoal(need));
+  }
   function purchases(reserve) {
     while (goals.length) {
       const key = goals[0], g = GOAL[key];
@@ -289,10 +302,14 @@ function simulate(runSeed) {
       if (!MACHINES[p.kind]) continue;
       const { map, x, y } = parsePlaceKey(k);
       standFacing(map, x, y);
-      if (p.item && p.nights <= 0) collectMachine(x, y);
-      if (!p.item) {
+      // The furnace and kiln finish at once, so they run until the bag runs out.
+      for (let i = 0; i < (MACHINES[p.kind].nights ? 1 : 40); i++) {
+        if (p.item && p.nights <= 0) collectMachine(x, y);
+        if (p.item) break;
+        // The kiln only burns wood the next purchase can spare, and only while coal is short.
+        if (p.kind === 'kiln') { const m = missingMats(), goalWood = GOAL[goals[0]]?.needs?.()?.wood || 0; if (!m.coal || s.bag.wood - 10 < goalWood) break; }
         const options = accepted(x, y).filter((it) => s.bag[it] > (reserved[it] || 0)).sort((a, b) => ITEMS[b].sell - ITEMS[a].sell);
-        if (options.length) loadMachine(x, y, options[0]);
+        if (!options.length || !loadMachine(x, y, options[0])) break;
       }
       spend(TIME.pet);
     }
@@ -481,6 +498,7 @@ function simulate(runSeed) {
     reserved = reserves();
     forage();
     layoutChores();
+    getCoal();
     if (missingMats().wood && !late()) chopWood();
     if (Object.keys(missingMats()).filter((k) => k !== 'wood').length && !late()) mine();   // saving up for something that needs ore: mine first
     if (!late()) farm('farm', true);

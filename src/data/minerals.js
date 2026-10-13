@@ -4,7 +4,13 @@ export const MINERALS = {
   copper: { name: 'Copper ore', sell: 5, material: true },
   iron:   { name: 'Iron ore',   sell: 10, material: true },
   gel:    { name: 'Slime gel',  sell: 5 },
+  // v26: smelted at the furnace (Stardew: 5 ore + 1 coal a bar; bars sell 60 and 120; coal 15).
+  coal:      { name: 'Coal',       sell: 15,  material: true },
+  copperbar: { name: 'Copper bar', sell: 60,  material: true },
+  ironbar:   { name: 'Iron bar',   sell: 120, material: true },
 };
+// Each stone rock has this chance of giving a piece of coal too.
+export const COAL_FROM_STONE = 0.06;
 
 // Rock tiles in the mine: tile code -> what it drops and how many pickaxe hits it takes.
 export const ROCKS = {

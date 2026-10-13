@@ -41,7 +41,7 @@ function placedDialog() {
     else if (p.item) html += `<p class="gift">${ITEMS[p.item].name} is ready (sells for ${ITEMS[p.item].sell}g).</p><div class="btns"><button data-collect>Collect</button></div>`;
     else {
       const items = accepted(at.x, at.y);
-      html += `<p>Takes ${m.hint}. Ready in ${m.nights} night${m.nights === 1 ? '' : 's'}.</p>`;
+      html += `<p>Takes ${m.hint}. ${m.nights ? `Ready in ${m.nights} night${m.nights === 1 ? '' : 's'}.` : 'Ready at once.'}</p>`;
       html += items.length
         ? items.map((k) => `<div class="shoprow"><div><b>${ITEMS[k].name} × ${G.S.bag[k]}</b><span>Becomes ${ITEMS[m.product(k)].name}, ${ITEMS[m.product(k)].sell}g</span></div><div class="btns"><button data-load="${k}">Put in</button></div></div>`).join('')
         : `<p class="role">You have nothing it takes.</p>`;

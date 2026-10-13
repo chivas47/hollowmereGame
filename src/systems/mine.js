@@ -6,7 +6,7 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
 import { ITEMS } from '../data/items.js';
-import { ROCKS } from '../data/minerals.js';
+import { ROCKS, COAL_FROM_STONE } from '../data/minerals.js';
 import { rng } from '../render/pixel.js';
 import { placePlayer, useEnergy } from './world.js';
 import { swingAt } from './effects.js';
@@ -93,10 +93,12 @@ addInteraction(66, ({ tx, ty, tile, item, mapId }) => {
 
   const n = rock.amount[0] + Math.floor(Math.random() * (rock.amount[1] - rock.amount[0] + 1));
   G.S.bag[rock.item] += n;
+  const coal = rock.item === 'stone' && Math.random() < COAL_FROM_STONE;
+  if (coal) G.S.bag.coal = (G.S.bag.coal || 0) + 1;
   delete MINE.rocks[key];
   emit('gather', { skill: 'mining', item: rock.item, xp: rock.hp * 2 - 1 });
   if (key === MINE.ladder) { MAPS.mine.grid[ty][tx] = 'L'; notify('You found a ladder down!'); }
-  else { MAPS.mine.grid[ty][tx] = 'f'; if (rock.item !== 'stone') notify(`+${n} ${ITEMS[rock.item].name}`); }
+  else { MAPS.mine.grid[ty][tx] = 'f'; if (rock.item !== 'stone' || coal) notify(`+${n} ${ITEMS[rock.item].name}${coal ? ', +1 Coal' : ''}`); }
   emit('world:changed');
   changed();
   return true;
