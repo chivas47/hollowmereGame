@@ -326,3 +326,41 @@ export function drawFloor(c, X, Y, kind, col) {
   r(c, X + 1, Y + 1, 6, 6, 'rgba(255,255,255,.15)'); r(c, X + 9, Y + 2, 6, 5, 'rgba(0,0,0,.08)'); r(c, X + 2, Y + 9, 5, 6, 'rgba(0,0,0,.08)'); r(c, X + 9, Y + 9, 6, 6, 'rgba(255,255,255,.12)');
   r(c, X + 8, Y, 1, 16, 'rgba(0,0,0,.15)'); r(c, X, Y + 8, 16, 1, 'rgba(0,0,0,.15)');
 }
+
+// ---- Pets and the horse (v23) ----
+// look: [body, accent]. hat: a PET_HATS color or null.
+export function drawPet(c, px, py, kind, look, dir, moving, hat) {
+  const left = dir === 'left', x = Math.round(px) - 6, base = Math.round(py), [body, acc] = look;
+  const y = base - 9 - (moving && Math.floor(performance.now() / 180) % 2 ? 1 : 0);
+  r(c, x + 1, base - 1, 11, 1, 'rgba(0,0,0,.25)');
+  let hx, hy;
+  if (kind === 'turtle') {
+    r(c, x + 2, y + 4, 9, 4, body); r(c, x + 3, y + 3, 7, 1, body); r(c, x + 4, y + 5, 2, 1, acc); r(c, x + 7, y + 4, 2, 1, acc);
+    [2, 9].forEach((lx) => r(c, x + lx, y + 8, 2, 1, '#8fae6a'));
+    hx = left ? x - 1 : x + 11; hy = y + 5; r(c, hx, hy, 3, 3, '#8fae6a'); r(c, left ? hx : hx + 2, hy + 1, 1, 1, '#2b211a');
+    hy -= 2;
+  } else {
+    const dog = kind === 'dog';
+    r(c, x + 2, y + 4, 9, 4, body); r(c, x + 3, y + 7, 6, 1, acc);
+    [3, 5, 8, 10].forEach((lx, i) => r(c, x + lx, y + 8, 1, 2 + (moving && i % 2 ? -1 : 0), body));
+    r(c, left ? x + 11 : x, y + (dog ? 3 : 1), 1, dog ? 2 : 4, body);   // tail
+    hx = left ? x - 1 : x + 8; hy = y;
+    r(c, hx, hy + 1, 5, 4, body); r(c, left ? hx : hx + 3, hy + 3, 2, 2, acc);
+    if (dog) { r(c, left ? hx + 3 : hx, hy + 1, 2, 3, acc === '#f4ead2' ? '#6e4626' : acc); }
+    else { r(c, hx, hy, 1, 1, body); r(c, hx + 4, hy, 1, 1, body); }
+    r(c, left ? hx + 1 : hx + 3, hy + 2, 1, 1, '#2b211a');
+  }
+  if (hat) { r(c, hx, hy - 1, 5, 1, hat); r(c, hx + 1, hy - 3, 3, 2, hat); }
+}
+
+export function drawHorse(c, px, py, dir, moving) {
+  const left = dir === 'left', x = Math.round(px) - 9, base = Math.round(py), step = moving ? Math.floor(performance.now() / 120) % 2 : 0;
+  const y = base - 14, body = '#8a5a32', dark = '#5c371e';
+  r(c, x + 1, base - 1, 17, 1, 'rgba(0,0,0,.25)');
+  r(c, x + 3, y + 5, 12, 6, body); r(c, x + 4, y + 4, 10, 1, body);
+  [4, 6, 12, 14].forEach((lx, i) => r(c, x + lx, y + 11, 1, 3 - (step && i % 2 ? 1 : 0), dark));
+  const hx = left ? x - 1 : x + 14;
+  r(c, hx, y, 4, 7, body); r(c, left ? hx : hx + 2, y + 5, 2, 2, dark); r(c, left ? hx + 1 : hx + 2, y + 2, 1, 1, '#2b211a');
+  r(c, left ? hx + 3 : hx, y - 1, 1, 6, dark);   // mane
+  r(c, left ? x + 15 : x + 2, y + 5, 1, 6, dark);   // tail
+}

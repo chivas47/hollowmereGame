@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v23: Pets and horse
+- Your pet lives on the farm: the cat, dog or turtle from the new game screen, in one of three looks, with the name you gave it. Older saves get a cat called Whisk.
+- Pat it once a day and fill its water bowl by the house with the watering can. Friendship shows as five hearts; a devoted pet sometimes leaves a gift by the bowl.
+- Pet hats at the seed stall (1000g each): ribbon bow, little sunhat, flower crown, party hat. Change hats in the pet's dialog.
+- The stable, at Bram's workbench: 10,000g, 100 wood and 25 iron ore. It comes with a horse, Clover. Face it to ride at 1.6 times walking speed, press Use to get off. It follows you to the Wilds and the village and waits outside the mine and greenhouse. H whistles it over.
+- The new game screen asks for the pet's look and name.
+
 ## v22: Farm layouts
 - Choose your farm on the new game screen: open field, river farm, woodland farm, hill quarry, wild farm, four corners, beach farm or meadow farm. Every layout keeps the house, path and building plots where they were; the open ground differs.
 - River farm, four corners and beach farm have water you can fish and refill the can from. The beach farm gets a crate of supplies on its sand most mornings.

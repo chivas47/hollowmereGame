@@ -48,6 +48,18 @@ export const GREENHOUSE = {
   inside: { x: 12, y: 14, dir: 'up' },
 };
 
+// Stardew counterpart: the stable (10,000g, 100 hardwood, 5 iron bars). Hardwood is rare until new areas
+// arrive, so wood stands in for it; 5 bars become 25 iron ore as for the tools.
+export const STABLE = {
+  cost: 10000,
+  needs: { wood: 100, iron: 25 },
+  desc: 'Bram builds it overnight by the well, with a horse in it. Ride at 1.6 times walking speed; press H to whistle for it.',
+  footprint: { x: 13, y: 1, w: 2, h: 2 },
+  home: { x: 13, y: 3 },
+  speed: 1.6,
+  horseName: 'Clover',
+};
+
 export const BARN = {
   cost: 6000,
   needs: { stone: 250, copper: 10 },

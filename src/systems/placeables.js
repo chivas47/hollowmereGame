@@ -10,7 +10,7 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
 import { PLACEABLES } from '../data/crafting.js';
-import { COOP, BARN, GREENHOUSE } from '../data/upgrades.js';
+import { COOP, BARN, GREENHOUSE, STABLE } from '../data/upgrades.js';
 import { drawPlaced, drawGlow } from '../render/sprites.js';
 import { soilOf, placeKey, parsePlaceKey } from './world.js';
 
@@ -20,7 +20,7 @@ export const tileFor = (p) => (PLACEABLES[p.kind].kind === 'floor' || p.open ? '
 const written = new Set();   // placeKey()s this module wrote into a grid
 
 const inRect = (x, y, f) => x >= f.x && x < f.x + f.w && y >= f.y && y < f.y + f.h;
-const reserved = (map, x, y) => map === 'farm' && (inRect(x, y, COOP.footprint) || inRect(x, y, BARN.footprint) || inRect(x, y, GREENHOUSE.footprint));
+const reserved = (map, x, y) => map === 'farm' && (inRect(x, y, COOP.footprint) || inRect(x, y, BARN.footprint) || inRect(x, y, GREENHOUSE.footprint) || inRect(x, y, STABLE.footprint));
 
 function syncGrid() {
   written.forEach((k) => { const { map, x, y } = parsePlaceKey(k); if (MAPS[map].grid[y][x] === TILE || MAPS[map].grid[y][x] === 'P') MAPS[map].grid[y][x] = 'g'; });

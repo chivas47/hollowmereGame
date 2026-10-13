@@ -191,7 +191,23 @@ function trough(g, p, o) {
   r(g, X + 1, Y + 6, 14, 9, '#6e4626'); r(g, X + 2, Y + 7, 12, 4, '#3f7fb0'); r(g, X + 3, Y + 8, 5, 1, '#69aedb'); r(g, X + 1, Y + 14, 14, 1, '#4e331f');
 }
 
-export const OBJECT_ART = { house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
+function stable(g, p, o) {
+  const X = o.x * T, Y = o.y * T;
+  r(g, X + 1, Y + 31, 30, 1, 'rgba(0,0,0,.25)');
+  r(g, X + 2, Y + 12, 28, 19, '#8a5a32');
+  for (let i = 0; i < 4; i++) r(g, X + 2 + i * 8, Y + 12, 1, 19, '#6e4626');
+  for (let j = 0; j < 10; j++) r(g, X + 10 - j, Y + 2 + j, 12 + 2 * j, 1, j % 3 === 2 ? '#3f3226' : '#7a4a2a');
+  if (p.snow) for (let j = 0; j < 3; j++) r(g, X + 10 - j, Y + 2 + j, 12 + 2 * j, 1, SNOW);
+  r(g, X + 9, Y + 18, 14, 13, '#3f3226'); r(g, X + 9, Y + 18, 14, 2, '#c9a06a'); r(g, X + 15, Y + 20, 2, 11, '#5c371e');
+}
+
+// The pet's water bowl: a tile, so it is drawn with the map (the water in it is drawn by systems/pets.js).
+export function drawBowl(g, x, y) {
+  const X = x * T, Y = y * T;
+  r(g, X + 3, Y + 12, 10, 1, 'rgba(0,0,0,.25)'); r(g, X + 3, Y + 8, 10, 4, '#b5452f'); r(g, X + 4, Y + 7, 8, 1, '#d9644a'); r(g, X + 5, Y + 8, 6, 2, '#3f3226');
+}
+
+export const OBJECT_ART = { stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
 
 // ---- Greenhouse interior (ignores seasons) ----
 export function drawGreenhouseFloor(g, x, y, t) {

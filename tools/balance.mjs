@@ -40,7 +40,7 @@ const ORCHARD = ['figtree', 'peartree', 'nectarinetree', 'persimmontree', 'plumt
 // What the bot saves up for, in order. Upgrade lines (can, hoe, rod, house) buy their next tier.
 const STRATEGIES = {
   full: ['can', 'coop', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'house',
-    'barn', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'rod', 'can',
+    'barn', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, 'stable', ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'rod', 'can',
     'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift'],
   crops: ['can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
 };
@@ -64,7 +64,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['layouts', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'trees', 'giants', 'clearing', 'weather', 'farmPerks'];
+  'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -100,6 +100,9 @@ const { funded, fundProject } = await load('systems/projects.js');
 const { orderBarn, buyAnimal, buyHay, collectMilk, herd } = await load('systems/barn.js');
 const { craft } = await load('systems/crafting.js');
 const { startLayout } = await load('systems/layouts.js');
+const { patPet, fillBowl } = await load('systems/pets.js');
+const { orderStable } = await load('systems/stable.js');
+const { STABLE } = await load('data/upgrades.js');
 const { pickUp } = await load('systems/placeables.js');
 const { accepted, loadMachine, collectMachine } = await load('systems/artisan.js');
 const { canDeliver, deliver } = await load('systems/quests.js');
@@ -162,6 +165,7 @@ function simulate(runSeed) {
     house: { cost: () => nextTier('house')?.cost, needs: () => nextTier('house')?.needs, ok: () => !!nextTier('house'), buy: () => track('upgrades', () => buyUpgrade('house')) },
     coop: { cost: () => COOP.cost, needs: () => COOP.needs, ok: () => !S().built.coop, buy: () => track('buildings', orderCoop) },
     barn: { cost: () => BARN.cost, needs: () => BARN.needs, ok: () => !S().built.barn, buy: () => track('buildings', orderBarn) },
+    stable: { cost: () => STABLE.cost, needs: () => STABLE.needs, ok: () => !S().built.stable, buy: () => track('buildings', orderStable) },
     greenhouse: { cost: () => GREENHOUSE.cost, needs: () => GREENHOUSE.needs, ok: () => !S().built.greenhouse, buy: () => track('buildings', orderGreenhouse) },
     chicken: { cost: () => COOP.chickenCost, needs: () => ({}), wait: () => S().built.coop !== true, ok: () => S().chickens.length < COOP.maxChickens, buy: () => track('animals', buyChicken) },
     cow: { cost: () => BARN.animals.cow.cost, needs: () => ({}), wait: () => S().built.barn !== true, ok: () => S().animals.length < BARN.maxAnimals, buy: () => track('animals', () => buyAnimal('cow')) },
@@ -251,6 +255,18 @@ function simulate(runSeed) {
       });
     }
     [...flock, ...herd].forEach((a) => { const t = tileOf(a.x, a.y); use('farm', t.tx, t.ty, 'hoe'); spend(TIME.pet); });
+  }
+
+  // The pet: a pat and a full water bowl every morning (both free; a can of water each day).
+  function pet() { patPet(); if (S().water > 0) fillBowl(); spend(TIME.pet); }
+
+  // Saving up for something that needs wood: chop alders, stumps and twigs anywhere on the farm.
+  function chopWood() {
+    const s = S();
+    for (const [k, d] of Object.entries(s.debris || {})) {
+      if (!missingMats().wood || s.energy < 30 || late()) return;
+      if (['alder', 'alderstump', 'twig'].includes(d.kind)) clear('farm', ...k.split(',').map(Number));
+    }
   }
 
   // Pick ripe fruit; chop giant crops so their tiles can be replanted.
@@ -388,10 +404,11 @@ function simulate(runSeed) {
   }
 
   // Mines until the next purchase has its materials or energy runs out. Every rock gives stone.
+  const oreNeeds = () => { const n = missingMats(); delete n.wood; return n; };
   function mine() {
     const s = S();
     enterMine(Math.max(...checkpoints())); spend(TIME.travel * 2);
-    let need = missingMats();
+    let need = oreNeeds();
     while (Object.keys(need).length && s.energy >= 2 && !late()) {
       const grid = MAPS.mine.grid, free = (x, y) => [[0, 1], [0, -1], [1, 0], [-1, 0]].some(([a, b]) => grid[y + b]?.[x + a] && !SOLID.has(grid[y + b][x + a]));
       const rocks = Object.keys(MINE.rocks).map((k) => k.split(',').map(Number)).filter(([x, y]) => free(x, y));
@@ -401,7 +418,7 @@ function simulate(runSeed) {
       if (!pickFrom.length) break;
       const [x, y] = pickFrom[Math.floor(Math.random() * pickFrom.length)];
       while (MINE.rocks[`${x},${y}`] && s.energy >= 2) { if (!use('mine', x, y, 'pick')) break; spend(TIME.rock); }
-      need = missingMats();
+      need = oreNeeds();
     }
     leaveMine();
     return !Object.keys(need).length;
@@ -451,6 +468,7 @@ function simulate(runSeed) {
     const s = S();
     const spent0 = Object.values(log.spend).reduce((a, x) => a + x, 0);
     animals();
+    pet();
     orchard();
     let reserved = reserves();
     machines(reserved);
@@ -463,7 +481,8 @@ function simulate(runSeed) {
     reserved = reserves();
     forage();
     layoutChores();
-    if (Object.keys(missingMats()).length && !late()) mine();   // saving up for something that needs ore: mine first
+    if (missingMats().wood && !late()) chopWood();
+    if (Object.keys(missingMats()).filter((k) => k !== 'wood').length && !late()) mine();   // saving up for something that needs ore: mine first
     if (!late()) farm('farm', true);
     if (!late() && greenhouseBuilt()) farm('greenhouse', true);
     if (!late()) fish(0);

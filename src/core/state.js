@@ -30,7 +30,7 @@ export function newState() {
     fishLog: {},        // fish key -> number caught
     upgrades: { can: 0, hoe: 0, axe: 0, rod: 0, house: 0 },   // tier index per upgrade line
     waterBonus: 0, maxEnergy: 270,                      // derived stats, see systems/upgrades.js
-    built: { coop: false, barn: false, greenhouse: false },   // false | 'pending' | true
+    built: { coop: false, barn: false, greenhouse: false, stable: false },   // false | 'pending' | true
     chickens: [],                                       // { name, pet: day last petted }
     eggs: 0,                                            // eggs waiting in the coop
     feed: 0,                                            // chicken feed at the coop
@@ -43,6 +43,8 @@ export function newState() {
     giants: {},
     layout: 'open',                                     // farm layout (data/layouts.js), chosen on the new game screen
     farmForage: [],                                     // woodland layout: forage in the farm's wood today
+    pet: null,                                          // the farm pet (systems/pets.js), made from the profile on load
+    horse: null,                                        // { name, map, x, y } once the stable is built (systems/stable.js)
     profile: null,                                      // farmer profile from the new game screen (data/profile.js); null until chosen
     weather: 'sun', forecast: null,                     // today's and tomorrow's weather (systems/weather.js); forecast rolled on load
     mist: null,                                         // this year's Silvermist day: { year, d }

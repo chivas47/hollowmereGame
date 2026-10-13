@@ -24,7 +24,8 @@ import { giantAt } from './giants.js';
 const grid = () => MAPS.farm.grid;
 const inRect = (x, y, f) => x >= f.x && x < f.x + f.w && y >= f.y && y < f.y + f.h;
 const inYard = (x, y, yd) => x >= yd.x0 && x <= yd.x1 && y >= yd.y0 && y <= yd.y1;
-const kept = (x, y) => y < 6 || [COOP, BARN, GREENHOUSE].some((b) => inRect(x, y, b.footprint)) || inYard(x, y, COOP.yard) || inYard(x, y, BARN.yard);
+const kept = (x, y) => y < 6 || (Math.abs(x - 6) <= 1 && y <= 7) ||   // the path, the house and the pet's bowl (6,5)
+  [COOP, BARN, GREENHOUSE].some((b) => inRect(x, y, b.footprint)) || inYard(x, y, COOP.yard) || inYard(x, y, BARN.yard);
 
 // Open farm grass where debris may appear: not tilled, built on, placed on or kept clear for buildings.
 export function freeTile(x, y) {

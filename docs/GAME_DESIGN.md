@@ -39,8 +39,21 @@ Chosen on the new game screen. The top of the farm (house, path, bin, well, work
 
 Fainting on the farm (wild farm) wakes you on the doorstep and costs gold as in the mine.
 
+## Pets and horse (v23)
+
+| Pet care | Friendship (max 1000, 5 hearts) | Stardew |
+|---|---|---|
+| Pat once a day | +12 | Same |
+| A night with the water bowl filled (watering can, 1 water) | +6 | Same |
+| At 800 or more | 20% of mornings a gift: a forage item of the season, fiber or stone | Pets bring gifts at high friendship (1.6) |
+
+Pet hats: 4 at the seed stall, 1000g each (Stardew's hat shop prices), cosmetic.
+
+Stable: 10,000g, 100 wood, 25 iron ore (Stardew: 10,000g, 100 hardwood, 5 iron bars; wood stands in for hardwood, which stays rare until new areas). Built overnight by the well with a horse. Riding speed 1.6 x walking. The horse follows you outdoors, waits outside the mine and greenhouse, is back at the stable each morning, and comes when you press H.
+
 ## Controls
 
+- H whistles for the horse.
 - Hotbar: 1 Hoe, 2 Can, 3 Rod, 4 Pick, 5 Sword, 6 Seeds, 7 Kit, 8 Axe (v19, added at the end so no key moved).
 - The seed slot plants the selected seed type. Press 6 or Q again (or tap the slot again) to switch to the next type you own, in-season types first.
 - The kit slot places the selected crafted object on untilled farm grass. Press 7 again to switch. Face a placed object and press Use to open it (load, collect, pick up).
@@ -169,6 +182,7 @@ Heart scenes (data/scenes.js): the first talk after reaching 4 and 8 hearts play
 | Chicken coop | 4000 | 150 stone | Up to 4 chickens at 800g |
 | Barn | 6000 | 250 stone, 10 copper | Up to 4 cows (1500g) or goats (4000g) |
 | Greenhouse | 35000 | none | 126 beds; any crop, any season |
+| Stable | 10000 | 100 wood, 25 iron | A horse: ride at 1.6 x walking speed, H to whistle |
 
 
 Chickens: each eats 1 feed a night (50g, bought at the coop). A fed chicken petted that day lays one egg (50g) next morning, collected at the coop.
@@ -350,7 +364,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Debris can creep onto grass the player meant to keep free; paths keep it off.
 - Farm water uses the pond's fish; sea and river fish of their own come with the fishing overhaul (roadmap item 20). It freezes in winter like the pond.
 - The balance bot farms the same field on every layout, so `--layout` runs show what the layout costs or adds to that field, not a tuned strategy for it.
-- The starting pet is chosen but has nowhere to live until pets and the pet bowl arrive.
+- Pet friendship never drops; Stardew's pets also forgive neglect. The horse has a fixed name.
 - Weather does not change fishing or neighbours yet (Stardew has rain-only fish and neighbours who stay in). Rain sound and richer effects come with the atmosphere item.
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.

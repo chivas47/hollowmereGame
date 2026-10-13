@@ -6,7 +6,7 @@ import { drawLayers, collectEntities } from '../core/registry.js';
 import { today, dayEnd } from '../core/time.js';
 import { MAPS } from '../data/maps.js';
 import { PAL } from '../data/seasons.js';
-import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, drawQuarry, drawSand, OBJECT_ART, CAVE_ART } from './tiles.js';
+import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, drawQuarry, drawSand, drawBowl, OBJECT_ART, CAVE_ART } from './tiles.js';
 import { facing, tileAt } from '../systems/world.js';
 
 let cache = {};
@@ -14,7 +14,7 @@ on('season:changed', () => { cache = {}; });
 on('game:reset', () => { cache = {}; });
 on('world:changed', () => { cache = {}; });
 
-const TILE_ART = { O: drawWater, T: drawTree, R: drawRock, w: drawGlassWall, ...CAVE_ART };
+const TILE_ART = { b: drawBowl, O: drawWater, T: drawTree, R: drawRock, w: drawGlassWall, ...CAVE_ART };
 
 function renderBackground(mapId, season) {
   const c = document.createElement('canvas'); c.width = W * T; c.height = H * T;
