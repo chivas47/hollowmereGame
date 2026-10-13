@@ -5,7 +5,7 @@ import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer } from '../core/registry.js';
 import { today, dateParts, fmtTime } from '../core/time.js';
-import { CROPS } from '../data/crops.js';
+import { PRODUCE } from '../data/crops.js';
 import { FORAGE } from '../data/forage.js';
 import { FISH } from '../data/fish.js';
 import { ITEMS } from '../data/items.js';
@@ -16,8 +16,8 @@ import { QUALITY } from '../data/quality.js';
 import { r } from '../render/pixel.js';
 
 const ACCEPTS = {
-  produce: (k) => k in CROPS || k in FORAGE,
-  crop: (k) => k in CROPS,
+  produce: (k) => k in PRODUCE || k in FORAGE,
+  crop: (k) => k in PRODUCE,
   fish: (k) => k in FISH,
 };
 export const ACCEPT_TEXT = { produce: 'a fresh crop or forage item', crop: 'a crop', fish: 'a fish' };

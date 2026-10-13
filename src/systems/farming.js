@@ -5,6 +5,7 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { CROPS } from '../data/crops.js';
+import { ITEMS } from '../data/items.js';
 import { drawSoil, drawCrop } from '../render/sprites.js';
 import { DIRS } from '../core/constants.js';
 import { tier } from '../data/upgrades.js';
@@ -32,9 +33,13 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
     return true;
   }
   if (s?.crop && isRipe(s.crop)) {
-    const type = s.crop.type, q = rollCropQuality(skillLevel('farming'), fertOf(s)?.quality || 0);
-    addItem(type, 1, q); notify(`Picked a ${q ? `${QUALITY[q].name.toLowerCase()} ` : ''}${CROPS[type].name}.`); s.crop = null;
-    emit('gather', { skill: 'farming', item: type, xp: Math.max(3, Math.round(CROPS[type].sell / 10)) });
+    const c = CROPS[s.crop.type], q = rollCropQuality(skillLevel('farming'), fertOf(s)?.quality || 0);
+    const item = c.packet === 'wild' ? c.produce[Math.floor(Math.random() * c.produce.length)] : s.crop.type, n = c.yield || 1;
+    addItem(item, n, q);
+    notify(`Picked ${n > 1 ? '' : 'a '}${q ? `${QUALITY[q].name.toLowerCase()} ` : ''}${ITEMS[item].name}${n > 1 ? ` x${n}` : ''}.`);
+    if (c.regrow) s.crop.age = (s.crop.need || c.days) - c.regrow;   // the plant stays and fruits again
+    else s.crop = null;
+    emit('gather', { skill: 'farming', item, n, xp: Math.max(3, Math.round(ITEMS[item].sell / 10)) });
     changed();
     return true;
   }
@@ -61,8 +66,11 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
     if (s.crop) { notify('Something is already growing here.'); return true; }
     if (!indoors && !c.seasons.includes(season)) { notify(`${c.name} won't grow in ${season}. Plant it in ${c.seasons.join(' or ')}. Press Q to switch seeds.`); return true; }
     if (S.seeds[seed] <= 0) { notify(`No ${c.name} seeds left. The stall sells them, or press Q to switch.`); return true; }
+    // Mixed seeds become a random crop that grows here and now.
+    const pool = c.packet === 'mixed' ? Object.keys(CROPS).filter((k) => !CROPS[k].packet && (indoors || CROPS[k].seasons.includes(season))) : null;
+    const type = pool ? pool[Math.floor(Math.random() * pool.length)] : seed, grow = CROPS[type].days;
     const speed = fertOf(s)?.speed || 0;
-    S.seeds[seed]--; s.crop = { type: seed, age: 0, ...(speed ? { need: Math.max(1, Math.round(c.days * (1 - speed))) } : {}) };
+    S.seeds[seed]--; s.crop = { type, age: 0, ...(speed ? { need: Math.max(1, Math.round(grow * (1 - speed))) } : {}) };
     swingAt(tx, ty, 'seed');
   }
   changed();

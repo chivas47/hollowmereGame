@@ -37,7 +37,7 @@ const RIPE_ART = {
 };
 
 export function drawCrop(c, X, Y, crop) {
-  const d = CROPS[crop.type], p = crop.age / d.days, cx = X + 8;
+  const d = CROPS[crop.type], p = crop.age / (crop.need || d.days), cx = X + 8;
   if (crop.dead) { r(c, cx, Y + 6, 1, 7, '#7a5a3a'); r(c, cx - 3, Y + 8, 3, 1, '#7a5a3a'); r(c, cx + 1, Y + 5, 3, 1, '#7a5a3a'); r(c, cx - 4, Y + 7, 1, 1, '#7a5a3a'); return; }
   if (crop.age === 0) { r(c, cx - 3, Y + 9, 1, 1, '#e3cf8a'); r(c, cx + 1, Y + 6, 1, 1, '#e3cf8a'); r(c, cx + 3, Y + 10, 1, 1, '#e3cf8a'); return; }
   if (p < 0.5) { r(c, cx, Y + 8, 1, 4, '#5da34a'); r(c, cx - 2, Y + 7, 2, 2, '#7fc35f'); r(c, cx + 1, Y + 6, 2, 2, '#7fc35f'); return; }

@@ -4,7 +4,7 @@ import { G } from '../core/game.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction } from '../core/registry.js';
 import { today } from '../core/time.js';
-import { CROPS } from '../data/crops.js';
+import { PRODUCE } from '../data/crops.js';
 import { FORAGE } from '../data/forage.js';
 import { FISH } from '../data/fish.js';
 import { ITEMS } from '../data/items.js';
@@ -18,7 +18,7 @@ const pick = (a) => a[Math.floor(Math.random() * a.length)];
 function pool() {
   const season = today().season, S = G.S;
   const out = [
-    ...Object.keys(CROPS).filter((k) => CROPS[k].seasons.includes(season)),
+    ...Object.keys(PRODUCE).filter((k) => PRODUCE[k].seasons.includes(season)),
     ...Object.keys(FORAGE).filter((k) => FORAGE[k].season === season),
     ...Object.keys(FISH).filter((k) => FISH[k].seasons.includes(season) && FISH[k].difficulty <= QUEST.maxFishDifficulty),
     'stone', 'copper',

@@ -1,6 +1,6 @@
 // Things you craft and place on the farm. Crafting costs materials and gold (Bram supplies the fittings).
 // kind: 'sprinkler' waters soil every morning, 'machine' turns an item into an artisan good, 'decor' just looks nice.
-import { CROPS } from './crops.js';
+import { PRODUCE } from './crops.js';
 import { FORAGE } from './forage.js';
 import { JAR_PREFIX } from './artisan.js';
 
@@ -36,7 +36,7 @@ export const RECIPES = {
 
 // Machines: accepts(itemKey) -> bool, product(itemKey) -> item key, nights to finish.
 export const MACHINES = {
-  crock: { accepts: (k) => k in CROPS || k in FORAGE, product: (k) => JAR_PREFIX + k, nights: 3, hint: 'a crop or forage item' },
+  crock: { accepts: (k) => k in PRODUCE || k in FORAGE, product: (k) => JAR_PREFIX + k, nights: 3, hint: 'a crop or forage item' },
   churn: { accepts: (k) => k === 'cowmilk', product: () => 'butter', nights: 1, hint: 'milk' },
   vat:   { accepts: (k) => k === 'goatmilk', product: () => 'cheese', nights: 1, hint: 'goat milk' },
 };
