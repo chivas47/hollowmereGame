@@ -6,6 +6,8 @@ import { ITEMS } from '../data/items.js';
 import { NPCS } from '../data/npcs.js';
 import { MAPS } from '../data/maps.js';
 import { HOTBAR, SEED_SLOT, OLD_SEED_SLOTS, OLD_FIRST_SEED_SLOT } from '../data/hotbar.js';
+import { PLACEABLES } from '../data/crafting.js';
+import { SKILLS } from '../data/skills.js';
 
 const STARTING_SEEDS = { turnip: 6, radish: 3 };
 
@@ -24,11 +26,22 @@ export function newState() {
     fishLog: {},        // fish key -> number caught
     upgrades: { can: 0, hoe: 0, rod: 0, house: 0 },   // tier index per upgrade line
     waterBonus: 0, maxEnergy: 100,                      // derived stats, see systems/upgrades.js
-    built: { coop: false },                             // false | 'pending' | true
+    built: { coop: false, barn: false },                // false | 'pending' | true
     chickens: [],                                       // { name, pet: day last petted }
     eggs: 0,                                            // eggs waiting in the coop
     hp: 100, maxHp: 100,                                // health, only lost in the mine
     mineDeepest: 0,                                     // deepest mine floor reached
+    kit: Object.fromEntries(Object.keys(PLACEABLES).map((k) => [k, 0])),   // crafted objects not yet placed
+    kitSel: 'sprinkler',                                // object the kit slot places (see systems/placeables.js)
+    placed: {},                                         // "x,y" on the farm -> { kind, item, nights }
+    animals: [],                                        // barn: { kind, name, pet: day last petted }
+    hay: 0,                                             // hay in the barn loft
+    barnGoods: { cowmilk: 0, goatmilk: 0 },             // milk waiting in the barn
+    skills: Object.fromEntries(Object.keys(SKILLS).map((k) => [k, 0])),    // XP per skill
+    energyBonus: 0,                                     // derived from skill milestones, see systems/skills.js
+    quests: [],                                         // open board requests, see systems/quests.js
+    questsDone: 0, questDay: 0,                         // requests completed, last day one was posted
+    festivals: {},                                      // "key-year" -> { item, rank } once entered
     npcs: Object.fromEntries(NPCS.map((d) => [d.id, { pts: 0, talked: 0, gifted: 0, reward: false }])),
   };
 }
@@ -44,6 +57,14 @@ export function merge(saved) {
   s.built = Object.assign(newState().built, saved.built || {});
   if (!Array.isArray(s.forage)) s.forage = [];
   if (!Array.isArray(s.chickens)) s.chickens = [];
+  s.kit = Object.assign(newState().kit, saved.kit || {});
+  s.skills = Object.assign(newState().skills, saved.skills || {});
+  s.barnGoods = Object.assign(newState().barnGoods, saved.barnGoods || {});
+  if (!s.placed || typeof s.placed !== 'object') s.placed = {};
+  if (!s.festivals || typeof s.festivals !== 'object') s.festivals = {};
+  if (!Array.isArray(s.animals)) s.animals = [];
+  if (!Array.isArray(s.quests)) s.quests = [];
+  if (!PLACEABLES[s.kitSel]) s.kitSel = 'sprinkler';
   // v8: one seed slot replaced the four crop slots (old keys 6 to 9).
   if (!saved.seedSel && saved.slot >= OLD_FIRST_SEED_SLOT) {
     s.seedSel = OLD_SEED_SLOTS[saved.slot - OLD_FIRST_SEED_SLOT] || 'turnip';

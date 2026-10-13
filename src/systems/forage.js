@@ -1,6 +1,6 @@
 // Daily forage in the wilds. Each spot picks at random among the season's items.
 import { G } from '../core/game.js';
-import { on, changed, notify } from '../core/events.js';
+import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { FORAGE, FORAGE_PER_DAY } from '../data/forage.js';
@@ -30,7 +30,9 @@ addInteraction(45, ({ tx, ty, tile, mapId, item }) => {
   if (i >= 0) {
     const f = G.S.forage[i];
     G.S.bag[f.type]++; G.S.forage.splice(i, 1);
-    notify(`Found a ${FORAGE[f.type].name}.`); changed();
+    notify(`Found a ${FORAGE[f.type].name}.`);
+    emit('gather', { skill: 'foraging', item: f.type, xp: 5 });
+    changed();
     return true;
   }
   if (tile === 'g' && item === 'hoe') { notify('The ground here is too rooty to farm.'); return true; }

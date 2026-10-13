@@ -1,7 +1,9 @@
-// Order of the hotbar slots. Tools first, then one seed slot.
+// Order of the hotbar slots. Tools first, then one seed slot, then one kit slot.
 // The seed slot plants whichever crop G.S.seedSel names (see systems/seeds.js).
-export const HOTBAR = ['hoe', 'can', 'rod', 'pick', 'sword', 'seeds'];
+// The kit slot places whichever crafted object G.S.kitSel names (see systems/placeables.js).
+export const HOTBAR = ['hoe', 'can', 'rod', 'pick', 'sword', 'seeds', 'kit'];
 export const SEED_SLOT = HOTBAR.indexOf('seeds');
+export const KIT_SLOT = HOTBAR.indexOf('kit');
 
 // Saves before v8 had one slot per crop at these indexes.
 export const OLD_SEED_SLOTS = ['turnip', 'radish', 'melon', 'pumpkin'];

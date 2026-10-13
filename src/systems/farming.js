@@ -1,7 +1,7 @@
 // Tilling, watering, planting, harvesting, growth and seasonal withering.
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
-import { on, changed, notify } from '../core/events.js';
+import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { CROPS } from '../data/crops.js';
@@ -25,7 +25,10 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
     return true;
   }
   if (s?.crop && isRipe(s.crop)) {
-    S.bag[s.crop.type]++; notify(`Picked a ${CROPS[s.crop.type].name}.`); s.crop = null; changed();
+    const type = s.crop.type;
+    S.bag[type]++; notify(`Picked a ${CROPS[type].name}.`); s.crop = null;
+    emit('gather', { skill: 'farming', item: type, xp: Math.max(3, Math.round(CROPS[type].sell / 10)) });
+    changed();
     return true;
   }
 

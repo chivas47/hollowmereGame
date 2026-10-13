@@ -17,8 +17,10 @@ src/
     registry.js       addInteraction, addLayer, addEntities, addUpdater (+ run/draw/collect)
     time.js           dateParts(day), today(), fmtTime(minutes)
   data/               content only, no logic
-    crops.js forage.js fish.js minerals.js products.js items.js
-    npcs.js maps.js seasons.js hotbar.js upgrades.js
+    crops.js forage.js fish.js minerals.js products.js artisan.js items.js
+    npcs.js maps.js seasons.js hotbar.js upgrades.js (incl. COOP, BARN)
+    crafting.js       PLACEABLES, RECIPES, MACHINES, sprinklerTiles()
+    skills.js quests.js festivals.js
   systems/            one feature per file
     world.js          tile queries, collision, facing(), placePlayer(), useEnergy()
     player.js         movement, map exits, player sprite (respects G.lock)
@@ -37,6 +39,15 @@ src/
     mine.js           floor generation, rocks, ladders, lighting
     health.js         hurtPlayer(), fainting
     monsters.js       slimes, sword
+    placeables.js     kit slot, placing/picking up crafted objects ('Y' tiles), drawing, lantern glow
+    crafting.js       craft(): gold + materials -> kit
+    sprinklers.js     water soil on day:start and on placement
+    artisan.js        load / collect machines, overnight processing
+    barn.js           barn placement, cows and goats, hay, milk
+    skills.js         XP from 'gather' events, bonus items, energy milestones
+    quests.js         quest board requests, deliver()
+    festivals.js      festival day logic, contests, market stall, decorations
+    village.js        fountain and cottage flavour text
     debug.js          DEBUG actions for the debug panel
   render/
     pixel.js          r() rectangle primitive, rng(seed), blink()
@@ -47,6 +58,7 @@ src/
   ui/
     dom.js toast.js modal.js hud.js hotbar.js dialogs.js inventory.js
     workshop.js mine.js input.js debugPanel.js
+    crafting.js (craft menu, placed-object dialog) barn.js village.js (board, festival)
 ```
 
 ## The four registries (`core/registry.js`)
@@ -65,12 +77,15 @@ src/
 | 200 | fishing.js | Any Use while a line is out |
 | 100 | npcs.js | Facing a neighbour |
 | 95 | coop.js | Facing a chicken (pet) |
-| 72 | upgrades.js / coop.js / mine.js | Workbench K, coop C, mine entrance M, ladders U/L |
+| 94 | barn.js | Facing a cow or goat (pet) |
+| 72 | upgrades.js / coop.js / barn.js / mine.js / placeables.js / quests.js / festivals.js | Workbench K, coop C, barn A, mine entrance M, ladders U/L, placed object Y, quest board Q, festival table J |
+| 71 | village.js | Fountain F, cottage V (flavour text) |
 | 70 | buildings.js | Door D, stall S, bin B |
 | 66 | mine.js | Pickaxe on mine rocks |
 | 65 | fishing.js | Rod on water O (cast) |
 | 60 | buildings.js | Well W or pond O (refill can) |
 | 58 | monsters.js | Sword (claims every press while held) |
+| 55 | placeables.js | Kit slot on untilled farm grass (place) |
 | 50 | farming.js | Grass on the farm |
 | 45 | forage.js | Forage items and grass in the Wilds |
 
@@ -79,11 +94,14 @@ src/
 | z | Owner | Draws |
 |---|---|---|
 | 10 | farming.js, forage.js | Soil, crops, forage |
-| (entities) | player, npcs, coop, monsters | y-sorted characters |
+| 20 | placeables.js | Sprinklers, machines, lanterns |
+| 30 | festivals.js | Bunting on festival days |
+| (entities) | player, npcs, coop, barn, monsters | y-sorted characters |
 | 55 | fishing.js | Line and bobber |
 | 60 | effects.js | Tool swing |
 | 90 | fishing.js | Reel bar |
 | 95 | mine.js | Darkness around the player |
+| 97 | placeables.js, festivals.js | Lantern glow after dark |
 
 The night tint is drawn by renderer.js after all layers (not in caves).
 
@@ -103,9 +121,11 @@ The night tint is drawn by renderer.js after all layers (not in caves).
 | `day:report` | report | days.js | ui/dialogs.js morning summary |
 | `mine:floor` | {floor, rng} | mine.js | monsters (spawn) |
 | `mine:faint` | none | health.js | mine.js (carry out) |
+| `gather` | {skill, xp, item?, n?} | farming, forage, fishing, mine, monsters, coop, barn | skills.js (XP, bonus item) |
+| `placed` | {x, y, kind} | placeables.js | sprinklers.js (water now) |
 | `ui:*` | varies | systems | ui modules open dialogs |
 
-The `report` object collects overnight results: `passedOut, grown, payout, withered, newSeason, eggs, built`. Add a field, set it in a `day:end` or `day:start` listener, and show it in the `day:report` handler in ui/dialogs.js.
+The `report` object collects overnight results: `passedOut, grown, payout, withered, newSeason, eggs, built, milk, hungry, artisan, sprinkled, questsPosted, questsExpired, festival, festivalSoon`. Add a field, set it in a `day:end` or `day:start` listener, and show it in the `day:report` handler in ui/dialogs.js.
 
 ## State
 
@@ -133,6 +153,9 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | W | well | yes |
 | K | Bram's workbench | yes |
 | C | chicken coop (written at runtime) | yes |
+| A | barn (written at runtime) | yes |
+| Y | crafted object (written at runtime from `G.S.placed`) | yes |
+| V, Q, F, J | village cottage, quest board, fountain, festival table | yes |
 | M | mine entrance | yes |
 | f, X | cave floor, cave wall | no, yes |
 | r, c, i | stone, copper, iron rock | yes |
@@ -150,4 +173,7 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 - **Building:** follow systems/coop.js: order at the workbench, build on `day:start`, write tiles at runtime, emit `world:changed`.
 - **Tool:** key in `data/hotbar.js` (+ `TOOL_NAMES`), icon in `render/icons.js`, an interaction in its system.
 - **Map:** grid and entry in `data/maps.js`, with an `E` tile and `exits` entry on both sides.
+- **Craftable object:** entry in `PLACEABLES` and `RECIPES` (data/crafting.js) plus art in `PLACED_ART` (render/sprites.js). A machine also needs a `MACHINES` entry; its products go in data/artisan.js.
+- **Skill XP source:** `emit('gather', { skill, xp, item, n })` where the player gathers. Pass `item` only if a bonus copy makes sense.
+- **Festival:** entry in data/festivals.js (contest or market). The table, decorations and NPC gathering pick it up.
 - **Minigame:** follow systems/fishing.js: a priority 200 interaction while active, `G.lock = true`, an updater, and a layer above 80 for its UI.

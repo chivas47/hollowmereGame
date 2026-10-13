@@ -2,7 +2,8 @@
 import { G } from '../core/game.js';
 import { START } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { today } from '../core/time.js';
+import { today, fmtTime } from '../core/time.js';
+import { FESTIVAL_HOURS } from '../data/festivals.js';
 import { newState, save } from '../core/state.js';
 import { CROPS } from '../data/crops.js';
 import { ITEMS } from '../data/items.js';
@@ -63,8 +64,15 @@ on('day:report', (r) => {
     if (r.newSeason === 'Winter') html += ' Nothing grows in winter, but the wilds still have frost roots.';
     html += '</p>';
   }
-  if (r.built) html += `<p class="gift">Bram finished your ${r.built}. Visit it to buy chickens.</p>`;
+  if (r.festival) html += `<p class="gift">Today is the ${r.festival.name}! Head to the village square, ${fmtTime(FESTIVAL_HOURS.from)} to ${fmtTime(FESTIVAL_HOURS.to)}. Your neighbours will be there instead of the farm.</p>`;
+  if (r.festivalSoon) html += `<p class="role">The ${r.festivalSoon.f.name} is in ${plural(r.festivalSoon.inDays, 'day')} (${r.festivalSoon.f.season} ${r.festivalSoon.f.day}).</p>`;
+  if (r.built) html += `<p class="gift">Bram finished your ${r.built}. Visit it to buy animals.</p>`;
   if (r.eggs) html += `<p class="gift">Your chickens laid ${plural(r.eggs, 'egg')}. Collect them at the coop.</p>`;
+  if (r.milk) html += `<p class="gift">Your animals gave ${plural(r.milk, 'pail')} of milk. Collect it at the barn.</p>`;
+  if (r.hungry) html += `<p class="role">${plural(r.hungry, 'animal')} went hungry: the loft ran out of hay. Buy more at the barn.</p>`;
+  if (r.artisan) html += `<p class="gift">${plural(r.artisan, 'machine')} finished overnight.</p>`;
+  if (r.sprinkled) html += `<p>Sprinklers watered ${plural(r.sprinkled, 'tile')}.</p>`;
+  if (r.questsPosted) html += '<p class="role">A new request is up on the village quest board.</p>';
   html += `<p>${r.passedOut ? 'You woke up at home with only part of your energy back. ' : ''}`;
   html += `${r.payout ? `The shipping bin paid out ${r.payout}g.` : 'Nothing was shipped yesterday.'} ${plural(r.grown, 'crop')} grew overnight.</p>`;
   openModal(html, [['Start the day', closeModal, true]]);

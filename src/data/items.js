@@ -4,5 +4,6 @@ import { FORAGE } from './forage.js';
 import { FISH } from './fish.js';
 import { PRODUCTS } from './products.js';
 import { MINERALS } from './minerals.js';
+import { ARTISAN } from './artisan.js';
 
-export const ITEMS = { ...CROPS, ...FORAGE, ...FISH, ...PRODUCTS, ...MINERALS };
+export const ITEMS = { ...CROPS, ...FORAGE, ...FISH, ...PRODUCTS, ...MINERALS, ...ARTISAN };

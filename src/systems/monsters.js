@@ -1,7 +1,7 @@
 // Slimes in the mine, and the sword.
 import { G } from '../core/game.js';
 import { T, W, H, DIRS } from '../core/constants.js';
-import { on, changed, notify } from '../core/events.js';
+import { on, emit, changed, notify } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
 import { SLIME, SWORD_DAMAGE } from '../data/minerals.js';
@@ -71,6 +71,7 @@ addInteraction(58, ({ item, mapId }) => {
     if (m.hp <= 0) {
       slimes.splice(slimes.indexOf(m), 1);
       if (Math.random() < SLIME.dropChance) { G.S.bag[SLIME.drop]++; notify('+1 Slime gel'); }
+      emit('gather', { skill: 'mining', xp: 3 });
       changed();
     }
   }

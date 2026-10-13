@@ -9,7 +9,7 @@ export function recalcStats() {
   const S = G.S;
   S.maxw = tier(S, 'can').cap + S.waterBonus;
   S.water = Math.min(S.water, S.maxw);
-  S.maxEnergy = tier(S, 'house').energy;
+  S.maxEnergy = tier(S, 'house').energy + (S.energyBonus || 0);
   S.energy = Math.min(S.energy, S.maxEnergy);
 }
 

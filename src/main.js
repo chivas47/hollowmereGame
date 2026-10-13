@@ -22,6 +22,15 @@ import './systems/coop.js';
 import './systems/mine.js';
 import './systems/health.js';
 import './systems/monsters.js';
+import './systems/placeables.js';
+import './systems/crafting.js';
+import './systems/sprinklers.js';
+import './systems/artisan.js';
+import './systems/barn.js';
+import './systems/skills.js';
+import './systems/quests.js';
+import './systems/festivals.js';
+import './systems/village.js';
 
 // UI
 import './ui/toast.js';
@@ -30,6 +39,9 @@ import './ui/dialogs.js';
 import './ui/inventory.js';
 import './ui/workshop.js';
 import './ui/mine.js';
+import './ui/crafting.js';
+import './ui/barn.js';
+import './ui/village.js';
 import { buildHotbar } from './ui/hotbar.js';
 import { initInput } from './ui/input.js';
 import { initDebug } from './ui/debugPanel.js';

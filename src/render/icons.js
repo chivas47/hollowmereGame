@@ -1,6 +1,8 @@
-// 16x16 hotbar icons. The seed slot draws the packet of the selected crop.
+// 16x16 hotbar icons. The seed slot draws the packet of the selected crop, the kit slot the selected object.
 import { CROPS } from '../data/crops.js';
+import { PLACEABLES } from '../data/crafting.js';
 import { r } from './pixel.js';
+import { drawPlaced } from './sprites.js';
 
 const TOOL_ICONS = {
   hoe: (g) => { for (let i = 0; i < 9; i++) r(g, 3 + i, 13 - i, 2, 2, '#8a5a32'); r(g, 10, 2, 5, 3, '#a9b4bd'); r(g, 10, 4, 2, 2, '#7f8a93'); },
@@ -23,10 +25,16 @@ const TOOL_ICONS = {
   },
 };
 
-// crop: which seed packet to draw for the 'seeds' slot (or a crop key passed as kind).
-export function drawIcon(g, kind, crop) {
+// sel: the crop for the 'seeds' slot, or the placeable for the 'kit' slot.
+export function drawIcon(g, kind, sel) {
   g.clearRect(0, 0, 16, 16);
   if (TOOL_ICONS[kind]) return TOOL_ICONS[kind](g);
+  if (kind === 'kit') {
+    if (PLACEABLES[sel]) return drawPlaced(g, 0, 0, sel, null);
+    r(g, 2, 6, 12, 8, '#8a5a32'); r(g, 2, 6, 12, 1, '#a5753f'); r(g, 2, 9, 12, 1, '#6e4626'); r(g, 7, 6, 2, 8, '#6e4626');   // empty crate
+    return;
+  }
+  const crop = sel;
   const c = CROPS[kind === 'seeds' ? crop : kind];
   if (!c) return;
   r(g, 3, 2, 10, 12, '#e8d9b5'); r(g, 3, 2, 10, 2, '#c9b083'); r(g, 6, 7, 4, 4, c.color);
