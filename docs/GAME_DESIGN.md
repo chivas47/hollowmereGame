@@ -76,6 +76,10 @@ Defense: each point takes 1 off a hit, to a minimum of 1 (Stardew's boots give 1
 
 Upgrades, buildings and recipes that took ore now take bars, at Stardew's 5 ore to a bar. The furnace (20 copper ore, 25 stone, Stardew's recipe) turns 5 copper or iron ore plus 1 coal into a copper bar (60g) or iron bar (120g). Coal (15g) comes from the charcoal kiln (10 wood each), from stone rocks in the Hollow (6% each) or from Bram at 150g (Stardew's blacksmith price). Bars and coal are materials: kept, never shipped.
 
+## Artisan machines, part 2 (v27)
+
+Stardew counterparts by role: keg (wine 3 x fruit, juice 2.25 x vegetable), mayonnaise machine, loom, oil maker, bee house, tapper, crystalarium, dehydrator, mushroom log and fish smoker. Ratios and night counts follow them; recipes swap hardwood and refined materials for wood, stone and bars at a similar effort. Gems: Hollow quartz 25g (2% of rocks), violet stone 100g (0.7%), Stardew's quartz and amethyst scale.
+
 ## Controls
 
 - H whistles for the horse.
@@ -240,6 +244,16 @@ Chickens: each eats 1 feed a night (50g, bought at the coop). A fed chicken pett
 | Lightning rod | 0 | 1 iron bar, 1 copper bar, 10 stone |
 | Furnace | 0 | 20 copper ore, 25 stone | 5 ore + 1 coal -> a bar, ready at once |
 | Charcoal kiln | 0 | 20 wood, 2 copper bars | 10 wood -> 1 coal, ready at once | Catches a storm's lightning as a storm cell (500g) |
+| Brew barrel | 0 | 30 wood, 1 copper bar, 1 iron bar | Fruit -> wine (3 x fruit) in 7 nights; vegetable -> juice (2.25 x) in 4 |
+| Egg press | 0 | 15 wood, 15 stone, 1 copper bar | Egg -> egg spread (190g) overnight |
+| Loom | 0 | 60 wood, 30 fiber | 5 fiber -> cloth overnight |
+| Oil press | 0 | 20 gel, 20 wood, 1 iron bar | Corn -> corn oil (100g) overnight |
+| Bee box | 0 | 40 wood, 8 coal, 1 iron bar | Meadow honey (100g) every 4 nights, not in winter |
+| Tree tap | 0 | 40 wood, 2 copper bars | Fixed to a grown alder: alder syrup (180g) every 8 nights |
+| Gem copier | 0 | 50 stone, 3 iron bars, 1 storm cell | Copies a gem (quartz 1 night, violet stone 2), then starts again |
+| Dryer | 0 | 30 wood, 1 copper bar, 20 stone | 5 fruit -> dried fruit (7.5 x + 25g); 5 mushrooms -> dried mushrooms |
+| Mushroom log | 0 | 15 wood, 10 fiber | A mushroom every 4 nights, not in winter |
+| Fish smoker | 0 | 20 wood, 1 iron bar | Fish + 1 coal -> smoked fish (2 x), ready at once |
 
 - Crafted objects go to the kit (slot 7). Placed on untilled farm grass only; not on the coop or barn footprint. They are solid. Picking one up returns it to the kit (machines only when empty).
 - Sprinklers also water their tiles the moment they are placed.
@@ -396,6 +410,9 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Weather does not change fishing or neighbours yet (Stardew has rain-only fish and neighbours who stay in). Rain sound and richer effects come with the atmosphere item.
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
+- Wood is the bottleneck for v27 machines (15 to 60 wood each) while alders are the only steady supply. In the simulator the bot finishes its shopping list later (the smoker and mushroom log are not reached in every run). Advisory: numbers stay on the Stardew scale.
+- The recycler, worm bin and bait maker wait for the fishing overhaul (roadmap item 20), which brings trash and bait.
+- Honey has one flavour; Stardew's flower honey is not modelled.
 - Mine floors have no special floors (treasure, boss, elevator).
 
 ## Roadmap

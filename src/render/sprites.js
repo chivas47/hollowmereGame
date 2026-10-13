@@ -184,6 +184,15 @@ const PLACED_ART = {
     r(c, X + 2, Y + 6, 12, 8, '#8d939a'); r(c, X + 2, Y + 6, 12, 1, '#c9ccd6'); r(c, X + 3, Y + 7, 10, 2, '#f4ead2');
     r(c, X + 1, Y + 9, 1, 3, '#6f757c'); r(c, X + 14, Y + 9, 1, 3, '#6f757c'); r(c, X + 4, Y + 12, 8, 1, '#6f757c');
   },
+  brewbarrel: (c, X, Y) => { r(c, X + 3, Y + 3, 10, 12, '#8a5a32'); r(c, X + 2, Y + 6, 12, 6, '#8a5a32'); [5, 12].forEach((o) => r(c, X + 2, Y + o, 12, 1, '#5c371e')); r(c, X + 7, Y + 9, 2, 2, '#c9ccd6'); },
+  eggpress: (c, X, Y) => { r(c, X + 3, Y + 8, 10, 7, '#c9ccd6'); r(c, X + 5, Y + 3, 6, 5, '#8d939a'); r(c, X + 6, Y + 1, 4, 2, '#f4ead2'); r(c, X + 6, Y + 10, 4, 3, '#fff8dc'); },
+  loom: (c, X, Y) => { r(c, X + 2, Y + 3, 2, 12, '#8a5a32'); r(c, X + 12, Y + 3, 2, 12, '#8a5a32'); r(c, X + 2, Y + 3, 12, 2, '#a5753f'); for (let i = 0; i < 4; i++) r(c, X + 5 + i * 2, Y + 5, 1, 7, '#e8e0d0'); r(c, X + 4, Y + 11, 8, 2, '#a5753f'); },
+  oilpress: (c, X, Y) => { r(c, X + 4, Y + 6, 8, 9, '#5f6870'); r(c, X + 7, Y + 1, 2, 5, '#3f4850'); r(c, X + 4, Y + 1, 8, 2, '#3f4850'); r(c, X + 6, Y + 10, 4, 3, '#e9c46a'); },
+  beebox: (c, X, Y) => { r(c, X + 3, Y + 5, 10, 10, '#e9c46a'); r(c, X + 2, Y + 3, 12, 2, '#a5753f'); [8, 12].forEach((o) => r(c, X + 3, Y + o, 10, 1, '#c9a043')); r(c, X + 7, Y + 13, 2, 2, '#3f3226'); if (blink(300)) r(c, X + 13, Y + 2, 1, 1, '#2b211a'); },
+  gemcopier: (c, X, Y) => { r(c, X + 3, Y + 10, 10, 5, '#5f6870'); r(c, X + 4, Y + 2, 8, 8, 'rgba(190,225,240,.55)'); r(c, X + 4, Y + 2, 8, 1, '#dfe3e8'); r(c, X + 7, Y + 5, 2, 3, '#b98ae0'); },
+  dryer: (c, X, Y) => { r(c, X + 2, Y + 4, 12, 11, '#a5753f'); [6, 9, 12].forEach((o) => r(c, X + 3, Y + o, 10, 1, '#6e4626')); r(c, X + 4, Y + 7, 2, 2, '#e8862a'); r(c, X + 9, Y + 10, 2, 2, '#7a3f8f'); },
+  mushroomlog: (c, X, Y) => { r(c, X + 1, Y + 9, 14, 6, '#6e4626'); r(c, X + 1, Y + 9, 2, 6, '#c9a06a'); r(c, X + 5, Y + 6, 4, 3, '#a0522d'); r(c, X + 6, Y + 8, 2, 1, '#efe6d2'); r(c, X + 10, Y + 7, 3, 2, '#a0522d'); },
+  smoker: (c, X, Y) => { r(c, X + 3, Y + 5, 10, 10, '#3f4850'); r(c, X + 5, Y + 8, 6, 4, '#2b211a'); r(c, X + 6, Y + 10, 4, 1, '#e8862a'); r(c, X + 7, Y, 2, 5, '#5f6870'); if (blink(500)) r(c, X + 6, Y - 2, 2, 2, 'rgba(220,220,220,.6)'); },
   furnace: (c, X, Y) => {
     r(c, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.25)'); r(c, X + 3, Y + 3, 10, 11, '#7d7a76'); r(c, X + 2, Y + 6, 12, 8, '#8d8a84');
     r(c, X + 5, Y + 8, 6, 5, '#2b211a'); r(c, X + 6, Y + 10, 4, 3, '#e8862a'); r(c, X + 7, Y + 11, 2, 1, '#e9c46a'); r(c, X + 6, Y, 4, 3, '#5f6870');
@@ -414,3 +423,9 @@ const FURN_ART = {
   chest: (c, X, Y, a, b) => { r(c, X + 2, Y + 5, 12, 10, a); r(c, X + 2, Y + 5, 12, 3, b); r(c, X + 7, Y + 7, 2, 3, '#3f3226'); },
 };
 export function drawFurniture(c, X, Y, def) { (FURN_ART[def.shape] || FURN_ART.chest)(c, X, Y, ...def.colors); }
+
+// A tree tap on an alder; ready: a drop of syrup shows.
+export function drawTap(c, X, Y, ready) {
+  r(c, X + 9, Y + 6, 3, 1, '#8d939a'); r(c, X + 10, Y + 7, 4, 5, '#a5753f'); r(c, X + 10, Y + 7, 4, 1, '#c9955a');
+  if (ready && blink(450)) r(c, X + 11, Y + 5, 2, 1, '#e8a35e');
+}

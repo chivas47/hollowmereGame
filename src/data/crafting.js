@@ -5,6 +5,8 @@ import { FORAGE } from './forage.js';
 import { JAR_PREFIX } from './artisan.js';
 import { TREES, FRUIT } from './trees.js';
 import { FURNITURE } from './furniture.js';
+import { FISH } from './fish.js';
+import { MINERALS } from './minerals.js';
 
 export const PLACEABLES = {
   sprinkler:  { name: 'Copper sprinkler', short: 'Sprinkler', kind: 'sprinkler', reach: 1, square: false },
@@ -38,6 +40,17 @@ export const PLACEABLES = {
   // v26: smelting.
   furnace:    { name: 'Furnace',          short: 'Furnace',   kind: 'machine' },
   kiln:       { name: 'Charcoal kiln',    short: 'Kiln',      kind: 'machine' },
+  // v27: artisan machines, part 2 (Stardew roles in the comments of RECIPES).
+  brewbarrel: { name: 'Brew barrel',      short: 'Barrel',    kind: 'machine' },
+  eggpress:   { name: 'Egg press',        short: 'Egg press', kind: 'machine' },
+  loom:       { name: 'Loom',             short: 'Loom',      kind: 'machine' },
+  oilpress:   { name: 'Oil press',        short: 'Oil press', kind: 'machine' },
+  beebox:     { name: 'Bee box',          short: 'Bee box',   kind: 'machine' },
+  gemcopier:  { name: 'Gem copier',       short: 'Copier',    kind: 'machine' },
+  dryer:      { name: 'Drying rack',      short: 'Dryer',     kind: 'machine' },
+  mushroomlog:{ name: 'Mushroom log',     short: 'Mush. log', kind: 'machine' },
+  smoker:     { name: 'Fish smoker',      short: 'Smoker',    kind: 'machine' },
+  treetap:    { name: 'Tree tap',         short: 'Tap',       kind: 'tap' },
   // v24: furniture, placed inside the farmhouse (bought from the catalogue there).
   ...Object.fromEntries(Object.entries(FURNITURE).map(([k, f]) => [k, { name: f.name, short: f.name.length > 10 ? f.name.split(' ').pop() : f.name, kind: 'furniture', walk: !!f.walk }])),
 };
@@ -63,7 +76,21 @@ export const RECIPES = {
   lightningrod: { cost: 0, needs: { ironbar: 1, copperbar: 1, stone: 10 }, desc: 'Catches a lightning strike in a storm and keeps it as a storm cell (500g).' },
   // Stardew: furnace 20 copper ore + 25 stone; charcoal kiln 20 wood + 2 copper bars.
   furnace:    { cost: 0, needs: { copper: 20, stone: 25 }, desc: 'Smelts 5 ore and 1 coal into a bar while you wait.' },
-  kiln:       { cost: 0, needs: { wood: 20, copperbar: 2 }, desc: 'Burns 10 wood into 1 coal while you wait.' }
+  kiln:       { cost: 0, needs: { wood: 20, copperbar: 2 }, desc: 'Burns 10 wood into 1 coal while you wait.' },
+  // v27. Stardew: keg 30 wood, 1 copper bar, 1 iron bar, oak resin; mayonnaise machine 15 wood, 15 stone, copper bar, earth crystal;
+  // loom 60 wood, 30 fiber, pine tar; oil maker 50 slime, 20 hardwood, gold bar; bee house 40 wood, 8 coal, iron bar, maple syrup;
+  // tapper 40 wood, 2 copper bars; crystalarium 99 stone, gold and iridium bars, battery; dehydrator 30 wood, clay, fire quartz;
+  // mushroom log 10 hardwood, 10 moss; fish smoker 10 hardwood, sea jellies. What we lack becomes wood, stone, bars, gel or a storm cell.
+  brewbarrel: { cost: 0, needs: { wood: 30, copperbar: 1, ironbar: 1 }, desc: 'Fruit becomes wine (3 times the fruit) in 7 nights; a vegetable becomes juice (2.25 times) in 4.' },
+  eggpress:   { cost: 0, needs: { wood: 15, stone: 15, copperbar: 1 }, desc: 'Turns an egg into egg spread (190g) overnight.' },
+  loom:       { cost: 0, needs: { wood: 60, fiber: 30 }, desc: 'Weaves 5 fiber into a cloth overnight.' },
+  oilpress:   { cost: 0, needs: { gel: 20, wood: 20, ironbar: 1 }, desc: 'Presses sweet corn into corn oil (100g) overnight.' },
+  beebox:     { cost: 0, needs: { wood: 40, coal: 8, ironbar: 1 }, desc: 'Bees make meadow honey (100g) every 4 nights, outside winter.' },
+  treetap:    { cost: 0, needs: { wood: 40, copperbar: 2 }, desc: 'Fix it to a grown alder: alder syrup (180g) every 8 nights. Chopping the tree gives the tap back.' },
+  gemcopier:  { cost: 0, needs: { stone: 50, ironbar: 3, stormcell: 1 }, desc: 'Copies a gem again and again: quartz every night, violet stone every 2.' },
+  dryer:      { cost: 0, needs: { wood: 30, copperbar: 1, stone: 20 }, desc: 'Dries 5 fruit or 5 Hollow caps overnight (worth 7.5 times one, plus 25).' },
+  mushroomlog:{ cost: 0, needs: { wood: 15, fiber: 10 }, desc: 'Grows Hollow caps every 4 nights, outside winter.' },
+  smoker:     { cost: 0, needs: { wood: 20, ironbar: 1 }, desc: 'Smokes a fish with 1 coal while you wait: worth twice the fish.' }
 };
 
 // Machines: accepts(itemKey) -> bool, product(itemKey) -> item key, nights to finish.
@@ -76,6 +103,16 @@ export const MACHINES = {
   // takes: what one load uses up (default: one of the item). nights 0: ready at once.
   furnace: { accepts: (k) => k === 'copper' || k === 'iron', takes: (k) => ({ [k]: 5, coal: 1 }), product: (k) => `${k}bar`, nights: 0, hint: '5 ore and 1 coal' },
   kiln:    { accepts: (k) => k === 'wood', takes: () => ({ wood: 10 }), product: () => 'coal', nights: 0, hint: '10 wood' },
+  // v27. nights may depend on the item; auto: makes an item every so many nights with nothing put in; repeat: starts again after collecting.
+  brewbarrel: { accepts: (k) => k in FRUIT || k in PRODUCE, product: (k) => (k in FRUIT ? `wine_${k}` : `juice_${k}`), nights: (k) => (k in FRUIT ? 7 : 4), hint: 'a fruit or a vegetable' },
+  eggpress:   { accepts: (k) => k === 'egg', product: () => 'mayo', nights: 1, hint: 'an egg' },
+  loom:       { accepts: (k) => k === 'fiber', takes: () => ({ fiber: 5 }), product: () => 'cloth', nights: 1, hint: '5 fiber' },
+  oilpress:   { accepts: (k) => k === 'corn', product: () => 'oil', nights: 1, hint: 'sweet corn' },
+  beebox:     { accepts: () => false, auto: { item: 'honey', every: 4, winter: false }, product: () => 'honey', nights: 0, hint: 'nothing: the bees do the work' },
+  gemcopier:  { accepts: (k) => !!MINERALS[k]?.gem, product: (k) => k, nights: (k) => (k === 'violet' ? 2 : 1), repeat: true, hint: 'a gem' },
+  dryer:      { accepts: (k) => k in FRUIT || k === 'mushroom', takes: (k) => ({ [k]: 5 }), product: (k) => `dried_${k}`, nights: 1, hint: '5 fruit or 5 Hollow caps' },
+  mushroomlog:{ accepts: () => false, auto: { item: 'mushroom', every: 4, winter: false }, product: () => 'mushroom', nights: 0, hint: 'nothing: give it time' },
+  smoker:     { accepts: (k) => k in FISH, takes: (k) => ({ [k]: 1, coal: 1 }), product: (k) => `smoked_${k}`, nights: 0, hint: 'a fish and 1 coal' },
 };
 
 // Tiles a sprinkler at (x, y) waters.

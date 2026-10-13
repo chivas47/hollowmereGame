@@ -98,6 +98,7 @@ addInteraction(55, ({ tx, ty, tile, mapId, item }) => {
   if (!soilOf(mapId) || tile !== 'g') return false;
   const soil = soilOf(mapId)[`${tx},${ty}`];
   if (def?.kind === 'furniture' && owned(S.kitSel)) { notify('Furniture goes inside the farmhouse.'); return true; }
+  if (def?.kind === 'tap' && owned(S.kitSel)) { notify('Face a grown alder to fix the tap to it.'); return true; }
   if (def?.kind === 'fertilizer' && owned(S.kitSel)) {
     if (!soil) { notify('Fertilizer goes on tilled soil.'); return true; }
     if (soil.crop?.dead) return false;   // farming clears it

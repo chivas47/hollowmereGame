@@ -8,7 +8,11 @@ export const MINERALS = {
   coal:      { name: 'Coal',       sell: 15,  material: true },
   copperbar: { name: 'Copper bar', sell: 60,  material: true },
   ironbar:   { name: 'Iron bar',   sell: 120, material: true },
+  // v27 gems from Hollow rocks (Stardew: quartz 25g, amethyst 100g); the gem copier copies them.
+  quartz:    { name: 'Hollow quartz', sell: 25,  gem: true },
+  violet:    { name: 'Violet stone',  sell: 100, gem: true },
 };
+export const GEM_DROPS = [['violet', 0.007], ['quartz', 0.02]];   // chance per broken rock, rarest first
 // Each stone rock has this chance of giving a piece of coal too.
 export const COAL_FROM_STONE = 0.06;
 
