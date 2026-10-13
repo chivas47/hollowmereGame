@@ -1,12 +1,12 @@
 // Dialogs for Bram's workbench and the chicken coop.
 import { G } from '../core/game.js';
 import { on, notify } from '../core/events.js';
-import { UPGRADES, COOP, BARN, GREENHOUSE, STABLE, tier } from '../data/upgrades.js';
+import { UPGRADES, COOP, BARN, GREENHOUSE, STABLE, COAL_COST, tier } from '../data/upgrades.js';
 import { orderStable } from '../systems/stable.js';
 import { RENOVATIONS } from '../data/furniture.js';
 import { buyRenovation } from '../systems/house.js';
 import { ITEMS } from '../data/items.js';
-import { nextTier, buyUpgrade, orderCoop, affordable } from '../systems/upgrades.js';
+import { nextTier, buyUpgrade, orderCoop, affordable, buyCoal } from '../systems/upgrades.js';
 import { buyChicken, collectEggs, buyFeed } from '../systems/coop.js';
 import { orderBarn } from '../systems/barn.js';
 import { orderGreenhouse } from '../systems/greenhouse.js';
@@ -42,7 +42,7 @@ function workbench() {
       : offer('Stable', `${STABLE.desc} ${STABLE.cost.toLocaleString('en-US')}g`, 'data-upgrade="stable"', STABLE.cost, STABLE.needs);
   const renos = Object.entries(RENOVATIONS).map(([k, r]) => (S.house.renos.includes(k) ? offer(r.name, 'Done')
     : offer(r.name, `${r.desc} ${r.cost.toLocaleString('en-US')}g`, `data-reno="${k}"`, r.cost))).join('');
-  openModal(`<h2>Bram's workbench</h2><p class="role">Bram takes orders here. You have <b>${S.gold}g</b>. Press C anywhere to craft sprinklers and machines.</p>${rows}${coop}${barn}${gh}${st}<h3>Farmhouse renovations</h3>${renos}`,
+  openModal(`<h2>Bram's workbench</h2><p class="role">Bram takes orders here. You have <b>${S.gold}g</b>. Press C anywhere to craft sprinklers and machines; a furnace smelts ore into the bars upgrades need.</p>${rows}${coop}${barn}${gh}${st}<h3>Farmhouse renovations</h3>${renos}<h3>Coal</h3><div class="shoprow"><div><b>Coal</b><span>${COAL_COST}g each. You have ${S.bag.coal || 0}. The furnace needs 1 per bar.</span></div><div class="btns"><button data-coal="1" ${S.gold < COAL_COST ? 'disabled' : ''}>Buy 1</button><button data-coal="5" ${S.gold < COAL_COST * 5 ? 'disabled' : ''}>Buy 5</button></div></div>`,
     [['Leave', closeModal, true]]);
 }
 
@@ -73,6 +73,8 @@ $('#mbody').addEventListener('click', (e) => {
     if (ok) workbench();
     return;
   }
+  const cl = e.target.closest('[data-coal]');
+  if (cl && !cl.disabled) { if (buyCoal(+cl.dataset.coal)) workbench(); return; }
   const rn = e.target.closest('[data-reno]');
   if (rn && !rn.disabled) { if (buyRenovation(rn.dataset.reno)) workbench(); return; }
   const cp = e.target.closest('[data-coop]');

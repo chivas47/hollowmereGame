@@ -72,6 +72,10 @@ Tailoring as in Stardew: at the sewing machine one cloth plus one item makes the
 
 Defense: each point takes 1 off a hit, to a minimum of 1 (Stardew's boots give 1 to 4). Dye pots recolour a shirt or trousers with any crop, fruit or fish, used up. A mannequin wears a copy of your outfit. Stations come from the farmhouse catalogue: sewing machine 2,500g, dye pots 1,000g, mannequin 2,000g (Stardew has no price for these: you use Emily's for free, so they are priced as mid-range furniture).
 
+## Smelting (v26)
+
+Upgrades, buildings and recipes that took ore now take bars, at Stardew's 5 ore to a bar. The furnace (20 copper ore, 25 stone, Stardew's recipe) turns 5 copper or iron ore plus 1 coal into a copper bar (60g) or iron bar (120g). Coal (15g) comes from the charcoal kiln (10 wood each), from stone rocks in the Hollow (6% each) or from Bram at 150g (Stardew's blacksmith price). Bars and coal are materials: kept, never shipped.
+
 ## Controls
 
 - H whistles for the horse.
@@ -193,18 +197,18 @@ Heart scenes (data/scenes.js): the first talk after reaching 4 and 8 hearts play
 
 | Purchase | Gold | Materials | Effect |
 |---|---|---|---|
-| Copper can | 2000 | 25 copper | Holds 55 |
-| Steel can | 5000 | 25 iron | Holds 70 |
-| Wide hoe | 2000 | 25 copper | Tills 3 tiles for 3 energy |
-| Copper axe | 2000 | 25 copper | Chops twice as fast; splits large stumps |
+| Copper can | 2000 | 5 copper bars | Holds 55 |
+| Steel can | 5000 | 5 iron bars | Holds 70 |
+| Wide hoe | 2000 | 5 copper bars | Tills 3 tiles for 3 energy |
+| Copper axe | 2000 | 5 copper bars | Chops twice as fast; splits large stumps |
 | Ashwood rod | 1800 | none | Green zone +14 px |
 | Extended farmhouse | 10000 | 150 stone | Max energy 300, adds the kitchen |
-| Hillside manor | 50000 | 200 stone, 50 iron | Max energy 340, adds the nursery |
+| Hillside manor | 50000 | 200 stone, 10 iron bars | Max energy 340, adds the nursery |
 | Manor with cellar | 100000 | none | Adds the cellar (Stardew: 100,000g) |
 | Chicken coop | 4000 | 150 stone | Up to 4 chickens at 800g |
-| Barn | 6000 | 250 stone, 10 copper | Up to 4 cows (1500g) or goats (4000g) |
+| Barn | 6000 | 250 stone, 2 copper bars | Up to 4 cows (1500g) or goats (4000g) |
 | Greenhouse | 35000 | none | 126 beds; any crop, any season |
-| Stable | 10000 | 100 wood, 25 iron | A horse: ride at 1.6 x walking speed, H to whistle |
+| Stable | 10000 | 100 wood, 5 iron bars | A horse: ride at 1.6 x walking speed, H to whistle |
 
 
 Chickens: each eats 1 feed a night (50g, bought at the coop). A fed chicken petted that day lays one egg (50g) next morning, collected at the coop.
@@ -220,12 +224,12 @@ Chickens: each eats 1 feed a night (50g, bought at the coop). A fed chicken pett
 
 | Object | Gold | Materials | Effect |
 |---|---|---|---|
-| Copper sprinkler | 75 | 3 copper, 5 stone | Waters the 4 tiles next to it every morning |
-| Iron sprinkler | 200 | 3 iron, 2 copper | Waters the 8 tiles around it every morning |
-| Steel sprinkler | 900 | 5 iron, 5 slime gel | Waters the 24 tiles in a 5 by 5 square every morning |
-| Brine crock | 500 | 30 stone, 4 copper | Any crop or forage item -> jarred version in 3 nights |
-| Butter churn | 400 | 6 copper | Milk -> butter (230g) overnight |
-| Cheese vat | 600 | 4 iron | Goat milk -> soft cheese (400g) overnight |
+| Copper sprinkler | 75 | 1 copper bar, 5 stone | Waters the 4 tiles next to it every morning |
+| Iron sprinkler | 200 | 1 iron bar, 1 copper bar | Waters the 8 tiles around it every morning |
+| Steel sprinkler | 900 | 1 iron bar, 5 slime gel | Waters the 24 tiles in a 5 by 5 square every morning |
+| Brine crock | 500 | 30 stone, 1 copper bar | Any crop or forage item -> jarred version in 3 nights |
+| Butter churn | 400 | 1 copper bar | Milk -> butter (230g) overnight |
+| Cheese vat | 600 | 1 iron bar | Goat milk -> soft cheese (400g) overnight |
 | Frost lantern | 350 | Frostlight Market only | Decoration, glows after 6 pm |
 | Wood fence x5 | 0 | 10 wood | Solid posts that join up |
 | Stone fence x5 | 0 | 10 stone | As wood fence |
@@ -233,7 +237,9 @@ Chickens: each eats 1 feed a night (50g, bought at the coop). A fed chicken pett
 | Gate | 0 | 10 wood | Face it to open or close; walkable when open |
 | Wood path x5 | 0 | 5 wood | Walkable floor; nothing creeps onto it |
 | Stone path x5 | 0 | 5 stone | As wood path |
-| Lightning rod | 0 | 5 iron, 5 copper, 10 stone | Catches a storm's lightning as a storm cell (500g) |
+| Lightning rod | 0 | 1 iron bar, 1 copper bar, 10 stone |
+| Furnace | 0 | 20 copper ore, 25 stone | 5 ore + 1 coal -> a bar, ready at once |
+| Charcoal kiln | 0 | 20 wood, 2 copper bars | 10 wood -> 1 coal, ready at once | Catches a storm's lightning as a storm cell (500g) |
 
 - Crafted objects go to the kit (slot 7). Placed on untilled farm grass only; not on the coop or barn footprint. They are solid. Picking one up returns it to the kit (machines only when empty).
 - Sprinklers also water their tiles the moment they are placed.
@@ -309,7 +315,7 @@ Each swing costs 2 energy, the copper axe does twice the damage. Alder cones go 
 
 | Project | Gold | Materials | Effect |
 |---|---|---|---|
-| Mine lift | 20000 | 40 iron | Start on any mine floor reached, not just every fifth |
+| Mine lift | 20000 | 8 iron bars | Start on any mine floor reached, not just every fifth |
 | Street lamps | 12000 | 60 stone | The day ends at 3 am instead of 2 am |
 
 ### Festivals (village square, 9:00 to 22:00)

@@ -35,19 +35,23 @@ export const PLACEABLES = {
   alderseed:  { name: 'Alder cone',     short: 'Cone',      kind: 'sprout' },
   // v20: catches a storm's lightning as a storm cell (systems/weather.js).
   lightningrod: { name: 'Lightning rod', short: 'L. rod',  kind: 'machine' },
+  // v26: smelting.
+  furnace:    { name: 'Furnace',          short: 'Furnace',   kind: 'machine' },
+  kiln:       { name: 'Charcoal kiln',    short: 'Kiln',      kind: 'machine' },
   // v24: furniture, placed inside the farmhouse (bought from the catalogue there).
   ...Object.fromEntries(Object.entries(FURNITURE).map(([k, f]) => [k, { name: f.name, short: f.name.length > 10 ? f.name.split(' ').pop() : f.name, kind: 'furniture', walk: !!f.walk }])),
 };
 
 // key -> what it makes (a PLACEABLES key). makes: how many one craft gives (default 1). Lanterns are only sold at the Frostlight Market.
 export const RECIPES = {
-  sprinkler:  { cost: 75,  needs: { copper: 3, stone: 5 }, desc: 'Waters the 4 tiles next to it every morning.' },
-  sprinkler2: { cost: 200, needs: { iron: 3, copper: 2 },  desc: 'Waters all 8 tiles around it every morning.' },
-  sprinkler3: { cost: 900, needs: { iron: 5, gel: 5 },     desc: 'Waters the 24 tiles in a 5 by 5 square around it every morning.' },
-  crock:      { cost: 500, needs: { stone: 30, copper: 4 }, desc: 'Jars a crop, fruit or forage item over 3 nights. Worth twice the item plus 50g.' },
-  churn:      { cost: 400, needs: { copper: 6 },            desc: 'Turns milk into butter overnight.' },
-  vat:        { cost: 600, needs: { iron: 4 },              desc: 'Turns goat milk into soft cheese overnight.' },
-  booster3:   { cost: 0,   needs: { iron: 5, gel: 10 },     desc: 'Highest soil booster: crops can come out heirloom quality.' },
+  // v26: ore became bars at Stardew's 5 ore to a bar (Stardew's sprinklers: a copper and an iron bar, and up).
+  sprinkler:  { cost: 75,  needs: { copperbar: 1, stone: 5 }, desc: 'Waters the 4 tiles next to it every morning.' },
+  sprinkler2: { cost: 200, needs: { ironbar: 1, copperbar: 1 }, desc: 'Waters all 8 tiles around it every morning.' },
+  sprinkler3: { cost: 900, needs: { ironbar: 1, gel: 5 },   desc: 'Waters the 24 tiles in a 5 by 5 square around it every morning.' },
+  crock:      { cost: 500, needs: { stone: 30, copperbar: 1 }, desc: 'Jars a crop, fruit or forage item over 3 nights. Worth twice the item plus 50g.' },
+  churn:      { cost: 400, needs: { copperbar: 1 },         desc: 'Turns milk into butter overnight.' },
+  vat:        { cost: 600, needs: { ironbar: 1 },           desc: 'Turns goat milk into soft cheese overnight.' },
+  booster3:   { cost: 0,   needs: { ironbar: 1, gel: 10 },  desc: 'Highest soil booster: crops can come out heirloom quality.' },
   // Stardew: wood fence 2 wood, stone fence 2 stone, hardwood fence 1 hardwood, gate 10 wood, paths 1 each.
   fence:      { cost: 0, needs: { wood: 10 },    makes: 5, desc: 'Five fence posts. They join up and block the way.' },
   stonefence: { cost: 0, needs: { stone: 10 },   makes: 5, desc: 'Five stone fence posts.' },
@@ -55,8 +59,11 @@ export const RECIPES = {
   gate:       { cost: 0, needs: { wood: 10 },    desc: 'Opens and closes when you face it. Fits in a fence line.' },
   woodpath:   { cost: 0, needs: { wood: 5 },     makes: 5, desc: 'Five tiles of wooden path. Weeds and stones never grow on paths.' },
   stonepath:  { cost: 0, needs: { stone: 5 },    makes: 5, desc: 'Five tiles of stone path. Weeds and stones never grow on paths.' },
-  // Stardew: 1 iron bar, 1 refined quartz, 5 bat wings. Ours (stone and ore for what we lack): iron for the bar, stone for the quartz, copper for the wings.
-  lightningrod: { cost: 0, needs: { iron: 5, copper: 5, stone: 10 }, desc: 'Catches a lightning strike in a storm and keeps it as a storm cell (500g).' },
+  // Stardew: 1 iron bar, 1 refined quartz, 5 bat wings. Ours (stone and bars for what we lack): stone for the quartz, a copper bar for the wings.
+  lightningrod: { cost: 0, needs: { ironbar: 1, copperbar: 1, stone: 10 }, desc: 'Catches a lightning strike in a storm and keeps it as a storm cell (500g).' },
+  // Stardew: furnace 20 copper ore + 25 stone; charcoal kiln 20 wood + 2 copper bars.
+  furnace:    { cost: 0, needs: { copper: 20, stone: 25 }, desc: 'Smelts 5 ore and 1 coal into a bar while you wait.' },
+  kiln:       { cost: 0, needs: { wood: 20, copperbar: 2 }, desc: 'Burns 10 wood into 1 coal while you wait.' }
 };
 
 // Machines: accepts(itemKey) -> bool, product(itemKey) -> item key, nights to finish.
@@ -66,6 +73,9 @@ export const MACHINES = {
   vat:   { accepts: (k) => k === 'goatmilk', product: () => 'cheese', nights: 1, hint: 'goat milk' },
   // Nothing goes in: a storm's lightning fills it (systems/weather.js).
   lightningrod: { accepts: () => false, product: () => 'stormcell', nights: 0, hint: 'lightning, during a storm' },
+  // takes: what one load uses up (default: one of the item). nights 0: ready at once.
+  furnace: { accepts: (k) => k === 'copper' || k === 'iron', takes: (k) => ({ [k]: 5, coal: 1 }), product: (k) => `${k}bar`, nights: 0, hint: '5 ore and 1 coal' },
+  kiln:    { accepts: (k) => k === 'wood', takes: () => ({ wood: 10 }), product: () => 'coal', nights: 0, hint: '10 wood' },
 };
 
 // Tiles a sprinkler at (x, y) waters.

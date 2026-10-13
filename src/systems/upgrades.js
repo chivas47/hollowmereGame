@@ -2,7 +2,7 @@
 import { G } from '../core/game.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction } from '../core/registry.js';
-import { UPGRADES, COOP, tier } from '../data/upgrades.js';
+import { UPGRADES, COOP, COAL_COST, tier } from '../data/upgrades.js';
 
 // Derived stats come from upgrade tiers plus bonuses. Call after anything that changes them.
 export function recalcStats() {
@@ -37,6 +37,15 @@ export function buyUpgrade(key) {
   if (key === 'house') S.energy = S.maxEnergy;
   notify(`The ${t.label} is yours.`);
   emit('upgraded', key);
+  changed();
+  return true;
+}
+
+export function buyCoal(n) {
+  const S = G.S, cost = COAL_COST * n;
+  if (S.gold < cost) return false;
+  S.gold -= cost; S.bag.coal = (S.bag.coal || 0) + n;
+  notify(`Bought ${n} coal.`);
   changed();
   return true;
 }

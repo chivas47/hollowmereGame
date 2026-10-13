@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v26: Smelting and bars
+- The furnace (20 copper ore, 25 stone) smelts 5 ore and 1 coal into a copper or iron bar. The charcoal kiln (20 wood, 2 copper bars) burns 10 wood into a coal. Stone rocks in the Hollow sometimes drop coal, and Bram sells it for 150g.
+- Tool and house upgrades, the barn, the stable, the mine lift and every recipe that took ore now take bars, at 5 ore to a bar. Ore you already have is still good: smelt it.
+
 ## v25: Clothing and tailoring
 - 25 pieces of clothing: 8 shirts, 5 trousers, 8 hats (you start in the straw hat) and 4 pairs of shoes. Shoes give defense: each point takes 1 off a monster's hit.
 - New for the farmhouse catalogue: a sewing machine (2,500g), dye pots (1,000g) and a mannequin (2,000g).

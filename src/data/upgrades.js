@@ -3,16 +3,16 @@
 export const UPGRADES = {
   can:   { name: 'Watering can', tiers: [
     { label: 'Basic can', cap: 40 },
-    { label: 'Copper can', cap: 55, cost: 2000, needs: { copper: 25 }, desc: 'Holds 55 water.' },
-    { label: 'Steel can', cap: 70, cost: 5000, needs: { iron: 25 }, desc: 'Holds 70 water.' },
+    { label: 'Copper can', cap: 55, cost: 2000, needs: { copperbar: 5 }, desc: 'Holds 55 water.' },
+    { label: 'Steel can', cap: 70, cost: 5000, needs: { ironbar: 5 }, desc: 'Holds 70 water.' },
   ] },
   hoe:   { name: 'Hoe', tiers: [
     { label: 'Hoe', reach: 1 },
-    { label: 'Wide hoe', reach: 3, cost: 2000, needs: { copper: 25 }, desc: 'Tills 3 tiles in a row for 3 energy.' },
+    { label: 'Wide hoe', reach: 3, cost: 2000, needs: { copperbar: 5 }, desc: 'Tills 3 tiles in a row for 3 energy.' },
   ] },
   axe:   { name: 'Axe', tiers: [
     { label: 'Axe', power: 1 },
-    { label: 'Copper axe', power: 2, cost: 2000, needs: { copper: 25 }, desc: 'Chops twice as fast and splits large stumps.' },
+    { label: 'Copper axe', power: 2, cost: 2000, needs: { copperbar: 5 }, desc: 'Chops twice as fast and splits large stumps.' },
   ] },
   rod:   { name: 'Fishing rod', tiers: [
     { label: 'Bamboo rod', zone: 0 },
@@ -21,10 +21,13 @@ export const UPGRADES = {
   house: { name: 'Farmhouse', tiers: [
     { label: 'Cottage', energy: 270 },
     { label: 'Extended farmhouse', energy: 300, cost: 10000, needs: { stone: 150 }, desc: 'A proper bed and a kitchen. Max energy rises to 300.' },
-    { label: 'Hillside manor', energy: 340, cost: 50000, needs: { stone: 200, iron: 50 }, desc: 'Stone walls and a nursery. Max energy rises to 340.' },
+    { label: 'Hillside manor', energy: 340, cost: 50000, needs: { stone: 200, ironbar: 10 }, desc: 'Stone walls and a nursery. Max energy rises to 340.' },
     { label: 'Manor with cellar', energy: 340, cost: 100000, desc: 'A cellar under the kitchen, lined with casks (Stardew: 100,000g).' },
   ] },
 };
+
+// Coal from Bram (Stardew's blacksmith sells it for 150g).
+export const COAL_COST = 150;
 
 export const tier = (S, key) => UPGRADES[key].tiers[S.upgrades[key]];
 
@@ -50,10 +53,10 @@ export const GREENHOUSE = {
 };
 
 // Stardew counterpart: the stable (10,000g, 100 hardwood, 5 iron bars). Hardwood is rare until new areas
-// arrive, so wood stands in for it; 5 bars become 25 iron ore as for the tools.
+// arrive, so wood stands in for it.
 export const STABLE = {
   cost: 10000,
-  needs: { wood: 100, iron: 25 },
+  needs: { wood: 100, ironbar: 5 },
   desc: 'Bram builds it overnight by the well, with a horse in it. Ride at 1.6 times walking speed; press H to whistle for it.',
   footprint: { x: 13, y: 1, w: 2, h: 2 },
   home: { x: 13, y: 3 },
@@ -63,7 +66,7 @@ export const STABLE = {
 
 export const BARN = {
   cost: 6000,
-  needs: { stone: 250, copper: 10 },
+  needs: { stone: 250, copperbar: 2 },
   desc: 'Bram builds it overnight by the west fence. Holds 4 cows or goats.',
   maxAnimals: 4,
   hayCost: 50,                                 // each animal eats 1 hay a night
