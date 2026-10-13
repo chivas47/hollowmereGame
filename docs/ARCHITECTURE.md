@@ -22,7 +22,7 @@ src/
     crafting.js       PLACEABLES, RECIPES, MACHINES, sprinklerTiles()
     skills.js quests.js festivals.js projects.js
   systems/            one feature per file
-    world.js          tile queries, collision, facing(), placePlayer(), useEnergy()
+    world.js          tile queries, collision, facing(), placePlayer(), useEnergy(), soilOf(map), placeKey()/parsePlaceKey()
     player.js         movement, map exits, player sprite (respects G.lock)
     clock.js          advances time, pass out at END
     days.js           sleep(): day:end -> date++ -> season:changed -> day:start -> day:report
@@ -49,6 +49,7 @@ src/
     festivals.js      festival day logic, contests, market stall, decorations
     village.js        fountain and cottage flavour text
     projects.js       village projects: fundProject(), funded()
+    greenhouse.js     greenhouse placement on the farm, ordering, entering
     debug.js          DEBUG actions for the debug panel
   render/
     pixel.js          r() rectangle primitive, rng(seed), blink()
@@ -84,7 +85,7 @@ Systems must stay importable without a DOM: keep `document` and `window` inside 
 | 100 | npcs.js | Facing a neighbour |
 | 95 | coop.js | Facing a chicken (pet) |
 | 94 | barn.js | Facing a cow or goat (pet) |
-| 72 | upgrades.js / coop.js / barn.js / mine.js / placeables.js / quests.js / festivals.js | Workbench K, coop C, barn A, mine entrance M, ladders U/L, placed object Y, quest board Q, festival table J |
+| 72 | upgrades.js / coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Workbench K, coop C, barn A, greenhouse G, mine entrance M, ladders U/L, placed object Y, quest board Q, festival table J |
 | 71 | village.js | Fountain F, cottage V (flavour text) |
 | 70 | buildings.js | Door D, stall S, bin B |
 | 66 | mine.js | Pickaxe on mine rocks |
@@ -99,7 +100,8 @@ Systems must stay importable without a DOM: keep `document` and `window` inside 
 
 | z | Owner | Draws |
 |---|---|---|
-| 10 | farming.js, forage.js | Soil, crops, forage |
+| 10 | farming.js, forage.js | Soil, crops, forage (soil of the current map) |
+| 12 | fishing.js | Ice hole in winter |
 | 20 | placeables.js | Sprinklers, machines, lanterns |
 | 30 | festivals.js | Bunting on festival days |
 | (entities) | player, npcs, coop, barn, monsters | y-sorted characters |
@@ -160,6 +162,8 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | K | Bram's workbench | yes |
 | C | chicken coop (written at runtime) | yes |
 | A | barn (written at runtime) | yes |
+| G | greenhouse building on the farm (written at runtime) | yes |
+| w, p | greenhouse glass wall, greenhouse floor | yes, no |
 | Y | crafted object (written at runtime from `G.S.placed`) | yes |
 | V, Q, F, J | village cottage, quest board, fountain, festival table | yes |
 | M | mine entrance | yes |
@@ -167,7 +171,9 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | r, c, i | stone, copper, iron rock | yes |
 | U, L | ladder up, ladder down | yes |
 
-`objects` on a map draw building art from `OBJECT_ART` in render/tiles.js. Maps with `base: 'cave'` use cave floor art and skip the night tint.
+`objects` on a map draw building art from `OBJECT_ART` in render/tiles.js. Maps with `base: 'cave'` use cave floor art and skip the night tint; `base: 'greenhouse'` uses plank floor and soil-bed art.
+
+Soil is per map: `soilOf(mapId)` returns `G.S.soil` (farm) or `G.S.greenSoil` (greenhouse). Placed objects are keyed by `placeKey(map, x, y)`: plain `"x,y"` on the farm (so old saves keep working), `"greenhouse:x,y"` inside.
 
 ## Recipes
 

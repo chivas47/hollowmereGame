@@ -75,6 +75,8 @@ Melon and pumpkin stay the best crops per tile, as their counterparts are. Start
 | Dusk grayling | 200g | 4 | Autumn |
 | Golden carp | 300g | 5 | Summer |
 | Lantern koi | 300g | 5 | Winter |
+| Snow eel | 85g | 3 | Winter, ice hole only |
+| Rime whitefish | 120g | 4 | Winter, ice hole only |
 
 Five fish per season. Bite odds are weighted toward easy fish (weight 6 minus difficulty). The green zone shrinks and the marker speeds up with difficulty.
 
@@ -108,6 +110,7 @@ Points: talk 20/day, gift 80 loved, 45 liked, 20 other (1 gift/day). 100 points 
 | Hillside manor | 50000 | 200 stone, 50 iron | Max energy 340 |
 | Chicken coop | 4000 | 150 stone | Up to 4 chickens at 800g |
 | Barn | 6000 | 250 stone, 10 copper | Up to 4 cows (1500g) or goats (4000g) |
+| Greenhouse | 35000 | none | 126 beds; any crop, any season |
 
 
 Chickens: each eats 1 feed a night (50g, bought at the coop). A fed chicken petted that day lays one egg (50g) next morning, collected at the coop.
@@ -156,6 +159,18 @@ Chickens: each eats 1 feed a night (50g, bought at the coop). A fed chicken pett
 - A request asks for 1 to 5 of an item you can get this season (in-season crops, forage, fish up to difficulty 3, stone, copper; iron after floor 6; eggs and milk once you own the animals). Materials ask for 3 to 25.
 - Reward: sell value x quantity x 3, rounded to 5g, paid at once, plus 50 friendship points with the neighbour who asked.
 
+### Greenhouse
+
+- Built overnight north of the path (footprint 9,1 to 12,2). Face it from the path to walk in; the door at the bottom of the interior leads back out.
+- 21 by 6 beds (126 tiles). Crops planted inside ignore seasons and never wither. A trough by the door refills the can.
+- Seeds are still only sold in season, so stock up before winter. Sprinklers, machines and lanterns can be placed on untilled beds.
+- Stardew counterpart: the bought greenhouse (35,000g, no materials).
+
+### Ice fishing
+
+- In winter the Wilds pond freezes. Casting anywhere but the ice hole (west edge, tile 15,10) is refused.
+- The hole draws from the season's fish plus two ice-only fish. Counterparts: eel (85g) and lingcod (120g).
+
 ### Village projects (quest board)
 
 | Project | Gold | Materials | Effect |
@@ -186,11 +201,11 @@ Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (
 
 ### Simulated balance (advisory)
 
-Balance warnings from tools/balance.mjs are information only since v11: values follow the Stardew scale instead of being tuned to the checks. Latest run (strategy full, 2 years, 5 runs): about 704,000g unspent at the end; the shopping list is finished by day 63 because 270 energy leaves plenty for mining iron. Quests pay 3x and artisan goods roughly doubled their share of income.
+Balance warnings from tools/balance.mjs are information only since v11: values follow the Stardew scale instead of being tuned to the checks. Latest run (strategy full, 2 years, 5 runs, v12): about 989,000g at the end (+40% from the greenhouse); crops are 55% of income; the greenhouse is bought around Summer 16 of year 1.
 
 - Sprinklers make watering free once you have the ore. That is intended, but it removes a daily energy cost; watch whether energy still matters by mid-summer.
 - Hotbar changed in v8: crops moved from keys 6 to 9 into one seed slot on key 6. Old saves keep the crop they had selected. v9 adds slot 7 (kit) at the end, so no key moved.
-- Winter still has no crops; it now has 2 forage items and 5 fish.
+- Winter crops only grow in the greenhouse; outdoors winter has 2 forage items, 5 pond fish and 2 ice-hole fish.
 - Four neighbours; festivals now, but no heart-level scenes. Quest friendship can pass 3 hearts; the reward then arrives on the next talk or gift.
 - On non-festival days the village is empty: neighbours still only walk the farm.
 - Two placed objects can wall the player in; picking one up from the inside fixes it, but nothing prevents it.

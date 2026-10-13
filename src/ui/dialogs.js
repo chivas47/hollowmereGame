@@ -61,12 +61,12 @@ on('day:report', (r) => {
   if (r.newSeason) {
     html += `<p class="gift">${r.newSeason} has arrived.`;
     if (r.withered) html += ` ${plural(r.withered, 'crop')} withered with the change of season.`;
-    if (r.newSeason === 'Winter') html += ' Nothing grows in winter, but the wilds still have frost roots.';
+    if (r.newSeason === 'Winter') html += ' Nothing grows outside in winter. The pond has frozen: fish through the ice hole on its west edge.';
     html += '</p>';
   }
   if (r.festival) html += `<p class="gift">Today is the ${r.festival.name}! Head to the village square, ${fmtTime(FESTIVAL_HOURS.from)} to ${fmtTime(FESTIVAL_HOURS.to)}. Your neighbours will be there instead of the farm.</p>`;
   if (r.festivalSoon) html += `<p class="role">The ${r.festivalSoon.f.name} is in ${plural(r.festivalSoon.inDays, 'day')} (${r.festivalSoon.f.season} ${r.festivalSoon.f.day}).</p>`;
-  if (r.built) html += `<p class="gift">Bram finished your ${r.built}. Visit it to buy animals.</p>`;
+  if (r.built) html += `<p class="gift">Bram finished your ${r.built}.</p>`;
   if (r.eggs) html += `<p class="gift">Your chickens laid ${plural(r.eggs, 'egg')}. Collect them at the coop.</p>`;
   if (r.milk) html += `<p class="gift">Your animals gave ${plural(r.milk, 'pail')} of milk. Collect it at the barn.</p>`;
   if (r.hungryHens) html += `<p class="role">${plural(r.hungryHens, 'chicken')} went hungry: the coop ran out of feed. Buy more at the coop.</p>`;
