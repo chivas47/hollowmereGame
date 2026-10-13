@@ -101,11 +101,12 @@ Points: talk 20/day, gift 80 loved, 45 liked, 20 other (1 gift/day). 100 points 
 | Wide hoe | 800 | 8 copper | Tills 3 tiles for 3 energy |
 | Ashwood rod | 700 | none | Green zone +14 px |
 | Extended farmhouse | 2500 | 60 stone | Max energy 140 |
+| Hillside manor | 12000 | 120 stone, 25 iron | Max energy 170 |
 | Chicken coop | 1200 | 30 stone | Up to 4 chickens at 300g |
 
 | Barn | 3000 | 50 stone, 10 copper | Up to 4 cows (900g) or goats (1100g) |
 
-Chickens: pet daily, a petted chicken lays one egg (50g) next morning, collected at the coop.
+Chickens: each eats 1 feed a night (5g, bought at the coop). A fed chicken petted that day lays one egg (50g) next morning, collected at the coop.
 
 ### Barn
 
@@ -120,6 +121,7 @@ Chickens: pet daily, a petted chicken lays one egg (50g) next morning, collected
 |---|---|---|---|
 | Copper sprinkler | 75 | 3 copper, 5 stone | Waters the 4 tiles next to it every morning |
 | Iron sprinkler | 200 | 3 iron, 2 copper | Waters the 8 tiles around it every morning |
+| Steel sprinkler | 900 | 5 iron, 5 slime gel | Waters the 24 tiles in a 5 by 5 square every morning |
 | Brine crock | 500 | 30 stone, 4 copper | Any crop or forage item -> jarred version in 3 nights |
 | Butter churn | 400 | 6 copper | Milk -> butter (190g) overnight |
 | Cheese vat | 600 | 4 iron | Goat milk -> soft cheese (240g) overnight |
@@ -150,6 +152,13 @@ Chickens: pet daily, a petted chicken lays one egg (50g) next morning, collected
 - A request asks for 1 to 5 of an item you can get this season (in-season crops, forage, fish up to difficulty 3, stone, copper; iron after floor 6; eggs and milk once you own the animals). Materials ask for 3 to 25.
 - Reward: sell value x quantity x 1.4 + 25g, rounded to 5g, paid at once, plus 50 friendship points with the neighbour who asked.
 
+### Village projects (quest board)
+
+| Project | Gold | Materials | Effect |
+|---|---|---|---|
+| Mine lift | 20000 | 40 iron | Start on any mine floor reached, not just every fifth |
+| Street lamps | 12000 | 60 stone | The day ends at 3 am instead of 2 am |
+
 ### Festivals (village square, 9:00 to 22:00)
 
 | Day | Festival | What happens | Prizes |
@@ -163,7 +172,7 @@ Chickens: pet daily, a petted chicken lays one egg (50g) next morning, collected
 
 ### Gold sinks
 
-One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up to 4,400g of animals, crafting (machines 400 to 600g each, sprinklers 75 to 200g each; a full field of iron sprinklers is about 1,600g and 24 iron), lanterns 350g each with no cap. Recurring: seeds and hay (10g per animal per night).
+One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up to 4,400g of animals, crafting (machines 400 to 600g each, sprinklers 75 to 200g each; a full field of iron sprinklers is about 1,600g and 24 iron), lanterns 350g each with no cap. Hillside manor 12,000g, village projects 32,000g. Recurring: seeds, hay (10g per animal per night) and chicken feed (5g per chicken per night).
 
 ### Energy costs
 
@@ -180,6 +189,8 @@ The bot plays efficiently (teleporting, no mine damage), so treat these as an up
 - **Skill bonuses compound.** Farming, foraging and mining reach level 10 in year 1, and level 10 means 50% bonus items.
 - **Finding a ladder costs about 45 rocks a floor.** Iron (floor 6) arrives anywhere from Winter Y1 to Summer Y2, so the cheese vat and iron sprinklers stall the shopping list.
 - **Late fishing is very strong** (26% of income over two years): sprinklers free up all the energy, and 190 max energy is about 60 casts a day.
+- **v10 sinks barely move it.** The manor, projects and feed absorb about 47,000g over two years, but the manor's extra energy feeds more fishing, so end gold drops only 4% (770,322g to 740,761g). Closing the gap needs income cuts (roadmap: economy pass), not just more things to buy.
+- The bot never buys the steel sprinkler: its 3 by 3 field blocks are already fully watered by iron sprinklers.
 
 - **Balance is untested, and v9 makes that worse.** All prices were set by feel. Nobody has played a full season without debug tools. v9 adds three new income streams (barn, artisan goods, quest rewards) and contest prizes on top of untested crop prices. A real playthrough is now the top priority.
 - **Artisan goods may be too strong.** A crock roughly doubles any crop's value and pays for itself in under two weeks. If a playthrough shows crocks replacing shipping, raise the crock to 4 nights or lower jars to 1.75x.
@@ -192,14 +203,13 @@ The bot plays efficiently (teleporting, no mine damage), so treat these as an up
 - Two placed objects can wall the player in; picking one up from the inside fixes it, but nothing prevents it.
 - Neighbours walk straight through trees and the coop on their way out; they have no collision.
 - No sound.
-- Chickens never leave the yard or get hungry; they have no feed cost even though barn animals now need hay.
+- Chickens never leave the yard.
 - Mine floors have no special floors (treasure, boss, elevator).
 
 ## Roadmap candidates (not committed)
 
 1. Balance pass from a real playthrough.
 2. Winter content (greenhouse, ice fishing spot).
-3. Chicken feed, to match the barn's hay.
-4. Neighbours who spend non-festival days in the village.
-5. Sound effects and a simple music loop (Web Audio, generated).
-6. Save export and import (a downloadable save file).
+3. Neighbours who spend non-festival days in the village.
+4. Sound effects and a simple music loop (Web Audio, generated).
+5. Save export and import (a downloadable save file).

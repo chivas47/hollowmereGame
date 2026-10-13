@@ -44,10 +44,17 @@ function syncFlock() {
 on('game:loaded', () => { flock.length = 0; placeCoop(); });
 on('game:reset', () => { flock.length = 0; });
 
+// Each chicken eats 1 feed a night; a fed chicken petted that day lays an egg.
 on('day:end', (report) => {
-  const laid = G.S.chickens.filter((c) => c.pet === G.S.day).length;
-  G.S.eggs += laid;
-  report.eggs = laid;
+  const S = G.S;
+  let laid = 0, hungry = 0;
+  for (const c of S.chickens) {
+    if (S.feed <= 0) { hungry++; continue; }
+    S.feed--;
+    if (c.pet === S.day) laid++;
+  }
+  S.eggs += laid;
+  report.eggs = laid; report.hungryHens = hungry;
 });
 
 on('day:start', (report) => {
@@ -104,6 +111,14 @@ export function buyChicken() {
   if (S.chickens.length >= COOP.maxChickens || S.gold < COOP.chickenCost) return false;
   S.gold -= COOP.chickenCost;
   S.chickens.push({ name: COOP.names[S.chickens.length], pet: 0 });
+  changed();
+  return true;
+}
+
+export function buyFeed(n) {
+  const S = G.S, cost = COOP.feedCost * n;
+  if (S.gold < cost) return false;
+  S.gold -= cost; S.feed += n;
   changed();
   return true;
 }

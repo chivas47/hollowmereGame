@@ -29,6 +29,8 @@ export function newState() {
     built: { coop: false, barn: false },                // false | 'pending' | true
     chickens: [],                                       // { name, pet: day last petted }
     eggs: 0,                                            // eggs waiting in the coop
+    feed: 0,                                            // chicken feed at the coop
+    projects: {},                                       // village projects funded: key -> true
     hp: 100, maxHp: 100,                                // health, only lost in the mine
     mineDeepest: 0,                                     // deepest mine floor reached
     kit: Object.fromEntries(Object.keys(PLACEABLES).map((k) => [k, 0])),   // crafted objects not yet placed
@@ -57,6 +59,9 @@ export function merge(saved) {
   s.built = Object.assign(newState().built, saved.built || {});
   if (!Array.isArray(s.forage)) s.forage = [];
   if (!Array.isArray(s.chickens)) s.chickens = [];
+  // v10: chickens need feed. Existing flocks get a week's worth so they keep laying.
+  if (saved.feed === undefined) s.feed = s.chickens.length * 7;
+  if (!s.projects || typeof s.projects !== 'object') s.projects = {};
   s.kit = Object.assign(newState().kit, saved.kit || {});
   s.skills = Object.assign(newState().skills, saved.skills || {});
   s.barnGoods = Object.assign(newState().barnGoods, saved.barnGoods || {});

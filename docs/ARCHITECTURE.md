@@ -15,12 +15,12 @@ src/
     state.js          newState(), merge(saved), load(), save()  (localStorage)
     events.js         on(event, fn), emit(event, data), changed(), notify(msg)
     registry.js       addInteraction, addLayer, addEntities, addUpdater (+ run/draw/collect)
-    time.js           dateParts(day), today(), fmtTime(minutes)
+    time.js           dateParts(day), today(), fmtTime(minutes), dayEnd() (END, later with street lamps)
   data/               content only, no logic
     crops.js forage.js fish.js minerals.js products.js artisan.js items.js
     npcs.js maps.js seasons.js hotbar.js upgrades.js (incl. COOP, BARN)
     crafting.js       PLACEABLES, RECIPES, MACHINES, sprinklerTiles()
-    skills.js quests.js festivals.js
+    skills.js quests.js festivals.js projects.js
   systems/            one feature per file
     world.js          tile queries, collision, facing(), placePlayer(), useEnergy()
     player.js         movement, map exits, player sprite (respects G.lock)
@@ -48,6 +48,7 @@ src/
     quests.js         quest board requests, deliver()
     festivals.js      festival day logic, contests, market stall, decorations
     village.js        fountain and cottage flavour text
+    projects.js       village projects: fundProject(), funded()
     debug.js          DEBUG actions for the debug panel
   render/
     pixel.js          r() rectangle primitive, rng(seed), blink()

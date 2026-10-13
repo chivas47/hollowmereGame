@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v10: Sinks and upkeep
+- Chickens eat 1 feed a night (5g, bought at the coop); unfed chickens do not lay. Saves from before v10 get 7 nights of feed per chicken.
+- Steel sprinkler: waters a 5 by 5 square (24 tiles). 900g, 5 iron, 5 slime gel.
+- Farmhouse tier 3, Hillside manor: 12,000g, 120 stone, 25 iron. Max energy 170.
+- Village projects on the quest board: Mine lift (20,000g, 40 iron: start on any floor reached) and Street lamps (12,000g, 60 stone: the day ends at 3 am).
+- Simulator bot buys feed, the manor and both projects.
+
 ## Tooling: automatic balance review
 - CI simulates the base branch and the PR, comments the before/after report on the PR and fails on a new balance warning.
 - `tools/balance.mjs --compare base.json --gate` does the same locally.

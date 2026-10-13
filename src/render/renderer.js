@@ -1,9 +1,9 @@
 // Composes a frame: cached background, ground layers, facing outline, y-sorted entities, overlays, night tint.
 import { G } from '../core/game.js';
-import { T, W, H, END } from '../core/constants.js';
+import { T, W, H } from '../core/constants.js';
 import { on } from '../core/events.js';
 import { drawLayers, collectEntities } from '../core/registry.js';
-import { today } from '../core/time.js';
+import { today, dayEnd } from '../core/time.js';
 import { MAPS } from '../data/maps.js';
 import { PAL } from '../data/seasons.js';
 import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, OBJECT_ART, CAVE_ART } from './tiles.js';
@@ -46,7 +46,7 @@ export function draw(c) {
   collectEntities().sort((a, b) => a.y - b.y).forEach((e) => e.draw(c));
   drawLayers(c, 50, 999);
   if (G.S.time > 18 * 60 && MAPS[G.S.map].base !== 'cave') {
-    const a = Math.min(0.5, (G.S.time - 18 * 60) / (END - 18 * 60) * 0.55);
+    const a = Math.min(0.5, (G.S.time - 18 * 60) / (dayEnd() - 18 * 60) * 0.55);
     c.fillStyle = `rgba(18,22,58,${a})`; c.fillRect(0, 0, W * T, H * T);
   }
 }

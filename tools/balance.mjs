@@ -35,8 +35,8 @@ const BEDTIME = 24 * 60;
 const STRATEGIES = {
   full: ['can', 'coop', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'house',
     'barn', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', ...Array(9).fill('sprinkler2'), 'hoe', 'rod', 'can',
-    'chicken', 'chicken', 'crock', 'crock', 'crock'],
-  crops: ['can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'rod', 'can'],
+    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift'],
+  crops: ['can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
 };
 
 // Warnings when the economy drifts from the design. Each returns a message or null.
@@ -83,7 +83,9 @@ const { sleep } = await load('systems/days.js');
 const { placePlayer, tileAt, tileOf } = await load('systems/world.js');
 const { buy, ship } = await load('systems/economy.js');
 const { nextTier, buyUpgrade, orderCoop, affordable } = await load('systems/upgrades.js');
-const { buyChicken, collectEggs, flock } = await load('systems/coop.js');
+const { buyChicken, collectEggs, buyFeed, flock } = await load('systems/coop.js');
+const { PROJECTS } = await load('data/projects.js');
+const { funded, fundProject } = await load('systems/projects.js');
 const { orderBarn, buyAnimal, buyHay, collectMilk, herd } = await load('systems/barn.js');
 const { craft } = await load('systems/crafting.js');
 const { pickUp } = await load('systems/placeables.js');
@@ -146,6 +148,7 @@ function simulate(runSeed) {
     cow: { cost: () => BARN.animals.cow.cost, needs: () => ({}), wait: () => S().built.barn !== true, ok: () => S().animals.length < BARN.maxAnimals, buy: () => track('animals', () => buyAnimal('cow')) },
     goat: { cost: () => BARN.animals.goat.cost, needs: () => ({}), wait: () => S().built.barn !== true, ok: () => S().animals.length < BARN.maxAnimals, buy: () => track('animals', () => buyAnimal('goat')) },
   };
+  for (const k of Object.keys(PROJECTS)) GOAL[k] = { cost: () => PROJECTS[k].cost, needs: () => PROJECTS[k].needs, ok: () => !funded(k), buy: () => track('projects', () => fundProject(k)) };
   for (const k of Object.keys(RECIPES)) GOAL[k] = { cost: () => RECIPES[k].cost, needs: () => RECIPES[k].needs, ok: () => true, buy: () => track('crafting', () => craft(k)) };
 
   const missingMats = () => {
@@ -190,6 +193,7 @@ function simulate(runSeed) {
   function animals() {
     const s = S();
     collectEggs(); collectMilk();
+    if (s.chickens.length && s.feed < s.chickens.length * 2) track('feed', () => buyFeed(Math.min(Math.floor(s.gold / COOP.feedCost), s.chickens.length * 7)));
     if (s.animals.length && s.hay < s.animals.length * 2) track('hay', () => buyHay(Math.min(Math.floor(s.gold / BARN.hayCost), s.animals.length * 7)));
     runUpdaters(0);   // places chickens and animals in their yards
     [...flock, ...herd].forEach((a) => { const t = tileOf(a.x, a.y); use('farm', t.tx, t.ty, 'hoe'); spend(TIME.pet); });

@@ -61,7 +61,9 @@ export function leaveMine() {
   changed();
 }
 
+// Floors you can start on: 1 and every fifth floor reached, or every floor reached with the mine lift.
 export function checkpoints() {
+  if (G.S.projects?.lift) return Array.from({ length: Math.max(1, G.S.mineDeepest) }, (_, i) => i + 1);
   const out = [1];
   for (let f = CHECKPOINT_EVERY; f <= G.S.mineDeepest; f += CHECKPOINT_EVERY) out.push(f);
   return out;
