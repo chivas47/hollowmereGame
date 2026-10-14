@@ -53,3 +53,34 @@ export function removeRing(slot) {
 }
 export const ringName = (k) => ITEMS[k]?.name;
 // v37: floor finds now wait in a treasure chest on their floor (systems/treasure.js).
+
+// ---- v39: the forge's gems and enchantments, and trinkets ----
+// G.S.forged[weapon] = { gem: n }; G.S.weaponEnch[weapon] = enchant; G.S.toolEnch[tool] = enchant; G.S.trinket = key.
+export const gemsOn = (key = G.S.weapon) => G.S.forged[key] || {};
+export const gemCount = (key = G.S.weapon) => Object.values(gemsOn(key)).reduce((a, n) => a + n, 0);
+const g = (gem) => gemsOn()[gem] || 0;
+export const weaponEnchant = () => G.S.weaponEnch[G.S.weapon] || null;
+export const toolEnchant = (tool) => G.S.toolEnch[tool] || null;
+// Multipliers and additions the forge puts on the weapon in use.
+export const forgeBonus = () => ({
+  damage: 1 + 0.1 * g('heartstone'),
+  crit: 0.04 * g('tidestone'),
+  critPower: 1 + 0.25 * g('frosttear'),
+  speed: 1 - 0.1 * g('emberquartz'),
+  knock: 1 + 0.25 * g('violet'),
+  defense: g('ambergem'),
+});
+
+export function wearTrinket(key) {
+  const S = G.S;
+  if (!ITEMS[key]?.trinket || !(S.bag[key] > 0)) return false;
+  if (S.trinket) S.bag[S.trinket] = (S.bag[S.trinket] || 0) + 1;
+  S.bag[key]--; S.trinket = key;
+  changed(); return true;
+}
+export function removeTrinket() {
+  const S = G.S;
+  if (!S.trinket) return false;
+  S.bag[S.trinket] = (S.bag[S.trinket] || 0) + 1; S.trinket = null;
+  changed(); return true;
+}

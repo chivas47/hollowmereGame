@@ -3,6 +3,7 @@ import { G } from '../core/game.js';
 import { T, DIRS } from '../core/constants.js';
 import { notify } from '../core/events.js';
 import { MAPS, SOLID } from '../data/maps.js';
+import { HOTBAR } from '../data/hotbar.js';
 
 export const currentMap = () => MAPS[G.S.map];
 
@@ -42,6 +43,7 @@ export function parsePlaceKey(k) {
 }
 
 export function useEnergy(n) {
+  if (G.S.toolEnch?.[HOTBAR[G.S.slot]] === 'efficient') return true;   // v39: an efficient tool uses no energy
   if (G.S.energy < n) { notify('You are too tired. Head to bed.'); return false; }
   G.S.energy -= n;
   return true;

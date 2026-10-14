@@ -34,6 +34,8 @@ export const GOALS = {
   // v38. Stardew: 100 mummies (arcane hat), 50 pepper rex (knight's helmet).
   wraith:   { n: 100,  reward: 'veilhat',   label: 'sand wraiths' },
   rex:      { n: 50,   reward: 'crestedhelm', label: 'scorch rex' },
+  // v39. Stardew: 150 magma sprites (a phone for Marlon); ours gives a trinket.
+  sprite:   { n: 150,  reward: 'magpie',    label: 'magma sprites' },
 };
 
 // Bombs: radius in tiles (Stardew's 3, 5 and 7, fitted to our smaller floors), damage to monsters; you take half.
@@ -67,4 +69,6 @@ export const chestLoot = (floor) => [
   ['coal', 5, 10],
   [floor >= 60 ? 'blastbomb' : 'emberbomb', 2, 4],
   [floor >= 50 ? 'heartstone' : floor >= 25 ? 'tidestone' : 'violet', 1, 2],
+  ...(floor >= 100 ? [[['lanternmoth', 'magpie', 'frostrod', 'toad'][Math.floor(Math.random() * 4)], 1, 1]] : []),   // v39: trinkets
+  ...(floor >= 130 ? [['cinder', 8, 15], ['starstone', 1, 1]] : []),
 ];

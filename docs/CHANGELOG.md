@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v39: The Ember Vent, the forge and trinkets
+- The Sunken Cavern's floor 10 has a door to the Ember Vent: ten floors of basalt and lava with cinder rocks, magma sprites and ember golems. Its top floor is the forge; once you reach it, the Hollow's entrance takes you straight there.
+- The forge: set up to 3 gems into a weapon (heartstone damage, tidestone critical chance, frost tear critical power, ember quartz speed, violet stone knockback, amber defense) for cinder shards, or enchant a weapon or a tool with 20 cinder shards and a starstone.
+- Tool enchantments: efficient (no energy), powerful (an extra hit), bottomless (the can never empties), calm (a wider fishing zone). Weapon enchantments: vampiric, crusader, bug killer, haymaker.
+- Trinkets, one worn at a time, from deep chests: the lantern moth heals, the magpie charm finds gold, the frost rod freezes monsters, the toad charm eats small ones.
+- Bram upgrades the pickaxe: copper, steel, gold and umbrite, each doing more hits a swing.
+- Hale adds a goal: 150 magma sprites, for the magpie charm.
+
 ## v38: The Sunken Cavern
 - Floor 80 of the Hollow has a sealed door. Behind it, the Sunken Cavern: a harder sand-floored dungeon where every visit starts at floor 1 (no lift), with more monsters and loot chests twice as often.
 - Two cavern monsters, the sand wraith and the scorch rex, with bats, bone walkers and serpents at cavern strength. Hale adds two slaying goals with new hats.

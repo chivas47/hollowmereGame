@@ -17,6 +17,15 @@ export const UPGRADES = {
     { label: 'Axe', power: 1 },
     { label: 'Copper axe', power: 2, cost: 2000, needs: { copperbar: 5 }, desc: 'Chops twice as fast and splits large stumps.' },
   ] },
+  // v39. Stardew's pickaxe upgrades: copper 2,000g, steel 5,000g, gold 10,000g, iridium 25,000g, 5 bars each.
+  // power: hits each swing does to a rock.
+  pick:  { name: 'Pickaxe', tiers: [
+    { label: 'Pickaxe', power: 1 },
+    { label: 'Copper pickaxe', power: 2, cost: 2000, needs: { copperbar: 5 }, desc: 'Each swing does 2 hits.' },
+    { label: 'Steel pickaxe', power: 3, cost: 5000, needs: { ironbar: 5 }, desc: 'Each swing does 3 hits.' },
+    { label: 'Gold pickaxe', power: 4, cost: 10000, needs: { goldbar: 5 }, desc: 'Each swing does 4 hits.' },
+    { label: 'Umbrite pickaxe', power: 6, cost: 25000, needs: { umbritebar: 5 }, desc: 'Breaks any rock in one swing.' },
+  ] },
   rod:   { name: 'Fishing rod', tiers: [
     { label: 'Bamboo rod', zone: 0 },
     { label: 'Ashwood rod', zone: 14, cost: 1800, desc: 'A wider green zone when reeling.' },

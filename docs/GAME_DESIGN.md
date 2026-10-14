@@ -578,6 +578,28 @@ Stardew's Skull Cavern by role, reached from the Hollow instead of a desert (the
 - Lodge goals: 100 sand wraiths (Desert veil hat; Stardew 100 mummies), 50 scorch rex (Crested helm; Stardew 50 pepper rex).
 - Dune blade: sword, 32 damage (Stardew's obsidian edge, 30 to 45).
 
+### The Ember Vent, the forge and trinkets (v39)
+
+Stardew's volcano dungeon and its dwarf forge, by role. A door on Sunken Cavern floor 10 opens the vent; it has 10 floors (strength 130 + 3n), and floor 10 is a quiet room with the forge. Once reached, the Hollow's entrance offers the vent's floor 1 and the forge.
+
+- Floors: 8% lava (solid), rocks 30% cinder (5 hits, 1 to 3 cinder shards, 50g each like Stardew's), 8% umbrite, 12% gold; 7 to 14 monsters: magma sprite (flies, 35 XP), ember golem (slow, tough, 45 XP), plus scorch rex and serpents; a chest on 15% of floors (trinkets, cinder shards and starstones join the loot from strength 100 and 130).
+- Gem forging (Stardew: ruby, aquamarine, jade, emerald, amethyst, topaz): up to 3 gems a weapon; the gem plus 10, 15, then 20 cinder shards.
+
+| Gem | Effect |
+|---|---|
+| Heartstone | +10% damage |
+| Tidestone | +4% critical chance |
+| Frost tear | criticals 25% stronger |
+| Ember quartz | swings 10% faster |
+| Violet stone | +25% knockback |
+| Hollow amber | +1 defense while it is the weapon in use |
+
+- Enchanting: 20 cinder shards and a starstone (Stardew: a prismatic shard and 20 cinder shards). The result is random among those that fit and replaces the old one.
+  - Weapons: vampiric (+3 health a defeat), crusader (+50% against bone walkers and sand wraiths), bug killer (double against mites), haymaker (30% chance of fiber, cloth or coal a defeat).
+  - Tools: efficient (no energy; any tool), powerful (one more hit; pickaxe and axe), bottomless (watering can), calm (wider fishing zone; rod).
+- Trinkets (Stardew 1.6's fairy box, parrot egg, ice rod, frog egg), one worn, fixed strength, sell 1,000g: lantern moth (1 health every 3 s underground), magpie charm (2 to 12g a defeat), frost rod (freezes the nearest monster 2 s, every 6 s), toad charm (eats a monster with 25 health or less within 3 tiles, every 10 s). From chests at strength 100 and up; the magpie charm also for 150 magma sprites.
+- Pickaxe at Bram's (Stardew's pickaxe upgrades, 5 bars each): copper 2,000g (2 hits a swing), steel 5,000g (3), gold 10,000g (4), umbrite 25,000g (6).
+
 ## Known issues and open questions
 
 ### Simulated balance (advisory)
@@ -615,6 +637,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Grazing animals stay in their yards (Stardew's roam the farm). The silo does not cap the hay loft.
 - Mine floors have no boss or monster-infested floors yet.
 - The balance bot never goes deeper than about floor 8, so the cavern, gold and umbrite and the two new can tiers never appear in the simulator.
+- Trinkets need no combat mastery (Stardew's do); mastery comes with item 19. The forge does not combine rings or reroll trinkets.
 - The lodge has no opening hours; shop hours come with item 22.
 - Lodge prices for the dirk, shortsword and boots are fitted by role; the wiki was out of reach when they were set.
 - The balance bot opens chests, uses chest bombs where they break the most rocks, has Bram crack its geodes and buys the lodge's club; it does not craft bombs or fight, so it never completes a slaying goal.

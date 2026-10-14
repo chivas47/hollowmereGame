@@ -30,8 +30,11 @@ export const MONSTERS = {
   skeleton: { name: 'Bone walker', from: 30, cavern: true, move: 'walk',  hp: (f) => 12 + Math.floor(f / 3), dmg: (f) => 10 + f, speed: () => 22, xp: 15, drop: ['iron', 0.3], color: '#e8e0d0' },
   // v38. cavern: also lives in the Sunken Cavern; cavernOnly: only there (Stardew's mummies and pepper rex).
   wraith:   { name: 'Sand wraith', from: 0, cavernOnly: true, move: 'walk', hp: (f) => 30 + Math.floor(f / 3), dmg: (f) => 18 + Math.floor(f / 4), speed: () => 18, xp: 25, drop: ['cloth', 0.1], color: '#d9c39a' },
-  rex:      { name: 'Scorch rex',  from: 0, cavernOnly: true, move: 'fly',  hp: (f) => 22 + Math.floor(f / 4), dmg: (f) => 20 + Math.floor(f / 4), speed: () => 40, xp: 30, drop: ['coal', 0.4], color: '#c8352f' },
-  serpent:  { name: 'Hollow serpent', from: 50, cavern: true, move: 'fly', hp: (f) => 20 + Math.floor(f / 2), dmg: (f) => 15 + f, speed: () => 44, xp: 20, drop: ['violet', 0.05], color: '#5f8a4a' },
+  rex:      { name: 'Scorch rex',  from: 0, cavernOnly: true, vent: true, move: 'fly',  hp: (f) => 22 + Math.floor(f / 4), dmg: (f) => 20 + Math.floor(f / 4), speed: () => 40, xp: 30, drop: ['coal', 0.4], color: '#c8352f' },
+  // v39. vent: also in the Ember Vent; ventOnly: only there (Stardew's magma sprites and lava lurks).
+  sprite:   { name: 'Magma sprite', from: 0, ventOnly: true, move: 'fly',  hp: (f) => 30 + Math.floor(f / 4), dmg: (f) => 24 + Math.floor(f / 5), speed: () => 46, xp: 35, drop: ['cinder', 0.5], color: '#e9862a' },
+  golem:    { name: 'Ember golem',  from: 0, ventOnly: true, move: 'walk', hp: (f) => 60 + Math.floor(f / 2), dmg: (f) => 28 + Math.floor(f / 5), speed: () => 14, xp: 45, drop: ['cinder', 0.8], color: '#5a3a30' },
+  serpent:  { name: 'Hollow serpent', from: 50, cavern: true, vent: true, move: 'fly', hp: (f) => 20 + Math.floor(f / 2), dmg: (f) => 15 + f, speed: () => 44, xp: 20, drop: ['violet', 0.05], color: '#5f8a4a' },
 };
 export const MONSTER_COUNT = (f) => Math.min(10, 2 + Math.floor(f / 2));
 // Each kill: a small chance of a weapon or ring from the floor's pool (Stardew: monsters rarely drop rings and weapons).
@@ -58,6 +61,6 @@ export const FLOOR_FINDS = {
   40: 'cutlass', 45: 'glowring', 55: 'mallet', 60: 'emberboots', 65: 'tidering', 70: 'greatsword', 80: 'deepboots',
 };
 // Rare drops by depth.
-export const DROP_POOL = (f, zone) => (zone === 'cavern' ? ['duneblade', 'leechring', 'thiefring'] : [
+export const DROP_POOL = (f, zone) => (zone === 'cavern' || zone === 'vent' ? ['duneblade', 'leechring', 'thiefring'] : [
   ...(f >= 3 ? ['dirk'] : []), ...(f >= 12 ? ['slimeward', 'mossring'] : []), ...(f >= 30 ? ['leechring', 'thiefring'] : []), ...(f >= 50 ? ['shank'] : []),
 ]);

@@ -15,7 +15,8 @@ import { PROFESSIONS } from '../data/professions.js';
 import { pending } from '../systems/professions.js';
 import { edible, eat } from '../systems/cooking.js';
 import { WEAPONS, RINGS } from '../data/weapons.js';
-import { weapon, chooseWeapon, wearRing, removeRing } from '../systems/gear.js';
+import { weapon, chooseWeapon, wearRing, removeRing, wearTrinket, removeTrinket } from '../systems/gear.js';
+import { TRINKETS } from '../data/forge.js';
 import { openModal, closeModal } from './modal.js';
 import { esc } from './dom.js';
 import { wardrobeHtml } from './clothing.js';
@@ -42,7 +43,7 @@ on('ui:inventory', () => {
   const tools = row(tier(S, 'hoe').label, tier(S, 'hoe').reach > 1 ? 'Tills 3 in a row' : 'Tills grass')
     + row(tier(S, 'can').label, `Holds ${S.maxw}`)
     + row(tier(S, 'rod').label, tier(S, 'rod').zone ? 'Wider reel zone' : 'Cast at the pond')
-    + row('Pickaxe', 'Breaks mine rocks') + row(weapon().name, `Slot 5: ${weapon().kind}, damage ${weapon().damage}`)
+    + row(tier(S, 'pick').label, `Breaks mine rocks, ${tier(S, 'pick').power} hit${tier(S, 'pick').power > 1 ? 's' : ''} a swing`) + row(weapon().name, `Slot 5: ${weapon().kind}, damage ${weapon().damage}`)
     + row(tier(S, 'house').label, `Max energy ${S.maxEnergy}`);
 
   const skills = Object.entries(SKILLS).map(([k, sk]) => {
@@ -54,6 +55,9 @@ on('ui:inventory', () => {
   const weapons = S.weapons.map((k) => row(`${WEAPONS[k].name} <span class="role">${WEAPONS[k].kind}, damage ${WEAPONS[k].damage}</span>`, S.weapon === k ? 'In slot 5' : `<button data-weapon="${k}">Use</button>`)).join('');
   const worn = S.rings.map((k, i) => (k ? row(`${RINGS[k].name} <span class="role">${RINGS[k].desc}</span>`, `<button data-ringoff="${i}">Take off</button>`) : '')).join('');
   const spare = Object.keys(RINGS).filter((k) => S.bag[k] > 0).map((k) => row(`${RINGS[k].name} × ${S.bag[k]} <span class="role">${RINGS[k].desc}</span>`, `<button data-ring="${k}">Wear</button>`)).join('');
+  // v39: the trinket worn and spare ones
+  const trinkets = (S.trinket ? row(`${TRINKETS[S.trinket].name} <span class="role">${TRINKETS[S.trinket].desc}</span>`, '<button data-trinketoff>Take off</button>') : '')
+    + Object.keys(TRINKETS).filter((k) => S.bag[k] > 0).map((k) => row(`${TRINKETS[k].name} × ${S.bag[k]} <span class="role">${TRINKETS[k].desc}</span>`, `<button data-trinket="${k}">Wear</button>`)).join('');
   const kitKeys = Object.keys(PLACEABLES).filter((k) => S.kit[k] > 0);
   const kit = kitKeys.length ? kitKeys.map((k) => row(PLACEABLES[k].name, `× ${S.kit[k]}`)).join('') : '<p class="role">Nothing crafted. Press C to craft.</p>';
 
@@ -70,6 +74,7 @@ on('ui:inventory', () => {
     <h3>Kit <span class="role">slot 7 places these</span></h3>${kit}
     <h3>Weapons <span class="role">slot 5 swings the one in use</span></h3>${weapons}
     ${worn || spare ? `<h3>Rings <span class="role">two at a time</span></h3>${worn}${spare}` : ''}
+    ${trinkets ? `<h3>Trinket <span class="role">one at a time</span></h3>${trinkets}` : ''}
     <h3>Skills <span class="role">each level: ${Math.round(BONUS_PER_LEVEL * 100)}% chance of a bonus item</span></h3>${skills}
     <h3>Wardrobe <span class="role">sew clothes at a sewing machine</span></h3>${wardrobeHtml()}
     <h3>Seeds</h3>${seeds}
@@ -84,6 +89,8 @@ document.querySelector('#mbody').addEventListener('click', (e) => {
   const wp = e.target.closest('[data-weapon]'); if (wp && chooseWeapon(wp.dataset.weapon)) { emit('ui:inventory'); return; }
   const rg = e.target.closest('[data-ring]'); if (rg && wearRing(rg.dataset.ring)) { emit('ui:inventory'); return; }
   const ro = e.target.closest('[data-ringoff]'); if (ro && removeRing(+ro.dataset.ringoff)) { emit('ui:inventory'); return; }
+  const tr = e.target.closest('[data-trinket]'); if (tr && wearTrinket(tr.dataset.trinket)) { emit('ui:inventory'); return; }   // v39
+  if (e.target.closest('[data-trinketoff]') && removeTrinket()) { emit('ui:inventory'); return; }
   const ea = e.target.closest('[data-eat]');   // v35: eating from the bag
   if (ea && eat(ea.dataset.eat)) emit('ui:inventory');
 });

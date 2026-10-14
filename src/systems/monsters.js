@@ -9,13 +9,14 @@ import { MAPS } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
 import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL } from '../data/weapons.js';
 import { CAVERN } from '../data/cavern.js';
+import { VENT } from '../data/forge.js';
 import { ITEMS } from '../data/items.js';
 import { drawSlime, drawMonster } from '../render/sprites.js';
 import { solidAt } from './world.js';
 import { hurtPlayer } from './health.js';
 import { has } from './professions.js';
 import { attackMult } from './buffs.js';
-import { weapon, weaponKind, wearing, giveFind } from './gear.js';
+import { weapon, weaponKind, wearing, giveFind, forgeBonus, weaponEnchant } from './gear.js';
 
 const AGGRO = 110, HOP = 1.2, HOP_ACTIVE = 0.5, TOUCH = 11;
 export const slimes = [];   // every monster on the map (named before v36, when there were only slimes); exported for tests
@@ -32,9 +33,9 @@ function make(kind, floor, px, py, R) {
 on('mine:floor', ({ floor: n, rng: R, zone, eff: floor }) => {
   slimes.length = 0; slimeMap = 'mine';
   // v38: in the Sunken Cavern only its own monsters and those marked cavern, at the cavern's strength.
-  const cav = zone === 'cavern', g = MAPS.mine.grid;
-  const kinds = Object.keys(MONSTERS).filter((k) => (cav ? MONSTERS[k].cavern || MONSTERS[k].cavernOnly : !MONSTERS[k].cavernOnly && floor >= MONSTERS[k].from));
-  const count = cav ? CAVERN.monsters(n) : MONSTER_COUNT(floor);
+  const cav = zone === 'cavern', vent = zone === 'vent', g = MAPS.mine.grid, D = MONSTERS;
+  const kinds = Object.keys(D).filter((k) => (vent ? D[k].vent || D[k].ventOnly : cav ? D[k].cavern || D[k].cavernOnly : !D[k].cavernOnly && !D[k].ventOnly && floor >= D[k].from));
+  const count = vent ? (n >= VENT.floors ? 0 : VENT.monsters(n)) : cav ? CAVERN.monsters(n) : MONSTER_COUNT(floor);   // v39: the forge room is safe
   for (let guard = 0; slimes.length < count && guard < 500; guard++) {
     const x = 1 + Math.floor(R() * (W - 2)), y = 1 + Math.floor(R() * (H - 2));
     if (g[y][x] !== 'f' || (x < 7 && y < 6)) continue;
@@ -66,6 +67,7 @@ addUpdater((dt) => {
   if (G.S.map !== slimeMap || !slimes.length) return;
   for (const m of [...slimes]) {
     if (m.hurt > 0) m.hurt -= dt;
+    if (m.frozen > 0) { m.frozen -= dt; continue; }   // v39: the frost rod
     m.hop += dt;
     const active = m.hop % HOP < HOP_ACTIVE;
     const dx = G.S.x - m.x, dy = G.S.y - m.y, d = Math.hypot(dx, dy);
@@ -94,8 +96,11 @@ addUpdater((dt) => {
 let cooldown = 0;
 addUpdater((dt) => { if (cooldown > 0) cooldown -= dt; });
 export function damageOf() {
-  return weapon().damage * attackMult() * (has('fighter') ? 1.1 : 1) * (has('brute') ? 1.15 : 1) * (wearing('emberring') ? 1.1 : 1);
+  return weapon().damage * attackMult() * (has('fighter') ? 1.1 : 1) * (has('brute') ? 1.15 : 1) * (wearing('emberring') ? 1.1 : 1) * forgeBonus().damage;   // v39: heartstones
 }
+// v39: weapon enchantments that change damage against a kind.
+const versus = (kind) => { const e = weaponEnchant(); return e === 'crusader' && (kind === 'skeleton' || kind === 'wraith') ? 1.5 : e === 'bugkiller' && kind === 'mite' ? 2 : 1; };
+const HAY = ['fiber', 'cloth', 'coal'];
 function defeat(m) {
   slimes.splice(slimes.indexOf(m), 1);
   const d = MONSTERS[m.kind || 'slime'], times = wearing('thiefring') ? 2 : 1;
@@ -103,6 +108,8 @@ function defeat(m) {
   const pool = DROP_POOL(m.floor || 1, m.zone);
   if (pool.length && Math.random() < RARE_DROP * times) giveFind(pool[Math.floor(Math.random() * pool.length)], `The ${d.name.toLowerCase()} dropped`);
   if (wearing('leechring')) G.S.hp = Math.min(G.S.maxHp, G.S.hp + 2);
+  if (weaponEnchant() === 'vampiric') G.S.hp = Math.min(G.S.maxHp, G.S.hp + 3);   // v39
+  if (weaponEnchant() === 'haymaker' && Math.random() < 0.3) { const k = HAY[Math.floor(Math.random() * HAY.length)]; G.S.bag[k] = (G.S.bag[k] || 0) + 1; }
   emit('gather', { skill: 'combat', xp: d.xp });
   emit('monster:slain', { kind: m.kind || 'slime', x: m.x, y: m.y, map: slimeMap });   // v37: the lodge's goals, the blast ring
   changed();
@@ -118,15 +125,16 @@ addInteraction(58, ({ item, mapId }) => {
   if (item !== 'sword') return false;
   if (cooldown > 0) return true;
   const wk = weaponKind(), [dx, dy] = DIRS[G.S.dir], px = G.S.x + dx * 12, py = G.S.y - 4 + dy * 12;
-  cooldown = wk.cooldown * (weapon().slow ? 1.5 : 1);
+  const fb = forgeBonus();
+  cooldown = wk.cooldown * (weapon().slow ? 1.5 : 1) * fb.speed;   // v39: ember quartz
   G.swing = { tx: Math.floor(px / T), ty: Math.floor(py / T), kind: 'sword', t: 0.3 };
   emit('sfx', 'sword');
   if (mapId !== slimeMap) return true;
   for (const m of [...slimes]) {
     if (Math.hypot(m.x - px, m.y - 4 - py) > wk.reach) continue;
-    const critChance = (has('scout') ? 0.1 : 0) + (wearing('tidering') ? 0.1 : 0);
-    const crit = Math.random() < critChance ? (has('desperado') ? 3 : 2) * (wearing('mossring') ? 1.5 : 1) : 1;   // v34 scout, desperado; v36 rings
-    hitMonster(m, damageOf() * crit, dx * wk.knock, dy * wk.knock);
+    const critChance = (has('scout') ? 0.1 : 0) + (wearing('tidering') ? 0.1 : 0) + fb.crit;
+    const crit = Math.random() < critChance ? (has('desperado') ? 3 : 2) * (wearing('mossring') ? 1.5 : 1) * fb.critPower : 1;   // v34 scout, desperado; v36 rings; v39 forge
+    hitMonster(m, damageOf() * crit * versus(m.kind), dx * wk.knock * fb.knock, dy * wk.knock * fb.knock);
   }
   return true;
 });

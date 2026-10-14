@@ -29,7 +29,7 @@ export function newState() {
     forage: [], forageDay: 0,
     wildWeeds: [],      // v33: weeds in the Wilds, cut for fiber (systems/forage.js)
     fishLog: {},        // fish key -> number caught
-    upgrades: { can: 0, hoe: 0, axe: 0, rod: 0, house: 0 },   // tier index per upgrade line
+    upgrades: { can: 0, hoe: 0, axe: 0, rod: 0, house: 0, pick: 0 },   // tier index per upgrade line
     waterBonus: 0, maxEnergy: 270,                      // derived stats, see systems/upgrades.js
     built: { coop: false, barn: false, greenhouse: false, stable: false, shed: false, mill: false, clocktower: false, pond: false, slimepen: false, helperhut: false, wayhollow: false, wayvillage: false },   // false | 'pending' | true
     sites: {},                                          // v30: building -> { x, y } top-left on the farm, when moved or placed (systems/sites.js)
@@ -69,6 +69,8 @@ export function newState() {
     skills: Object.fromEntries(Object.keys(SKILLS).map((k) => [k, 0])),    // XP per skill
     weapons: ['oldblade'], weapon: 'oldblade', rings: [null, null], finds: [],   // v36: weapons owned and in use, rings worn, mine floors whose find is taken
     cavernOpen: false, cavernDeepest: 0,                // v38: the Sunken Cavern's door opened, its deepest floor
+    ventOpen: false, ventDeepest: 0,                    // v39: the Ember Vent; floor 10 is the forge
+    forged: {}, weaponEnch: {}, toolEnch: {}, trinket: null,   // v39: weapon -> gem counts, weapon -> enchant, tool -> enchant, worn trinket
     slain: {}, goalsClaimed: [],                        // v37: monsters defeated by kind, slaying goals rewarded (systems/guild.js)
     recipes: ['friedegg'], fridge: {},                 // v35: dishes you can cook; what the kitchen fridge holds
     buff: null, drink: null, luck: 0,                   // v35: food and drink buffs, today's luck (systems/buffs.js)
@@ -108,6 +110,7 @@ export function merge(saved) {
   if (!Array.isArray(s.rings) || s.rings.length !== 2) s.rings = [null, null];
   if (!Array.isArray(s.finds)) s.finds = [];
   if (!s.slain || typeof s.slain !== 'object') s.slain = {};
+  for (const k of ['forged', 'weaponEnch', 'toolEnch']) if (!s[k] || typeof s[k] !== 'object') s[k] = {};
   if (!Array.isArray(s.goalsClaimed)) s.goalsClaimed = [];
   if (!s.fridge || typeof s.fridge !== 'object') s.fridge = {};
   if (!s.wish || typeof s.wish !== 'object') s.wish = {};   // v34: skills already at 5 or 10 offer their picks

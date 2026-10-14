@@ -314,15 +314,39 @@ export function drawGlassWall(g, x, y) {
 }
 
 // ---- Cave tiles (the mine ignores seasons) ----
+// Floor and wall colours by theme: the Hollow, the Sunken Cavern's sand (v38), the Ember Vent's basalt (v39).
+const CAVE_COLS = {
+  rock:  { floor: ['#3b3430', '#463e39', '#302a26'], wall: ['#1f1a18', '#2a2421', '#2e2724'] },
+  sand:  { floor: ['#7a5a38', '#8a6a44', '#6a4c2e'], wall: ['#3f2c1c', '#4f3824', '#5a4026'] },
+  ember: { floor: ['#3a2422', '#4a2c26', '#2e1c1a'], wall: ['#1a0f0e', '#2a1612', '#3a1a14'] },
+};
+const colsFor = (p) => CAVE_COLS[p?.theme] || CAVE_COLS.rock;
 export function drawCaveFloor(g, x, y, p) {
-  const X = x * T, Y = y * T, R = rng(x * 131 + y * 71), sand = p?.theme === 'sand';   // v38: the Sunken Cavern's sand
-  r(g, X, Y, T, T, sand ? '#7a5a38' : '#3b3430');
-  for (let i = 0; i < 5; i++) r(g, X + (R() * 15 | 0), Y + (R() * 15 | 0), 2, 1, R() < 0.5 ? (sand ? '#8a6a44' : '#463e39') : (sand ? '#6a4c2e' : '#302a26'));
+  const X = x * T, Y = y * T, R = rng(x * 131 + y * 71), c = colsFor(p).floor;
+  r(g, X, Y, T, T, c[0]);
+  for (let i = 0; i < 5; i++) r(g, X + (R() * 15 | 0), Y + (R() * 15 | 0), 2, 1, R() < 0.5 ? c[1] : c[2]);
 }
 function caveWall(g, x, y, p) {
-  const X = x * T, Y = y * T, R = rng(x * 53 + y * 97), sand = p?.theme === 'sand';
-  r(g, X, Y, T, T, sand ? '#3f2c1c' : '#1f1a18'); r(g, X, Y + 12, T, 4, sand ? '#4f3824' : '#2a2421');
-  for (let i = 0; i < 3; i++) r(g, X + (R() * 13 | 0), Y + (R() * 10 | 0), 3, 1, sand ? '#5a4026' : '#2e2724');
+  const X = x * T, Y = y * T, R = rng(x * 53 + y * 97), c = colsFor(p).wall;
+  r(g, X, Y, T, T, c[0]); r(g, X, Y + 12, T, 4, c[1]);
+  for (let i = 0; i < 3; i++) r(g, X + (R() * 13 | 0), Y + (R() * 10 | 0), 3, 1, c[2]);
+}
+// v39: lava, the vent's door and the forge.
+function lava(g, x, y) {
+  const X = x * T, Y = y * T, R = rng(x * 17 + y * 29);
+  r(g, X, Y, T, T, '#c8352f');
+  for (let i = 0; i < 4; i++) r(g, X + (R() * 12 | 0), Y + (R() * 12 | 0), 4, 2, R() < 0.5 ? '#e9862a' : '#ffd98a');
+}
+function ventDoor(g, x, y, p) {
+  const X = x * T, Y = y * T;
+  caveWall(g, x, y, p); r(g, X + 2, Y + 1, 12, 15, '#3f3226'); r(g, X + 4, Y + 3, 8, 13, '#1a0f0e');
+  r(g, X + 4, Y + 12, 8, 4, '#c8352f'); r(g, X + 6, Y + 13, 4, 2, '#ffd98a'); r(g, X + 2, Y + 1, 12, 1, '#5a3a30');
+}
+function forgeAnvil(g, x, y, p) {
+  const X = x * T, Y = y * T;
+  drawCaveFloor(g, x, y, p);
+  r(g, X + 1, Y + 14, 14, 1, 'rgba(0,0,0,.4)'); r(g, X + 5, Y + 9, 6, 5, '#3f4850'); r(g, X + 2, Y + 5, 12, 4, '#5f6870'); r(g, X + 1, Y + 5, 3, 2, '#5f6870');
+  r(g, X + 2, Y + 5, 12, 1, '#8d939a'); r(g, X + 11, Y + 1, 3, 4, '#e9862a'); r(g, X + 12, Y, 1, 2, '#ffd98a');
 }
 function mineRock(ore) {
   return (g, x, y) => {
@@ -331,9 +355,9 @@ function mineRock(ore) {
     if (ore) { r(g, X + 5, Y + 8, 2, 2, ore); r(g, X + 9, Y + 6, 2, 1, ore); r(g, X + 10, Y + 10, 2, 2, ore); }
   };
 }
-function ladderUp(g, x, y) {
+function ladderUp(g, x, y, p) {
   const X = x * T, Y = y * T;
-  caveWall(g, x, y); r(g, X + 4, Y, 8, 16, '#2a2421'); r(g, X + 5, Y, 6, 2, '#e9c46a');
+  caveWall(g, x, y, p); r(g, X + 4, Y, 8, 16, '#2a2421'); r(g, X + 5, Y, 6, 2, '#e9c46a');
   r(g, X + 4, Y, 1, 16, '#94673d'); r(g, X + 11, Y, 1, 16, '#94673d');
   for (let i = 0; i < 4; i++) r(g, X + 4, Y + 2 + i * 4, 8, 1, '#b8864f');
 }
@@ -377,6 +401,7 @@ export const CAVE_ART = {
   X: caveWall, U: ladderUp, L: ladderDown,
   r: mineRock(null), c: mineRock('#d0874a'), i: mineRock('#c9ccd6'),
   '%': mineRock('#e9c46a'), '*': mineRock('#9a7ae0'), '^': cavernDoor, '!': shaft,
+  '#': mineRock('#e9862a'), '~': lava, '>': ventDoor, '=': forgeAnvil,
 };
 
 // v22 farm layouts: quarry floor and sand.
