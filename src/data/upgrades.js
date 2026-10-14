@@ -84,6 +84,23 @@ export const STABLE = {
 // v28. Stardew: big barn 12,000g, 450 wood, 200 stone; deluxe barn 25,000g, 550 wood, 300 stone. Sheep 8,000g
 // (wool every 3 days, shears), pig 16,000g (truffles outdoors, not in winter or rain), ostrich (hatched only, egg
 // every 7). Milk pail and shears 1,000g each. Goats keep the daily milk they always gave here.
+// v30: buildings the player places on open farm grass (systems/sites.js). Stardew: shed 15,000g and 300 wood;
+// mill 2,500g, 150 wood, 50 stone, 4 cloth; the gold clock 10,000,000g (no more debris creeping in).
+// footprint has no x and y until placed. inside: where the shed's door lets you in on its own map.
+export const SHED = {
+  cost: 15000, needs: { wood: 300 }, footprint: { w: 3, h: 2 }, inside: { x: 11, y: 11, dir: 'up' },
+  desc: 'A walk-in room for machines and furniture.',
+};
+export const MILL = {
+  cost: 2500, needs: { wood: 150, stone: 50, cloth: 4 }, footprint: { w: 2, h: 2 },
+  desc: 'Grinds wheat into flour and beets into sugar overnight.',
+  grinds: { wheat: 'flour', beet: 'sugar' },
+};
+export const CLOCK = {
+  cost: 10000000, needs: {}, footprint: { w: 2, h: 2 },
+  desc: 'A golden clock tower. Weeds, stones and twigs stop creeping onto the farm.',
+};
+
 export const BARN = {
   cost: 6000,
   needs: { stone: 250, copperbar: 2 },

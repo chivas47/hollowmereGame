@@ -120,6 +120,7 @@ on('day:report', (r) => {
   if (r.noTool) html += `<p class="role">${r.noTool === 'pail' ? 'A cow or goat had milk for you, but you need a milk pail' : 'A sheep had wool for you, but you need shears'} from the barn.</p>`;
   if (r.hungryHens) html += `<p class="role">${plural(r.hungryHens, 'coop animal')} went hungry: the coop ran out of feed and grass. Buy more at the coop.</p>`;
   if (r.hungry) html += `<p class="role">${plural(r.hungry, 'animal')} went hungry: the loft ran out of hay and the yard of grass. Buy more at the barn.</p>`;
+  if (r.milled) html += `<p class="gift">The mill ground ${plural(r.milled, 'load')} overnight. Collect it at the mill.</p>`;
   if (r.artisan) html += `<p class="gift">${plural(r.artisan, 'machine')} finished overnight.</p>`;
   if (r.fruit) html += `<p class="gift">Your fruit trees grew ${plural(r.fruit, 'fruit')}.</p>`;
   if (r.giants) html += `<p class="gift">Something huge happened in the field overnight: ${plural(r.giants, 'giant crop')}!</p>`;

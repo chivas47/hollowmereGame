@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v30: Placing buildings
+- Move the coop, barn, greenhouse or stable at Bram's workbench: face the new spot and press Use. Animals, yards and the horse come along.
+- New buildings you place yourself: a walk-in shed for machines and furniture, a mill, and the golden clock tower that stops debris creeping in.
+- Wheat (summer and autumn) and beets (autumn) at the seed stall; the mill grinds them into flour and sugar.
+- A mini shipping bin to craft and put anywhere.
+
 ## v29: Wood and stone from Bram
 - Bram's workbench sells wood (10g) and stone (20g), in tens and fifties, next to coal.
 

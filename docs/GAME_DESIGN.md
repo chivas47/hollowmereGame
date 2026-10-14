@@ -72,6 +72,19 @@ Tailoring as in Stardew: at the sewing machine one cloth plus one item makes the
 
 Defense: each point takes 1 off a hit, to a minimum of 1 (Stardew's boots give 1 to 4). Dye pots recolour a shirt or trousers with any crop, fruit or fish, used up. A mannequin wears a copy of your outfit. Stations come from the farmhouse catalogue: sewing machine 2,500g, dye pots 1,000g, mannequin 2,000g (Stardew has no price for these: you use Emily's for free, so they are priced as mid-range furniture).
 
+## Farm buildings: placing (v30)
+
+Bram's workbench moves any building for free: choose the spot by facing where its top-left corner goes and pressing Use (Escape, or facing the workbench, stops). The coop and barn take their yards and animals along; the stable takes the horse's spot. Buildings need open grass below the path, clear of soil, placed objects, debris and other buildings' yards. Grass tufts under a new building go.
+
+| Building | Gold | Materials | Size | Effect | Stardew counterpart |
+|---|---|---|---|---|---|
+| Shed | 15,000 | 300 wood | 3 by 2 | A walk-in room (16 by 9 floor) for machines, decorations, mini bins and furniture | Shed: 15,000g, 300 wood |
+| Mill | 2,500 | 150 wood, 50 stone, 4 cloth | 2 by 2 | Wheat becomes flour (50g), beets sugar (50g), overnight | Mill: same |
+| Clock tower | 10,000,000 | none | 2 by 2 | Weeds, stones and twigs stop creeping onto the farm | Gold clock |
+
+- Mini shipping bin (crafted, 30 wood and 1 copper bar): ships the basket from anywhere on the farm or in the shed. Stardew's is a quest reward with no recipe, so the price is ours.
+- One shed per farm, and no big shed yet.
+
 ## Materials from Bram (v29)
 
 Wood 10g and stone 20g each at Bram's workbench, in tens and fifties (Stardew's carpenter prices). Coal stays 150g. Materials are never shipped, so buying them is a one-way cost.
@@ -116,6 +129,8 @@ Profit per day = (sells - seed) / days, one harvest per seed.
 | Pumpkin | 100g | 8 | 235g | 16.9g | Autumn |
 | Carrot | 15g | 3 | 35g | 6.7g | Spring |
 | Frost kale | 50g | 6 | 100g | 8.3g | Winter (outdoors) |
+| Wheat | 10g | 4 | 25g | 3.8g | Summer, Autumn (v30; flour at the mill) |
+| Beet | 20g | 6 | 100g | 13.3g | Autumn (v30; sugar at the mill) |
 
 Regrowing crops (the plant stays; regrow = days to the next harvest):
 
@@ -446,6 +461,8 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - The recycler, worm bin and bait maker wait for the fishing overhaul (roadmap item 20), which brings trash and bait.
 - Honey has one flavour; Stardew's flower honey is not modelled.
 - Since v29 wood and stone can be bought (10g and 20g), so big wood costs are a gold cost too. In the simulator the bot finishes all but about 4 items of its 2-year shopping list (26 before) and raises far more animals (animal products +160%); year 1 summer and autumn earn 17% less while it buys materials.
+- v30 adds wheat and beets to the quest board's crops. The balance bot never grows them, so it fills fewer requests and loses about 10% of crop income in the simulator (checked: with the two crops kept off the board the loss is gone). Real players can grow them for requests.
+- The balance bot reaches the loom but not the mill in 2 years (the mill needs 4 cloth, from 20 fiber).
 - Coop and barn upgrades do not change the buildings' size or art.
 - Grazing animals stay in their yards (Stardew's roam the farm). The silo does not cap the hay loft.
 - Mine floors have no special floors (treasure, boss, elevator).

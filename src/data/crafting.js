@@ -54,6 +54,8 @@ export const PLACEABLES = {
   // v28: livestock. The incubator hatches eggs into animals; a silo turns cut grass into hay; grass starter plants a tuft.
   incubator:  { name: 'Incubator',        short: 'Incubator', kind: 'machine' },
   silo:       { name: 'Silo',             short: 'Silo',      kind: 'decor' },
+  // v30: a small shipping bin to put anywhere on the farm or in the shed (kind 'bin': facing it ships, systems/buildings.js).
+  minibin:    { name: 'Mini shipping bin', short: 'Mini bin', kind: 'bin' },
   grassstarter: { name: 'Grass starter',  short: 'Grass',     kind: 'grass' },
   // v24: furniture, placed inside the farmhouse (bought from the catalogue there).
   ...Object.fromEntries(Object.entries(FURNITURE).map(([k, f]) => [k, { name: f.name, short: f.name.length > 10 ? f.name.split(' ').pop() : f.name, kind: 'furniture', walk: !!f.walk }])),
@@ -98,6 +100,8 @@ export const RECIPES = {
   // v28. Stardew: ostrich incubator 50 bone fragments, 50 hardwood, 20 cinder shards (the big coop's own is built in);
   // silo 100g, 100 stone, 10 clay, 5 copper bars. Stone stands in for the clay and bones, wood for the hardwood.
   incubator:  { cost: 0, needs: { wood: 50, stone: 50, ironbar: 2 }, desc: 'Hatches an egg into an animal: chicken and duck eggs in 9 nights, Mossback eggs in 12, Strider eggs in 15. It needs room in the coop or barn.' },
+  // v30. Stardew's mini shipping bin is a quest reward with no recipe; ours costs about an early machine.
+  minibin:    { cost: 0, needs: { wood: 30, copperbar: 1 }, desc: 'Ships your basket from anywhere you put it, like the big bin.' },
   silo:       { cost: 100, needs: { stone: 110, copperbar: 5 }, desc: 'With a silo on the farm, cutting grass gives hay for the barn loft half the time.' },
 };
 

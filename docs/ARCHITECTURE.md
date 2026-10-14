@@ -47,7 +47,9 @@ src/
     farming.js        till (wide hoe), water, plant, harvest, growth, withering
     forage.js         daily forage spawns in the Wilds
     fishing.js        cast, bite, reel minigame, fish log
-    buildings.js      door (sleep), stall (shop), bin (ship), well/pond refill
+    sites.js          where every farm building stands: moving and placing buildings, writing their tiles
+    mill.js           the mill (wheat and beets overnight) and the shed door
+    buildings.js      door (sleep), stall (shop), bin and mini bins (ship), well/pond refill
     economy.js        ship(), buy(), overnight payout; materials are never shipped
     npcs.js           schedules across farm and village, talk, gifts, hearts, 3-heart rewards, heart scenes
     upgrades.js       workbench purchases, material costs, recalcStats()
@@ -112,6 +114,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 
 | Priority | Owner | Claims |
 |---|---|---|
+| 300 | sites.js | Any Use while placing or moving a building |
 | 200 | fishing.js | Any Use while a line is out |
 | 199 | stable.js | Any Use while riding (get off) |
 | 100 | npcs.js | Facing a neighbour |
@@ -122,7 +125,9 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 73 | clothing.js | Facing a sewing machine, dye pots or mannequin in the farmhouse |
 | 74 | clearing.js | Facing a fence, gate or path (gate opens; axe or pickaxe takes it up) |
 | 73 | trees.js | Facing a fruit tree (pick fruit) |
+| 73 | buildings.js | Facing a mini shipping bin (ships; axe or pickaxe takes it up) |
 | 72 | pets.js | The water bowl b (the can fills it) |
+| 72 | mill.js | Mill m, shed s (enter), clock tower k |
 | 72 | upgrades.js / coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Workbench K, coop C, barn A, greenhouse G, mine entrance M, ladders U/L, placed object Y, quest board Q, festival table J |
 | 71 | village.js | Fountain F, cottage V (flavour text) |
 | 70 | buildings.js, house.js | Stall S, bin B; farm door D (enter), bed Z, lectern l, kitchen and cellar fittings |
@@ -175,6 +180,7 @@ The night tint is drawn by renderer.js after all layers (not in caves).
 | `mine:faint` | none | health.js | mine.js (carry out) |
 | `gather` | {skill, xp, item?, n?} | farming, giants, clearing, forage, fishing, mine, monsters, coop, barn | skills.js (XP, bonus item) |
 | `upgraded` | key | upgrades.js | house.js (rebuild the farmhouse rooms) |
+| `site:moved` | building key | sites.js | coop, barn (animals back in the yard), stable (horse home) |
 | `placed` | {map, x, y, kind} | placeables.js | sprinklers.js (water now), audio/sfx.js |
 | `sfx` | name | effects, monsters, fishing, health, economy, skills, coop, barn, ui/modal | audio/sfx.js |
 | `ui:scene` | {npc, at, scene, extra} | npcs.js | ui/dialogs.js heart scene with choices |
@@ -240,6 +246,7 @@ Soil is per map: `soilOf(mapId)` returns `G.S.soil` (farm) or `G.S.greenSoil` (g
 - **Map:** grid and entry in `data/maps.js`, with an `E` tile and `exits` entry on both sides.
 - **Craftable object:** entry in `PLACEABLES` and `RECIPES` (data/crafting.js) plus art in `PLACED_ART` (render/sprites.js). A machine also needs a `MACHINES` entry; its products go in data/artisan.js. A machine that uses up more than one item a load (the furnace) gives `takes(k)`, and one with `nights: 0` is ready at once. `nights` can be a function of the item (the brew barrel). `repeat: true` restarts the same load after collecting (the gem copier); `auto: {item, every, winter}` produces on its own with a `timer` field (bee box, mushroom log). Tree taps live on alder debris as `d.tap` in clearing.js, not in G.S.placed. `hatch: {egg: animal}` (the incubator) moves an animal in through systems/livestock.js `adopt()` instead of giving an item.
 - **Animal:** an entry in `COOP.animals` or `BARN.animals` (data/upgrades.js) with product, every, level and optional tool, deluxe, outdoors or hatched; its product in data/products.js; art in render/sprites.js (drawCoopAnimal or drawAnimal). systems/livestock.js does the rest.
+- **Building on the farm:** an entry in `SITES` (systems/sites.js) with its def (data/upgrades.js), tile and art. sites.js keeps `def.footprint` (and a yard or horse spot) where `G.S.sites` says, by changing the def in place, and writes the tiles; a placed building (`placed: true`) has no spot until the player picks one and finishes on `day:start`. Code that reads `COOP.footprint` or `BARN.yard` always gets the current spot.
 - **Walkable debris:** `walk: true` in DEBRIS (grass) keeps the tile walkable; clearing.js skips the 'Y' and draws it on layer 9.
 - **Skill XP source:** `emit('gather', { skill, xp, item, n })` where the player gathers. Pass `item` only if a bonus copy makes sense.
 - **Festival:** entry in data/festivals.js (contest or market). The table, decorations and NPC gathering pick it up.

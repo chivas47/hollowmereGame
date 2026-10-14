@@ -41,11 +41,13 @@ const ORCHARD = ['figtree', 'peartree', 'nectarinetree', 'persimmontree', 'plumt
 const STRATEGIES = {
   full: ['furnace', 'can', 'coop', 'grassstarter', 'grassstarter', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'kiln', 'house',
     'barn', 'pail', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'silo', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, 'stable', 'bigcoop', 'duck', 'duck', 'duck', 'duck', ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'rod', 'can',
-    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'house',
+    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'shed', 'house',
     'brewbarrel', 'brewbarrel', 'eggpress', 'beebox', 'beebox', 'dryer', 'smoker', 'mushroomlog',   // wood-hungry, so last
     // v28: more livestock. The big coop comes in year one like a player's; the rest take hundreds of wood, so they come last.
     'bigbarn', 'cow', 'cow', 'goat', 'goat',
-    'deluxecoop', 'rabbit', 'rabbit', 'deluxebarn', 'shears', 'sheep', 'sheep', 'pig', 'pig'],
+    'deluxecoop', 'rabbit', 'rabbit', 'deluxebarn', 'shears', 'sheep', 'sheep', 'pig', 'pig',
+    // v30: the mill needs cloth, so a loom comes first (the shed is earlier). The bot picks the first free spot from the bottom right.
+    'loom', 'mill'],
   crops: ['furnace', 'can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
 };
 
@@ -67,8 +69,8 @@ globalThis.performance ??= { now: () => Date.now() };
 
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
-const SYSTEMS = ['layouts', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing'];
+const SYSTEMS = ['layouts', 'sites', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
+  'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -103,6 +105,8 @@ const { buyChicken, collectEggs, buyFeed, flock } = await load('systems/coop.js'
 const { PROJECTS } = await load('data/projects.js');
 const { funded, fundProject } = await load('systems/projects.js');
 const { orderBarn, buyAnimal, buyHay, collectMilk, herd } = await load('systems/barn.js');
+const { SITES, findSite, siteAt, noFit } = await load('systems/sites.js');
+const { millIn, millCollect } = await load('systems/mill.js');
 const { HOMES, homeOf, level, noRoom, buyLivestock, orderLevel, buyTool } = await load('systems/livestock.js');
 const { craft } = await load('systems/crafting.js');
 const { startLayout } = await load('systems/layouts.js');
@@ -187,6 +191,10 @@ function simulate(runSeed) {
       ok: () => level(home) < lv, buy: () => track('buildings', () => orderLevel(home)) };
   }
   for (const k of Object.keys(BARN.tools)) GOAL[k] = { cost: () => BARN.tools[k].cost, needs: () => ({}), ok: () => !S().ranch[k], buy: () => track('upgrades', () => buyTool(k)) };
+  for (const [k, s] of Object.entries(SITES).filter(([, x]) => x.placed)) {
+    GOAL[k] = { cost: () => s.def.cost, needs: () => s.def.needs, ok: () => !S().built[k],
+      buy: () => track('buildings', () => { const at = botSite(k); return !!at && siteAt(k, 'new', at.x, at.y); }) };
+  }
   GOAL.grassstarter = { cost: () => SUPPLIES.grassstarter, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply('grassstarter', 1)) };
   for (const k of Object.keys(PROJECTS)) GOAL[k] = { cost: () => PROJECTS[k].cost, needs: () => PROJECTS[k].needs, ok: () => !funded(k), buy: () => track('projects', () => fundProject(k)) };
   for (const k of Object.keys(TREES)) GOAL[k] = { cost: () => TREES[k].cost, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply(k, 1)) };
@@ -227,6 +235,19 @@ function simulate(runSeed) {
       goals.shift();
     }
     if (log.goalsDone === null) log.goalsDone = S().day;
+  }
+
+  // A spot for a new building: a free one, or else one where only debris is in the way (cleared first).
+  function botSite(k) {
+    const free = findSite(k);
+    if (free) return free;
+    const { w, h } = SITES[k].def.footprint;
+    for (let y = 13; y >= 5; y--) for (let x = 22 - w; x >= 1; x--) {
+      if (!/^Clear the/.test(noFit(k, x, y) || '')) continue;
+      for (let ty = y; ty < y + h; ty++) for (let tx = x; tx < x + w; tx++) clear('farm', tx, ty);
+      if (!noFit(k, x, y)) return { x, y };
+    }
+    return null;
   }
 
   // Clears debris or a wild tree from a farm tile with the right tool. False if it cannot (yet).
@@ -344,8 +365,9 @@ function simulate(runSeed) {
         if (p.item && p.nights <= 0) collectMachine(x, y);
         if (p.item) break;
         // The kiln only burns wood the next purchase can spare, and only while coal is short.
+        if (p.kind === 'loom' && !missingMats().cloth) break;   // cloth is only woven for a purchase, from fiber (wool sells)
         if (p.kind === 'kiln') { const m = missingMats(), goalWood = GOAL[goals[0]]?.needs?.()?.wood || 0; if (!m.coal || s.bag.wood - 10 < goalWood) break; }
-        const options = accepted(x, y).filter((it) => s.bag[it] > (reserved[it] || 0)).sort((a, b) => ITEMS[b].sell - ITEMS[a].sell);
+        const options = accepted(x, y).filter((it) => s.bag[it] > (reserved[it] || 0) && !(p.kind === 'loom' && it === 'wool')).sort((a, b) => ITEMS[b].sell - ITEMS[a].sell);
         if (!options.length || !loadMachine(x, y, options[0])) break;
       }
       spend(TIME.pet);
@@ -537,12 +559,15 @@ function simulate(runSeed) {
     layoutChores();
     getCoal(); getMaterials();
     if (missingMats().wood && !late()) chopWood();
+    if (missingMats().fiber && !late()) for (const [k, d] of Object.entries(s.debris || {})) if (d.kind === 'weeds') clear('farm', ...k.split(',').map(Number));   // fiber for the loom
     plantCones();
-    if (Object.keys(missingMats()).filter((k) => k !== 'wood').length && !late()) mine();   // saving up for something that needs ore: mine first
+    if (Object.keys(missingMats()).filter((k) => !['wood', 'fiber', 'cloth'].includes(k)).length && !late()) mine();   // saving up for something that needs ore: mine first (not for fiber or cloth)
     if (!late()) farm('farm', true);
     if (!late() && greenhouseBuilt()) farm('greenhouse', true);
     if (!late()) fish(0);
     machines(reserved);
+    // The mill doubles wheat (flour 50g against wheat 25g); beets are worth more whole, so they are sold.
+    if (s.built.mill === true) { millCollect(); if (s.bag.wheat > (reserves().wheat || 0)) millIn('wheat', s.bag.wheat - (reserves().wheat || 0)); spend(TIME.chore); }
     shipAll(reserves());
     const energyLeft = s.energy;
     sleep(false);

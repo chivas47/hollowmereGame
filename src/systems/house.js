@@ -83,7 +83,7 @@ addInteraction(70, ({ tile, mapId }) => {
   return false;
 });
 
-const inHouse = () => Object.entries(G.S.placed).map(([k, p]) => ({ p, ...parsePlaceKey(k) })).filter((e) => e.map === 'house' && G.S.map === 'house' && FURNITURE[e.p.kind]);
+const inHouse = () => Object.entries(G.S.placed).map(([k, p]) => ({ p, ...parsePlaceKey(k) })).filter((e) => e.map === G.S.map && (e.map === 'house' || e.map === 'shed') && FURNITURE[e.p.kind]);   // v30: the shed takes furniture too
 addLayer(9, (c) => { for (const e of inHouse()) if (FURNITURE[e.p.kind].walk) drawFurniture(c, e.x * T, e.y * T, FURNITURE[e.p.kind]); });
 addEntities(() => inHouse().filter((e) => !FURNITURE[e.p.kind].walk).map((e) => ({ y: (e.y + 1) * T - 3, draw: (c) => drawFurniture(c, e.x * T, e.y * T, FURNITURE[e.p.kind]) })));
 

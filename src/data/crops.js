@@ -26,6 +26,9 @@ export const CROPS = {
   carrot:   { name: 'Carrot',       days: 3, seed: 15, sell: 35,  color: '#e8862a', top: null,      line: null,      shape: 'root',  seasons: ['Spring'] },
   squash:   { name: 'Summer squash', days: 5, seed: 45, sell: 45, color: '#e9c46a', top: null,      line: '#c9a43a', shape: 'round', seasons: ['Summer'], regrow: 3 },
   broccoli: { name: 'Broccoli',     days: 6, seed: 60, sell: 70,  color: '#3f8a4a', top: null,      line: '#2f6b3a', shape: 'leafy', seasons: ['Autumn'], regrow: 4 },
+  // v30, for the mill (Stardew: wheat 10g seed, 4 days, sells 25g, summer and autumn; beet 20g, 6 days, 100g, autumn).
+  wheat:    { name: 'Wheat',        days: 4, seed: 10, sell: 25,  color: '#d9b45a', top: null,      line: '#b8913a', shape: 'leafy', seasons: ['Summer', 'Autumn'] },
+  beet:     { name: 'Beet',         days: 6, seed: 20, sell: 100, color: '#8a2a4a', top: '#5d9a4a', line: null,      shape: 'root',  seasons: ['Autumn'] },
   frostkale:{ name: 'Frost kale',   days: 6, seed: 50, sell: 100, color: '#8fb8b0', top: null,      line: '#5f8f88', shape: 'leafy', seasons: ['Winter'] },
   // v17: seed packets
   wildspring: { name: 'Spring wild seeds', days: 6, seed: 40, sell: 0, color: '#86b964', top: null, line: '#5e8d45', shape: 'leafy', seasons: ['Spring'], packet: 'wild', produce: ['leek', 'sorrel'] },

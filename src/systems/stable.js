@@ -7,30 +7,24 @@ import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addUpdater, addEntities } from '../core/registry.js';
-import { MAPS } from '../data/maps.js';
 import { STABLE } from '../data/upgrades.js';
 import { OUTDOORS } from '../data/weather.js';
 import { drawHorse } from '../render/sprites.js';
 import { tileOf } from './world.js';
 import { affordable } from './upgrades.js';
+import { placeBuilding } from './sites.js';
 
-const farm = MAPS.farm, fp = STABLE.footprint;
 export const stableBuilt = () => G.S.built.stable === true;
 let last = null;   // last outdoor spot while riding, where the horse waits if you go indoors
 
 function placeStable() {
-  for (let y = fp.y; y < fp.y + fp.h; y++) for (let x = fp.x; x < fp.x + fp.w; x++) if (farm.grid[y][x] === 'N') farm.grid[y][x] = 'g';
-  farm.objects = farm.objects.filter((o) => o.art !== 'stable');
-  if (stableBuilt()) {
-    for (let y = fp.y; y < fp.y + fp.h; y++) for (let x = fp.x; x < fp.x + fp.w; x++) { farm.grid[y][x] = 'N'; delete G.S.soil[`${x},${y}`]; }
-    farm.objects.push({ art: 'stable', x: fp.x, y: fp.y });
-    if (!G.S.horse) G.S.horse = { name: STABLE.horseName };
-  }
-  emit('world:changed');
+  placeBuilding('stable');   // systems/sites.js writes the tiles wherever it stands
+  if (stableBuilt() && !G.S.horse) G.S.horse = { name: STABLE.horseName };
 }
 const home = () => Object.assign(G.S.horse, { map: 'farm', x: STABLE.home.x * T + 8, y: STABLE.home.y * T + 12, dir: 'right' });
 
-on('game:loaded', () => { G.riding = false; placeStable(); if (G.S.horse && !G.S.horse.map) home(); });
+on('game:loaded', () => { G.riding = false; if (stableBuilt() && !G.S.horse) G.S.horse = { name: STABLE.horseName }; if (G.S.horse && !G.S.horse.map) home(); });
+on('site:moved', (key) => { if (key === 'stable' && G.S.horse && !G.riding) home(); });
 on('game:reset', () => { G.riding = false; });
 on('day:start', (report) => {
   if (G.S.built.stable === 'pending') { G.S.built.stable = true; report.built = report.built ? `${report.built} and stable` : 'stable'; placeStable(); }

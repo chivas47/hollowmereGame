@@ -6,26 +6,14 @@ import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addUpdater, addEntities } from '../core/registry.js';
 import { COOP } from '../data/upgrades.js';
-import { MAPS } from '../data/maps.js';
 import { drawChicken, drawCoopAnimal, drawHeart } from '../render/sprites.js';
 import { tileOf } from './world.js';
+import { placeBuilding } from './sites.js';
 import { night, collect, buyLivestock, pet, kindOf } from './livestock.js';
 
-const farm = MAPS.farm, fp = COOP.footprint, yard = COOP.yard, SPEED = 14;
+const yard = COOP.yard, SPEED = 14;   // yard moves with the coop (systems/sites.js)
 
-// Remember the tiles under the coop so a new game can restore them.
-const original = [];
-for (let y = fp.y; y < fp.y + fp.h; y++) for (let x = fp.x; x < fp.x + fp.w; x++) original.push([x, y, farm.grid[y][x]]);
-
-function placeCoop() {
-  original.forEach(([x, y, t]) => { farm.grid[y][x] = t; });
-  farm.objects = farm.objects.filter((o) => o.art !== 'coop');
-  if (G.S.built.coop === true) {
-    original.forEach(([x, y]) => { farm.grid[y][x] = 'C'; delete G.S.soil[`${x},${y}`]; });
-    farm.objects.push({ art: 'coop', x: fp.x, y: fp.y });
-  }
-  emit('world:changed');
-}
+const placeCoop = () => placeBuilding('coop');   // systems/sites.js writes the tiles wherever it stands
 
 const built = () => G.S.built.coop === true;
 const randomYardPoint = () => ({
@@ -43,7 +31,8 @@ function syncFlock() {
   flock.length = G.S.chickens.length;
 }
 
-on('game:loaded', () => { flock.length = 0; placeCoop(); });
+on('game:loaded', () => { flock.length = 0; });
+on('site:moved', (key) => { if (key === 'coop') flock.length = 0; });
 on('game:reset', () => { flock.length = 0; });
 
 // Each coop animal eats 1 feed a night, or grazes a grass tuft in the yard (systems/livestock.js).
