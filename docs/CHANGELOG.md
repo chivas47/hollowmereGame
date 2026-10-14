@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v38: The Sunken Cavern
+- Floor 80 of the Hollow has a sealed door. Behind it, the Sunken Cavern: a harder sand-floored dungeon where every visit starts at floor 1 (no lift), with more monsters and loot chests twice as often.
+- Two cavern monsters, the sand wraith and the scorch rex, with bats, bone walkers and serpents at cavern strength. Hale adds two slaying goals with new hats.
+- Gold ore (in the Hollow from floor 80, and common in the cavern) and umbrite ore (cavern only, more of it deeper). The furnace smelts both into bars.
+- Shafts: sometimes the cavern's hidden ladder is a shaft that drops you 3 to 8 floors and costs a tenth of your health.
+- Bram upgrades the watering can twice more: gold (85 water) and umbrite (100).
+- The Dune blade (32 damage) turns up in the cavern's chests and, rarely, from its monsters.
+
 ## v37: The Wardens' Lodge, bombs, treasure and geodes
 - The Wardens' Lodge, a cabin in the Wilds by the Hollow, opens once you have been down. Warden Hale sells weapons and boots as you go deeper, and keeps five slaying goals with a reward each: 1,000 slimes, 80 mites, 200 bats, 50 bone walkers, 250 serpents.
 - Bombs: craft ember, blast and great bombs (mining levels 1, 6 and 8) and throw them from the kit in the Hollow. They break every rock around them and hurt monsters, and you if you stand too close.

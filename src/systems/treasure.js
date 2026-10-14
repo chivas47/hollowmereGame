@@ -10,7 +10,8 @@ import { addInteraction, addUpdater, addEntities, addLayer } from '../core/regis
 import { MAPS, SOLID } from '../data/maps.js';
 import { ITEMS } from '../data/items.js';
 import { PLACEABLES } from '../data/crafting.js';
-import { FLOOR_FINDS } from '../data/weapons.js';
+import { FLOOR_FINDS, WEAPONS } from '../data/weapons.js';
+import { CAVERN } from '../data/cavern.js';
 import { BOMBS, FUSE, BLAST_RING, CHEST_CHANCE, CHEST_SPOT, chestLoot, GEODE_LOOT, CRACK_COST } from '../data/guild.js';
 import { drawBomb, drawBlast } from '../render/sprites.js';
 import { MINE, breakRock } from './mine.js';
@@ -86,11 +87,11 @@ addLayer(60, (c) => { if (G.S.map === 'mine') blasts.forEach((k) => drawBlast(c,
 
 // ---- Treasure chests ----
 // MINE.chest: { x, y, find } for the chest on this floor (find: a FLOOR_FINDS key), or null.
-on('mine:floor', ({ floor, rng: R }) => {
+on('mine:floor', ({ floor, rng: R, zone, eff }) => {
   MINE.chest = null;
-  const g = MAPS.mine.grid, find = FLOOR_FINDS[floor];
+  const cav = zone === 'cavern', g = MAPS.mine.grid, find = cav ? null : FLOOR_FINDS[floor];   // v38: the cavern has loot chests only, more often
   if (find && !G.S.finds.includes(floor)) MINE.chest = { ...CHEST_SPOT, find };
-  else if (floor >= 10 && R() < CHEST_CHANCE) {
+  else if (eff >= 10 && R() < (cav ? CAVERN.chest : CHEST_CHANCE)) {
     for (let guard = 0; guard < 200 && !MINE.chest; guard++) {
       const x = 1 + Math.floor(R() * 22), y = 1 + Math.floor(R() * 14);
       if (g[y][x] === 'f' && !(x <= 4 && y <= 4)) MINE.chest = { x, y, find: null };
@@ -113,7 +114,9 @@ export function openChest() {
     giveFind(c.find, 'In the chest you found');
     got = ITEMS[c.find]?.name || c.find;
   } else {
-    const loot = chestLoot(MINE.floor), [k, a, b] = loot[Math.floor(Math.random() * loot.length)], n = roll(a, b);
+    const loot = chestLoot(MINE.eff).filter(([k]) => !(WEAPONS[k] && S.weapons.includes(k)));   // v38: a weapon only once
+    const [k, a, b] = loot[Math.floor(Math.random() * loot.length)], n = roll(a, b);
+    if (WEAPONS[k]) { giveFind(k, 'In the chest you found'); changed(); return WEAPONS[k].name; }
     if (PLACEABLES[k]) S.kit[k] += n; else S.bag[k] = (S.bag[k] || 0) + n;
     got = `${n} ${PLACEABLES[k]?.name || ITEMS[k].name}`;
     notify(`In the chest: ${got}!`);

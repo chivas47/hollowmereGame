@@ -19,11 +19,11 @@ const TILE_ART = { b: drawBowl, O: drawWater, T: drawTree, R: drawRock, w: drawG
 
 function renderBackground(mapId, season) {
   const c = document.createElement('canvas'); c.width = W * T; c.height = H * T;
-  const g = c.getContext('2d'), p = PAL[season], map = MAPS[mapId];
+  const g = c.getContext('2d'), map = MAPS[mapId], p = map.theme ? { ...PAL[season], theme: map.theme } : PAL[season];   // v38: theme (the cavern's sand)
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
     const t = map.grid[y][x];
     if (map.base === 'house') { drawHouseTile(g, x, y, t, map.grid[y + 1]?.[x], WALLPAPERS, FLOORS, map.decor); continue; }
-    if (map.base === 'cave') drawCaveFloor(g, x, y);
+    if (map.base === 'cave') drawCaveFloor(g, x, y, p);
     else if (map.base === 'greenhouse' && t !== 'E') drawGreenhouseFloor(g, x, y, t);
     else if (t === 'P' || t === 'E') drawPath(g, x, y, p);
     else if (t === 'q') drawQuarry(g, x, y, p);
@@ -39,7 +39,7 @@ function renderBackground(mapId, season) {
 }
 
 function background() {
-  const key = G.S.map + '-' + today().season;
+  const key = G.S.map + '-' + today().season + (MAPS[G.S.map].theme || '');
   return cache[key] || (cache[key] = renderBackground(G.S.map, today().season));
 }
 

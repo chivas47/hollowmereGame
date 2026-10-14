@@ -31,6 +31,9 @@ export const GOALS = {
   bat:      { n: 200,  reward: 'leechring', label: 'cave bats' },
   skeleton: { n: 50,   reward: 'bonemask',  label: 'bone walkers' },
   serpent:  { n: 250,  reward: 'blastring', label: 'Hollow serpents' },
+  // v38. Stardew: 100 mummies (arcane hat), 50 pepper rex (knight's helmet).
+  wraith:   { n: 100,  reward: 'veilhat',   label: 'sand wraiths' },
+  rex:      { n: 50,   reward: 'crestedhelm', label: 'scorch rex' },
 };
 
 // Bombs: radius in tiles (Stardew's 3, 5 and 7, fitted to our smaller floors), damage to monsters; you take half.
@@ -58,8 +61,9 @@ export const GEODE_LOOT = {
 export const CHEST_CHANCE = 0.03;
 export const CHEST_SPOT = { x: 4, y: 3 };   // the find chest stands by the landing
 export const chestLoot = (floor) => [
-  [floor >= 40 ? 'frostgeode' : 'geode', 2, 4],
-  [floor >= 40 ? 'ironbar' : 'copperbar', 2, 4],
+  [floor >= 80 ? 'magmageode' : floor >= 40 ? 'frostgeode' : 'geode', 2, 4],
+  floor >= 110 ? ['umbritebar', 1, 2] : floor >= 80 ? ['goldbar', 1, 3] : [floor >= 40 ? 'ironbar' : 'copperbar', 2, 4],   // v38
+  ...(floor >= 100 ? [['duneblade', 1, 1]] : []),
   ['coal', 5, 10],
   [floor >= 60 ? 'blastbomb' : 'emberbomb', 2, 4],
   [floor >= 50 ? 'heartstone' : floor >= 25 ? 'tidestone' : 'violet', 1, 2],

@@ -5,6 +5,9 @@ export const UPGRADES = {
     { label: 'Basic can', cap: 40 },
     { label: 'Copper can', cap: 55, cost: 2000, needs: { copperbar: 5 }, desc: 'Holds 55 water.' },
     { label: 'Steel can', cap: 70, cost: 5000, needs: { ironbar: 5 }, desc: 'Holds 70 water.' },
+    // v38. Stardew: gold can 10,000g and 5 gold bars (85), iridium can 25,000g and 5 iridium bars (100).
+    { label: 'Gold can', cap: 85, cost: 10000, needs: { goldbar: 5 }, desc: 'Holds 85 water.' },
+    { label: 'Umbrite can', cap: 100, cost: 25000, needs: { umbritebar: 5 }, desc: 'Holds 100 water.' },
   ] },
   hoe:   { name: 'Hoe', tiers: [
     { label: 'Hoe', reach: 1 },

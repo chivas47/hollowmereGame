@@ -28,6 +28,7 @@ src/
     furniture.js      FURNITURE, WALLPAPERS, FLOORS, RENOVATIONS, catalogue prices
     pets.js           PET friendship numbers, PET_LOOKS, PET_NAMES, PET_HATS
     profile.js        farmer profile: LOOKS, PETS, DEFAULT_PROFILE, playerPal()
+    cavern.js         CAVERN (the Sunken Cavern's door, strength, ores, shafts, chests), HOLLOW_GOLD (v38)
     guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item
     schedules.js      neighbour daily schedules, rest days, map entry points
@@ -64,7 +65,7 @@ src/
     upgrades.js       workbench purchases, material costs, recalcStats()
     livestock.js      shared animal rules: coop and barn levels, room, buying and hatching, friendship, grazing, products, quality
     coop.js           coop placement, coop animals, petting, feed
-    mine.js           floor generation, rocks, ladders, lighting
+    mine.js           floor generation for the Hollow and the Sunken Cavern (MINE.zone, MINE.eff), rocks, breakRock(), ladders, shafts, lighting
     health.js         hurtPlayer(), fainting
     monsters.js       mine monsters by kind and floor (and the wild farm's slimes), the weapon swing, drops
     placeables.js     kit slot, placing/picking up crafted objects ('Y' tiles), drawing, lantern glow
@@ -143,7 +144,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 57 | treasure.js | Kit slot with a bomb (throws it at the faced tile, Hollow only) |
 | 72 | helpers.js | Helper hut a, waystones e and d (warp), cave mouth y, the cave's crate t |
 | 57 | helpers.js | Kit slot with a home charm (warp home) |
-| 72 | upgrades.js / coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Workbench K, coop C, barn A, greenhouse G, mine entrance M, ladders U/L, placed object Y, quest board Q, festival table J |
+| 72 | upgrades.js / coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Workbench K, coop C, barn A, greenhouse G, mine entrance M, ladders U/L, the cavern door ^ and shafts !, placed object Y, quest board Q, festival table J |
 | 71 | village.js | Fountain F, cottage V (flavour text) |
 | 71 | cooking.js | Farmhouse stove o (cook) and counters n (fridge) |
 | 70 | buildings.js, house.js | Stall S, bin B; farm door D (enter), bed Z, lectern l, kitchen and cellar fittings |
@@ -194,7 +195,7 @@ The night tint is drawn by renderer.js after all layers (not in caves).
 | `season:changed` | {from, to, report} | days.js | farming (wither), trees (drop fruit), renderer |
 | `day:start` | report | days.js | forage, npcs, coop (build), health, fishing, monsters, trees (age, fruit), giants (merge), clearing (creep, alder growth), weather (rain waters soil) |
 | `day:report` | report | days.js | ui/dialogs.js morning summary |
-| `mine:floor` | {floor, rng} | mine.js | monsters (spawn), treasure (chest) |
+| `mine:floor` | {floor, rng, zone, eff} | mine.js | monsters (spawn), treasure (chest) |
 | `monster:slain` | {kind, x, y, map} | monsters.js | guild (goal counts), treasure (blast ring) |
 | `mine:faint` | none | health.js | mine.js (carry out) |
 | `gather` | {skill, xp, item?, n?} | farming, giants, clearing, forage, fishing, mine, monsters, coop, barn | skills.js (XP, bonus item) |
