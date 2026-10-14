@@ -98,7 +98,7 @@ const { placePlayer, tileAt, tileOf, soilOf, placeKey, parsePlaceKey } = await l
 const { greenhouseBuilt, orderGreenhouse } = await load('systems/greenhouse.js');
 const { buy, ship, buySupply } = await load('systems/economy.js');
 const { valueOf } = await load('systems/quality.js');
-const { nextTier, buyUpgrade, orderCoop, affordable, buyCoal } = await load('systems/upgrades.js');
+const { nextTier, buyUpgrade, orderCoop, affordable, buyCoal, buyMaterial } = await load('systems/upgrades.js');
 const { buyChicken, collectEggs, buyFeed, flock } = await load('systems/coop.js');
 const { PROJECTS } = await load('data/projects.js');
 const { funded, fundProject } = await load('systems/projects.js');
@@ -108,7 +108,7 @@ const { craft } = await load('systems/crafting.js');
 const { startLayout } = await load('systems/layouts.js');
 const { patPet, fillBowl } = await load('systems/pets.js');
 const { orderStable } = await load('systems/stable.js');
-const { STABLE, COAL_COST } = await load('data/upgrades.js');
+const { STABLE, COAL_COST, MATERIAL_COST } = await load('data/upgrades.js');
 const BAR_ORE = { copperbar: 'copper', ironbar: 'iron' };
 const { pickUp } = await load('systems/placeables.js');
 const { accepted, loadMachine, collectMachine } = await load('systems/artisan.js');
@@ -208,6 +208,14 @@ function simulate(runSeed) {
   function getCoal() {
     const need = missingMats().coal || 0, s = S();
     if (need && s.gold > COAL_COST * need + 500) track('coal', () => buyCoal(need));
+  }
+  // Wood and stone: bought from Bram when the gold is there with the purchase itself still affordable.
+  function getMaterials() {
+    const m = missingMats(), s = S(), g = GOAL[goals[0]];
+    for (const k of Object.keys(MATERIAL_COST)) {
+      const need = m[k] || 0, cost = MATERIAL_COST[k] * need;
+      if (need && g && s.gold > cost + (g.cost() || 0) + 500) track('materials', () => buyMaterial(k, need));
+    }
   }
   function purchases(reserve) {
     while (goals.length) {
@@ -527,7 +535,7 @@ function simulate(runSeed) {
     reserved = reserves();
     forage();
     layoutChores();
-    getCoal();
+    getCoal(); getMaterials();
     if (missingMats().wood && !late()) chopWood();
     plantCones();
     if (Object.keys(missingMats()).filter((k) => k !== 'wood').length && !late()) mine();   // saving up for something that needs ore: mine first

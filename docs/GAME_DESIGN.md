@@ -72,6 +72,10 @@ Tailoring as in Stardew: at the sewing machine one cloth plus one item makes the
 
 Defense: each point takes 1 off a hit, to a minimum of 1 (Stardew's boots give 1 to 4). Dye pots recolour a shirt or trousers with any crop, fruit or fish, used up. A mannequin wears a copy of your outfit. Stations come from the farmhouse catalogue: sewing machine 2,500g, dye pots 1,000g, mannequin 2,000g (Stardew has no price for these: you use Emily's for free, so they are priced as mid-range furniture).
 
+## Materials from Bram (v29)
+
+Wood 10g and stone 20g each at Bram's workbench, in tens and fifties (Stardew's carpenter prices). Coal stays 150g. Materials are never shipped, so buying them is a one-way cost.
+
 ## Smelting (v26)
 
 Upgrades, buildings and recipes that took ore now take bars, at Stardew's 5 ore to a bar. The furnace (20 copper ore, 25 stone, Stardew's recipe) turns 5 copper or iron ore plus 1 coal into a copper bar (60g) or iron bar (120g). Coal (15g) comes from the charcoal kiln (10 wood each), from stone rocks in the Hollow (6% each) or from Bram at 150g (Stardew's blacksmith price). Bars and coal are materials: kept, never shipped.
@@ -439,10 +443,9 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Weather does not change fishing or neighbours yet (Stardew has rain-only fish and neighbours who stay in). Rain sound and richer effects come with the atmosphere item.
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
-- Wood is the bottleneck for v27 machines (15 to 60 wood each) while alders are the only steady supply. In the simulator the bot finishes its shopping list later (the smoker and mushroom log are not reached in every run). Advisory: numbers stay on the Stardew scale.
 - The recycler, worm bin and bait maker wait for the fishing overhaul (roadmap item 20), which brings trash and bait.
 - Honey has one flavour; Stardew's flower honey is not modelled.
-- v28 makes wood scarcer: the big coop and barn take 400 to 550 wood. In the simulator the bot saves for the big coop from autumn of year 1 and gets it in year 2 (4 of 5 runs), mining and chopping instead of fishing meanwhile (fish income -42%). Stardew's carpenter sells wood; adding that is a roadmap call for Nuno.
+- Since v29 wood and stone can be bought (10g and 20g), so big wood costs are a gold cost too. In the simulator the bot finishes all but about 4 items of its 2-year shopping list (26 before) and raises far more animals (animal products +160%); year 1 summer and autumn earn 17% less while it buys materials.
 - Coop and barn upgrades do not change the buildings' size or art.
 - Grazing animals stay in their yards (Stardew's roam the farm). The silo does not cap the hay loft.
 - Mine floors have no special floors (treasure, boss, elevator).

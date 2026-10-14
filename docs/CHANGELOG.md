@@ -2,6 +2,9 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v29: Wood and stone from Bram
+- Bram's workbench sells wood (10g) and stone (20g), in tens and fifties, next to coal.
+
 ## v28: More livestock
 - New animals: ducks, rabbits, sheep and pigs, plus two you can only hatch, the Mossback and the Strider. Their eggs turn up in Hollow rocks now and then.
 - Big and deluxe coops and barns at Bram's workbench: more room, and the bigger animals.

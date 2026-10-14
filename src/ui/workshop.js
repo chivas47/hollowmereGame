@@ -1,12 +1,12 @@
 // Dialogs for Bram's workbench and the chicken coop.
 import { G } from '../core/game.js';
 import { on, notify } from '../core/events.js';
-import { UPGRADES, COOP, BARN, GREENHOUSE, STABLE, COAL_COST, tier } from '../data/upgrades.js';
+import { UPGRADES, COOP, BARN, GREENHOUSE, STABLE, COAL_COST, MATERIAL_COST, tier } from '../data/upgrades.js';
 import { orderStable } from '../systems/stable.js';
 import { RENOVATIONS } from '../data/furniture.js';
 import { buyRenovation } from '../systems/house.js';
 import { ITEMS } from '../data/items.js';
-import { nextTier, buyUpgrade, orderCoop, affordable, buyCoal } from '../systems/upgrades.js';
+import { nextTier, buyUpgrade, orderCoop, affordable, buyCoal, buyMaterial } from '../systems/upgrades.js';
 import { collectEggs, buyFeed } from '../systems/coop.js';
 import { HOMES, nextLevel, orderLevel, buyLivestock, noRoom, kindOf, hearts, room, level } from '../systems/livestock.js';
 import { orderBarn } from '../systems/barn.js';
@@ -51,7 +51,8 @@ function workbench() {
   }).join('');
   const renos = Object.entries(RENOVATIONS).map(([k, r]) => (S.house.renos.includes(k) ? offer(r.name, 'Done')
     : offer(r.name, `${r.desc} ${r.cost.toLocaleString('en-US')}g`, `data-reno="${k}"`, r.cost))).join('');
-  openModal(`<h2>Bram's workbench</h2><p class="role">Bram takes orders here. You have <b>${S.gold}g</b>. Press C anywhere to craft sprinklers and machines; a furnace smelts ore into the bars upgrades need.</p>${rows}${coop}${barn}${ups}${gh}${st}<h3>Farmhouse renovations</h3>${renos}<h3>Coal</h3><div class="shoprow"><div><b>Coal</b><span>${COAL_COST}g each. You have ${S.bag.coal || 0}. The furnace needs 1 per bar.</span></div><div class="btns"><button data-coal="1" ${S.gold < COAL_COST ? 'disabled' : ''}>Buy 1</button><button data-coal="5" ${S.gold < COAL_COST * 5 ? 'disabled' : ''}>Buy 5</button></div></div>`,
+  const mats = Object.entries(MATERIAL_COST).map(([k, c]) => `<div class="shoprow"><div><b>${ITEMS[k].name}</b><span>${c}g each. You have ${S.bag[k] || 0}.</span></div><div class="btns">${[10, 50].map((n) => `<button data-mat="${k}:${n}" ${S.gold < c * n ? 'disabled' : ''}>Buy ${n}</button>`).join('')}</div></div>`).join('');
+  openModal(`<h2>Bram's workbench</h2><p class="role">Bram takes orders here. You have <b>${S.gold}g</b>. Press C anywhere to craft sprinklers and machines; a furnace smelts ore into the bars upgrades need.</p>${rows}${coop}${barn}${ups}${gh}${st}<h3>Farmhouse renovations</h3>${renos}<h3>Coal and materials</h3><div class="shoprow"><div><b>Coal</b><span>${COAL_COST}g each. You have ${S.bag.coal || 0}. The furnace needs 1 per bar.</span></div><div class="btns"><button data-coal="1" ${S.gold < COAL_COST ? 'disabled' : ''}>Buy 1</button><button data-coal="5" ${S.gold < COAL_COST * 5 ? 'disabled' : ''}>Buy 5</button></div></div>${mats}`,
     [['Leave', closeModal, true]]);
 }
 
@@ -95,6 +96,8 @@ $('#mbody').addEventListener('click', (e) => {
   if (cl && !cl.disabled) { if (buyCoal(+cl.dataset.coal)) workbench(); return; }
   const lv = e.target.closest('[data-level]');
   if (lv && !lv.disabled) { if (orderLevel(lv.dataset.level)) workbench(); return; }
+  const mt = e.target.closest('[data-mat]');
+  if (mt && !mt.disabled) { const [k, n] = mt.dataset.mat.split(':'); if (buyMaterial(k, +n)) workbench(); return; }
   const rn = e.target.closest('[data-reno]');
   if (rn && !rn.disabled) { if (buyRenovation(rn.dataset.reno)) workbench(); return; }
   const an = e.target.closest('[data-animal]');
