@@ -26,6 +26,9 @@ export const CROPS = {
   carrot:   { name: 'Carrot',       days: 3, seed: 15, sell: 35,  color: '#e8862a', top: null,      line: null,      shape: 'root',  seasons: ['Spring'] },
   squash:   { name: 'Summer squash', days: 5, seed: 45, sell: 45, color: '#e9c46a', top: null,      line: '#c9a43a', shape: 'round', seasons: ['Summer'], regrow: 3 },
   broccoli: { name: 'Broccoli',     days: 6, seed: 60, sell: 70,  color: '#3f8a4a', top: null,      line: '#2f6b3a', shape: 'leafy', seasons: ['Autumn'], regrow: 4 },
+  // v33: fiber seeds (Stardew's: crafted, grow in any season and outdoors in winter in 7 days without water, 4 to 7 fiber).
+  // crafted: not sold at the stall. dry: grows without watering.
+  fiberseed: { name: 'Fiber seeds', days: 7, seed: 0, sell: 0, color: '#8fae5a', top: null, line: '#5d7a3a', shape: 'leafy', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], packet: 'fiber', produce: ['fiber'], amount: [4, 7], crafted: true, dry: true },
   // v32: the premium summer crop (Stardew's starfruit: 400g seed, 13 days, sells 750g); helper huts need 9.
   gleamfruit: { name: 'Gleamfruit', days: 13, seed: 400, sell: 750, color: '#f2d14a', top: '#7fbf5a', line: '#c9a43a', shape: 'round', seasons: ['Summer'] },
   // v30, for the mill (Stardew: wheat 10g seed, 4 days, sells 25g, summer and autumn; beet 20g, 6 days, 100g, autumn).

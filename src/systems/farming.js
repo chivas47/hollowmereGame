@@ -25,8 +25,9 @@ const fertOf = (s) => (s?.fert ? PLACEABLES[s.fert] : null);
 // Takes the ripe crop off a soil tile (a regrowing plant stays) and says what came off. Also used by the
 // helper hut (systems/helpers.js). Quality is rolled here.
 export function harvest(s) {
-  const c = CROPS[s.crop.type], q = rollCropQuality(skillLevel('farming'), fertOf(s)?.quality || 0);
-  const item = c.packet === 'wild' ? c.produce[Math.floor(Math.random() * c.produce.length)] : s.crop.type, n = c.yield || 1;
+  const c = CROPS[s.crop.type], q = c.packet === 'fiber' ? 0 : rollCropQuality(skillLevel('farming'), fertOf(s)?.quality || 0);
+  const item = c.packet === 'wild' || c.packet === 'fiber' ? c.produce[Math.floor(Math.random() * c.produce.length)] : s.crop.type;
+  const n = c.amount ? c.amount[0] + Math.floor(Math.random() * (c.amount[1] - c.amount[0] + 1)) : c.yield || 1;
   if (c.regrow) s.crop.age = (s.crop.need || c.days) - c.regrow;   // the plant stays and fruits again
   else s.crop = null;
   return { item, n, q };
@@ -87,7 +88,7 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
 
 on('day:end', (report) => {
   for (const s of [...Object.values(G.S.soil), ...Object.values(G.S.greenSoil)]) {
-    if (s.crop && !s.crop.dead && s.w && !isRipe(s.crop)) { s.crop.age++; report.grown++; }
+    if (s.crop && !s.crop.dead && (s.w || CROPS[s.crop.type].dry) && !isRipe(s.crop)) { s.crop.age++; report.grown++; }
     const keep = fertOf(s)?.retain || 0;
     s.w = keep > 0 && Math.random() < keep;   // mulch can keep the soil damp
   }

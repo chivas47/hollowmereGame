@@ -12,4 +12,6 @@ export const FORAGE = {
   // Only on Silvermist days (systems/weather.js), never in the daily spawn.
   mistlily:  { name: 'Mist lily',   sell: 90,  season: null },
 };
+// v33: weeds in the Wilds, cut for fiber with any tool (Stardew: weeds give fiber all over the valley).
+export const WILD_WEEDS = { perDay: 6, fiber: 1 };
 export const FORAGE_PER_DAY = 6;

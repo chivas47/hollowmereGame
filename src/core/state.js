@@ -27,6 +27,7 @@ export function newState() {
     soil: {},           // farm: "x,y" -> { w: watered, crop: { type, age, dead } | null }
     greenSoil: {},      // greenhouse beds, same shape
     forage: [], forageDay: 0,
+    wildWeeds: [],      // v33: weeds in the Wilds, cut for fiber (systems/forage.js)
     fishLog: {},        // fish key -> number caught
     upgrades: { can: 0, hoe: 0, axe: 0, rod: 0, house: 0 },   // tier index per upgrade line
     waterBonus: 0, maxEnergy: 270,                      // derived stats, see systems/upgrades.js
@@ -84,6 +85,7 @@ export function merge(saved) {
   s.upgrades = Object.assign(newState().upgrades, saved.upgrades || {});
   s.built = Object.assign(newState().built, saved.built || {});
   if (!Array.isArray(s.forage)) s.forage = [];
+  if (!Array.isArray(s.wildWeeds)) s.wildWeeds = [];
   if (!Array.isArray(s.chickens)) s.chickens = [];
   // v10: chickens need feed. Existing flocks get a week's worth so they keep laying.
   if (saved.feed === undefined) s.feed = s.chickens.length * 7;

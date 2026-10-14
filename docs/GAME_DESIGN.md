@@ -156,6 +156,8 @@ Profit per day = (sells - seed) / days, one harvest per seed.
 | Beet | 20g | 6 | 100g | 13.3g | Autumn (v30; sugar at the mill) |
 | Gleamfruit | 400g | 13 | 750g | 26.9g | Summer (v32; Stardew's starfruit) |
 
+Fiber seeds (v33, Stardew's fiber seeds): crafted from 1 mixed seeds packet, 5 wood (for sap) and 1 stone (for clay). They grow outdoors in every season, need no water, and give 4 to 7 fiber after 7 days. Not sold at the stall. The Wilds grow 6 weeds a day; any tool cuts one for 1 fiber, free.
+
 Regrowing crops (the plant stays; regrow = days to the next harvest):
 
 | Crop | Seed | Days | Regrow | Sells | Seasons | Stardew role |
@@ -486,7 +488,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Honey has one flavour; Stardew's flower honey is not modelled.
 - Since v29 wood and stone can be bought (10g and 20g), so big wood costs are a gold cost too. In the simulator the bot finishes all but about 4 items of its 2-year shopping list (26 before) and raises far more animals (animal products +160%); year 1 summer and autumn earn 17% less while it buys materials.
 - v30 adds wheat and beets to the quest board's crops. The balance bot never grows them, so it fills fewer requests and loses about 10% of crop income in the simulator (checked: with the two crops kept off the board the loss is gone). Real players can grow them for requests.
-- Fiber is the next bottleneck after wood: only weeds give it (about 0.65 a day), and the helper hut needs 100. The balance bot never gets the hut in 2 years; it is last on its list.
+- Fiber was the bottleneck after wood until v33 (fiber seeds, weeds in the Wilds). The balance bot now cuts the Wilds' weeds when a purchase needs fiber and reaches the loom in 4 of 5 runs, but still not the mill or the helper hut (last on its list); it does not plant fiber seeds.
 - In 2 of 5 simulator runs the bot's farm has no free 3 by 3 spot for the fish pond (its tilled field and buildings fill the farm).
 - The balance bot builds the fish pond in year 1 and stocks it with its best catch (about 7,000g of roe by the end of year 2). It does not use the slime pen: gel sells for 5g.
 - The balance bot reaches the loom but not the mill in 2 years (the mill needs 4 cloth, from 20 fiber).

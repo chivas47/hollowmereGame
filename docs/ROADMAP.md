@@ -33,6 +33,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 14a | Farm buildings: placing | feature | done (chivas47/hollowmereGame#25) | Place new buildings on open farm grass and move any building (coop, barn, greenhouse and stable too) at the workbench; shed, mill, mini shipping bin, an expensive late-game clock tower. |
 | 14b | Farm buildings: ponds and pens | feature | done (chivas47/hollowmereGame#26) | Fish pond (raise fish, roe, pond requests) and slime pen. |
 | 14c | Farm buildings: helpers and the cave | feature | done (chivas47/hollowmereGame#27) | Helper huts (original spirit helpers that harvest), waystones (warp), the farm cave choice (fruit bats or mushrooms). |
+| 14d | Fiber | feature | done (chivas47/hollowmereGame#28) | Fiber seeds (crafted, any season, no water) and weeds in the Wilds. Added by Nuno after v32 made fiber the bottleneck. |
 | 15 | Professions | feature | next | Two choices at level 5 and one of two branches at level 10 for each skill. Adds a combat skill. |
 | 16 | Cooking and buffs | feature | queued | Kitchen, about 30 recipes learned from TV, neighbours and shops, food and drink buffs (skill, speed, defence, luck), daily luck, fridge, energy-raising star fruit (original name). |
 | 17 | Combat expansion | feature | queued | Swords, daggers, clubs; bats, bugs, skeletons, serpents; rings, boots, bombs; treasure and geodes in the mine; a monster hunters' guild with slaying goals. |
