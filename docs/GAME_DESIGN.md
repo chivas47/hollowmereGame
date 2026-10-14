@@ -74,7 +74,7 @@ Defense: each point takes 1 off a hit, to a minimum of 1 (Stardew's boots give 1
 
 ## Farm buildings: placing (v30)
 
-Bram's workbench moves any building for free: choose the spot by facing where its top-left corner goes and pressing Use (Escape, or facing the workbench, stops). The coop and barn take their yards and animals along; the stable takes the horse's spot. Buildings need open grass below the path, clear of soil, placed objects, debris and other buildings' yards. Grass tufts under a new building go.
+Bram's workbench moves any building for free: choose the spot by facing where its top-left corner goes and pressing Use (Escape, or facing the workbench, stops). The coop and barn take their yards and animals along; the stable takes the horse's spot. Buildings need open grass below the path (empty tilled soil is fine since v34; it is cleared), clear of crops, placed objects, debris and other buildings' yards. Grass tufts under a new building go.
 
 | Building | Gold | Materials | Size | Effect | Stardew counterpart |
 |---|---|---|---|---|---|
@@ -373,12 +373,29 @@ Each swing costs 2 energy, the copper axe does twice the damage. Alder cones go 
 | Farming | Harvest: sell / 10, at least 3 |
 | Foraging | Each forage item: 5 |
 | Fishing | Each catch: 4 + 3 x difficulty |
-| Mining | Stone 1, copper 3, iron 5, slime 3 |
+| Mining | Stone 1, copper 3, iron 5 |
 | Ranching | Petting 2, each egg 3, each milk 4 |
+| Combat (v34) | Each slime: 3 (slimes trained mining before v34) |
 
 - Levels 0 to 10 at 50, 130, 250, 420, 650, 950, 1330, 1800, 2380, 3100 XP.
 - Each level: +2% chance per item of a bonus item when you gather with that skill (level 10 = 20%).
-- Levels 5 and 10 each add +5 max energy (up to +50 across all skills).
+- Levels 5 and 10 each add +5 max energy (up to +60 across all six skills).
+- Combat levels add 5 max health each (Stardew's).
+
+### Professions (v34)
+
+At level 5 pick one of two; at level 10 pick one of the two that follow it. Stardew's trees by role; farming and ranching split Stardew's farming tree. The choice opens when the level is reached (or from the bag, for saves that already had the levels).
+
+| Skill | Level 5 | Level 10 after the first | Level 10 after the second |
+|---|---|---|---|
+| Farming | Tiller: crops +10% / Grower: crops grow 10% faster | Artisan: artisan goods +40% / Bountiful: a quarter of harvests give a second crop | Quickgrow: a further 10% faster / Seedsaver: a fifth of harvests give the seed back |
+| Ranching | Rancher: animal products +20% / Breeder: eggs hatch in half the time | Coopkeeper: coop animals warm twice as fast / Shepherd: barn animals warm twice as fast, sheep every 2 nights | Nurturer: no friendship lost on unpetted days / Hatcher: hatched animals start at three hearts |
+| Foraging | Forester: trees +25% wood / Gatherer: forage doubles a fifth of the time | Lumberjack: felled alders drop hardwood 25% / Tapper: taps fill in 6 nights | Botanist: forage always heirloom / Tracker: 2 more forage items a day in the Wilds |
+| Mining | Miner: +1 ore per ore rock / Geologist: gems in pairs half the time | Blacksmith: 4 ore a bar / Prospector: coal twice as often | Excavator: gems and rare eggs twice as often / Gemologist: gems +30% |
+| Fishing | Fisher: fish +25% / Pondkeeper: pond fish multiply a night sooner | Angler: fish +50% instead / Steady hand: 30% wider reel zone | Roemaster: roe +50% / Netter: roe 15% more often |
+| Combat | Fighter: sword +10%, +15 health / Scout: 10% critical hits for double damage | Brute: sword +15% more / Defender: +25 health | Acrobat: slimes hurt 25% less / Desperado: criticals triple |
+
+Original where Stardew's mechanic does not exist here: Bountiful, Quickgrow, Seedsaver, Nurturer, Hatcher (the farming and ranching split), Blacksmith (bars are not shipped), Excavator (no artifacts), Pondkeeper, Steady hand, Roemaster and Netter (no crab pots or treasure), Acrobat (no special moves). Selling bonuses apply when shipping, not in contests.
 
 ### Village and quest board
 
@@ -489,7 +506,8 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Since v29 wood and stone can be bought (10g and 20g), so big wood costs are a gold cost too. In the simulator the bot finishes all but about 4 items of its 2-year shopping list (26 before) and raises far more animals (animal products +160%); year 1 summer and autumn earn 17% less while it buys materials.
 - v30 adds wheat and beets to the quest board's crops. The balance bot never grows them, so it fills fewer requests and loses about 10% of crop income in the simulator (checked: with the two crops kept off the board the loss is gone). Real players can grow them for requests.
 - Fiber was the bottleneck after wood until v33 (fiber seeds, weeds in the Wilds). The balance bot now cuts the Wilds' weeds when a purchase needs fiber and reaches the loom in 4 of 5 runs, but still not the mill or the helper hut (last on its list); it does not plant fiber seeds.
-- In 2 of 5 simulator runs the bot's farm has no free 3 by 3 spot for the fish pond (its tilled field and buildings fill the farm).
+- Before v34 the bot's farm sometimes had no free 3 by 3 spot for the fish pond; buildings may now go on empty tilled soil.
+- The balance bot never fights, so combat stays at level 0 in the simulator.
 - The balance bot builds the fish pond in year 1 and stocks it with its best catch (about 7,000g of roe by the end of year 2). It does not use the slime pen: gel sells for 5g.
 - The balance bot reaches the loom but not the mill in 2 years (the mill needs 4 cloth, from 20 fiber).
 - Coop and barn upgrades do not change the buildings' size or art.

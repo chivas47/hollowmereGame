@@ -8,6 +8,8 @@ import { SLIME, SWORD_DAMAGE } from '../data/minerals.js';
 import { drawSlime } from '../render/sprites.js';
 import { solidAt } from './world.js';
 import { hurtPlayer } from './health.js';
+import { has } from './professions.js';
+import { COMBAT } from '../data/professions.js';
 
 const AGGRO = 110, HOP = 1.2, HOP_ACTIVE = 0.5, TOUCH = 11, REACH = 16;
 export const slimes = [];   // exported for debugging and tests
@@ -81,11 +83,12 @@ addInteraction(58, ({ item, mapId }) => {
   if (mapId !== slimeMap) return true;
   for (const m of [...slimes]) {
     if (Math.hypot(m.x - px, m.y - 4 - py) > REACH) continue;
-    m.hp -= SWORD_DAMAGE; m.hurt = 0.25; m.kx = dx * 160; m.ky = dy * 160;
+    const crit = has('scout') && Math.random() < 0.1 ? (has('desperado') ? 3 : 2) : 1;   // v34: scout, desperado
+    m.hp -= SWORD_DAMAGE * (has('fighter') ? 1.1 : 1) * (has('brute') ? 1.15 : 1) * crit; m.hurt = 0.25; m.kx = dx * 160; m.ky = dy * 160;
     if (m.hp <= 0) {
       slimes.splice(slimes.indexOf(m), 1);
       if (Math.random() < SLIME.dropChance) { G.S.bag[SLIME.drop]++; notify('+1 Slime gel'); }
-      emit('gather', { skill: 'mining', xp: 3 });
+      emit('gather', { skill: 'combat', xp: COMBAT.slimeXp });   // v34: slimes train combat (they trained mining before)
       changed();
     }
   }

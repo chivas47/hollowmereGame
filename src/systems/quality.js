@@ -4,6 +4,7 @@
 import { G } from '../core/game.js';
 import { ITEMS } from '../data/items.js';
 import { QUALITY } from '../data/quality.js';
+import { priceMult } from './professions.js';
 
 // [plain, fine, prime, heirloom], reconciled with the bag total.
 export function counts(k) {
@@ -19,7 +20,8 @@ export function addItem(k, n = 1, tier = 0) {
 }
 
 export const unitValue = (k, tier) => Math.floor(ITEMS[k].sell * QUALITY[tier].mult);
-export const valueOf = (k) => counts(k).reduce((sum, n, t) => sum + n * unitValue(k, t), 0);
+// Shipping value: quality, then the selling professions (systems/professions.js).
+export const valueOf = (k) => counts(k).reduce((sum, n, t) => sum + n * Math.floor(unitValue(k, t) * priceMult(k)), 0);
 
 // Removes one of the best quality on hand and returns its tier, or -1 if there is none.
 export function takeBest(k) {

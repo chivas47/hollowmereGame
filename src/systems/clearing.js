@@ -15,6 +15,7 @@ import { COOP, BARN, GREENHOUSE, tier } from '../data/upgrades.js';
 import { DEBRIS, ALDER, CREEP, START_CLUTTER, SWING, GRASS } from '../data/clearing.js';
 
 const TAP = { item: 'syrup', every: 8 };   // Stardew: a tapper on a maple fills in 9 days
+const tapNights = () => (has('tapper') ? 6 : TAP.every);   // v34: tapper
 import { LAYOUTS } from '../data/layouts.js';
 import { drawDebris, drawAlder, drawFence, drawGate, drawFloor, drawTap } from '../render/sprites.js';
 import { useEnergy, placeKey, parsePlaceKey } from './world.js';
@@ -22,6 +23,7 @@ import { swingAt } from './effects.js';
 import { addItem } from './quality.js';
 import { pickUp, tileFor } from './placeables.js';
 import { giantAt } from './giants.js';
+import { has } from './professions.js';
 
 const grid = () => MAPS.farm.grid;
 const inRect = (x, y, f) => x >= f.x && x < f.x + f.w && y >= f.y && y < f.y + f.h;
@@ -163,13 +165,13 @@ addInteraction(62, ({ tx, ty, mapId, item }) => {
   // A tree tap (v27): fix one from the kit, collect syrup with anything but the axe.
   if (d.kind === 'alder' && !young && item === 'kit' && PLACEABLES[G.S.kitSel]?.kind === 'tap' && G.S.kit[G.S.kitSel] > 0) {
     if (d.tap) { notify('This alder already has a tap.'); return true; }
-    G.S.kit[G.S.kitSel]--; d.tap = { timer: TAP.every, ready: false };
-    emit('sfx', 'place'); notify(`Fixed a tap to the alder. Syrup in ${TAP.every} nights.`); changed();
+    G.S.kit[G.S.kitSel]--; d.tap = { timer: tapNights(), ready: false };
+    emit('sfx', 'place'); notify(`Fixed a tap to the alder. Syrup in ${tapNights()} nights.`); changed();
     return true;
   }
   if (d.tap && item !== 'axe') {
     if (!d.tap.ready) { notify(`The tap is filling. Syrup in ${d.tap.timer} night${d.tap.timer === 1 ? '' : 's'}.`); return true; }
-    addItem(TAP.item, 1); d.tap = { timer: TAP.every, ready: false };
+    addItem(TAP.item, 1); d.tap = { timer: tapNights(), ready: false };
     emit('sfx', 'pickup'); notify(`Collected ${ITEMS[TAP.item].name.toLowerCase()}.`); changed();
     return true;
   }
@@ -190,7 +192,10 @@ addInteraction(62, ({ tx, ty, mapId, item }) => {
   }
   d.hp = (d.hp ?? def.hp) - power;
   if (d.hp > 0) { changed(); return true; }
-  const got = drop(d.drops || def.drops);
+  const drops = { ...(d.drops || def.drops) };
+  if (drops.wood && has('forester')) drops.wood = drops.wood.map((n) => Math.round(n * 1.25));   // v34: forester
+  const got = drop(drops);
+  if (d.kind === 'alder' && has('lumberjack') && Math.random() < 0.25) { addItem('hardwood', 1); got.push('Hardwood x1'); }   // v34: lumberjack
   if (!got.length) got.push('nothing useful');
   remove(k);
   if (d.tap) { G.S.kit.treetap = (G.S.kit.treetap || 0) + 1; got.push('the tree tap back'); }

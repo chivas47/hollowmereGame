@@ -13,6 +13,9 @@ import { FISH } from '../data/fish.js';
 import { ITEMS } from '../data/items.js';
 import { built } from './sites.js';
 import { addItem } from './quality.js';
+import { has } from './professions.js';
+
+const spawnEvery = (sell) => Math.max(1, POND.spawnEvery(sell) - (has('pondkeeper') ? 1 : 0));   // v34: pondkeeper
 
 const capStep = () => POND.caps.indexOf(G.S.pond.cap);
 
@@ -20,7 +23,7 @@ export function stockPond(k) {
   const P = G.S.pond;
   if (!built('pond') || P.fish || !FISH[k] || !(G.S.bag[k] > 0)) return false;
   G.S.bag[k]--;
-  Object.assign(P, { fish: k, n: 1, cap: POND.caps[0], timer: POND.spawnEvery(FISH[k].sell), roe: 0, ask: null });
+  Object.assign(P, { fish: k, n: 1, cap: POND.caps[0], timer: spawnEvery(FISH[k].sell), roe: 0, ask: null });
   emit('world:changed'); changed();
   return true;
 }
@@ -75,13 +78,13 @@ export function collectBalls() {
 on('day:end', (report) => {
   const S = G.S, P = S.pond;
   if (built('pond') && P.fish) {
-    if (P.n < P.cap && --P.timer <= 0) { P.n++; P.timer = POND.spawnEvery(FISH[P.fish].sell); report.pondFish = true; }
+    if (P.n < P.cap && --P.timer <= 0) { P.n++; P.timer = spawnEvery(FISH[P.fish].sell); report.pondFish = true; }
     if (P.n >= P.cap && P.cap < POND.caps.at(-1) && !P.ask) {
       const list = POND.asks[capStep()];
       P.ask = list[Math.floor(Math.random() * list.length)];
       report.pondAsk = true;
     }
-    if (Math.random() < POND.roeChance(P.n)) P.roe++;
+    if (Math.random() < POND.roeChance(P.n) + (has('netter') ? 0.15 : 0)) P.roe++;   // v34: netter
   }
   if (built('slimepen') && S.slimes.n && S.slimes.trough === S.day) {
     for (let i = 0; i < S.slimes.n; i++) if (Math.random() < SLIME_PEN.ballChance) S.slimes.balls++;

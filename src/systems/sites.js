@@ -116,7 +116,7 @@ export function noFit(key, x, y) {
     const k = `${tx},${ty}`, d = S.debris?.[k];
     if (mine(tx, ty)) continue;
     if (farm.grid[ty][tx] !== 'g' && !(d && farm.grid[ty][tx] === 'Y')) return 'It needs open grass: no water, trees, paths or buildings in the way.';
-    if (S.soil[k]) return 'It cannot go on tilled soil.';
+    if (S.soil[k]?.crop) return 'Something is growing there.';   // empty tilled soil is cleared by the build (v34)
     if (S.placed[k]) return 'Something you placed is in the way.';
     if (d && !DEBRIS[d.kind]?.walk) return `Clear the ${DEBRIS[d.kind].name.toLowerCase()} first.`;
     if (S.giants && Object.keys(S.giants).some((g) => { const [gx, gy] = g.split(',').map(Number); return tx >= gx && tx < gx + 3 && ty >= gy && ty < gy + 3; })) return 'A giant crop is in the way.';

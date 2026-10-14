@@ -3,6 +3,7 @@
 // bite  -> short window to press Use
 // reel  -> a marker sweeps a bar; press Use while it is inside the green zone
 import { G } from '../core/game.js';
+import { has } from './professions.js';
 import { T, W } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addUpdater, addLayer } from '../core/registry.js';
@@ -34,7 +35,7 @@ function pickFish(ice) {
 
 function startReel(f) {
   const d = FISH[f.fish].difficulty;
-  f.zw = Math.min(BAR - 20, Math.max(18, 56 - d * 8) + tier(G.S, 'rod').zone);
+  f.zw = Math.min(BAR - 20, Math.round((Math.max(18, 56 - d * 8) + tier(G.S, 'rod').zone) * (has('steady') ? 1.3 : 1)));   // v34: steady hand
   f.zone = Math.random() * (BAR - f.zw);
   f.marker = 0; f.vel = 70 + d * 28;
   f.phase = 'reel';

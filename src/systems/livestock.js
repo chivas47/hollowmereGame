@@ -11,6 +11,7 @@ import { ITEMS } from '../data/items.js';
 import { affordable } from './upgrades.js';
 import { addItem, rollSkillQuality } from './quality.js';
 import { skillLevel } from './skills.js';
+import { has } from './professions.js';
 
 export const HOMES = {
   coop: { def: COOP, list: () => G.S.chickens, goods: () => G.S.coopGoods, food: 'feed', place: 'coop' },
@@ -36,13 +37,13 @@ export function noRoom(kind) {
 }
 
 // Moves a new animal in (bought or hatched). Returns its name, or null with the reason shown.
-export function adopt(kind) {
+export function adopt(kind, love = 0) {
   const why = noRoom(kind);
   if (why) { notify(why); return null; }
   const H = HOMES[homeOf(kind)], def = animalDef(kind), list = H.list();
   const taken = new Set(list.map((a) => a.name));
   const name = def.names.find((n) => !taken.has(n)) || `${def.name} ${list.length + 1}`;
-  list.push({ kind, name, pet: 0, love: 0, days: 0 });
+  list.push({ kind, name, pet: 0, love, days: 0 });
   changed();
   return name;
 }
@@ -88,7 +89,8 @@ export function buyTool(k) {
 
 export function pet(a) {
   a.pet = G.S.day;
-  a.love = Math.min(LOVE.max, (a.love || 0) + LOVE.pet);
+  const twice = homeOf(kindOf(a)) === 'coop' ? has('coopkeeper') : has('shepherd');   // v34
+  a.love = Math.min(LOVE.max, (a.love || 0) + LOVE.pet * (twice ? 2 : 1));
 }
 
 // ---- Overnight ----
@@ -122,13 +124,14 @@ export function night(home) {
     if (grass.length) { delete S.debris[grass.splice(Math.floor(Math.random() * grass.length), 1)[0]]; fed = grazed = true; out.grazed++; }
     else if (S[H.food] > 0) { S[H.food]--; fed = true; }
     let love = a.love || 0;
-    if (!petted) love -= Math.max(0, Math.floor(10 - love / 200));
+    if (!petted && !has('nurturer')) love -= Math.max(0, Math.floor(10 - love / 200));
     if (!fed) { love -= LOVE.hungry; out.hungry++; }
     a.love = Math.max(0, Math.min(LOVE.max, love));
     if (!fed) continue;
     const mood = Math.min(255, (petted ? 200 : 100) + (grazed ? 40 : 0));
     a.days = (a.days || 0) + 1;
-    if (a.days < def.every || !petted) continue;
+    const every = kindOf(a) === 'sheep' && has('shepherd') ? 2 : def.every;   // v34: shepherd
+    if (a.days < every || !petted) continue;
     if (def.tool && !S.ranch[def.tool]) { out.noTool = def.tool; continue; }
     if (def.outdoors && !outside) continue;
     a.days = 0;

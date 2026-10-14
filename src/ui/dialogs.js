@@ -125,6 +125,7 @@ on('day:report', (r) => {
   if (r.pondAsk) html += '<p class="role">The fish pond is full. It wants something before it holds more: see the pond.</p>';
   if (r.helpers) html += `<p class="gift">The helpers harvested ${plural(r.helpers, 'crop')}. Collect them at the helper hut.</p>`;
   if (r.cave) html += '<p class="gift">Bram found a cave in the hill north of the farm, just above the bin. Go and have a look.</p>';
+  if (r.profession) html += '<p class="gift">A profession is waiting to be chosen: open the bag (I).</p>';
   if (r.artisan) html += `<p class="gift">${plural(r.artisan, 'machine')} finished overnight.</p>`;
   if (r.fruit) html += `<p class="gift">Your fruit trees grew ${plural(r.fruit, 'fruit')}.</p>`;
   if (r.giants) html += `<p class="gift">Something huge happened in the field overnight: ${plural(r.giants, 'giant crop')}!</p>`;

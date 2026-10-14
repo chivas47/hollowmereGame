@@ -43,6 +43,7 @@ on('gather', ({ skill, xp = 0, item, n = 1 }) => {
     if (gain) S.energy = Math.min(S.maxEnergy, S.energy + ENERGY_PER_MILESTONE);
     notify(`${SKILLS[skill].name} reached level ${after}!${gain}`);
     emit('sfx', 'levelup');
+    emit('skill:level', { skill, level: after });   // v34: professions at 5 and 10, combat health
   }
   changed();
 });
