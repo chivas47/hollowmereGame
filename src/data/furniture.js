@@ -38,6 +38,7 @@ export const FURNITURE = {
   // priced like mid-range furniture.
   sewing:     { name: 'Sewing machine',   shape: 'sewing',    cost: 2500, colors: ['#3f4850', '#c9ccd6'], station: 'tailor' },
   dyepots:    { name: 'Dye pots',         shape: 'dyepots',   cost: 1000, colors: ['#8d8a84', '#5f8fb5'], station: 'dye' },
+  tv:         { name: 'Television',       shape: 'tv',        cost: 750,  colors: ['#3f3226', '#5d7a90'], station: 'tv' },   // v35: Stardew's budget TV; weather, fortune and the cooking show
   mannequin:  { name: 'Mannequin',        shape: 'mannequin', cost: 2000, colors: ['#c9b68e', '#6e4626'], station: 'mannequin' },
 };
 

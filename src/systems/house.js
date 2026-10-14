@@ -68,8 +68,6 @@ export function buyRenovation(k) {
 on('upgraded', (key) => { if (key === 'house') rebuildHouse(true); });
 
 const LINES = {
-  n: 'A clean counter and an empty pantry.',
-  o: 'The stove is cold. Someday it will smell of soup.',
   x: 'An empty crib, freshly painted.',
   v: 'Old oak casks, waiting for something worth ageing.',
 };

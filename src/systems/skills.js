@@ -5,8 +5,10 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { ITEMS } from '../data/items.js';
 import { SKILLS, LEVEL_XP, BONUS_PER_LEVEL, MILESTONES, ENERGY_PER_MILESTONE, levelFor } from '../data/skills.js';
 import { recalcStats } from './upgrades.js';
+import { buff } from './buffs.js';
 
-export const skillLevel = (key) => levelFor(G.S.skills[key] || 0);
+// v35: food buffs add skill levels while they last.
+export const skillLevel = (key) => levelFor(G.S.skills[key] || 0) + buff(key);
 
 // Progress toward the next level, for the bag screen.
 export function skillProgress(key) {

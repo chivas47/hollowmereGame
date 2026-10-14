@@ -69,7 +69,7 @@ globalThis.performance ??= { now: () => Date.now() };
 
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
-const SYSTEMS = ['layouts', 'sites', 'professions', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
+const SYSTEMS = ['layouts', 'sites', 'professions', 'cooking', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
   'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
@@ -111,6 +111,7 @@ const { millIn, millCollect } = await load('systems/mill.js');
 const { stockPond, collectRoe, giveAsk, canGive } = await load('systems/ponds.js');
 const { collectHut, chooseCave, collectCave } = await load('systems/helpers.js');
 const { pending, choose } = await load('systems/professions.js');
+const { cook, eat, kitchen } = await load('systems/cooking.js');
 // The bot's professions (v34): the selling and yield picks, Stardew's usual money route.
 const PICKS = { farming: ['tiller', 'artisan'], ranching: ['rancher', 'coopkeeper'], foraging: ['forester', 'lumberjack'], mining: ['miner', 'blacksmith'], fishing: ['fisher', 'angler'], combat: ['fighter', 'brute'] };
 const { HOMES, homeOf, level, noRoom, buyLivestock, orderLevel, buyTool } = await load('systems/livestock.js');
@@ -531,7 +532,8 @@ function simulate(runSeed) {
   function reserves() {
     const s = S(), out = {};
     s.quests.forEach((q) => { out[q.item] = (out[q.item] || 0) + q.n; });
-    for (const [k, n] of Object.entries(GOAL[goals[0]]?.needs?.() || {})) if (k in CROPS) out[k] = (out[k] || 0) + n;   // crops the next purchase needs (the helper hut's gleamfruit)
+    for (const [k, n] of Object.entries(GOAL[goals[0]]?.needs?.() || {})) if (k in CROPS) out[k] = (out[k] || 0) + n;
+    if (s.bag.friedegg) out.friedegg = s.bag.friedegg;   // pan eggs are kept to eat, not shipped   // crops the next purchase needs (the helper hut's gleamfruit)
     const n = nextFestival();
     if (n && n.inDays <= 7 && n.f.kind === 'contest') {
       const items = Object.keys(s.bag).filter((k) => s.bag[k] > 0 && contestItemsFor(n.f, k)).sort((a, b) => ITEMS[b].sell - ITEMS[a].sell);
@@ -546,7 +548,7 @@ function simulate(runSeed) {
     for (const [k, n] of Object.entries(reserved)) { held[k] = Math.min(n, s.bag[k]); s.bag[k] -= held[k]; }
     for (const [k, n] of Object.entries(s.bag)) {
       if (!n || ITEMS[k].material) continue;
-      const src = k.startsWith('roe_') ? 'fish pond' : k.startsWith('aged_') ? 'artisan goods' : k in CROPS ? 'crops' : k in FORAGE ? 'forage' : k in FRUIT ? 'fruit' : k in WEATHER_ITEMS ? 'storm cells' : k in FISH ? 'fish' : k in PRODUCTS ? 'animal products' : k in ARTISAN ? 'artisan goods' : 'mining';
+      const src = ITEMS[k].dish ? 'cooking' : k.startsWith('roe_') ? 'fish pond' : k.startsWith('aged_') ? 'artisan goods' : k in CROPS ? 'crops' : k in FORAGE ? 'forage' : k in FRUIT ? 'fruit' : k in WEATHER_ITEMS ? 'storm cells' : k in FISH ? 'fish' : k in PRODUCTS ? 'animal products' : k in ARTISAN ? 'artisan goods' : 'mining';
       add(log.income, src, valueOf(k));
     }
     ship();
@@ -582,6 +584,8 @@ function simulate(runSeed) {
     if (Object.keys(missingMats()).filter((k) => !['wood', 'fiber', 'cloth'].includes(k)).length && !late()) mine();   // saving up for something that needs ore: mine first (not for fiber or cloth)
     if (!late()) farm('farm', true);
     if (!late() && greenhouseBuilt()) farm('greenhouse', true);
+    // v35: with a kitchen, eggs become pan eggs (50 energy each) eaten when energy runs low, for more fishing.
+    if (kitchen()) { while (s.bag.egg > 2 && (s.bag.friedegg || 0) < 3 && cook('friedegg')); while (s.energy < 40 && s.bag.friedegg > 0 && eat('friedegg')); }
     if (!late()) fish(0);
     machines(reserved);
     // The mill doubles wheat (flour 50g against wheat 25g); beets are worth more whole, so they are sold.

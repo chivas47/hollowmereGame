@@ -11,6 +11,7 @@ import { rng } from '../render/pixel.js';
 import { placePlayer, useEnergy } from './world.js';
 import { swingAt } from './effects.js';
 import { has } from './professions.js';
+import { luck } from './buffs.js';
 
 const ENTRANCE = { map: 'wilds', x: 12, y: 2, dir: 'down' };
 const SPAWN = { x: 2, y: 1 };          // ladder up sits just above, at (2, 0)
@@ -94,10 +95,11 @@ addInteraction(66, ({ tx, ty, tile, item, mapId }) => {
 
   const n = rock.amount[0] + Math.floor(Math.random() * (rock.amount[1] - rock.amount[0] + 1)) + (rock.item !== 'stone' && has('miner') ? 1 : 0);   // v34: miner
   G.S.bag[rock.item] += n;
-  const coal = rock.item === 'stone' && Math.random() < COAL_FROM_STONE * (has('prospector') ? 2 : 1);   // v34: prospector
+  const lucky = 1 + 2 * luck();   // v35: the day's luck shifts coal and gem chances by up to a fifth
+  const coal = rock.item === 'stone' && Math.random() < COAL_FROM_STONE * (has('prospector') ? 2 : 1) * lucky;   // v34: prospector
   if (coal) G.S.bag.coal = (G.S.bag.coal || 0) + 1;
   // v34: the excavator doubles the chance of a gem or egg; the geologist finds gems in pairs half the time.
-  const gr = Math.random() / (has('excavator') ? 2 : 1), gem = GEM_DROPS.find(([, c], i) => gr < GEM_DROPS.slice(0, i + 1).reduce((a, [, x]) => a + x, 0))?.[0];
+  const gr = Math.random() / (has('excavator') ? 2 : 1) / lucky, gem = GEM_DROPS.find(([, c], i) => gr < GEM_DROPS.slice(0, i + 1).reduce((a, [, x]) => a + x, 0))?.[0];
   if (gem) { G.S.bag[gem] = (G.S.bag[gem] || 0) + (has('geologist') && MINERALS[gem]?.gem && Math.random() < 0.5 ? 2 : 1); notify(`You found ${ITEMS[gem].name.toLowerCase()}!`); }
   delete MINE.rocks[key];
   emit('gather', { skill: 'mining', item: rock.item, xp: rock.hp * 2 - 1 });

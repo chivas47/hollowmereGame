@@ -13,6 +13,8 @@ import { SUPPLIES, PLACEABLES } from '../data/crafting.js';
 import { TREES, TREE_DAYS } from '../data/trees.js';
 import { WEATHER } from '../data/weather.js';
 import { PET, PET_HATS } from '../data/pets.js';
+import { DISHES } from '../data/cooking.js';
+import { knows, buyRecipe, fortune } from '../systems/cooking.js';
 import { buyHat, hearts as petHearts } from '../systems/pets.js';
 
 const WEATHER_LINES = {
@@ -63,7 +65,11 @@ on('ui:shop', () => {
   const pet = G.S.pet, hats = pet ? Object.entries(PET_HATS).map(([k, h]) => `
     <div class="shoprow"><div><b>${h.name}</b><span>${h.cost}g. For ${esc(pet.name)}.${pet.hats.includes(k) ? ' You have it.' : ''}</span></div>
     <div class="btns"><button data-hat="${k}" ${pet.hats.includes(k) || G.S.gold < h.cost ? 'disabled' : ''}>Buy</button></div></div>`).join('') : '';
-  openModal(`<h2>Seed stall</h2><p>You have <b id="shopGold">${G.S.gold}g</b>.</p>${note}${rows}<h3>Farm supplies</h3>${supplies}<h3>Fruit saplings</h3>${saplings}${hats ? `<h3>Pet hats</h3>${hats}` : ''}`, [['Leave', closeModal, true]]);
+  // v35: recipes for the stove
+  const recipes = Object.entries(DISHES).filter(([, d]) => d.from?.stall).map(([k, d]) => `
+    <div class="shoprow"><div><b>${d.name} recipe</b><span>${d.from.stall.toLocaleString('en-US')}g.${knows(k) ? ' You know it.' : ''}</span></div>
+    <div class="btns"><button data-recipe="${k}" ${knows(k) || G.S.gold < d.from.stall ? 'disabled' : ''}>Buy</button></div></div>`).join('');
+  openModal(`<h2>Seed stall</h2><p>You have <b id="shopGold">${G.S.gold}g</b>.</p>${note}${rows}<h3>Farm supplies</h3>${supplies}<h3>Fruit saplings</h3>${saplings}${hats ? `<h3>Pet hats</h3>${hats}` : ''}${recipes ? `<h3>Recipes</h3>${recipes}` : ''}`, [['Leave', closeModal, true]]);
   refreshShop();
 });
 
@@ -72,6 +78,8 @@ $('#mbody').addEventListener('click', (e) => {
   if (b && !b.disabled && buy(b.dataset.buy, +b.dataset.n)) refreshShop();
   const hat = e.target.closest('[data-hat]');
   if (hat && !hat.disabled && buyHat(hat.dataset.hat)) { notify(`${PET_HATS[hat.dataset.hat].name} bought. ${G.S.pet.name} is wearing it.`); emit('ui:shop'); return; }
+  const rc = e.target.closest('[data-recipe]');
+  if (rc && !rc.disabled && buyRecipe(rc.dataset.recipe)) { emit('ui:shop'); return; }
   const sp = e.target.closest('[data-supply]');
   if (sp && !sp.disabled && buySupply(sp.dataset.supply, +sp.dataset.n)) refreshShop();
 });
@@ -126,6 +134,9 @@ on('day:report', (r) => {
   if (r.helpers) html += `<p class="gift">The helpers harvested ${plural(r.helpers, 'crop')}. Collect them at the helper hut.</p>`;
   if (r.cave) html += '<p class="gift">Bram found a cave in the hill north of the farm, just above the bin. Go and have a look.</p>';
   if (r.profession) html += '<p class="gift">A profession is waiting to be chosen: open the bag (I).</p>';
+  if (r.luck !== undefined) html += `<p class="role">${fortune(r.luck)}</p>`;
+  if (r.recipes) html += `<p class="gift">Recipes arrived in the post: ${r.recipes.join(', ')}.</p>`;
+  if (r.wishfruit) html += '<p class="gift">Something special turned up for you: a wishfruit. Eat it from the bag.</p>';
   if (r.artisan) html += `<p class="gift">${plural(r.artisan, 'machine')} finished overnight.</p>`;
   if (r.fruit) html += `<p class="gift">Your fruit trees grew ${plural(r.fruit, 'fruit')}.</p>`;
   if (r.giants) html += `<p class="gift">Something huge happened in the field overnight: ${plural(r.giants, 'giant crop')}!</p>`;

@@ -48,7 +48,7 @@ function festival() {
         : `<p class="role">Bring ${ACCEPT_TEXT[f.accepts]} to enter. One entry per year.</p>`;
     }
   } else {
-    html += `<p class="role">You have <b>${G.S.gold}g</b>.</p>` + f.stall.map((it) => `<div class="shoprow"><div><b>${it.label}</b><span>${it.desc} ${it.cost}g</span></div><div class="btns"><button data-stall="${it.key}" ${G.S.gold < it.cost ? 'disabled' : ''}>Buy</button></div></div>`).join('');
+    html += `<p class="role">You have <b>${G.S.gold}g</b>.</p>` + f.stall.map((it) => `<div class="shoprow"><div><b>${it.label}</b><span>${it.desc} ${it.cost}g</span></div><div class="btns"><button data-stall="${it.key}" ${G.S.gold < it.cost || (it.once && G.S.wish[it.once]) ? 'disabled' : ''}>Buy</button></div></div>`).join('');
   }
   openModal(html, [['Leave', closeModal, true]]);
 }

@@ -10,7 +10,8 @@ export function recalcStats() {
   const S = G.S;
   S.maxw = tier(S, 'can').cap + S.waterBonus;
   S.water = Math.min(S.water, S.maxw);
-  S.maxEnergy = tier(S, 'house').energy + (S.energyBonus || 0);
+  const fed = [S.buff, S.drink].reduce((n, b) => n + (b && S.time < b.until ? b.maxEnergy || 0 : 0), 0);   // v35: food buffs
+  S.maxEnergy = tier(S, 'house').energy + (S.energyBonus || 0) + (S.wishfruits || 0) * 34 + fed;   // v35: each wishfruit +34
   S.energy = Math.min(S.energy, S.maxEnergy);
 }
 

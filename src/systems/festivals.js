@@ -53,10 +53,12 @@ export function buyStall(key) {
   const f = festivalToday(), S = G.S, it = f?.stall?.find((s) => s.key === key);
   if (!it || !festivalOpen() || S.gold < it.cost) return false;
   if (it.energy && S.energy >= S.maxEnergy) { notify('You are not tired enough to need cider.'); return false; }
+  if (it.once && S.wish[it.once]) { notify('The stall has no more of those.'); return false; }
   S.gold -= it.cost;
   if (it.placeable) S.kit[it.key]++;
   if (it.energy) S.energy = Math.min(S.maxEnergy, S.energy + it.energy);
-  notify(it.placeable ? `Bought a ${it.label}. Place it on the farm from slot 7.` : `You drink the ${it.label.toLowerCase()}. Warmth spreads to your fingers.`);
+  if (it.item) { S.bag[it.item] = (S.bag[it.item] || 0) + 1; if (it.once) S.wish[it.once] = true; }   // v35: the wishfruit
+  notify(it.placeable ? `Bought a ${it.label}. Place it on the farm from slot 7.` : it.item ? `Bought the ${it.label.toLowerCase()}. It is in your bag.` : `You drink the ${it.label.toLowerCase()}. Warmth spreads to your fingers.`);
   changed();
   return true;
 }

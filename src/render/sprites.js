@@ -494,6 +494,7 @@ export function drawHorse(c, px, py, dir, moving) {
 
 // ---- Furniture (v24): one tile each, colors [main, second] from data/furniture.js ----
 const FURN_ART = {
+  tv: (c, X, Y, a, b) => { r(c, X + 2, Y + 12, 12, 3, a); r(c, X + 2, Y + 3, 12, 9, '#2b211a'); r(c, X + 3, Y + 4, 10, 7, b); r(c, X + 4, Y + 5, 3, 1, '#a3bfd3'); r(c, X + 7, Y + 1, 1, 2, '#2b211a'); r(c, X + 9, Y, 1, 3, '#2b211a'); },
   chair: (c, X, Y, a, b) => { r(c, X + 4, Y + 2, 8, 7, b); r(c, X + 5, Y + 3, 6, 5, a); r(c, X + 3, Y + 8, 10, 3, a); r(c, X + 4, Y + 11, 1, 4, b); r(c, X + 11, Y + 11, 1, 4, b); },
   armchair: (c, X, Y, a, b) => { r(c, X + 2, Y + 2, 12, 7, b); r(c, X + 1, Y + 6, 3, 8, a); r(c, X + 12, Y + 6, 3, 8, a); r(c, X + 4, Y + 8, 8, 5, a); r(c, X + 3, Y + 3, 10, 4, a); },
   sofa: (c, X, Y, a, b) => { r(c, X, Y + 3, 16, 6, b); r(c, X, Y + 8, 16, 6, a); r(c, X + 1, Y + 4, 6, 4, a); r(c, X + 9, Y + 4, 6, 4, a); r(c, X + 7, Y + 9, 1, 4, b); },

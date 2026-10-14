@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v35: Cooking, buffs, luck and the wishfruit
+- Cook at the farmhouse stove once you have the kitchen: 30 recipes. You know the pan egg; the rest come from a TV cooking show, from neighbours at 3 and 7 hearts, and from the seed stall.
+- Eat dishes from the bag for energy and health. Many give a buff for some hours: farming, fishing, mining or foraging levels, speed, defense, luck, attack or max energy.
+- A kitchen counter is the fridge; cooking uses what is in it too.
+- The TV (furniture catalogue, 750g): tomorrow's weather, today's fortune and the cooking show.
+- Daily luck, told in the morning, nudges gems and coal in the mine and doubles a forage find now and then.
+- Five wishfruits in the valley, each worth 34 more max energy for good.
+
 ## v34: Professions and combat
 - At levels 5 and 10 of every skill, choose a profession: 36 in all, Stardew's trees by role under our own names. Older saves with high skills choose from the bag.
 - A sixth skill, Combat: slimes give combat XP (they gave mining XP before), and each combat level adds 5 health.

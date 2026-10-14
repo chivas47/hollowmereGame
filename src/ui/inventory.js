@@ -13,6 +13,7 @@ import { SKILLS, BONUS_PER_LEVEL } from '../data/skills.js';
 import { skillProgress } from '../systems/skills.js';
 import { PROFESSIONS } from '../data/professions.js';
 import { pending } from '../systems/professions.js';
+import { edible, eat } from '../systems/cooking.js';
 import { openModal, closeModal } from './modal.js';
 import { esc } from './dom.js';
 import { wardrobeHtml } from './clothing.js';
@@ -25,11 +26,12 @@ on('ui:inventory', () => {
 
   const held = Object.keys(S.bag).filter((k) => S.bag[k] > 0 && !ITEMS[k].material);
   const mats = Object.keys(ITEMS).filter((k) => ITEMS[k].material);
-  const materials = mats.map((k) => row(ITEMS[k].name, `× ${S.bag[k]}`)).join('');
+  const eatBtn = (k) => (edible(k) && S.bag[k] > 0 ? ` <button data-eat="${k}">Eat</button>` : '');   // v35
+  const materials = mats.map((k) => row(ITEMS[k].name, `× ${S.bag[k]}${eatBtn(k)}`)).join('');
   const worth = held.reduce((s, k) => s + valueOf(k), 0);
   const tiers = (k) => counts(k).map((n, t) => (t && n ? `<span style="color:${QUALITY[t].color}">${n} ${QUALITY[t].name.toLowerCase()}</span>` : '')).filter(Boolean).join(', ');
   const basket = held.length
-    ? held.map((k) => row(`${ITEMS[k].name} × ${S.bag[k]}${tiers(k) ? ` <span class="role">(${tiers(k)})</span>` : ''}`, `${valueOf(k)}g`)).join('') + row('Worth if shipped', `${worth}g`, 'total')
+    ? held.map((k) => row(`${ITEMS[k].name} × ${S.bag[k]}${tiers(k) ? ` <span class="role">(${tiers(k)})</span>` : ''}`, `${valueOf(k)}g${eatBtn(k)}`)).join('') + row('Worth if shipped', `${worth}g`, 'total')
     : '<p class="role">Empty. Harvest, forage or fish to fill it.</p>';
 
   const seeds = Object.entries(CROPS).map(([k, c]) =>
@@ -69,4 +71,8 @@ on('ui:inventory', () => {
 });
 
 // v34: a profession choice that waits opens from the bag.
-document.querySelector('#mbody').addEventListener('click', (e) => { if (e.target.closest('[data-profs]')) { closeModal(); emit('ui:profession'); } });
+document.querySelector('#mbody').addEventListener('click', (e) => {
+  if (e.target.closest('[data-profs]')) { closeModal(); emit('ui:profession'); }
+  const ea = e.target.closest('[data-eat]');   // v35: eating from the bag
+  if (ea && eat(ea.dataset.eat)) emit('ui:inventory');
+});
