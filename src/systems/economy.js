@@ -51,6 +51,7 @@ export function ship() {
 
 on('day:end', (report) => {
   report.payout = G.S.bin;
+  G.S.earned = (G.S.earned || 0) + G.S.bin;   // v32: everything shipped, ever (the farm cave opens at 25,000g)
   G.S.gold += G.S.bin;
   G.S.bin = 0;
 });

@@ -32,8 +32,8 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 13b | Bram sells wood and stone | feature | done (chivas47/hollowmereGame#24) | Wood (10g) and stone (20g) at Bram's workbench, Stardew's carpenter prices. Added by Nuno after v27 and v28 made wood the bottleneck. |
 | 14a | Farm buildings: placing | feature | done (chivas47/hollowmereGame#25) | Place new buildings on open farm grass and move any building (coop, barn, greenhouse and stable too) at the workbench; shed, mill, mini shipping bin, an expensive late-game clock tower. |
 | 14b | Farm buildings: ponds and pens | feature | done (chivas47/hollowmereGame#26) | Fish pond (raise fish, roe, pond requests) and slime pen. |
-| 14c | Farm buildings: helpers and the cave | feature | next | Helper huts (original spirit helpers that harvest), waystones (warp), the farm cave choice (fruit bats or mushrooms). |
-| 15 | Professions | feature | queued | Two choices at level 5 and one of two branches at level 10 for each skill. Adds a combat skill. |
+| 14c | Farm buildings: helpers and the cave | feature | done (chivas47/hollowmereGame#27) | Helper huts (original spirit helpers that harvest), waystones (warp), the farm cave choice (fruit bats or mushrooms). |
+| 15 | Professions | feature | next | Two choices at level 5 and one of two branches at level 10 for each skill. Adds a combat skill. |
 | 16 | Cooking and buffs | feature | queued | Kitchen, about 30 recipes learned from TV, neighbours and shops, food and drink buffs (skill, speed, defence, luck), daily luck, fridge, energy-raising star fruit (original name). |
 | 17 | Combat expansion | feature | queued | Swords, daggers, clubs; bats, bugs, skeletons, serpents; rings, boots, bombs; treasure and geodes in the mine; a monster hunters' guild with slaying goals. |
 | 18 | Deep dungeons and forge | feature | queued | A desert cavern dungeon with harder floors, a volcanic dungeon, the forge (enchantments, upgrades), trinkets. |

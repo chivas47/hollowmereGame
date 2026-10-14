@@ -224,6 +224,15 @@ export function drawSlimes(c, X, Y, w, h, n, balls, full) {
   for (let i = 0; i < Math.min(balls, 6); i++) { const bx = X + w - 12 - (i % 3) * 5, by = Y + h - 12 - Math.floor(i / 3) * 5; r(c, bx, by, 4, 4, '#5fb04a'); r(c, bx + 1, by, 2, 1, '#9fe08a'); }
 }
 
+// v32: the farm cave's life. choice 'bats' (bats hanging from the ceiling) or 'logs' (six mushroom logs);
+// items: what waits in the crate at (cx, cy) in tiles.
+export function drawCaveLife(c, choice, n, cx, cy) {
+  const t = performance.now() / 500;
+  if (choice === 'bats') for (let i = 0; i < 5; i++) { const x = 104 + i * 40, y = 70 + (i % 2) * 6 + Math.round(Math.sin(t + i)); r(c, x, y, 4, 4, '#3f2f3a'); r(c, x - 3, y + 1, 3, 2, '#5a4050'); r(c, x + 4, y + 1, 3, 2, '#5a4050'); r(c, x + 1, y + 1, 1, 1, '#e9c46a'); }
+  if (choice === 'logs') for (let i = 0; i < 6; i++) { const x = 104 + (i % 3) * 48, y = 120 + Math.floor(i / 3) * 40; r(c, x, y + 6, 24, 8, '#6e4626'); r(c, x, y + 6, 3, 8, '#c9a06a'); r(c, x + 6, y + 2, 5, 4, '#a0522d'); r(c, x + 15, y + 3, 4, 3, '#a0522d'); }
+  if (n) { r(c, cx * 16 + 4, cy * 16 + 1, 8, 4, '#e9933c'); r(c, cx * 16 + 5, cy * 16, 3, 2, '#7f3a8a'); }
+}
+
 // Crafted objects placed on the farm. state: { item, nights } for machines, null otherwise.
 const PLACED_ART = {
   slimepress: (c, X, Y) => {

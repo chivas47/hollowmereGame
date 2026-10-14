@@ -47,7 +47,7 @@ const STRATEGIES = {
     'bigbarn', 'cow', 'cow', 'goat', 'goat',
     'deluxecoop', 'rabbit', 'rabbit', 'deluxebarn', 'shears', 'sheep', 'sheep', 'pig', 'pig',
     // v30: the mill needs cloth, so a loom comes first (the shed is earlier). The bot picks the first free spot from the bottom right.
-    'loom', 'mill'],
+    'loom', 'mill', 'helperhut'],   // the hut's 100 fiber come slowly from weeds
   crops: ['furnace', 'can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
 };
 
@@ -70,7 +70,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['layouts', 'sites', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing'];
+  'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -108,6 +108,7 @@ const { orderBarn, buyAnimal, buyHay, collectMilk, herd } = await load('systems/
 const { SITES, findSite, siteAt, noFit } = await load('systems/sites.js');
 const { millIn, millCollect } = await load('systems/mill.js');
 const { stockPond, collectRoe, giveAsk, canGive } = await load('systems/ponds.js');
+const { collectHut, chooseCave, collectCave } = await load('systems/helpers.js');
 const { HOMES, homeOf, level, noRoom, buyLivestock, orderLevel, buyTool } = await load('systems/livestock.js');
 const { craft } = await load('systems/crafting.js');
 const { startLayout } = await load('systems/layouts.js');
@@ -240,6 +241,12 @@ function simulate(runSeed) {
 
   // A spot for a new building: a free one, or else one where only debris is in the way (cleared first).
   function botSite(k) {
+    if (k === 'helperhut') {   // the helpers reach 8 tiles: as close to the middle of the field as fits
+      const mx = FIELD.reduce((a, [x]) => a + x, 0) / FIELD.length, my = FIELD.reduce((a, [, y]) => a + y, 0) / FIELD.length, spots = [];
+      for (let y = 5; y < 14; y++) for (let x = 1; x < 22; x++) if (!noFit(k, x, y)) spots.push([x, y]);
+      spots.sort((a, b) => Math.hypot(a[0] - mx, a[1] - my) - Math.hypot(b[0] - mx, b[1] - my));
+      if (spots.length) return { x: spots[0][0], y: spots[0][1] };
+    }
     const free = findSite(k);
     if (free) return free;
     const { w, h } = SITES[k].def.footprint;
@@ -334,8 +341,9 @@ function simulate(runSeed) {
   }
   // Alder cones from felled trees go back into open grass away from the field, so wood keeps coming.
   function plantCones() {
-    const s = S();
-    for (let y = 13; y >= 6 && s.kit.alderseed > 0; y--) for (let x = 21; x >= 1 && s.kit.alderseed > 0; x--) {
+    const s = S(), trees = () => Object.values(s.debris || {}).filter((d) => d.kind === 'alder').length;
+    // At most 20 alders (the wild limit), so open ground is left for buildings.
+    for (let y = 13; y >= 6 && s.kit.alderseed > 0 && trees() < 20; y--) for (let x = 21; x >= 1 && s.kit.alderseed > 0 && trees() < 20; x--) {
       if (FIELD.some(([fx, fy]) => fx === x && fy === y) || !freeTile(x, y)) continue;
       s.kitSel = 'alderseed'; use('farm', x, y, 'kit'); spend(TIME.tile);
     }
@@ -519,6 +527,7 @@ function simulate(runSeed) {
   function reserves() {
     const s = S(), out = {};
     s.quests.forEach((q) => { out[q.item] = (out[q.item] || 0) + q.n; });
+    for (const [k, n] of Object.entries(GOAL[goals[0]]?.needs?.() || {})) if (k in CROPS) out[k] = (out[k] || 0) + n;   // crops the next purchase needs (the helper hut's gleamfruit)
     const n = nextFestival();
     if (n && n.inDays <= 7 && n.f.kind === 'contest') {
       const items = Object.keys(s.bag).filter((k) => s.bag[k] > 0 && contestItemsFor(n.f, k)).sort((a, b) => ITEMS[b].sell - ITEMS[a].sell);
@@ -575,6 +584,8 @@ function simulate(runSeed) {
       collectRoe(); if (canGive()) giveAsk();
       spend(TIME.chore);
     }
+    if (s.built.helperhut === true) collectHut();
+    if (s.cave.open) { chooseCave('bats'); collectCave(); }
     shipAll(reserves());
     const energyLeft = s.energy;
     sleep(false);

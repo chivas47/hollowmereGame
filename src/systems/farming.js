@@ -18,10 +18,20 @@ import { QUALITY } from '../data/quality.js';
 import { rainWaters } from './weather.js';
 
 const ENERGY = { hoe: 2, wideHoe: 3, water: 2, clear: 1 };
-const isRipe = (crop) => crop.age >= (crop.need || CROPS[crop.type].days);   // need: days after growth tonics
+export const isRipe = (crop) => crop.age >= (crop.need || CROPS[crop.type].days);   // need: days after growth tonics
 const fertOf = (s) => (s?.fert ? PLACEABLES[s.fert] : null);
 
 // Soil lives on the farm and in the greenhouse; greenhouse crops ignore seasons.
+// Takes the ripe crop off a soil tile (a regrowing plant stays) and says what came off. Also used by the
+// helper hut (systems/helpers.js). Quality is rolled here.
+export function harvest(s) {
+  const c = CROPS[s.crop.type], q = rollCropQuality(skillLevel('farming'), fertOf(s)?.quality || 0);
+  const item = c.packet === 'wild' ? c.produce[Math.floor(Math.random() * c.produce.length)] : s.crop.type, n = c.yield || 1;
+  if (c.regrow) s.crop.age = (s.crop.need || c.days) - c.regrow;   // the plant stays and fruits again
+  else s.crop = null;
+  return { item, n, q };
+}
+
 addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
   const soil = soilOf(mapId);
   if (!soil || tile !== 'g') return false;
@@ -34,12 +44,9 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
     return true;
   }
   if (s?.crop && isRipe(s.crop)) {
-    const c = CROPS[s.crop.type], q = rollCropQuality(skillLevel('farming'), fertOf(s)?.quality || 0);
-    const item = c.packet === 'wild' ? c.produce[Math.floor(Math.random() * c.produce.length)] : s.crop.type, n = c.yield || 1;
+    const { item, n, q } = harvest(s);
     addItem(item, n, q);
     notify(`Picked ${n > 1 ? '' : 'a '}${q ? `${QUALITY[q].name.toLowerCase()} ` : ''}${ITEMS[item].name}${n > 1 ? ` x${n}` : ''}.`);
-    if (c.regrow) s.crop.age = (s.crop.need || c.days) - c.regrow;   // the plant stays and fruits again
-    else s.crop = null;
     emit('gather', { skill: 'farming', item, n, xp: Math.max(3, Math.round(ITEMS[item].sell / 10)) });
     changed();
     return true;

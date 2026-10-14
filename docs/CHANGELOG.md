@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v32: Helpers, waystones and the farm cave
+- Gleamfruit, a premium summer crop (400g seed, 13 days, sells for 750g).
+- The helper hut (20,000g, 200 stone, 100 fiber, 9 gleamfruit): little spirits harvest ripe crops within 8 tiles every morning outside winter.
+- Two waystones you place on the farm: one to the Hollow, one to the village square. A home charm, crafted, takes you home from anywhere.
+- Once the farm has shipped 25,000g, a cave opens in the hill above the bin. Choose fruit bats or mushroom logs; each morning the cave's crate fills.
+
 ## v31: Fish pond and slime pen
 - Build a fish pond and put a fish in: that kind multiplies and leaves roe. When the pond is full it asks for something; bring it and it holds more (3, 5, 7, then 10).
 - Age roe in the brine crock.
