@@ -8,7 +8,7 @@ import { SUPPLIES, PLACEABLES } from '../data/crafting.js';
 import { valueOf, clearQuality } from './quality.js';
 
 export const inSeason = (crop) => CROPS[crop].seasons.includes(today().season);
-export const canBuy = (crop, n) => inSeason(crop) && G.S.gold >= CROPS[crop].seed * n;
+export const canBuy = (crop, n) => !CROPS[crop].crafted && inSeason(crop) && G.S.gold >= CROPS[crop].seed * n;
 
 export function buy(crop, n) {
   if (!canBuy(crop, n)) return false;

@@ -50,7 +50,7 @@ const supplyText = (d) => (d.kind === 'grass' ? 'A tuft of grass for open farm g
 
 on('ui:shop', () => {
   const season = today().season;
-  const rows = Object.entries(CROPS).map(([k, c]) => `
+  const rows = Object.entries(CROPS).filter(([, c]) => !c.crafted).map(([k, c]) => `
     <div class="shoprow"><div><b>${c.packet ? c.name : `${c.name} seeds`}</b><span>${inSeason(k) ? `${c.seed}g each, ${seedNote(c)}` : `Back in ${c.seasons.join(' and ')}`}</span></div>
     <div class="btns"><button data-buy="${k}" data-n="1">Buy 1</button><button data-buy="${k}" data-n="5">Buy 5</button></div></div>`).join('');
   const note = season === 'Winter' ? '<p class="role">Winter stock is thin: frost kale, wild seeds and mixed seeds. The rest is back in spring.</p>' : '';

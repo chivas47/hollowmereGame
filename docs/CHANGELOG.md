@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v33: Fiber
+- Fiber seeds, crafted from a packet of mixed seeds, 5 wood and 1 stone: they grow outdoors in any season, winter too, without water, into 4 to 7 fiber in 7 days.
+- Weeds grow in the Wilds every day. Cut them with any tool for fiber.
+
 ## v32: Helpers, waystones and the farm cave
 - Gleamfruit, a premium summer crop (400g seed, 13 days, sells for 750g).
 - The helper hut (20,000g, 200 stone, 100 fiber, 9 gleamfruit): little spirits harvest ripe crops within 8 tiles every morning outside winter.

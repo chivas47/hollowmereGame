@@ -109,6 +109,8 @@ export const RECIPES = {
   // v31. Stardew's slime egg-press: 25 coal, a fire quartz, a battery pack (ours: a violet stone, a storm cell).
   slimepress: { cost: 0, needs: { coal: 25, violet: 1, stormcell: 1 }, desc: 'Presses 100 slime gel into a slime egg overnight. Hatch it in the incubator for the slime pen.' },
   // v32. Stardew's farm warp totem: 1 hardwood, 1 honey, 20 fiber.
+  // v33. Stardew's fiber seeds: 1 mixed seeds, 5 sap, 1 clay (wood for the sap, stone for the clay). seed: makes seeds, not a kit object.
+  fiberseed:  { cost: 0, needs: { wood: 5, stone: 1 }, seeds: { mixed: 1 }, seed: true, desc: 'One packet of fiber seeds: grows anywhere outdoors in any season, without water, into 4 to 7 fiber in 7 days.' },
   homecharm:  { cost: 0, needs: { hardwood: 1, honey: 1, fiber: 20 }, desc: 'Use it from the kit anywhere to go straight home. Used up.' },
   silo:       { cost: 100, needs: { stone: 110, copperbar: 5 }, desc: 'With a silo on the farm, cutting grass gives hay for the barn loft half the time.' },
 };

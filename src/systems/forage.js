@@ -3,10 +3,10 @@ import { G } from '../core/game.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer } from '../core/registry.js';
 import { today } from '../core/time.js';
-import { FORAGE, FORAGE_PER_DAY } from '../data/forage.js';
+import { FORAGE, FORAGE_PER_DAY, WILD_WEEDS } from '../data/forage.js';
 import { MIST } from '../data/weather.js';
 import { MAPS } from '../data/maps.js';
-import { drawForage } from '../render/sprites.js';
+import { drawForage, drawDebris } from '../render/sprites.js';
 import { addItem, rollSkillQuality } from './quality.js';
 import { skillLevel } from './skills.js';
 
@@ -22,6 +22,25 @@ export function spawnForage() {
     out.push({ x, y, type: out.length < lilies ? 'mistlily' : pool[Math.random() * pool.length | 0] });
   }
   G.S.forage = out; G.S.forageDay = G.S.day;
+  // v33: a few weeds to cut for fiber, on grass the forage left free.
+  const weeds = [];
+  for (let guard = 0; weeds.length < WILD_WEEDS.perDay && guard < 600; guard++) {
+    const x = 1 + (Math.random() * (grid[0].length - 2) | 0), y = 1 + (Math.random() * (grid.length - 2) | 0);
+    if (grid[y][x] !== 'g' || out.some((f) => f.x === x && f.y === y) || weeds.some((w) => w.x === x && w.y === y)) continue;
+    weeds.push({ x, y });
+  }
+  G.S.wildWeeds = weeds;
+}
+
+// Cutting a weed in the Wilds: any tool, no energy (like the sword on farm weeds).
+export function cutWildWeed(x, y) {
+  const i = (G.S.wildWeeds || []).findIndex((w) => w.x === x && w.y === y);
+  if (i < 0) return false;
+  G.S.wildWeeds.splice(i, 1);
+  addItem('fiber', WILD_WEEDS.fiber);
+  emit('gather', { skill: 'foraging', xp: 1 });
+  changed();
+  return true;
 }
 
 on('day:start', spawnForage);
@@ -42,4 +61,11 @@ addInteraction(45, ({ tx, ty, tile, mapId, item }) => {
   return false;
 });
 
-addLayer(10, (c) => { if (G.S.map === AREA) G.S.forage.forEach((f) => drawForage(c, f)); });
+// Priority 61: above the sword (58), so any tool cuts a weed in the Wilds.
+addInteraction(61, ({ tx, ty, mapId, item }) => {
+  if (mapId !== AREA || !['hoe', 'sword', 'axe', 'pick'].includes(item) || !cutWildWeed(tx, ty)) return false;
+  notify('Cut the weeds: +1 fiber.');
+  return true;
+});
+
+addLayer(10, (c) => { if (G.S.map === AREA) { (G.S.wildWeeds || []).forEach((w) => drawDebris(c, w.x * 16, w.y * 16, 'weeds')); G.S.forage.forEach((f) => drawForage(c, f)); } });

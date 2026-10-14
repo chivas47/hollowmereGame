@@ -93,6 +93,7 @@ const { SKILLS } = await load('data/skills.js');
 const { TREES, FRUIT } = await load('data/trees.js');
 const { DEBRIS } = await load('data/clearing.js');
 const { freeTile, grassTile } = await load('systems/clearing.js');
+const { cutWildWeed } = await load('systems/forage.js');
 const { WEATHER_ITEMS } = await load('data/weather.js');
 const { act } = await load('systems/interact.js');
 const { sleep } = await load('systems/days.js');
@@ -569,7 +570,10 @@ function simulate(runSeed) {
     layoutChores();
     getCoal(); getMaterials();
     if (missingMats().wood && !late()) chopWood();
-    if (missingMats().fiber && !late()) for (const [k, d] of Object.entries(s.debris || {})) if (d.kind === 'weeds') clear('farm', ...k.split(',').map(Number));   // fiber for the loom
+    if (missingMats().fiber && !late()) {   // fiber: weeds on the farm, then the Wilds' weeds
+      for (const [k, d] of Object.entries(s.debris || {})) if (d.kind === 'weeds') clear('farm', ...k.split(',').map(Number));
+      if (missingMats().fiber && s.wildWeeds.length) { spend(TIME.travel); for (const w of [...s.wildWeeds]) { cutWildWeed(w.x, w.y); spend(TIME.tile); } }
+    }
     plantCones();
     if (Object.keys(missingMats()).filter((k) => !['wood', 'fiber', 'cloth'].includes(k)).length && !late()) mine();   // saving up for something that needs ore: mine first (not for fiber or cloth)
     if (!late()) farm('farm', true);
