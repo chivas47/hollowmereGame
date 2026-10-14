@@ -199,6 +199,17 @@ Melon and pumpkin stay the best crops per tile, as their counterparts are. Start
 | Autumn | Hollow cap 40g, Rosehip 80g |
 | Winter | Frost root 70g, Ice moss 100g |
 
+### The catch bar (v41)
+
+Stardew's bobber bar by role: after a bite, hold Use to lift your bar (it falls when you let go and bounces at the bottom). The meter starts at 30%, fills 22% a second while the fish is inside your bar and drains 30% outside; full lands the fish, empty loses it. Fish swim faster and pause less with difficulty, and from difficulty 3 they dart. A bot reacting every quarter second lands about 75 to 90% of easy fish and 40% of the hardest.
+
+- Bar height: 28 of 120, + half the rod's and enchantment's old zone bonus, + 1.5 per fishing level, x1.3 steady hand, x1.25 cork bobber.
+- Treasure (15%, doubled by the treasure hunter): keep it in the bar to fill its meter; one roll of bait, coal, ore, geodes, quartz, tidestone, the fishing book, wild bait or the tide ring.
+- Trash (8% of bites, caught at once): driftwood, sodden letter, broken glass, old boot. Recycler (25 wood, 25 stone, 1 iron bar; Stardew's): driftwood to wood or coal, letter to fiber or cloth, glass to quartz, boot to stone, coal or iron ore.
+- Bait (Stardew: 1 bug meat for 5; ours 1 gel for 5) halves the wait, needs the ashwood rod. Wild bait (10 fiber, 5 gel for 5): wait x0.75, 25% double catches.
+- Ironwood rod (Stardew's iridium rod, 7,500g) takes tackle, 20 catches each: spinner (2 iron bars; bites 25% sooner), cork bobber (10 wood, 5 hardwood, 10 gel; bar +25%), trap bobber (1 copper bar, 10 gel; drain x0.67), lead bobber (1 iron bar, 10 stone; no bounce), treasure hunter (2 gold bars).
+- Bobber styles: six colours, a new one every 25 fish.
+
 ### Fish (pond in the Wilds, 8 energy per cast)
 
 | Fish | Sells | Difficulty | Seasons |
@@ -650,7 +661,8 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Weather does not change fishing or neighbours yet (Stardew has rain-only fish and neighbours who stay in). Rain sound and richer effects come with the atmosphere item.
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
-- The recycler, worm bin and bait maker wait for the fishing overhaul (roadmap item 20), which brings trash and bait.
+- The worm bin and bait maker are not built; bait is crafted from gel (v41). The balance bot's catch rate comes from playing the real catch bar with a quarter-second reaction (tools/balance.mjs REACT); real players may do better or worse.
+- v41 roughly doubles the bot's fish income: playing the real bar it lands about 40% of the hardest fish, where the old one-press model gave it about 10%.
 - Honey has one flavour; Stardew's flower honey is not modelled.
 - Since v29 wood and stone can be bought (10g and 20g), so big wood costs are a gold cost too. In the simulator the bot finishes all but about 4 items of its 2-year shopping list (26 before) and raises far more animals (animal products +160%); year 1 summer and autumn earn 17% less while it buys materials.
 - v30 adds wheat and beets to the quest board's crops. The balance bot never grows them, so it fills fewer requests and loses about 10% of crop income in the simulator (checked: with the two crops kept off the board the loss is gone). Real players can grow them for requests.

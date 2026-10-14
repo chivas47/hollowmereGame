@@ -18,6 +18,8 @@ import { WEAPONS, RINGS } from '../data/weapons.js';
 import { weapon, chooseWeapon, wearRing, removeRing, wearTrinket, removeTrinket } from '../systems/gear.js';
 import { TRINKETS } from '../data/forge.js';
 import { BOOKS } from '../data/books.js';
+import { BAIT, TACKLE, BOBBERS, BOBBER_EVERY } from '../data/angling.js';
+import { baitOk, tackleOk, bobberStyles, fixTackle } from '../systems/fishing.js';
 import { readBook, hasRead, masteryOpen } from '../systems/books.js';
 import { masteryText } from './books.js';
 import { openModal, closeModal } from './modal.js';
@@ -59,6 +61,12 @@ on('ui:inventory', () => {
   const weapons = S.weapons.map((k) => row(`${WEAPONS[k].name} <span class="role">${WEAPONS[k].kind}, damage ${WEAPONS[k].damage}</span>`, S.weapon === k ? 'In slot 5' : `<button data-weapon="${k}">Use</button>`)).join('');
   const worn = S.rings.map((k, i) => (k ? row(`${RINGS[k].name} <span class="role">${RINGS[k].desc}</span>`, `<button data-ringoff="${i}">Take off</button>`) : '')).join('');
   const spare = Object.keys(RINGS).filter((k) => S.bag[k] > 0).map((k) => row(`${RINGS[k].name} × ${S.bag[k]} <span class="role">${RINGS[k].desc}</span>`, `<button data-ring="${k}">Wear</button>`)).join('');
+  // v41: the rod's bait, tackle and bobber
+  const baits = Object.entries(BAIT).filter(([k]) => S.bag[k] > 0).map(([k, b]) => row(`${b.name} × ${S.bag[k]} <span class="role">${b.desc}</span>`, S.bait === k ? 'On the rod' : `<button data-bait="${k}" ${baitOk() ? '' : 'disabled title="Needs the ashwood rod"'}>Use</button>`)).join('');
+  const tackles = (S.tackle ? row(`${TACKLE[S.tackle].name} <span class="role">${TACKLE[S.tackle].desc} ${S.tackleUses} catches left.</span>`, 'On the rod') : '')
+    + Object.entries(TACKLE).filter(([k]) => S.bag[k] > 0).map(([k, t]) => row(`${t.name} × ${S.bag[k]} <span class="role">${t.desc}</span>`, `<button data-tackle="${k}" ${tackleOk() ? '' : 'disabled title="Needs the ironwood rod"'}>Fix to rod</button>`)).join('');
+  const bobbers = BOBBERS.slice(0, bobberStyles()).map((b, i) => `<button data-bobber="${i}" ${(S.bobber || 0) === i ? 'class="primary"' : ''}>${b.name}</button>`).join('');
+  const rod = `${baits}${tackles}<div class="btns">${bobbers}</div><p class="role">A new bobber every ${BOBBER_EVERY} fish.${S.bait ? ` Bait on the rod: ${BAIT[S.bait].name}.` : ''}</p>`;
   // v39: the trinket worn and spare ones
   const trinkets = (S.trinket ? row(`${TRINKETS[S.trinket].name} <span class="role">${TRINKETS[S.trinket].desc}</span>`, '<button data-trinketoff>Take off</button>') : '')
     + Object.keys(TRINKETS).filter((k) => S.bag[k] > 0).map((k) => row(`${TRINKETS[k].name} × ${S.bag[k]} <span class="role">${TRINKETS[k].desc}</span>`, `<button data-trinket="${k}">Wear</button>`)).join('');
@@ -82,6 +90,7 @@ on('ui:inventory', () => {
     ${worn || spare ? `<h3>Rings <span class="role">two at a time</span></h3>${worn}${spare}` : ''}
     ${trinkets ? `<h3>Trinket <span class="role">one at a time</span></h3>${trinkets}` : ''}
     ${books ? `<h3>Books</h3>${books}` : ''}
+    <h3>Rod <span class="role">bait, tackle and bobber</span></h3>${rod}
     <h3>Skills <span class="role">each level: ${Math.round(BONUS_PER_LEVEL * 100)}% chance of a bonus item</span></h3>${skills}
     <h3>Wardrobe <span class="role">sew clothes at a sewing machine</span></h3>${wardrobeHtml()}
     <h3>Seeds</h3>${seeds}
@@ -96,6 +105,9 @@ document.querySelector('#mbody').addEventListener('click', (e) => {
   const wp = e.target.closest('[data-weapon]'); if (wp && chooseWeapon(wp.dataset.weapon)) { emit('ui:inventory'); return; }
   const rg = e.target.closest('[data-ring]'); if (rg && wearRing(rg.dataset.ring)) { emit('ui:inventory'); return; }
   const ro = e.target.closest('[data-ringoff]'); if (ro && removeRing(+ro.dataset.ringoff)) { emit('ui:inventory'); return; }
+  const bt = e.target.closest('[data-bait]'); if (bt && !bt.disabled) { G.S.bait = bt.dataset.bait; emit('ui:inventory'); return; }   // v41
+  const tk = e.target.closest('[data-tackle]'); if (tk && !tk.disabled) { fixTackle(tk.dataset.tackle); emit('ui:inventory'); return; }
+  const bb = e.target.closest('[data-bobber]'); if (bb) { G.S.bobber = +bb.dataset.bobber; emit('ui:inventory'); return; }
   const rd = e.target.closest('[data-read]'); if (rd && readBook(rd.dataset.read)) { emit('ui:inventory'); return; }   // v40
   const tr = e.target.closest('[data-trinket]'); if (tr && wearTrinket(tr.dataset.trinket)) { emit('ui:inventory'); return; }   // v39
   if (e.target.closest('[data-trinketoff]') && removeTrinket()) { emit('ui:inventory'); return; }

@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v41: The catch bar
+- A new catch minigame: hold Use (or the Use button) to lift your bar, let go and it falls. Keep the fish inside it until the meter fills; hard fish dart about. Your bar grows with your fishing level.
+- Treasure chests sometimes rise in the water while you reel: keep them in the bar too for bait, ore, geodes, gems or a book.
+- Trash comes up now and then. The recycler (craft) turns it into wood, coal, fiber, quartz, stone or ore.
+- Bait (craft from gel) halves the wait with the ashwood rod or better; wild bait sometimes doubles the catch.
+- The ironwood rod (7,500g at Bram's) takes tackle: spinner, cork, trap and lead bobbers and the treasure hunter, each good for 20 catches.
+- Bobber styles: a new one every 25 fish, chosen in the bag.
+
 ## v40: Books and mastery
 - Books turn up while you work (each harvest, catch, rock or chop has a small chance of its skill's book) and in mine chests from floor 20. Read them from the bag.
 - Six skill books give XP in their skill; the Starlit Primer gives XP in all six.

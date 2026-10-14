@@ -132,6 +132,8 @@ const { bombs, throwBomb, openChest, crackGeode, GEODES } = await load('systems/
 const { buyGear, owns } = await load('systems/guild.js');
 const { LODGE_SHOP } = await load('data/guild.js');
 const { readBook } = await load('systems/books.js');
+const { finishReel, stepReel } = await load('systems/fishing.js');
+const REACT = 0.25;   // seconds between the bot's decisions on the catch bar (an average player)
 const { BOOKS } = await load('data/books.js');
 
 // ---- Helpers ----
@@ -493,11 +495,22 @@ function simulate(runSeed) {
       use('wilds', 15, 10, 'rod');
       const f = G.fishing; if (!f) break;
       f.t = 0; runUpdaters(0.001);                 // the bite
-      act();                                       // start reeling
-      const d = FISH[f.fish].difficulty;
-      const p = Math.max(0.05, Math.min(0.95, (1.3 * f.zw / 160 + 0.25 - 0.06 * d) * FISH_SKILL));
-      f.marker = Math.random() < p ? f.zone + f.zw / 2 : (f.zone > 1 ? 0 : 160);
-      act();
+      if (!G.fishing) break;
+      act();                                       // start reeling (trash comes in at once)
+      // v41: the bot plays the real catch bar like a player who reacts every REACT seconds (slower with a lower
+      // --fish-skill): it holds Use while its bar's middle is below the fish (or the treasure, when the fish is safe).
+      if (G.fishing?.phase === 'reel') {
+        const react = REACT / FISH_SKILL;
+        for (let t = 0, next = 0; G.fishing && t < 60; t += 1 / 30) {
+          if (t >= next) {
+            const g = G.fishing, mid = g.bar.y + g.bar.h / 2, chase = g.treasure && !g.treasure.got && g.prog > 0.6 ? g.treasure.y : g.fy;
+            G.useHeld = mid < chase; next = t + react * (0.5 + Math.random());
+          }
+          stepReel(1 / 30);
+        }
+        G.useHeld = false;
+        if (G.fishing) finishReel(false);
+      }
       spend(TIME.cast);
     }
   }

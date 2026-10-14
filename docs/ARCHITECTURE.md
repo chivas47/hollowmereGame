@@ -11,7 +11,7 @@ src/
   main.js             boot: imports every system and UI module, runs the frame loop
   core/
     constants.js      T=16 tile px, W=24 x H=16 tiles, START 6:00, END 2:00, TICK, SAVE_KEY, DIRS
-    game.js           G: shared runtime object (G.S is the save; keys, paused, lock, swing, fishing, hurtT)
+    game.js           G: shared runtime object (G.S is the save; keys, useHeld, paused, lock, swing, fishing, hurtT)
     state.js          newState(), merge(saved), load(), save() (localStorage), exportSave(), importSave(text)
     events.js         on(event, fn), emit(event, data), changed(), notify(msg)
     registry.js       addInteraction, addLayer, addEntities, addUpdater (+ run/draw/collect)
@@ -28,6 +28,7 @@ src/
     furniture.js      FURNITURE, WALLPAPERS, FLOORS, RENOVATIONS, catalogue prices
     pets.js           PET friendship numbers, PET_LOOKS, PET_NAMES, PET_HATS
     profile.js        farmer profile: LOOKS, PETS, DEFAULT_PROFILE, playerPal()
+    angling.js        CATCH (the catch bar), BAIT, TACKLE, BOBBERS, TRASH, RECYCLE, FISH_TREASURE (v41)
     books.js          BOOKS (skill, primer, power), BOOK_FIND, MASTERY_XP, PERKS, SHRINE (v40)
     forge.js          VENT, FORGE_GEMS, enchantments, TRINKETS (v39)
     cavern.js         CAVERN (the Sunken Cavern's door, strength, ores, shafts, chests), HOLLOW_GOLD (v38)
@@ -50,7 +51,7 @@ src/
     effects.js        tool swing animation (swingAt)
     farming.js        till (wide hoe), water, plant, harvest, growth, withering
     forage.js         daily forage spawns in the Wilds
-    fishing.js        cast, bite, reel minigame, fish log
+    fishing.js        cast, bite, the catch bar (v41: hold Use, G.useHeld), bait, tackle, treasure, trash, fish log
     sites.js          where every farm building stands: moving and placing buildings, writing their tiles
     mill.js           the mill (wheat and beets overnight) and the shed door
     cooking.js        recipes, cooking at the stove, the fridge, eating, buffs on G.S.buff and G.S.drink, daily luck, the TV show, wishfruit sources

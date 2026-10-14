@@ -71,6 +71,7 @@ export function newState() {
     cavernOpen: false, cavernDeepest: 0,                // v38: the Sunken Cavern's door opened, its deepest floor
     ventOpen: false, ventDeepest: 0,                    // v39: the Ember Vent; floor 10 is the forge
     forged: {}, weaponEnch: {}, toolEnch: {}, trinket: null,   // v39: weapon -> gem counts, weapon -> enchant, tool -> enchant, worn trinket
+    bait: null, tackle: null, tackleUses: 0, bobber: 0, // v41: bait and tackle on the rod, bobber style
     read: [], mastery: { xp: 0, claimed: [] },          // v40: power books read, mastery XP and the skills whose perk is claimed
     slain: {}, goalsClaimed: [],                        // v37: monsters defeated by kind, slaying goals rewarded (systems/guild.js)
     recipes: ['friedegg'], fridge: {},                 // v35: dishes you can cook; what the kitchen fridge holds

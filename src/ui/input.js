@@ -30,13 +30,13 @@ export function initInput(canvas) {
     if (KEYMAP[e.code]) { G.keys[KEYMAP[e.code]] = true; e.preventDefault(); return; }
     if (e.code === 'Space' || e.code === 'KeyE') {
       if (e.target.tagName === 'BUTTON' && e.code === 'Space') return;
-      e.preventDefault(); if (!e.repeat) act(); return;
+      e.preventDefault(); G.useHeld = true; if (!e.repeat) act(); return;   // v41: held Use lifts the catch bar
     }
     const m = /^Digit(\d)$/.exec(e.code);
     if (m && !e.repeat && +m[1] >= 1 && +m[1] <= HOTBAR.length) selectSlot(+m[1] - 1);
   });
-  addEventListener('keyup', (e) => { if (KEYMAP[e.code]) G.keys[KEYMAP[e.code]] = false; });
-  addEventListener('blur', () => { G.keys = {}; });
+  addEventListener('keyup', (e) => { if (KEYMAP[e.code]) G.keys[KEYMAP[e.code]] = false; if (e.code === 'Space' || e.code === 'KeyE') G.useHeld = false; });
+  addEventListener('blur', () => { G.keys = {}; G.useHeld = false; });
 
   $$('[data-dir]').forEach((b) => {
     const d = b.dataset.dir;
@@ -44,7 +44,12 @@ export function initInput(canvas) {
     ['pointerup', 'pointerleave', 'pointercancel'].forEach((ev) => b.addEventListener(ev, () => { G.keys[d] = false; }));
     b.addEventListener('contextmenu', (e) => e.preventDefault());
   });
-  $('#use').addEventListener('click', () => act());
+  // v41: the Use button acts on press and, while held, lifts the catch bar.
+  const use = $('#use');
+  use.addEventListener('pointerdown', (e) => { e.preventDefault(); G.useHeld = true; act(); });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach((ev) => use.addEventListener(ev, () => { G.useHeld = false; }));
+  use.addEventListener('keydown', (e) => { if (e.code === 'Enter') act(); });
+  use.addEventListener('contextmenu', (e) => e.preventDefault());
 
   canvas.addEventListener('pointerdown', (e) => {
     if (G.paused) return;

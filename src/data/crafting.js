@@ -7,6 +7,7 @@ import { TREES, FRUIT } from './trees.js';
 import { FURNITURE } from './furniture.js';
 import { FISH } from './fish.js';
 import { MINERALS } from './minerals.js';
+import { RECYCLE } from './angling.js';
 
 export const PLACEABLES = {
   sprinkler:  { name: 'Copper sprinkler', short: 'Sprinkler', kind: 'sprinkler', reach: 1, square: false },
@@ -58,6 +59,7 @@ export const PLACEABLES = {
   minibin:    { name: 'Mini shipping bin', short: 'Mini bin', kind: 'bin' },
   // v31: presses 100 gel into a slime egg; the incubator hatches it for the slime pen.
   slimepress: { name: 'Slime press',      short: 'Sl. press', kind: 'machine' },
+  recycler:   { name: 'Recycler',         short: 'Recycler',  kind: 'machine' },   // v41
   // v32: used from the kit anywhere, it takes you home (systems/helpers.js) and is used up.
   homecharm:  { name: 'Home charm',       short: 'Charm',     kind: 'charm' },
   grassstarter: { name: 'Grass starter',  short: 'Grass',     kind: 'grass' },
@@ -121,6 +123,18 @@ export const RECIPES = {
   emberbomb:  { cost: 0, needs: { copper: 4, coal: 1 }, skill: ['mining', 1], desc: 'Throw it from the kit in the Hollow: after a moment it breaks every rock within 2 tiles and hurts monsters (and you) nearby.' },
   blastbomb:  { cost: 0, needs: { iron: 4, coal: 1 }, skill: ['mining', 6], desc: 'A bigger bomb: breaks rocks within 3 tiles.' },
   greatbomb:  { cost: 0, needs: { ironbar: 1, coal: 2, gel: 10 }, skill: ['mining', 8], desc: 'The biggest bomb: breaks rocks within 4 tiles.' },
+  // v41: fishing. item: makes bag items, not kit objects. Stardew: bait 1 bug meat (5); wild bait 10 fiber, 5 slime,
+  // 5 bug meat (5); spinner 2 iron bars; cork bobber 10 wood, 5 hardwood, 10 slime; trap bobber 1 copper bar, 10 sap;
+  // treasure hunter 2 gold bars; lead bobber (Willy's). Gel stands in for bug meat and sap.
+  bait:      { cost: 0, needs: { gel: 1 }, makes: 5, item: true, desc: 'Five bait. With the ashwood rod or better, fish bite in half the time.' },
+  wildbait:  { cost: 0, needs: { fiber: 10, gel: 5 }, makes: 5, item: true, desc: 'Five wild bait: sooner bites, and a quarter of catches come in pairs.' },
+  spinner:   { cost: 0, needs: { ironbar: 2 }, item: true, desc: 'Tackle for the ironwood rod: fish bite a quarter sooner. Lasts 20 catches.' },
+  corkbob:   { cost: 0, needs: { wood: 10, hardwood: 5, gel: 10 }, item: true, desc: 'Tackle: a quarter bigger catch bar. Lasts 20 catches.' },
+  trapbob:   { cost: 0, needs: { copperbar: 1, gel: 10 }, item: true, desc: 'Tackle: the meter drains a third slower. Lasts 20 catches.' },
+  leadbob:   { cost: 0, needs: { ironbar: 1, stone: 10 }, item: true, desc: 'Tackle: your bar stops bouncing at the bottom. Lasts 20 catches.' },
+  treasurer: { cost: 0, needs: { goldbar: 2 }, item: true, desc: 'Tackle: more treasure, and its meter never drains. Lasts 20 catches.' },
+  // Stardew's recycling machine: 25 wood, 25 stone, 1 iron bar.
+  recycler:  { cost: 0, needs: { wood: 25, stone: 25, ironbar: 1 }, desc: 'Turns trash from the pond into wood, coal, fiber, quartz, stone or ore overnight.' },
   silo:       { cost: 100, needs: { stone: 110, copperbar: 5 }, desc: 'With a silo on the farm, cutting grass gives hay for the barn loft half the time.' },
 };
 
@@ -149,6 +163,7 @@ export const MACHINES = {
   oilpress:   { accepts: (k) => k === 'corn' || k === 'truffle', product: (k) => (k === 'truffle' ? 'truffleoil' : 'oil'), nights: 1, hint: 'sweet corn or a truffle' },
   beebox:     { accepts: () => false, auto: { item: 'honey', every: 4, winter: false }, product: () => 'honey', nights: 0, hint: 'nothing: the bees do the work' },
   gemcopier:  { accepts: (k) => !!MINERALS[k]?.gem, product: (k) => k, nights: (k) => COPY_NIGHTS[k] || 1, repeat: true, hint: 'a gem' },
+  recycler:   { accepts: (k) => k in RECYCLE, product: (k) => { let r = Math.random(); for (const [it, c] of RECYCLE[k]) { if (r < c) return it; r -= c; } return RECYCLE[k][0][0]; }, nights: 1, hint: 'trash from the pond' },   // v41
   dryer:      { accepts: (k) => k in FRUIT || k === 'mushroom', takes: (k) => ({ [k]: 5 }), product: (k) => `dried_${k}`, nights: 1, hint: '5 fruit or 5 Hollow caps' },
   mushroomlog:{ accepts: () => false, auto: { item: 'mushroom', every: 4, winter: false }, product: () => 'mushroom', nights: 0, hint: 'nothing: give it time' },
   smoker:     { accepts: (k) => k in FISH, takes: (k) => ({ [k]: 1, coal: 1 }), product: (k) => `smoked_${k}`, nights: 0, hint: 'a fish and 1 coal' },

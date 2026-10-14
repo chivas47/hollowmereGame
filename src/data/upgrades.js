@@ -28,7 +28,9 @@ export const UPGRADES = {
   ] },
   rod:   { name: 'Fishing rod', tiers: [
     { label: 'Bamboo rod', zone: 0 },
-    { label: 'Ashwood rod', zone: 14, cost: 1800, desc: 'A wider green zone when reeling.' },
+    { label: 'Ashwood rod', zone: 14, cost: 1800, desc: 'A bigger catch bar, and it takes bait.' },
+    // v41. Stardew's iridium rod: 7,500g, takes bait and tackle.
+    { label: 'Ironwood rod', zone: 20, cost: 7500, desc: 'A bigger catch bar still; takes bait and tackle.' },
   ] },
   house: { name: 'Farmhouse', tiers: [
     { label: 'Cottage', energy: 270 },
