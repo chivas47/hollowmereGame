@@ -68,6 +68,7 @@ export function newState() {
     barnGoods: { cowmilk: 0, goatmilk: 0 },             // milk waiting in the barn
     skills: Object.fromEntries(Object.keys(SKILLS).map((k) => [k, 0])),    // XP per skill
     weapons: ['oldblade'], weapon: 'oldblade', rings: [null, null], finds: [],   // v36: weapons owned and in use, rings worn, mine floors whose find is taken
+    cavernOpen: false, cavernDeepest: 0,                // v38: the Sunken Cavern's door opened, its deepest floor
     slain: {}, goalsClaimed: [],                        // v37: monsters defeated by kind, slaying goals rewarded (systems/guild.js)
     recipes: ['friedegg'], fridge: {},                 // v35: dishes you can cook; what the kitchen fridge holds
     buff: null, drink: null, luck: 0,                   // v35: food and drink buffs, today's luck (systems/buffs.js)

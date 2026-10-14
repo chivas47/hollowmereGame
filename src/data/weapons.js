@@ -17,6 +17,7 @@ export const WEAPONS = {
   shank:      { name: 'Burrow shank',     kind: 'dagger', damage: 8 },    // burglar's shank 7-12
   club:       { name: 'Oak club',         kind: 'club',   damage: 11 },   // wood club 9-16
   mallet:     { name: 'Stone mallet',     kind: 'club',   damage: 17 },   // wood mallet 15-24
+  duneblade:  { name: 'Dune blade',       kind: 'sword',  damage: 32 },   // v38: obsidian edge 30-45, from cavern chests and monsters
   mitefang:   { name: 'Mite fang',        kind: 'dagger', damage: 13 },   // v37: insect head 10-20, the lodge's reward for 80 mites
 };
 
@@ -25,9 +26,12 @@ export const WEAPONS = {
 export const MONSTERS = {
   slime:    { name: 'Slime',       from: 1,  move: 'hop',   hp: (f) => 3 + Math.floor(f / 3),  dmg: (f) => 6 + f,  speed: (f) => 18 + Math.min(20, f * 2), xp: 3, drop: ['gel', 0.6] },
   mite:     { name: 'Hollow mite', from: 3,  move: 'crawl', hp: (f) => 2 + Math.floor(f / 5),  dmg: (f) => 4 + Math.floor(f / 2), speed: () => 14, xp: 2, drop: ['fiber', 0.3], color: '#6b4a2b' },
-  bat:      { name: 'Cave bat',    from: 12, move: 'fly',   hp: (f) => 4 + Math.floor(f / 4),  dmg: (f) => 7 + f,  speed: (f) => 34 + Math.min(16, f), xp: 6, drop: ['coal', 0.2], color: '#4a3b5a' },
-  skeleton: { name: 'Bone walker', from: 30, move: 'walk',  hp: (f) => 12 + Math.floor(f / 3), dmg: (f) => 10 + f, speed: () => 22, xp: 15, drop: ['iron', 0.3], color: '#e8e0d0' },
-  serpent:  { name: 'Hollow serpent', from: 50, move: 'fly', hp: (f) => 20 + Math.floor(f / 2), dmg: (f) => 15 + f, speed: () => 44, xp: 20, drop: ['violet', 0.05], color: '#5f8a4a' },
+  bat:      { name: 'Cave bat',    from: 12, cavern: true, move: 'fly',   hp: (f) => 4 + Math.floor(f / 4),  dmg: (f) => 7 + f,  speed: (f) => 34 + Math.min(16, f), xp: 6, drop: ['coal', 0.2], color: '#4a3b5a' },
+  skeleton: { name: 'Bone walker', from: 30, cavern: true, move: 'walk',  hp: (f) => 12 + Math.floor(f / 3), dmg: (f) => 10 + f, speed: () => 22, xp: 15, drop: ['iron', 0.3], color: '#e8e0d0' },
+  // v38. cavern: also lives in the Sunken Cavern; cavernOnly: only there (Stardew's mummies and pepper rex).
+  wraith:   { name: 'Sand wraith', from: 0, cavernOnly: true, move: 'walk', hp: (f) => 30 + Math.floor(f / 3), dmg: (f) => 18 + Math.floor(f / 4), speed: () => 18, xp: 25, drop: ['cloth', 0.1], color: '#d9c39a' },
+  rex:      { name: 'Scorch rex',  from: 0, cavernOnly: true, move: 'fly',  hp: (f) => 22 + Math.floor(f / 4), dmg: (f) => 20 + Math.floor(f / 4), speed: () => 40, xp: 30, drop: ['coal', 0.4], color: '#c8352f' },
+  serpent:  { name: 'Hollow serpent', from: 50, cavern: true, move: 'fly', hp: (f) => 20 + Math.floor(f / 2), dmg: (f) => 15 + f, speed: () => 44, xp: 20, drop: ['violet', 0.05], color: '#5f8a4a' },
 };
 export const MONSTER_COUNT = (f) => Math.min(10, 2 + Math.floor(f / 2));
 // Each kill: a small chance of a weapon or ring from the floor's pool (Stardew: monsters rarely drop rings and weapons).
@@ -54,6 +58,6 @@ export const FLOOR_FINDS = {
   40: 'cutlass', 45: 'glowring', 55: 'mallet', 60: 'emberboots', 65: 'tidering', 70: 'greatsword', 80: 'deepboots',
 };
 // Rare drops by depth.
-export const DROP_POOL = (f) => [
+export const DROP_POOL = (f, zone) => (zone === 'cavern' ? ['duneblade', 'leechring', 'thiefring'] : [
   ...(f >= 3 ? ['dirk'] : []), ...(f >= 12 ? ['slimeward', 'mossring'] : []), ...(f >= 30 ? ['leechring', 'thiefring'] : []), ...(f >= 50 ? ['shank'] : []),
-];
+]);

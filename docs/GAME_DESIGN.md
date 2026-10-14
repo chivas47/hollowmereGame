@@ -554,6 +554,30 @@ Stardew counterparts: basic, quality and deluxe fertilizer; speed-gro and deluxe
 - The game autosaves to this browser on sleep and when the tab is hidden.
 - Export save downloads `hollowmere-<season>-<day>-year-<n>.json` ({ game, version, saved, S }). Import save reads one back, shows its date and gold, and replaces the current farm only after confirmation. Files from older versions load like old saves.
 
+### The Sunken Cavern (v38)
+
+Stardew's Skull Cavern by role, reached from the Hollow instead of a desert (the desert comes with item 27). A sealed door on Hollow floor 80 opens it; after that the Hollow's entrance offers it too. Every visit starts at floor 1.
+
+| | Value | Stardew |
+|---|---|---|
+| Strength | cavern floor n fights like Hollow floor 100 + 2n | Skull Cavern is harder than the mines' bottom |
+| Monsters | 6 a floor, up to 14; sand wraith (walks, 30+ health, 25 XP), scorch rex (flies, 30 XP), plus bats, bone walkers, serpents | mummies, pepper rex, serpents, bats |
+| Rocks | 40% of floor tiles; 18% gold, iron 15%, umbrite 2% rising to 12% by floor 25 | iridium grows with depth |
+| Shafts | the ladder rock is a shaft 25% of the time: drops 3 to 8 floors, costs 10% health | shafts drop 3 to 15 floors |
+| Chests | 6% of floors: geodes, gold or umbrite bars, coal, bombs, a gem or the Dune blade | treasure floors |
+
+| Item | Sell | Stardew |
+|---|---|---|
+| Gold ore (rock hp 4) | 25g | gold ore 25g |
+| Gold bar (5 ore, 1 coal) | 250g | gold bar 250g |
+| Umbrite ore (rock hp 6) | 100g | iridium ore 100g |
+| Umbrite bar (5 ore, 1 coal) | 1,000g | iridium bar 1,000g |
+
+- Gold rocks also appear on Hollow floors 80 and deeper (8% of rocks; Stardew's gold from floor 80).
+- Watering can: Gold can 85 water, 10,000g and 5 gold bars; Umbrite can 100 water, 25,000g and 5 umbrite bars (Stardew's gold and iridium cans).
+- Lodge goals: 100 sand wraiths (Desert veil hat; Stardew 100 mummies), 50 scorch rex (Crested helm; Stardew 50 pepper rex).
+- Dune blade: sword, 32 damage (Stardew's obsidian edge, 30 to 45).
+
 ## Known issues and open questions
 
 ### Simulated balance (advisory)
@@ -590,6 +614,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Coop and barn upgrades do not change the buildings' size or art.
 - Grazing animals stay in their yards (Stardew's roam the farm). The silo does not cap the hay loft.
 - Mine floors have no boss or monster-infested floors yet.
+- The balance bot never goes deeper than about floor 8, so the cavern, gold and umbrite and the two new can tiers never appear in the simulator.
 - The lodge has no opening hours; shop hours come with item 22.
 - Lodge prices for the dirk, shortsword and boots are fitted by role; the wiki was out of reach when they were set.
 - The balance bot opens chests, uses chest bombs where they break the most rocks, has Bram crack its geodes and buys the lodge's club; it does not craft bombs or fight, so it never completes a slaying goal.

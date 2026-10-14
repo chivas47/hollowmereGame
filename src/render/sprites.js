@@ -371,6 +371,15 @@ export function drawMonster(c, px, py, kind, color, hurt, t) {
     r(c, x - 4, base - 1, 8, 1, 'rgba(0,0,0,.35)'); r(c, x - 3, base - 16, 6, 5, col); r(c, x - 2, base - 14, 1, 1, '#2b211a'); r(c, x + 1, base - 14, 1, 1, '#2b211a');
     r(c, x - 1, base - 11, 2, 6, col); [-4, -3, 2, 3].forEach((lx) => r(c, x + lx - 0.5, base - 10, 1, 1, col)); r(c, x - 3, base - 9, 6, 1, col);
     r(c, x - 2 - f, base - 5, 1, 5, col); r(c, x + 1 + f, base - 5, 1, 5, col);
+  } else if (kind === 'wraith') {   // v38: a sand wraith, wrapped and swaying
+    const sw = Math.round(Math.sin(t * 3));
+    r(c, x - 4, base - 1, 8, 1, 'rgba(0,0,0,.35)'); r(c, x - 3 + sw, base - 16, 6, 6, col); r(c, x - 4, base - 10, 8, 9, col);
+    for (let i = 0; i < 4; i++) r(c, x - 4, base - 14 + i * 3, 8, 1, 'rgba(0,0,0,.18)');
+    r(c, x - 2 + sw, base - 13, 1, 1, '#e9862a'); r(c, x + 1 + sw, base - 13, 1, 1, '#e9862a'); r(c, x - 3 - f, base - 2, 2, 2, col); r(c, x + 1 + f, base - 2, 2, 2, col);
+  } else if (kind === 'rex') {   // v38: a scorch rex, a small winged lizard
+    const y = base - 13 + Math.round(Math.sin(t * 5) * 2);
+    r(c, x - 4, base - 1, 8, 1, 'rgba(0,0,0,.25)'); r(c, x - 4, y, 9, 5, col); r(c, x + 4, y - 2, 4, 4, col); r(c, x + 6, y - 1, 1, 1, '#e9c46a');
+    r(c, x - 7, y + 2, 3, 2, col); if (f) { r(c, x - 3, y - 4, 6, 3, '#e9862a'); } else { r(c, x - 3, y + 4, 6, 2, '#e9862a'); }
   } else {   // serpent
     const y = base - 12 + Math.round(Math.sin(t * 3) * 2);
     r(c, x - 4, base - 1, 8, 1, 'rgba(0,0,0,.25)');

@@ -314,15 +314,15 @@ export function drawGlassWall(g, x, y) {
 }
 
 // ---- Cave tiles (the mine ignores seasons) ----
-export function drawCaveFloor(g, x, y) {
-  const X = x * T, Y = y * T, R = rng(x * 131 + y * 71);
-  r(g, X, Y, T, T, '#3b3430');
-  for (let i = 0; i < 5; i++) r(g, X + (R() * 15 | 0), Y + (R() * 15 | 0), 2, 1, R() < 0.5 ? '#463e39' : '#302a26');
+export function drawCaveFloor(g, x, y, p) {
+  const X = x * T, Y = y * T, R = rng(x * 131 + y * 71), sand = p?.theme === 'sand';   // v38: the Sunken Cavern's sand
+  r(g, X, Y, T, T, sand ? '#7a5a38' : '#3b3430');
+  for (let i = 0; i < 5; i++) r(g, X + (R() * 15 | 0), Y + (R() * 15 | 0), 2, 1, R() < 0.5 ? (sand ? '#8a6a44' : '#463e39') : (sand ? '#6a4c2e' : '#302a26'));
 }
-function caveWall(g, x, y) {
-  const X = x * T, Y = y * T, R = rng(x * 53 + y * 97);
-  r(g, X, Y, T, T, '#1f1a18'); r(g, X, Y + 12, T, 4, '#2a2421');
-  for (let i = 0; i < 3; i++) r(g, X + (R() * 13 | 0), Y + (R() * 10 | 0), 3, 1, '#2e2724');
+function caveWall(g, x, y, p) {
+  const X = x * T, Y = y * T, R = rng(x * 53 + y * 97), sand = p?.theme === 'sand';
+  r(g, X, Y, T, T, sand ? '#3f2c1c' : '#1f1a18'); r(g, X, Y + 12, T, 4, sand ? '#4f3824' : '#2a2421');
+  for (let i = 0; i < 3; i++) r(g, X + (R() * 13 | 0), Y + (R() * 10 | 0), 3, 1, sand ? '#5a4026' : '#2e2724');
 }
 function mineRock(ore) {
   return (g, x, y) => {
@@ -336,6 +336,16 @@ function ladderUp(g, x, y) {
   caveWall(g, x, y); r(g, X + 4, Y, 8, 16, '#2a2421'); r(g, X + 5, Y, 6, 2, '#e9c46a');
   r(g, X + 4, Y, 1, 16, '#94673d'); r(g, X + 11, Y, 1, 16, '#94673d');
   for (let i = 0; i < 4; i++) r(g, X + 4, Y + 2 + i * 4, 8, 1, '#b8864f');
+}
+// v38: the sealed door to the Sunken Cavern, and a shaft (a hole with no ladder).
+function cavernDoor(g, x, y, p) {
+  const X = x * T, Y = y * T;
+  caveWall(g, x, y, p); r(g, X + 2, Y + 1, 12, 15, '#6f6862'); r(g, X + 4, Y + 3, 8, 13, '#2b211a');
+  r(g, X + 4, Y + 3, 8, 2, '#e9c46a'); r(g, X + 7, Y + 8, 2, 3, '#e9862a'); r(g, X + 2, Y + 1, 12, 1, '#8d857d');
+}
+function shaft(g, x, y, p) {
+  const X = x * T, Y = y * T;
+  drawCaveFloor(g, x, y, p); r(g, X + 2, Y + 3, 12, 11, '#050403'); r(g, X + 3, Y + 2, 10, 1, '#0e0b0a'); r(g, X + 3, Y + 14, 10, 1, '#0e0b0a');
 }
 function ladderDown(g, x, y) {
   const X = x * T, Y = y * T;
@@ -354,9 +364,9 @@ function caveCrate(g, x, y) {
 }
 
 // v37: a treasure chest on a Hollow floor.
-function chest(g, x, y) {
+function chest(g, x, y, p) {
   const X = x * T, Y = y * T;
-  drawCaveFloor(g, x, y);
+  drawCaveFloor(g, x, y, p);
   r(g, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.35)');
   r(g, X + 2, Y + 6, 12, 8, '#8a5a32'); r(g, X + 2, Y + 4, 12, 3, '#a5753f'); r(g, X + 2, Y + 7, 12, 1, '#5c371e');
   r(g, X + 2, Y + 4, 1, 10, '#e9b44c'); r(g, X + 13, Y + 4, 1, 10, '#e9b44c'); r(g, X + 7, Y + 7, 2, 3, '#e9b44c');
@@ -366,6 +376,7 @@ export const CAVE_ART = {
   y: caveMouth, t: caveCrate, $: chest,
   X: caveWall, U: ladderUp, L: ladderDown,
   r: mineRock(null), c: mineRock('#d0874a'), i: mineRock('#c9ccd6'),
+  '%': mineRock('#e9c46a'), '*': mineRock('#9a7ae0'), '^': cavernDoor, '!': shaft,
 };
 
 // v22 farm layouts: quarry floor and sand.

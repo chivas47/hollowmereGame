@@ -8,6 +8,7 @@ import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
 import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL } from '../data/weapons.js';
+import { CAVERN } from '../data/cavern.js';
 import { ITEMS } from '../data/items.js';
 import { drawSlime, drawMonster } from '../render/sprites.js';
 import { solidAt } from './world.js';
@@ -28,13 +29,16 @@ function make(kind, floor, px, py, R) {
     hp: d.hp(floor), dmg: d.dmg(floor), speed: d.speed(floor), color: d.color || SLIME.colors[floor > 10 ? 2 : floor > 5 ? 1 : 0] };
 }
 
-on('mine:floor', ({ floor, rng: R }) => {
+on('mine:floor', ({ floor: n, rng: R, zone, eff: floor }) => {
   slimes.length = 0; slimeMap = 'mine';
-  const g = MAPS.mine.grid, kinds = Object.keys(MONSTERS).filter((k) => floor >= MONSTERS[k].from);
-  for (let guard = 0; slimes.length < MONSTER_COUNT(floor) && guard < 500; guard++) {
+  // v38: in the Sunken Cavern only its own monsters and those marked cavern, at the cavern's strength.
+  const cav = zone === 'cavern', g = MAPS.mine.grid;
+  const kinds = Object.keys(MONSTERS).filter((k) => (cav ? MONSTERS[k].cavern || MONSTERS[k].cavernOnly : !MONSTERS[k].cavernOnly && floor >= MONSTERS[k].from));
+  const count = cav ? CAVERN.monsters(n) : MONSTER_COUNT(floor);
+  for (let guard = 0; slimes.length < count && guard < 500; guard++) {
     const x = 1 + Math.floor(R() * (W - 2)), y = 1 + Math.floor(R() * (H - 2));
     if (g[y][x] !== 'f' || (x < 7 && y < 6)) continue;
-    slimes.push(make(kinds[Math.floor(R() * kinds.length)], floor, x * T + 8, y * T + 12, R));
+    slimes.push({ ...make(kinds[Math.floor(R() * kinds.length)], floor, x * T + 8, y * T + 12, R), zone });
   }
 });
 on('map:changed', (id) => { if (id !== slimeMap) slimes.length = 0; });
@@ -96,7 +100,7 @@ function defeat(m) {
   slimes.splice(slimes.indexOf(m), 1);
   const d = MONSTERS[m.kind || 'slime'], times = wearing('thiefring') ? 2 : 1;
   if (d.drop && Math.random() < d.drop[1]) { G.S.bag[d.drop[0]] = (G.S.bag[d.drop[0]] || 0) + times; notify(`+${times} ${ITEMS[d.drop[0]].name}`); }
-  const pool = DROP_POOL(m.floor || 1);
+  const pool = DROP_POOL(m.floor || 1, m.zone);
   if (pool.length && Math.random() < RARE_DROP * times) giveFind(pool[Math.floor(Math.random() * pool.length)], `The ${d.name.toLowerCase()} dropped`);
   if (wearing('leechring')) G.S.hp = Math.min(G.S.maxHp, G.S.hp + 2);
   emit('gather', { skill: 'combat', xp: d.xp });

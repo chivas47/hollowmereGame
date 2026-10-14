@@ -13,28 +13,38 @@ import { swingAt } from './effects.js';
 import { has } from './professions.js';
 import { luck } from './buffs.js';
 import { GEODE_CHANCE, geodeFor } from '../data/guild.js';
+import { CAVERN, HOLLOW_GOLD } from '../data/cavern.js';
 
 const ENTRANCE = { map: 'wilds', x: 12, y: 2, dir: 'down' };
 const SPAWN = { x: 2, y: 1 };          // ladder up sits just above, at (2, 0)
 const CHECKPOINT_EVERY = 5, PICK_ENERGY = 2;
 
-export const MINE = { floor: 0, rocks: {}, ladder: null };
+// zone: 'hollow' or 'cavern' (v38: the Sunken Cavern reuses the mine map); eff: the Hollow-floor strength of this floor.
+export const MINE = { floor: 0, rocks: {}, ladder: null, zone: 'hollow', eff: 0 };
 
 const solidGrid = () => Array.from({ length: H }, () => Array(W).fill('X'));
 MAPS.mine = { name: 'The Hollow', salt: 0, base: 'cave', grid: solidGrid(), objects: [], exits: {} };
 
-export function genFloor(n) {
-  const R = rng(n * 7919 + G.S.day * 104729 + 13), g = solidGrid();
-  for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) g[y][x] = R() < 0.05 ? 'X' : 'f';
+export function genFloor(n, zone = 'hollow') {
+  const cav = zone === 'cavern', eff = cav ? CAVERN.eff(n) : n;
+  const R = rng(n * 7919 + G.S.day * 104729 + (cav ? 31337 : 13)), g = solidGrid();
+  for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) g[y][x] = R() < (cav ? 0.08 : 0.05) ? 'X' : 'f';
   for (let y = 1; y <= 4; y++) for (let x = 1; x <= 4; x++) g[y][x] = 'f';   // clear landing area
   g[0][SPAWN.x] = 'U';
+  const door = !cav && n === CAVERN.doorFloor;   // v38: the sealed door to the Sunken Cavern
+  if (door) g[CAVERN.door.y][CAVERN.door.x] = '^';
 
   MINE.rocks = {};
   const keys = [], copperChance = Math.min(0.3, 0.1 + n * 0.02);
   for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
-    if (g[y][x] !== 'f' || (x <= 4 && y <= 4) || R() > 0.3) continue;
+    if (g[y][x] !== 'f' || (x <= 4 && y <= 4) || R() > (cav ? 0.4 : 0.3)) continue;
     const roll = R();
-    const t = n >= 6 && roll < 0.1 ? 'i' : roll < 0.1 + copperChance ? 'c' : 'r';
+    let t;
+    if (cav) {   // v38: the cavern: umbrite, gold, iron and stone
+      const um = CAVERN.umbrite(n);
+      t = roll < um ? '*' : roll < um + CAVERN.gold ? '%' : roll < um + CAVERN.gold + CAVERN.iron ? 'i' : 'r';
+    } else if (n >= HOLLOW_GOLD.from && roll < HOLLOW_GOLD.chance) t = '%';
+    else t = n >= 6 && roll < 0.1 ? 'i' : roll < 0.1 + copperChance ? 'c' : 'r';
     g[y][x] = t;
     MINE.rocks[`${x},${y}`] = { hp: ROCKS[t].hp };
     keys.push(`${x},${y}`);
@@ -42,19 +52,20 @@ export function genFloor(n) {
   MINE.ladder = keys.length ? keys[Math.floor(R() * keys.length)] : null;
   if (!MINE.ladder) g[8][12] = 'L';
 
-  Object.assign(MAPS.mine, { grid: g, name: `The Hollow, floor ${n}` });
-  MINE.floor = n;
-  G.S.mineDeepest = Math.max(G.S.mineDeepest, n);
+  Object.assign(MAPS.mine, { grid: g, name: cav ? `${CAVERN.name}, floor ${n}` : `The Hollow, floor ${n}`, theme: cav ? 'sand' : null });
+  Object.assign(MINE, { floor: n, zone, eff });
+  if (cav) G.S.cavernDeepest = Math.max(G.S.cavernDeepest || 0, n);
+  else G.S.mineDeepest = Math.max(G.S.mineDeepest, n);
   emit('world:changed');
-  emit('mine:floor', { floor: n, rng: R });
+  emit('mine:floor', { floor: n, rng: R, zone, eff });
 }
 
-export function enterMine(n) {
-  genFloor(n);
+export function enterMine(n, zone = 'hollow') {
+  genFloor(n, zone);
   placePlayer('mine', SPAWN.x, SPAWN.y, 'down');
   G.swing = null;
   emit('map:changed', 'mine');
-  notify(`The Hollow, floor ${n}`);
+  notify(MAPS.mine.name);
   changed();
 }
 
@@ -76,11 +87,21 @@ export function checkpoints() {
 on('game:loaded', () => { if (G.S.map === 'mine') placePlayer(ENTRANCE.map, ENTRANCE.x, ENTRANCE.y, ENTRANCE.dir); });
 on('mine:faint', leaveMine);
 
+// v38: a shaft in the cavern drops you several floors and costs some health.
+export function fallDown() {
+  const S = G.S, [a, b] = CAVERN.shaftDrop, n = a + Math.floor(Math.random() * (b - a + 1));
+  S.hp = Math.max(1, S.hp - Math.round(S.maxHp * CAVERN.shaftHurt));
+  enterMine(MINE.floor + n, MINE.zone);
+  notify(`You drop ${n} floors, to ${MAPS.mine.name}.`);
+}
+
 addInteraction(72, ({ tile, mapId }) => {
   if (tile === 'M') { emit('ui:mineEntrance'); return true; }
   if (mapId !== 'mine') return false;
   if (tile === 'U') { leaveMine(); return true; }
-  if (tile === 'L') { enterMine(MINE.floor + 1); return true; }
+  if (tile === 'L') { enterMine(MINE.floor + 1, MINE.zone); return true; }
+  if (tile === '^') { G.S.cavernOpen = true; enterMine(1, 'cavern'); return true; }   // v38
+  if (tile === '!') { fallDown(); return true; }
   return false;
 });
 
@@ -98,10 +119,13 @@ export function breakRock(tx, ty, quiet = false) {
   const gr = Math.random() / (has('excavator') ? 2 : 1) / lucky, gem = GEM_DROPS.find(([, c], i) => gr < GEM_DROPS.slice(0, i + 1).reduce((a, [, x]) => a + x, 0))?.[0];
   if (gem) { G.S.bag[gem] = (G.S.bag[gem] || 0) + (has('geologist') && MINERALS[gem]?.gem && Math.random() < 0.5 ? 2 : 1); notify(`You found ${ITEMS[gem].name.toLowerCase()}!`); }
   // v37: geodes, twice as often for the excavator (Stardew's excavator doubles geode finds).
-  if (Math.random() < GEODE_CHANCE * (has('excavator') ? 2 : 1) * lucky) { const k = geodeFor(MINE.floor); G.S.bag[k] = (G.S.bag[k] || 0) + 1; notify(`You found a ${ITEMS[k].name.toLowerCase()}!`); }
+  if (Math.random() < GEODE_CHANCE * (has('excavator') ? 2 : 1) * lucky) { const k = geodeFor(MINE.eff); G.S.bag[k] = (G.S.bag[k] || 0) + 1; notify(`You found a ${ITEMS[k].name.toLowerCase()}!`); }
   delete MINE.rocks[key];
   emit('gather', { skill: 'mining', item: rock.item, xp: rock.hp * 2 - 1 });
-  if (key === MINE.ladder) { MAPS.mine.grid[ty][tx] = 'L'; notify('You found a ladder down!'); }
+  if (key === MINE.ladder) {
+    const shaft = MINE.zone === 'cavern' && Math.random() < CAVERN.shaft;   // v38
+    MAPS.mine.grid[ty][tx] = shaft ? '!' : 'L'; notify(shaft ? 'You found a shaft! It drops several floors.' : 'You found a ladder down!');
+  }
   else { MAPS.mine.grid[ty][tx] = 'f'; if (!quiet && (rock.item !== 'stone' || coal)) notify(`+${n} ${ITEMS[rock.item].name}${coal ? ', +1 Coal' : ''}`); }
   emit('world:changed');
   changed();
