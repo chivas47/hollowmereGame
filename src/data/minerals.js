@@ -13,6 +13,7 @@ export const MINERALS = {
   goldbar:    { name: 'Gold bar',     sell: 250,  material: true },
   umbrite:    { name: 'Umbrite ore',  sell: 100,  material: true },
   umbritebar: { name: 'Umbrite bar',  sell: 1000, material: true },
+  cinder:     { name: 'Cinder shard', sell: 50,  material: true },   // v39: Stardew's cinder shard, 50g
   // v27 gems from Hollow rocks (Stardew: quartz 25g, amethyst 100g); the gem copier copies them.
   quartz:    { name: 'Hollow quartz', sell: 25,  gem: true },
   violet:    { name: 'Violet stone',  sell: 100, gem: true },
@@ -41,6 +42,7 @@ export const ROCKS = {
   i: { item: 'iron',   hp: 3, amount: [1, 2], ore: '#c9ccd6' },
   '%': { item: 'gold',    hp: 4, amount: [1, 2], ore: '#e9c46a' },   // v38
   '*': { item: 'umbrite', hp: 6, amount: [1, 2], ore: '#9a7ae0' },   // v38
+  '#': { item: 'cinder',  hp: 5, amount: [1, 3], ore: '#e9862a' },   // v39: cinder rock
 };
 
 // Slimes get tougher every floor; colour changes at floors 6 and 11.

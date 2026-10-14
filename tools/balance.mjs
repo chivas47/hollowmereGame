@@ -40,7 +40,7 @@ const ORCHARD = ['figtree', 'peartree', 'nectarinetree', 'persimmontree', 'plumt
 // What the bot saves up for, in order. Upgrade lines (can, hoe, rod, house) buy their next tier.
 const STRATEGIES = {
   full: ['furnace', 'can', 'coop', 'grassstarter', 'grassstarter', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'kiln', 'house',
-    'barn', 'pail', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'silo', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, 'stable', 'lodge:club', 'bigcoop', 'duck', 'duck', 'duck', 'duck', ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'rod', 'can',
+    'barn', 'pail', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'silo', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, 'stable', 'lodge:club', 'bigcoop', 'duck', 'duck', 'duck', 'duck', ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'pick', 'rod', 'can', 'pick',
     'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'shed', 'pond', 'house',
     'brewbarrel', 'brewbarrel', 'eggpress', 'beebox', 'beebox', 'dryer', 'smoker', 'mushroomlog',   // wood-hungry, so last
     // v28: more livestock. The big coop comes in year one like a player's; the rest take hundreds of wood, so they come last.
@@ -71,7 +71,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['layouts', 'sites', 'professions', 'cooking', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild'];
+  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -184,6 +184,7 @@ function simulate(runSeed) {
     axe: { cost: () => nextTier('axe')?.cost, needs: () => nextTier('axe')?.needs, ok: () => !!nextTier('axe'), buy: () => track('upgrades', () => buyUpgrade('axe')) },
     hoe: { cost: () => nextTier('hoe')?.cost, needs: () => nextTier('hoe')?.needs, ok: () => !!nextTier('hoe'), buy: () => track('upgrades', () => buyUpgrade('hoe')) },
     rod: { cost: () => nextTier('rod')?.cost, needs: () => nextTier('rod')?.needs, ok: () => !!nextTier('rod'), buy: () => track('upgrades', () => buyUpgrade('rod')) },
+    pick: { cost: () => nextTier('pick')?.cost, needs: () => nextTier('pick')?.needs, ok: () => !!nextTier('pick'), buy: () => track('upgrades', () => buyUpgrade('pick')) },   // v39
     house: { cost: () => nextTier('house')?.cost, needs: () => nextTier('house')?.needs, ok: () => !!nextTier('house'), buy: () => track('upgrades', () => buyUpgrade('house')) },
     coop: { cost: () => COOP.cost, needs: () => COOP.needs, ok: () => !S().built.coop, buy: () => track('buildings', orderCoop) },
     barn: { cost: () => BARN.cost, needs: () => BARN.needs, ok: () => !S().built.barn, buy: () => track('buildings', orderBarn) },

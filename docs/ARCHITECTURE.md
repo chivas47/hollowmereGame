@@ -28,6 +28,7 @@ src/
     furniture.js      FURNITURE, WALLPAPERS, FLOORS, RENOVATIONS, catalogue prices
     pets.js           PET friendship numbers, PET_LOOKS, PET_NAMES, PET_HATS
     profile.js        farmer profile: LOOKS, PETS, DEFAULT_PROFILE, playerPal()
+    forge.js          VENT, FORGE_GEMS, enchantments, TRINKETS (v39)
     cavern.js         CAVERN (the Sunken Cavern's door, strength, ores, shafts, chests), HOLLOW_GOLD (v38)
     guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item
@@ -53,7 +54,8 @@ src/
     mill.js           the mill (wheat and beets overnight) and the shed door
     cooking.js        recipes, cooking at the stove, the fridge, eating, buffs on G.S.buff and G.S.drink, daily luck, the TV show, wishfruit sources
     buffs.js          buff() and luck() for the systems that read them (kept import-free of cooking.js)
-    gear.js           weapons owned and in use, rings worn, giveFind()
+    gear.js           weapons owned and in use, rings worn, giveFind(), forge bonuses (forgeBonus, toolEnchant), trinkets worn
+    forge.js          the forge: forgeGem(), enchantWeapon(), enchantTool(); trinket effects underground
     treasure.js       bombs (throw, fuse, explode()), Hollow treasure chests (floor finds and rare loot), geode cracking
     guild.js          the Wardens' Lodge in the Wilds: shop, slaying goals (G.S.slain, G.S.goalsClaimed), its keeper
     professions.js    professions: has(id) for the systems that apply one, priceMult() for selling, choosing, combat health
@@ -65,7 +67,7 @@ src/
     upgrades.js       workbench purchases, material costs, recalcStats()
     livestock.js      shared animal rules: coop and barn levels, room, buying and hatching, friendship, grazing, products, quality
     coop.js           coop placement, coop animals, petting, feed
-    mine.js           floor generation for the Hollow and the Sunken Cavern (MINE.zone, MINE.eff), rocks, breakRock(), ladders, shafts, lighting
+    mine.js           floor generation for the Hollow, the Sunken Cavern and the Ember Vent (MINE.zone, MINE.eff), the forge room, rocks, breakRock(), ladders, shafts, lighting
     health.js         hurtPlayer(), fainting
     monsters.js       mine monsters by kind and floor (and the wild farm's slimes), the weapon swing, drops
     placeables.js     kit slot, placing/picking up crafted objects ('Y' tiles), drawing, lantern glow
@@ -144,7 +146,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 57 | treasure.js | Kit slot with a bomb (throws it at the faced tile, Hollow only) |
 | 72 | helpers.js | Helper hut a, waystones e and d (warp), cave mouth y, the cave's crate t |
 | 57 | helpers.js | Kit slot with a home charm (warp home) |
-| 72 | upgrades.js / coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Workbench K, coop C, barn A, greenhouse G, mine entrance M, ladders U/L, the cavern door ^ and shafts !, placed object Y, quest board Q, festival table J |
+| 72 | upgrades.js / coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Workbench K, coop C, barn A, greenhouse G, mine entrance M, ladders U/L, the cavern door ^, shafts !, the vent door > and the forge =, placed object Y, quest board Q, festival table J |
 | 71 | village.js | Fountain F, cottage V (flavour text) |
 | 71 | cooking.js | Farmhouse stove o (cook) and counters n (fridge) |
 | 70 | buildings.js, house.js | Stall S, bin B; farm door D (enter), bed Z, lectern l, kitchen and cellar fittings |

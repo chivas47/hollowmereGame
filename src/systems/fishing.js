@@ -35,7 +35,7 @@ function pickFish(ice) {
 
 function startReel(f) {
   const d = FISH[f.fish].difficulty;
-  f.zw = Math.min(BAR - 20, Math.round((Math.max(18, 56 - d * 8) + tier(G.S, 'rod').zone) * (has('steady') ? 1.3 : 1)));   // v34: steady hand
+  f.zw = Math.min(BAR - 20, Math.round((Math.max(18, 56 - d * 8) + tier(G.S, 'rod').zone + (G.S.toolEnch.rod === 'calm' ? 10 : 0)) * (has('steady') ? 1.3 : 1)));   // v39: calm   // v34: steady hand
   f.zone = Math.random() * (BAR - f.zw);
   f.marker = 0; f.vel = 70 + d * 28;
   f.phase = 'reel';

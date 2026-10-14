@@ -71,7 +71,8 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
     if (!s) { notify('Till the ground first.'); return true; }
     if (S.water <= 0) { notify('The can is empty. Refill it at the well.'); return true; }
     if (!useEnergy(ENERGY.water)) return true;
-    S.water--; s.w = true;
+    if (S.toolEnch.can !== 'bottomless') S.water--;   // v39
+    s.w = true;
     swingAt(tx, ty, 'can');
   } else if (CROPS[seed]) {
     const c = CROPS[seed], season = today().season;

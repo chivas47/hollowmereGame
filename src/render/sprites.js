@@ -380,6 +380,14 @@ export function drawMonster(c, px, py, kind, color, hurt, t) {
     const y = base - 13 + Math.round(Math.sin(t * 5) * 2);
     r(c, x - 4, base - 1, 8, 1, 'rgba(0,0,0,.25)'); r(c, x - 4, y, 9, 5, col); r(c, x + 4, y - 2, 4, 4, col); r(c, x + 6, y - 1, 1, 1, '#e9c46a');
     r(c, x - 7, y + 2, 3, 2, col); if (f) { r(c, x - 3, y - 4, 6, 3, '#e9862a'); } else { r(c, x - 3, y + 4, 6, 2, '#e9862a'); }
+  } else if (kind === 'sprite') {   // v39: a magma sprite, a flickering ember with wings
+    const y = base - 14 + Math.round(Math.sin(t * 7) * 2);
+    r(c, x - 3, base - 1, 6, 1, 'rgba(0,0,0,.25)'); r(c, x - 3, y, 6, 6, col); r(c, x - 2, y + 1, 4, 4, hurt ? '#ffffff' : '#ffd98a');
+    if (f) { r(c, x - 7, y + 1, 4, 2, '#c8352f'); r(c, x + 3, y + 1, 4, 2, '#c8352f'); } else { r(c, x - 6, y + 3, 3, 2, '#c8352f'); r(c, x + 3, y + 3, 3, 2, '#c8352f'); }
+  } else if (kind === 'golem') {   // v39: an ember golem, a slow heap of basalt with a glowing core
+    r(c, x - 6, base - 1, 12, 1, 'rgba(0,0,0,.35)'); r(c, x - 5, base - 15, 10, 13, col); r(c, x - 7, base - 12, 2, 6, col); r(c, x + 5, base - 12, 2, 6, col);
+    r(c, x - 2, base - 10, 4, 3, hurt ? '#ffffff' : '#e9862a'); r(c, x - 3, base - 14, 2, 1, '#ffd98a'); r(c, x + 1, base - 14, 2, 1, '#ffd98a');
+    r(c, x - 4 - f, base - 2, 3, 2, col); r(c, x + 1 + f, base - 2, 3, 2, col);
   } else {   // serpent
     const y = base - 12 + Math.round(Math.sin(t * 3) * 2);
     r(c, x - 4, base - 1, 8, 1, 'rgba(0,0,0,.25)');

@@ -14,6 +14,8 @@ import { has } from './professions.js';
 import { luck } from './buffs.js';
 import { GEODE_CHANCE, geodeFor } from '../data/guild.js';
 import { CAVERN, HOLLOW_GOLD } from '../data/cavern.js';
+import { VENT } from '../data/forge.js';
+import { tier } from '../data/upgrades.js';
 
 const ENTRANCE = { map: 'wilds', x: 12, y: 2, dir: 'down' };
 const SPAWN = { x: 2, y: 1 };          // ladder up sits just above, at (2, 0)
@@ -26,13 +28,14 @@ const solidGrid = () => Array.from({ length: H }, () => Array(W).fill('X'));
 MAPS.mine = { name: 'The Hollow', salt: 0, base: 'cave', grid: solidGrid(), objects: [], exits: {} };
 
 export function genFloor(n, zone = 'hollow') {
-  const cav = zone === 'cavern', eff = cav ? CAVERN.eff(n) : n;
-  const R = rng(n * 7919 + G.S.day * 104729 + (cav ? 31337 : 13)), g = solidGrid();
-  for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) g[y][x] = R() < (cav ? 0.08 : 0.05) ? 'X' : 'f';
+  const cav = zone === 'cavern', vent = zone === 'vent', eff = vent ? VENT.eff(n) : cav ? CAVERN.eff(n) : n;
+  const R = rng(n * 7919 + G.S.day * 104729 + (vent ? 77777 : cav ? 31337 : 13)), g = solidGrid();
+  for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) g[y][x] = R() < (cav || vent ? 0.08 : 0.05) ? 'X' : vent && R() < VENT.lava ? '~' : 'f';
   for (let y = 1; y <= 4; y++) for (let x = 1; x <= 4; x++) g[y][x] = 'f';   // clear landing area
   g[0][SPAWN.x] = 'U';
-  const door = !cav && n === CAVERN.doorFloor;   // v38: the sealed door to the Sunken Cavern
-  if (door) g[CAVERN.door.y][CAVERN.door.x] = '^';
+  if (!cav && !vent && n === CAVERN.doorFloor) g[CAVERN.door.y][CAVERN.door.x] = '^';   // v38: the sealed door to the Sunken Cavern
+  if (cav && n === VENT.doorFloor) g[CAVERN.door.y][CAVERN.door.x] = '>';             // v39: the door to the Ember Vent
+  if (vent && n >= VENT.floors) return forgeRoom(n, eff, g);
 
   MINE.rocks = {};
   const keys = [], copperChance = Math.min(0.3, 0.1 + n * 0.02);
@@ -40,7 +43,9 @@ export function genFloor(n, zone = 'hollow') {
     if (g[y][x] !== 'f' || (x <= 4 && y <= 4) || R() > (cav ? 0.4 : 0.3)) continue;
     const roll = R();
     let t;
-    if (cav) {   // v38: the cavern: umbrite, gold, iron and stone
+    if (vent) {   // v39: the vent: cinder, umbrite, gold and stone
+      t = roll < VENT.cinder ? '#' : roll < VENT.cinder + VENT.umbrite ? '*' : roll < VENT.cinder + VENT.umbrite + VENT.gold ? '%' : 'r';
+    } else if (cav) {   // v38: the cavern: umbrite, gold, iron and stone
       const um = CAVERN.umbrite(n);
       t = roll < um ? '*' : roll < um + CAVERN.gold ? '%' : roll < um + CAVERN.gold + CAVERN.iron ? 'i' : 'r';
     } else if (n >= HOLLOW_GOLD.from && roll < HOLLOW_GOLD.chance) t = '%';
@@ -52,12 +57,26 @@ export function genFloor(n, zone = 'hollow') {
   MINE.ladder = keys.length ? keys[Math.floor(R() * keys.length)] : null;
   if (!MINE.ladder) g[8][12] = 'L';
 
-  Object.assign(MAPS.mine, { grid: g, name: cav ? `${CAVERN.name}, floor ${n}` : `The Hollow, floor ${n}`, theme: cav ? 'sand' : null });
+  Object.assign(MAPS.mine, { grid: g, name: vent ? `${VENT.name}, floor ${n}` : cav ? `${CAVERN.name}, floor ${n}` : `The Hollow, floor ${n}`, theme: vent ? 'ember' : cav ? 'sand' : null });
   Object.assign(MINE, { floor: n, zone, eff });
-  if (cav) G.S.cavernDeepest = Math.max(G.S.cavernDeepest || 0, n);
+  if (vent) G.S.ventDeepest = Math.max(G.S.ventDeepest || 0, n);
+  else if (cav) G.S.cavernDeepest = Math.max(G.S.cavernDeepest || 0, n);
   else G.S.mineDeepest = Math.max(G.S.mineDeepest, n);
   emit('world:changed');
   emit('mine:floor', { floor: n, rng: R, zone, eff });
+}
+
+// v39: the vent's top floor: a quiet room with the forge, no rocks and no monsters.
+function forgeRoom(n, eff, g) {
+  for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) g[y][x] = 'f';
+  g[0][SPAWN.x] = 'U';
+  g[VENT.forge.y][VENT.forge.x] = '=';
+  MINE.rocks = {}; MINE.ladder = null;
+  Object.assign(MAPS.mine, { grid: g, name: `${VENT.name}: the forge`, theme: 'ember' });
+  Object.assign(MINE, { floor: n, zone: 'vent', eff });
+  G.S.ventDeepest = Math.max(G.S.ventDeepest || 0, n);
+  emit('world:changed');
+  emit('mine:floor', { floor: n, rng: () => 1, zone: 'vent', eff });
 }
 
 export function enterMine(n, zone = 'hollow') {
@@ -101,6 +120,8 @@ addInteraction(72, ({ tile, mapId }) => {
   if (tile === 'U') { leaveMine(); return true; }
   if (tile === 'L') { enterMine(MINE.floor + 1, MINE.zone); return true; }
   if (tile === '^') { G.S.cavernOpen = true; enterMine(1, 'cavern'); return true; }   // v38
+  if (tile === '>') { G.S.ventOpen = true; enterMine(1, 'vent'); return true; }       // v39
+  if (tile === '=') { emit('ui:forge'); return true; }
   if (tile === '!') { fallDown(); return true; }
   return false;
 });
@@ -138,7 +159,7 @@ addInteraction(66, ({ tx, ty, tile, item, mapId }) => {
   if (!useEnergy(PICK_ENERGY)) return true;
   const st = MINE.rocks[`${tx},${ty}`];
   swingAt(tx, ty, 'pick');
-  st.hp--;
+  st.hp -= tier(G.S, 'pick').power + (G.S.toolEnch.pick === 'powerful' ? 1 : 0);   // v39: pickaxe tiers, powerful
   if (st.hp > 0) { changed(); return true; }
   breakRock(tx, ty);
   return true;
