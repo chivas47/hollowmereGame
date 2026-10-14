@@ -41,7 +41,7 @@ const ORCHARD = ['figtree', 'peartree', 'nectarinetree', 'persimmontree', 'plumt
 const STRATEGIES = {
   full: ['furnace', 'can', 'coop', 'grassstarter', 'grassstarter', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'kiln', 'house',
     'barn', 'pail', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'silo', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, 'stable', 'bigcoop', 'duck', 'duck', 'duck', 'duck', ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'rod', 'can',
-    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'shed', 'house',
+    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'shed', 'pond', 'house',
     'brewbarrel', 'brewbarrel', 'eggpress', 'beebox', 'beebox', 'dryer', 'smoker', 'mushroomlog',   // wood-hungry, so last
     // v28: more livestock. The big coop comes in year one like a player's; the rest take hundreds of wood, so they come last.
     'bigbarn', 'cow', 'cow', 'goat', 'goat',
@@ -70,7 +70,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['layouts', 'sites', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing'];
+  'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -107,6 +107,7 @@ const { funded, fundProject } = await load('systems/projects.js');
 const { orderBarn, buyAnimal, buyHay, collectMilk, herd } = await load('systems/barn.js');
 const { SITES, findSite, siteAt, noFit } = await load('systems/sites.js');
 const { millIn, millCollect } = await load('systems/mill.js');
+const { stockPond, collectRoe, giveAsk, canGive } = await load('systems/ponds.js');
 const { HOMES, homeOf, level, noRoom, buyLivestock, orderLevel, buyTool } = await load('systems/livestock.js');
 const { craft } = await load('systems/crafting.js');
 const { startLayout } = await load('systems/layouts.js');
@@ -532,7 +533,7 @@ function simulate(runSeed) {
     for (const [k, n] of Object.entries(reserved)) { held[k] = Math.min(n, s.bag[k]); s.bag[k] -= held[k]; }
     for (const [k, n] of Object.entries(s.bag)) {
       if (!n || ITEMS[k].material) continue;
-      const src = k in CROPS ? 'crops' : k in FORAGE ? 'forage' : k in FRUIT ? 'fruit' : k in WEATHER_ITEMS ? 'storm cells' : k in FISH ? 'fish' : k in PRODUCTS ? 'animal products' : k in ARTISAN ? 'artisan goods' : 'mining';
+      const src = k.startsWith('roe_') ? 'fish pond' : k.startsWith('aged_') ? 'artisan goods' : k in CROPS ? 'crops' : k in FORAGE ? 'forage' : k in FRUIT ? 'fruit' : k in WEATHER_ITEMS ? 'storm cells' : k in FISH ? 'fish' : k in PRODUCTS ? 'animal products' : k in ARTISAN ? 'artisan goods' : 'mining';
       add(log.income, src, valueOf(k));
     }
     ship();
@@ -568,6 +569,12 @@ function simulate(runSeed) {
     machines(reserved);
     // The mill doubles wheat (flour 50g against wheat 25g); beets are worth more whole, so they are sold.
     if (s.built.mill === true) { millCollect(); if (s.bag.wheat > (reserves().wheat || 0)) millIn('wheat', s.bag.wheat - (reserves().wheat || 0)); spend(TIME.chore); }
+    // The fish pond (v31): stock it with the best fish caught today, collect roe, bring what it asks for.
+    if (s.built.pond === true) {
+      if (!s.pond.fish) { const best = Object.keys(FISH).filter((k) => s.bag[k] > 0).sort((a, b) => FISH[b].sell - FISH[a].sell)[0]; if (best) stockPond(best); }
+      collectRoe(); if (canGive()) giveAsk();
+      spend(TIME.chore);
+    }
     shipAll(reserves());
     const energyLeft = s.energy;
     sleep(false);

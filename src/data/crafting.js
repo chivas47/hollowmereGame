@@ -56,6 +56,8 @@ export const PLACEABLES = {
   silo:       { name: 'Silo',             short: 'Silo',      kind: 'decor' },
   // v30: a small shipping bin to put anywhere on the farm or in the shed (kind 'bin': facing it ships, systems/buildings.js).
   minibin:    { name: 'Mini shipping bin', short: 'Mini bin', kind: 'bin' },
+  // v31: presses 100 gel into a slime egg; the incubator hatches it for the slime pen.
+  slimepress: { name: 'Slime press',      short: 'Sl. press', kind: 'machine' },
   grassstarter: { name: 'Grass starter',  short: 'Grass',     kind: 'grass' },
   // v24: furniture, placed inside the farmhouse (bought from the catalogue there).
   ...Object.fromEntries(Object.entries(FURNITURE).map(([k, f]) => [k, { name: f.name, short: f.name.length > 10 ? f.name.split(' ').pop() : f.name, kind: 'furniture', walk: !!f.walk }])),
@@ -67,7 +69,7 @@ export const RECIPES = {
   sprinkler:  { cost: 75,  needs: { copperbar: 1, stone: 5 }, desc: 'Waters the 4 tiles next to it every morning.' },
   sprinkler2: { cost: 200, needs: { ironbar: 1, copperbar: 1 }, desc: 'Waters all 8 tiles around it every morning.' },
   sprinkler3: { cost: 900, needs: { ironbar: 1, gel: 5 },   desc: 'Waters the 24 tiles in a 5 by 5 square around it every morning.' },
-  crock:      { cost: 500, needs: { stone: 30, copperbar: 1 }, desc: 'Jars a crop, fruit or forage item over 3 nights. Worth twice the item plus 50g.' },
+  crock:      { cost: 500, needs: { stone: 30, copperbar: 1 }, desc: 'Jars a crop, fruit or forage item over 3 nights. Worth twice the item plus 50g. Roe becomes aged roe, worth twice the roe.' },
   churn:      { cost: 400, needs: { copperbar: 1 },         desc: 'Turns milk into butter overnight.' },
   vat:        { cost: 600, needs: { ironbar: 1 },           desc: 'Turns goat milk into soft cheese overnight.' },
   booster3:   { cost: 0,   needs: { ironbar: 1, gel: 10 },  desc: 'Highest soil booster: crops can come out heirloom quality.' },
@@ -99,20 +101,22 @@ export const RECIPES = {
   smoker:     { cost: 0, needs: { wood: 20, ironbar: 1 }, desc: 'Smokes a fish with 1 coal while you wait: worth twice the fish.' },
   // v28. Stardew: ostrich incubator 50 bone fragments, 50 hardwood, 20 cinder shards (the big coop's own is built in);
   // silo 100g, 100 stone, 10 clay, 5 copper bars. Stone stands in for the clay and bones, wood for the hardwood.
-  incubator:  { cost: 0, needs: { wood: 50, stone: 50, ironbar: 2 }, desc: 'Hatches an egg into an animal: chicken and duck eggs in 9 nights, Mossback eggs in 12, Strider eggs in 15. It needs room in the coop or barn.' },
+  incubator:  { cost: 0, needs: { wood: 50, stone: 50, ironbar: 2 }, desc: 'Hatches an egg into an animal: chicken and duck eggs in 9 nights, Mossback eggs in 12, Strider eggs in 15, slime eggs in 3. It needs room in the coop or barn.' },
   // v30. Stardew's mini shipping bin is a quest reward with no recipe; ours costs about an early machine.
   minibin:    { cost: 0, needs: { wood: 30, copperbar: 1 }, desc: 'Ships your basket from anywhere you put it, like the big bin.' },
+  // v31. Stardew's slime egg-press: 25 coal, a fire quartz, a battery pack (ours: a violet stone, a storm cell).
+  slimepress: { cost: 0, needs: { coal: 25, violet: 1, stormcell: 1 }, desc: 'Presses 100 slime gel into a slime egg overnight. Hatch it in the incubator for the slime pen.' },
   silo:       { cost: 100, needs: { stone: 110, copperbar: 5 }, desc: 'With a silo on the farm, cutting grass gives hay for the barn loft half the time.' },
 };
 
 // v28: which egg makes which spread, and what hatches from which egg (Stardew: 9 nights, dinosaur 12 here, ostrich 15).
 export const EGG_SPREAD = { egg: 'mayo', duckegg: 'duckmayo', mossegg: 'mossmayo' };
-export const HATCH = { egg: 'chicken', duckegg: 'duck', mossegg: 'mossback', bigegg: 'strider' };
-const HATCH_NIGHTS = { egg: 9, duckegg: 9, mossegg: 12, bigegg: 15 };
+export const HATCH = { egg: 'chicken', duckegg: 'duck', mossegg: 'mossback', bigegg: 'strider', slimeegg: 'slime' };
+const HATCH_NIGHTS = { egg: 9, duckegg: 9, mossegg: 12, bigegg: 15, slimeegg: 3 };   // v31: Stardew's slime incubator takes about 3 days
 
 // Machines: accepts(itemKey) -> bool, product(itemKey) -> item key, nights to finish.
 export const MACHINES = {
-  crock: { accepts: (k) => k in PRODUCE || k in FRUIT || k in FORAGE, product: (k) => JAR_PREFIX + k, nights: 3, hint: 'a crop, fruit or forage item' },
+  crock: { accepts: (k) => k in PRODUCE || k in FRUIT || k in FORAGE || k.startsWith('roe_'), product: (k) => (k.startsWith('roe_') ? `aged_${k.slice(4)}` : JAR_PREFIX + k), nights: 3, hint: 'a crop, fruit, forage item or roe' },
   churn: { accepts: (k) => k === 'cowmilk', product: () => 'butter', nights: 1, hint: 'milk' },
   vat:   { accepts: (k) => k === 'goatmilk', product: () => 'cheese', nights: 1, hint: 'goat milk' },
   // Nothing goes in: a storm's lightning fills it (systems/weather.js).
@@ -131,6 +135,7 @@ export const MACHINES = {
   mushroomlog:{ accepts: () => false, auto: { item: 'mushroom', every: 4, winter: false }, product: () => 'mushroom', nights: 0, hint: 'nothing: give it time' },
   smoker:     { accepts: (k) => k in FISH, takes: (k) => ({ [k]: 1, coal: 1 }), product: (k) => `smoked_${k}`, nights: 0, hint: 'a fish and 1 coal' },
   // v28. hatch: egg -> animal kind. Collecting moves the animal into the coop or barn (systems/livestock.js).
+  slimepress: { accepts: (k) => k === 'gel', takes: () => ({ gel: 100 }), product: () => 'slimeegg', nights: 1, hint: '100 slime gel' },
   incubator:  { accepts: (k) => k in HATCH, hatch: HATCH, product: (k) => k, nights: (k) => HATCH_NIGHTS[k], hint: 'an egg' },
 };
 
