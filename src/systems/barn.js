@@ -7,27 +7,15 @@ import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addUpdater, addEntities } from '../core/registry.js';
 import { BARN } from '../data/upgrades.js';
-import { MAPS } from '../data/maps.js';
 import { drawAnimal, drawHeart } from '../render/sprites.js';
 import { tileOf } from './world.js';
+import { placeBuilding } from './sites.js';
 import { affordable } from './upgrades.js';
 import { night, collect, buyLivestock, pet, animalDef } from './livestock.js';
 
-const farm = MAPS.farm, fp = BARN.footprint, yard = BARN.yard, SPEED = 10;
+const yard = BARN.yard, SPEED = 10;   // yard moves with the barn (systems/sites.js)
 
-// Remember the tiles under the barn so a new game can restore them.
-const original = [];
-for (let y = fp.y; y < fp.y + fp.h; y++) for (let x = fp.x; x < fp.x + fp.w; x++) original.push([x, y, farm.grid[y][x]]);
-
-function placeBarn() {
-  original.forEach(([x, y, t]) => { farm.grid[y][x] = t; });
-  farm.objects = farm.objects.filter((o) => o.art !== 'barn');
-  if (G.S.built.barn === true) {
-    original.forEach(([x, y]) => { farm.grid[y][x] = 'A'; delete G.S.soil[`${x},${y}`]; });
-    farm.objects.push({ art: 'barn', x: fp.x, y: fp.y });
-  }
-  emit('world:changed');
-}
+const placeBarn = () => placeBuilding('barn');   // systems/sites.js writes the tiles wherever it stands
 
 export const barnBuilt = () => G.S.built.barn === true;
 const randomYardPoint = () => ({
@@ -44,7 +32,8 @@ function syncHerd() {
   herd.length = G.S.animals.length;
 }
 
-on('game:loaded', () => { herd.length = 0; placeBarn(); });
+on('game:loaded', () => { herd.length = 0; });
+on('site:moved', (key) => { if (key === 'barn') herd.length = 0; });
 on('game:reset', () => { herd.length = 0; });
 
 on('day:end', (report) => {

@@ -17,8 +17,9 @@ import { soilOf, placeKey, parsePlaceKey } from './world.js';
 const TILE = 'Y';
 const SELF_DRAWN = new Set(['tree', 'fence', 'gate', 'floor', 'furniture']);
 // Furniture goes in the farmhouse on its floor ('h'); everything else on farm grass or greenhouse beds ('g').
-const ground = (map) => (map === 'house' ? 'h' : 'g');
-const canPlaceOn = (map) => map === 'house' || !!soilOf(map);
+const INDOORS = new Set(['house', 'shed']);   // floors ('h') rather than grass
+const ground = (map) => (INDOORS.has(map) ? 'h' : 'g');
+const canPlaceOn = (map) => INDOORS.has(map) || !!soilOf(map);
 export const tileFor = (p) => (PLACEABLES[p.kind].walk ? 'h' : PLACEABLES[p.kind].kind === 'floor' || p.open ? 'P' : TILE);
 const written = new Set();   // placeKey()s this module wrote into a grid
 
@@ -81,15 +82,16 @@ const treeNear = (map, x, y) => [-1, 0, 1].some((dy) => [-1, 0, 1].some((dx) => 
 addInteraction(55, ({ tx, ty, tile, mapId, item }) => {
   if (item !== 'kit') return false;
   const S = G.S, key = placeKey(mapId, tx, ty), def = PLACEABLES[S.kitSel];
-  if (mapId === 'house') {   // furniture
+  if (INDOORS.has(mapId)) {   // furniture in the house; furniture, machines and decorations in the shed
     if (tile !== 'h') return false;
     if (!owned(S.kitSel)) { announceKit(); return true; }
-    if (def.kind !== 'furniture') { notify('That belongs outdoors.'); return true; }
+    const fits = def.kind === 'furniture' || (mapId === 'shed' && ['machine', 'decor', 'bin'].includes(def.kind));
+    if (!fits) { notify(mapId === 'shed' ? 'Machines, decorations and furniture go in the shed.' : 'That belongs outdoors.'); return true; }
     if (S.placed[key]) { notify('Something is already there.'); return true; }
-    if (MAPS.house.keepClear.includes(`${tx},${ty}`)) { notify('Keep the doorway clear.'); return true; }
+    if (MAPS[mapId].keepClear.includes(`${tx},${ty}`)) { notify('Keep the doorway clear.'); return true; }
     S.kit[S.kitSel]--;
     S.placed[key] = { kind: S.kitSel, item: null, nights: 0 };
-    MAPS.house.grid[ty][tx] = tileFor(S.placed[key]); written.add(key);
+    MAPS[mapId].grid[ty][tx] = tileFor(S.placed[key]); written.add(key);
     emit('placed', { map: mapId, x: tx, y: ty, kind: S.kitSel });
     notify(`Placed the ${def.name}.`);
     changed();

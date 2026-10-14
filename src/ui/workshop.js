@@ -3,6 +3,7 @@ import { G } from '../core/game.js';
 import { on, notify } from '../core/events.js';
 import { UPGRADES, COOP, BARN, GREENHOUSE, STABLE, COAL_COST, MATERIAL_COST, tier } from '../data/upgrades.js';
 import { orderStable } from '../systems/stable.js';
+import { SITES, startSiting } from '../systems/sites.js';
 import { RENOVATIONS } from '../data/furniture.js';
 import { buyRenovation } from '../systems/house.js';
 import { ITEMS } from '../data/items.js';
@@ -49,10 +50,19 @@ function workbench() {
     if (!next) return offer(H.def.levels[level(home)].label, 'Fully upgraded');
     return offer(next.label, `${next.desc} ${next.cost.toLocaleString('en-US')}g`, `data-level="${home}"`, next.cost, next.needs);
   }).join('');
+  // v30: buildings you place yourself, and moving any building that stands.
+  const placedRows = Object.entries(SITES).filter(([, s]) => s.placed).map(([k, s]) => {
+    const st = S.built[k];
+    if (st === 'pending') return offer(s.name, 'Bram builds it tonight');
+    if (st === true) return '';
+    return `<div class="shoprow"><div><b>${s.name}</b><span>${s.def.desc} ${s.def.cost.toLocaleString('en-US')}g. You choose the spot (${s.def.footprint.w} by ${s.def.footprint.h} tiles).${Object.keys(s.def.needs).length ? `<br>Needs ${needsText(s.def.needs)}` : ''}</span></div><div class="btns"><button data-site="new:${k}" ${affordable(s.def.cost, s.def.needs) ? '' : 'disabled'}>Choose a spot</button></div></div>`;
+  }).join('');
+  const movable = Object.entries(SITES).filter(([k]) => S.built[k] === true);
+  const moveRow = movable.length ? `<div class="shoprow"><div><b>Move a building</b><span>Free. Choose the new spot on the farm; animals and the horse come along.</span></div><div class="btns">${movable.map(([k, s]) => `<button data-site="move:${k}">${s.name}</button>`).join('')}</div></div>` : '';
   const renos = Object.entries(RENOVATIONS).map(([k, r]) => (S.house.renos.includes(k) ? offer(r.name, 'Done')
     : offer(r.name, `${r.desc} ${r.cost.toLocaleString('en-US')}g`, `data-reno="${k}"`, r.cost))).join('');
   const mats = Object.entries(MATERIAL_COST).map(([k, c]) => `<div class="shoprow"><div><b>${ITEMS[k].name}</b><span>${c}g each. You have ${S.bag[k] || 0}.</span></div><div class="btns">${[10, 50].map((n) => `<button data-mat="${k}:${n}" ${S.gold < c * n ? 'disabled' : ''}>Buy ${n}</button>`).join('')}</div></div>`).join('');
-  openModal(`<h2>Bram's workbench</h2><p class="role">Bram takes orders here. You have <b>${S.gold}g</b>. Press C anywhere to craft sprinklers and machines; a furnace smelts ore into the bars upgrades need.</p>${rows}${coop}${barn}${ups}${gh}${st}<h3>Farmhouse renovations</h3>${renos}<h3>Coal and materials</h3><div class="shoprow"><div><b>Coal</b><span>${COAL_COST}g each. You have ${S.bag.coal || 0}. The furnace needs 1 per bar.</span></div><div class="btns"><button data-coal="1" ${S.gold < COAL_COST ? 'disabled' : ''}>Buy 1</button><button data-coal="5" ${S.gold < COAL_COST * 5 ? 'disabled' : ''}>Buy 5</button></div></div>${mats}`,
+  openModal(`<h2>Bram's workbench</h2><p class="role">Bram takes orders here. You have <b>${S.gold}g</b>. Press C anywhere to craft sprinklers and machines; a furnace smelts ore into the bars upgrades need.</p>${rows}${coop}${barn}${ups}${gh}${st}${placedRows}${moveRow}<h3>Farmhouse renovations</h3>${renos}<h3>Coal and materials</h3><div class="shoprow"><div><b>Coal</b><span>${COAL_COST}g each. You have ${S.bag.coal || 0}. The furnace needs 1 per bar.</span></div><div class="btns"><button data-coal="1" ${S.gold < COAL_COST ? 'disabled' : ''}>Buy 1</button><button data-coal="5" ${S.gold < COAL_COST * 5 ? 'disabled' : ''}>Buy 5</button></div></div>${mats}`,
     [['Leave', closeModal, true]]);
 }
 
@@ -94,6 +104,8 @@ $('#mbody').addEventListener('click', (e) => {
   }
   const cl = e.target.closest('[data-coal]');
   if (cl && !cl.disabled) { if (buyCoal(+cl.dataset.coal)) workbench(); return; }
+  const si = e.target.closest('[data-site]');
+  if (si && !si.disabled) { const [mode, k] = si.dataset.site.split(':'); closeModal(); startSiting(k, mode); return; }
   const lv = e.target.closest('[data-level]');
   if (lv && !lv.disabled) { if (orderLevel(lv.dataset.level)) workbench(); return; }
   const mt = e.target.closest('[data-mat]');

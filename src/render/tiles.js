@@ -207,7 +207,47 @@ export function drawBowl(g, x, y) {
   r(g, X + 3, Y + 12, 10, 1, 'rgba(0,0,0,.25)'); r(g, X + 3, Y + 8, 10, 4, '#b5452f'); r(g, X + 4, Y + 7, 8, 1, '#d9644a'); r(g, X + 5, Y + 8, 6, 2, '#3f3226');
 }
 
-export const OBJECT_ART = { stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
+// v30: buildings the player places (systems/sites.js). o.w and o.h are the footprint in tiles.
+function shed(g, p, o) {
+  const X = o.x * T, Y = o.y * T;
+  r(g, X + 2, Y + 31, 44, 1, 'rgba(0,0,0,.25)');
+  r(g, X + 3, Y + 12, 42, 19, '#a5753f');
+  for (let i = 0; i < 7; i++) r(g, X + 3 + i * 6, Y + 12, 1, 19, '#8a5a32');
+  for (let j = 0; j < 11; j++) r(g, X + 13 - j, Y + 1 + j, 22 + 2 * j, 1, j % 3 === 2 ? '#3f4850' : '#5f6870');
+  if (p.snow) for (let j = 0; j < 3; j++) r(g, X + 13 - j, Y + 1 + j, 22 + 2 * j, 1, SNOW);
+  r(g, X + 18, Y + 18, 12, 13, '#5c371e'); r(g, X + 18, Y + 18, 12, 2, '#c9a06a'); r(g, X + 27, Y + 25, 1, 2, '#e9c46a');
+  r(g, X + 6, Y + 16, 7, 6, '#3f3226'); r(g, X + 7, Y + 17, 5, 4, '#bfe0ec'); r(g, X + 35, Y + 16, 7, 6, '#3f3226'); r(g, X + 36, Y + 17, 5, 4, '#bfe0ec');
+}
+function mill(g, p, o) {
+  const X = o.x * T, Y = o.y * T, a = 0.4;
+  r(g, X + 1, Y + 31, 30, 1, 'rgba(0,0,0,.25)');
+  r(g, X + 6, Y + 10, 20, 21, '#d9caa6'); r(g, X + 6, Y + 10, 20, 2, '#b8a888');
+  for (let j = 0; j < 6; j++) r(g, X + 11 - j, Y + 4 + j, 10 + 2 * j, 1, '#8a3a2a');
+  if (p.snow) r(g, X + 8, Y + 6, 16, 2, SNOW);
+  r(g, X + 13, Y + 22, 6, 9, '#6e4626');
+  for (let k = 0; k < 4; k++) {   // sails
+    const ang = a + k * Math.PI / 2;
+    for (let i = 2; i < 13; i++) r(g, X + 16 + Math.round(Math.cos(ang) * i), Y + 9 + Math.round(Math.sin(ang) * i), 2, 2, '#f4ead2');
+  }
+  r(g, X + 15, Y + 8, 3, 3, '#5c371e');
+}
+function clocktower(g, p, o) {
+  const X = o.x * T, Y = o.y * T;
+  r(g, X + 3, Y + 31, 26, 1, 'rgba(0,0,0,.25)');
+  r(g, X + 8, Y + 4, 16, 27, '#e9c46a'); r(g, X + 8, Y + 4, 3, 27, '#f6dc8a'); r(g, X + 21, Y + 4, 3, 27, '#c9a43a');
+  for (let j = 0; j < 6; j++) r(g, X + 15 - j, Y - 4 + j, 2 + 2 * j, 1, '#b5452f');
+  r(g, X + 10, Y + 8, 12, 12, '#fffbe8'); r(g, X + 10, Y + 8, 12, 1, '#c9a43a'); r(g, X + 15, Y + 10, 2, 5, '#2b211a'); r(g, X + 16, Y + 14, 4, 1, '#2b211a');
+  r(g, X + 13, Y + 24, 6, 7, '#8a5a32');
+}
+function scaffold(g, p, o) {
+  const X = o.x * T, Y = o.y * T, w = o.w * T, h = o.h * T;
+  r(g, X + 2, Y + h - 4, w - 4, 3, '#a5753f');
+  for (let x = 3; x < w - 2; x += 10) r(g, X + x, Y + 6, 2, h - 9, '#8a5a32');
+  r(g, X + 2, Y + 8, w - 4, 2, '#8a5a32'); r(g, X + 2, Y + h / 2, w - 4, 2, '#8a5a32');
+  r(g, X + 6, Y + h - 10, 8, 6, '#9aa3ab'); r(g, X + w - 14, Y + h - 9, 8, 5, '#b08a5a');
+}
+
+export const OBJECT_ART = { shed, mill, clocktower, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
 
 // ---- Greenhouse interior (ignores seasons) ----
 export function drawGreenhouseFloor(g, x, y, t) {

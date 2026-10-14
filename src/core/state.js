@@ -30,7 +30,9 @@ export function newState() {
     fishLog: {},        // fish key -> number caught
     upgrades: { can: 0, hoe: 0, axe: 0, rod: 0, house: 0 },   // tier index per upgrade line
     waterBonus: 0, maxEnergy: 270,                      // derived stats, see systems/upgrades.js
-    built: { coop: false, barn: false, greenhouse: false, stable: false },   // false | 'pending' | true
+    built: { coop: false, barn: false, greenhouse: false, stable: false, shed: false, mill: false, clocktower: false },   // false | 'pending' | true
+    sites: {},                                          // v30: building -> { x, y } top-left on the farm, when moved or placed (systems/sites.js)
+    mill: { in: {}, out: {} },                          // v30: crop -> waiting to be ground, product -> ready (systems/mill.js)
     chickens: [],                                       // coop animals: { kind, name, pet: day last petted, love, days } (systems/livestock.js)
     eggs: 0,                                            // before v28: eggs waiting in the coop (moved into coopGoods on load)
     coopGoods: {},                                      // v28: item -> how many wait in the coop
@@ -87,6 +89,8 @@ export function merge(saved) {
   s.skills = Object.assign(newState().skills, saved.skills || {});
   s.barnGoods = Object.assign(newState().barnGoods, saved.barnGoods || {});
   if (!s.placed || typeof s.placed !== 'object') s.placed = {};
+  if (!s.sites || typeof s.sites !== 'object') s.sites = {};
+  s.mill = { in: { ...(saved.mill?.in || {}) }, out: { ...(saved.mill?.out || {}) } };
   // v28: eggs moved into coopGoods; barns built before the milk pail keep milking.
   s.coopGoods = Object.assign({}, saved.coopGoods || {});
   if (saved.eggs > 0) { s.coopGoods.egg = (s.coopGoods.egg || 0) + saved.eggs; s.eggs = 0; }

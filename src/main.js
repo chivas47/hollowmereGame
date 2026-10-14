@@ -8,6 +8,7 @@ import { draw } from './render/renderer.js';
 
 // Systems (order of import does not matter; priorities live in each file)
 import './systems/layouts.js';   // first: rebuilds the farm grid before other systems write into it
+import './systems/sites.js';     // second: moves building footprints and writes building tiles
 import './systems/player.js';
 import './systems/clock.js';
 import './systems/effects.js';
@@ -35,6 +36,7 @@ import './systems/festivals.js';
 import './systems/village.js';
 import './systems/projects.js';
 import './systems/greenhouse.js';
+import './systems/mill.js';
 import './systems/trees.js';
 import './systems/giants.js';
 import './systems/clearing.js';
@@ -54,6 +56,7 @@ import './ui/workshop.js';
 import './ui/mine.js';
 import './ui/crafting.js';
 import './ui/barn.js';
+import './ui/mill.js';
 import './ui/village.js';
 import './ui/creation.js';
 import './ui/house.js';

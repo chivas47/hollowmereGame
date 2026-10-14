@@ -207,6 +207,10 @@ export function drawAnimal(c, px, py, dir, moving, kind) {
 
 // Crafted objects placed on the farm. state: { item, nights } for machines, null otherwise.
 const PLACED_ART = {
+  minibin: (c, X, Y) => {
+    r(c, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.25)'); r(c, X + 3, Y + 7, 10, 7, '#a5753f'); r(c, X + 3, Y + 10, 10, 1, '#8a5a32');
+    r(c, X + 2, Y + 5, 12, 3, '#8a5a32'); r(c, X + 2, Y + 5, 12, 1, '#c9a06a'); r(c, X + 7, Y + 8, 2, 2, '#e9c46a');
+  },
   sprinkler: (c, X, Y) => {
     r(c, X + 5, Y + 9, 6, 5, '#b8733e'); r(c, X + 5, Y + 9, 6, 1, '#d99a5e'); r(c, X + 7, Y + 5, 2, 4, '#9a6a3e');
     r(c, X + 4, Y + 5, 8, 1, '#d99a5e'); r(c, X + 7, Y + 2, 2, 8, '#d99a5e'); r(c, X + 7, Y + 4, 2, 2, '#69aedb');

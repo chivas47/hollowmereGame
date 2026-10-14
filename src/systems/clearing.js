@@ -128,7 +128,8 @@ on('day:start', (report) => {
   }
   let crept = 0;
   const loose = all.filter(([, d]) => CREEP.weights[d.kind]).length, total = Object.values(CREEP.weights).reduce((a, b) => a + b, 0);
-  for (let i = 0; i < CREEP.perNight && loose + crept < CREEP.cap; i++) {
+  const still = S.built.clocktower === true;   // v30: the clock tower stops debris creeping in
+  for (let i = 0; i < (still ? 0 : CREEP.perNight) && loose + crept < CREEP.cap; i++) {
     if (Math.random() >= CREEP.chance) continue;
     const t = randomFree(); if (!t) break;
     let roll = Math.random() * total, kind = 'weeds';

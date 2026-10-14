@@ -12,6 +12,7 @@ import { confirmReset } from './dialogs.js';
 import { toggleDebug } from './debugPanel.js';
 import { toggleAll } from './sound.js';
 import { whistle } from '../systems/stable.js';
+import { cancelSiting } from '../systems/sites.js';
 import { $, $$ } from './dom.js';
 
 const KEYMAP = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right' };
@@ -19,6 +20,7 @@ const KEYMAP = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', Arr
 export function initInput(canvas) {
   addEventListener('keydown', (e) => {
     if (modalOpen()) { if (e.code === 'Escape') closeModal(); return; }
+    if (e.code === 'Escape' && G.siting) { cancelSiting(); return; }   // stop placing a building
     if (e.code === 'Backquote') { toggleDebug(); return; }
     if (e.code === 'KeyI') { emit('ui:inventory'); return; }
     if (e.code === 'KeyC') { emit('ui:craft'); return; }
