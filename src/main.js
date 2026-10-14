@@ -24,6 +24,7 @@ import './systems/livestock.js';
 import './systems/coop.js';
 import './systems/mine.js';
 import './systems/health.js';
+import './systems/gear.js';
 import './systems/monsters.js';
 import './systems/placeables.js';
 import './systems/crafting.js';

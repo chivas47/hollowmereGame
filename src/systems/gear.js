@@ -1,0 +1,61 @@
+// Weapons, rings and mine finds (v36). G.S.weapons: owned weapon keys; G.S.weapon: the one hotbar slot 5 swings.
+// Rings are items in the bag (data/weapons.js RINGS); G.S.rings: the two worn. Floors in FLOOR_FINDS give their find
+// the first time you reach them; monsters rarely drop something from DROP_POOL.
+import { G } from '../core/game.js';
+import { on, changed, notify } from '../core/events.js';
+import { WEAPONS, WEAPON_KINDS, RINGS, FLOOR_FINDS } from '../data/weapons.js';
+import { CLOTHES } from '../data/clothing.js';
+import { ITEMS } from '../data/items.js';
+
+export const weapon = () => WEAPONS[G.S.weapon] || WEAPONS.oldblade;
+export const weaponKind = () => WEAPON_KINDS[weapon().kind];
+export const wearing = (id) => G.S.rings.includes(id);
+
+// Gives a weapon, ring or pair of boots; says what it was. Returns false if it was a weapon or boots you have.
+export function giveFind(key, how = 'You found') {
+  const S = G.S;
+  if (WEAPONS[key]) {
+    if (S.weapons.includes(key)) return false;
+    S.weapons.push(key);
+    notify(`${how} a ${WEAPONS[key].name.toLowerCase()}! Choose your weapon in the bag (I).`);
+  } else if (RINGS[key]) {
+    S.bag[key] = (S.bag[key] || 0) + 1;
+    notify(`${how} a ${RINGS[key].name.toLowerCase()}! Wear it from the bag (I).`);
+  } else if (CLOTHES[key]) {
+    if (S.wardrobe[key]) return false;
+    S.wardrobe[key] = true;
+    notify(`${how} ${CLOTHES[key].name.toLowerCase()}! Wear them from the bag (I).`);
+  } else return false;
+  changed();
+  return true;
+}
+
+export function chooseWeapon(key) {
+  if (!G.S.weapons.includes(key)) return false;
+  G.S.weapon = key; changed();
+  return true;
+}
+
+// Wears a ring from the bag in the first free hand (or replaces the second one); takes one off.
+export function wearRing(key) {
+  const S = G.S;
+  if (!RINGS[key] || !(S.bag[key] > 0) || S.rings.includes(key)) return false;
+  const slot = S.rings[0] ? 1 : 0;
+  if (S.rings[slot]) S.bag[S.rings[slot]] = (S.bag[S.rings[slot]] || 0) + 1;
+  S.bag[key]--; S.rings[slot] = key;
+  changed(); return true;
+}
+export function removeRing(slot) {
+  const S = G.S, k = S.rings[slot];
+  if (!k) return false;
+  S.bag[k] = (S.bag[k] || 0) + 1; S.rings[slot] = null;
+  changed(); return true;
+}
+export const ringName = (k) => ITEMS[k]?.name;
+
+on('mine:floor', ({ floor }) => {
+  const key = FLOOR_FINDS[floor], S = G.S;
+  if (!key || S.finds.includes(floor)) return;
+  S.finds.push(floor);
+  giveFind(key, `On floor ${floor} you found`);
+});

@@ -333,6 +333,29 @@ export function drawBunting(c, x0, x1, y, colors) {
 }
 
 // phase: 0 at rest, 0..1 through a hop.
+// v36: the Hollow's other monsters. t: a running clock for wing beats and legs.
+export function drawMonster(c, px, py, kind, color, hurt, t) {
+  const x = Math.round(px), base = Math.round(py), col = hurt ? '#ffffff' : color, f = Math.floor(t * 8) % 2;
+  if (kind === 'mite') {
+    r(c, x - 5, base - 1, 10, 1, 'rgba(0,0,0,.35)'); r(c, x - 4, base - 6, 8, 5, col); r(c, x - 3, base - 7, 6, 1, col);
+    [-4, -1, 2].forEach((lx, i) => r(c, x + lx, base - 1 - ((i + f) % 2), 2, 1, '#2b211a')); r(c, x + 2, base - 5, 1, 1, '#e9c46a');
+  } else if (kind === 'bat') {
+    const y = base - 14 + Math.round(Math.sin(t * 6) * 2);
+    r(c, x - 3, base - 1, 6, 1, 'rgba(0,0,0,.25)'); r(c, x - 2, y, 4, 4, col);
+    if (f) { r(c, x - 7, y, 5, 2, col); r(c, x + 2, y, 5, 2, col); } else { r(c, x - 6, y + 2, 4, 2, col); r(c, x + 2, y + 2, 4, 2, col); }
+    r(c, x - 1, y + 1, 1, 1, '#e2707a'); r(c, x + 1, y + 1, 1, 1, '#e2707a');
+  } else if (kind === 'skeleton') {
+    r(c, x - 4, base - 1, 8, 1, 'rgba(0,0,0,.35)'); r(c, x - 3, base - 16, 6, 5, col); r(c, x - 2, base - 14, 1, 1, '#2b211a'); r(c, x + 1, base - 14, 1, 1, '#2b211a');
+    r(c, x - 1, base - 11, 2, 6, col); [-4, -3, 2, 3].forEach((lx) => r(c, x + lx - 0.5, base - 10, 1, 1, col)); r(c, x - 3, base - 9, 6, 1, col);
+    r(c, x - 2 - f, base - 5, 1, 5, col); r(c, x + 1 + f, base - 5, 1, 5, col);
+  } else {   // serpent
+    const y = base - 12 + Math.round(Math.sin(t * 3) * 2);
+    r(c, x - 4, base - 1, 8, 1, 'rgba(0,0,0,.25)');
+    for (let i = 0; i < 5; i++) r(c, x - 8 + i * 3, y + Math.round(Math.sin(t * 6 + i) * 2), 4, 4, col);
+    r(c, x + 7, y - 1, 4, 4, col); r(c, x + 9, y, 1, 1, '#e9c46a');
+  }
+}
+
 export function drawSlime(c, px, py, color, hurt, phase) {
   const lift = Math.round(Math.sin(phase * Math.PI) * 3), x = Math.round(px) - 5, base = Math.round(py);
   const y = base - 8 - lift, col = hurt ? '#ffffff' : color;

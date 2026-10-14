@@ -51,6 +51,7 @@ src/
     mill.js           the mill (wheat and beets overnight) and the shed door
     cooking.js        recipes, cooking at the stove, the fridge, eating, buffs on G.S.buff and G.S.drink, daily luck, the TV show, wishfruit sources
     buffs.js          buff() and luck() for the systems that read them (kept import-free of cooking.js)
+    gear.js           weapons owned and in use, rings worn, mine floor finds, giveFind()
     professions.js    professions: has(id) for the systems that apply one, priceMult() for selling, choosing, combat health
     helpers.js        helper hut harvests, waystones, the home charm, the farm cave (opening, choice, daily crate)
     ponds.js          the fish pond (stock, breed, roe, requests) and the slime pen (trough, slime balls, addSlime)
@@ -62,7 +63,7 @@ src/
     coop.js           coop placement, coop animals, petting, feed
     mine.js           floor generation, rocks, ladders, lighting
     health.js         hurtPlayer(), fainting
-    monsters.js       slimes, sword
+    monsters.js       mine monsters by kind and floor (and the wild farm's slimes), the weapon swing, drops
     placeables.js     kit slot, placing/picking up crafted objects ('Y' tiles), drawing, lantern glow
     crafting.js       craft(): gold + materials -> kit
     sprinklers.js     water soil on day:start and on placement
@@ -146,7 +147,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 62 | clearing.js | Any tool aimed at farm debris or an alder |
 | 61 | forage.js | Any tool aimed at a weed in the Wilds (fiber) |
 | 59 | giants.js | Any tool aimed at a giant crop (chop with hoe, pickaxe or sword) |
-| 58 | monsters.js | Sword (claims every press while held) |
+| 58 | monsters.js | The weapon in slot 5 (claims every press while held) |
 | 56 | clearing.js | Kit slot with an alder cone (plant) |
 | 55 | placeables.js | Kit slot on untilled farm grass (place) |
 | 51 | farmPerks.js | Forage in the woodland farm's wood |
