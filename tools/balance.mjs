@@ -561,7 +561,7 @@ function simulate(runSeed) {
     if (missingMats().wood && !late()) chopWood();
     if (missingMats().fiber && !late()) for (const [k, d] of Object.entries(s.debris || {})) if (d.kind === 'weeds') clear('farm', ...k.split(',').map(Number));   // fiber for the loom
     plantCones();
-    if (Object.keys(missingMats()).filter((k) => k !== 'wood').length && !late()) mine();   // saving up for something that needs ore: mine first
+    if (Object.keys(missingMats()).filter((k) => !['wood', 'fiber', 'cloth'].includes(k)).length && !late()) mine();   // saving up for something that needs ore: mine first (not for fiber or cloth)
     if (!late()) farm('farm', true);
     if (!late() && greenhouseBuilt()) farm('greenhouse', true);
     if (!late()) fish(0);
