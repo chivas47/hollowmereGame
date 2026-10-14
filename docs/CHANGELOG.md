@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v40: Books and mastery
+- Books turn up while you work (each harvest, catch, rock or chop has a small chance of its skill's book) and in mine chests from floor 20. Read them from the bag.
+- Six skill books give XP in their skill; the Starlit Primer gives XP in all six.
+- Five power books give a lasting perk: walk faster, take less harm from your own bombs, double wood now and then, rarer monster finds twice as often, every recipe from the cooking show.
+- Mastery: once all six skills reach 10, every bit of XP also counts toward mastery. Six mastery levels, each claimed as one skill's perk at its pedestal in the shrine by the Hollow (a stone door in the Wilds).
+
 ## v39: The Ember Vent, the forge and trinkets
 - The Sunken Cavern's floor 10 has a door to the Ember Vent: ten floors of basalt and lava with cinder rocks, magma sprites and ember golems. Its top floor is the forge; once you reach it, the Hollow's entrance takes you straight there.
 - The forge: set up to 3 gems into a weapon (heartstone damage, tidestone critical chance, frost tear critical power, ember quartz speed, violet stone knockback, amber defense) for cinder shards, or enchant a weapon or a tool with 20 cinder shards and a starstone.

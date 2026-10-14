@@ -49,7 +49,8 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
     return true;
   }
   if (s?.crop && isRipe(s.crop)) {
-    const { item, n, q } = harvest(s);
+    const h = harvest(s), { item, q } = h;
+    const n = h.n + (G.S.mastery.claimed.includes('farming') && Math.random() < 0.1 ? 1 : 0);   // v40: farming mastery
     addItem(item, n, q);
     notify(`Picked ${n > 1 ? '' : 'a '}${q ? `${QUALITY[q].name.toLowerCase()} ` : ''}${ITEMS[item].name}${n > 1 ? ` x${n}` : ''}.`);
     emit('gather', { skill: 'farming', item, n, xp: Math.max(3, Math.round(ITEMS[item].sell / 10)) });

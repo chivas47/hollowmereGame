@@ -54,6 +54,7 @@ import './systems/clothing.js';
 import './systems/treasure.js';
 import './systems/guild.js';
 import './systems/forge.js';
+import './systems/books.js';
 
 // UI
 import './ui/toast.js';
@@ -75,6 +76,7 @@ import './ui/house.js';
 import './ui/clothing.js';
 import './ui/guild.js';
 import './ui/forge.js';
+import './ui/books.js';
 import { buildHotbar } from './ui/hotbar.js';
 import { initInput } from './ui/input.js';
 import { initDebug } from './ui/debugPanel.js';

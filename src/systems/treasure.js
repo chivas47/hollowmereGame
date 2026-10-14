@@ -51,7 +51,7 @@ export function explode(px, py, radius, damage, safe = false) {
     const d = Math.hypot(m.x - px, m.y - py);
     if (d <= reach + 6) hitMonster(m, damage, ((m.x - px) / (d || 1)) * 200, ((m.y - py) / (d || 1)) * 200);
   }
-  if (!safe && Math.hypot(G.S.x - px, G.S.y - py) <= reach + 6) hurtPlayer(damage / 2, px, py);
+  if (!safe && Math.hypot(G.S.x - px, G.S.y - py) <= reach + 6) hurtPlayer(damage / 2 * (G.S.read.includes('pw_blaster') ? 0.25 : 1), px, py);   // v40: Blaster's Handbook
   blasts.push({ x: px, y: py, radius: reach + 8, t: 0.4 });
   emit('sfx', 'boom');
   if (broke > 1) notify(`The blast broke ${broke} rocks.`);

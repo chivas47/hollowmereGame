@@ -600,6 +600,33 @@ Stardew's volcano dungeon and its dwarf forge, by role. A door on Sunken Cavern 
 - Trinkets (Stardew 1.6's fairy box, parrot egg, ice rod, frog egg), one worn, fixed strength, sell 1,000g: lantern moth (1 health every 3 s underground), magpie charm (2 to 12g a defeat), frost rod (freezes the nearest monster 2 s, every 6 s), toad charm (eats a monster with 25 health or less within 3 tiles, every 10 s). From chests at strength 100 and up; the magpie charm also for 150 magma sprites.
 - Pickaxe at Bram's (Stardew's pickaxe upgrades, 5 bars each): copper 2,000g (2 hits a swing), steel 5,000g (3), gold 10,000g (4), umbrite 25,000g (6).
 
+### Books and mastery (v40)
+
+Stardew 1.6 by role, original titles. Books are bag items you read; the bookseller (item 29) will sell them later.
+
+| Book | Effect | Stardew |
+|---|---|---|
+| Six skill books (Grower's Almanac, Notes from the Wood, Line and Lure, Rock and Seam Monthly, Herder's Handbook, Wardens' Quarterly) | 50 XP in the skill | skill books, 250 XP (our level curve is about a fifth of Stardew's) |
+| The Starlit Primer | 50 XP in every skill | Book of Stars |
+| Tailwind Treatise | walk 5% faster | Way of the Wind |
+| Blaster's Handbook | your bombs hurt you 75% less | Dwarvish Safety Manual |
+| Woodsman's Secret | 10% of chops give twice the wood | Woody's Secret |
+| Bestiary of the Hollow | rare monster drops twice as often | Monster Compendium |
+| Kitchen of the Air | learn every cooking-show recipe | Queen of Sauce Cookbook |
+
+- Finds: 0.3% per gather of that skill's book; chests from strength 20 hold the primer or a power book. A power book already read can only be sold (500g); skill books sell for 100g, the primer 200g.
+- Mastery (Stardew: all skills at 10, then 10,000 to 100,000 mastery XP): all six skills at 10 (food buffs do not count); mastery XP at 2,070, 5,170, 9,300, 14,500, 20,700 and 28,000 (Stardew's scaled, plus a sixth level for our sixth skill).
+- The shrine (Stardew's mastery cave): a stone door in the Wilds west of the Hollow, sealed until mastery opens. Each mastery level claims one skill's perk at its pedestal:
+
+| Skill | Perk |
+|---|---|
+| Farming | harvests give one more crop 10% of the time |
+| Foraging | chopping gives one more wood |
+| Fishing | a wider green zone when reeling |
+| Mining | one more ore from each ore rock |
+| Combat | weapons hit 15% harder |
+| Ranching | animal products one quality higher |
+
 ## Known issues and open questions
 
 ### Simulated balance (advisory)
@@ -637,7 +664,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Grazing animals stay in their yards (Stardew's roam the farm). The silo does not cap the hay loft.
 - Mine floors have no boss or monster-infested floors yet.
 - The balance bot never goes deeper than about floor 8, so the cavern, gold and umbrite and the two new can tiers never appear in the simulator.
-- Trinkets need no combat mastery (Stardew's do); mastery comes with item 19. The forge does not combine rings or reroll trinkets.
+- Trinkets need no combat mastery (Stardew's do); mastery perks arrived in v40 without that gate. The forge does not combine rings or reroll trinkets.
 - The lodge has no opening hours; shop hours come with item 22.
 - Lodge prices for the dirk, shortsword and boots are fitted by role; the wiki was out of reach when they were set.
 - The balance bot opens chests, uses chest bombs where they break the most rocks, has Bram crack its geodes and buys the lodge's club; it does not craft bombs or fight, so it never completes a slaying goal.

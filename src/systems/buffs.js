@@ -9,5 +9,5 @@ export function buff(key) {
   return [S.buff, S.drink].reduce((sum, b) => sum + (b && S.time < b.until ? b[key] || 0 : 0), 0);
 }
 export const luck = () => (G.S.luck || 0) + buff('luck') * BUFF.luck;
-export const speedMult = () => 1 + buff('speed') * BUFF.speed;
+export const speedMult = () => (1 + buff('speed') * BUFF.speed) * (G.S.read?.includes('pw_tailwind') ? 1.05 : 1);   // v40: Tailwind Treatise
 export const attackMult = () => 1 + buff('attack') * BUFF.attack;

@@ -1,6 +1,7 @@
 // Static world art: tiles and buildings. Drawn once per map and season into a cached canvas.
 import { T } from '../core/constants.js';
 import { r, rng } from './pixel.js';
+import { SHRINE } from '../data/books.js';
 
 const SNOW = '#f2f6f8';
 
@@ -396,12 +397,27 @@ function chest(g, x, y, p) {
   r(g, X + 2, Y + 4, 1, 10, '#e9b44c'); r(g, X + 13, Y + 4, 1, 10, '#e9b44c'); r(g, X + 7, Y + 7, 2, 3, '#e9b44c');
 }
 
+// v40: the shrine door in the Wilds and a skill's pedestal inside the shrine.
+function shrineDoor(g, x, y, p) {
+  const X = x * T, Y = y * T;
+  r(g, X, Y, T, T, '#6f6862'); r(g, X + 2, Y + 2, 12, 14, '#4f4945'); r(g, X + 3, Y + 3, 10, 13, '#2b2a2e');
+  Object.values(SHRINE.colors).forEach((c, i) => r(g, X + 3 + (i % 3) * 4, Y + 5 + Math.floor(i / 3) * 5, 2, 2, c));
+  if (p.snow) r(g, X, Y, T, 2, SNOW);
+}
+function pedestal(g, x, y, p) {
+  const X = x * T, Y = y * T, skill = Object.keys(SHRINE.pedestals).find((k) => SHRINE.pedestals[k] === x);
+  drawCaveFloor(g, x, y, p);
+  r(g, X + 3, Y + 13, 10, 2, '#4f4945'); r(g, X + 5, Y + 6, 6, 8, '#8d857d'); r(g, X + 4, Y + 5, 8, 2, '#a8a199');
+  r(g, X + 6, Y + 1, 4, 4, SHRINE.colors[skill] || '#e9c46a'); r(g, X + 7, Y + 2, 1, 1, '#ffffff');
+}
+
 export const CAVE_ART = {
   y: caveMouth, t: caveCrate, $: chest,
   X: caveWall, U: ladderUp, L: ladderDown,
   r: mineRock(null), c: mineRock('#d0874a'), i: mineRock('#c9ccd6'),
   '%': mineRock('#e9c46a'), '*': mineRock('#9a7ae0'), '^': cavernDoor, '!': shaft,
   '#': mineRock('#e9862a'), '~': lava, '>': ventDoor, '=': forgeAnvil,
+  '@': shrineDoor, '+': pedestal,
 };
 
 // v22 farm layouts: quarry floor and sand.

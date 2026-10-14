@@ -1,5 +1,6 @@
 // Combat expansion, part 2 (v37): the Wardens' Lodge in the Wilds, bombs, Hollow treasure chests and geodes.
 // Stardew by role, original names: the lodge is the adventurers' guild, Warden Hale its keeper.
+import { CHEST_BOOKS } from './books.js';
 
 // The lodge opens once you have been down the Hollow. tile: the cabin's tiles in the Wilds (data/maps.js).
 export const LODGE = {
@@ -71,4 +72,5 @@ export const chestLoot = (floor) => [
   [floor >= 50 ? 'heartstone' : floor >= 25 ? 'tidestone' : 'violet', 1, 2],
   ...(floor >= 100 ? [[['lanternmoth', 'magpie', 'frostrod', 'toad'][Math.floor(Math.random() * 4)], 1, 1]] : []),   // v39: trinkets
   ...(floor >= 130 ? [['cinder', 8, 15], ['starstone', 1, 1]] : []),
+  ...(floor >= 20 ? [[CHEST_BOOKS[Math.floor(Math.random() * CHEST_BOOKS.length)], 1, 1]] : []),   // v40: books
 ];
