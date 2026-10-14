@@ -6,6 +6,7 @@ import { MACHINES } from '../data/crafting.js';
 import { placeKey } from './world.js';
 import { today } from '../core/time.js';
 import { adopt, animalDef, homeOf } from './livestock.js';
+import { addSlime } from './ponds.js';
 
 const machine = (x, y) => {
   const p = G.S.placed[placeKey(G.S.map, x, y)];
@@ -42,6 +43,13 @@ export function collectMachine(x, y) {
   const p = machine(x, y);
   if (!p || !p.item || p.nights > 0) return null;
   const item = p.item, hatch = MACHINES[p.kind].hatch?.[item];
+  if (hatch === 'slime') {   // v31: a slime goes to the slime pen (systems/ponds.js)
+    if (!addSlime()) return null;
+    p.item = null; p.nights = 0;
+    notify('A slime hatched and bounced off to the slime pen.');
+    changed();
+    return hatch;
+  }
   if (hatch) {   // the incubator (v28): the animal moves into its coop or barn, if there is room
     const name = adopt(hatch);
     if (!name) return null;

@@ -205,8 +205,31 @@ export function drawAnimal(c, px, py, dir, moving, kind) {
   r(c, left ? x + 12 : x + 1, y + 4, 1, 3, spot);
 }
 
+// v31: fish in the pond (n of them, colour of the kind) and slimes and slime balls in the pen. X, Y: the top-left pixel.
+export function drawPondLife(c, X, Y, w, h, n, color, roe) {
+  const t = performance.now() / 900;
+  for (let i = 0; i < n; i++) {
+    const fx = X + 10 + ((i * 13 + Math.sin(t + i) * 6) % (w - 22) + (w - 22)) % (w - 22), fy = Y + 10 + ((i * 7) % (h - 22));
+    r(c, Math.round(fx), Math.round(fy), 5, 2, color); r(c, Math.round(fx) - 1, Math.round(fy), 1, 2, color);
+  }
+  if (roe) { r(c, X + w - 10, Y + 6, 4, 3, '#e9933c'); r(c, X + w - 9, Y + 5, 2, 1, '#f3b26a'); }
+}
+export function drawSlimes(c, X, Y, w, h, n, balls, full) {
+  const t = performance.now() / 300;
+  if (full) r(c, X + 7, Y + h - 13, 14, 3, '#69aedb');
+  for (let i = 0; i < Math.min(n, 12); i++) {
+    const sx = X + 8 + (i * 11) % (w - 16), sy = Y + 10 + Math.floor(i * 11 / (w - 16)) * 8 % (h - 22), b = Math.floor(t + i) % 2;
+    r(c, sx, sy + 2 - b, 6, 4 + b, '#7fcf6a'); r(c, sx + 1, sy + 1 - b, 4, 1, '#a6e88f'); r(c, sx + 1, sy + 3, 1, 1, '#2b211a'); r(c, sx + 4, sy + 3, 1, 1, '#2b211a');
+  }
+  for (let i = 0; i < Math.min(balls, 6); i++) { const bx = X + w - 12 - (i % 3) * 5, by = Y + h - 12 - Math.floor(i / 3) * 5; r(c, bx, by, 4, 4, '#5fb04a'); r(c, bx + 1, by, 2, 1, '#9fe08a'); }
+}
+
 // Crafted objects placed on the farm. state: { item, nights } for machines, null otherwise.
 const PLACED_ART = {
+  slimepress: (c, X, Y) => {
+    r(c, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.25)'); r(c, X + 3, Y + 6, 10, 8, '#5f6870'); r(c, X + 3, Y + 6, 10, 1, '#8d939a');
+    r(c, X + 5, Y + 2, 6, 4, '#3f4850'); r(c, X + 7, Y, 2, 2, '#3f4850'); r(c, X + 5, Y + 9, 6, 3, '#7fcf6a'); r(c, X + 6, Y + 9, 2, 1, '#a6e88f');
+  },
   minibin: (c, X, Y) => {
     r(c, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.25)'); r(c, X + 3, Y + 7, 10, 7, '#a5753f'); r(c, X + 3, Y + 10, 10, 1, '#8a5a32');
     r(c, X + 2, Y + 5, 12, 3, '#8a5a32'); r(c, X + 2, Y + 5, 12, 1, '#c9a06a'); r(c, X + 7, Y + 8, 2, 2, '#e9c46a');

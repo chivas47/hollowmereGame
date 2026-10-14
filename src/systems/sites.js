@@ -12,6 +12,7 @@ import { addInteraction, addLayer } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
 import { DEBRIS } from '../data/clearing.js';
 import { COOP, BARN, GREENHOUSE, STABLE, SHED, MILL, CLOCK } from '../data/upgrades.js';
+import { POND, SLIME_PEN } from '../data/ponds.js';
 import { affordable } from './upgrades.js';
 
 // tile: what the building writes into the grid. art: render/tiles.js OBJECT_ART. placed: the player picks the spot.
@@ -23,6 +24,8 @@ export const SITES = {
   shed:       { def: SHED,       tile: 's', art: 'shed',       name: 'Shed', placed: true },
   mill:       { def: MILL,       tile: 'm', art: 'mill',       name: 'Mill', placed: true },
   clocktower: { def: CLOCK,      tile: 'k', art: 'clocktower', name: 'Clock tower', placed: true },
+  pond:       { def: POND,       tile: 'u', art: 'pond',       name: 'Fish pond', placed: true },     // v31
+  slimepen:   { def: SLIME_PEN,  tile: 'j', art: 'slimepen',   name: 'Slime pen', placed: true },
 };
 const farm = MAPS.farm;
 const OFF = -99;   // a footprint that is nowhere yet

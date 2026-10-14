@@ -42,14 +42,14 @@ function placedDialog() {
     if (m.auto && !p.item) html += `<p>Makes ${ITEMS[m.auto.item].name.toLowerCase()} every ${m.auto.every} nights${m.auto.winter === false ? ', outside winter' : ''}. Next in ${p.timer ?? m.auto.every} night${(p.timer ?? m.auto.every) === 1 ? '' : 's'}.</p>`;
     else if (p.kind === 'lightningrod' && !p.item) html += '<p>Waits for a storm. When lightning strikes the farm it hits the rod first and leaves a storm cell (500g) to collect.</p>';
     else if (m.hatch && p.item && p.nights > 0) html += `<p>Keeping ${ITEMS[p.item].name.toLowerCase()} warm. It hatches in ${p.nights} night${p.nights === 1 ? '' : 's'}.</p>`;
-    else if (m.hatch && p.item) html += `<p class="gift">The ${ITEMS[p.item].name.toLowerCase()} is hatching: a ${animalDef(m.hatch[p.item]).name.toLowerCase()}!</p><div class="btns"><button data-collect>Move it in</button></div>`;
+    else if (m.hatch && p.item) html += `<p class="gift">The ${ITEMS[p.item].name.toLowerCase()} is hatching: a ${m.hatch[p.item] === 'slime' ? 'slime' : animalDef(m.hatch[p.item]).name.toLowerCase()}!</p><div class="btns"><button data-collect>Move it in</button></div>`;
     else if (p.item && p.nights > 0) html += `<p>Working on ${ITEMS[p.item].name}. Ready in ${p.nights} night${p.nights === 1 ? '' : 's'}.</p>`;
     else if (p.item) html += `<p class="gift">${ITEMS[p.item].name} is ready (sells for ${ITEMS[p.item].sell}g).</p><div class="btns"><button data-collect>Collect</button></div>`;
     else {
       const items = accepted(at.x, at.y);
       html += `<p>Takes ${m.hint}. ${typeof m.nights === 'function' ? 'Ready in a few nights.' : m.nights ? `Ready in ${m.nights} night${m.nights === 1 ? '' : 's'}.` : 'Ready at once.'}</p>`;
       html += items.length
-        ? items.map((k) => `<div class="shoprow"><div><b>${ITEMS[k].name} × ${G.S.bag[k]}</b><span>${m.hatch ? `Hatches a ${animalDef(m.hatch[k]).name.toLowerCase()} for the ${homeOf(m.hatch[k])}` : `Becomes ${ITEMS[m.product(k)].name}, ${ITEMS[m.product(k)].sell}g`}</span></div><div class="btns"><button data-load="${k}">Put in</button></div></div>`).join('')
+        ? items.map((k) => `<div class="shoprow"><div><b>${ITEMS[k].name} × ${G.S.bag[k]}</b><span>${m.hatch ? (m.hatch[k] === 'slime' ? 'Hatches a slime for the slime pen' : `Hatches a ${animalDef(m.hatch[k]).name.toLowerCase()} for the ${homeOf(m.hatch[k])}`) : `Becomes ${ITEMS[m.product(k)].name}, ${ITEMS[m.product(k)].sell}g`}</span></div><div class="btns"><button data-load="${k}">Put in</button></div></div>`).join('')
         : `<p class="role">You have nothing it takes.</p>`;
     }
   }

@@ -85,6 +85,18 @@ Bram's workbench moves any building for free: choose the spot by facing where it
 - Mini shipping bin (crafted, 30 wood and 1 copper bar): ships the basket from anywhere on the farm or in the shed. Stardew's is a quest reward with no recipe, so the price is ours.
 - One shed per farm, and no big shed yet.
 
+### Fish pond and slime pen (v31)
+
+| Building | Gold | Materials | Size | Stardew counterpart |
+|---|---|---|---|---|
+| Fish pond | 5,000 | 200 stone, 10 fiber | 3 by 3 | Fish pond: 5,000g, 200 stone, 5 seaweed, 5 green algae (fiber for both) |
+| Slime pen | 10,000 | 500 stone, 10 Hollow quartz, 1 iron bar | 4 by 3 | Slime hutch: 10,000g, 500 stone, 10 refined quartz, 1 iridium bar |
+
+- Pond: one kind of fish. A new fish every 2 nights (sells under 50g), 3 (under 100g), 4 (under 200g) or 5; roe chance each night 15% plus 8% a fish. Roe sells for 30g plus half the fish (Stardew's), aged roe from the brine crock for twice that. When full, the pond asks for one of: 10 fiber, 25 stone or 3 coal; then 2 copper bars, 20 gel or 2 Hollow quartz; then 2 iron bars, a violet stone or a storm cell. Room 3, 5, 7, 10.
+- Slime press (crafted, 25 coal, a violet stone, a storm cell; Stardew's slime egg-press with fire quartz and a battery swapped): 100 gel becomes a slime egg (1,000g) overnight. The incubator hatches it in 3 nights into the slime pen (room 20).
+- Slime pen: fill the trough with the watering can (1 water). That night each slime leaves a slime ball 25% of the time; a ball holds 10 to 20 gel.
+- One fish pond and one slime pen per farm. You cannot fish in the pond.
+
 ## Materials from Bram (v29)
 
 Wood 10g and stone 20g each at Bram's workbench, in tens and fifties (Stardew's carpenter prices). Coal stays 150g. Materials are never shipped, so buying them is a one-way cost.
@@ -462,6 +474,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Honey has one flavour; Stardew's flower honey is not modelled.
 - Since v29 wood and stone can be bought (10g and 20g), so big wood costs are a gold cost too. In the simulator the bot finishes all but about 4 items of its 2-year shopping list (26 before) and raises far more animals (animal products +160%); year 1 summer and autumn earn 17% less while it buys materials.
 - v30 adds wheat and beets to the quest board's crops. The balance bot never grows them, so it fills fewer requests and loses about 10% of crop income in the simulator (checked: with the two crops kept off the board the loss is gone). Real players can grow them for requests.
+- The balance bot builds the fish pond in year 1 and stocks it with its best catch (about 7,000g of roe by the end of year 2). It does not use the slime pen: gel sells for 5g.
 - The balance bot reaches the loom but not the mill in 2 years (the mill needs 4 cloth, from 20 fiber).
 - Coop and barn upgrades do not change the buildings' size or art.
 - Grazing animals stay in their yards (Stardew's roam the farm). The silo does not cap the hay loft.

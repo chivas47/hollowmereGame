@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v31: Fish pond and slime pen
+- Build a fish pond and put a fish in: that kind multiplies and leaves roe. When the pond is full it asks for something; bring it and it holds more (3, 5, 7, then 10).
+- Age roe in the brine crock.
+- Build a slime pen, press 100 slime gel into a slime egg at the new slime press, and hatch it in the incubator. Fill the pen's trough with the watering can and the slimes leave balls of gel.
+
 ## v30: Placing buildings
 - Move the coop, barn, greenhouse or stable at Bram's workbench: face the new spot and press Use. Animals, yards and the horse come along.
 - New buildings you place yourself: a walk-in shed for machines and furniture, a mill, and the golden clock tower that stops debris creeping in.

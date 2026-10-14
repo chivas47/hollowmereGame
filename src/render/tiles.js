@@ -239,6 +239,21 @@ function clocktower(g, p, o) {
   r(g, X + 10, Y + 8, 12, 12, '#fffbe8'); r(g, X + 10, Y + 8, 12, 1, '#c9a43a'); r(g, X + 15, Y + 10, 2, 5, '#2b211a'); r(g, X + 16, Y + 14, 4, 1, '#2b211a');
   r(g, X + 13, Y + 24, 6, 7, '#8a5a32');
 }
+// v31: the fish pond (stone rim, water) and the slime pen (fence, trough). What lives there is drawn by sprites.js.
+function pond(g, p, o) {
+  const X = o.x * T, Y = o.y * T, w = o.w * T, h = o.h * T;
+  r(g, X + 1, Y + 2, w - 2, h - 3, '#8d8a84'); r(g, X + 1, Y + 2, w - 2, 2, '#b5b1a8');
+  r(g, X + 4, Y + 5, w - 8, h - 10, p.snow ? '#bcd4e6' : p.water); r(g, X + 4, Y + 5, w - 8, 2, 'rgba(0,0,0,.15)');
+  for (let i = 0; i < 3; i++) r(g, X + 8 + i * 12, Y + 14 + (i % 2) * 10, 6, 1, p.ripple);
+}
+function slimepen(g, p, o) {
+  const X = o.x * T, Y = o.y * T, w = o.w * T, h = o.h * T;
+  r(g, X + 1, Y + 3, w - 2, h - 4, p.snow ? '#e6e2d6' : '#7a8f5a');
+  for (let x = X + 1; x < X + w - 1; x += 6) { r(g, x, Y + 2, 2, 6, '#8a5a32'); r(g, x, Y + h - 7, 2, 6, '#8a5a32'); }
+  r(g, X + 1, Y + 4, w - 2, 1, '#a5753f'); r(g, X + 1, Y + h - 5, w - 2, 1, '#a5753f');
+  r(g, X + 1, Y + 2, 2, h - 3, '#8a5a32'); r(g, X + w - 3, Y + 2, 2, h - 3, '#8a5a32');
+  r(g, X + 6, Y + h - 14, 16, 6, '#6e4626'); r(g, X + 7, Y + h - 13, 14, 3, '#5d7a90');   // the trough
+}
 function scaffold(g, p, o) {
   const X = o.x * T, Y = o.y * T, w = o.w * T, h = o.h * T;
   r(g, X + 2, Y + h - 4, w - 4, 3, '#a5753f');
@@ -247,7 +262,7 @@ function scaffold(g, p, o) {
   r(g, X + 6, Y + h - 10, 8, 6, '#9aa3ab'); r(g, X + w - 14, Y + h - 9, 8, 5, '#b08a5a');
 }
 
-export const OBJECT_ART = { shed, mill, clocktower, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
+export const OBJECT_ART = { pond, slimepen, shed, mill, clocktower, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
 
 // ---- Greenhouse interior (ignores seasons) ----
 export function drawGreenhouseFloor(g, x, y, t) {
