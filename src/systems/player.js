@@ -1,5 +1,6 @@
 // Player movement, map exits and drawing.
 import { G } from '../core/game.js';
+import { speedMult } from './buffs.js';
 import { emit, changed, notify } from '../core/events.js';
 import { addUpdater, addEntities } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
@@ -18,7 +19,7 @@ addUpdater((dt) => {
   G.moving = !!(dx || dy);
   if (!G.moving) return;
   S.dir = dx && !dy ? (dx < 0 ? 'left' : 'right') : (dy < 0 ? 'up' : 'down');
-  const step = SPEED * (G.riding ? STABLE.speed : 1) * dt * (dx && dy ? 0.7071 : 1);
+  const step = SPEED * (G.riding ? STABLE.speed : 1) * speedMult() * dt * (dx && dy ? 0.7071 : 1);   // v35: speed buffs
   const nx = S.x + dx * step; if (!blocked(nx, S.y)) S.x = nx;
   const ny = S.y + dy * step; if (!blocked(S.x, ny)) S.y = ny;
   G.walkT += dt;

@@ -67,6 +67,9 @@ export function newState() {
     hay: 0,                                             // hay in the barn loft
     barnGoods: { cowmilk: 0, goatmilk: 0 },             // milk waiting in the barn
     skills: Object.fromEntries(Object.keys(SKILLS).map((k) => [k, 0])),    // XP per skill
+    recipes: ['friedegg'], fridge: {},                 // v35: dishes you can cook; what the kitchen fridge holds
+    buff: null, drink: null, luck: 0,                   // v35: food and drink buffs, today's luck (systems/buffs.js)
+    wish: {}, wishfruits: 0,                            // v35: wishfruit sources found, wishfruit eaten
     professions: {},                                    // v34: skill -> [level-5 pick, level-10 pick] (systems/professions.js)
     energyBonus: 0,                                     // derived from skill milestones, see systems/skills.js
     quests: [],                                         // open board requests, see systems/quests.js
@@ -95,7 +98,10 @@ export function merge(saved) {
   if (!s.qbag || typeof s.qbag !== 'object') s.qbag = {};
   s.kit = Object.assign(newState().kit, saved.kit || {});
   s.skills = Object.assign(newState().skills, saved.skills || {});
-  if (!s.professions || typeof s.professions !== 'object') s.professions = {};   // v34: skills already at 5 or 10 offer their picks
+  if (!s.professions || typeof s.professions !== 'object') s.professions = {};
+  if (!Array.isArray(s.recipes)) s.recipes = ['friedegg'];
+  if (!s.fridge || typeof s.fridge !== 'object') s.fridge = {};
+  if (!s.wish || typeof s.wish !== 'object') s.wish = {};   // v34: skills already at 5 or 10 offer their picks
   s.barnGoods = Object.assign(newState().barnGoods, saved.barnGoods || {});
   if (!s.placed || typeof s.placed !== 'object') s.placed = {};
   if (!s.sites || typeof s.sites !== 'object') s.sites = {};

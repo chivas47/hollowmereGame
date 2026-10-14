@@ -2,6 +2,7 @@
 // null for the look from the new game screen), dyes (G.S.dyes: piece key -> colour), and the stations
 // in the farmhouse: the sewing machine (weave cloth, tailor), the dye pots and mannequins.
 import { G } from '../core/game.js';
+import { buff } from './buffs.js';
 import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addEntities } from '../core/registry.js';
@@ -17,7 +18,7 @@ export const pieceColor = (k) => G.S.dyes?.[k] || CLOTHES[k].color;
 export const dyeOf = (item) => ITEMS[item]?.color || null;
 // Clothing that a given item tailors into.
 export const tailorsInto = (item) => Object.keys(CLOTHES).find((k) => CLOTHES[k].from === item) || null;
-export const defense = () => CLOTHES[G.S.outfit?.shoes]?.def || 0;
+export const defense = () => (CLOTHES[G.S.outfit?.shoes]?.def || 0) + buff('defense');   // v35: food buffs add defense
 
 // The palette drawPerson() uses for someone in this outfit.
 export function outfitPal(profile, outfit = {}) {

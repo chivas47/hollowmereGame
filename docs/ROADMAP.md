@@ -35,8 +35,8 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 14c | Farm buildings: helpers and the cave | feature | done (chivas47/hollowmereGame#27) | Helper huts (original spirit helpers that harvest), waystones (warp), the farm cave choice (fruit bats or mushrooms). |
 | 14d | Fiber | feature | done (chivas47/hollowmereGame#28) | Fiber seeds (crafted, any season, no water) and weeds in the Wilds. Added by Nuno after v32 made fiber the bottleneck. |
 | 15 | Professions | feature | done (chivas47/hollowmereGame#29) | Two choices at level 5 and one of two branches at level 10 for each skill. Adds a combat skill. |
-| 16 | Cooking and buffs | feature | next | Kitchen, about 30 recipes learned from TV, neighbours and shops, food and drink buffs (skill, speed, defence, luck), daily luck, fridge, energy-raising star fruit (original name). |
-| 17 | Combat expansion | feature | queued | Swords, daggers, clubs; bats, bugs, skeletons, serpents; rings, boots, bombs; treasure and geodes in the mine; a monster hunters' guild with slaying goals. |
+| 16 | Cooking and buffs | feature | done (chivas47/hollowmereGame#30) | Kitchen, about 30 recipes learned from TV, neighbours and shops, food and drink buffs (skill, speed, defence, luck), daily luck, fridge, energy-raising star fruit (original name). |
+| 17 | Combat expansion | feature | next | Swords, daggers, clubs; bats, bugs, skeletons, serpents; rings, boots, bombs; treasure and geodes in the mine; a monster hunters' guild with slaying goals. |
 | 18 | Deep dungeons and forge | feature | queued | A desert cavern dungeon with harder floors, a volcanic dungeon, the forge (enchantments, upgrades), trinkets. |
 | 19 | Books and mastery | feature | queued | Skill books, a book that gives XP in every skill, power books with special perks, mastery progression after level 10 in every skill. |
 | 20 | Fishing overhaul | feature | queued | A new catch minigame (moving fish, catch bar), bait, tackle, bobber styles, treasure chests, trash, crab pots, legendary fish, upgradeable gold pan. |

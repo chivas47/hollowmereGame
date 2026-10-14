@@ -49,6 +49,8 @@ src/
     fishing.js        cast, bite, reel minigame, fish log
     sites.js          where every farm building stands: moving and placing buildings, writing their tiles
     mill.js           the mill (wheat and beets overnight) and the shed door
+    cooking.js        recipes, cooking at the stove, the fridge, eating, buffs on G.S.buff and G.S.drink, daily luck, the TV show, wishfruit sources
+    buffs.js          buff() and luck() for the systems that read them (kept import-free of cooking.js)
     professions.js    professions: has(id) for the systems that apply one, priceMult() for selling, choosing, combat health
     helpers.js        helper hut harvests, waystones, the home charm, the farm cave (opening, choice, daily crate)
     ponds.js          the fish pond (stock, breed, roe, requests) and the slime pen (trough, slime balls, addSlime)
@@ -136,6 +138,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 57 | helpers.js | Kit slot with a home charm (warp home) |
 | 72 | upgrades.js / coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Workbench K, coop C, barn A, greenhouse G, mine entrance M, ladders U/L, placed object Y, quest board Q, festival table J |
 | 71 | village.js | Fountain F, cottage V (flavour text) |
+| 71 | cooking.js | Farmhouse stove o (cook) and counters n (fridge) |
 | 70 | buildings.js, house.js | Stall S, bin B; farm door D (enter), bed Z, lectern l, kitchen and cellar fittings |
 | 66 | mine.js | Pickaxe on mine rocks |
 | 65 | fishing.js | Rod on water O (cast) |

@@ -10,6 +10,7 @@ import { drawForage, drawDebris } from '../render/sprites.js';
 import { addItem, rollSkillQuality } from './quality.js';
 import { skillLevel } from './skills.js';
 import { has } from './professions.js';
+import { luck } from './buffs.js';
 
 const AREA = 'wilds';
 
@@ -53,7 +54,8 @@ addInteraction(45, ({ tx, ty, tile, mapId, item }) => {
   const i = G.S.forage.findIndex((f) => f.x === tx && f.y === ty);
   if (i >= 0) {
     const f = G.S.forage[i];
-    addItem(f.type, has('gatherer') && Math.random() < 0.2 ? 2 : 1, has('botanist') ? 3 : rollSkillQuality(skillLevel('foraging'))); G.S.forage.splice(i, 1);   // v34: gatherer, botanist
+    addItem(f.type, (has('gatherer') && Math.random() < 0.2) || Math.random() < luck() ? 2 : 1,   // v35: a lucky day can double forage
+      has('botanist') ? 3 : rollSkillQuality(skillLevel('foraging'))); G.S.forage.splice(i, 1);   // v34: gatherer, botanist
     notify(`Found a ${FORAGE[f.type].name}.`);
     emit('gather', { skill: 'foraging', item: f.type, xp: 5 });
     changed();

@@ -382,6 +382,22 @@ Each swing costs 2 energy, the copper axe does twice the damage. Alder cones go 
 - Levels 5 and 10 each add +5 max energy (up to +60 across all six skills).
 - Combat levels add 5 max health each (Stardew's).
 
+### Cooking and buffs (v35)
+
+Cooking needs the kitchen (the first farmhouse upgrade): face the stove. A kitchen counter is the fridge; cooking takes from the bag first, then the fridge. Eat dishes from the bag (I): energy as listed, health 45% of it (Stardew). A food buff and a drink buff can run together; a new one of the same kind replaces the old, and all end at bedtime. Values follow Stardew's dishes by role (sell, energy, buffs).
+
+| Source | Recipes |
+|---|---|
+| Known from the start | Pan egg (egg; 35g, 50 energy) |
+| TV cooking show (every 7th day; a rerun 3 days later) | Farm omelette, Spring greens bowl, Crisp turnip cakes (farming +1), Griddle cakes (foraging +2), Hearth bread, Oven fish, Garden medley, Flatbread supper, Pumpkin pottage (defense +2, luck +2), Honeyed carrots, Sugar biscuit, Brook soup (fishing +1), Ember eel (luck +1, speed +1), Thyme tea (drink: speed +1), Cheesy broccoli, Harvest stuffing (defense +2), Fortune plate (luck +3) |
+| Neighbours (3 and 7 hearts) | Ines: Honey cake, Root cellar bake (foraging +2, defense +2). Bram: Field lunch (farming +3), Quarry snack (mining +3). Odile: Net mender stew (fishing +3), Wrapped fish (fishing +2). Tavi: Trail bun (foraging +3), Wanderer's feast (max energy +40, speed +1) |
+| Seed stall | Corn flatcake 100g, Raw slices 150g, Skillet caps 250g (attack +2), Triple thyme brew 5,000g (drink: speed +1, longer) |
+
+- Buff strengths: a speed point is 15% faster walking, a luck point adds 0.02 to the day's luck, an attack point hits 10% harder; skill points add levels while they last.
+- Daily luck: -0.1 to +0.1, rolled each morning and told as a fortune (morning report and the TV). It multiplies gem, rare egg and coal chances in the mine by 1 + 2 x luck, and on a lucky day each forage find doubles with a chance equal to the luck.
+- TV (furniture, 750g, Stardew's budget TV): weather, fortune, cooking show.
+- Wishfruit (Stardew: stardrop): +34 max energy for good. Five: the Frostlight Market (50,000g, once), mine floor 50, the first neighbour at 10 hearts, every village project funded, every fish caught.
+
 ### Professions (v34)
 
 At level 5 pick one of two; at level 10 pick one of the two that follow it. Stardew's trees by role; farming and ranching split Stardew's farming tree. The choice opens when the level is reached (or from the bag, for saves that already had the levels).
@@ -507,6 +523,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - v30 adds wheat and beets to the quest board's crops. The balance bot never grows them, so it fills fewer requests and loses about 10% of crop income in the simulator (checked: with the two crops kept off the board the loss is gone). Real players can grow them for requests.
 - Fiber was the bottleneck after wood until v33 (fiber seeds, weeds in the Wilds). The balance bot now cuts the Wilds' weeds when a purchase needs fiber and reaches the loom in 4 of 5 runs, but still not the mill or the helper hut (last on its list); it does not plant fiber seeds.
 - Before v34 the bot's farm sometimes had no free 3 by 3 spot for the fish pond; buildings may now go on empty tilled soil.
+- The balance bot cooks pan eggs once it has the kitchen and eats them when energy runs low; it does not cook anything else, buy the TV or learn recipes.
 - The balance bot never fights, so combat stays at level 0 in the simulator.
 - The balance bot builds the fish pond in year 1 and stocks it with its best catch (about 7,000g of roe by the end of year 2). It does not use the slime pen: gel sells for 5g.
 - The balance bot reaches the loom but not the mill in 2 years (the mill needs 4 cloth, from 20 fiber).

@@ -40,6 +40,8 @@ export const FESTIVALS = [
     stall: [
       { key: 'lantern', label: 'Frost lantern', cost: 350, desc: 'Decoration for the farm. Glows at night.', placeable: true },
       { key: 'cider', label: 'Warm cider', cost: 60, desc: 'Drink it now: restores 60 energy.', energy: 60 },
+      // v35: one wishfruit, once (Stardew's fair sells a stardrop for 2,000 star tokens).
+      { key: 'wishfruit', label: 'Wishfruit', cost: 50000, desc: 'Eat it for 34 more max energy, for good. Only one.', item: 'wishfruit', once: 'market' },
     ],
     lines: {
       ines: 'The hives are asleep. So I get to stay up late for once.',
