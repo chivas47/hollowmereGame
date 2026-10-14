@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v37: The Wardens' Lodge, bombs, treasure and geodes
+- The Wardens' Lodge, a cabin in the Wilds by the Hollow, opens once you have been down. Warden Hale sells weapons and boots as you go deeper, and keeps five slaying goals with a reward each: 1,000 slimes, 80 mites, 200 bats, 50 bone walkers, 250 serpents.
+- Bombs: craft ember, blast and great bombs (mining levels 1, 6 and 8) and throw them from the kit in the Hollow. They break every rock around them and hurt monsters, and you if you stand too close.
+- Floor finds now wait in a treasure chest on their floor; from floor 10 other floors sometimes hold a chest of geodes, bars, coal, bombs or a gem.
+- Geodes turn up in Hollow rocks (frost geodes from floor 40, magma geodes from 80). Bram cracks them for 25g: ore, coal or one of six new gems.
+- New rewards: the Mite fang dagger, the Bone helm and the Blast ring (defeated monsters burst).
+
 ## v36: Weapons, monsters and rings
 - Slot 5 swings the weapon you choose in the bag: swords, fast daggers or slow, heavy clubs. Ten in all, found on mine floors and, rarely, dropped by monsters.
 - The Hollow fills up deeper down: mites from floor 3, bats from 12, bone walkers from 30, serpents from 50. Bats and serpents fly over the rocks.

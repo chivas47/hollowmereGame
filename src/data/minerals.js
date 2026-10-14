@@ -11,6 +11,18 @@ export const MINERALS = {
   // v27 gems from Hollow rocks (Stardew: quartz 25g, amethyst 100g); the gem copier copies them.
   quartz:    { name: 'Hollow quartz', sell: 25,  gem: true },
   violet:    { name: 'Violet stone',  sell: 100, gem: true },
+  // v37: gems from geodes (Stardew: topaz 80, frozen tear 75, fire quartz 100, aquamarine 180, ruby 250, diamond 750).
+  ambergem:    { name: 'Hollow amber', sell: 80,  gem: true },
+  frosttear:   { name: 'Frost tear',   sell: 75,  gem: true },
+  emberquartz: { name: 'Ember quartz', sell: 100, gem: true },
+  tidestone:   { name: 'Tidestone',    sell: 180, gem: true },
+  heartstone:  { name: 'Heartstone',   sell: 250, gem: true },
+  starstone:   { name: 'Starstone',    sell: 750, gem: true },
+  // v37: geodes from Hollow rocks, cracked at Bram's workbench (Stardew: geode 50g on floors 1 to 39, frozen geode 100g
+  // on 40 to 79, magma geode 150g from 80; cracking costs 25g).
+  geode:      { name: 'Geode',        sell: 50,  geode: true },
+  frostgeode: { name: 'Frost geode',  sell: 100, geode: true },
+  magmageode: { name: 'Magma geode',  sell: 150, geode: true },
 };
 // v28: the two hatch-only eggs turn up in rocks too (Stardew finds them as island and mine treasures).
 export const GEM_DROPS = [['mossegg', 0.001], ['bigegg', 0.003], ['violet', 0.007], ['quartz', 0.02]];   // chance per broken rock, rarest first

@@ -31,6 +31,7 @@ export const CLOTHES = {
   bucket:    { name: 'Bucket hat',       slot: 'hat', color: '#5d8a4a', style: 'bucket', from: 'snappea' },
   ranger:    { name: 'Ranger hat',       slot: 'hat', color: '#6e4626', band: '#3f3226', style: 'straw', from: 'hardwood' },
   fishhat:   { name: 'Angler hat',       slot: 'hat', color: '#c9b68e', band: '#3d6a8f', style: 'bucket', from: 'trout' },
+  bonemask:  { name: 'Bone helm',        slot: 'hat', color: '#e8e0d0', band: '#2b211a', style: 'beanie', found: true },   // v37: the lodge's reward for 50 bone walkers
   // Shoes (defense)
   sandals:   { name: 'Rope sandals',     slot: 'shoes', color: '#c9b68e', def: 1, from: 'fiber' },
   boots:     { name: 'Work boots',       slot: 'shoes', color: '#5c371e', def: 2, from: 'copper' },

@@ -17,6 +17,7 @@ export const WEAPONS = {
   shank:      { name: 'Burrow shank',     kind: 'dagger', damage: 8 },    // burglar's shank 7-12
   club:       { name: 'Oak club',         kind: 'club',   damage: 11 },   // wood club 9-16
   mallet:     { name: 'Stone mallet',     kind: 'club',   damage: 17 },   // wood mallet 15-24
+  mitefang:   { name: 'Mite fang',        kind: 'dagger', damage: 13 },   // v37: insect head 10-20, the lodge's reward for 80 mites
 };
 
 // Monsters by mine floor (Stardew: slimes and bugs early, bats from 30, skeletons around 70, serpents deep).
@@ -43,6 +44,7 @@ export const RINGS = {
   slimeward: { name: 'Slime ward',  sell: 350, desc: 'Slimes cannot hurt you.' },
   thiefring: { name: "Thief's ring", sell: 500, desc: 'Monsters drop twice as much.' },
   glowring:  { name: 'Glow ring',   sell: 100, desc: 'A wider pool of light in the Hollow.' },
+  blastring: { name: 'Blast ring',  sell: 1000, desc: 'Monsters you defeat burst, hurting monsters and breaking rocks around them.' },   // v37: napalm ring
 };
 export const RING_ITEMS = Object.fromEntries(Object.entries(RINGS).map(([k, r]) => [k, { name: r.name, sell: r.sell, material: true, ring: true }]));
 

@@ -1,9 +1,9 @@
 // Weapons, rings and mine finds (v36). G.S.weapons: owned weapon keys; G.S.weapon: the one hotbar slot 5 swings.
 // Rings are items in the bag (data/weapons.js RINGS); G.S.rings: the two worn. Floors in FLOOR_FINDS give their find
-// the first time you reach them; monsters rarely drop something from DROP_POOL.
+// in a treasure chest (systems/treasure.js); monsters rarely drop something from DROP_POOL.
 import { G } from '../core/game.js';
-import { on, changed, notify } from '../core/events.js';
-import { WEAPONS, WEAPON_KINDS, RINGS, FLOOR_FINDS } from '../data/weapons.js';
+import { changed, notify } from '../core/events.js';
+import { WEAPONS, WEAPON_KINDS, RINGS } from '../data/weapons.js';
 import { CLOTHES } from '../data/clothing.js';
 import { ITEMS } from '../data/items.js';
 
@@ -52,10 +52,4 @@ export function removeRing(slot) {
   changed(); return true;
 }
 export const ringName = (k) => ITEMS[k]?.name;
-
-on('mine:floor', ({ floor }) => {
-  const key = FLOOR_FINDS[floor], S = G.S;
-  if (!key || S.finds.includes(floor)) return;
-  S.finds.push(floor);
-  giveFind(key, `On floor ${floor} you found`);
-});
+// v37: floor finds now wait in a treasure chest on their floor (systems/treasure.js).

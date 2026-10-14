@@ -4,13 +4,17 @@ import { changed, notify } from '../core/events.js';
 import { RECIPES, PLACEABLES } from '../data/crafting.js';
 import { affordable } from './upgrades.js';
 import { CROPS } from '../data/crops.js';
+import { skillLevel } from './skills.js';
 
 // Recipes that also use seed packets (fiber seeds take a packet of mixed seeds).
 export const seedsOk = (rc) => Object.entries(rc.seeds || {}).every(([k, n]) => (G.S.seeds[k] || 0) >= n);
 
+// v37: recipes learnt at a skill level (bombs at mining 1, 6 and 8).
+export const learnt = (rc) => !rc.skill || skillLevel(rc.skill[0]) >= rc.skill[1];
+
 export function craft(key) {
   const S = G.S, rc = RECIPES[key];
-  if (!rc || !affordable(rc.cost, rc.needs) || !seedsOk(rc)) return false;
+  if (!rc || !learnt(rc) || !affordable(rc.cost, rc.needs) || !seedsOk(rc)) return false;
   S.gold -= rc.cost;
   Object.entries(rc.needs).forEach(([k, n]) => { S.bag[k] -= n; });
   Object.entries(rc.seeds || {}).forEach(([k, n]) => { S.seeds[k] -= n; });

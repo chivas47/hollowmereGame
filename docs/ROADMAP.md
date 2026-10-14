@@ -37,8 +37,8 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 15 | Professions | feature | done (chivas47/hollowmereGame#29) | Two choices at level 5 and one of two branches at level 10 for each skill. Adds a combat skill. |
 | 16 | Cooking and buffs | feature | done (chivas47/hollowmereGame#30) | Kitchen, about 30 recipes learned from TV, neighbours and shops, food and drink buffs (skill, speed, defence, luck), daily luck, fridge, energy-raising star fruit (original name). |
 | 17a | Combat expansion: weapons and monsters | feature | done (chivas47/hollowmereGame#31) | Swords, daggers, clubs in slot 5; bats, bugs, skeletons, serpents by depth; rings and boots. |
-| 17b | Combat expansion: the guild and mine treasure | feature | next | Bombs, treasure chests and geodes in the mine; a monster hunters' guild cabin in the Wilds with a keeper, a weapon shop and slaying goals. |
-| 18 | Deep dungeons and forge | feature | queued | A desert cavern dungeon with harder floors, a volcanic dungeon, the forge (enchantments, upgrades), trinkets. |
+| 17b | Combat expansion: the guild and mine treasure | feature | done (chivas47/hollowmereGame#32) | Bombs, treasure chests and geodes in the mine; a monster hunters' guild cabin in the Wilds with a keeper, a weapon shop and slaying goals. |
+| 18 | Deep dungeons and forge | feature | next | A desert cavern dungeon with harder floors, a volcanic dungeon, the forge (enchantments, upgrades), trinkets. |
 | 19 | Books and mastery | feature | queued | Skill books, a book that gives XP in every skill, power books with special perks, mastery progression after level 10 in every skill. |
 | 20 | Fishing overhaul | feature | queued | A new catch minigame (moving fish, catch bar), bait, tackle, bobber styles, treasure chests, trash, crab pots, legendary fish, upgradeable gold pan. |
 | 21 | New areas | feature | queued | Beach, forest, mountain lake, a quarry, a hidden grove, the railway, the sewer; each with fishing and forage. |

@@ -278,7 +278,23 @@ function scaffold(g, p, o) {
   r(g, X + 6, Y + h - 10, 8, 6, '#9aa3ab'); r(g, X + w - 14, Y + h - 9, 8, 5, '#b08a5a');
 }
 
-export const OBJECT_ART = { helperhut, waystone, pond, slimepen, shed, mill, clocktower, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
+// v37: the Wardens' Lodge, a log cabin by the Hollow with crossed blades over the door.
+function lodge(g, p, o) {
+  const X = o.x * T, Y = o.y * T;
+  r(g, X + 1, Y + 31, 46, 1, 'rgba(0,0,0,.3)');
+  r(g, X + 3, Y + 10, 42, 21, '#6e4626');
+  for (let i = 0; i < 5; i++) r(g, X + 3, Y + 12 + i * 4, 42, 1, '#5a3a20');
+  for (let j = 0; j < 10; j++) r(g, X + 14 - j, Y - 4 + j, 20 + 2 * j, 1, j % 3 === 2 ? '#3f2f22' : '#4f3a2a');
+  r(g, X + 14, Y - 6, 20, 2, '#4f3a2a');
+  if (p.snow) for (let j = 0; j < 3; j++) r(g, X + 14 - j, Y - 6 + j, 20 + 2 * j, 1, SNOW);
+  r(g, X + 36, Y - 8, 4, 8, '#5f5a52');
+  r(g, X + 19, Y + 17, 10, 14, '#3f2f22'); r(g, X + 20, Y + 18, 8, 13, '#5c371e'); r(g, X + 26, Y + 24, 1, 2, '#e9b44c');
+  r(g, X + 6, Y + 17, 8, 6, '#2b211a'); r(g, X + 7, Y + 18, 6, 4, '#e9b44c'); r(g, X + 34, Y + 17, 8, 6, '#2b211a'); r(g, X + 35, Y + 18, 6, 4, '#e9b44c');
+  r(g, X + 18, Y + 8, 12, 7, '#a5753f'); r(g, X + 18, Y + 8, 12, 1, '#c99a5e');
+  for (let i = 0; i < 6; i++) { r(g, X + 20 + i, Y + 9 + i, 1, 1, '#d6dde3'); r(g, X + 27 - i, Y + 9 + i, 1, 1, '#d6dde3'); }
+}
+
+export const OBJECT_ART = { lodge, helperhut, waystone, pond, slimepen, shed, mill, clocktower, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
 
 // ---- Greenhouse interior (ignores seasons) ----
 export function drawGreenhouseFloor(g, x, y, t) {
@@ -337,8 +353,17 @@ function caveCrate(g, x, y) {
   drawCaveFloor(g, x, y); r(g, X + 2, Y + 5, 12, 10, '#8a5a32'); r(g, X + 2, Y + 5, 12, 1, '#a5753f'); r(g, X + 2, Y + 10, 12, 1, '#6e4626');
 }
 
+// v37: a treasure chest on a Hollow floor.
+function chest(g, x, y) {
+  const X = x * T, Y = y * T;
+  drawCaveFloor(g, x, y);
+  r(g, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.35)');
+  r(g, X + 2, Y + 6, 12, 8, '#8a5a32'); r(g, X + 2, Y + 4, 12, 3, '#a5753f'); r(g, X + 2, Y + 7, 12, 1, '#5c371e');
+  r(g, X + 2, Y + 4, 1, 10, '#e9b44c'); r(g, X + 13, Y + 4, 1, 10, '#e9b44c'); r(g, X + 7, Y + 7, 2, 3, '#e9b44c');
+}
+
 export const CAVE_ART = {
-  y: caveMouth, t: caveCrate,
+  y: caveMouth, t: caveCrate, $: chest,
   X: caveWall, U: ladderUp, L: ladderDown,
   r: mineRock(null), c: mineRock('#d0874a'), i: mineRock('#c9ccd6'),
 };

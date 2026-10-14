@@ -40,13 +40,14 @@ const ORCHARD = ['figtree', 'peartree', 'nectarinetree', 'persimmontree', 'plumt
 // What the bot saves up for, in order. Upgrade lines (can, hoe, rod, house) buy their next tier.
 const STRATEGIES = {
   full: ['furnace', 'can', 'coop', 'grassstarter', 'grassstarter', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'kiln', 'house',
-    'barn', 'pail', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'silo', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, 'stable', 'bigcoop', 'duck', 'duck', 'duck', 'duck', ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'rod', 'can',
+    'barn', 'pail', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'silo', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, 'stable', 'lodge:club', 'bigcoop', 'duck', 'duck', 'duck', 'duck', ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'rod', 'can',
     'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'shed', 'pond', 'house',
     'brewbarrel', 'brewbarrel', 'eggpress', 'beebox', 'beebox', 'dryer', 'smoker', 'mushroomlog',   // wood-hungry, so last
     // v28: more livestock. The big coop comes in year one like a player's; the rest take hundreds of wood, so they come last.
     'bigbarn', 'cow', 'cow', 'goat', 'goat',
     'deluxecoop', 'rabbit', 'rabbit', 'deluxebarn', 'shears', 'sheep', 'sheep', 'pig', 'pig',
     // v30: the mill needs cloth, so a loom comes first (the shed is earlier). The bot picks the first free spot from the bottom right.
+    'lodge:saber', 'lodge:cutlass',   // v37: the lodge's weapons, skipped if the bot has not been deep enough
     'loom', 'mill', 'helperhut'],   // the hut's 100 fiber come slowly from weeds
   crops: ['furnace', 'can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
 };
@@ -70,7 +71,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['layouts', 'sites', 'professions', 'cooking', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing'];
+  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -127,6 +128,9 @@ const { canDeliver, deliver } = await load('systems/quests.js');
 const { festivalToday, festivalOpen, contestItems, enterContest, nextFestival } = await load('systems/festivals.js');
 const { MINE, enterMine, leaveMine, checkpoints } = await load('systems/mine.js');
 const { skillLevel } = await load('systems/skills.js');
+const { bombs, throwBomb, openChest, crackGeode, GEODES } = await load('systems/treasure.js');
+const { buyGear, owns } = await load('systems/guild.js');
+const { LODGE_SHOP } = await load('data/guild.js');
 
 // ---- Helpers ----
 const S = () => G.S;
@@ -205,6 +209,8 @@ function simulate(runSeed) {
   GOAL.grassstarter = { cost: () => SUPPLIES.grassstarter, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply('grassstarter', 1)) };
   for (const k of Object.keys(PROJECTS)) GOAL[k] = { cost: () => PROJECTS[k].cost, needs: () => PROJECTS[k].needs, ok: () => !funded(k), buy: () => track('projects', () => fundProject(k)) };
   for (const k of Object.keys(TREES)) GOAL[k] = { cost: () => TREES[k].cost, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply(k, 1)) };
+  // v37: weapons from the Wardens' Lodge; skipped when the bot has not reached the floor that sells them.
+  for (const o of LODGE_SHOP) GOAL[`lodge:${o.key}`] = { cost: () => o.cost, needs: () => ({}), ok: () => !owns(o.key) && S().mineDeepest >= o.floor, buy: () => track('weapons', () => buyGear(o.key)) };
   for (const k of Object.keys(RECIPES)) GOAL[k] = { cost: () => RECIPES[k].cost, needs: () => RECIPES[k].needs, ok: () => true, buy: () => track('crafting', () => craft(k)) };
 
   const missingMats = () => {
@@ -500,6 +506,8 @@ function simulate(runSeed) {
     enterMine(Math.max(...checkpoints())); spend(TIME.travel * 2);
     let need = oreNeeds();
     while (Object.keys(need).length && s.energy >= 2 && !late()) {
+      if (MINE.chest) { openChest(); spend(TIME.chore); }   // v37: treasure chests
+      bombFloor();
       const grid = MAPS.mine.grid, free = (x, y) => [[0, 1], [0, -1], [1, 0], [-1, 0]].some(([a, b]) => grid[y + b]?.[x + a] && !SOLID.has(grid[y + b][x + a]));
       const rocks = Object.keys(MINE.rocks).map((k) => k.split(',').map(Number)).filter(([x, y]) => free(x, y));
       const ore = rocks.filter(([x, y]) => (grid[y][x] === 'i' && need.iron) || (grid[y][x] === 'c' && need.copper));
@@ -512,6 +520,29 @@ function simulate(runSeed) {
     }
     leaveMine();
     return !Object.keys(need).length;
+  }
+
+  // v37: a bomb from a chest goes where it breaks the most rocks; the bot stands at the ladder up meanwhile.
+  function bombFloor() {
+    const s = S(), kind = ['greatbomb', 'blastbomb', 'emberbomb'].find((k) => s.kit[k] > 0);
+    if (!kind) return;
+    const grid = MAPS.mine.grid, open = [];
+    for (let y = 1; y < 15; y++) for (let x = 1; x < 23; x++) if (grid[y][x] === 'f' && Math.hypot(x - 2, y - 1) > 6) open.push([x, y]);
+    const near = ([x, y]) => Object.keys(MINE.rocks).filter((k) => { const [a, b] = k.split(',').map(Number); return Math.hypot(a - x, b - y) <= 2; }).length;
+    const best = open.sort((a, b) => near(b) - near(a))[0];
+    if (!best || near(best) < 4) return;
+    const sel = s.kitSel; s.kitSel = kind;
+    placePlayer('mine', 2, 1, 'down');
+    if (throwBomb(...best)) { bombs.forEach((b) => { b.t = 0; }); runUpdaters(0.001); spend(TIME.chore); }
+    s.kitSel = sel;
+  }
+
+  // v37: Bram cracks geodes for 25g once there is gold to spare; what is inside ships or goes to purchases.
+  function geodes() {
+    const s = S();
+    if (s.gold < 500 || !GEODES.some((k) => s.bag[k] > 0)) return;
+    for (const k of GEODES) while (s.bag[k] > 0 && track('geodes', () => crackGeode(k)));
+    spend(TIME.chore);
   }
 
   function village() {
@@ -598,6 +629,7 @@ function simulate(runSeed) {
     }
     if (s.built.helperhut === true) collectHut();
     if (s.cave.open) { chooseCave('bats'); collectCave(); }
+    geodes();
     shipAll(reserves());
     const energyLeft = s.energy;
     sleep(false);

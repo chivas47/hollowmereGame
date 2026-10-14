@@ -12,6 +12,8 @@ import { collectEggs, buyFeed } from '../systems/coop.js';
 import { HOMES, nextLevel, orderLevel, buyLivestock, noRoom, kindOf, hearts, room, level } from '../systems/livestock.js';
 import { orderBarn } from '../systems/barn.js';
 import { orderGreenhouse } from '../systems/greenhouse.js';
+import { GEODES, crackGeode } from '../systems/treasure.js';
+import { CRACK_COST } from '../data/guild.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
 
@@ -22,6 +24,7 @@ const offer = (title, detail, attr, cost, needs) => `
   <div class="shoprow"><div><b>${title}</b><span>${detail}${needs ? `<br>Needs ${needsText(needs)}` : ''}</span></div>
   <div class="btns">${attr ? `<button ${attr} ${affordable(cost, needs) ? '' : 'disabled'}>Buy</button>` : ''}</div></div>`;
 
+let cracked = '';   // what the last geode held, shown once
 function workbench() {
   const S = G.S;
   const rows = Object.keys(UPGRADES).map((k) => {
@@ -62,7 +65,11 @@ function workbench() {
   const renos = Object.entries(RENOVATIONS).map(([k, r]) => (S.house.renos.includes(k) ? offer(r.name, 'Done')
     : offer(r.name, `${r.desc} ${r.cost.toLocaleString('en-US')}g`, `data-reno="${k}"`, r.cost))).join('');
   const mats = Object.entries(MATERIAL_COST).map(([k, c]) => `<div class="shoprow"><div><b>${ITEMS[k].name}</b><span>${c}g each. You have ${S.bag[k] || 0}.</span></div><div class="btns">${[10, 50].map((n) => `<button data-mat="${k}:${n}" ${S.gold < c * n ? 'disabled' : ''}>Buy ${n}</button>`).join('')}</div></div>`).join('');
-  openModal(`<h2>Bram's workbench</h2><p class="role">Bram takes orders here. You have <b>${S.gold}g</b>. Press C anywhere to craft sprinklers and machines; a furnace smelts ore into the bars upgrades need.</p>${rows}${coop}${barn}${ups}${gh}${st}${placedRows}${moveRow}<h3>Farmhouse renovations</h3>${renos}<h3>Coal and materials</h3><div class="shoprow"><div><b>Coal</b><span>${COAL_COST}g each. You have ${S.bag.coal || 0}. The furnace needs 1 per bar.</span></div><div class="btns"><button data-coal="1" ${S.gold < COAL_COST ? 'disabled' : ''}>Buy 1</button><button data-coal="5" ${S.gold < COAL_COST * 5 ? 'disabled' : ''}>Buy 5</button></div></div>${mats}`,
+  // v37: Bram cracks geodes open.
+  const held = GEODES.filter((k) => S.bag[k] > 0);
+  const geodes = `<h3>Geodes</h3>${held.length ? held.map((k) => `<div class="shoprow"><div><b>${ITEMS[k].name}</b><span>You have ${S.bag[k]}. Bram cracks one for ${CRACK_COST}g.</span></div><div class="btns"><button data-crack="${k}" ${S.gold < CRACK_COST ? 'disabled' : ''}>Crack one</button></div></div>`).join('') : '<p class="role">Bring geodes from the Hollow and Bram cracks them open for ' + CRACK_COST + 'g each.</p>'}${cracked ? `<p>Inside: <b>${cracked}</b>.</p>` : ''}`;
+  cracked = '';
+  openModal(`<h2>Bram's workbench</h2><p class="role">Bram takes orders here. You have <b>${S.gold}g</b>. Press C anywhere to craft sprinklers and machines; a furnace smelts ore into the bars upgrades need.</p>${rows}${coop}${barn}${ups}${gh}${st}${placedRows}${moveRow}${geodes}<h3>Farmhouse renovations</h3>${renos}<h3>Coal and materials</h3><div class="shoprow"><div><b>Coal</b><span>${COAL_COST}g each. You have ${S.bag.coal || 0}. The furnace needs 1 per bar.</span></div><div class="btns"><button data-coal="1" ${S.gold < COAL_COST ? 'disabled' : ''}>Buy 1</button><button data-coal="5" ${S.gold < COAL_COST * 5 ? 'disabled' : ''}>Buy 5</button></div></div>${mats}`,
     [['Leave', closeModal, true]]);
 }
 
@@ -102,6 +109,8 @@ $('#mbody').addEventListener('click', (e) => {
     if (ok) workbench();
     return;
   }
+  const ck = e.target.closest('[data-crack]');
+  if (ck && !ck.disabled) { const got = crackGeode(ck.dataset.crack); if (got) { cracked = `${got.n} ${ITEMS[got.item].name}`; workbench(); } return; }
   const cl = e.target.closest('[data-coal]');
   if (cl && !cl.disabled) { if (buyCoal(+cl.dataset.coal)) workbench(); return; }
   const si = e.target.closest('[data-site]');

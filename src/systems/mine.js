@@ -12,6 +12,7 @@ import { placePlayer, useEnergy } from './world.js';
 import { swingAt } from './effects.js';
 import { has } from './professions.js';
 import { luck } from './buffs.js';
+import { GEODE_CHANCE, geodeFor } from '../data/guild.js';
 
 const ENTRANCE = { map: 'wilds', x: 12, y: 2, dir: 'down' };
 const SPAWN = { x: 2, y: 1 };          // ladder up sits just above, at (2, 0)
@@ -83,16 +84,11 @@ addInteraction(72, ({ tile, mapId }) => {
   return false;
 });
 
-addInteraction(66, ({ tx, ty, tile, item, mapId }) => {
-  if (mapId !== 'mine' || item !== 'pick') return false;
-  const rock = ROCKS[tile];
-  if (!rock) { notify('Nothing to break there.'); return true; }
-  if (!useEnergy(PICK_ENERGY)) return true;
-  const key = `${tx},${ty}`, st = MINE.rocks[key];
-  swingAt(tx, ty, 'pick');
-  st.hp--;
-  if (st.hp > 0) { changed(); return true; }
-
+// Breaks the rock at a tile: its stone or ore, a chance of coal, a gem or a geode, the ladder if it hid there.
+// Used by the pickaxe and by bombs (systems/treasure.js). quiet: no notice for plain stone (bombs break many at once).
+export function breakRock(tx, ty, quiet = false) {
+  const key = `${tx},${ty}`, rock = ROCKS[MAPS.mine.grid[ty]?.[tx]];
+  if (!rock || !MINE.rocks[key]) return false;
   const n = rock.amount[0] + Math.floor(Math.random() * (rock.amount[1] - rock.amount[0] + 1)) + (rock.item !== 'stone' && has('miner') ? 1 : 0);   // v34: miner
   G.S.bag[rock.item] += n;
   const lucky = 1 + 2 * luck();   // v35: the day's luck shifts coal and gem chances by up to a fifth
@@ -101,12 +97,26 @@ addInteraction(66, ({ tx, ty, tile, item, mapId }) => {
   // v34: the excavator doubles the chance of a gem or egg; the geologist finds gems in pairs half the time.
   const gr = Math.random() / (has('excavator') ? 2 : 1) / lucky, gem = GEM_DROPS.find(([, c], i) => gr < GEM_DROPS.slice(0, i + 1).reduce((a, [, x]) => a + x, 0))?.[0];
   if (gem) { G.S.bag[gem] = (G.S.bag[gem] || 0) + (has('geologist') && MINERALS[gem]?.gem && Math.random() < 0.5 ? 2 : 1); notify(`You found ${ITEMS[gem].name.toLowerCase()}!`); }
+  // v37: geodes, twice as often for the excavator (Stardew's excavator doubles geode finds).
+  if (Math.random() < GEODE_CHANCE * (has('excavator') ? 2 : 1) * lucky) { const k = geodeFor(MINE.floor); G.S.bag[k] = (G.S.bag[k] || 0) + 1; notify(`You found a ${ITEMS[k].name.toLowerCase()}!`); }
   delete MINE.rocks[key];
   emit('gather', { skill: 'mining', item: rock.item, xp: rock.hp * 2 - 1 });
   if (key === MINE.ladder) { MAPS.mine.grid[ty][tx] = 'L'; notify('You found a ladder down!'); }
-  else { MAPS.mine.grid[ty][tx] = 'f'; if (rock.item !== 'stone' || coal) notify(`+${n} ${ITEMS[rock.item].name}${coal ? ', +1 Coal' : ''}`); }
+  else { MAPS.mine.grid[ty][tx] = 'f'; if (!quiet && (rock.item !== 'stone' || coal)) notify(`+${n} ${ITEMS[rock.item].name}${coal ? ', +1 Coal' : ''}`); }
   emit('world:changed');
   changed();
+  return true;
+}
+
+addInteraction(66, ({ tx, ty, tile, item, mapId }) => {
+  if (mapId !== 'mine' || item !== 'pick') return false;
+  if (!ROCKS[tile]) { notify('Nothing to break there.'); return true; }
+  if (!useEnergy(PICK_ENERGY)) return true;
+  const st = MINE.rocks[`${tx},${ty}`];
+  swingAt(tx, ty, 'pick');
+  st.hp--;
+  if (st.hp > 0) { changed(); return true; }
+  breakRock(tx, ty);
   return true;
 });
 
