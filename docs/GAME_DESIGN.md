@@ -97,6 +97,17 @@ Bram's workbench moves any building for free: choose the spot by facing where it
 - Slime pen: fill the trough with the watering can (1 water). That night each slime leaves a slime ball 25% of the time; a ball holds 10 to 20 gel.
 - One fish pond and one slime pen per farm. You cannot fish in the pond.
 
+### Helpers, waystones and the farm cave (v32)
+
+| Building | Gold | Materials | Size | Effect | Stardew counterpart |
+|---|---|---|---|---|---|
+| Helper hut | 20,000 | 200 stone, 100 fiber, 9 gleamfruit | 2 by 2 | Harvests ripe crops within 8 tiles each morning (not in winter), at full quality rolls; collect at the hut | Junimo hut (starfruit becomes gleamfruit) |
+| Hollow waystone | 500,000 | 10 iron bars, 10 Hollow quartz | 1 by 2 | Warps you to the Hollow's entrance | Earth obelisk (iridium bars and earth crystals swapped) |
+| Village waystone | 500,000 | 5 iron bars, 100 stone | 1 by 2 | Warps you to the village fountain | Water obelisk (iridium bars, clams and coral swapped) |
+
+- Home charm (crafted: 1 hardwood, 1 honey, 20 fiber; Stardew's farm warp totem): use it from the kit anywhere to go home. Used up.
+- Farm cave: opens once the farm has shipped 25,000g in all (Stardew's trigger; older saves count the gold they hold). The first visit offers fruit bats (up to 3 fruit of any tree, 60% each, every morning) or six mushroom logs (a Hollow cap each, 50%, every morning). The choice is for good. Stardew's mushroom cave grows several kinds; we have one.
+
 ## Materials from Bram (v29)
 
 Wood 10g and stone 20g each at Bram's workbench, in tens and fifties (Stardew's carpenter prices). Coal stays 150g. Materials are never shipped, so buying them is a one-way cost.
@@ -143,6 +154,7 @@ Profit per day = (sells - seed) / days, one harvest per seed.
 | Frost kale | 50g | 6 | 100g | 8.3g | Winter (outdoors) |
 | Wheat | 10g | 4 | 25g | 3.8g | Summer, Autumn (v30; flour at the mill) |
 | Beet | 20g | 6 | 100g | 13.3g | Autumn (v30; sugar at the mill) |
+| Gleamfruit | 400g | 13 | 750g | 26.9g | Summer (v32; Stardew's starfruit) |
 
 Regrowing crops (the plant stays; regrow = days to the next harvest):
 
@@ -474,6 +486,8 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Honey has one flavour; Stardew's flower honey is not modelled.
 - Since v29 wood and stone can be bought (10g and 20g), so big wood costs are a gold cost too. In the simulator the bot finishes all but about 4 items of its 2-year shopping list (26 before) and raises far more animals (animal products +160%); year 1 summer and autumn earn 17% less while it buys materials.
 - v30 adds wheat and beets to the quest board's crops. The balance bot never grows them, so it fills fewer requests and loses about 10% of crop income in the simulator (checked: with the two crops kept off the board the loss is gone). Real players can grow them for requests.
+- Fiber is the next bottleneck after wood: only weeds give it (about 0.65 a day), and the helper hut needs 100. The balance bot never gets the hut in 2 years; it is last on its list.
+- In 2 of 5 simulator runs the bot's farm has no free 3 by 3 spot for the fish pond (its tilled field and buildings fill the farm).
 - The balance bot builds the fish pond in year 1 and stocks it with its best catch (about 7,000g of roe by the end of year 2). It does not use the slime pen: gel sells for 5g.
 - The balance bot reaches the loom but not the mill in 2 years (the mill needs 4 cloth, from 20 fiber).
 - Coop and barn upgrades do not change the buildings' size or art.

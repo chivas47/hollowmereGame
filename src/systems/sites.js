@@ -13,6 +13,7 @@ import { MAPS } from '../data/maps.js';
 import { DEBRIS } from '../data/clearing.js';
 import { COOP, BARN, GREENHOUSE, STABLE, SHED, MILL, CLOCK } from '../data/upgrades.js';
 import { POND, SLIME_PEN } from '../data/ponds.js';
+import { HELPER_HUT, WAYSTONES } from '../data/helpers.js';
 import { affordable } from './upgrades.js';
 
 // tile: what the building writes into the grid. art: render/tiles.js OBJECT_ART. placed: the player picks the spot.
@@ -26,6 +27,9 @@ export const SITES = {
   clocktower: { def: CLOCK,      tile: 'k', art: 'clocktower', name: 'Clock tower', placed: true },
   pond:       { def: POND,       tile: 'u', art: 'pond',       name: 'Fish pond', placed: true },     // v31
   slimepen:   { def: SLIME_PEN,  tile: 'j', art: 'slimepen',   name: 'Slime pen', placed: true },
+  helperhut:  { def: HELPER_HUT, tile: 'a', art: 'helperhut',  name: 'Helper hut', placed: true },   // v32
+  wayhollow:  { def: WAYSTONES.wayhollow,  tile: 'e', art: 'waystone', name: 'Hollow waystone', placed: true },
+  wayvillage: { def: WAYSTONES.wayvillage, tile: 'd', art: 'waystone', name: 'Village waystone', placed: true },
 };
 const farm = MAPS.farm;
 const OFF = -99;   // a footprint that is nowhere yet

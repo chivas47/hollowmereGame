@@ -58,6 +58,8 @@ export const PLACEABLES = {
   minibin:    { name: 'Mini shipping bin', short: 'Mini bin', kind: 'bin' },
   // v31: presses 100 gel into a slime egg; the incubator hatches it for the slime pen.
   slimepress: { name: 'Slime press',      short: 'Sl. press', kind: 'machine' },
+  // v32: used from the kit anywhere, it takes you home (systems/helpers.js) and is used up.
+  homecharm:  { name: 'Home charm',       short: 'Charm',     kind: 'charm' },
   grassstarter: { name: 'Grass starter',  short: 'Grass',     kind: 'grass' },
   // v24: furniture, placed inside the farmhouse (bought from the catalogue there).
   ...Object.fromEntries(Object.entries(FURNITURE).map(([k, f]) => [k, { name: f.name, short: f.name.length > 10 ? f.name.split(' ').pop() : f.name, kind: 'furniture', walk: !!f.walk }])),
@@ -106,6 +108,8 @@ export const RECIPES = {
   minibin:    { cost: 0, needs: { wood: 30, copperbar: 1 }, desc: 'Ships your basket from anywhere you put it, like the big bin.' },
   // v31. Stardew's slime egg-press: 25 coal, a fire quartz, a battery pack (ours: a violet stone, a storm cell).
   slimepress: { cost: 0, needs: { coal: 25, violet: 1, stormcell: 1 }, desc: 'Presses 100 slime gel into a slime egg overnight. Hatch it in the incubator for the slime pen.' },
+  // v32. Stardew's farm warp totem: 1 hardwood, 1 honey, 20 fiber.
+  homecharm:  { cost: 0, needs: { hardwood: 1, honey: 1, fiber: 20 }, desc: 'Use it from the kit anywhere to go straight home. Used up.' },
   silo:       { cost: 100, needs: { stone: 110, copperbar: 5 }, desc: 'With a silo on the farm, cutting grass gives hay for the barn loft half the time.' },
 };
 

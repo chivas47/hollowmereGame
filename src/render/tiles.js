@@ -254,6 +254,22 @@ function slimepen(g, p, o) {
   r(g, X + 1, Y + 2, 2, h - 3, '#8a5a32'); r(g, X + w - 3, Y + 2, 2, h - 3, '#8a5a32');
   r(g, X + 6, Y + h - 14, 16, 6, '#6e4626'); r(g, X + 7, Y + h - 13, 14, 3, '#5d7a90');   // the trough
 }
+// v32: the helper hut (a round thatched hut) and a waystone (a tall carved stone).
+function helperhut(g, p, o) {
+  const X = o.x * T, Y = o.y * T;
+  r(g, X + 2, Y + 31, 28, 1, 'rgba(0,0,0,.25)');
+  r(g, X + 5, Y + 16, 22, 15, '#a07a4f'); r(g, X + 5, Y + 16, 22, 2, '#8a6640');
+  for (let j = 0; j < 12; j++) r(g, X + 16 - j - 2, Y + 4 + j, 4 + 2 * j + 4, 1, j % 2 ? '#c9a24a' : '#b8913a');
+  if (p.snow) r(g, X + 10, Y + 5, 12, 3, SNOW);
+  r(g, X + 13, Y + 22, 6, 9, '#3f3226'); r(g, X + 14, Y + 23, 4, 2, '#7fcf6a');
+}
+function waystone(g, p, o) {
+  const X = o.x * T, Y = o.y * T, hollow = o.site === 'wayhollow';
+  r(g, X + 3, Y + 31, 10, 1, 'rgba(0,0,0,.25)');
+  r(g, X + 4, Y + 4, 8, 27, '#8d8a84'); r(g, X + 5, Y + 2, 6, 2, '#8d8a84'); r(g, X + 4, Y + 4, 2, 27, '#b5b1a8');
+  r(g, X + 7, Y + 9, 2, 8, hollow ? '#b98ae0' : '#69aedb'); r(g, X + 6, Y + 12, 4, 2, hollow ? '#b98ae0' : '#69aedb');
+  r(g, X + 3, Y + 28, 10, 3, '#6a6862');
+}
 function scaffold(g, p, o) {
   const X = o.x * T, Y = o.y * T, w = o.w * T, h = o.h * T;
   r(g, X + 2, Y + h - 4, w - 4, 3, '#a5753f');
@@ -262,7 +278,7 @@ function scaffold(g, p, o) {
   r(g, X + 6, Y + h - 10, 8, 6, '#9aa3ab'); r(g, X + w - 14, Y + h - 9, 8, 5, '#b08a5a');
 }
 
-export const OBJECT_ART = { pond, slimepen, shed, mill, clocktower, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
+export const OBJECT_ART = { helperhut, waystone, pond, slimepen, shed, mill, clocktower, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
 
 // ---- Greenhouse interior (ignores seasons) ----
 export function drawGreenhouseFloor(g, x, y, t) {
@@ -311,7 +327,18 @@ function ladderDown(g, x, y) {
   for (let i = 0; i < 3; i++) r(g, X + 5, Y + 4 + i * 3, 6, 1, '#b8864f');
 }
 
+// v32: the farm cave's mouth in the farm's north edge, and the crate inside the cave.
+function caveMouth(g, x, y, p) {
+  const X = x * T, Y = y * T;
+  r(g, X, Y, T, T, '#5f5a52'); r(g, X + 2, Y + 4, 12, 12, '#1a1512'); r(g, X + 3, Y + 3, 10, 1, '#2a2421'); r(g, X + 1, Y + 1, 3, 3, p.snow ? SNOW : '#4f8f3a');
+}
+function caveCrate(g, x, y) {
+  const X = x * T, Y = y * T;
+  drawCaveFloor(g, x, y); r(g, X + 2, Y + 5, 12, 10, '#8a5a32'); r(g, X + 2, Y + 5, 12, 1, '#a5753f'); r(g, X + 2, Y + 10, 12, 1, '#6e4626');
+}
+
 export const CAVE_ART = {
+  y: caveMouth, t: caveCrate,
   X: caveWall, U: ladderUp, L: ladderDown,
   r: mineRock(null), c: mineRock('#d0874a'), i: mineRock('#c9ccd6'),
 };

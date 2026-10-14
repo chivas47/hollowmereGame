@@ -49,6 +49,7 @@ src/
     fishing.js        cast, bite, reel minigame, fish log
     sites.js          where every farm building stands: moving and placing buildings, writing their tiles
     mill.js           the mill (wheat and beets overnight) and the shed door
+    helpers.js        helper hut harvests, waystones, the home charm, the farm cave (opening, choice, daily crate)
     ponds.js          the fish pond (stock, breed, roe, requests) and the slime pen (trough, slime balls, addSlime)
     buildings.js      door (sleep), stall (shop), bin and mini bins (ship), well/pond refill
     economy.js        ship(), buy(), overnight payout; materials are never shipped
@@ -130,6 +131,8 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 72 | pets.js | The water bowl b (the can fills it) |
 | 72 | mill.js | Mill m, shed s (enter), clock tower k |
 | 72 | ponds.js | Fish pond u, slime pen j (the can fills its trough) |
+| 72 | helpers.js | Helper hut a, waystones e and d (warp), cave mouth y, the cave's crate t |
+| 57 | helpers.js | Kit slot with a home charm (warp home) |
 | 72 | upgrades.js / coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Workbench K, coop C, barn A, greenhouse G, mine entrance M, ladders U/L, placed object Y, quest board Q, festival table J |
 | 71 | village.js | Fountain F, cottage V (flavour text) |
 | 70 | buildings.js, house.js | Stall S, bin B; farm door D (enter), bed Z, lectern l, kitchen and cellar fittings |
