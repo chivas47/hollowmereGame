@@ -7,6 +7,7 @@ export const SKILLS = {
   fishing:  { name: 'Fishing',  verb: 'catch' },
   mining:   { name: 'Mining',   verb: 'break a rock' },
   ranching: { name: 'Ranching', verb: 'collect eggs or milk' },
+  combat:   { name: 'Combat',   verb: 'defeat a slime' },   // v34
 };
 export const LEVEL_XP = [50, 130, 250, 420, 650, 950, 1330, 1800, 2380, 3100];
 export const BONUS_PER_LEVEL = 0.02;

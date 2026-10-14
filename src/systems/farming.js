@@ -12,6 +12,7 @@ import { tier } from '../data/upgrades.js';
 import { useEnergy, tileAt, soilOf } from './world.js';
 import { swingAt } from './effects.js';
 import { addItem, rollCropQuality } from './quality.js';
+import { has } from './professions.js';
 import { skillLevel } from './skills.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { QUALITY } from '../data/quality.js';
@@ -28,9 +29,12 @@ export function harvest(s) {
   const c = CROPS[s.crop.type], q = c.packet === 'fiber' ? 0 : rollCropQuality(skillLevel('farming'), fertOf(s)?.quality || 0);
   const item = c.packet === 'wild' || c.packet === 'fiber' ? c.produce[Math.floor(Math.random() * c.produce.length)] : s.crop.type;
   const n = c.amount ? c.amount[0] + Math.floor(Math.random() * (c.amount[1] - c.amount[0] + 1)) : c.yield || 1;
+  const type = s.crop.type;
   if (c.regrow) s.crop.age = (s.crop.need || c.days) - c.regrow;   // the plant stays and fruits again
   else s.crop = null;
-  return { item, n, q };
+  const extra = !c.packet && has('bountiful') && Math.random() < 0.25 ? 1 : 0;   // v34: bountiful
+  if (!c.packet && !c.regrow && has('seedsaver') && Math.random() < 0.2) G.S.seeds[type]++;   // v34: seedsaver
+  return { item, n: n + extra, q };
 }
 
 addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
@@ -78,7 +82,7 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
     // Mixed seeds become a random crop that grows here and now.
     const pool = c.packet === 'mixed' ? Object.keys(CROPS).filter((k) => !CROPS[k].packet && (indoors || CROPS[k].seasons.includes(season))) : null;
     const type = pool ? pool[Math.floor(Math.random() * pool.length)] : seed, grow = CROPS[type].days;
-    const speed = fertOf(s)?.speed || 0;
+    const speed = (fertOf(s)?.speed || 0) + (has('grower') ? 0.1 : 0) + (has('quickgrow') ? 0.1 : 0);   // v34: grower, quickgrow
     S.seeds[seed]--; s.crop = { type, age: 0, ...(speed ? { need: Math.max(1, Math.round(grow * (1 - speed))) } : {}) };
     swingAt(tx, ty, 'seed');
   }

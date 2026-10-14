@@ -13,6 +13,7 @@ import { layout } from './layouts.js';
 import { addDebris, freeTile } from './clearing.js';
 import { addItem, rollSkillQuality } from './quality.js';
 import { skillLevel } from './skills.js';
+import { has } from './professions.js';
 import { spawnSlimes } from './monsters.js';
 
 const perks = () => layout().perks || {};
@@ -73,7 +74,7 @@ addInteraction(51, ({ tx, ty, mapId }) => {
   const i = G.S.farmForage.findIndex((f) => f.x === tx && f.y === ty);
   if (i < 0) return false;
   const f = G.S.farmForage[i];
-  addItem(f.type, 1, rollSkillQuality(skillLevel('foraging'))); G.S.farmForage.splice(i, 1);
+  addItem(f.type, has('gatherer') && Math.random() < 0.2 ? 2 : 1, has('botanist') ? 3 : rollSkillQuality(skillLevel('foraging'))); G.S.farmForage.splice(i, 1);
   notify(`Found a ${FORAGE[f.type].name}.`);
   emit('gather', { skill: 'foraging', item: f.type, xp: 5 });
   changed();

@@ -67,6 +67,7 @@ export function newState() {
     hay: 0,                                             // hay in the barn loft
     barnGoods: { cowmilk: 0, goatmilk: 0 },             // milk waiting in the barn
     skills: Object.fromEntries(Object.keys(SKILLS).map((k) => [k, 0])),    // XP per skill
+    professions: {},                                    // v34: skill -> [level-5 pick, level-10 pick] (systems/professions.js)
     energyBonus: 0,                                     // derived from skill milestones, see systems/skills.js
     quests: [],                                         // open board requests, see systems/quests.js
     questsDone: 0, questDay: 0,                         // requests completed, last day one was posted
@@ -94,6 +95,7 @@ export function merge(saved) {
   if (!s.qbag || typeof s.qbag !== 'object') s.qbag = {};
   s.kit = Object.assign(newState().kit, saved.kit || {});
   s.skills = Object.assign(newState().skills, saved.skills || {});
+  if (!s.professions || typeof s.professions !== 'object') s.professions = {};   // v34: skills already at 5 or 10 offer their picks
   s.barnGoods = Object.assign(newState().barnGoods, saved.barnGoods || {});
   if (!s.placed || typeof s.placed !== 'object') s.placed = {};
   if (!s.sites || typeof s.sites !== 'object') s.sites = {};

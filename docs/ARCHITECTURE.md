@@ -49,6 +49,7 @@ src/
     fishing.js        cast, bite, reel minigame, fish log
     sites.js          where every farm building stands: moving and placing buildings, writing their tiles
     mill.js           the mill (wheat and beets overnight) and the shed door
+    professions.js    professions: has(id) for the systems that apply one, priceMult() for selling, choosing, combat health
     helpers.js        helper hut harvests, waystones, the home charm, the farm cave (opening, choice, daily crate)
     ponds.js          the fish pond (stock, breed, roe, requests) and the slime pen (trough, slime balls, addSlime)
     buildings.js      door (sleep), stall (shop), bin and mini bins (ship), well/pond refill
@@ -185,6 +186,7 @@ The night tint is drawn by renderer.js after all layers (not in caves).
 | `mine:floor` | {floor, rng} | mine.js | monsters (spawn) |
 | `mine:faint` | none | health.js | mine.js (carry out) |
 | `gather` | {skill, xp, item?, n?} | farming, giants, clearing, forage, fishing, mine, monsters, coop, barn | skills.js (XP, bonus item) |
+| `skill:level` | {skill, level} | skills.js | professions (offer a choice, combat health) |
 | `upgraded` | key | upgrades.js | house.js (rebuild the farmhouse rooms) |
 | `site:moved` | building key | sites.js | coop, barn (animals back in the yard), stable (horse home) |
 | `placed` | {map, x, y, kind} | placeables.js | sprinklers.js (water now), audio/sfx.js |
@@ -252,6 +254,7 @@ Soil is per map: `soilOf(mapId)` returns `G.S.soil` (farm) or `G.S.greenSoil` (g
 - **Map:** grid and entry in `data/maps.js`, with an `E` tile and `exits` entry on both sides.
 - **Craftable object:** entry in `PLACEABLES` and `RECIPES` (data/crafting.js) plus art in `PLACED_ART` (render/sprites.js). A machine also needs a `MACHINES` entry; its products go in data/artisan.js. A machine that uses up more than one item a load (the furnace) gives `takes(k)`, and one with `nights: 0` is ready at once. `nights` can be a function of the item (the brew barrel). `repeat: true` restarts the same load after collecting (the gem copier); `auto: {item, every, winter}` produces on its own with a `timer` field (bee box, mushroom log). Tree taps live on alder debris as `d.tap` in clearing.js, not in G.S.placed. `hatch: {egg: animal}` (the incubator) moves an animal in through systems/livestock.js `adopt()` instead of giving an item.
 - **Animal:** an entry in `COOP.animals` or `BARN.animals` (data/upgrades.js) with product, every, level and optional tool, deluxe, outdoors or hatched; its product in data/products.js; art in render/sprites.js (drawCoopAnimal or drawAnimal). systems/livestock.js does the rest.
+- **Profession effect:** the profession in data/professions.js (a tree and a description), then `has(id)` where the effect applies; selling bonuses go in `priceMult()` (systems/professions.js), used by `valueOf()` in systems/quality.js.
 - **Crafted seeds:** a recipe with `seed: true` (fiber seeds) adds to `G.S.seeds` instead of the kit; `seeds: {mixed: 1}` in a recipe uses up seed packets. The crop is marked `crafted` so the stall leaves it out, and `dry` grows without water.
 - **Building on the farm:** an entry in `SITES` (systems/sites.js) with its def (data/upgrades.js), tile and art. sites.js keeps `def.footprint` (and a yard or horse spot) where `G.S.sites` says, by changing the def in place, and writes the tiles; a placed building (`placed: true`) has no spot until the player picks one and finishes on `day:start`. Code that reads `COOP.footprint` or `BARN.yard` always gets the current spot.
 - **Walkable debris:** `walk: true` in DEBRIS (grass) keeps the tile walkable; clearing.js skips the 'Y' and draws it on layer 9.

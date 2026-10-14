@@ -1,6 +1,6 @@
 // The Bag screen: basket, seeds, tools and the fish log.
 import { G } from '../core/game.js';
-import { on } from '../core/events.js';
+import { on, emit } from '../core/events.js';
 import { today } from '../core/time.js';
 import { ITEMS } from '../data/items.js';
 import { CROPS } from '../data/crops.js';
@@ -11,6 +11,8 @@ import { counts, valueOf } from '../systems/quality.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { SKILLS, BONUS_PER_LEVEL } from '../data/skills.js';
 import { skillProgress } from '../systems/skills.js';
+import { PROFESSIONS } from '../data/professions.js';
+import { pending } from '../systems/professions.js';
 import { openModal, closeModal } from './modal.js';
 import { esc } from './dom.js';
 import { wardrobeHtml } from './clothing.js';
@@ -41,8 +43,9 @@ on('ui:inventory', () => {
 
   const skills = Object.entries(SKILLS).map(([k, sk]) => {
     const p = skillProgress(k);
-    return row(`${sk.name} <span class="role">level ${p.lv}</span>`, p.next ? `${p.xp} / ${p.next} XP` : 'Mastered');
-  }).join('');
+    const profs = (S.professions[k] || []).map((id) => PROFESSIONS[id].name).join(', ');
+    return row(`${sk.name} <span class="role">level ${p.lv}${profs ? `, ${profs}` : ''}</span>`, p.next ? `${p.xp} / ${p.next} XP` : 'Mastered');
+  }).join('') + (pending() ? '<div class="btns"><button data-profs>Choose a profession</button></div>' : '');
   const kitKeys = Object.keys(PLACEABLES).filter((k) => S.kit[k] > 0);
   const kit = kitKeys.length ? kitKeys.map((k) => row(PLACEABLES[k].name, `× ${S.kit[k]}`)).join('') : '<p class="role">Nothing crafted. Press C to craft.</p>';
 
@@ -64,3 +67,6 @@ on('ui:inventory', () => {
     <h3>Fish log <span class="role">${known} of ${Object.keys(FISH).length}</span></h3>${fish}`,
   [['Close', closeModal, true]]);
 });
+
+// v34: a profession choice that waits opens from the bag.
+document.querySelector('#mbody').addEventListener('click', (e) => { if (e.target.closest('[data-profs]')) { closeModal(); emit('ui:profession'); } });

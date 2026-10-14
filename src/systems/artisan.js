@@ -7,6 +7,7 @@ import { placeKey } from './world.js';
 import { today } from '../core/time.js';
 import { adopt, animalDef, homeOf } from './livestock.js';
 import { addSlime } from './ponds.js';
+import { has } from './professions.js';
 
 const machine = (x, y) => {
   const p = G.S.placed[placeKey(G.S.map, x, y)];
@@ -15,7 +16,10 @@ const machine = (x, y) => {
 
 // What one load of item k uses up (most machines: one of it; the furnace: 5 ore and a coal).
 export const nightsFor = (kind, k) => { const n = MACHINES[kind].nights; return typeof n === 'function' ? n(k) : n; };
-export const takes = (kind, k) => MACHINES[kind].takes?.(k) || { [k]: 1 };
+export const takes = (kind, k) => {
+  const t = MACHINES[kind].takes?.(k) || { [k]: 1 };
+  return kind === 'furnace' && has('blacksmith') ? { ...t, [k]: 4 } : t;   // v34: blacksmith
+};
 const enough = (need) => Object.entries(need).every(([k, n]) => (G.S.bag[k] || 0) >= n);
 
 // Bag items this machine accepts and that you have enough of, for the dialog.
@@ -32,6 +36,7 @@ export function loadMachine(x, y, item) {
   Object.entries(need).forEach(([k, n]) => { G.S.bag[k] -= n; });
   p.item = MACHINES[p.kind].product(item);
   p.nights = nightsFor(p.kind, item);
+  if (MACHINES[p.kind].hatch && has('breeder')) p.nights = Math.ceil(p.nights / 2);   // v34: breeder
   if (MACHINES[p.kind].repeat) p.copy = item;
   if (MACHINES[p.kind].hatch) notify(`The ${ITEMS[item].name.toLowerCase()} hatches in ${p.nights} nights.`);
   else notify(p.nights ? `${ITEMS[p.item].name} will be ready in ${p.nights} night${p.nights === 1 ? '' : 's'}.` : `${ITEMS[p.item].name} is ready.`);
@@ -51,7 +56,7 @@ export function collectMachine(x, y) {
     return hatch;
   }
   if (hatch) {   // the incubator (v28): the animal moves into its coop or barn, if there is room
-    const name = adopt(hatch);
+    const name = adopt(hatch, has('hatcher') ? 600 : 0);   // v34: hatcher, three hearts
     if (!name) return null;
     p.item = null; p.nights = 0;
     notify(`${name} the ${animalDef(hatch).name.toLowerCase()} hatched and moved into the ${homeOf(hatch)}.`);

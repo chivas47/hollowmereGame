@@ -69,7 +69,7 @@ globalThis.performance ??= { now: () => Date.now() };
 
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
-const SYSTEMS = ['layouts', 'sites', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
+const SYSTEMS = ['layouts', 'sites', 'professions', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
   'mine', 'health', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
@@ -110,6 +110,9 @@ const { SITES, findSite, siteAt, noFit } = await load('systems/sites.js');
 const { millIn, millCollect } = await load('systems/mill.js');
 const { stockPond, collectRoe, giveAsk, canGive } = await load('systems/ponds.js');
 const { collectHut, chooseCave, collectCave } = await load('systems/helpers.js');
+const { pending, choose } = await load('systems/professions.js');
+// The bot's professions (v34): the selling and yield picks, Stardew's usual money route.
+const PICKS = { farming: ['tiller', 'artisan'], ranching: ['rancher', 'coopkeeper'], foraging: ['forester', 'lumberjack'], mining: ['miner', 'blacksmith'], fishing: ['fisher', 'angler'], combat: ['fighter', 'brute'] };
 const { HOMES, homeOf, level, noRoom, buyLivestock, orderLevel, buyTool } = await load('systems/livestock.js');
 const { craft } = await load('systems/crafting.js');
 const { startLayout } = await load('systems/layouts.js');
@@ -554,6 +557,7 @@ function simulate(runSeed) {
   for (let day = 1; day <= DAYS; day++) {
     const s = S();
     const spent0 = Object.values(log.spend).reduce((a, x) => a + x, 0);
+    for (let p = pending(); p; p = pending()) choose(p.skill, PICKS[p.skill][p.level === 5 ? 0 : 1]);
     animals();
     pet();
     orchard();

@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v34: Professions and combat
+- At levels 5 and 10 of every skill, choose a profession: 36 in all, Stardew's trees by role under our own names. Older saves with high skills choose from the bag.
+- A sixth skill, Combat: slimes give combat XP (they gave mining XP before), and each combat level adds 5 health.
+- Buildings can be placed on empty tilled soil.
+
 ## v33: Fiber
 - Fiber seeds, crafted from a packet of mixed seeds, 5 wood and 1 stone: they grow outdoors in any season, winter too, without water, into 4 to 7 fiber in 7 days.
 - Weeds grow in the Wilds every day. Cut them with any tool for fiber.
