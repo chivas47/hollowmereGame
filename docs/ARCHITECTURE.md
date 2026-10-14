@@ -28,6 +28,7 @@ src/
     furniture.js      FURNITURE, WALLPAPERS, FLOORS, RENOVATIONS, catalogue prices
     pets.js           PET friendship numbers, PET_LOOKS, PET_NAMES, PET_HATS
     profile.js        farmer profile: LOOKS, PETS, DEFAULT_PROFILE, playerPal()
+    guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item
     schedules.js      neighbour daily schedules, rest days, map entry points
     scenes.js         heart scenes at 4 and 8 hearts
@@ -51,7 +52,9 @@ src/
     mill.js           the mill (wheat and beets overnight) and the shed door
     cooking.js        recipes, cooking at the stove, the fridge, eating, buffs on G.S.buff and G.S.drink, daily luck, the TV show, wishfruit sources
     buffs.js          buff() and luck() for the systems that read them (kept import-free of cooking.js)
-    gear.js           weapons owned and in use, rings worn, mine floor finds, giveFind()
+    gear.js           weapons owned and in use, rings worn, giveFind()
+    treasure.js       bombs (throw, fuse, explode()), Hollow treasure chests (floor finds and rare loot), geode cracking
+    guild.js          the Wardens' Lodge in the Wilds: shop, slaying goals (G.S.slain, G.S.goalsClaimed), its keeper
     professions.js    professions: has(id) for the systems that apply one, priceMult() for selling, choosing, combat health
     helpers.js        helper hut harvests, waystones, the home charm, the farm cave (opening, choice, daily crate)
     ponds.js          the fish pond (stock, breed, roe, requests) and the slime pen (trough, slime balls, addSlime)
@@ -135,6 +138,9 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 72 | pets.js | The water bowl b (the can fills it) |
 | 72 | mill.js | Mill m, shed s (enter), clock tower k |
 | 72 | ponds.js | Fish pond u, slime pen j (the can fills its trough) |
+| 72 | treasure.js | Treasure chest $ in the Hollow |
+| 72 | guild.js | Wardens' Lodge & in the Wilds (dialog, or a barred door before floor 1) |
+| 57 | treasure.js | Kit slot with a bomb (throws it at the faced tile, Hollow only) |
 | 72 | helpers.js | Helper hut a, waystones e and d (warp), cave mouth y, the cave's crate t |
 | 57 | helpers.js | Kit slot with a home charm (warp home) |
 | 72 | upgrades.js / coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Workbench K, coop C, barn A, greenhouse G, mine entrance M, ladders U/L, placed object Y, quest board Q, festival table J |
@@ -163,10 +169,11 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 12 | fishing.js | Ice hole in winter |
 | 20 | placeables.js | Sprinklers, machines, lanterns |
 | 30 | festivals.js | Bunting on festival days |
-| (entities) | player, npcs, coop, barn, monsters, trees, giants, clearing, house (furniture) | y-sorted characters, fruit trees, giant crops, debris, alders, fences, gates |
+| (entities) | player, npcs, coop, barn, monsters, treasure (lit bombs), guild (Warden Hale), trees, giants, clearing, house (furniture) | y-sorted characters, fruit trees, giant crops, debris, alders, fences, gates |
 | 55 | fishing.js | Line and bobber |
 | 60 | effects.js | Tool swing |
 | 90 | fishing.js | Reel bar |
+| 60 | treasure.js | Bomb blasts in the Hollow |
 | 95 | mine.js | Darkness around the player |
 | 96 | weather.js | Rain, storm flashes, snow, mist (outdoor maps) |
 | 97 | placeables.js, festivals.js | Lantern glow after dark |
@@ -187,7 +194,8 @@ The night tint is drawn by renderer.js after all layers (not in caves).
 | `season:changed` | {from, to, report} | days.js | farming (wither), trees (drop fruit), renderer |
 | `day:start` | report | days.js | forage, npcs, coop (build), health, fishing, monsters, trees (age, fruit), giants (merge), clearing (creep, alder growth), weather (rain waters soil) |
 | `day:report` | report | days.js | ui/dialogs.js morning summary |
-| `mine:floor` | {floor, rng} | mine.js | monsters (spawn) |
+| `mine:floor` | {floor, rng} | mine.js | monsters (spawn), treasure (chest) |
+| `monster:slain` | {kind, x, y, map} | monsters.js | guild (goal counts), treasure (blast ring) |
 | `mine:faint` | none | health.js | mine.js (carry out) |
 | `gather` | {skill, xp, item?, n?} | farming, giants, clearing, forage, fishing, mine, monsters, coop, barn | skills.js (XP, bonus item) |
 | `skill:level` | {skill, level} | skills.js | professions (offer a choice, combat health) |

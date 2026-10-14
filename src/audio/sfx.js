@@ -19,6 +19,7 @@ const SFX = {
   pet:     () => { tone({ freq: 1500, dur: 0.05, type: 'sine', slide: 2100 }); tone({ freq: 1800, dur: 0.05, type: 'sine', at: 0.08, slide: 2400 }); },
   place:   () => noise({ dur: 0.1, vol: 0.18, freq: 300 }),
   door:    () => noise({ dur: 0.35, vol: 0.08, filter: 'bandpass', freq: 300, sweep: 900 }),
+  boom:    () => { noise({ dur: 0.6, vol: 0.35, freq: 220, sweep: 60 }); tone({ freq: 90, dur: 0.4, type: 'square', vol: 0.08, slide: 40 }); },   // v37: a bomb
   ui:      () => tone({ freq: 700, dur: 0.04, type: 'triangle', vol: 0.05 }),
   morning: () => [784, 988, 1175].forEach((f, i) => tone({ freq: f, dur: 0.25, type: 'sine', vol: 0.06, at: i * 0.12 })),
 };

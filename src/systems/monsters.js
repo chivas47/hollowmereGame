@@ -100,8 +100,16 @@ function defeat(m) {
   if (pool.length && Math.random() < RARE_DROP * times) giveFind(pool[Math.floor(Math.random() * pool.length)], `The ${d.name.toLowerCase()} dropped`);
   if (wearing('leechring')) G.S.hp = Math.min(G.S.maxHp, G.S.hp + 2);
   emit('gather', { skill: 'combat', xp: d.xp });
+  emit('monster:slain', { kind: m.kind || 'slime', x: m.x, y: m.y, map: slimeMap });   // v37: the lodge's goals, the blast ring
   changed();
 }
+// v37: hurts a monster (bombs and the blast ring use it too); knock: [kx, ky] push.
+export function hitMonster(m, dmg, kx = 0, ky = 0) {
+  if (!slimes.includes(m)) return;
+  m.hp -= dmg; m.hurt = 0.25; m.kx = kx; m.ky = ky;
+  if (m.hp <= 0) defeat(m);
+}
+export const monstersOn = () => slimeMap;
 addInteraction(58, ({ item, mapId }) => {
   if (item !== 'sword') return false;
   if (cooldown > 0) return true;
@@ -114,8 +122,7 @@ addInteraction(58, ({ item, mapId }) => {
     if (Math.hypot(m.x - px, m.y - 4 - py) > wk.reach) continue;
     const critChance = (has('scout') ? 0.1 : 0) + (wearing('tidering') ? 0.1 : 0);
     const crit = Math.random() < critChance ? (has('desperado') ? 3 : 2) * (wearing('mossring') ? 1.5 : 1) : 1;   // v34 scout, desperado; v36 rings
-    m.hp -= damageOf() * crit; m.hurt = 0.25; m.kx = dx * wk.knock; m.ky = dy * wk.knock;
-    if (m.hp <= 0) defeat(m);
+    hitMonster(m, damageOf() * crit, dx * wk.knock, dy * wk.knock);
   }
   return true;
 });

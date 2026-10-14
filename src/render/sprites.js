@@ -234,7 +234,30 @@ export function drawCaveLife(c, choice, n, cx, cy) {
 }
 
 // Crafted objects placed on the farm. state: { item, nights } for machines, null otherwise.
+// v37: bombs (the kit icon and a lit bomb on the floor). col: the band's colour by size.
+const BOMB_COL = { emberbomb: '#c8352f', blastbomb: '#3f4850', greatbomb: '#8a5aa8' };
+function bombArt(c, X, Y, kind) {
+  r(c, X + 4, Y + 14, 8, 1, 'rgba(0,0,0,.35)');
+  r(c, X + 4, Y + 6, 8, 8, '#2b2a2e'); r(c, X + 3, Y + 7, 10, 6, '#2b2a2e'); r(c, X + 5, Y + 7, 2, 2, '#6a6870');
+  r(c, X + 3, Y + 10, 10, 1, BOMB_COL[kind] || '#c8352f');
+  r(c, X + 7, Y + 3, 2, 3, '#8d857d'); r(c, X + 9, Y + 2, 2, 1, '#a5753f');
+}
+export function drawBomb(c, px, py, kind, t) {
+  const X = Math.round(px) - 8, Y = Math.round(py) - 14;
+  bombArt(c, X, Y, kind);
+  if (Math.floor(t * 12) % 2) { r(c, X + 10, Y, 3, 3, '#ffd98a'); r(c, X + 11, Y + 1, 1, 1, '#ffffff'); }
+}
+// A blast: a ring of fire that grows and fades. k: 0 to 1 through it.
+export function drawBlast(c, px, py, radius, k) {
+  const g = c.createRadialGradient(px, py, 0, px, py, radius * (0.4 + 0.6 * k));
+  g.addColorStop(0, `rgba(255,246,214,${0.9 * (1 - k)})`); g.addColorStop(0.5, `rgba(233,134,42,${0.7 * (1 - k)})`); g.addColorStop(1, 'rgba(200,53,47,0)');
+  c.fillStyle = g; c.fillRect(px - radius, py - radius, radius * 2, radius * 2);
+}
+
 const PLACED_ART = {
+  emberbomb: (c, X, Y) => bombArt(c, X, Y, 'emberbomb'),
+  blastbomb: (c, X, Y) => bombArt(c, X, Y, 'blastbomb'),
+  greatbomb: (c, X, Y) => bombArt(c, X, Y, 'greatbomb'),
   slimepress: (c, X, Y) => {
     r(c, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.25)'); r(c, X + 3, Y + 6, 10, 8, '#5f6870'); r(c, X + 3, Y + 6, 10, 1, '#8d939a');
     r(c, X + 5, Y + 2, 6, 4, '#3f4850'); r(c, X + 7, Y, 2, 2, '#3f4850'); r(c, X + 5, Y + 9, 6, 3, '#7fcf6a'); r(c, X + 6, Y + 9, 2, 1, '#a6e88f');

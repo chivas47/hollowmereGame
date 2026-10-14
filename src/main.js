@@ -51,6 +51,8 @@ import './systems/pets.js';
 import './systems/stable.js';
 import './systems/house.js';
 import './systems/clothing.js';
+import './systems/treasure.js';
+import './systems/guild.js';
 
 // UI
 import './ui/toast.js';
@@ -70,6 +72,7 @@ import './ui/village.js';
 import './ui/creation.js';
 import './ui/house.js';
 import './ui/clothing.js';
+import './ui/guild.js';
 import { buildHotbar } from './ui/hotbar.js';
 import { initInput } from './ui/input.js';
 import { initDebug } from './ui/debugPanel.js';

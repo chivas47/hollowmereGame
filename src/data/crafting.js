@@ -61,6 +61,10 @@ export const PLACEABLES = {
   // v32: used from the kit anywhere, it takes you home (systems/helpers.js) and is used up.
   homecharm:  { name: 'Home charm',       short: 'Charm',     kind: 'charm' },
   grassstarter: { name: 'Grass starter',  short: 'Grass',     kind: 'grass' },
+  // v37: bombs, used from the kit in the Hollow (systems/treasure.js; radius and damage in data/guild.js BOMBS).
+  emberbomb:  { name: 'Ember bomb',       short: 'Ember bmb', kind: 'bomb' },
+  blastbomb:  { name: 'Blast bomb',       short: 'Bomb',      kind: 'bomb' },
+  greatbomb:  { name: 'Great bomb',       short: 'Great bmb', kind: 'bomb' },
   // v24: furniture, placed inside the farmhouse (bought from the catalogue there).
   ...Object.fromEntries(Object.entries(FURNITURE).map(([k, f]) => [k, { name: f.name, short: f.name.length > 10 ? f.name.split(' ').pop() : f.name, kind: 'furniture', walk: !!f.walk }])),
 };
@@ -112,6 +116,11 @@ export const RECIPES = {
   // v33. Stardew's fiber seeds: 1 mixed seeds, 5 sap, 1 clay (wood for the sap, stone for the clay). seed: makes seeds, not a kit object.
   fiberseed:  { cost: 0, needs: { wood: 5, stone: 1 }, seeds: { mixed: 1 }, seed: true, desc: 'One packet of fiber seeds: grows anywhere outdoors in any season, without water, into 4 to 7 fiber in 7 days.' },
   homecharm:  { cost: 0, needs: { hardwood: 1, honey: 1, fiber: 20 }, desc: 'Use it from the kit anywhere to go straight home. Used up.' },
+  // v37. Stardew's cherry bomb (4 copper ore, 1 coal, mining 1), bomb (4 iron ore, 1 coal, mining 6) and mega bomb
+  // (4 gold ore, solar and void essence, mining 8; an iron bar and gel stand in). skill: [skill, level] to learn it.
+  emberbomb:  { cost: 0, needs: { copper: 4, coal: 1 }, skill: ['mining', 1], desc: 'Throw it from the kit in the Hollow: after a moment it breaks every rock within 2 tiles and hurts monsters (and you) nearby.' },
+  blastbomb:  { cost: 0, needs: { iron: 4, coal: 1 }, skill: ['mining', 6], desc: 'A bigger bomb: breaks rocks within 3 tiles.' },
+  greatbomb:  { cost: 0, needs: { ironbar: 1, coal: 2, gel: 10 }, skill: ['mining', 8], desc: 'The biggest bomb: breaks rocks within 4 tiles.' },
   silo:       { cost: 100, needs: { stone: 110, copperbar: 5 }, desc: 'With a silo on the farm, cutting grass gives hay for the barn loft half the time.' },
 };
 
@@ -119,6 +128,9 @@ export const RECIPES = {
 export const EGG_SPREAD = { egg: 'mayo', duckegg: 'duckmayo', mossegg: 'mossmayo' };
 export const HATCH = { egg: 'chicken', duckegg: 'duck', mossegg: 'mossback', bigegg: 'strider', slimeegg: 'slime' };
 const HATCH_NIGHTS = { egg: 9, duckegg: 9, mossegg: 12, bigegg: 15, slimeegg: 3 };   // v31: Stardew's slime incubator takes about 3 days
+
+// v37: nights the gem copier takes per gem (Stardew's crystalarium: about a day for cheap gems, 5 for a diamond).
+const COPY_NIGHTS = { violet: 2, ambergem: 2, emberquartz: 2, tidestone: 3, heartstone: 3, starstone: 5 };
 
 // Machines: accepts(itemKey) -> bool, product(itemKey) -> item key, nights to finish.
 export const MACHINES = {
@@ -136,7 +148,7 @@ export const MACHINES = {
   loom:       { accepts: (k) => k === 'fiber' || k === 'wool', takes: (k) => ({ [k]: k === 'wool' ? 1 : 5 }), product: () => 'cloth', nights: 1, hint: '5 fiber or a wool' },
   oilpress:   { accepts: (k) => k === 'corn' || k === 'truffle', product: (k) => (k === 'truffle' ? 'truffleoil' : 'oil'), nights: 1, hint: 'sweet corn or a truffle' },
   beebox:     { accepts: () => false, auto: { item: 'honey', every: 4, winter: false }, product: () => 'honey', nights: 0, hint: 'nothing: the bees do the work' },
-  gemcopier:  { accepts: (k) => !!MINERALS[k]?.gem, product: (k) => k, nights: (k) => (k === 'violet' ? 2 : 1), repeat: true, hint: 'a gem' },
+  gemcopier:  { accepts: (k) => !!MINERALS[k]?.gem, product: (k) => k, nights: (k) => COPY_NIGHTS[k] || 1, repeat: true, hint: 'a gem' },
   dryer:      { accepts: (k) => k in FRUIT || k === 'mushroom', takes: (k) => ({ [k]: 5 }), product: (k) => `dried_${k}`, nights: 1, hint: '5 fruit or 5 Hollow caps' },
   mushroomlog:{ accepts: () => false, auto: { item: 'mushroom', every: 4, winter: false }, product: () => 'mushroom', nights: 0, hint: 'nothing: give it time' },
   smoker:     { accepts: (k) => k in FISH, takes: (k) => ({ [k]: 1, coal: 1 }), product: (k) => `smoked_${k}`, nights: 0, hint: 'a fish and 1 coal' },

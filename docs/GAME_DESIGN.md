@@ -403,6 +403,44 @@ Slot 5 (no hotbar change) swings the weapon chosen in the bag. Damage is Stardew
 - Monsters (count grows to 10 a floor): slime (floor 1+, gel 60%), Hollow mite (3+, crawls, fiber 30%), cave bat (12+, flies, coal 20%), bone walker (30+, iron ore 30%), Hollow serpent (50+, flies, violet stone 5%). Combat XP 3, 2, 6, 15, 20. Any kill: 1% chance of a weapon or ring from the floor's pool.
 - Rings (two worn; Stardew's ruby, topaz, aquamarine, jade, vampire, slime charmer, burglar's and glow rings): Ember +10% damage, Stone +1 defense, Tide +10% critical chance, Moss criticals x1.5, Leech +2 health a kill, Slime ward (slimes do no harm), Thief's (double drops), Glow (40% more light). Floors 15, 35, 45 and 65 give one; the rest drop.
 - Boots found on floors 30, 60 and 80: Tunnel boots (3), Ember boots (4), Deepstone boots (5 defense).
+- v37: floor finds wait in a treasure chest on their floor (old saves keep the finds they took).
+
+### The Wardens' Lodge, bombs, treasure and geodes (v37)
+
+The lodge (Stardew's adventurers' guild) stands in the Wilds east of the Hollow. It opens once you have reached floor 1. Warden Hale (original) runs it.
+
+| Hale sells | Price | Once you reach | Stardew counterpart |
+|---|---|---|---|
+| Oak club | 250g | floor 1 | wooden blade, 250g |
+| Iron dirk, Steel shortsword | 500g | floor 10 | early guild blades |
+| Silver saber | 750g | floor 20 | silver saber, 750g |
+| Tunnel boots | 750g | floor 30 | work boots |
+| Hollow cutlass | 1,500g | floor 40 | cutlass, 1,500g |
+| Stone mallet | 2,000g | floor 50 | wood mallet, 2,000g |
+| Ember boots | 1,250g | floor 60 | combat boots, 1,250g |
+| Greatsword | 2,000g | floor 70 | claymore, 2,000g |
+
+| Slaying goal | Reward | Stardew goal |
+|---|---|---|
+| 1,000 slimes | Slime ward | 1,000 slimes, slime charmer ring |
+| 80 Hollow mites | Mite fang (dagger, 13) | 80 cave insects, insect head |
+| 200 cave bats | Leech ring | 200 bats, vampire ring |
+| 50 bone walkers | Bone helm (hat) | 50 skeletons, skeleton mask |
+| 250 Hollow serpents | Blast ring (defeated monsters burst: 1.5 tiles, 12 damage, never hurts you) | 250 serpents, napalm ring |
+
+- Kills count anywhere, the wild farm's slimes included. Claim each reward from Hale once.
+- Bombs (kit slot, Hollow only; a 1.6 s fuse; you take half damage inside the blast):
+
+| Bomb | Recipe | Learnt | Radius | Damage | Stardew |
+|---|---|---|---|---|---|
+| Ember bomb | 4 copper ore, 1 coal | mining 1 | 2 tiles | 15 | cherry bomb (radius 3) |
+| Blast bomb | 4 iron ore, 1 coal | mining 6 | 3 tiles | 30 | bomb (radius 5) |
+| Great bomb | 1 iron bar, 2 coal, 10 gel | mining 8 | 4 tiles | 60 | mega bomb (radius 7; bar and gel for gold ore and essences) |
+
+- Rocks a bomb breaks give their drops and mining XP, with no energy spent.
+- Treasure chests: the floor-find floors, plus a 3% chance on any other floor from 10: 2 to 4 geodes, bars, 5 to 10 coal, 2 to 4 bombs or a gem, by depth.
+- Geodes: 1.5% per broken rock (doubled by the excavator), geode floors 1 to 39 (sells 50g), frost geode 40 to 79 (100g), magma geode 80+ (150g); Stardew's prices and depths. Bram cracks one for 25g (Stardew's blacksmith; it moves to the blacksmith with item 22).
+- Contents: about half ore, stone and coal, half gems. New gems: Hollow amber 80g, Frost tear 75g, Ember quartz 100g, Tidestone 180g, Heartstone 250g, Starstone 750g (Stardew's topaz, frozen tear, fire quartz, aquamarine, ruby, diamond). The gem copier copies them in 2 to 5 nights.
 
 ### Cooking and buffs (v35)
 
@@ -546,12 +584,15 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Fiber was the bottleneck after wood until v33 (fiber seeds, weeds in the Wilds). The balance bot now cuts the Wilds' weeds when a purchase needs fiber and reaches the loom in 4 of 5 runs, but still not the mill or the helper hut (last on its list); it does not plant fiber seeds.
 - Before v34 the bot's farm sometimes had no free 3 by 3 spot for the fish pond; buildings may now go on empty tilled soil.
 - The balance bot cooks pan eggs once it has the kitchen and eats them when energy runs low; it does not cook anything else, buy the TV or learn recipes.
-- The balance bot never fights (it takes the floor finds as it mines down), so combat stays at level 0 in the simulator.
+- The balance bot never fights (it opens the floor-find chests as it mines down), so combat stays at level 0 in the simulator.
 - The balance bot builds the fish pond in year 1 and stocks it with its best catch (about 7,000g of roe by the end of year 2). It does not use the slime pen: gel sells for 5g.
 - The balance bot reaches the loom but not the mill in 2 years (the mill needs 4 cloth, from 20 fiber).
 - Coop and barn upgrades do not change the buildings' size or art.
 - Grazing animals stay in their yards (Stardew's roam the farm). The silo does not cap the hay loft.
-- Mine floors have no special floors (treasure, boss, elevator).
+- Mine floors have no boss or monster-infested floors yet.
+- The lodge has no opening hours; shop hours come with item 22.
+- Lodge prices for the dirk, shortsword and boots are fitted by role; the wiki was out of reach when they were set.
+- The balance bot opens chests, uses chest bombs where they break the most rocks, has Bram crack its geodes and buys the lodge's club; it does not craft bombs or fight, so it never completes a slaying goal.
 
 ## Roadmap
 
