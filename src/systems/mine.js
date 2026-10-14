@@ -131,7 +131,7 @@ addInteraction(72, ({ tile, mapId }) => {
 export function breakRock(tx, ty, quiet = false) {
   const key = `${tx},${ty}`, rock = ROCKS[MAPS.mine.grid[ty]?.[tx]];
   if (!rock || !MINE.rocks[key]) return false;
-  const n = rock.amount[0] + Math.floor(Math.random() * (rock.amount[1] - rock.amount[0] + 1)) + (rock.item !== 'stone' && has('miner') ? 1 : 0);   // v34: miner
+  const n = rock.amount[0] + Math.floor(Math.random() * (rock.amount[1] - rock.amount[0] + 1)) + (rock.item !== 'stone' && has('miner') ? 1 : 0) + (rock.item !== 'stone' && G.S.mastery.claimed.includes('mining') ? 1 : 0);   // v34: miner; v40: mining mastery
   G.S.bag[rock.item] += n;
   const lucky = 1 + 2 * luck();   // v35: the day's luck shifts coal and gem chances by up to a fifth
   const coal = rock.item === 'stone' && Math.random() < COAL_FROM_STONE * (has('prospector') ? 2 : 1) * lucky;   // v34: prospector

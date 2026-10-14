@@ -71,6 +71,7 @@ export function newState() {
     cavernOpen: false, cavernDeepest: 0,                // v38: the Sunken Cavern's door opened, its deepest floor
     ventOpen: false, ventDeepest: 0,                    // v39: the Ember Vent; floor 10 is the forge
     forged: {}, weaponEnch: {}, toolEnch: {}, trinket: null,   // v39: weapon -> gem counts, weapon -> enchant, tool -> enchant, worn trinket
+    read: [], mastery: { xp: 0, claimed: [] },          // v40: power books read, mastery XP and the skills whose perk is claimed
     slain: {}, goalsClaimed: [],                        // v37: monsters defeated by kind, slaying goals rewarded (systems/guild.js)
     recipes: ['friedegg'], fridge: {},                 // v35: dishes you can cook; what the kitchen fridge holds
     buff: null, drink: null, luck: 0,                   // v35: food and drink buffs, today's luck (systems/buffs.js)
@@ -110,6 +111,8 @@ export function merge(saved) {
   if (!Array.isArray(s.rings) || s.rings.length !== 2) s.rings = [null, null];
   if (!Array.isArray(s.finds)) s.finds = [];
   if (!s.slain || typeof s.slain !== 'object') s.slain = {};
+  if (!Array.isArray(s.read)) s.read = [];
+  s.mastery = Object.assign({ xp: 0, claimed: [] }, s.mastery || {});
   for (const k of ['forged', 'weaponEnch', 'toolEnch']) if (!s[k] || typeof s[k] !== 'object') s[k] = {};
   if (!Array.isArray(s.goalsClaimed)) s.goalsClaimed = [];
   if (!s.fridge || typeof s.fridge !== 'object') s.fridge = {};

@@ -96,7 +96,7 @@ addUpdater((dt) => {
 let cooldown = 0;
 addUpdater((dt) => { if (cooldown > 0) cooldown -= dt; });
 export function damageOf() {
-  return weapon().damage * attackMult() * (has('fighter') ? 1.1 : 1) * (has('brute') ? 1.15 : 1) * (wearing('emberring') ? 1.1 : 1) * forgeBonus().damage;   // v39: heartstones
+  return weapon().damage * attackMult() * (has('fighter') ? 1.1 : 1) * (has('brute') ? 1.15 : 1) * (wearing('emberring') ? 1.1 : 1) * forgeBonus().damage * (G.S.mastery.claimed.includes('combat') ? 1.15 : 1);   // v39: heartstones; v40: combat mastery
 }
 // v39: weapon enchantments that change damage against a kind.
 const versus = (kind) => { const e = weaponEnchant(); return e === 'crusader' && (kind === 'skeleton' || kind === 'wraith') ? 1.5 : e === 'bugkiller' && kind === 'mite' ? 2 : 1; };
@@ -106,7 +106,7 @@ function defeat(m) {
   const d = MONSTERS[m.kind || 'slime'], times = wearing('thiefring') ? 2 : 1;
   if (d.drop && Math.random() < d.drop[1]) { G.S.bag[d.drop[0]] = (G.S.bag[d.drop[0]] || 0) + times; notify(`+${times} ${ITEMS[d.drop[0]].name}`); }
   const pool = DROP_POOL(m.floor || 1, m.zone);
-  if (pool.length && Math.random() < RARE_DROP * times) giveFind(pool[Math.floor(Math.random() * pool.length)], `The ${d.name.toLowerCase()} dropped`);
+  if (pool.length && Math.random() < RARE_DROP * times * (G.S.read.includes('pw_bestiary') ? 2 : 1)) giveFind(pool[Math.floor(Math.random() * pool.length)], `The ${d.name.toLowerCase()} dropped`);
   if (wearing('leechring')) G.S.hp = Math.min(G.S.maxHp, G.S.hp + 2);
   if (weaponEnchant() === 'vampiric') G.S.hp = Math.min(G.S.maxHp, G.S.hp + 3);   // v39
   if (weaponEnchant() === 'haymaker' && Math.random() < 0.3) { const k = HAY[Math.floor(Math.random() * HAY.length)]; G.S.bag[k] = (G.S.bag[k] || 0) + 1; }

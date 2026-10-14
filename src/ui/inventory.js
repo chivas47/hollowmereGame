@@ -17,6 +17,9 @@ import { edible, eat } from '../systems/cooking.js';
 import { WEAPONS, RINGS } from '../data/weapons.js';
 import { weapon, chooseWeapon, wearRing, removeRing, wearTrinket, removeTrinket } from '../systems/gear.js';
 import { TRINKETS } from '../data/forge.js';
+import { BOOKS } from '../data/books.js';
+import { readBook, hasRead, masteryOpen } from '../systems/books.js';
+import { masteryText } from './books.js';
 import { openModal, closeModal } from './modal.js';
 import { esc } from './dom.js';
 import { wardrobeHtml } from './clothing.js';
@@ -50,7 +53,8 @@ on('ui:inventory', () => {
     const p = skillProgress(k);
     const profs = (S.professions[k] || []).map((id) => PROFESSIONS[id].name).join(', ');
     return row(`${sk.name} <span class="role">level ${p.lv}${profs ? `, ${profs}` : ''}</span>`, p.next ? `${p.xp} / ${p.next} XP` : 'Mastered');
-  }).join('') + (pending() ? '<div class="btns"><button data-profs>Choose a profession</button></div>' : '');
+  }).join('') + (pending() ? '<div class="btns"><button data-profs>Choose a profession</button></div>' : '')
+    + (masteryOpen() ? `<p class="role">${masteryText()}${S.mastery.claimed.length ? ` Mastered: ${S.mastery.claimed.map((k) => SKILLS[k].name).join(', ')}.` : ''}</p>` : '');   // v40
   // v36: weapons and rings
   const weapons = S.weapons.map((k) => row(`${WEAPONS[k].name} <span class="role">${WEAPONS[k].kind}, damage ${WEAPONS[k].damage}</span>`, S.weapon === k ? 'In slot 5' : `<button data-weapon="${k}">Use</button>`)).join('');
   const worn = S.rings.map((k, i) => (k ? row(`${RINGS[k].name} <span class="role">${RINGS[k].desc}</span>`, `<button data-ringoff="${i}">Take off</button>`) : '')).join('');
@@ -58,6 +62,8 @@ on('ui:inventory', () => {
   // v39: the trinket worn and spare ones
   const trinkets = (S.trinket ? row(`${TRINKETS[S.trinket].name} <span class="role">${TRINKETS[S.trinket].desc}</span>`, '<button data-trinketoff>Take off</button>') : '')
     + Object.keys(TRINKETS).filter((k) => S.bag[k] > 0).map((k) => row(`${TRINKETS[k].name} × ${S.bag[k]} <span class="role">${TRINKETS[k].desc}</span>`, `<button data-trinket="${k}">Wear</button>`)).join('');
+  // v40: books to read
+  const books = Object.entries(BOOKS).filter(([k]) => S.bag[k] > 0).map(([k, b]) => row(`${b.name} × ${S.bag[k]} <span class="role">${b.skill ? `${SKILLS[b.skill].name} XP` : b.all ? 'XP in every skill' : hasRead(k) ? 'already read' : b.power}</span>`, b.power && hasRead(k) ? '' : `<button data-read="${k}">Read</button>`)).join('');
   const kitKeys = Object.keys(PLACEABLES).filter((k) => S.kit[k] > 0);
   const kit = kitKeys.length ? kitKeys.map((k) => row(PLACEABLES[k].name, `× ${S.kit[k]}`)).join('') : '<p class="role">Nothing crafted. Press C to craft.</p>';
 
@@ -75,6 +81,7 @@ on('ui:inventory', () => {
     <h3>Weapons <span class="role">slot 5 swings the one in use</span></h3>${weapons}
     ${worn || spare ? `<h3>Rings <span class="role">two at a time</span></h3>${worn}${spare}` : ''}
     ${trinkets ? `<h3>Trinket <span class="role">one at a time</span></h3>${trinkets}` : ''}
+    ${books ? `<h3>Books</h3>${books}` : ''}
     <h3>Skills <span class="role">each level: ${Math.round(BONUS_PER_LEVEL * 100)}% chance of a bonus item</span></h3>${skills}
     <h3>Wardrobe <span class="role">sew clothes at a sewing machine</span></h3>${wardrobeHtml()}
     <h3>Seeds</h3>${seeds}
@@ -89,6 +96,7 @@ document.querySelector('#mbody').addEventListener('click', (e) => {
   const wp = e.target.closest('[data-weapon]'); if (wp && chooseWeapon(wp.dataset.weapon)) { emit('ui:inventory'); return; }
   const rg = e.target.closest('[data-ring]'); if (rg && wearRing(rg.dataset.ring)) { emit('ui:inventory'); return; }
   const ro = e.target.closest('[data-ringoff]'); if (ro && removeRing(+ro.dataset.ringoff)) { emit('ui:inventory'); return; }
+  const rd = e.target.closest('[data-read]'); if (rd && readBook(rd.dataset.read)) { emit('ui:inventory'); return; }   // v40
   const tr = e.target.closest('[data-trinket]'); if (tr && wearTrinket(tr.dataset.trinket)) { emit('ui:inventory'); return; }   // v39
   if (e.target.closest('[data-trinketoff]') && removeTrinket()) { emit('ui:inventory'); return; }
   const ea = e.target.closest('[data-eat]');   // v35: eating from the bag

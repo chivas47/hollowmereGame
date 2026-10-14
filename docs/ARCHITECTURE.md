@@ -28,6 +28,7 @@ src/
     furniture.js      FURNITURE, WALLPAPERS, FLOORS, RENOVATIONS, catalogue prices
     pets.js           PET friendship numbers, PET_LOOKS, PET_NAMES, PET_HATS
     profile.js        farmer profile: LOOKS, PETS, DEFAULT_PROFILE, playerPal()
+    books.js          BOOKS (skill, primer, power), BOOK_FIND, MASTERY_XP, PERKS, SHRINE (v40)
     forge.js          VENT, FORGE_GEMS, enchantments, TRINKETS (v39)
     cavern.js         CAVERN (the Sunken Cavern's door, strength, ores, shafts, chests), HOLLOW_GOLD (v38)
     guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
@@ -55,6 +56,7 @@ src/
     cooking.js        recipes, cooking at the stove, the fridge, eating, buffs on G.S.buff and G.S.drink, daily luck, the TV show, wishfruit sources
     buffs.js          buff() and luck() for the systems that read them (kept import-free of cooking.js)
     gear.js           weapons owned and in use, rings worn, giveFind(), forge bonuses (forgeBonus, toolEnchant), trinkets worn
+    books.js          reading books (G.S.read), mastery XP and perks (G.S.mastery), the shrine door and pedestals
     forge.js          the forge: forgeGem(), enchantWeapon(), enchantTool(); trinket effects underground
     treasure.js       bombs (throw, fuse, explode()), Hollow treasure chests (floor finds and rare loot), geode cracking
     guild.js          the Wardens' Lodge in the Wilds: shop, slaying goals (G.S.slain, G.S.goalsClaimed), its keeper
@@ -141,6 +143,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 72 | pets.js | The water bowl b (the can fills it) |
 | 72 | mill.js | Mill m, shed s (enter), clock tower k |
 | 72 | ponds.js | Fish pond u, slime pen j (the can fills its trough) |
+| 72 | books.js | Shrine door @ in the Wilds, pedestals + in the shrine |
 | 72 | treasure.js | Treasure chest $ in the Hollow |
 | 72 | guild.js | Wardens' Lodge & in the Wilds (dialog, or a barred door before floor 1) |
 | 57 | treasure.js | Kit slot with a bomb (throws it at the faced tile, Hollow only) |
@@ -200,7 +203,7 @@ The night tint is drawn by renderer.js after all layers (not in caves).
 | `mine:floor` | {floor, rng, zone, eff} | mine.js | monsters (spawn), treasure (chest) |
 | `monster:slain` | {kind, x, y, map} | monsters.js | guild (goal counts), treasure (blast ring) |
 | `mine:faint` | none | health.js | mine.js (carry out) |
-| `gather` | {skill, xp, item?, n?} | farming, giants, clearing, forage, fishing, mine, monsters, coop, barn | skills.js (XP, bonus item) |
+| `gather` | {skill, xp, item?, n?} | farming, giants, clearing, forage, fishing, mine, monsters, coop, barn, books | skills.js (XP, bonus item), books.js (mastery XP, book finds) |
 | `skill:level` | {skill, level} | skills.js | professions (offer a choice, combat health) |
 | `upgraded` | key | upgrades.js | house.js (rebuild the farmhouse rooms) |
 | `site:moved` | building key | sites.js | coop, barn (animals back in the yard), stable (horse home) |

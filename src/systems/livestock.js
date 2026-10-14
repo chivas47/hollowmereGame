@@ -105,7 +105,7 @@ const grassIn = (yard) => Object.keys(G.S.debris || {}).filter((k) => {
 function rollTier(a, mood) {
   const chance = (a.love || 0) / 1000 - (1 - mood / 225), r = Math.random();
   const byLove = r < chance / 2 ? 2 : r < chance ? 1 : 0;
-  return Math.max(byLove, rollSkillQuality(skillLevel('ranching')));
+  return Math.min(3, Math.max(byLove, rollSkillQuality(skillLevel('ranching'))) + (G.S.mastery.claimed.includes('ranching') ? 1 : 0));   // v40: ranching mastery
 }
 function store(goods, item, tier) {
   goods[item] = (goods[item] || 0) + 1;

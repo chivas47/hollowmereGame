@@ -194,6 +194,8 @@ addInteraction(62, ({ tx, ty, mapId, item }) => {
   if (d.hp > 0) { changed(); return true; }
   const drops = { ...(d.drops || def.drops) };
   if (drops.wood && has('forester')) drops.wood = drops.wood.map((n) => Math.round(n * 1.25));   // v34: forester
+  if (drops.wood && G.S.mastery.claimed.includes('foraging')) drops.wood = drops.wood.map((n) => n + 1);   // v40: foraging mastery
+  if (drops.wood && G.S.read.includes('pw_woodsman') && Math.random() < 0.1) drops.wood = drops.wood.map((n) => n * 2);   // v40: Woodsman's Secret
   const got = drop(drops);
   if (d.kind === 'alder' && has('lumberjack') && Math.random() < 0.25) { addItem('hardwood', 1); got.push('Hardwood x1'); }   // v34: lumberjack
   if (!got.length) got.push('nothing useful');

@@ -71,7 +71,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['layouts', 'sites', 'professions', 'cooking', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge'];
+  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -131,6 +131,8 @@ const { skillLevel } = await load('systems/skills.js');
 const { bombs, throwBomb, openChest, crackGeode, GEODES } = await load('systems/treasure.js');
 const { buyGear, owns } = await load('systems/guild.js');
 const { LODGE_SHOP } = await load('data/guild.js');
+const { readBook } = await load('systems/books.js');
+const { BOOKS } = await load('data/books.js');
 
 // ---- Helpers ----
 const S = () => G.S;
@@ -631,6 +633,7 @@ function simulate(runSeed) {
     if (s.built.helperhut === true) collectHut();
     if (s.cave.open) { chooseCave('bats'); collectCave(); }
     geodes();
+    for (const k of Object.keys(BOOKS)) while (S().bag[k] > 0 && readBook(k));   // v40: books are read; power books already known are sold
     shipAll(reserves());
     const energyLeft = s.energy;
     sleep(false);
