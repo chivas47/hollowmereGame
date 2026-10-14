@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v36: Weapons, monsters and rings
+- Slot 5 swings the weapon you choose in the bag: swords, fast daggers or slow, heavy clubs. Ten in all, found on mine floors and, rarely, dropped by monsters.
+- The Hollow fills up deeper down: mites from floor 3, bats from 12, bone walkers from 30, serpents from 50. Bats and serpents fly over the rocks.
+- Eight rings, two worn at a time: harder hits, defense, critical hits, healing, a slime ward, double drops and a wider light.
+- Three pairs of boots wait deep in the Hollow.
+
 ## v35: Cooking, buffs, luck and the wishfruit
 - Cook at the farmhouse stove once you have the kitchen: 30 recipes. You know the pan egg; the rest come from a TV cooking show, from neighbours at 3 and 7 hearts, and from the seed stall.
 - Eat dishes from the bag for energy and health. Many give a buff for some hours: farming, fishing, mining or foraging levels, speed, defense, luck, attack or max energy.

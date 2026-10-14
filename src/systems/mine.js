@@ -114,7 +114,8 @@ addInteraction(66, ({ tx, ty, tile, item, mapId }) => {
 addLayer(95, (c) => {
   if (G.S.map !== 'mine') return;
   const px = G.S.x, py = G.S.y - 6;
-  const grad = c.createRadialGradient(px, py, 18, px, py, 120);
+  const glow = G.S.rings?.includes('glowring') ? 1.4 : 1;   // v36: the glow ring
+  const grad = c.createRadialGradient(px, py, 18 * glow, px, py, 120 * glow);
   grad.addColorStop(0, 'rgba(6,5,10,0)');
   grad.addColorStop(1, 'rgba(6,5,10,.88)');
   c.fillStyle = grad;

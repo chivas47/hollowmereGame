@@ -12,7 +12,7 @@ const INVULNERABLE = 1, KNOCKBACK = 10, FAINT_GOLD_SHARE = 0.15, FAINT_GOLD_MAX 
 export function hurtPlayer(dmg, fromX, fromY) {
   if (G.hurtT > 0 || G.paused) return;
   const S = G.S;
-  S.hp = Math.max(0, S.hp - Math.max(1, Math.round(dmg * (has('acrobat') ? 0.75 : 1)) - defense()));   // shoes take some of the hit; v34: acrobat
+  S.hp = Math.max(0, S.hp - Math.max(1, Math.round(dmg * (has('acrobat') ? 0.75 : 1)) - defense() - (G.S.rings?.includes('stonering') ? 1 : 0)));   // shoes take some of the hit; v34: acrobat
   G.hurtT = INVULNERABLE;
   emit('sfx', 'hurt');
   const dx = S.x - fromX, dy = S.y - fromY, d = Math.hypot(dx, dy) || 1;

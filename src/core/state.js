@@ -67,6 +67,7 @@ export function newState() {
     hay: 0,                                             // hay in the barn loft
     barnGoods: { cowmilk: 0, goatmilk: 0 },             // milk waiting in the barn
     skills: Object.fromEntries(Object.keys(SKILLS).map((k) => [k, 0])),    // XP per skill
+    weapons: ['oldblade'], weapon: 'oldblade', rings: [null, null], finds: [],   // v36: weapons owned and in use, rings worn, mine floors whose find is taken
     recipes: ['friedegg'], fridge: {},                 // v35: dishes you can cook; what the kitchen fridge holds
     buff: null, drink: null, luck: 0,                   // v35: food and drink buffs, today's luck (systems/buffs.js)
     wish: {}, wishfruits: 0,                            // v35: wishfruit sources found, wishfruit eaten
@@ -100,6 +101,10 @@ export function merge(saved) {
   s.skills = Object.assign(newState().skills, saved.skills || {});
   if (!s.professions || typeof s.professions !== 'object') s.professions = {};
   if (!Array.isArray(s.recipes)) s.recipes = ['friedegg'];
+  if (!Array.isArray(s.weapons) || !s.weapons.length) s.weapons = ['oldblade'];
+  if (!s.weapons.includes(s.weapon)) s.weapon = 'oldblade';
+  if (!Array.isArray(s.rings) || s.rings.length !== 2) s.rings = [null, null];
+  if (!Array.isArray(s.finds)) s.finds = [];
   if (!s.fridge || typeof s.fridge !== 'object') s.fridge = {};
   if (!s.wish || typeof s.wish !== 'object') s.wish = {};   // v34: skills already at 5 or 10 offer their picks
   s.barnGoods = Object.assign(newState().barnGoods, saved.barnGoods || {});

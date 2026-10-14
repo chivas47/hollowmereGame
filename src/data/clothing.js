@@ -36,5 +36,9 @@ export const CLOTHES = {
   boots:     { name: 'Work boots',       slot: 'shoes', color: '#5c371e', def: 2, from: 'copper' },
   fieldboots:{ name: 'Field boots',      slot: 'shoes', color: '#3f4850', def: 3, from: 'stone' },
   ironboots: { name: 'Iron-toe boots',   slot: 'shoes', color: '#8d939a', def: 4, from: 'stormcell' },
+  // v36: boots found deep in the Hollow (Stardew's mine boots: defense 3 to 5), not sewn.
+  tunnelboots: { name: 'Tunnel boots',   slot: 'shoes', color: '#6b5a48', def: 3, found: true },
+  emberboots:  { name: 'Ember boots',    slot: 'shoes', color: '#a5432f', def: 4, found: true },
+  deepboots:   { name: 'Deepstone boots', slot: 'shoes', color: '#3f4850', def: 5, found: true },
 };
 export const SLOTS = { shirt: 'Shirt', pants: 'Trousers', hat: 'Hat', shoes: 'Shoes' };

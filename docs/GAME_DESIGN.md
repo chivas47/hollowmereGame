@@ -382,6 +382,28 @@ Each swing costs 2 energy, the copper axe does twice the damage. Alder cones go 
 - Levels 5 and 10 each add +5 max energy (up to +60 across all six skills).
 - Combat levels add 5 max health each (Stardew's).
 
+### Weapons, monsters and rings (v36)
+
+Slot 5 (no hotbar change) swings the weapon chosen in the bag. Damage is Stardew's average for the weapon, scaled so the old blade (Stardew's rusty sword) does 3.
+
+| Weapon | Kind | Damage | Where | Stardew role |
+|---|---|---|---|---|
+| Old blade | sword | 3 | start | Rusty sword |
+| Paring knife | dagger | 2 | floor 5 | Carving knife |
+| Steel shortsword | sword | 5 | floor 10 | Steel smallsword |
+| Oak club | club | 11 | floor 20 | Wood club |
+| Silver saber | sword | 10 | floor 25 | Silver saber |
+| Hollow cutlass | sword | 11 | floor 40 | Cutlass |
+| Stone mallet | club | 17 | floor 55 | Wood mallet |
+| Greatsword | sword (slow) | 22 | floor 70 | Claymore |
+| Iron dirk | dagger | 3 | drop, floor 3+ | Iron dirk |
+| Burrow shank | dagger | 8 | drop, floor 50+ | Burglar's shank |
+
+- Swords swing every 0.3 s, daggers every 0.16 s with shorter reach, clubs every 0.6 s with longer reach and three times the knockback of a dagger.
+- Monsters (count grows to 10 a floor): slime (floor 1+, gel 60%), Hollow mite (3+, crawls, fiber 30%), cave bat (12+, flies, coal 20%), bone walker (30+, iron ore 30%), Hollow serpent (50+, flies, violet stone 5%). Combat XP 3, 2, 6, 15, 20. Any kill: 1% chance of a weapon or ring from the floor's pool.
+- Rings (two worn; Stardew's ruby, topaz, aquamarine, jade, vampire, slime charmer, burglar's and glow rings): Ember +10% damage, Stone +1 defense, Tide +10% critical chance, Moss criticals x1.5, Leech +2 health a kill, Slime ward (slimes do no harm), Thief's (double drops), Glow (40% more light). Floors 15, 35, 45 and 65 give one; the rest drop.
+- Boots found on floors 30, 60 and 80: Tunnel boots (3), Ember boots (4), Deepstone boots (5 defense).
+
 ### Cooking and buffs (v35)
 
 Cooking needs the kitchen (the first farmhouse upgrade): face the stove. A kitchen counter is the fridge; cooking takes from the bag first, then the fridge. Eat dishes from the bag (I): energy as listed, health 45% of it (Stardew). A food buff and a drink buff can run together; a new one of the same kind replaces the old, and all end at bedtime. Values follow Stardew's dishes by role (sell, energy, buffs).
@@ -524,7 +546,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Fiber was the bottleneck after wood until v33 (fiber seeds, weeds in the Wilds). The balance bot now cuts the Wilds' weeds when a purchase needs fiber and reaches the loom in 4 of 5 runs, but still not the mill or the helper hut (last on its list); it does not plant fiber seeds.
 - Before v34 the bot's farm sometimes had no free 3 by 3 spot for the fish pond; buildings may now go on empty tilled soil.
 - The balance bot cooks pan eggs once it has the kitchen and eats them when energy runs low; it does not cook anything else, buy the TV or learn recipes.
-- The balance bot never fights, so combat stays at level 0 in the simulator.
+- The balance bot never fights (it takes the floor finds as it mines down), so combat stays at level 0 in the simulator.
 - The balance bot builds the fish pond in year 1 and stocks it with its best catch (about 7,000g of roe by the end of year 2). It does not use the slime pen: gel sells for 5g.
 - The balance bot reaches the loom but not the mill in 2 years (the mill needs 4 cloth, from 20 fiber).
 - Coop and barn upgrades do not change the buildings' size or art.
