@@ -39,7 +39,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 17a | Combat expansion: weapons and monsters | feature | done (chivas47/hollowmereGame#31) | Swords, daggers, clubs in slot 5; bats, bugs, skeletons, serpents by depth; rings and boots. |
 | 17b | Combat expansion: the guild and mine treasure | feature | done (chivas47/hollowmereGame#32) | Bombs, treasure chests and geodes in the mine; a monster hunters' guild cabin in the Wilds with a keeper, a weapon shop and slaying goals. |
 | 18a | Deep dungeons: the Sunken Cavern | feature | done (chivas47/hollowmereGame#33) | A harder dungeon behind a sealed door on Hollow floor 80: every visit starts at floor 1, shafts, sand wraiths and scorch rex, gold and umbrite ore and bars, gold and umbrite cans. |
-| 18b | Deep dungeons: the volcanic vent and the forge | feature | done | A volcanic dungeon past the cavern, the forge (enchantments, weapon and tool upgrades with umbrite), trinkets. |
+| 18b | Deep dungeons: the volcanic vent and the forge | feature | done (chivas47/hollowmereGame#34) | A volcanic dungeon past the cavern, the forge (enchantments, weapon and tool upgrades with umbrite), trinkets. |
 | 19 | Books and mastery | feature | next | Skill books, a book that gives XP in every skill, power books with special perks, mastery progression after level 10 in every skill. |
 | 20 | Fishing overhaul | feature | queued | A new catch minigame (moving fish, catch bar), bait, tackle, bobber styles, treasure chests, trash, crab pots, legendary fish, upgradeable gold pan. |
 | 21 | New areas | feature | queued | Beach, forest, mountain lake, a quarry, a hidden grove, the railway, the sewer; each with fishing and forage. |
