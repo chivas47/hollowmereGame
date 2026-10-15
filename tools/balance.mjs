@@ -71,7 +71,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['layouts', 'sites', 'professions', 'cooking', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots', 'areas'];
+  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots', 'areas', 'quarry'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -135,6 +135,7 @@ const { readBook } = await load('systems/books.js');
 const { finishReel, stepReel, buyBait } = await load('systems/fishing.js');
 const { placePot, usePot, panAt } = await load('systems/pots.js');
 const { pickAreaForage } = await load('systems/areas.js');
+const { hitQuarryRock } = await load('systems/quarry.js');
 const REACT = 0.25;   // seconds between the bot's decisions on the catch bar (an average player)
 const { BOOKS } = await load('data/books.js');
 
@@ -489,7 +490,7 @@ function simulate(runSeed) {
     spend(TIME.travel);
     for (const f of [...s.forage]) { use('wilds', f.x, f.y, 'hoe'); spend(TIME.forage); }
     // v43: the beach and the forest each take a walk there and back.
-    for (const map of ['beach', 'forest']) {
+    for (const map of ['beach', 'forest', 'mountain']) {
       const list = s.areaForage?.[map];
       if (!list?.length || late()) continue;
       spend(TIME.travel * 2);
@@ -541,8 +542,18 @@ function simulate(runSeed) {
 
   // Mines until the next purchase has its materials or energy runs out. Every rock gives stone.
   const oreNeeds = () => { const n = missingMats(); delete n.wood; return n; };
+  // v44: the quarry's rocks are nearer than the Hollow: break the ones holding a needed ore first.
+  function quarry(need) {
+    const s = S(), want = { c: 'copper', i: 'iron', '%': 'gold' };
+    const rocks = Object.entries(s.quarryRocks || {}).filter(([, r]) => need[want[r.t]]);
+    if (!rocks.length) return;
+    spend(TIME.travel * 2);
+    for (const [k] of rocks) { const [x, y] = k.split(',').map(Number); while (s.quarryRocks[k] && s.energy >= 2 && !late()) { hitQuarryRock(x, y); spend(TIME.rock); } }
+  }
+
   function mine() {
     const s = S();
+    quarry(oreNeeds());
     enterMine(Math.max(...checkpoints())); spend(TIME.travel * 2);
     let need = oreNeeds();
     while (Object.keys(need).length && s.energy >= 2 && !late()) {

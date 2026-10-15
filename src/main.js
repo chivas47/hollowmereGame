@@ -57,6 +57,7 @@ import './systems/forge.js';
 import './systems/books.js';
 import './systems/pots.js';
 import './systems/areas.js';
+import './systems/quarry.js';
 
 // UI
 import './ui/toast.js';

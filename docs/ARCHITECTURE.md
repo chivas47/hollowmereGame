@@ -57,7 +57,8 @@ src/
     cooking.js        recipes, cooking at the stove, the fridge, eating, buffs on G.S.buff and G.S.drink, daily luck, the TV show, wishfruit sources
     buffs.js          buff() and luck() for the systems that read them (kept import-free of cooking.js)
     gear.js           weapons owned and in use, rings worn, giveFind(), forge bonuses (forgeBonus, toolEnchant), trinkets worn
-    areas.js          the beach and the forest: their daily forage (G.S.areaForage)
+    areas.js          the beach, the forest and the mountain: their daily forage (G.S.areaForage)
+    quarry.js         the quarry's daily rocks (G.S.quarryRocks) and breaking them
     pots.js           crab pots on the Wilds pond (G.S.pots), the gold pan and its shimmer spot (G.S.shimmer)
     books.js          reading books (G.S.read), mastery XP and perks (G.S.mastery), the shrine door and pedestals
     forge.js          the forge: forgeGem(), enchantWeapon(), enchantTool(); trinket effects underground
@@ -150,6 +151,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 72 | books.js | Shrine door @ in the Wilds, pedestals + in the shrine |
 | 68 | pots.js | Facing a crab pot on the pond (collect, bait, take back) |
 | 66 | pots.js | The gold pan in slot 9 on pond water |
+| 66 | quarry.js | Pickaxe on a quarry rock |
 | 64 | pots.js | Kit slot with a crab pot on pond water (set it) |
 | 72 | treasure.js | Treasure chest $ in the Hollow |
 | 72 | guild.js | Wardens' Lodge & in the Wilds (dialog, or a barred door before floor 1) |

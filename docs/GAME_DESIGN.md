@@ -254,6 +254,22 @@ Stardew's beach and Cindersap forest by role. The farm's new path south (10, 14)
 - Beach forage (Stardew's): ridge clam 50g, sand cockle 50g, sea coral 80g all year; purple urchin 160g (summer); spiral shell 120g (winter).
 - Forest forage (Stardew's): wood narcissus 30g, honeycomb morel 150g (spring); curled fern 90g, sweet vetch 50g (summer); gold chanterelle 160g, wild hazelnut 90g (autumn); winter holly 80g, frost berry 150g (winter).
 
+### The mountain lake and the quarry (v44)
+
+Stardew's mountain lake and quarry by role. The Wilds' path north (21, 1) leads to Cragmoor; the mountain's east path to the quarry. Cragmoor has 4 forage spots a morning; its lake never freezes.
+
+| Lake fish | Sell | Seasons | Diff. | Stardew |
+|---|---|---|---|---|
+| Lake carp | 30g | spring to autumn | 1 | carp |
+| Stone bullhead | 75g | all year | 2 | bullhead |
+| Ridge chub | 50g | all year | 2 | chub |
+| Big-mouth bass | 100g | all year | 3 | largemouth bass |
+| Moon carp | 150g | autumn, winter | 4 | midnight carp |
+| Old sturgeon | 200g | summer, winter | 5 | sturgeon |
+
+- Mountain forage (Stardew's): hill dandelion 40g, crag leek 60g (spring); fire berry 80g, hill grape 80g (summer); wild plum 80g, bramble berry 20g (autumn); snow yam 100g, snow crocus 60g (winter).
+- The quarry: 16 rocks every morning (half stone, a quarter copper, 17% iron, 8% gold; the Hollow's hit points and drops), 2 energy a swing, the pickaxe's tier and enchantment apply; 4% of rocks also give a geode (70%) or frost geode. Stardew's quarry opens after the bridge is mended (item 26); ours is open from the start.
+
 ### Fish (pond in the Wilds, 8 energy per cast)
 
 | Fish | Sells | Difficulty | Seasons |
@@ -706,6 +722,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
 - The worm bin and bait maker are not built; bait is crafted from gel (v41). The balance bot's catch rate comes from playing the real catch bar with a quarter-second reaction (tools/balance.mjs REACT); real players may do better or worse.
+- v44: the balance bot breaks quarry rocks holding the ore its next purchase needs before going down the Hollow, and forages Cragmoor; over 15 runs gold at the end of year 1 rises about 19% (summer +41%) as it spends less time in the Hollow and more fishing.
 - v43: crab pots and the gold pan still work only on the Wilds pond, not the sea or the river.
 - v43: the balance bot walks to the beach and the forest each day for their forage; forage income rises about 3.75 times and gold at the end of year 1 about 32% over 15 runs.
 - v42: the balance bot pans the shimmer spot daily from the start (free ore means less mining and coal buying) and sets two crab pots in year 2; with legendary fish, gold at the end of year 1 rises about 20% over 15 runs.

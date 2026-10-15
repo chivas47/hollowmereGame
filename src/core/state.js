@@ -71,6 +71,7 @@ export function newState() {
     cavernOpen: false, cavernDeepest: 0,                // v38: the Sunken Cavern's door opened, its deepest floor
     ventOpen: false, ventDeepest: 0,                    // v39: the Ember Vent; floor 10 is the forge
     forged: {}, weaponEnch: {}, toolEnch: {}, trinket: null,   // v39: weapon -> gem counts, weapon -> enchant, tool -> enchant, worn trinket
+    quarryRocks: null,                                 // v44: today's rocks in the quarry (systems/quarry.js)
     areaForage: {}, areaForageDay: 0,                 // v43: forage on the beach and in the forest (systems/areas.js)
     pots: {}, legends: [], shimmer: null,              // v42: crab pots on the Wilds pond ('x,y' -> { bait, catch }), legends caught, today's pan spot
     bait: null, tackle: null, tackleUses: 0, bobber: 0, // v41: bait and tackle on the rod, bobber style
