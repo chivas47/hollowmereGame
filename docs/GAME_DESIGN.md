@@ -642,6 +642,7 @@ Original where Stardew's mechanic does not exist here: Bountiful, Quickgrow, See
 |---|---|---|---|
 | Spring 9 | Blossom Show | Enter one crop or forage item, judged by sell value | 600g at 100g+, 250g at 45g+, 80g otherwise |
 | Spring 13 (v54) | Egg Hunt | Find 9 of 18 painted eggs hidden around the village in 50 seconds (walk over them) | First win: the egg-hunt wreath (a hat); later wins 1,000g; nothing if you miss (Stardew's Egg Festival: 9 eggs in 50 seconds, a straw hat) |
+| Summer 11 (v55) | Summer Potluck | Add one food item to the communal soup; Hob tastes it (with quality) | Every villager's friendship: +120 at 300g+, +60 at 160g+, 0 at 60g+, -50 below, -100 for trash (Stardew's Luau) |
 | Summer 20 | Midsummer Catch | Enter one fish | 800g at 150g+, 300g at 60g+, 80g otherwise |
 | Autumn 21 | Harvest Weigh-in | Enter one crop | 900g at 200g+, 350g at 100g+, 80g otherwise |
 | Winter 12 | Frostlight Market | Stall: frost lantern 350g, warm cider 60g (+60 energy) | none |
@@ -789,7 +790,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
 - The worm bin and bait maker are not built; bait is crafted from gel (v41). The balance bot's catch rate comes from playing the real catch bar with a quarter-second reaction (tools/balance.mjs REACT); real players may do better or worse.
-- v54: only the egg hunt of the four new festivals so far (the communal soup, maze night and gift exchange follow). Shops shut on festival days, so now on Spring 13 too. The balance bot does not play the egg hunt.
+- v54/v55: the egg hunt and the potluck so far (maze night and the gift exchange follow). Shops shut on festival days, so now on Spring 13 too. The balance bot does not play the egg hunt.
 - v53: children do not grow past toddler; there is no child bed, and a third farmhouse room is not needed. The roommate has no 14-heart scene.
 - v52: the chore chance (40%) is ours: Stardew's odds vary by chore and friendship. No wedding ceremony scene, just a message; no spouse room. The beach does not show rain, so check the weather in the top bar for the boatman.
 - v51: no group 10-heart event when dating several (Stardew has one); jealousy is a flat 20 points per gift to another partner, not tied to who sees it.

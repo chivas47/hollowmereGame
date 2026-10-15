@@ -1,5 +1,6 @@
 // Festivals in the village square (v54: two a season). kind 'contest': enter one item, judged by its sell value.
-// kind 'market': a stall with festival-only goods. kind 'hunt' (v54): a timed egg hunt. Neighbours spend the
+// kind 'market': a stall with festival-only goods. kind 'hunt' (v54): a timed egg hunt. kind 'pot' (v55): add one
+// item to the communal soup; how good it is changes everyone's friendship. Neighbours spend the
 // festival in the square.
 export const FESTIVALS = [
   {
@@ -25,6 +26,29 @@ export const FESTIVALS = [
       tavi: 'I know where every egg is. I am not allowed to play any more.',
       kit: 'This year I am winning. I have a system.',
       lio: 'I play a little tune when someone finds one. Listen for it!',
+    },
+  },
+  // v55. Stardew's Luau (Summer 11): one item into the soup; the taster's verdict moves everyone's friendship
+  // (best +120, good +60, neutral 0, poor -50, and a disgusting item -100). Judged by the item's value with quality.
+  {
+    key: 'potluck', name: 'Summer Potluck', season: 'Summer', day: 11, kind: 'pot',
+    intro: 'A giant pot bubbles in the square. Everyone adds one thing, and Hob tastes it in front of the whole village.',
+    pot: {
+      tiers: [
+        { min: 300, pts: 120, label: 'Magnificent', text: 'Hob tastes, closes his eyes, and raises the ladle to the sky. "Magnificent!" The square cheers.' },
+        { min: 160, pts: 60, label: 'Very good', text: 'Hob smacks his lips. "Very good. Very good indeed." People nod at you.' },
+        { min: 60, pts: 0, label: 'Fine', text: 'Hob shrugs. "It is soup." Nobody says anything.' },
+        { min: 0, pts: -50, label: 'Thin', text: 'Hob frowns. "Thin. Very thin." A few people glance your way.' },
+      ],
+      gross: { pts: -100, label: 'Disgusting', text: 'Hob tastes, coughs, and turns a strange colour. The square goes very quiet.' },
+    },
+    lines: {
+      ines: 'I put honey in last year. It was not a soup any more, but nobody complained.',
+      bram: 'I just stir. Stirring is a skill.',
+      odile: 'A good fish makes a good soup. Bring a good fish.',
+      tavi: 'Someone put a boot in once. We do not talk about it.',
+      hob: 'I taste whatever goes in. Whatever. Please be kind.',
+      nell: 'In my day we put in what we grew. Simple is best.',
     },
   },
   {
