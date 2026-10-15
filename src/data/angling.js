@@ -70,3 +70,16 @@ export const FISH_TREASURE = [
   ['frostgeode', 0.06, 1, 2], ['quartz', 0.08, 1, 3], ['tidestone', 0.05, 1, 1], ['bk_fishing', 0.06, 1, 1],
   ['wildbait', 0.04, 3, 5], ['tidering', 0.02, 1, 1],
 ];
+
+// ---- v42: crab pots, legendary fish, the gold pan ----
+// Crab pots (Stardew: 40 wood and 3 iron bars; baited, each morning a catch; Stardew's freshwater pot finds
+// crayfish, snails and periwinkles, and trash now and then). Placed on the Wilds pond.
+export const POT_CATCH = [['crayfish', 0.35], ['snail', 0.3], ['winkle', 0.2], ['trash', 0.15]];
+export const LEGEND_CHANCE = 0.05;   // a bite is the season's legend this often, once you qualify
+export const BAIT_PRICE = 5;         // Stardew's fish shop sells bait for 5g
+// The gold pan (Stardew 1.6: copper pan, upgraded to steel, gold and iridium for more finds). Shimmering spots
+// turn up in the pond some days; panning one costs PAN.energy and rolls PAN.loot once per pan level (+1).
+export const PAN = {
+  energy: 4, spotChance: 0.5, again: 0.3,
+  loot: [['copper', 0.35, 3, 8], ['iron', 0.25, 2, 6], ['coal', 0.15, 2, 5], ['gold', 0.12, 1, 4], ['quartz', 0.08, 1, 2], ['umbrite', 0.03, 1, 2], ['geode', 0.02, 1, 1]],
+};

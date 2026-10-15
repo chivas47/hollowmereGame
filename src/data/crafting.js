@@ -60,6 +60,7 @@ export const PLACEABLES = {
   // v31: presses 100 gel into a slime egg; the incubator hatches it for the slime pen.
   slimepress: { name: 'Slime press',      short: 'Sl. press', kind: 'machine' },
   recycler:   { name: 'Recycler',         short: 'Recycler',  kind: 'machine' },   // v41
+  crabpot:    { name: 'Crab pot',         short: 'Crab pot',  kind: 'pot' },       // v42: placed on pond water (systems/pots.js)
   // v32: used from the kit anywhere, it takes you home (systems/helpers.js) and is used up.
   homecharm:  { name: 'Home charm',       short: 'Charm',     kind: 'charm' },
   grassstarter: { name: 'Grass starter',  short: 'Grass',     kind: 'grass' },
@@ -133,6 +134,8 @@ export const RECIPES = {
   trapbob:   { cost: 0, needs: { copperbar: 1, gel: 10 }, item: true, desc: 'Tackle: the meter drains a third slower. Lasts 20 catches.' },
   leadbob:   { cost: 0, needs: { ironbar: 1, stone: 10 }, item: true, desc: 'Tackle: your bar stops bouncing at the bottom. Lasts 20 catches.' },
   treasurer: { cost: 0, needs: { goldbar: 2 }, item: true, desc: 'Tackle: more treasure, and its meter never drains. Lasts 20 catches.' },
+  // v42. Stardew's crab pot: 40 wood, 3 iron bars.
+  crabpot:   { cost: 0, needs: { wood: 40, ironbar: 3 }, desc: 'Set it on the Wilds pond and bait it: each morning a crayfish, a snail, a winkle or some trash.' },
   // Stardew's recycling machine: 25 wood, 25 stone, 1 iron bar.
   recycler:  { cost: 0, needs: { wood: 25, stone: 25, ironbar: 1 }, desc: 'Turns trash from the pond into wood, coal, fiber, quartz, stone or ore overnight.' },
   silo:       { cost: 100, needs: { stone: 110, copperbar: 5 }, desc: 'With a silo on the farm, cutting grass gives hay for the barn loft half the time.' },

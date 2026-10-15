@@ -10,6 +10,8 @@ import { ITEMS } from '../data/items.js';
 import { sleep } from '../systems/days.js';
 import { buy, canBuy, inSeason, buySupply, canBuySupply } from '../systems/economy.js';
 import { SUPPLIES, PLACEABLES } from '../data/crafting.js';
+import { BAIT_PRICE } from '../data/angling.js';
+import { buyBait } from '../systems/fishing.js';
 import { TREES, TREE_DAYS } from '../data/trees.js';
 import { WEATHER } from '../data/weather.js';
 import { PET, PET_HATS } from '../data/pets.js';
@@ -59,6 +61,8 @@ on('ui:shop', () => {
   const supplies = Object.entries(SUPPLIES).filter(([k]) => !TREES[k]).map(([k, cost]) => `
     <div class="shoprow"><div><b>${PLACEABLES[k].name}</b><span>${supplyText(PLACEABLES[k])} ${cost}g. Goes to slot 7; ${PLACEABLES[k].kind === 'grass' ? 'face open grass to plant it' : 'face tilled soil to spread it'}.</span></div>
     <div class="btns"><button data-supply="${k}" data-n="1">Buy 1</button><button data-supply="${k}" data-n="10">Buy 10</button></div></div>`).join('');
+  const baitRow = `<div class="shoprow"><div><b>Bait</b><span>${BAIT_PRICE}g each. You have ${G.S.bag.bait || 0}. For the rod (ashwood or better) and crab pots.</span></div>
+    <div class="btns"><button data-bait-buy="10" ${G.S.gold < BAIT_PRICE * 10 ? 'disabled' : ''}>Buy 10</button></div></div>`;   // v42
   const saplings = Object.entries(TREES).map(([k, t]) => `
     <div class="shoprow"><div><b>${t.name}</b><span>${t.cost}g. Grows for ${TREE_DAYS} days, then a ${ITEMS[t.fruit].name.toLowerCase()} (${ITEMS[t.fruit].sell}g) every ${t.season} morning. Slot 7; plant on open grass with a free tile around it.</span></div>
     <div class="btns"><button data-supply="${k}" data-n="1">Buy 1</button></div></div>`).join('');
@@ -69,7 +73,7 @@ on('ui:shop', () => {
   const recipes = Object.entries(DISHES).filter(([, d]) => d.from?.stall).map(([k, d]) => `
     <div class="shoprow"><div><b>${d.name} recipe</b><span>${d.from.stall.toLocaleString('en-US')}g.${knows(k) ? ' You know it.' : ''}</span></div>
     <div class="btns"><button data-recipe="${k}" ${knows(k) || G.S.gold < d.from.stall ? 'disabled' : ''}>Buy</button></div></div>`).join('');
-  openModal(`<h2>Seed stall</h2><p>You have <b id="shopGold">${G.S.gold}g</b>.</p>${note}${rows}<h3>Farm supplies</h3>${supplies}<h3>Fruit saplings</h3>${saplings}${hats ? `<h3>Pet hats</h3>${hats}` : ''}${recipes ? `<h3>Recipes</h3>${recipes}` : ''}`, [['Leave', closeModal, true]]);
+  openModal(`<h2>Seed stall</h2><p>You have <b id="shopGold">${G.S.gold}g</b>.</p>${note}${rows}<h3>Farm supplies</h3>${supplies}<h3>Fishing</h3>${baitRow}<h3>Fruit saplings</h3>${saplings}${hats ? `<h3>Pet hats</h3>${hats}` : ''}${recipes ? `<h3>Recipes</h3>${recipes}` : ''}`, [['Leave', closeModal, true]]);
   refreshShop();
 });
 
@@ -82,6 +86,8 @@ $('#mbody').addEventListener('click', (e) => {
   if (rc && !rc.disabled && buyRecipe(rc.dataset.recipe)) { emit('ui:shop'); return; }
   const sp = e.target.closest('[data-supply]');
   if (sp && !sp.disabled && buySupply(sp.dataset.supply, +sp.dataset.n)) refreshShop();
+  const bb = e.target.closest('[data-bait-buy]');   // v42
+  if (bb && !bb.disabled && buyBait(+bb.dataset.baitBuy)) emit('ui:shop');
 });
 
 on('ui:talk', ({ npc, text, extra }) => {

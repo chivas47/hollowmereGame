@@ -41,7 +41,7 @@ const ORCHARD = ['figtree', 'peartree', 'nectarinetree', 'persimmontree', 'plumt
 const STRATEGIES = {
   full: ['furnace', 'can', 'coop', 'grassstarter', 'grassstarter', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'kiln', 'house',
     'barn', 'pail', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'silo', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, 'stable', 'lodge:club', 'bigcoop', 'duck', 'duck', 'duck', 'duck', ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'pick', 'rod', 'can', 'pick',
-    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'shed', 'pond', 'house',
+    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'shed', 'pond', 'crabpot', 'crabpot', 'house',
     'brewbarrel', 'brewbarrel', 'eggpress', 'beebox', 'beebox', 'dryer', 'smoker', 'mushroomlog',   // wood-hungry, so last
     // v28: more livestock. The big coop comes in year one like a player's; the rest take hundreds of wood, so they come last.
     'bigbarn', 'cow', 'cow', 'goat', 'goat',
@@ -71,7 +71,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['layouts', 'sites', 'professions', 'cooking', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books'];
+  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -132,7 +132,8 @@ const { bombs, throwBomb, openChest, crackGeode, GEODES } = await load('systems/
 const { buyGear, owns } = await load('systems/guild.js');
 const { LODGE_SHOP } = await load('data/guild.js');
 const { readBook } = await load('systems/books.js');
-const { finishReel, stepReel } = await load('systems/fishing.js');
+const { finishReel, stepReel, buyBait } = await load('systems/fishing.js');
+const { placePot, usePot, panAt } = await load('systems/pots.js');
 const REACT = 0.25;   // seconds between the bot's decisions on the catch bar (an average player)
 const { BOOKS } = await load('data/books.js');
 
@@ -488,9 +489,24 @@ function simulate(runSeed) {
     for (const f of [...s.forage]) { use('wilds', f.x, f.y, 'hoe'); spend(TIME.forage); }
   }
 
+  // v42: pond chores: set crab pots on the pond's edge, empty and re-bait them (buying bait), pan the shimmer spot.
+  const POT_SPOTS = [[17, 8], [18, 8], [19, 8], [16, 12], [17, 12]];
+  function pond() {
+    const s = S();
+    for (const [x, y] of POT_SPOTS) if (s.kit.crabpot > 0 && !s.pots[`${x},${y}`]) placePot(x, y);
+    const pots = Object.keys(s.pots);
+    if (pots.length) {
+      if ((s.bag.bait || 0) < pots.length) track('bait', () => buyBait(10));
+      for (const k of pots) { const [x, y] = k.split(',').map(Number); usePot(x, y); if (!s.pots[k].bait) usePot(x, y); }
+      spend(TIME.chore);
+    }
+    if (s.shimmer && s.energy >= 4) { panAt(s.shimmer.x, s.shimmer.y); spend(TIME.chore); }
+  }
+
   function fish(stopAt) {
     const s = S();
     spend(TIME.travel);
+    pond();
     while (s.energy >= COST.cast + stopAt && !late()) {
       use('wilds', 15, 10, 'rod');
       const f = G.fishing; if (!f) break;

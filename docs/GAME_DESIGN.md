@@ -210,6 +210,22 @@ Stardew's bobber bar by role: after a bite, hold Use to lift your bar (it falls 
 - Ironwood rod (Stardew's iridium rod, 7,500g) takes tackle, 20 catches each: spinner (2 iron bars; bites 25% sooner), cork bobber (10 wood, 5 hardwood, 10 gel; bar +25%), trap bobber (1 copper bar, 10 gel; drain x0.67), lead bobber (1 iron bar, 10 stone; no bounce), treasure hunter (2 gold bars).
 - Bobber styles: six colours, a new one every 25 fish.
 
+### Crab pots, legends and the gold pan (v42)
+
+- Crab pot (Stardew's: 40 wood, 3 iron bars), placed on Wilds pond water (not the ice hole). Bait it (one bait); next morning: pond crayfish 75g (35%), mud snail 65g (30%), reed winkle 20g (20%), trash (15%); Stardew's freshwater crayfish, snail and periwinkle. Pots keep working under the winter ice.
+- Legendary fish (difficulty 6, one each; a bite is the legend 5% of the time once you qualify):
+
+| Fish | Sell | When | Fishing level | Stardew |
+|---|---|---|---|---|
+| Old Mossjaw | 5,000g | spring, rain | 10 | Legend |
+| Sunfin | 1,500g | summer | 5 | Crimsonfish |
+| Dusk angler | 900g | autumn | 3 | Angler |
+| Frostcrown | 1,000g | winter, ice hole | 6 | Glacierfish |
+
+- Gold pan, hotbar slot 9 (added at the end, no key moved): a shimmering spot appears in the pond on half the days outside winter; panning costs 4 energy, rolls the loot once per pan level, and 30% of the time the shimmer moves elsewhere. Loot: copper ore 3 to 8 (35%), iron ore 2 to 6 (25%), coal 2 to 5 (15%), gold ore 1 to 4 (12%), quartz (8%), umbrite 1 to 2 (3%), a geode (2%).
+- Pans at Bram's (Stardew's): steel 5,000g + 5 iron bars (2 finds), gold 10,000g + 5 gold bars (3), umbrite 12,500g + 5 umbrite bars (4).
+- Bait at the seed stall: 5g (Stardew's fish shop).
+
 ### Fish (pond in the Wilds, 8 energy per cast)
 
 | Fish | Sells | Difficulty | Seasons |
@@ -662,6 +678,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
 - The worm bin and bait maker are not built; bait is crafted from gel (v41). The balance bot's catch rate comes from playing the real catch bar with a quarter-second reaction (tools/balance.mjs REACT); real players may do better or worse.
+- v42: the balance bot pans the shimmer spot daily from the start (free ore means less mining and coal buying) and sets two crab pots in year 2; with legendary fish, gold at the end of year 1 rises about 20% over 15 runs.
 - v41 roughly doubles the bot's fish income: playing the real bar it lands about 40% of the hardest fish, where the old one-press model gave it about 10%.
 - Honey has one flavour; Stardew's flower honey is not modelled.
 - Since v29 wood and stone can be bought (10g and 20g), so big wood costs are a gold cost too. In the simulator the bot finishes all but about 4 items of its 2-year shopping list (26 before) and raises far more animals (animal products +160%); year 1 summer and autumn earn 17% less while it buys materials.

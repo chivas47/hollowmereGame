@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v42: Crab pots, legends and the gold pan
+- Crab pots (40 wood, 3 iron bars): set them on the Wilds pond from the kit and bait them; each morning a pond crayfish, a mud snail, a reed winkle or some trash. The pickaxe or axe takes an empty pot back.
+- Four legendary fish, one of each to catch: Old Mossjaw (spring, in rain, fishing 10), Sunfin (summer, fishing 5), Dusk angler (autumn, fishing 3) and Frostcrown (winter, at the ice hole, fishing 6).
+- The gold pan, on a new hotbar slot 9 (no other key moved): pan the shimmering spot that appears in the pond on many days outside winter for ore, coal, gems and now and then umbrite. Bram upgrades it three times for more finds.
+- Bait at the seed stall, 5g each.
+
 ## v41: The catch bar
 - A new catch minigame: hold Use (or the Use button) to lift your bar, let go and it falls. Keep the fish inside it until the meter fills; hard fish dart about. Your bar grows with your fishing level.
 - Treasure chests sometimes rise in the water while you reel: keep them in the bar too for bait, ore, geodes, gems or a book.

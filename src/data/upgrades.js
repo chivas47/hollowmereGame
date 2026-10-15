@@ -26,6 +26,14 @@ export const UPGRADES = {
     { label: 'Gold pickaxe', power: 4, cost: 10000, needs: { goldbar: 5 }, desc: 'Each swing does 4 hits.' },
     { label: 'Umbrite pickaxe', power: 6, cost: 25000, needs: { umbritebar: 5 }, desc: 'Breaks any rock in one swing.' },
   ] },
+  // v42. Stardew's pans: copper, then steel 5,000g + 5 iron bars, gold 10,000g + 5 gold bars, iridium 12,500g + 5 iridium bars.
+  // rolls: finds per panning.
+  pan:   { name: 'Gold pan', tiers: [
+    { label: 'Copper pan', rolls: 1 },
+    { label: 'Steel pan', rolls: 2, cost: 5000, needs: { ironbar: 5 }, desc: 'Two finds every time you pan.' },
+    { label: 'Gold pan', rolls: 3, cost: 10000, needs: { goldbar: 5 }, desc: 'Three finds every time you pan.' },
+    { label: 'Umbrite pan', rolls: 4, cost: 12500, needs: { umbritebar: 5 }, desc: 'Four finds every time you pan.' },
+  ] },
   rod:   { name: 'Fishing rod', tiers: [
     { label: 'Bamboo rod', zone: 0 },
     { label: 'Ashwood rod', zone: 14, cost: 1800, desc: 'A bigger catch bar, and it takes bait.' },
