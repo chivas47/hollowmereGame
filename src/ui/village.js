@@ -8,7 +8,8 @@ import { canDeliver, deliver } from '../systems/quests.js';
 import { PROJECTS } from '../data/projects.js';
 import { funded, fundProject } from '../systems/projects.js';
 import { affordable } from '../systems/upgrades.js';
-import { nextFestival, contestItems, enterContest, buyStall, entry, festivalToday, hoursText, ACCEPT_TEXT } from '../systems/festivals.js';
+import { nextFestival, contestItems, enterContest, buyStall, entry, festivalToday, hoursText, ACCEPT_TEXT, startHunt } from '../systems/festivals.js';
+import { CLOTHES } from '../data/clothing.js';
 import { openModal, closeModal } from './modal.js';
 import { counts, unitValue } from '../systems/quality.js';
 import { QUALITY } from '../data/quality.js';
@@ -47,6 +48,10 @@ function festival() {
         ? items.map((k) => `<div class="shoprow"><div><b>${best(k) ? `${QUALITY[best(k)].name} ` : ''}${ITEMS[k].name}</b><span>Worth ${unitValue(k, best(k))}g. Your best one is entered.</span></div><div class="btns"><button data-enter="${k}">Enter</button></div></div>`).join('')
         : `<p class="role">Bring ${ACCEPT_TEXT[f.accepts]} to enter. One entry per year.</p>`;
     }
+  } else if (f.kind === 'hunt') {   // v54
+    const done = entry(f);
+    html += done ? `<p class="gift">You found ${done.found} eggs${done.won ? ' and won' : ''}. See you next year.</p>`
+      : `<p class="role">Find ${f.hunt.need} of the ${f.hunt.eggs} eggs in ${f.hunt.seconds} seconds: walk over them to pick them up. The first win earns the ${CLOTHES[f.hunt.prize].name.toLowerCase()}, later wins ${f.hunt.gold}g.</p><div class="btns"><button data-hunt>Start the hunt</button></div>`;
   } else {
     html += `<p class="role">You have <b>${G.S.gold}g</b>.</p>` + f.stall.map((it) => `<div class="shoprow"><div><b>${it.label}</b><span>${it.desc} ${it.cost}g</span></div><div class="btns"><button data-stall="${it.key}" ${G.S.gold < it.cost || (it.once && G.S.wish[it.once]) ? 'disabled' : ''}>Buy</button></div></div>`).join('');
   }
@@ -67,6 +72,7 @@ $('#mbody').addEventListener('click', (e) => {
     if (res) notify(`${res.rank.label}! The judges award you ${res.rank.gold}g.`);
     festival(); return;
   }
+  if (e.target.closest('[data-hunt]')) { closeModal(); startHunt(); return; }   // v54
   const st = e.target.closest('[data-stall]');
   if (st && !st.disabled) { buyStall(st.dataset.stall); festival(); }
 });
