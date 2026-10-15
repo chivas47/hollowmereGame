@@ -4,9 +4,9 @@ import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer, addUpdater } from '../core/registry.js';
-import { MAPS, SOLID } from '../data/maps.js';
+import { MAPS, SOLID, MAZE } from '../data/maps.js';
 import { CLOTHES } from '../data/clothing.js';
-import { playerTile } from './world.js';
+import { playerTile, placePlayer } from './world.js';
 import { NPCS } from '../data/npcs.js';
 import { PRODUCTS } from '../data/products.js';
 import { ARTISAN } from '../data/artisan.js';
@@ -19,7 +19,7 @@ import { PRODUCE } from '../data/crops.js';
 import { FORAGE } from '../data/forage.js';
 import { FISH } from '../data/fish.js';
 import { ITEMS } from '../data/items.js';
-import { FESTIVAL_HOURS, festivalOn } from '../data/festivals.js';
+import { hoursOf, festivalOn } from '../data/festivals.js';
 import { drawBunting, drawGlow } from '../render/sprites.js';
 import { takeBest, unitValue } from './quality.js';
 import { QUALITY } from '../data/quality.js';
@@ -34,8 +34,8 @@ const ACCEPTS = {
 export const ACCEPT_TEXT = { produce: 'a fresh crop or forage item', crop: 'a crop', fish: 'a fish' };
 
 export const festivalToday = () => festivalOn(today());
-export const festivalOpen = () => !!festivalToday() && G.S.time >= FESTIVAL_HOURS.from && G.S.time < FESTIVAL_HOURS.to;
-export const hoursText = () => `${fmtTime(FESTIVAL_HOURS.from)} to ${fmtTime(FESTIVAL_HOURS.to)}`;
+export const festivalOpen = () => { const f = festivalToday(), h = hoursOf(f); return !!f && G.S.time >= h.from && G.S.time < h.to; };
+export const hoursText = (f = festivalToday()) => `${fmtTime(hoursOf(f).from)} to ${fmtTime(hoursOf(f).to)}`;
 const entryKey = (f) => `${f.key}-${today().year}`;
 export const entry = (f) => G.S.festivals[entryKey(f)] || null;
 
@@ -94,7 +94,7 @@ addInteraction(72, ({ tile, mapId }) => {
 });
 
 // Decorations on festival days.
-const COLORS = { potluck: ['#e8862a', '#86b86a', '#f4ead2'], egghunt: ['#f2a0c0', '#9fd8f0', '#f4e3a0'], blossom: ['#f4ead2', '#e2707a', '#e9b44c'], catch: ['#69aedb', '#f4ead2', '#86b86a'], weighin: ['#e8862a', '#d9644a', '#e9b44c'], frostlight: ['#ffd98a', '#cfe3ee', '#e2707a'] };
+const COLORS = { mazenight: ['#e8862a', '#5a3a5a', '#e9b44c'], potluck: ['#e8862a', '#86b86a', '#f4ead2'], egghunt: ['#f2a0c0', '#9fd8f0', '#f4e3a0'], blossom: ['#f4ead2', '#e2707a', '#e9b44c'], catch: ['#69aedb', '#f4ead2', '#86b86a'], weighin: ['#e8862a', '#d9644a', '#e9b44c'], frostlight: ['#ffd98a', '#cfe3ee', '#e2707a'] };
 addLayer(30, (c) => {
   if (G.S.map !== 'village') return;
   const f = festivalToday(); if (!f) return;
@@ -176,3 +176,31 @@ export function addToPot(item) {
   changed();
   return v;
 }
+
+// ---- v56: maze night ----
+export function enterMaze() {
+  const f = festivalToday();
+  if (!f || f.kind !== 'maze' || !festivalOpen()) return false;
+  placePlayer('maze', MAZE.start.x, MAZE.start.y, 'up');
+  emit('map:changed', 'maze');
+  notify('The hedges close in behind you. Somewhere ahead, something glints.');
+  return true;
+}
+export function openMazeChest() {
+  const f = festivalToday(), S = G.S;
+  if (!f || f.kind !== 'maze' || !festivalOpen()) { notify('The chest is locked until next Maze Night.'); return null; }
+  if (entry(f)) { notify('The chest is empty. You already found this year\'s prize.'); return null; }
+  S.festivals[entryKey(f)] = { prize: f.maze.prize };
+  S.bag[f.maze.prize] = (S.bag[f.maze.prize] || 0) + 1;
+  emit('sfx', 'pickup');
+  emit('ui:message', { title: 'The heart of the maze', text: `Inside the chest, wrapped in straw: a ${ITEMS[f.maze.prize].name.toLowerCase()}. Everyone in the valley would love one.` });
+  changed();
+  return f.maze.prize;
+}
+addInteraction(72, ({ tile, mapId }) => {
+  if (mapId !== 'maze' || tile !== '$') return false;
+  openMazeChest();
+  return true;
+});
+// Out of the maze when it shuts.
+addUpdater(() => { if (G.S.map === 'maze' && !festivalOpen()) { placePlayer('village', 13, 13, 'up'); emit('map:changed', 'village'); notify('The lanterns go out. Maze Night is over.'); } });

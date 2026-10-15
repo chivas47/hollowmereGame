@@ -1,6 +1,7 @@
 // Festivals in the village square (v54: two a season). kind 'contest': enter one item, judged by its sell value.
 // kind 'market': a stall with festival-only goods. kind 'hunt' (v54): a timed egg hunt. kind 'pot' (v55): add one
-// item to the communal soup; how good it is changes everyone's friendship. Neighbours spend the
+// item to the communal soup; how good it is changes everyone's friendship. kind 'maze' (v56): a hedge maze at night.
+// Neighbours spend the
 // festival in the square.
 export const FESTIVALS = [
   {
@@ -73,6 +74,21 @@ export const FESTIVALS = [
       tavi: 'The square looks better in autumn. Even the map ink seems warmer.',
     },
   },
+  // v56. Stardew's Spirit's Eve (Autumn 27, 22:00 to 23:50): a haunted maze with a golden pumpkin at its heart,
+  // there for whoever reaches it first each year.
+  {
+    key: 'mazenight', name: 'Maze Night', season: 'Autumn', day: 27, kind: 'maze', hours: { from: 22 * 60, to: 23 * 60 + 50 },
+    intro: 'Lanterns lead to a hedge maze on the edge of the village. Something gilded waits at its heart.',
+    maze: { prize: 'gildedgourd' },
+    lines: {
+      ines: 'I went in once and came out at dawn. Do not tell anyone.',
+      bram: 'I planted those hedges forty years ago. Even I get lost.',
+      odile: 'I follow the left wall. It works on boats too.',
+      tavi: 'I drew a map of the maze. They moved the hedges. On purpose.',
+      esme: 'The lanterns make the leaves look like fire. I have to paint this.',
+      kit: 'I heard there is a ghost in the middle. Probably Lio with a sheet.',
+    },
+  },
   {
     key: 'frostlight', name: 'Frostlight Market', season: 'Winter', day: 12, kind: 'market',
     intro: 'Lanterns hang over the square. One stall sells frost lanterns and warm cider.',
@@ -91,7 +107,11 @@ export const FESTIVALS = [
   },
 ];
 
+// v56: the maze's prize. Stardew's golden pumpkin: sells for 2,500g and everyone loves it.
+export const FESTIVAL_ITEMS = { gildedgourd: { name: 'Gilded gourd', sell: 2500 } };
+
 export const FESTIVAL_HOURS = { from: 9 * 60, to: 22 * 60 };
+export const hoursOf = (f) => f?.hours || FESTIVAL_HOURS;   // v56: a festival may keep its own hours (maze night)
 
 // Where neighbours stand in the village during a festival (tile coordinates).
 export const FESTIVAL_SPOTS = { ines: [9, 7], bram: [15, 7], odile: [9, 10], tavi: [15, 10], wren: [8, 9], corvin: [16, 9], hob: [13, 12], maren: [10, 12], hale: [17, 8], lio: [12, 7], pell: [8, 7], juno: [16, 7], nell: [8, 11], rook: [16, 11], esme: [11, 11], kit: [14, 7] };   // v49, v50: the town villagers

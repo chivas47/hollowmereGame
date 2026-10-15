@@ -3,7 +3,7 @@ import { G } from '../core/game.js';
 import { START } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { today, fmtTime } from '../core/time.js';
-import { FESTIVAL_HOURS } from '../data/festivals.js';
+import { hoursOf } from '../data/festivals.js';
 import { newState, save } from '../core/state.js';
 import { CROPS } from '../data/crops.js';
 import { ITEMS } from '../data/items.js';
@@ -131,7 +131,7 @@ on('day:report', (r) => {
     if (r.newSeason === 'Winter') html += ' Nothing grows outside in winter. The pond has frozen: fish through the ice hole on its west edge.';
     html += '</p>';
   }
-  if (r.festival) html += `<p class="gift">Today is the ${r.festival.name}! Head to the village square, ${fmtTime(FESTIVAL_HOURS.from)} to ${fmtTime(FESTIVAL_HOURS.to)}. Your neighbours will be there instead of the farm.</p>`;
+  if (r.festival) html += `<p class="gift">Today is the ${r.festival.name}! Head to the village square, ${fmtTime(hoursOf(r.festival).from)} to ${fmtTime(hoursOf(r.festival).to)}. Your neighbours will be there instead of the farm.</p>`;
   if (r.festivalSoon) html += `<p class="role">The ${r.festivalSoon.f.name} is in ${plural(r.festivalSoon.inDays, 'day')} (${r.festivalSoon.f.season} ${r.festivalSoon.f.day}).</p>`;
   if (r.built) html += `<p class="gift">Bram finished your ${r.built}.</p>`;
   const made = (m) => Object.entries(m || {}).map(([k, n]) => `${n} ${ITEMS[k].name.toLowerCase()}`).join(', ');

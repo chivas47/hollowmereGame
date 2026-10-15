@@ -56,8 +56,8 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 24c | Dating, marriage and family: children, divorce, roommate | feature | done (chivas47/hollowmereGame#48) | Children who grow up, divorce, a roommate option. |
 | 25a | Festival calendar: egg hunt | feature | done (chivas47/hollowmereGame#49) | Spring: a timed egg hunt in the village (Stardew's Egg Festival). |
 | 25b | Festival calendar: communal soup | feature | done (chivas47/hollowmereGame#50) | Summer: everyone adds an ingredient to a giant pot; the soup's quality depends on what you bring (Stardew's Luau). |
-| 25c | Festival calendar: maze night | feature | next | Autumn: a hedge maze at night with a prize at its heart (Stardew's Spirit's Eve). |
-| 25d | Festival calendar: gift exchange | feature | queued | Winter: draw a villager's name and give them a gift (Stardew's Feast of the Winter Star). |
+| 25c | Festival calendar: maze night | feature | done (PR pending) | Autumn: a hedge maze at night with a prize at its heart (Stardew's Spirit's Eve). |
+| 25d | Festival calendar: gift exchange | feature | next | Winter: draw a villager's name and give them a gift (Stardew's Feast of the Winter Star). |
 | 25e | Festival calendar: more festivals | feature | queued | The rest of the list, to be chosen: dance, grange display fair, ice fishing, night market, fishing derby, squid contest, desert festival. |
 | 26 | Town restoration and orders | feature | queued | Restore the old town hall with item bundles, or buy the upgrades from a corporate rival instead (original names); special orders board; a challenge-giver with a gem currency. |
 | 27 | Desert and island | feature | queued | A bus to the desert (shop, casino, desert fishing), a boat to a tropical island (island farm, a collectible nut currency, island trader, dig site, island dungeon, hidden puzzles). |

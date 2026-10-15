@@ -12,7 +12,7 @@ export const TIER_NAMES = { loved: 'Loves', liked: 'Likes', neutral: 'Neutral', 
 // Stardew: the prismatic shard is loved by all; gems, artisan goods and tree fruit are liked; ores and raw
 // materials are disliked; trash is hated.
 export const UNIVERSAL = {
-  loved: ['starstone'],
+  loved: ['starstone', 'gildedgourd'],   // v56: the maze's gilded gourd (Stardew's golden pumpkin)
   liked: [...Object.keys(MINERALS).filter((k) => MINERALS[k].gem && k !== 'starstone'), ...Object.keys(ARTISAN).filter((k) => !['oil', 'flour', 'sugar'].includes(k)), ...Object.keys(FRUIT)],
   disliked: ['stone', 'copper', 'iron', 'gold', 'umbrite', 'coal', 'cinder', 'wood', 'hardwood', 'fiber', 'gel'],
   hated: Object.keys(TRASH),

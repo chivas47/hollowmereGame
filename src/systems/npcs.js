@@ -7,7 +7,7 @@ import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { ITEMS } from '../data/items.js';
 import { NPCS, OUTFITS } from '../data/npcs.js';
-import { festivalOn, FESTIVAL_HOURS, FESTIVAL_SPOTS } from '../data/festivals.js';
+import { festivalOn, hoursOf, FESTIVAL_SPOTS } from '../data/festivals.js';
 import { scheduleFor, spouseDay, ENTRIES } from '../data/schedules.js';
 import { SCENES, SCENE_HEARTS } from '../data/scenes.js';
 import { GIFT_POINTS, BIRTHDAY_MULT, UNIVERSAL } from '../data/gifts.js';
@@ -51,7 +51,7 @@ on('day:start', hideAll);
 on('game:reset', hideAll);
 
 function festivalUpdate() {
-  const open = G.S.time >= FESTIVAL_HOURS.from && G.S.time < FESTIVAL_HOURS.to;
+  const h = hoursOf(festival()), open = G.S.time >= h.from && G.S.time < h.to;
   for (const n of NPCRT) {
     n.moving = false;
     if (G.talking === n.id) continue;
