@@ -54,7 +54,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 24a | Dating, marriage and family: bouquet and dating | feature | done (chivas47/hollowmereGame#46) | Eight marriage candidates, the 8-heart cap, the bouquet, dating several with jealousy, heart scenes at 2, 6 and 10. |
 | 24b | Dating, marriage and family: proposal and wedding | feature | done (chivas47/hollowmereGame#47) | The pendant, the proposal, the wedding, the spouse moving in, spouse chores and gifts, 14 hearts. |
 | 24c | Dating, marriage and family: children, divorce, roommate | feature | done (chivas47/hollowmereGame#48) | Children who grow up, divorce, a roommate option. |
-| 25a | Festival calendar: egg hunt | feature | done (PR pending) | Spring: a timed egg hunt in the village (Stardew's Egg Festival). |
+| 25a | Festival calendar: egg hunt | feature | done (chivas47/hollowmereGame#49) | Spring: a timed egg hunt in the village (Stardew's Egg Festival). |
 | 25b | Festival calendar: communal soup | feature | next | Summer: everyone adds an ingredient to a giant pot; the soup's quality depends on what you bring (Stardew's Luau). |
 | 25c | Festival calendar: maze night | feature | queued | Autumn: a hedge maze at night with a prize at its heart (Stardew's Spirit's Eve). |
 | 25d | Festival calendar: gift exchange | feature | queued | Winter: draw a villager's name and give them a gift (Stardew's Feast of the Winter Star). |
