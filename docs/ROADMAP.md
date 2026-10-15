@@ -51,7 +51,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 23a | More villagers and mail: gift tiers, birthdays, social menu, mail | feature | done (chivas47/hollowmereGame#43) | Five gift-taste tiers, birthdays, a social menu and letters and mail, for the four neighbours. |
 | 23b | More villagers and mail: six new villagers | feature | done (chivas47/hollowmereGame#44) | Six new original villagers (shopkeepers among them) with homes in the town and village, schedules, birthdays and tastes. |
 | 23c | More villagers and mail: six more and outfits | feature | done (chivas47/hollowmereGame#45) | Six more villagers and seasonal outfits. |
-| 24a | Dating, marriage and family: bouquet and dating | feature | done (PR pending) | Eight marriage candidates, the 8-heart cap, the bouquet, dating several with jealousy, heart scenes at 2, 6 and 10. |
+| 24a | Dating, marriage and family: bouquet and dating | feature | done (chivas47/hollowmereGame#46) | Eight marriage candidates, the 8-heart cap, the bouquet, dating several with jealousy, heart scenes at 2, 6 and 10. |
 | 24b | Dating, marriage and family: proposal and wedding | feature | next | The pendant, the proposal, the wedding, the spouse moving in, spouse chores and gifts, 14 hearts. |
 | 24c | Dating, marriage and family: children, divorce, roommate | feature | queued | Children who grow up, divorce, a roommate option. |
 | 25 | Festival calendar | feature | queued | Two festivals a season with original themes: an egg hunt minigame, a dance, a communal soup, a grange display fair, a maze night, an ice-fishing contest, a night market, a winter gift exchange, a fishing derby, a squid-themed contest, a desert festival, plus the four we have. |
