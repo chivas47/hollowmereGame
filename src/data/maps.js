@@ -74,7 +74,10 @@ function villageGrid() {
   fill(m, 11, 12, 11, 14, 'P'); m[15][11] = 'E';   // v43: the path south to the beach
   m[11][2] = ';';                                   // v45: the sewer grate
   fill(m, 10, 0, 10, 3, 'P'); m[0][10] = 'E';       // v46: the lane north to the town
-  put(m, [[3, 9], [5, 12], [2, 14], [19, 12], [21, 10], [17, 14], [12, 14], [6, 7]], 'T');
+  put(m, [[3, 9], [5, 12], [2, 14], [21, 10], [6, 7]], 'T');
+  // v50: a row of cottages on the south lane (Nell, Rook, Esme, Kit), their doors onto row 14
+  [2, 6, 14, 18].forEach((x) => fill(m, x, 12, x + 2, 13, 'V'));
+  m[12][5] = 'g'; fill(m, 3, 14, 20, 14, 'P');
   return m;
 }
 
@@ -139,8 +142,10 @@ function townGrid() {
   for (const s of Object.values(SHOP_SPOTS)) if (s.y < 8) m[7][s.x + 1] = 'P';
   fill(m, 10, 9, 10, H - 1, 'P'); m[H - 1][10] = 'E';
   fill(m, 2, 12, 21, 12, 'P');   // v47: the lower lane past the tavern and the clinic
-  put(m, [[3, 2], [7, 3], [20, 3], [7, 14], [19, 10], [21, 14], [2, 14], [17, 14]], 'T');
+  put(m, [[3, 2], [7, 3], [7, 14], [19, 10], [21, 14], [2, 14], [17, 14]], 'T');
   fill(m, 13, 1, 15, 2, 'V'); fill(m, 14, 3, 14, 7, 'P');   // v49: Lio's cottage on the north edge
+  fill(m, 4, 1, 6, 2, 'V'); fill(m, 5, 3, 5, 7, 'P');        // v50: Pell's cottage
+  fill(m, 18, 1, 20, 2, 'V'); fill(m, 19, 3, 20, 3, 'P'); fill(m, 20, 4, 20, 7, 'P');   // v50: Juno's cottage
   return m;
 }
 
@@ -238,6 +243,7 @@ export const MAPS = {
       { art: 'cottage', x: 1, y: 2, roof: '#a5432f' }, { art: 'cottage', x: 5, y: 2, roof: '#5d7a4a' },
       { art: 'cottage', x: 16, y: 2, roof: '#3f5f6e' }, { art: 'cottage', x: 20, y: 2, roof: '#8b6a9e' },
       { art: 'board', x: 11, y: 5 }, { art: 'fountain', x: 11, y: 8 }, { art: 'table', x: 13, y: 11 },
+      { art: 'cottage', x: 2, y: 12, roof: '#7a8a5a' }, { art: 'cottage', x: 6, y: 12, roof: '#4a6a7a' }, { art: 'cottage', x: 14, y: 12, roof: '#8a5a8a' }, { art: 'cottage', x: 18, y: 12, roof: '#c98a3a' },   // v50
     ],
     exits: { [`${W - 1},8`]: { to: 'farm', x: 1, y: 4, dir: 'right' }, '11,15': { to: 'beach', x: 11, y: 1, dir: 'down' }, '10,0': { to: 'town', x: 10, y: H - 2, dir: 'up' } },   // v43: the beach; v46: the town
   },
@@ -272,7 +278,7 @@ export const MAPS = {
   },
   town: {
     name: 'Hollowmere Town', salt: 83, grid: townGrid(),
-    objects: [...Object.entries(SHOP_SPOTS).map(([kind, s]) => ({ art: 'storefront', kind, x: s.x, y: s.y })), { art: 'cottage', x: 13, y: 1, roof: '#7a4a8a' }],
+    objects: [...Object.entries(SHOP_SPOTS).map(([kind, s]) => ({ art: 'storefront', kind, x: s.x, y: s.y })), { art: 'cottage', x: 13, y: 1, roof: '#7a4a8a' }, { art: 'cottage', x: 4, y: 1, roof: '#5f8fb5' }, { art: 'cottage', x: 18, y: 1, roof: '#a5432f' }],
     exits: { [`10,${H - 1}`]: { to: 'village', x: 10, y: 1, dir: 'down' } },
   },
   sewer: {

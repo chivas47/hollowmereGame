@@ -134,4 +134,98 @@ export const NPCS = [
     ],
     react: { loved: 'A {item}! I am writing a song about this. Right now.', liked: 'A {item}! Thanks, that is great.', neutral: 'Oh, thanks!', disliked: 'A {item}... thank you? I think?', hated: 'Frost kale? It tastes like a cold puddle. Sorry.', birthday: 'You know my birthday? This is the best day ever!' },
   },
+  // ---- v50: six more villagers. Pell and Juno live on the town's north edge; Nell, Rook, Esme and Kit in a new row
+  // of cottages on the village's south lane.
+  {
+    id: 'pell', name: 'Pell', role: 'Teaches the valley children in the town hall', seed: 10,
+    loves: ['bk_stars', 'persimmon'], likes: ['pear', 'plum', 'biscuit', 'thymetea', 'violet'], dislikes: ['coal', 'gel'], hates: ['oldboot', 'smoked_carp'],
+    birthday: { season: 'Autumn', d: 24 },
+    pal: { hat: null, hair: '#3f2f22', shirt: '#5f8fb5', pants: '#4a4a5a', skin: '#e8b88f', long: true },
+    lines: [
+      ['Lessons in the morning, marking in the evening. The rest is gardening.', 'If you see a child in your field, send them back to me. Kindly.'],
+      ['The children wrote stories about your farm. One has a dragon in it.', 'I read a book a week. It is the only vice I can afford.', 'Good day, {name}. Learn anything today?'],
+      ['You would make a fine teacher. You explain things without making people feel small.', 'I came here for one year. That was twelve years ago.'],
+    ],
+    react: { loved: 'A {item}! Oh, this is wonderful. Thank you.', liked: 'A {item}. How lovely, thank you.', neutral: 'Thank you, that is kind.', disliked: 'A {item}. Well, the children might like it.', hated: 'That smell... please, take it away.', birthday: 'For my birthday? I am going to tell the whole class.' },
+  },
+  {
+    id: 'juno', name: 'Juno', role: 'Carries the mail over the valley roads', seed: 11,
+    loves: ['triplebrew', 'trailbun'], likes: ['thymetea', 'egg', 'pancakes', 'fig', 'hazelnut'], dislikes: ['stone', 'clam'], hates: ['wetpaper'],
+    birthday: { season: 'Winter', d: 22 },
+    pal: { hat: '#3f5f6e', band: '#c0443a', hair: '#a5432f', shirt: '#3f5f6e', pants: '#3f3a33', skin: '#f0c8a0' },
+    lines: [
+      ['Mail in the morning, mail at night. The roads never end, I swear.', 'If your mailbox flag is up, it is me. Or the wind. Mostly me.'],
+      ['I always save your letters for the end of the round. Nice way to finish.', 'Corvin gets more letters than you would think. Do not ask me who from.', 'Hey, {name}! Anything to send?'],
+      ['I would walk the long way past your farm even if there were no mail.', 'Someday I want to deliver a letter to the city. Just to see it.'],
+    ],
+    react: { loved: 'A {item}! You know exactly what keeps me going.', liked: 'A {item}! For the road. Thanks.', neutral: 'Thanks!', disliked: 'A {item}? It will weigh down my bag.', hated: 'Soggy paper? I see enough of that on rainy rounds.', birthday: 'You remembered! I deliver everyone else\'s birthday cards, nobody sends me one.' },
+  },
+  {
+    id: 'nell', name: 'Nell', role: 'Retired miner who keeps a garden by the south lane', seed: 12,
+    loves: ['jar_pumpkin', 'heartstone'], likes: ['carrot', 'beet', 'cheese', 'quartz', 'tidestone'], dislikes: ['pizza', 'triplebrew'], hates: ['mayo'],
+    birthday: { season: 'Summer', d: 14 },
+    pal: { hat: '#a07a4a', band: '#6b4a2b', hair: '#e8e4dc', shirt: '#7a8a5a', pants: '#4a3a2a', skin: '#d9a37e', long: true },
+    lines: [
+      ['Forty years down the Hollow. Now I dig in softer dirt.', 'Mind the beets, they are just coming up.'],
+      ['You remind me of myself at your age. Stubborn, early riser.', 'I found my first heartstone on floor 52. Gave it to my husband. He cried.', 'Morning, {name}. Hands dirty yet?'],
+      ['When I go, the garden is yours. I mean that.', 'Come for tea any time. The pot is always on.'],
+    ],
+    react: { loved: 'A {item}! You spoil an old woman.', liked: 'A {item}. That is a proper gift.', neutral: 'Thank you, dear.', disliked: 'A {item}. Too fancy for my old stomach.', hated: 'Mayonnaise is not food. I will not hear otherwise.', birthday: 'My birthday? I stopped counting, but I will take the gift.' },
+  },
+  {
+    id: 'rook', name: 'Rook', role: 'Boatwright who works on the beach', seed: 13,
+    loves: ['bluefin', 'wine_nectarine'], likes: ['hardwood', 'wood', 'pilchard', 'sprat', 'coral'], dislikes: ['lettuce', 'frostkale'], hates: ['glass'],
+    birthday: { season: 'Spring', d: 12 },
+    pal: { hat: null, hair: '#2b2018', shirt: '#4a6a7a', pants: '#3a3a3a', skin: '#b5835a', beard: true },
+    lines: [
+      ['That hull will float by summer. Or I will.', 'The sea takes what it wants. You learn to build around that.'],
+      ['You have steady hands. Ever thought about boats?', 'Odile and I argue about knots. She is usually right.', '{name}. Fair wind today.'],
+      ['When this boat is done, you are the first one in it.', 'My father built boats here. His father too. I would like it to carry on.'],
+    ],
+    react: { loved: 'A {item}! Now that is a gift a sailor understands.', liked: 'A {item}. That will do nicely.', neutral: 'Thanks, friend.', disliked: 'Greens. I am a fish man.', hated: 'Broken glass? On my beach? No.', birthday: 'A birthday gift. I will carve your name on the next keel.' },
+  },
+  {
+    id: 'esme', name: 'Esme', role: 'Painter who sketches in the forest', seed: 14,
+    loves: ['wine_pear', 'violet'], likes: ['morel', 'chanterelle', 'narcissus', 'crocus', 'dandelion'], dislikes: ['coal', 'goldbar'], hates: ['smoked_minnow'],
+    birthday: { season: 'Autumn', d: 2 },
+    pal: { hat: null, hair: '#c98a3a', shirt: '#8a5a8a', pants: '#3f4a3a', skin: '#f0c8a0', long: true },
+    lines: [
+      ['Hold still. No, really, the light on you is perfect.', 'The forest is a different colour every hour. I can never keep up.'],
+      ['I painted your farm from the hill. You are a small blue dot in it.', 'Lio plays while I paint sometimes. It helps.', 'Hello, {name}. Seen anything beautiful today?'],
+      ['I want to paint you properly one day. Not a dot.', 'I came here to get away from people. Turns out I just needed better ones.'],
+    ],
+    react: { loved: 'A {item}! The colour of it. Thank you.', liked: 'A {item}. I might paint it before I use it.', neutral: 'Thank you.', disliked: 'A {item}. Not very... inspiring.', hated: 'Smoked fish? The smell will be in my brushes for weeks.', birthday: 'A birthday present! I am going to paint it.' },
+  },
+  {
+    id: 'kit', name: 'Kit', role: 'Teenage tinkerer, always building something', seed: 15,
+    loves: ['emberquartz', 'pizza'], likes: ['copperbar', 'ironbar', 'quartz', 'biscuit', 'cinder'], dislikes: ['salad', 'pottage'], hates: ['frostkale'],
+    birthday: { season: 'Winter', d: 8 },
+    pal: { hat: null, hair: '#2b2a2e', shirt: '#c98a3a', pants: '#3f4a5a', skin: '#c99a74' },
+    lines: [
+      ['Do not touch that. It is either a clock or a bomb. I forget which.', 'Corvin lets me use the scrap pile. Best place in town.'],
+      ['I am building a machine that waters plants. You might need one, actually.', 'Juno says my letters are mostly diagrams. They are.', 'Oh, hey {name}! Want to see something?'],
+      ['You are the only grown-up who asks how things work instead of saying be careful.', 'When I build something real, I will name it after your farm.'],
+    ],
+    react: { loved: 'A {item}! This is perfect. This is so perfect.', liked: 'A {item}! I can use this.', neutral: 'Oh. Thanks.', disliked: 'A {item}. Mum makes me eat that.', hated: 'Frost kale? I would rather eat a gear.', birthday: 'My birthday present? Best day. Best.' },
+  },
 ];
+
+// v50: seasonal outfits (Stardew 1.6 dresses villagers for winter and some for summer): drawn over pal by season.
+export const OUTFITS = {
+  ines:   { Winter: { shirt: '#8a4a2a', hat: '#e8e0d0', band: '#c0443a' }, Summer: { shirt: '#f4e3a0' } },
+  bram:   { Winter: { shirt: '#4a3a2a', hat: '#6b5a48', band: '#3f3226' } },
+  odile:  { Winter: { shirt: '#2b4352', hat: '#c9c4bc', band: '#2b4352' }, Summer: { shirt: '#e8eef2' } },
+  tavi:   { Winter: { shirt: '#5d7a4a', hat: '#a5432f', band: '#f4ead2' }, Summer: { shirt: '#e2a33a' } },
+  wren:   { Winter: { shirt: '#7a2f2a', hat: '#f4ead2', band: '#c0443a' } },
+  corvin: { Winter: { shirt: '#3a3f46' } },
+  hob:    { Winter: { shirt: '#c9b68e', hat: '#5a3a22', band: '#3a2f28' } },
+  maren:  { Winter: { shirt: '#c9d4dc', hat: '#5a6a7a', band: '#3f4a5a' } },
+  hale:   { Winter: { shirt: '#3f5a2e', hat: '#5f5a52', band: '#3f3226' } },
+  lio:    { Winter: { shirt: '#4a2f5a', hat: '#c0443a', band: '#f4ead2' }, Summer: { shirt: '#e8862a', hat: null } },
+  pell:   { Winter: { shirt: '#3d6a8f', hat: '#e8e0d0', band: '#5f8fb5' }, Summer: { shirt: '#f4ead2' } },
+  juno:   { Winter: { shirt: '#2b4352', band: '#e8e0d0' } },
+  nell:   { Winter: { shirt: '#5a6a3a', hat: '#8a5a32', band: '#e8e0d0' } },
+  rook:   { Winter: { shirt: '#2b3f4a', hat: '#3f3a36', band: '#2b211a' }, Summer: { shirt: '#e8e0d0' } },
+  esme:   { Winter: { shirt: '#5a3a5a', hat: '#c98a3a', band: '#8a5a8a' }, Summer: { shirt: '#c9b0d9' } },
+  kit:    { Winter: { shirt: '#8a5a2a', hat: '#3f4a5a', band: '#c98a3a' } },
+};
