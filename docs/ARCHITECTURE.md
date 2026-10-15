@@ -57,6 +57,7 @@ src/
     cooking.js        recipes, cooking at the stove, the fridge, eating, buffs on G.S.buff and G.S.drink, daily luck, the TV show, wishfruit sources
     buffs.js          buff() and luck() for the systems that read them (kept import-free of cooking.js)
     gear.js           weapons owned and in use, rings worn, giveFind(), forge bonuses (forgeBonus, toolEnchant), trinkets worn
+    areas.js          the beach and the forest: their daily forage (G.S.areaForage)
     pots.js           crab pots on the Wilds pond (G.S.pots), the gold pan and its shimmer spot (G.S.shimmer)
     books.js          reading books (G.S.read), mastery XP and perks (G.S.mastery), the shrine door and pedestals
     forge.js          the forge: forgeGem(), enchantWeapon(), enchantTool(); trinket effects underground
@@ -145,6 +146,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 72 | pets.js | The water bowl b (the can fills it) |
 | 72 | mill.js | Mill m, shed s (enter), clock tower k |
 | 72 | ponds.js | Fish pond u, slime pen j (the can fills its trough) |
+| 45 | areas.js, forage.js | Picking forage on the beach, in the forest and in the Wilds |
 | 72 | books.js | Shrine door @ in the Wilds, pedestals + in the shrine |
 | 68 | pots.js | Facing a crab pot on the pond (collect, bait, take back) |
 | 66 | pots.js | The gold pan in slot 9 on pond water |

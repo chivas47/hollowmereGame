@@ -226,6 +226,34 @@ Stardew's bobber bar by role: after a bite, hold Use to lift your bar (it falls 
 - Pans at Bram's (Stardew's): steel 5,000g + 5 iron bars (2 finds), gold 10,000g + 5 gold bars (3), umbrite 12,500g + 5 umbrite bars (4).
 - Bait at the seed stall: 5g (Stardew's fish shop).
 
+### The beach and the forest (v43)
+
+Stardew's beach and Cindersap forest by role. The farm's new path south (10, 14) leads to Brackenwood; the village's path south (11, 14) to Saltreach Beach. Each area has 5 forage spots a morning (6 with the tracker); the sea and the river never freeze.
+
+| Sea fish | Sell | Seasons | Diff. | Stardew |
+|---|---|---|---|---|
+| Salt sprat | 30g | spring, autumn | 1 | anchovy |
+| Harbour pilchard | 40g | spring, autumn, winter | 1 | sardine |
+| Coral snapper | 50g | summer, autumn | 2 | red snapper |
+| Sand flatfish | 100g | spring, summer | 3 | flounder |
+| Bluefin | 100g | summer, winter | 4 | tuna |
+| Inkfish | 80g | winter | 3 | squid |
+| Spiny blowfish | 200g | summer | 5 | pufferfish |
+| Rock octopus | 150g | summer | 5 | octopus |
+
+| River fish | Sell | Seasons | Diff. | Stardew |
+|---|---|---|---|---|
+| Redfin | 30g | spring, summer | 1 | sunfish |
+| River bass | 50g | spring, autumn | 2 | smallmouth bass |
+| Silver shad | 60g | spring to autumn | 2 | shad |
+| Run salmon | 75g | autumn | 3 | salmon |
+| Striped trout | 150g | autumn, winter | 4 | tiger trout |
+| Goldfin | 100g | summer | 5 | dorado |
+| Mud catfish | 200g | spring, autumn, rain only | 5 | catfish |
+
+- Beach forage (Stardew's): ridge clam 50g, sand cockle 50g, sea coral 80g all year; purple urchin 160g (summer); spiral shell 120g (winter).
+- Forest forage (Stardew's): wood narcissus 30g, honeycomb morel 150g (spring); curled fern 90g, sweet vetch 50g (summer); gold chanterelle 160g, wild hazelnut 90g (autumn); winter holly 80g, frost berry 150g (winter).
+
 ### Fish (pond in the Wilds, 8 energy per cast)
 
 | Fish | Sells | Difficulty | Seasons |
@@ -678,6 +706,8 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
 - The worm bin and bait maker are not built; bait is crafted from gel (v41). The balance bot's catch rate comes from playing the real catch bar with a quarter-second reaction (tools/balance.mjs REACT); real players may do better or worse.
+- v43: crab pots and the gold pan still work only on the Wilds pond, not the sea or the river.
+- v43: the balance bot walks to the beach and the forest each day for their forage; forage income rises about 3.75 times and gold at the end of year 1 about 32% over 15 runs.
 - v42: the balance bot pans the shimmer spot daily from the start (free ore means less mining and coal buying) and sets two crab pots in year 2; with legendary fish, gold at the end of year 1 rises about 20% over 15 runs.
 - v41 roughly doubles the bot's fish income: playing the real bar it lands about 40% of the hardest fish, where the old one-press model gave it about 10%.
 - Honey has one flavour; Stardew's flower honey is not modelled.

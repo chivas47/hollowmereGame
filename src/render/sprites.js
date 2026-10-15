@@ -69,6 +69,20 @@ const FORAGE_ART = {
     r(c, cx, Y + 7, 1, 7, '#5da34a'); r(c, cx - 3, Y + 11, 3, 2, '#6fae45'); r(c, cx + 1, Y + 10, 3, 2, '#6fae45');
     r(c, cx - 3, Y + 3, 7, 4, '#e8f2f0'); r(c, cx - 2, Y + 2, 5, 1, '#e8f2f0'); r(c, cx - 1, Y + 4, 3, 2, '#bfe0d8'); r(c, cx, Y + 5, 1, 1, '#e9c46a');
   },
+  // v43: beach and forest forage
+  clam: (c, X, Y) => { r(c, X + 4, Y + 9, 8, 4, '#e8dcc8'); r(c, X + 5, Y + 8, 6, 1, '#e8dcc8'); r(c, X + 5, Y + 10, 6, 1, '#b8a888'); r(c, X + 7, Y + 9, 1, 4, '#b8a888'); },
+  cockle: (c, X, Y) => { r(c, X + 5, Y + 8, 6, 5, '#e9b48a'); r(c, X + 6, Y + 7, 4, 1, '#e9b48a'); [6, 8, 10].forEach((a) => r(c, X + a, Y + 8, 1, 5, '#c98a5a')); },
+  coral: (c, X, Y) => { r(c, X + 7, Y + 7, 2, 7, '#e2707a'); r(c, X + 4, Y + 6, 2, 5, '#e2707a'); r(c, X + 10, Y + 5, 2, 6, '#e2707a'); r(c, X + 5, Y + 10, 6, 2, '#e2707a'); r(c, X + 4, Y + 6, 1, 1, '#f4b8be'); },
+  urchin: (c, X, Y) => { r(c, X + 5, Y + 8, 6, 5, '#6b3a7a'); [[4, 7], [11, 7], [7, 6], [4, 12], [11, 12], [8, 13]].forEach(([a, b]) => r(c, X + a, Y + b, 1, 1, '#8a5aa8')); },
+  spiralshell: (c, X, Y) => { r(c, X + 4, Y + 8, 8, 5, '#e8d0b0'); r(c, X + 6, Y + 9, 3, 3, '#c98a5a'); r(c, X + 7, Y + 10, 1, 1, '#e8d0b0'); r(c, X + 11, Y + 11, 2, 2, '#e8d0b0'); },
+  morel: (c, X, Y, cx) => { r(c, cx - 1, Y + 10, 3, 4, '#efe6d2'); r(c, cx - 3, Y + 4, 6, 7, '#8a6a44'); [[-2, 5], [1, 6], [-1, 8], [1, 9]].forEach(([a, b]) => r(c, cx + a, Y + b, 1, 1, '#5c4026')); },
+  fiddlehead: (c, X, Y, cx) => { r(c, cx, Y + 6, 1, 8, '#5d8a4a'); r(c, cx - 3, Y + 4, 4, 3, '#7fc35f'); r(c, cx - 2, Y + 5, 2, 1, '#5d8a4a'); r(c, cx + 2, Y + 8, 2, 3, '#7fc35f'); },
+  chanterelle: (c, X, Y, cx) => { r(c, cx - 1, Y + 9, 3, 5, '#e9b44c'); r(c, cx - 4, Y + 6, 8, 3, '#e9a42a'); r(c, cx - 3, Y + 5, 6, 1, '#f0c060'); },
+  hazelnut: (c, X, Y) => { r(c, X + 5, Y + 8, 5, 5, '#8a5a32'); r(c, X + 5, Y + 7, 5, 2, '#c9a24a'); r(c, X + 9, Y + 10, 3, 3, '#8a5a32'); r(c, X + 6, Y + 9, 1, 1, '#b08a5a'); },
+  holly: (c, X, Y) => { r(c, X + 3, Y + 8, 5, 3, '#2f6a3a'); r(c, X + 8, Y + 7, 5, 3, '#2f6a3a'); r(c, X + 7, Y + 10, 2, 2, '#c8352f'); r(c, X + 9, Y + 11, 2, 2, '#c8352f'); },
+  narcissus: (c, X, Y, cx) => { r(c, cx, Y + 7, 1, 7, '#5da34a'); r(c, cx - 2, Y + 4, 5, 4, '#f4ead2'); r(c, cx - 1, Y + 5, 3, 2, '#e9b44c'); },
+  vetch: (c, X, Y, cx) => { r(c, cx, Y + 6, 1, 8, '#5da34a'); r(c, cx - 3, Y + 5, 3, 3, '#d27ab0'); r(c, cx + 1, Y + 7, 3, 3, '#b56ad0'); r(c, cx - 2, Y + 10, 2, 2, '#7fc35f'); },
+  frostberry: (c, X, Y) => { r(c, X + 4, Y + 8, 8, 6, '#3f6a5a'); [[5, 8], [8, 10], [10, 8]].forEach(([a, b]) => { r(c, X + a, Y + b, 2, 2, '#bfe0f2'); r(c, X + a, Y + b, 1, 1, '#ffffff'); }); },
   icemoss: (c, X, Y) => {
     r(c, X + 3, Y + 11, 10, 3, '#5f9e9a'); r(c, X + 4, Y + 10, 8, 1, '#8fc2c0'); r(c, X + 5, Y + 9, 5, 1, '#a8d8d4');
     r(c, X + 6, Y + 9, 2, 1, '#e6fbf8'); r(c, X + 10, Y + 12, 2, 1, '#3f7a76');

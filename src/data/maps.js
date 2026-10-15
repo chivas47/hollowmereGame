@@ -33,6 +33,7 @@ export function farmGrid() {
   fill(m, 1, 1, 5, 3, 'H'); m[3][3] = 'D';
   fill(m, 19, 1, 21, 3, 'S');
   m[3][8] = 'B'; m[3][12] = 'W'; m[3][15] = 'K';
+  m[14][10] = 'P'; m[15][10] = 'E';   // v43: the path south to the forest (clear of every layout's water and the yards)
   m[5][6] = 'b';   // the pet's water bowl (systems/pets.js)
   fill(m, 1, 4, W - 2, 4, 'P'); m[4][W - 1] = 'E'; m[4][0] = 'E';
   put(m, [[22, 1], [22, 2], [22, 3], [6, 1], [7, 1], [16, 1], [17, 1], [1, 14], [22, 14], [22, 13], [1, 13]], 'T');
@@ -65,6 +66,7 @@ function villageGrid() {
   fill(m, 11, 5, 12, 5, 'Q');
   fill(m, 11, 8, 12, 9, 'F');
   fill(m, 13, 11, 14, 11, 'J');
+  fill(m, 11, 12, 11, 14, 'P'); m[15][11] = 'E';   // v43: the path south to the beach
   put(m, [[3, 9], [5, 12], [2, 14], [19, 12], [21, 10], [17, 14], [12, 14], [6, 7]], 'T');
   return m;
 }
@@ -74,6 +76,24 @@ function greenhouseGrid() {
   fill(m, 2, 4, 22, 9, 'g');   // 21 x 6 beds
   m[12][2] = 'W';
   m[H - 1][12] = 'E';
+  return m;
+}
+
+// v43: the beach south of the village: sand, a short pier and the sea along the bottom.
+function beachGrid() {
+  const m = Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => (y === 0 ? 'T' : y >= 10 ? 'O' : x === 0 || x === W - 1 ? 'R' : 'z')));
+  m[0][11] = 'E';
+  fill(m, 6, 9, 6, 12, 'P');                      // the pier
+  put(m, [[3, 3], [19, 2], [15, 6], [21, 8], [2, 8]], 'R');
+  return m;
+}
+// v43: the forest south of the farm: trees, a river across it and a footbridge.
+function forestGrid() {
+  const m = emptyGrid();
+  m[0][10] = 'E';
+  fill(m, 1, 8, W - 2, 9, 'O');
+  fill(m, 10, 1, 10, 13, 'P');                     // the path and the bridge over the river
+  put(m, [[3, 2], [6, 3], [14, 2], [17, 4], [20, 2], [2, 5], [8, 5], [13, 6], [19, 6], [4, 11], [7, 13], [12, 11], [15, 12], [18, 11], [21, 13], [2, 13]], 'T');
   return m;
 }
 
@@ -127,6 +147,7 @@ export const MAPS = {
     exits: {
       [`${W - 1},4`]: { to: 'wilds', x: 1, y: 4, dir: 'right' },
       '0,4': { to: 'village', x: W - 2, y: 8, dir: 'left' },
+      '10,15': { to: 'forest', x: 10, y: 1, dir: 'down' },   // v43
     },
     spawn: { x: 3, y: 4, dir: 'down' },
   },
@@ -142,7 +163,7 @@ export const MAPS = {
       { art: 'cottage', x: 16, y: 2, roof: '#3f5f6e' }, { art: 'cottage', x: 20, y: 2, roof: '#8b6a9e' },
       { art: 'board', x: 11, y: 5 }, { art: 'fountain', x: 11, y: 8 }, { art: 'table', x: 13, y: 11 },
     ],
-    exits: { [`${W - 1},8`]: { to: 'farm', x: 1, y: 4, dir: 'right' } },
+    exits: { [`${W - 1},8`]: { to: 'farm', x: 1, y: 4, dir: 'right' }, '11,15': { to: 'beach', x: 11, y: 1, dir: 'down' } },   // v43: the beach
   },
   house: {
     name: 'Farmhouse', salt: 3, base: 'house', grid: houseGrid(),
@@ -156,6 +177,14 @@ export const MAPS = {
     name: 'Farm cave', salt: 13, base: 'cave', grid: caveGrid(),
     objects: [],
     exits: { '11,12': { to: 'farm', x: 8, y: 1, dir: 'down' } },
+  },
+  beach: {
+    name: 'Saltreach Beach', salt: 41, grid: beachGrid(), objects: [], ground: 'z',
+    exits: { '11,0': { to: 'village', x: 11, y: 14, dir: 'up' } },
+  },
+  forest: {
+    name: 'Brackenwood', salt: 29, grid: forestGrid(), objects: [],
+    exits: { '10,0': { to: 'farm', x: 10, y: 14, dir: 'up' } },
   },
   shrine: {
     name: 'The shrine', salt: 19, base: 'cave', grid: shrineGrid(),

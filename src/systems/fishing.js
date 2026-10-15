@@ -34,10 +34,14 @@ export function legendHere(ice) {
   return Object.keys(FISH).find((k) => { const f = FISH[k]; return f.legendary && f.seasons.includes(season) && !!f.ice === !!ice
     && (!f.rain || S.weather === 'rain' || S.weather === 'storm') && skillLevel('fishing') >= f.level && !S.legends.includes(k); }) || null;
 }
-function pickFish(ice) {
-  const season = today().season, legend = legendHere(ice);
+// v43: which water a map holds: the Wilds pond, the sea at the beach, the river in the forest.
+export const WATERS = { wilds: 'pond', beach: 'sea', forest: 'river' };
+function pickFish(ice, water = 'pond') {
+  const S = G.S, season = today().season, legend = water === 'pond' ? legendHere(ice) : null;
   if (legend && Math.random() < LEGEND_CHANCE) return legend;
-  const pool = Object.entries(FISH).filter(([, f]) => !f.legendary && f.seasons.includes(season) && (!f.spot || (ice && f.spot === 'ice')));
+  const wet = S.weather === 'rain' || S.weather === 'storm';
+  const pool = Object.entries(FISH).filter(([, f]) => !f.legendary && f.seasons.includes(season) && (f.water || 'pond') === water && (!f.rain || wet)
+    && (!f.spot || (ice && f.spot === 'ice')));
   const total = pool.reduce((s, [, f]) => s + (6 - f.difficulty), 0);
   let roll = Math.random() * total;
   for (const [k, f] of pool) { roll -= 6 - f.difficulty; if (roll <= 0) return k; }
@@ -139,13 +143,13 @@ addInteraction(200, () => {
 // Casting. Priority 65 beats the can refill (60) on the same water.
 addInteraction(65, ({ tx, ty, tile, item, mapId }) => {
   if (item !== 'rod' || !WATER.has(tile)) return false;
-  const S = G.S, ice = frozen() && atHole(tx, ty, mapId);
-  if (frozen() && !ice) { notify('The pond is frozen solid. Fish through the ice hole on its west edge.'); return true; }
+  const S = G.S, pond = mapId === ICE_HOLE.map, ice = pond && frozen() && atHole(tx, ty, mapId);   // v43: only the pond freezes
+  if (pond && frozen() && !ice) { notify('The pond is frozen solid. Fish through the ice hole on its west edge.'); return true; }
   if (!useEnergy(ENERGY)) return true;
   const bait = baitOk() && S.bait && S.bag[S.bait] > 0 ? S.bait : null;
   if (bait) { S.bag[bait]--; if (!S.bag[bait]) notify(`That was your last ${ITEMS[bait].name.toLowerCase()}.`); }
   const wait = (1.5 + Math.random() * 2.5) * (bait ? BAIT[bait].wait : 1) * (tackle() === 'spinner' ? 0.75 : 1);
-  G.fishing = { phase: 'wait', t: wait, tx, ty, ice, bait };
+  G.fishing = { phase: 'wait', t: wait, tx, ty, ice, bait, water: WATERS[mapId] || 'pond' };
   G.lock = true;
   changed();
   return true;
@@ -186,7 +190,7 @@ addUpdater((dt) => {
     f.t -= dt;
     if (f.t <= 0) {
       f.phase = 'bite'; f.t = BITE_WINDOW;
-      if (Math.random() < TRASH_CHANCE) { const k = Object.keys(TRASH); f.trash = k[Math.floor(Math.random() * k.length)]; } else f.fish = pickFish(f.ice);
+      if (Math.random() < TRASH_CHANCE) { const k = Object.keys(TRASH); f.trash = k[Math.floor(Math.random() * k.length)]; } else f.fish = pickFish(f.ice, f.water);
       notify('A bite! Press Use.'); emit('sfx', 'bite');
     }
   } else if (f.phase === 'bite') {
