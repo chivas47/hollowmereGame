@@ -72,6 +72,7 @@ export function newState() {
     ventOpen: false, ventDeepest: 0,                    // v39: the Ember Vent; floor 10 is the forge
     forged: {}, weaponEnch: {}, toolEnch: {}, trinket: null,   // v39: weapon -> gem counts, weapon -> enchant, tool -> enchant, worn trinket
     quarryRocks: null,                                 // v44: today's rocks in the quarry (systems/quarry.js)
+    spouse: null, wedding: null,                     // v52: your spouse's villager id; a wedding { id, day } to come
     mail: [], mailRead: [],                          // v48: letters waiting in the mailbox, letters read (systems/mail.js)
     gates: { log: false, rubble: false, key: false },  // v45: the grove log, the railway rubble, the sewer key
     groveStumps: null, trader: { day: 0, bought: {}, once: [] },   // v45: systems/hidden.js

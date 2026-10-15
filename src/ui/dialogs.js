@@ -94,7 +94,7 @@ on('ui:talk', ({ npc, text, extra }) => {
   const pr = G.S.profile, said = esc(text).replace(/\{name\}/g, esc(pr?.name || 'friend')).replace(/\{fav\}/g, esc(pr?.favourite || 'a good harvest'));
   let html = `<h2>${d.name}</h2><p class="role">${d.role}</p><p>“${said}”</p>`;
   if (extra) html += `<p class="gift">${extra}</p>`;
-  html += `<p class="hearts" aria-label="${hearts(st)} of 10 hearts">${heartStr(st)}</p>`;
+  html += `<p class="hearts" aria-label="${hearts(st)} of ${st.married ? 14 : 10} hearts">${heartStr(st)}</p>`;
   if (st.gifted === G.S.day) html += `<p class="role">You already gave ${d.name} a gift today.</p>`;
   else if (!gifts.length) html += `<p class="role">Harvest or forage something to bring ${d.name} a gift.</p>`;
   const actions = gifts.map((k) => [`Give ${ITEMS[k].name}`, () => giveGift(npc, k)]);
@@ -109,7 +109,7 @@ on('ui:scene', ({ npc, at, scene, extra }) => {
   if (extra) html += `<p class="gift">${extra}</p>`;
   openModal(html, scene.choices.map((c, i) => [c.label, () => {
     const reply = chooseScene(npc, at, i), st = G.S.npcs[npc.id];
-    openModal(`<h2>${d.name}</h2><p>${reply}</p><p class="hearts" aria-label="${hearts(st)} of 10 hearts">${heartStr(st)}</p>`, [['Goodbye', closeModal, true]]);
+    openModal(`<h2>${d.name}</h2><p>${reply}</p><p class="hearts" aria-label="${hearts(st)} of ${st.married ? 14 : 10} hearts">${heartStr(st)}</p>`, [['Goodbye', closeModal, true]]);
   }, i === 0]));
 });
 

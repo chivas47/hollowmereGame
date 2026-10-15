@@ -25,7 +25,7 @@ function render() {
   $('#bin').textContent = `${S.bin}g`;
   $('#friends').innerHTML = NPCS.map((n) => {
     const st = S.npcs[n.id];
-    return `<div><b>${n.name}</b>${isBirthday(n) ? ' <span class="role">birthday</span>' : ''} <span class="hearts" aria-label="${hearts(st)} of 10 hearts">${heartStr(st)}</span></div>`;
+    return `<div><b>${n.name}</b>${isBirthday(n) ? ' <span class="role">birthday</span>' : ''} <span class="hearts" aria-label="${hearts(st)} of ${st.married ? 14 : 10} hearts">${heartStr(st)}</span></div>`;
   }).join('');
 }
 

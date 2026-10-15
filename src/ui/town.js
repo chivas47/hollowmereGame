@@ -1,4 +1,4 @@
-// The tavern, the clinic and the farmhouse phone (v47).
+// The tavern, the clinic and the farmhouse phone (v47); the old boatman (v52).
 import { G } from '../core/game.js';
 import { on, emit } from '../core/events.js';
 import { fmtTime } from '../core/time.js';
@@ -8,6 +8,8 @@ import { ITEMS } from '../data/items.js';
 import { WEATHER } from '../data/weather.js';
 import { isOpen, openToday, special, dishPrice, buyDish, buyClinic } from '../systems/town.js';
 import { knows, buyRecipe } from '../systems/cooking.js';
+import { PENDANT, BOATMAN } from '../data/romance.js';
+import { buyPendant } from '../systems/marriage.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
 
@@ -56,3 +58,12 @@ $('#mbody').addEventListener('click', (e) => {
   const p = e.target.closest('[data-phone]');
   if (p && !p.disabled) emit(SHOPS[p.dataset.phone].ui);
 });
+
+// v52: the old boatman on the pier in the rain sells the pendant.
+function boatman() {
+  const S = G.S, can = S.gold >= PENDANT.cost && !(S.bag.pendant > 0) && !S.spouse;
+  openModal(`<h2>${BOATMAN.name}</h2><p class="role">An old man in oilskins sits at the end of the pier, rain dripping off his hat. "Looking for something that says forever? Sea glass, worn smooth by a hundred years of tide."</p>
+    <div class="shoprow"><div><b>Sea-glass pendant</b><span>${g(PENDANT.cost)}. Give it to your partner at ${PENDANT.hearts} hearts to propose (the farmhouse needs its first upgrade). You have <b>${g(S.gold)}</b>.</span></div><div class="btns"><button data-pendant ${can ? '' : 'disabled'}>Buy</button></div></div>`, [['Leave', closeModal, true]]);
+}
+on('ui:boatman', boatman);
+$('#mbody').addEventListener('click', (e) => { const b = e.target.closest('[data-pendant]'); if (b && !b.disabled && buyPendant()) boatman(); });

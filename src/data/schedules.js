@@ -7,7 +7,7 @@ const H = 60;
 const PLAZA_IN = [16, 8];                               // first village waypoint, reached from the east road
 const home = (x) => [PLAZA_IN, [16, 4], [x, 4]];        // walk to the front door of a cottage
 
-export const ENTRIES = { farm: [1, 4], village: [22, 8], town: [10, 15], wilds: [1, 4], beach: [11, 0], forest: [10, 0] };   // where neighbours step onto each map
+export const ENTRIES = { farm: [1, 4], village: [22, 8], town: [10, 15], wilds: [1, 4], beach: [11, 0], forest: [10, 0], house: [11, 11] };   // where neighbours step onto each map
 
 const VILLAGE_PATHS = {
   ines:  [PLAZA_IN, [16, 6], [9, 6], [9, 10], [16, 10]],
@@ -51,5 +51,15 @@ export function scheduleFor(def, day) {
     { from: 8 * H, to: 11 * H, map: 'village', path: village },
     { from: 11 * H, to: 18 * H, map: 'farm', path: def.path },
     evening,
+  ];
+}
+
+// v52: a spouse lives at the farm: the farmhouse in the morning, about the yard by the house through the day,
+// home again in the evening.
+export function spouseDay() {
+  return [
+    { from: 6 * H, to: 10 * H, map: 'house', path: [[11, 11], [11, 7], [13, 7]], stay: true },
+    { from: 10 * H, to: 17 * H, map: 'farm', path: [[3, 4], [3, 5], [7, 5], [7, 6], [3, 6]] },
+    { from: 17 * H, to: 24 * H, map: 'house', path: [[11, 11], [11, 8], [14, 8]], stay: true, exit: false },
   ];
 }

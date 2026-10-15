@@ -61,6 +61,7 @@ import './systems/quarry.js';
 import './systems/hidden.js';
 import './systems/town.js';
 import './systems/mail.js';
+import './systems/marriage.js';
 
 // UI
 import './ui/toast.js';
