@@ -11,7 +11,7 @@ import { addInteraction, addUpdater, addLayer } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { FISH, ICE_HOLE } from '../data/fish.js';
 import { ITEMS } from '../data/items.js';
-import { CATCH, BAIT, TACKLE, TACKLE_USES, BOBBERS, BOBBER_EVERY, TRASH, TRASH_CHANCE, FISH_TREASURE } from '../data/angling.js';
+import { CATCH, BAIT, TACKLE, TACKLE_USES, BOBBERS, BOBBER_EVERY, TRASH, TRASH_CHANCE, FISH_TREASURE, LEGEND_CHANCE, BAIT_PRICE } from '../data/angling.js';
 import { tier } from '../data/upgrades.js';
 import { r } from '../render/pixel.js';
 import { drawBubble } from '../render/sprites.js';
@@ -28,9 +28,16 @@ on('map:changed', end); on('day:start', end); on('game:reset', end);
 const frozen = () => today().season === 'Winter';
 const atHole = (tx, ty, mapId) => mapId === ICE_HOLE.map && tx === ICE_HOLE.x && ty === ICE_HOLE.y;
 
+// v42: the season's legendary fish, if you qualify and have not caught it yet.
+export function legendHere(ice) {
+  const S = G.S, season = today().season;
+  return Object.keys(FISH).find((k) => { const f = FISH[k]; return f.legendary && f.seasons.includes(season) && !!f.ice === !!ice
+    && (!f.rain || S.weather === 'rain' || S.weather === 'storm') && skillLevel('fishing') >= f.level && !S.legends.includes(k); }) || null;
+}
 function pickFish(ice) {
-  const season = today().season;
-  const pool = Object.entries(FISH).filter(([, f]) => f.seasons.includes(season) && (!f.spot || (ice && f.spot === 'ice')));
+  const season = today().season, legend = legendHere(ice);
+  if (legend && Math.random() < LEGEND_CHANCE) return legend;
+  const pool = Object.entries(FISH).filter(([, f]) => !f.legendary && f.seasons.includes(season) && (!f.spot || (ice && f.spot === 'ice')));
   const total = pool.reduce((s, [, f]) => s + (6 - f.difficulty), 0);
   let roll = Math.random() * total;
   for (const [k, f] of pool) { roll -= 6 - f.difficulty; if (roll <= 0) return k; }
@@ -48,6 +55,15 @@ export function fixTackle(k) {
   if (S.tackle && S.tackleUses >= TACKLE_USES) S.bag[S.tackle] = (S.bag[S.tackle] || 0) + 1;
   S.bag[k]--; S.tackle = k; S.tackleUses = TACKLE_USES;
   changed();
+  return true;
+}
+// v42: bait from the stall, Stardew's fish-shop price.
+export function buyBait(n) {
+  const S = G.S;
+  if (S.gold < BAIT_PRICE * n) return false;
+  S.gold -= BAIT_PRICE * n; S.bag.bait = (S.bag.bait || 0) + n;
+  if (!S.bait) S.bait = 'bait';
+  emit('sfx', 'coin'); changed();
   return true;
 }
 export const bobberStyles = () => Math.min(BOBBERS.length, 1 + Math.floor(Object.values(G.S.fishLog).reduce((a, n) => a + n, 0) / BOBBER_EVERY));
@@ -77,11 +93,13 @@ function giveTreasure() {
 
 function land(f) {
   const S = G.S, fish = FISH[f.fish], first = !S.fishLog[f.fish];
-  const n = BAIT[f.bait]?.double && Math.random() < BAIT[f.bait].double ? 2 : 1;   // v41: wild bait
+  const n = !fish.legendary && BAIT[f.bait]?.double && Math.random() < BAIT[f.bait].double ? 2 : 1;   // v41: wild bait
+  if (fish.legendary) S.legends.push(f.fish);   // v42: one of a kind
   S.bag[f.fish] += n;
   S.fishLog[f.fish] = (S.fishLog[f.fish] || 0) + n;
   const loot = f.treasure?.got ? giveTreasure() : null;
-  notify(`${first ? 'New species! ' : ''}You caught ${n > 1 ? `two ${fish.name}s` : `a ${fish.name}`}.${loot ? ` In the chest: ${loot}!` : ''}`);
+  if (fish.legendary) { emit('sfx', 'levelup'); notify(`A legend! You caught ${fish.name}.`); }
+  else notify(`${first ? 'New species! ' : ''}You caught ${n > 1 ? `two ${fish.name}s` : `a ${fish.name}`}.${loot ? ` In the chest: ${loot}!` : ''}`);
   if (tackle() && --S.tackleUses <= 0) { notify(`The ${ITEMS[S.tackle].name.toLowerCase()} wore out.`); S.tackle = null; }
   end();
   emit('sfx', 'catch');

@@ -48,6 +48,7 @@ on('ui:inventory', () => {
   const tools = row(tier(S, 'hoe').label, tier(S, 'hoe').reach > 1 ? 'Tills 3 in a row' : 'Tills grass')
     + row(tier(S, 'can').label, `Holds ${S.maxw}`)
     + row(tier(S, 'rod').label, tier(S, 'rod').zone ? 'Wider reel zone' : 'Cast at the pond')
+    + row(tier(S, 'pan').label, `Slot 9: pan shimmering water, ${tier(S, 'pan').rolls} find${tier(S, 'pan').rolls > 1 ? 's' : ''} a time`)
     + row(tier(S, 'pick').label, `Breaks mine rocks, ${tier(S, 'pick').power} hit${tier(S, 'pick').power > 1 ? 's' : ''} a swing`) + row(weapon().name, `Slot 5: ${weapon().kind}, damage ${weapon().damage}`)
     + row(tier(S, 'house').label, `Max energy ${S.maxEnergy}`);
 
@@ -78,7 +79,7 @@ on('ui:inventory', () => {
   const known = Object.keys(FISH).filter((k) => S.fishLog[k]).length;
   const fish = Object.entries(FISH).map(([k, f]) => S.fishLog[k]
     ? row(f.name, `${S.fishLog[k]} caught`)
-    : row('???', f.spot === 'ice' ? 'Winter, ice hole' : f.seasons.length === 4 ? 'All year' : f.seasons.join(', '), 'muted')).join('');
+    : row('???', f.legendary ? `Legendary: ${f.seasons[0]}${f.ice ? ', ice hole' : ''}${f.rain ? ', in rain' : ''}, fishing level ${f.level}` : f.spot === 'pot' ? 'Crab pot' : f.spot === 'ice' ? 'Winter, ice hole' : f.seasons.length === 4 ? 'All year' : f.seasons.join(', '), 'muted')).join('');
 
   const pr = S.profile;
   const who = pr ? `<p class="role">${esc(pr.name)} of ${esc(pr.farm)} Farm. Favourite thing: ${esc(pr.favourite)}. Pet: ${PETS[pr.pet].toLowerCase()}, waiting to move in.</p>` : '';

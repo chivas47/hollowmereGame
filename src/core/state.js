@@ -29,7 +29,7 @@ export function newState() {
     forage: [], forageDay: 0,
     wildWeeds: [],      // v33: weeds in the Wilds, cut for fiber (systems/forage.js)
     fishLog: {},        // fish key -> number caught
-    upgrades: { can: 0, hoe: 0, axe: 0, rod: 0, house: 0, pick: 0 },   // tier index per upgrade line
+    upgrades: { can: 0, hoe: 0, axe: 0, rod: 0, house: 0, pick: 0, pan: 0 },   // tier index per upgrade line
     waterBonus: 0, maxEnergy: 270,                      // derived stats, see systems/upgrades.js
     built: { coop: false, barn: false, greenhouse: false, stable: false, shed: false, mill: false, clocktower: false, pond: false, slimepen: false, helperhut: false, wayhollow: false, wayvillage: false },   // false | 'pending' | true
     sites: {},                                          // v30: building -> { x, y } top-left on the farm, when moved or placed (systems/sites.js)
@@ -71,6 +71,7 @@ export function newState() {
     cavernOpen: false, cavernDeepest: 0,                // v38: the Sunken Cavern's door opened, its deepest floor
     ventOpen: false, ventDeepest: 0,                    // v39: the Ember Vent; floor 10 is the forge
     forged: {}, weaponEnch: {}, toolEnch: {}, trinket: null,   // v39: weapon -> gem counts, weapon -> enchant, tool -> enchant, worn trinket
+    pots: {}, legends: [], shimmer: null,              // v42: crab pots on the Wilds pond ('x,y' -> { bait, catch }), legends caught, today's pan spot
     bait: null, tackle: null, tackleUses: 0, bobber: 0, // v41: bait and tackle on the rod, bobber style
     read: [], mastery: { xp: 0, claimed: [] },          // v40: power books read, mastery XP and the skills whose perk is claimed
     slain: {}, goalsClaimed: [],                        // v37: monsters defeated by kind, slaying goals rewarded (systems/guild.js)
@@ -113,6 +114,8 @@ export function merge(saved) {
   if (!Array.isArray(s.finds)) s.finds = [];
   if (!s.slain || typeof s.slain !== 'object') s.slain = {};
   if (!Array.isArray(s.read)) s.read = [];
+  if (!s.pots || typeof s.pots !== 'object') s.pots = {};
+  if (!Array.isArray(s.legends)) s.legends = [];
   s.mastery = Object.assign({ xp: 0, claimed: [] }, s.mastery || {});
   for (const k of ['forged', 'weaponEnch', 'toolEnch']) if (!s[k] || typeof s[k] !== 'object') s[k] = {};
   if (!Array.isArray(s.goalsClaimed)) s.goalsClaimed = [];
