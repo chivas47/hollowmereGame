@@ -329,10 +329,20 @@ Five fish per season. Bite odds are weighted toward easy fish (weight 6 minus di
 | Doctor Maren (v49) | Runs the clinic | Winter 3 | Tidestone, thyme tea | Carrot, lettuce, spring greens bowl, trout, pear | Sugar, sugar biscuit | Ember eel | none |
 | Warden Hale (v49) | Keeps the Wardens' Lodge | Spring 27 | Umbrite bar, skillet caps | Iron and gold ore, pike, ember quartz, quarry snack | Snow crocus, narcissus | Griddle cakes | none |
 | Lio (v49) | Young fiddler, lives in a cottage on the town's north edge | Summer 2 | Honey cake, frost tear | Plum, pear, sugar biscuit, glade mint, sunberry | Coal, clam | Frost kale | none |
+| Pell (v50) | Teacher, lives on the town's north edge | Autumn 24 | The Starlit Primer, persimmon | Pear, plum, sugar biscuit, thyme tea, violet | Coal, gel | Old boot, smoked carp | none |
+| Juno (v50) | Mail carrier, lives on the town's north edge | Winter 22 | Triple thyme brew, trail bun | Thyme tea, egg, griddle cakes, fig, hazelnut | Stone, clam | Wet paper | none |
+| Nell (v50) | Retired miner and gardener, south lane | Summer 14 | Pumpkin jam, heartstone | Carrot, beet, cheese, quartz, tidestone | Flatbread supper, triple thyme brew | Mayonnaise | none |
+| Rook (v50) | Boatwright on the beach, south lane | Spring 12 | Bluefin, nectarine wine | Hardwood, wood, pilchard, sprat, coral | Lettuce, frost kale | Glass | none |
+| Esme (v50) | Painter in the forest, south lane | Autumn 2 | Pear wine, violet | Morel, chanterelle, narcissus, snow crocus, dandelion | Coal, gold bar | Smoked minnow | none |
+| Kit (v50) | Teenage tinkerer, south lane | Winter 8 | Ember quartz, flatbread supper | Copper and iron bars, quartz, sugar biscuit, cinder shard | Spring greens bowl, pumpkin pottage | Frost kale | none |
+
+Outfits (v50): every villager wears a winter outfit (a warmer shirt, most with a hat), and some change for summer (Stardew 1.6's seasonal outfits).
 
 Universal tastes (v48, after a neighbour's own lists; Stardew's): everyone loves starstone; gems, artisan goods (not oil, flour or sugar) and tree fruit are liked; ores, coal, cinder, stone, wood, hardwood, fiber and gel are disliked; trash is hated. Everything else is neutral.
 
 Points: talk 20/day, gift 80 loved, 45 liked, 20 neutral, -20 disliked, -40 hated (v48, Stardew's; 1 gift/day; friendship never drops below 0). On a neighbour's birthday a gift counts eight times, loss or gain (Stardew's x8); the morning notice and the neighbours panel say whose birthday it is. 100 points per heart, 10 hearts max. Dialogue changes at 2 and 5 hearts.
+
+Schedules (v50) for the six newest: Pell teaches in town 9:00 to 15:00 (Saturdays in the forest); Juno walks mail rounds through the village and town; Nell gardens on the south lane; Rook works on the beach 8:00 to 17:00 and visits the Lantern; Esme paints in the forest 9:00 to 16:00; Kit tinkers by the smithy and plays in the square (Saturdays on the beach).
 
 Schedules (v49) for the six town villagers: shopkeepers stand by their shop door through opening hours and live at their shop (Wren rests on Wednesdays in the village); Corvin, Hale and Lio meet outside the Lantern in the evening; Hob strolls the village before opening; Maren walks the village after the clinic shuts; Hale keeps the lodge door 8:00 to 18:00; Lio plays in the square in the morning. Everyone gathers in the square for festivals.
 
@@ -770,6 +780,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
 - The worm bin and bait maker are not built; bait is crafted from gel (v41). The balance bot's catch rate comes from playing the real catch bar with a quarter-second reaction (tools/balance.mjs REACT); real players may do better or worse.
+- v50: all twelve newer villagers (v49 and v50) have no heart scenes, 3-heart rewards or mail letters yet, and never visit the farm. Villagers walk through houses between waypoints (they ignore walls, as before).
 - v49: the six new villagers have no heart scenes, 3-heart rewards or mail letters yet, and they never visit the farm.
 - v48: gifts stay one a day per neighbour; Stardew allows two a week plus the birthday. The four existing neighbours only: new villagers, homes and outfits come in items 23b and 23c.
 - v47: the clinic has no muscle remedy (Stardew's cures exhaustion, which we do not have). The phone does not report tool upgrades (ours are instant) or sell animals.

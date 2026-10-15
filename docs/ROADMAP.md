@@ -50,8 +50,8 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 22b | Town and shops: tavern, clinic and phone | feature | done (chivas47/hollowmereGame#42) | The tavern, the clinic, and a phone to call shops. |
 | 23a | More villagers and mail: gift tiers, birthdays, social menu, mail | feature | done (chivas47/hollowmereGame#43) | Five gift-taste tiers, birthdays, a social menu and letters and mail, for the four neighbours. |
 | 23b | More villagers and mail: six new villagers | feature | done (chivas47/hollowmereGame#44) | Six new original villagers (shopkeepers among them) with homes in the town and village, schedules, birthdays and tastes. |
-| 23c | More villagers and mail: six more and outfits | feature | next | Six more villagers and seasonal outfits. |
-| 24 | Dating, marriage and family | feature | queued | Bouquet, dating, heart scenes up to 10 (14 for spouses), proposal, wedding, spouse chores and gifts, children who grow up, divorce, a roommate option. |
+| 23c | More villagers and mail: six more and outfits | feature | done (PR pending) | Six more villagers and seasonal outfits. |
+| 24 | Dating, marriage and family | feature | next | Bouquet, dating, heart scenes up to 10 (14 for spouses), proposal, wedding, spouse chores and gifts, children who grow up, divorce, a roommate option. |
 | 25 | Festival calendar | feature | queued | Two festivals a season with original themes: an egg hunt minigame, a dance, a communal soup, a grange display fair, a maze night, an ice-fishing contest, a night market, a winter gift exchange, a fishing derby, a squid-themed contest, a desert festival, plus the four we have. |
 | 26 | Town restoration and orders | feature | queued | Restore the old town hall with item bundles, or buy the upgrades from a corporate rival instead (original names); special orders board; a challenge-giver with a gem currency. |
 | 27 | Desert and island | feature | queued | A bus to the desert (shop, casino, desert fishing), a boat to a tropical island (island farm, a collectible nut currency, island trader, dig site, island dungeon, hidden puzzles). |

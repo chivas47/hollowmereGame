@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v50: Six more villagers and seasonal outfits
+- Pell the teacher and Juno the mail carrier move into cottages on the town's north edge; Nell, Rook, Esme and Kit into a new row of cottages on the village's south lane. Rook works on the beach and Esme paints in the forest, so you will meet people there now.
+- Every villager dresses for winter, and some for summer.
+
 ## v49: Six new villagers
 - Wren Fenn, Corvin, Hob and Doctor Maren now live at their shops and walk the town and village on their own schedules; Warden Hale keeps the lodge by day and comes to town in the evening; and Lio, a young fiddler, plays in the square and lives in a new cottage in town.
 - Each has a birthday, gift tastes and their own lines; they gather in the square for festivals and post quests on the board like everyone else.

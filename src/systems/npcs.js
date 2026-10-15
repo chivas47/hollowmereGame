@@ -6,7 +6,7 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { ITEMS } from '../data/items.js';
-import { NPCS } from '../data/npcs.js';
+import { NPCS, OUTFITS } from '../data/npcs.js';
 import { festivalOn, FESTIVAL_HOURS, FESTIVAL_SPOTS } from '../data/festivals.js';
 import { scheduleFor, ENTRIES } from '../data/schedules.js';
 import { SCENES, SCENE_HEARTS } from '../data/scenes.js';
@@ -168,10 +168,13 @@ export function giveGift(n, item) {
   emit('ui:talk', { npc: n, text: bday && GIFT_POINTS[kind] > 0 ? `${d.react.birthday} ${said}` : said, extra });
 }
 
+// v50: today's outfit, the season's over the base look.
+export const lookOf = (def) => ({ ...def.pal, ...(OUTFITS[def.id]?.[today().season] || {}) });
+
 addEntities(() => NPCRT.filter((n) => n.visible && n.map === G.S.map).map((n) => ({
   y: n.y,
   draw: (c) => {
-    drawPerson(c, n.x, n.y, n.dir, n.moving, n.walkT, n.def.pal);
+    drawPerson(c, n.x, n.y, n.dir, n.moving, n.walkT, lookOf(n.def));
     if (G.S.npcs[n.id].talked !== G.S.day && G.talking !== n.id) drawBubble(c, n.x, n.y);
   },
 })));
