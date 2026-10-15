@@ -59,7 +59,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 25c | Festival calendar: maze night | feature | done (chivas47/hollowmereGame#51) | Autumn: a hedge maze at night with a prize at its heart (Stardew's Spirit's Eve). |
 | 25d | Festival calendar: gift exchange | feature | done (chivas47/hollowmereGame#52) | Winter: draw a villager's name and give them a gift (Stardew's Feast of the Winter Star). |
 | 25e | Festival calendar: ribbon dance | feature | done (chivas47/hollowmereGame#54) | Spring: ask a candidate to dance (Stardew's Flower Dance). |
-| 25f | Festival calendar: grange fair | feature | done (PR_LINK) | Autumn: a display of nine items judged for variety, quality and value, with gold prizes (Stardew's Fair grange display; Nuno: gold, not tokens). |
+| 25f | Festival calendar: grange fair | feature | done (chivas47/hollowmereGame#55) | Autumn: a display of nine items judged for variety, quality and value, with gold prizes (Stardew's Fair grange display; Nuno: gold, not tokens). |
 | 26 | Town restoration and orders | feature | next | Restore the old town hall with item bundles, or buy the upgrades from a corporate rival instead (original names); special orders board; a challenge-giver with a gem currency. |
 | 27 | Desert and island | feature | queued | A bus to the desert (shop, casino, desert fishing), a boat to a tropical island (island farm, a collectible nut currency, island trader, dig site, island dungeon, hidden puzzles). |
 | 28 | Museum and collections | feature | queued | Artifacts and minerals, geodes, museum donations with rewards, collections menu, secret notes, achievements, a completion tracker. |
