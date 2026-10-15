@@ -72,6 +72,7 @@ export function newState() {
     ventOpen: false, ventDeepest: 0,                    // v39: the Ember Vent; floor 10 is the forge
     forged: {}, weaponEnch: {}, toolEnch: {}, trinket: null,   // v39: weapon -> gem counts, weapon -> enchant, tool -> enchant, worn trinket
     quarryRocks: null,                                 // v44: today's rocks in the quarry (systems/quarry.js)
+    mail: [], mailRead: [],                          // v48: letters waiting in the mailbox, letters read (systems/mail.js)
     gates: { log: false, rubble: false, key: false },  // v45: the grove log, the railway rubble, the sewer key
     groveStumps: null, trader: { day: 0, bought: {}, once: [] },   // v45: systems/hidden.js
     areaForage: {}, areaForageDay: 0,                 // v43: forage on the beach and in the forest (systems/areas.js)
@@ -87,7 +88,7 @@ export function newState() {
     quests: [],                                         // open board requests, see systems/quests.js
     questsDone: 0, questDay: 0,                         // requests completed, last day one was posted
     festivals: {},                                      // "key-year" -> { item, rank } once entered
-    npcs: Object.fromEntries(NPCS.map((d) => [d.id, { pts: 0, talked: 0, gifted: 0, reward: false, scenes: [] }])),
+    npcs: Object.fromEntries(NPCS.map((d) => [d.id, { pts: 0, talked: 0, gifted: 0, reward: false, scenes: [], known: {} }])),
   };
 }
 
@@ -97,6 +98,7 @@ export function merge(saved) {
   s.seeds = Object.assign(newState().seeds, saved.seeds || {});
   s.bag = Object.assign(newState().bag, saved.bag || {});
   s.npcs = Object.assign(newState().npcs, saved.npcs || {});
+  for (const st of Object.values(s.npcs)) if (!st.known || typeof st.known !== 'object') st.known = {};   // v48: gift tastes learned
   if (!MAPS[s.map]) s.map = 'farm';
   s.upgrades = Object.assign(newState().upgrades, saved.upgrades || {});
   s.built = Object.assign(newState().built, saved.built || {});
@@ -125,6 +127,8 @@ export function merge(saved) {
   if (!Array.isArray(s.goalsClaimed)) s.goalsClaimed = [];
   if (!s.fridge || typeof s.fridge !== 'object') s.fridge = {};
   s.gates = Object.assign(newState().gates, saved.gates || {});   // v45
+  for (const k of ['mail', 'mailRead']) if (!Array.isArray(s[k])) s[k] = [];   // v48
+  if (saved.day > 3 && !saved.mailRead) s.mailRead.push('welcome');   // v48: no welcome letter for a farm already under way
   s.trader = { day: saved.trader?.day || 0, bought: { ...(saved.trader?.bought || {}) }, once: [...(saved.trader?.once || [])] };
   if (!s.wish || typeof s.wish !== 'object') s.wish = {};   // v34: skills already at 5 or 10 offer their picks
   s.barnGoods = Object.assign(newState().barnGoods, saved.barnGoods || {});

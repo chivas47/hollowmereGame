@@ -4,7 +4,7 @@ import { today, fmtTime } from '../core/time.js';
 import { ITEMS } from '../data/items.js';
 import { NPCS } from '../data/npcs.js';
 import { MAPS } from '../data/maps.js';
-import { hearts, heartStr } from '../systems/npcs.js';
+import { hearts, heartStr, isBirthday } from '../systems/npcs.js';
 import { weatherNow } from '../systems/weather.js';
 import { $ } from './dom.js';
 
@@ -25,7 +25,7 @@ function render() {
   $('#bin').textContent = `${S.bin}g`;
   $('#friends').innerHTML = NPCS.map((n) => {
     const st = S.npcs[n.id];
-    return `<div><b>${n.name}</b> <span class="hearts" aria-label="${hearts(st)} of 10 hearts">${heartStr(st)}</span></div>`;
+    return `<div><b>${n.name}</b>${isBirthday(n) ? ' <span class="role">birthday</span>' : ''} <span class="hearts" aria-label="${hearts(st)} of 10 hearts">${heartStr(st)}</span></div>`;
   }).join('');
 }
 

@@ -317,16 +317,22 @@ Five fish per season. Bite odds are weighted toward easy fish (weight 6 minus di
 
 ### Neighbours
 
-| Name | Who | Loves | Likes | 3-heart reward |
-|---|---|---|---|---|
-| Ines | Beekeeper | Pumpkin | Turnip, sunberry, melon, golden carp, egg | 5 pumpkin seeds |
-| Bram | Retired carpenter, runs the carpentry in town | Radish | Pumpkin, hollow cap, frost root, trout, pike, iron ore | +10 watering can capacity |
-| Odile | Net mender who fishes the Wilds pond | Dusk grayling | Spotted dace, copper rudd, frost char, sweet pepper, wild thyme, cucumber | 6 cucumber seeds |
-| Tavi | Young mapmaker | Rosehip | Wood sorrel, fava bean, celeriac, melon, copper ore, egg | 5 fava bean seeds |
+| Name | Who | Birthday | Loves | Likes | Dislikes | Hates | 3-heart reward |
+|---|---|---|---|---|---|---|---|
+| Ines | Beekeeper | Spring 20 | Pumpkin, meadow honey | Turnip, sunberry, melon, golden carp, egg, sunberry jam | Hollow quartz, coal | Sweet pepper | 5 pumpkin seeds |
+| Bram | Retired carpenter, runs the carpentry in town | Autumn 6 | Radish, hardwood | Pumpkin, hollow cap, frost root, trout, pike, iron ore | Syrup, sugar | Meadow honey | +10 watering can capacity |
+| Odile | Net mender who fishes the Wilds pond | Summer 9 | Dusk grayling, smoked grayling | Spotted dace, copper rudd, frost char, sweet pepper, wild thyme, cucumber | Frost kale, flour | Corn oil | 6 cucumber seeds |
+| Tavi | Young mapmaker | Winter 17 | Rosehip, trail bun | Wood sorrel, fava bean, celeriac, melon, copper ore, egg | Cheese, butter | Mayonnaise | 5 fava bean seeds |
 
-Points: talk 20/day, gift 80 loved, 45 liked, 20 other (1 gift/day). 100 points per heart, 10 hearts max. Dialogue changes at 2 and 5 hearts.
+Universal tastes (v48, after a neighbour's own lists; Stardew's): everyone loves starstone; gems, artisan goods (not oil, flour or sugar) and tree fruit are liked; ores, coal, cinder, stone, wood, hardwood, fiber and gel are disliked; trash is hated. Everything else is neutral.
+
+Points: talk 20/day, gift 80 loved, 45 liked, 20 neutral, -20 disliked, -40 hated (v48, Stardew's; 1 gift/day; friendship never drops below 0). On a neighbour's birthday a gift counts eight times, loss or gain (Stardew's x8); the morning notice and the neighbours panel say whose birthday it is. 100 points per heart, 10 hearts max. Dialogue changes at 2 and 5 hearts.
 
 Schedule (data/schedules.js): village square 8:00 to 11:00, the farm 11:00 to 18:00 (entering from the village road on the west), their cottage door 18:00 to 21:00, then indoors. One rest day a week in the village all day: Ines on day 1 of each week, Bram day 3, Odile day 5, Tavi day 7. Festival days override the schedule.
+
+The social menu (v48, F or a click on the neighbours panel): hearts, role, birthday, whether you talked and gave a gift today, and every taste you have learned by giving gifts.
+
+Mail (v48, data/mail.js): letters arrive in the morning and wait in the mailbox on the farmhouse front (its flag is up). Bram's welcome (new farms only), Fenn's notice at the start of each season, and each neighbour writes at 4 and 7 hearts with a gift: Ines 3 honey and a honey cake, Bram 10 hardwood and 2 quarry snacks, Odile 20 bait and a wrapped fish, Tavi 2 glade mint and 2 trail buns (Stardew's neighbours mail gifts as friendship grows).
 
 Heart scenes (data/scenes.js): the first talk after reaching 4 and 8 hearts plays a scene with two choices. The warmer choice gives 60 points at 4 hearts and 80 at 8; the other gives 25 and 50. Scenes: Ines, a swarm in the hedge and the honey ledger; Bram, the bin hinge and the old porch plans; Odile, mending nets at dawn and the boat south; Tavi, a runaway map page and the finished map.
 
@@ -756,6 +762,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
 - The worm bin and bait maker are not built; bait is crafted from gel (v41). The balance bot's catch rate comes from playing the real catch bar with a quarter-second reaction (tools/balance.mjs REACT); real players may do better or worse.
+- v48: gifts stay one a day per neighbour; Stardew allows two a week plus the birthday. The four existing neighbours only: new villagers, homes and outfits come in items 23b and 23c.
 - v47: the clinic has no muscle remedy (Stardew's cures exhaustion, which we do not have). The phone does not report tool upgrades (ours are instant) or sell animals.
 - v46: shops have no interiors yet; the keepers stand by their doors while open. Tool upgrades are still instant (Stardew's take two days). Animals are still bought at the coop and barn.
 - v46: the balance bot shops on open days only, pays one walk to town a day and stocks seeds in the morning (double before Wednesday); over 15 runs earnings are flat to +4% a season and gold at the end of year 1 about 3% lower as it buys more buildings and animals sooner.

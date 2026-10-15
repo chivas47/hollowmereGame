@@ -71,7 +71,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['layouts', 'sites', 'professions', 'cooking', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots', 'areas', 'quarry', 'hidden', 'town'];
+  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots', 'areas', 'quarry', 'hidden', 'town', 'mail'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -138,6 +138,7 @@ const { pickAreaForage } = await load('systems/areas.js');
 const { hitQuarryRock } = await load('systems/quarry.js');
 const { chopStump } = await load('systems/hidden.js');
 const { openToday } = await load('systems/town.js');
+const { readLetter } = await load('systems/mail.js');
 const { SHOPS } = await load('data/town.js');
 const REACT = 0.25;   // seconds between the bot's decisions on the catch bar (an average player)
 const { BOOKS } = await load('data/books.js');
@@ -715,6 +716,7 @@ function simulate(runSeed) {
     if (s.built.helperhut === true) collectHut();
     if (s.cave.open) { chooseCave('bats'); collectCave(); }
     for (const k of Object.keys(BOOKS)) while (S().bag[k] > 0 && readBook(k));   // v40: books are read; power books already known are sold
+    while (S().mail.length) readLetter();   // v48: letters, and what they enclose
     shipAll(reserves());
     const energyLeft = s.energy;
     sleep(false);
@@ -832,7 +834,7 @@ const lines = [
   '- Forages every day, delivers quests it can fill, enters every contest with its most valuable eligible item.',
   '- Spends leftover energy mining when the next purchase needs materials, otherwise fishing.',
   '- Fishing success: zone width and difficulty based, scaled by --fish-skill.',
-  '- Shops in town: buys on the days a shop opens and before it shuts (fitting the walk around its morning), one walk to town a day (none for the carpentry: it phones Bram); stocks seeds in the morning, double before the store shuts. Never faints, so never pays the clinic; skips the tavern and the tonic.', '',
+  '- Shops in town: buys on the days a shop opens and before it shuts (fitting the walk around its morning), one walk to town a day (none for the carpentry: it phones Bram); stocks seeds in the morning, double before the store shuts. Never faints, so never pays the clinic; skips the tavern and the tonic. Reads its mail each evening.', '',
 ];
 const md = lines.join('\n');
 if (OUT) writeFileSync(OUT, md); else console.log(md);
