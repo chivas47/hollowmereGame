@@ -109,7 +109,7 @@ addInteraction(71, ({ tile, mapId }) => {
 
 // Recipes sold at the seed stall.
 export function buyRecipe(k) {
-  const price = DISHES[k]?.from?.stall;
+  const price = DISHES[k]?.from?.tavern;
   if (!price || knows(k) || G.S.gold < price) return false;
   G.S.gold -= price;
   emit('sfx', 'coin');

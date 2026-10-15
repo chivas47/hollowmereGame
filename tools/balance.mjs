@@ -192,6 +192,7 @@ function simulate(runSeed) {
   let tripDay = 0;
   const goShop = (k) => {
     if (!openToday(k) || S().time >= SHOPS[k].close) return false;
+    if (SHOPS[k].phone) return true;   // v47: Bram takes orders by phone, no walk
     if (tripDay !== S().day) { tripDay = S().day; spend(TIME.travel * 2); }
     return true;
   };
@@ -831,7 +832,7 @@ const lines = [
   '- Forages every day, delivers quests it can fill, enters every contest with its most valuable eligible item.',
   '- Spends leftover energy mining when the next purchase needs materials, otherwise fishing.',
   '- Fishing success: zone width and difficulty based, scaled by --fish-skill.',
-  '- Shops in town: buys on the days a shop opens and before it shuts (fitting the walk around its morning), one walk to town a day; stocks seeds in the morning, double before the store shuts.', '',
+  '- Shops in town: buys on the days a shop opens and before it shuts (fitting the walk around its morning), one walk to town a day (none for the carpentry: it phones Bram); stocks seeds in the morning, double before the store shuts. Never faints, so never pays the clinic; skips the tavern and the tonic.', '',
 ];
 const md = lines.join('\n');
 if (OUT) writeFileSync(OUT, md); else console.log(md);

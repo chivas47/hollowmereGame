@@ -336,11 +336,16 @@ Hollowmere Town, up a lane from the village's north edge (10, 0). The farm's sta
 
 | Shop | Keeper | Sells | Hours | Shut | Stardew |
 |---|---|---|---|---|---|
-| Fenn's Provisions | Wren Fenn | seeds, farm supplies, bait, saplings, pet hats, recipes (the old seed stall) | 9:00 to 17:00 | Wednesdays | Pierre's: 9 to 5, shut Wednesdays |
+| Fenn's Provisions | Wren Fenn | seeds, farm supplies, bait, saplings, pet hats (the old seed stall; its recipes moved to the tavern in v47) | 9:00 to 17:00 | Wednesdays | Pierre's: 9 to 5, shut Wednesdays |
 | The Anvil | Corvin | tool upgrades, cracking geodes, coal | 9:00 to 16:00 | never | Clint's: 9 to 4 |
-| Bram's Carpentry | Bram | the farmhouse, buildings and their upgrades, moving buildings, renovations, wood and stone | 9:00 to 17:00 | Tuesdays | Robin's: 9 to 5, shut Tuesdays |
+| Bram's Carpentry | Bram | the farmhouse, buildings and their upgrades, moving buildings, renovations, wood and stone; orders by phone while open (v47) | 9:00 to 17:00 | Tuesdays | Robin's: 9 to 5, shut Tuesdays; takes calls |
+| The Lantern (v47) | Hob | menu: spring greens bowl 220g, hearth bread 120g, flatbread supper 600g, thyme tea 300g; a dish of the day off the cooking show; recipes: corn flatcake 100g, raw slices 150g, skillet caps 250g, triple thyme brew 5,000g (moved from the stall) | 12:00 to midnight | never | the Saloon: dishes at twice their sell price, a dish of the day, Gus's recipes |
+| Hollowmere Clinic (v47) | Doctor Maren | energy tonic 1,000g: +500 energy, +225 health (sells for 250g) | 9:00 to 15:00 | never | Harvey's: energy tonic 1,000g |
 
 Buildings ordered in town are placed on the farm: walk home and face the spot (Escape stops). Prices are unchanged.
+
+- The phone (v47), on the farmhouse wall above the bed corner: every shop's hours and closing days and whether it is open now, tomorrow's weather, and Bram's carpentry dialog while it is open (Stardew's phone: shop hours, the weather line, Robin's orders).
+- Fainting (v47): you come to at the clinic in town and pay the doctor's bill, 15% of your gold up to 1,000g (Stardew's Harvey: up to 1,000g). Before v47 you lost up to 500g and woke at the Hollow's mouth or your door.
 
 ### Upgrades and buildings (the smithy and the carpentry)
 
@@ -551,7 +556,7 @@ Cooking needs the kitchen (the first farmhouse upgrade): face the stove. A kitch
 | Known from the start | Pan egg (egg; 35g, 50 energy) |
 | TV cooking show (every 7th day; a rerun 3 days later) | Farm omelette, Spring greens bowl, Crisp turnip cakes (farming +1), Griddle cakes (foraging +2), Hearth bread, Oven fish, Garden medley, Flatbread supper, Pumpkin pottage (defense +2, luck +2), Honeyed carrots, Sugar biscuit, Brook soup (fishing +1), Ember eel (luck +1, speed +1), Thyme tea (drink: speed +1), Cheesy broccoli, Harvest stuffing (defense +2), Fortune plate (luck +3) |
 | Neighbours (3 and 7 hearts) | Ines: Honey cake, Root cellar bake (foraging +2, defense +2). Bram: Field lunch (farming +3), Quarry snack (mining +3). Odile: Net mender stew (fishing +3), Wrapped fish (fishing +2). Tavi: Trail bun (foraging +3), Wanderer's feast (max energy +40, speed +1) |
-| Seed stall | Corn flatcake 100g, Raw slices 150g, Skillet caps 250g (attack +2), Triple thyme brew 5,000g (drink: speed +1, longer) |
+| The tavern (the seed stall before v47) | Corn flatcake 100g, Raw slices 150g, Skillet caps 250g (attack +2), Triple thyme brew 5,000g (drink: speed +1, longer) |
 
 - Buff strengths: a speed point is 15% faster walking, a luck point adds 0.02 to the day's luck, an attack point hits 10% harder; skill points add levels while they last.
 - Daily luck: -0.1 to +0.1, rolled each morning and told as a fortune (morning report and the TV). It multiplies gem, rare egg and coal chances in the mine by 1 + 2 x luck, and on a lucky day each forage find doubles with a chance equal to the luck.
@@ -751,6 +756,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
 - The worm bin and bait maker are not built; bait is crafted from gel (v41). The balance bot's catch rate comes from playing the real catch bar with a quarter-second reaction (tools/balance.mjs REACT); real players may do better or worse.
+- v47: the clinic has no muscle remedy (Stardew's cures exhaustion, which we do not have). The phone does not report tool upgrades (ours are instant) or sell animals.
 - v46: shops have no interiors yet; the keepers stand by their doors while open. Tool upgrades are still instant (Stardew's take two days). Animals are still bought at the coop and barn.
 - v46: the balance bot shops on open days only, pays one walk to town a day and stocks seeds in the morning (double before Wednesday); over 15 runs earnings are flat to +4% a season and gold at the end of year 1 about 3% lower as it buys more buildings and animals sooner.
 - v45: the balance bot cuts the grove log once it has the copper axe, forages the grove and the railway once open and chops the grove stumps with spare energy; over 15 runs forage income rises about 16% and fish income falls about 15% (less time at the pond), gold at the end of year 1 about 4% lower. It does not soak, visit the sewer or buy from the trader.

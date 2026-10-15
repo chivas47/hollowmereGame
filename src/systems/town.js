@@ -1,10 +1,14 @@
-// The town (v46): the general store, the smithy and Bram's carpentry, north of the village. Each opens its dialog
-// from its door during opening hours (data/town.js); the farm's old stall and workbench point the way.
+// The town (v46): the general store, the smithy and Bram's carpentry, north of the village; v47 the tavern and the
+// clinic. Each opens its dialog from its door during opening hours (data/town.js); the farm's old stall and
+// workbench point the way. v47: the farmhouse phone (hours, the forecast, Bram's orders) and the tavern and clinic stock.
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
-import { emit, notify } from '../core/events.js';
+import { emit, changed, notify } from '../core/events.js';
 import { addInteraction, addEntities } from '../core/registry.js';
-import { SHOPS, DAY_NAMES } from '../data/town.js';
+import { SHOPS, DAY_NAMES, TAVERN, CLINIC } from '../data/town.js';
+import { DISHES, TV_RECIPES } from '../data/cooking.js';
+import { ITEMS } from '../data/items.js';
+import { addItem } from './quality.js';
 import { SHOP_SPOTS } from '../data/maps.js';
 import { NPCS } from '../data/npcs.js';
 import { today, fmtTime } from '../core/time.js';
@@ -47,3 +51,40 @@ addEntities(() => (G.S.map !== 'town' ? [] : Object.entries(SHOP_SPOTS).filter((
   const [x, y] = s.keeper;
   return { y: y * T + 14, draw: (c) => drawPerson(c, x * T + 8, y * T + 14, 'down', false, 0, look(k)) };
 })));
+
+// ---- v47: the phone on the farmhouse wall ----
+addInteraction(72, ({ tile, mapId }) => {
+  if (mapId !== 'house' || tile !== '_') return false;
+  emit('ui:phone');
+  return true;
+});
+
+// ---- v47: the tavern ----
+// The dish of the day: a dish off the cooking show not on the menu, a new one each day.
+export function special(day = G.S.day) {
+  const list = TV_RECIPES.filter((k) => !TAVERN.menu.includes(k));
+  return list[(day * 7 + 3) % list.length];
+}
+export const dishPrice = (k) => DISHES[k].sell * TAVERN.markup;
+export function buyDish(k) {
+  const S = G.S;
+  if (!(TAVERN.menu.includes(k) || k === special()) || S.gold < dishPrice(k)) return false;
+  S.gold -= dishPrice(k);
+  addItem(k, 1);
+  emit('sfx', 'coin');
+  notify(`${SHOPS.tavern.keeper} slides over a plate: ${DISHES[k].name.toLowerCase()}. Eat it from the bag.`);
+  changed();
+  return true;
+}
+
+// ---- v47: the clinic ----
+export function buyClinic(k) {
+  const S = G.S, o = CLINIC.stock.find((x) => x.key === k);
+  if (!o || S.gold < o.cost) return false;
+  S.gold -= o.cost;
+  addItem(k, 1);
+  emit('sfx', 'coin');
+  notify(`Bought an ${ITEMS[k].name.toLowerCase()}. Drink it from the bag.`);
+  changed();
+  return true;
+}

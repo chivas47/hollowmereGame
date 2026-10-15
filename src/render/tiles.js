@@ -300,6 +300,8 @@ const FRONT = {
   store:     { wall: '#e2cda0', line: '#c9b083', roof: '#c0443a', door: '#7a4b2a' },
   smithy:    { wall: '#8a8f96', line: '#6f747a', roof: '#3f3a36', door: '#3f2f22' },
   carpenter: { wall: '#b08d55', line: '#987745', roof: '#5d7a4a', door: '#6e4626' },
+  tavern:    { wall: '#8a5a32', line: '#6e4626', roof: '#7a2f2a', door: '#3f2f22' },   // v47
+  clinic:    { wall: '#eef2f4', line: '#d0d8dc', roof: '#4f7a9a', door: '#5a6a7a' },
 };
 function storefront(g, p, o) {
   const X = o.x * T, Y = o.y * T, f = FRONT[o.kind];
@@ -317,6 +319,9 @@ function storefront(g, p, o) {
   if (o.kind === 'smithy') { r(g, X + 20, Y + 13, 8, 2, '#3f3a36'); r(g, X + 22, Y + 15, 4, 1, '#3f3a36'); r(g, X + 38, Y - 8, 5, 10, '#5f5a52'); r(g, X + 39, Y - 11, 3, 3, 'rgba(200,200,200,.5)'); }
   if (o.kind === 'carpenter') { r(g, X + 19, Y + 13, 9, 2, '#a9b4bd'); for (let i = 0; i < 4; i++) r(g, X + 19 + i * 2, Y + 15, 1, 1, '#7f8a93'); r(g, X + 28, Y + 12, 2, 4, '#8a5a32');
     r(g, X + 40, Y + 26, 6, 5, '#c9a06a'); r(g, X + 40, Y + 26, 6, 1, '#a07a4a'); }
+  if (o.kind === 'tavern') { r(g, X + 21, Y + 12, 5, 4, '#e9b44c'); r(g, X + 21, Y + 12, 5, 1, '#f4ead2'); r(g, X + 26, Y + 13, 2, 2, '#e9b44c');
+    r(g, X + 3, Y + 26, 2, 4, '#2b211a'); r(g, X + 2, Y + 24, 4, 3, '#e9b44c'); }
+  if (o.kind === 'clinic') { r(g, X + 23, Y + 12, 2, 4, '#4f9a6a'); r(g, X + 22, Y + 13, 4, 2, '#4f9a6a'); }
 }
 
 export const OBJECT_ART = { storefront, lodge, helperhut, waystone, pond, slimepen, shed, mill, clocktower, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
@@ -493,7 +498,7 @@ function pattern(g, X, Y, d, wall) {
 export function drawHouseTile(g, x, y, t, below, walls, floors, decor) {
   const X = x * T, Y = y * T;
   if (t === '.') { r(g, X, Y, T, T, '#14100c'); return; }
-  if (t === 'I') {
+  if (t === 'I' || t === '_') {   // v47: the phone hangs on a wall face
     if (below && below !== 'I' && below !== '.') { pattern(g, X, Y, walls[decor.wall] || walls[0], true); r(g, X, Y + 14, T, 2, '#3f3226'); return; }   // the wall's face
     r(g, X, Y, T, T, '#4a3828'); r(g, X, Y, T, 1, '#5c4632'); r(g, X, Y + 15, T, 1, '#2b2018');   // wall tops
     return;
@@ -504,6 +509,7 @@ export function drawHouseTile(g, x, y, t, below, walls, floors, decor) {
 const bed = (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 1, Y, 14, T, '#7a4a2a'); r(g, X + 2, Y + 1, 12, 14, '#f4ead2'); r(g, X + 2, Y + 6, 12, 9, '#5f8fb5'); r(g, X + 2, Y + 6, 12, 1, '#3d6a8f'); };
 const bedHead = (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 1, Y, 14, T, '#7a4a2a'); r(g, X + 2, Y + 3, 12, 13, '#f4ead2'); r(g, X + 4, Y + 4, 8, 4, '#ffffff'); r(g, X + 1, Y, 14, 3, '#5c371e'); };
 export const HOUSE_ART = {
+  _: (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 5, Y + 3, 6, 9, '#3f3226'); r(g, X + 6, Y + 4, 4, 7, '#b5452f'); r(g, X + 4, Y + 4, 2, 6, '#2b211a'); r(g, X + 7, Y + 6, 2, 1, '#e9c46a'); r(g, X + 7, Y + 8, 2, 1, '#e9c46a'); },
   Z: (g, x, y, m) => (m[y - 1]?.[x] === 'Z' ? bed(g, x, y) : bedHead(g, x, y)),
   l: (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 6, Y + 8, 4, 7, '#6e4626'); r(g, X + 2, Y + 3, 12, 6, '#8a5a32'); r(g, X + 3, Y + 3, 5, 5, '#f4ead2'); r(g, X + 8, Y + 3, 5, 5, '#e8dcc0'); r(g, X + 7, Y + 3, 1, 5, '#b5452f'); },
   n: (g, x, y) => { const X = x * T, Y = y * T; r(g, X, Y + 2, T, 14, '#a5753f'); r(g, X, Y + 2, T, 3, '#d9caa6'); r(g, X + 3, Y + 8, 10, 6, '#8a5a32'); r(g, X + 7, Y + 10, 2, 1, '#e9c46a'); },
