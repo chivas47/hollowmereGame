@@ -18,7 +18,7 @@ const needsText = (needs) => Object.entries(needs).map(([k, n]) => `${n} ${ITEMS
 function craftMenu() {
   const S = G.S;
   const rows = Object.entries(RECIPES).map(([k, rc]) => `
-    <div class="shoprow"><div><b>${rc.seed ? CROPS[k].name : PLACEABLES[k].name}</b><span>${rc.desc}${rc.cost ? ` ${rc.cost}g` : ''}<br>Needs ${needsText(rc.needs)}${Object.entries(rc.seeds || {}).map(([s, n]) => `, ${n} ${CROPS[s].name.toLowerCase()} (you have ${S.seeds[s]})`).join('')}${rc.seed ? (S.seeds[k] ? `<br>Packets: ${S.seeds[k]}` : '') : S.kit[k] ? `<br>In your kit: ${S.kit[k]}` : ''}</span></div>
+    <div class="shoprow"><div><b>${rc.seed ? CROPS[k].name : rc.item ? ITEMS[k].name : PLACEABLES[k].name}</b><span>${rc.desc}${rc.cost ? ` ${rc.cost}g` : ''}<br>Needs ${needsText(rc.needs)}${Object.entries(rc.seeds || {}).map(([s, n]) => `, ${n} ${CROPS[s].name.toLowerCase()} (you have ${S.seeds[s]})`).join('')}${rc.seed ? (S.seeds[k] ? `<br>Packets: ${S.seeds[k]}` : '') : rc.item ? (S.bag[k] ? `<br>In your bag: ${S.bag[k]}` : '') : S.kit[k] ? `<br>In your kit: ${S.kit[k]}` : ''}</span></div>
     <div class="btns"><button data-craft="${k}" ${learnt(rc) && affordable(rc.cost, rc.needs) && seedsOk(rc) ? '' : 'disabled'} ${learnt(rc) ? '' : `title="Learnt at ${SKILLS[rc.skill[0]].name.toLowerCase()} level ${rc.skill[1]}"`}>${learnt(rc) ? 'Craft' : `${SKILLS[rc.skill[0]].name} ${rc.skill[1]}`}</button></div></div>`).join('');
   openModal(`<h2>Crafting</h2><p class="role">Stone and ore from the Hollow, wood from the farm, plus Bram's fittings. You have <b>${S.gold}g</b>. Crafted things go to slot 7; face untilled farm grass or a greenhouse bed and press Use to place one.</p>${rows}`,
     [['Close', closeModal, true]]);
