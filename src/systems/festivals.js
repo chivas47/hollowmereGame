@@ -13,7 +13,8 @@ import { ARTISAN } from '../data/artisan.js';
 import { FRUIT } from '../data/trees.js';
 import { DISHES } from '../data/cooking.js';
 import { TRASH } from '../data/angling.js';
-import { addPoints } from './npcs.js';
+import { addPoints, giftTier } from './npcs.js';
+import { GIFT_POINTS } from '../data/gifts.js';
 import { today, dateParts, fmtTime } from '../core/time.js';
 import { PRODUCE } from '../data/crops.js';
 import { FORAGE } from '../data/forage.js';
@@ -94,7 +95,7 @@ addInteraction(72, ({ tile, mapId }) => {
 });
 
 // Decorations on festival days.
-const COLORS = { mazenight: ['#e8862a', '#5a3a5a', '#e9b44c'], potluck: ['#e8862a', '#86b86a', '#f4ead2'], egghunt: ['#f2a0c0', '#9fd8f0', '#f4e3a0'], blossom: ['#f4ead2', '#e2707a', '#e9b44c'], catch: ['#69aedb', '#f4ead2', '#86b86a'], weighin: ['#e8862a', '#d9644a', '#e9b44c'], frostlight: ['#ffd98a', '#cfe3ee', '#e2707a'] };
+const COLORS = { longnight: ['#e9b44c', '#c0443a', '#f4ead2'], mazenight: ['#e8862a', '#5a3a5a', '#e9b44c'], potluck: ['#e8862a', '#86b86a', '#f4ead2'], egghunt: ['#f2a0c0', '#9fd8f0', '#f4e3a0'], blossom: ['#f4ead2', '#e2707a', '#e9b44c'], catch: ['#69aedb', '#f4ead2', '#86b86a'], weighin: ['#e8862a', '#d9644a', '#e9b44c'], frostlight: ['#ffd98a', '#cfe3ee', '#e2707a'] };
 addLayer(30, (c) => {
   if (G.S.map !== 'village') return;
   const f = festivalToday(); if (!f) return;
@@ -204,3 +205,37 @@ addInteraction(72, ({ tile, mapId }) => {
 });
 // Out of the maze when it shuts.
 addUpdater(() => { if (G.S.map === 'maze' && !festivalOpen()) { placePlayer('village', 13, 13, 'up'); emit('map:changed', 'village'); notify('The lanterns go out. Maze Night is over.'); } });
+
+// ---- v57: the gift exchange ----
+// G.S.secretFriend = { year, id }: chosen when the reveal day comes (or on the feast day itself, for a save that
+// slept past it), from the villagers who come to festivals.
+const exchangeFestival = () => festivalOn({ season: 'Winter', d: 25 }) || null;
+function pickFriend(year) {
+  const pool = NPCS.filter((d) => !d.noFestival && d.id !== G.S.spouse);
+  return pool[(year * 7 + 3) % pool.length].id;
+}
+export function secretFriend() {
+  const S = G.S, y = today().year, f = exchangeFestival();
+  if (!f) return null;
+  if (S.secretFriend?.year !== y) S.secretFriend = { year: y, id: pickFriend(y) };
+  return S.secretFriend.id;
+}
+on('day:start', () => {
+  const d = today(), f = exchangeFestival();
+  if (!f || d.season !== f.season || d.d !== f.exchange.reveal) return;
+  const id = secretFriend();
+  notify(`A note slipped under your door: your secret friend for the ${f.name} is ${NPCS.find((n) => n.id === id).name}. Bring them a gift on ${f.season} ${f.day}.`);
+});
+export function giveExchange(item) {
+  const f = festivalToday(), S = G.S;
+  if (!f || f.kind !== 'exchange' || !festivalOpen() || entry(f) || !(S.bag[item] > 0)) return null;
+  const id = secretFriend(), def = NPCS.find((n) => n.id === id);
+  S.bag[item]--;
+  const tier = giftTier(def, item), pts = GIFT_POINTS[tier] * f.exchange.mult;
+  addPoints(id, pts);
+  const back = f.exchange.presents[(today().year * 5 + S.day) % f.exchange.presents.length];
+  S.bag[back] = (S.bag[back] || 0) + 1;
+  S.festivals[entryKey(f)] = { to: id, item, tier, got: back };
+  changed();
+  return { to: def.name, tier, pts, got: back };
+}

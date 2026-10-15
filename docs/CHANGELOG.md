@@ -2,6 +2,9 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v57: The Longnight Feast
+- A new winter festival on Winter 25. A week before, a note names your secret friend; bring them a gift to the feast. It counts five times as much as usual, and a present finds its way back to you.
+
 ## v56: Maze Night
 - A new autumn festival on the night of Autumn 27, 10:00 to 11:50 pm: find your way through a hedge maze to the chest at its heart. Inside, a gilded gourd that every villager would love as a gift.
 

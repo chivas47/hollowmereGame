@@ -647,6 +647,7 @@ Original where Stardew's mechanic does not exist here: Bountiful, Quickgrow, See
 | Autumn 21 | Harvest Weigh-in | Enter one crop | 900g at 200g+, 350g at 100g+, 80g otherwise |
 | Autumn 27 (v56), 22:00 to 23:50 | Maze Night | Walk a hedge maze (the same every year) to the chest at its heart | A gilded gourd once a year (sells 2,500g; everyone loves it as a gift). Stardew's Spirit's Eve and its golden pumpkin |
 | Winter 12 | Frostlight Market | Stall: frost lantern 350g, warm cider 60g (+60 energy) | none |
+| Winter 25 (v57) | Longnight Feast | A secret friend is named on Winter 18 (a note under the door); give them one gift at the table | The gift's friendship counts 5 times; you get a present back (a gem, a dish, a wine or the Starlit Primer). Stardew's Feast of the Winter Star |
 
 - One contest entry per festival per year. On festival days neighbours skip the farm and stand in the square; talking there gives double points (40) and a festival line.
 
@@ -791,7 +792,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
 - The worm bin and bait maker are not built; bait is crafted from gel (v41). The balance bot's catch rate comes from playing the real catch bar with a quarter-second reaction (tools/balance.mjs REACT); real players may do better or worse.
-- v54 to v56: the egg hunt, the potluck and maze night so far (the gift exchange follows). Maze night keeps its own hours (22:00 to 23:50); the shops still shut that whole day. Shops shut on festival days, so now on Spring 13 too. The balance bot does not play the egg hunt.
+- v54 to v57: two festivals every season now. The rest of the roadmap's themes (dance, grange fair, ice fishing, night market, fishing derby, squid contest, desert festival) wait in item 25e. The 5x gift multiplier at the Longnight Feast is our reading of Stardew's; check it against yours. Maze night keeps its own hours (22:00 to 23:50); the shops still shut that whole day. Shops shut on festival days, so now on Spring 13 too. The balance bot does not play the egg hunt.
 - v53: children do not grow past toddler; there is no child bed, and a third farmhouse room is not needed. The roommate has no 14-heart scene.
 - v52: the chore chance (40%) is ours: Stardew's odds vary by chore and friendship. No wedding ceremony scene, just a message; no spouse room. The beach does not show rain, so check the weather in the top bar for the boatman.
 - v51: no group 10-heart event when dating several (Stardew has one); jealousy is a flat 20 points per gift to another partner, not tied to who sees it.
