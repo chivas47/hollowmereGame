@@ -178,7 +178,7 @@ addInteraction(62, ({ tx, ty, mapId, item }) => {
   const def = DEBRIS[d.kind], tools = young ? ['axe', 'hoe', 'pick'] : def.tools;
   if (!tools.includes(item)) { notify(`${young ? 'A young alder' : def.name}: clear it with the ${listOr(tools.map(toolName))}.`); return true; }
   const power = item === 'axe' ? tier(G.S, 'axe').power + (G.S.toolEnch.axe === 'powerful' ? 1 : 0) : item === 'pick' ? (G.S.toolEnch.pick === 'powerful' ? 2 : 1) : 1;   // v39: powerful
-  if (def.axe && (item !== 'axe' || G.S.upgrades.axe < def.axe)) { notify(`This ${def.name.toLowerCase()} is too tough for a basic axe. Bram can upgrade it at the workbench.`); return true; }
+  if (def.axe && (item !== 'axe' || G.S.upgrades.axe < def.axe)) { notify(`This ${def.name.toLowerCase()} is too tough for a basic axe. The smithy in town can upgrade it.`); return true; }
   if (item !== 'sword' && !useEnergy(SWING)) return true;
   swingAt(tx, ty, item);
   if (young) { remove(k); notify('Cleared the young alder.'); changed(); return true; }

@@ -1,7 +1,6 @@
 // Bram's workbench: tool and house upgrades, and ordering the coop.
 import { G } from '../core/game.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addInteraction } from '../core/registry.js';
 import { UPGRADES, COOP, COAL_COST, MATERIAL_COST, tier } from '../data/upgrades.js';
 import { ITEMS } from '../data/items.js';
 
@@ -73,8 +72,3 @@ export function orderCoop() {
   return true;
 }
 
-addInteraction(72, ({ tile }) => {
-  if (tile !== 'K') return false;
-  emit('ui:upgrades');
-  return true;
-});

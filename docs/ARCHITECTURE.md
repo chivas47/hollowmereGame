@@ -31,6 +31,7 @@ src/
     angling.js        CATCH (the catch bar), BAIT, TACKLE, BOBBERS, TRASH, RECYCLE, FISH_TREASURE (v41)
     books.js          BOOKS (skill, primer, power), BOOK_FIND, MASTERY_XP, PERKS, SHRINE (v40)
     forge.js          VENT, FORGE_GEMS, enchantments, TRINKETS (v39)
+    town.js           SHOPS: name, keeper, hours, closing weekdays, dialog event (v46)
     hidden.js         GATES (grove log, railway rubble, sewer key), GROVE stumps, SPRING, TRADER stock (v45)
     cavern.js         CAVERN (the Sunken Cavern's door, strength, ores, shafts, chests), HOLLOW_GOLD (v38)
     guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
@@ -72,7 +73,8 @@ src/
     buildings.js      door (sleep), stall (shop), bin and mini bins (ship), well/pond refill
     economy.js        ship(), buy(), overnight payout; materials are never shipped
     npcs.js           schedules across farm and village, talk, gifts, hearts, 3-heart rewards, heart scenes
-    upgrades.js       workbench purchases, material costs, recalcStats()
+    upgrades.js       smithy and carpentry purchases, material costs, recalcStats()
+    town.js           the town's shops: opening hours and closing days (isOpen, closedWhy), doors, keepers; the farm stall and workbench point to town
     livestock.js      shared animal rules: coop and barn levels, room, buying and hatching, friendship, grazing, products, quality
     coop.js           coop placement, coop animals, petting, feed
     mine.js           floor generation for the Hollow, the Sunken Cavern and the Ember Vent (MINE.zone, MINE.eff), the forge room, rocks, breakRock(), ladders, shafts, lighting
@@ -163,10 +165,12 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 57 | treasure.js | Kit slot with a bomb (throws it at the faced tile, Hollow only) |
 | 72 | helpers.js | Helper hut a, waystones e and d (warp), cave mouth y, the cave's crate t |
 | 57 | helpers.js | Kit slot with a home charm (warp home) |
-| 72 | upgrades.js / coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Workbench K, coop C, barn A, greenhouse G, mine entrance M, ladders U/L, the cavern door ^, shafts !, the vent door > and the forge =, placed object Y, quest board Q, festival table J |
+| 72 | town.js | Shop doors ( ) ] in the town (dialog, or the hours and closing day) |
+| 70 | town.js | The farm's old stall S and workbench K (a note pointing to town) |
+| 72 | coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Coop C, barn A, greenhouse G, mine entrance M, ladders U/L, the cavern door ^, shafts !, the vent door > and the forge =, placed object Y, quest board Q, festival table J |
 | 71 | village.js | Fountain F, cottage V (flavour text) |
 | 71 | cooking.js | Farmhouse stove o (cook) and counters n (fridge) |
-| 70 | buildings.js, house.js | Stall S, bin B; farm door D (enter), bed Z, lectern l, kitchen and cellar fittings |
+| 70 | buildings.js, house.js | Bin B; farm door D (enter), bed Z, lectern l, kitchen and cellar fittings |
 | 66 | mine.js | Pickaxe on mine rocks |
 | 65 | fishing.js | Rod on water O (cast) |
 | 60 | buildings.js | Well W or pond O (refill can) |
@@ -258,7 +262,8 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | S | seed stall | yes |
 | B | shipping bin | yes |
 | W | well | yes |
-| K | Bram's workbench | yes |
+| K | Bram's old workbench (a note since v46) | yes |
+| (, ), ] | the town's general store, smithy and carpentry, each with its keeper's spot (v46) | yes |
 | C | chicken coop (written at runtime) | yes |
 | A | barn (written at runtime) | yes |
 | G | greenhouse building on the farm (written at runtime) | yes |
@@ -282,7 +287,7 @@ Soil is per map: `soilOf(mapId)` returns `G.S.soil` (farm) or `G.S.greenSoil` (g
 - **Forage:** entry in `data/forage.js` plus art in `FORAGE_ART` (render/sprites.js).
 - **Neighbour:** entry in `data/npcs.js` (farm path), plus a village path, home and rest day in `data/schedules.js`, and scenes in `data/scenes.js`. Paths are walked x first, then y; keep each leg clear.
 - **Upgrade tier:** append to a line in `data/upgrades.js`; read effects with `tier(G.S, 'line')`.
-- **Building:** follow systems/coop.js: order at the workbench, build on `day:start`, write tiles at runtime, emit `world:changed`.
+- **Building:** follow systems/coop.js: order at the carpentry (ui/workshop.js), build on `day:start`, write tiles at runtime, emit `world:changed`.
 - **Tool:** key in `data/hotbar.js` (+ `TOOL_NAMES`), icon in `render/icons.js`, an interaction in its system.
 - **Map:** grid and entry in `data/maps.js`, with an `E` tile and `exits` entry on both sides.
 - **Craftable object:** entry in `PLACEABLES` and `RECIPES` (data/crafting.js) plus art in `PLACED_ART` (render/sprites.js). A machine also needs a `MACHINES` entry; its products go in data/artisan.js. A machine that uses up more than one item a load (the furnace) gives `takes(k)`, and one with `nights: 0` is ready at once. `nights` can be a function of the item (the brew barrel). `repeat: true` restarts the same load after collecting (the gem copier); `auto: {item, every, winter}` produces on its own with a `timer` field (bee box, mushroom log). Tree taps live on alder debris as `d.tap` in clearing.js, not in G.S.placed. `hatch: {egg: animal}` (the incubator) moves an animal in through systems/livestock.js `adopt()` instead of giving an item.

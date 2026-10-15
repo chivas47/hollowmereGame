@@ -64,7 +64,7 @@ Systems never call each other's internals. They plug into four registries and an
 
 **New crop:** add an entry to `data/crops.js` and its key to `data/hotbar.js`. The shop, planting, growth and withering pick it up automatically.
 
-**New fruit tree:** add a sapling to `TREES` and its fruit to `FRUIT` in `data/trees.js`. The stall, the kit slot, the fruit item and its jar pick it up automatically.
+**New fruit tree:** add a sapling to `TREES` and its fruit to `FRUIT` in `data/trees.js`. The general store, the kit slot, the fruit item and its jar pick it up automatically.
 
 **New forage item:** add it to `data/forage.js` and an art function in `render/sprites.js` (`FORAGE_ART`).
 
@@ -83,9 +83,9 @@ A new tool also needs its key in `data/hotbar.js`, a label in `ui/hotbar.js` and
 
 **New fish:** add an entry to `data/fish.js`. Seasons, bite odds, difficulty, the bag and the fish log update automatically.
 
-**New upgrade tier:** append a tier to the line in `data/upgrades.js`. The workbench lists it automatically. If it adds a new effect, read it where it matters with `tier(G.S, 'line')` (for example `farming.js` reads the hoe's `reach`).
+**New upgrade tier:** append a tier to the line in `data/upgrades.js`. The smithy (or the carpentry, for the house) lists it automatically. If it adds a new effect, read it where it matters with `tier(G.S, 'line')` (for example `farming.js` reads the hoe's `reach`).
 
-**New building:** `systems/coop.js` is the worked example. Buildings are ordered at the workbench, become real overnight on `day:start`, and write their tiles into the map at runtime. The original tiles are remembered, so a new game restores them. Emit `world:changed` so the background is redrawn.
+**New building:** `systems/coop.js` is the worked example. Buildings are ordered at the carpentry in town, become real overnight on `day:start`, and write their tiles into the map at runtime. The original tiles are remembered, so a new game restores them. Emit `world:changed` so the background is redrawn.
 
 **Mine content:** rock types, drops, slime scaling and sword damage live in `data/minerals.js`. Floors are generated in `systems/mine.js` (seeded by floor and day, so a floor stays the same until tomorrow). Mark an item `material: true` and the shipping bin keeps it for upgrades.
 

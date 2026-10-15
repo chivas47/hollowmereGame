@@ -142,7 +142,7 @@ export function startSiting(key, mode) {
   if (mode === 'new' && (G.S.built[key] || !affordable(s.def.cost, s.def.needs))) return false;
   if (mode === 'move' && !built(key)) return false;
   G.siting = { key, mode };
-  notify(`${mode === 'new' ? 'Placing' : 'Moving'} the ${s.name.toLowerCase()}: face where its top-left corner goes and press Use. Face the workbench or press Escape to stop.`);
+  notify(`${mode === 'new' ? 'Placing' : 'Moving'} the ${s.name.toLowerCase()}: on the farm, face where its top-left corner goes and press Use. Press Escape to stop.`);
   return true;
 }
 export function cancelSiting() { if (!G.siting) return; G.siting = null; notify('Put that off for now.'); }
@@ -177,11 +177,11 @@ export function findSite(key) {
   return null;
 }
 
-// Priority 300: while siting, Use on the farm places the building. Facing the workbench stops.
+// Priority 300: while siting, Use on the farm places the building. Facing the workbench or the carpentry stops.
 addInteraction(300, ({ tx, ty, tile, mapId }) => {
   const g = G.siting;
   if (!g) return false;
-  if (tile === 'K') { cancelSiting(); return true; }
+  if (tile === 'K' || tile === ']') { cancelSiting(); return true; }   // v46: or the carpentry door
   if (mapId !== 'farm') { notify('Go to the farm to place it.'); return true; }
   if (siteAt(g.key, g.mode, tx, ty)) G.siting = null;
   return true;

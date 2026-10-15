@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v46: The town
+- Hollowmere Town, up a new lane north of the village, with three shops: Fenn's Provisions (seeds, supplies, bait, saplings, hats, recipes), The Anvil (tool upgrades, geodes, coal) and Bram's Carpentry (the farmhouse, buildings, renovations, wood and stone).
+- Shops keep hours: the store and the carpentry 9:00 to 5:00 pm, the smithy 9:00 to 4:00 pm. The store shuts on Wednesdays, the carpentry on Tuesdays, and all three on festival days. The HUD now shows the weekday.
+- The farm's seed stall and Bram's workbench now point you to town. Prices are unchanged.
+
 ## v45: The grove, the railway and the sewer
 - A fallen log at the forest's west edge: the copper axe cuts through to a hidden grove with a still pond (the Glade skipper), grove forage and six big stumps that grow back every morning, 2 hardwood each.
 - Rubble east of the Wilds clears on Summer 3 of the first year: the railway beyond has forage and a hot spring. Soak in it for an hour to get back 60 energy and half your health.

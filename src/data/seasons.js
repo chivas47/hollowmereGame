@@ -1,5 +1,6 @@
 export const SEASONS = ['Spring', 'Summer', 'Autumn', 'Winter'];
 export const SEASON_LENGTH = 28;
+export const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];   // v46: the 1st of every season is a Monday
 
 // Palette per season. The world art reads only from these.
 export const PAL = {
