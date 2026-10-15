@@ -4,7 +4,7 @@ import { on, emit } from '../core/events.js';
 import { NPCS } from '../data/npcs.js';
 import { ITEMS } from '../data/items.js';
 import { TIER_NAMES } from '../data/gifts.js';
-import { hearts, heartStr, isBirthday } from '../systems/npcs.js';
+import { hearts, heartStr, isBirthday, isCandidate } from '../systems/npcs.js';
 import { readLetter } from '../systems/mail.js';
 import { openModal, closeModal } from './modal.js';
 import { $, esc } from './dom.js';
@@ -16,10 +16,11 @@ function social() {
     const tastes = Object.keys(TIER_NAMES).map((t) => [t, known.filter(([, k]) => k === t).map(([i]) => ITEMS[i]?.name || i)]).filter(([, l]) => l.length)
       .map(([t, l]) => `${TIER_NAMES[t]}: ${l.join(', ')}`).join('. ');
     const today = [st.talked === S.day ? 'talked today' : 'not talked to today', st.gifted === S.day ? 'gift given' : 'no gift yet'].join(', ');
-    return `<div class="shoprow"><div><b>${d.name}</b> <span class="hearts" aria-label="${hearts(st)} of 10 hearts">${heartStr(st)}</span>
+    const love = isCandidate(d.id) ? (st.dating ? ' <span class="role">dating</span>' : ' <span class="role">single</span>') : '';   // v51
+    return `<div class="shoprow"><div><b>${d.name}</b>${love} <span class="hearts" aria-label="${hearts(st)} of 10 hearts">${heartStr(st)}</span>
       <span>${d.role}. Birthday: ${d.birthday.season} ${d.birthday.d}${isBirthday(d) ? ' (today!)' : ''}. ${today[0].toUpperCase()}${today.slice(1)}.<br>${tastes ? `${tastes}.` : 'Give gifts to learn what they like.'}</span></div></div>`;
   }).join('');
-  openModal(`<h2>Neighbours</h2><p class="role">A gift a day each: loved, liked and neutral gifts raise friendship; disliked and hated ones lower it. Birthday gifts count eight times.</p>${rows}`, [['Close', closeModal, true]]);
+  openModal(`<h2>Neighbours</h2><p class="role">A gift a day each: loved, liked and neutral gifts raise friendship; disliked and hated ones lower it. Birthday gifts count eight times. Someone single stops at 8 hearts until you give them a bouquet (the general store).</p>${rows}`, [['Close', closeModal, true]]);
 }
 
 function letter(l) {

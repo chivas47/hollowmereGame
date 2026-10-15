@@ -8,6 +8,8 @@ import { SHOPS, DAY_NAMES, TAVERN, CLINIC } from '../data/town.js';
 import { DISHES, TV_RECIPES } from '../data/cooking.js';
 import { ITEMS } from '../data/items.js';
 import { addItem } from './quality.js';
+import { hearts } from './npcs.js';
+import { CANDIDATES, BOUQUET } from '../data/romance.js';
 import { SHOP_SPOTS } from '../data/maps.js';
 import { today, fmtTime } from '../core/time.js';
 import { festivalToday } from './festivals.js';
@@ -77,6 +79,19 @@ export function buyClinic(k) {
   addItem(k, 1);
   emit('sfx', 'coin');
   notify(`Bought an ${ITEMS[k].name.toLowerCase()}. Drink it from the bag.`);
+  changed();
+  return true;
+}
+
+// ---- v51: the bouquet, at the store once any candidate is at 8 hearts ----
+export const bouquetOnSale = () => CANDIDATES.some((id) => hearts(G.S.npcs[id]) >= BOUQUET.hearts);
+export function buyBouquet() {
+  const S = G.S;
+  if (!bouquetOnSale() || S.gold < BOUQUET.cost) return false;
+  S.gold -= BOUQUET.cost;
+  addItem('bouquet', 1);
+  emit('sfx', 'coin');
+  notify('Bought a bouquet. Give it to someone at 8 hearts or more to start dating.');
   changed();
   return true;
 }

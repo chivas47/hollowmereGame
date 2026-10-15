@@ -29,6 +29,8 @@ import { hearts, heartStr, giftOptions, giveGift, chooseScene } from '../systems
 import { openModal, closeModal } from './modal.js';
 import { $, esc } from './dom.js';
 import { SHOPS } from '../data/town.js';
+import { BOUQUET } from '../data/romance.js';
+import { bouquetOnSale, buyBouquet } from '../systems/town.js';
 
 const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
@@ -70,7 +72,7 @@ on('ui:shop', () => {
   const pet = G.S.pet, hats = pet ? Object.entries(PET_HATS).map(([k, h]) => `
     <div class="shoprow"><div><b>${h.name}</b><span>${h.cost}g. For ${esc(pet.name)}.${pet.hats.includes(k) ? ' You have it.' : ''}</span></div>
     <div class="btns"><button data-hat="${k}" ${pet.hats.includes(k) || G.S.gold < h.cost ? 'disabled' : ''}>Buy</button></div></div>`).join('') : '';
-  openModal(`<h2>${SHOPS.store.name}</h2><p>You have <b id="shopGold">${G.S.gold}g</b>.</p>${note}${rows}<h3>Farm supplies</h3>${supplies}<h3>Fishing</h3>${baitRow}<h3>Fruit saplings</h3>${saplings}${hats ? `<h3>Pet hats</h3>${hats}` : ''}`, [['Leave', closeModal, true]]);
+  openModal(`<h2>${SHOPS.store.name}</h2><p>You have <b id="shopGold">${G.S.gold}g</b>.</p>${note}${rows}<h3>Farm supplies</h3>${supplies}<h3>Fishing</h3>${baitRow}<h3>Fruit saplings</h3>${saplings}${hats ? `<h3>Pet hats</h3>${hats}` : ''}${bouquetOnSale() ? `<h3>Flowers</h3><div class="shoprow"><div><b>Bouquet</b><span>${BOUQUET.cost}g. Give it to someone you love at ${BOUQUET.hearts} hearts or more to ask them out. You have ${G.S.bag.bouquet || 0}.</span></div><div class="btns"><button data-bouquet ${G.S.gold < BOUQUET.cost ? 'disabled' : ''}>Buy</button></div></div>` : ''}`, [['Leave', closeModal, true]]);
   refreshShop();
 });
 
@@ -81,6 +83,8 @@ $('#mbody').addEventListener('click', (e) => {
   if (hat && !hat.disabled && buyHat(hat.dataset.hat)) { notify(`${PET_HATS[hat.dataset.hat].name} bought. ${G.S.pet.name} is wearing it.`); emit('ui:shop'); return; }
   const sp = e.target.closest('[data-supply]');
   if (sp && !sp.disabled && buySupply(sp.dataset.supply, +sp.dataset.n)) refreshShop();
+  const bq = e.target.closest('[data-bouquet]');   // v51
+  if (bq && !bq.disabled && buyBouquet()) { emit('ui:shop'); return; }
   const bb = e.target.closest('[data-bait-buy]');   // v42
   if (bb && !bb.disabled && buyBait(+bb.dataset.baitBuy)) emit('ui:shop');
 });
