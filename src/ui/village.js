@@ -9,7 +9,7 @@ import { canDeliver, deliver } from '../systems/quests.js';
 import { PROJECTS } from '../data/projects.js';
 import { funded, fundProject } from '../systems/projects.js';
 import { affordable } from '../systems/upgrades.js';
-import { nextFestival, contestItems, enterContest, buyStall, entry, festivalToday, hoursText, ACCEPT_TEXT, startHunt, potItems, addToPot, enterMaze, secretFriend, giveExchange, danceAsk, askDance } from '../systems/festivals.js';
+import { nextFestival, contestItems, enterContest, buyStall, entry, festivalToday, hoursText, ACCEPT_TEXT, startHunt, potItems, addToPot, enterMaze, secretFriend, giveExchange, danceAsk, askDance, grangeItems, grangeKind, judgeGrange } from '../systems/festivals.js';
 import { CLOTHES } from '../data/clothing.js';
 import { openModal, closeModal } from './modal.js';
 import { counts, unitValue } from '../systems/quality.js';
@@ -17,6 +17,7 @@ import { QUALITY } from '../data/quality.js';
 import { $ } from './dom.js';
 
 const npcName = (id) => NPCS.find((d) => d.id === id).name;
+let display = [];   // v59: the grange fair's display while you arrange it
 
 function board() {
   const S = G.S;
@@ -48,6 +49,19 @@ function festival() {
       html += items.length
         ? items.map((k) => `<div class="shoprow"><div><b>${best(k) ? `${QUALITY[best(k)].name} ` : ''}${ITEMS[k].name}</b><span>Worth ${unitValue(k, best(k))}g. Your best one is entered.</span></div><div class="btns"><button data-enter="${k}">Enter</button></div></div>`).join('')
         : `<p class="role">Bring ${ACCEPT_TEXT[f.accepts]} to enter. One entry per year.</p>`;
+    }
+  } else if (f.kind === 'grange') {   // v59
+    const done = entry(f);
+    if (done) html += `<p class="gift">Your display scored ${done.score} points: ${done.rank}, ${done.gold}g. Your things are back in your bag. See you next autumn.</p>`;
+    else {
+      const g = f.grange, have = grangeItems();
+      display = display.filter((k) => have.includes(k));
+      const kinds = new Set(display.map(grangeKind)).size;
+      html += `<p class="role">Prizes: ${g.ranks.map((rk) => `${rk.label} ${rk.gold}g`).join(', ')}. The judges score variety (up to ${g.kinds} kinds of thing), quality and value, and dislike empty slots. You get everything back.</p>`
+        + `<h3>Your display (${display.length}/${g.slots}, ${kinds} kind${kinds === 1 ? '' : 's'})</h3>`
+        + (display.length ? display.map((k) => `<div class="shoprow"><div><b>${ITEMS[k].name}</b></div><div class="btns"><button data-gout="${k}">Take back</button></div></div>`).join('') : '<p class="role">Empty. Add things from your bag below.</p>')
+        + `<div class="btns"><button data-judge ${display.length ? '' : 'disabled'}>Call the judges</button></div><h3>Your bag</h3>`
+        + (have.filter((k) => !display.includes(k)).map((k) => `<div class="shoprow"><div><b>${ITEMS[k].name}</b><span>${grangeKind(k)}</span></div><div class="btns"><button data-gin="${k}" ${display.length >= g.slots ? 'disabled' : ''}>Add</button></div></div>`).join('') || '<p class="role">Nothing more to show: bring crops, fruit, forage, fish, animal products, artisan goods, dishes or gems.</p>');
     }
   } else if (f.kind === 'dance') {   // v58
     const done = entry(f);
@@ -104,6 +118,14 @@ $('#mbody').addEventListener('click', (e) => {
   }
   if (e.target.closest('[data-hunt]')) { closeModal(); startHunt(); return; }   // v54
   if (e.target.closest('[data-maze]')) { closeModal(); enterMaze(); return; }   // v56
+  const gin = e.target.closest('[data-gin]'), gout = e.target.closest('[data-gout]');   // v59
+  if (gin && !gin.disabled) { display.push(gin.dataset.gin); festival(); return; }
+  if (gout) { display = display.filter((k) => k !== gout.dataset.gout); festival(); return; }
+  if (e.target.closest('[data-judge]')) {
+    const r = judgeGrange(display);
+    if (r) { display = []; emit('ui:message', { title: r.rank.label, text: `The judges walk along your display, whispering and making notes. ${r.score} points: ${r.rank.label.toLowerCase()}, and ${r.rank.gold}g.` }); }
+    return;
+  }
   const dn = e.target.closest('[data-dance]');   // v58
   if (dn && !dn.disabled) {
     const r = askDance(dn.dataset.dance);

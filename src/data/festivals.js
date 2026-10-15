@@ -2,6 +2,7 @@
 // kind 'market': a stall with festival-only goods. kind 'hunt' (v54): a timed egg hunt. kind 'pot' (v55): add one
 // item to the communal soup; how good it is changes everyone's friendship. kind 'maze' (v56): a hedge maze at night.
 // kind 'exchange' (v57): a gift for your secret friend, and one back. kind 'dance' (v58): ask someone to dance.
+// kind 'grange' (v59): a display of nine items, scored for variety, quality and price.
 // Neighbours spend the
 // festival in the square.
 export const FESTIVALS = [
@@ -77,6 +78,27 @@ export const FESTIVALS = [
       bram: 'Fish. In a square. In summer. Stand upwind.',
       odile: 'Golden carp rise at noon when it is hot. That is all I am saying.',
       tavi: 'I made a map of where everyone fishes. It is mostly arrows pointing at Odile.',
+    },
+  },
+  // v59. Stardew's Fair (Fall 16), its grange display: nine items scored from 14 points, plus quality (silver 1,
+  // gold 2, best 3) and price (20g+ 1, 90g+ 2, 200g+ 3, 300g+ 4) for each item, plus 5 for each kind of item up to
+  // six kinds, less 2 for each empty slot. 90+ wins first, 75+ second, 60+ third. Stardew pays 1,000, 500, 200 and
+  // 50 star tokens; we pay the same in gold (Nuno: no new currency). Your items come back after the judging.
+  {
+    key: 'grangefair', name: 'Grange Fair', season: 'Autumn', day: 16, kind: 'grange',
+    intro: 'Every farm sets out a display of its best. Nine slots, and the judges like variety as much as quality.',
+    grange: {
+      slots: 9, base: 14, kinds: 6, perKind: 5, empty: 2,
+      quality: [0, 1, 2, 3], price: [[300, 4], [200, 3], [90, 2], [20, 1]],
+      ranks: [{ min: 90, label: 'First prize', gold: 1000 }, { min: 75, label: 'Second prize', gold: 500 }, { min: 60, label: 'Third prize', gold: 200 }, { min: 0, label: 'Fourth place', gold: 50 }],
+    },
+    lines: {
+      ines: 'I put honey in every slot once. The judges said "variety". I said "honey".',
+      bram: 'I built the display stands. Nine slots. Not ten. Do not ask for ten.',
+      odile: 'A fish in a display. It is allowed. It is not always wise in the sun.',
+      tavi: 'I mapped last year\'s winning display. Item by item. It is framed in my kitchen.',
+      hale: 'I judge, but only the knots on the ribbons.',
+      nell: 'I won this fair thirty years ago with a marrow. They still talk about the marrow.',
     },
   },
   {
