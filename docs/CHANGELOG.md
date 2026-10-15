@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v43: The beach and the forest
+- Saltreach Beach, down a new path south of the village: sand, a short pier and the sea. Eight sea fish and shells, coral and urchins to gather.
+- Brackenwood, down a new path south of the farm: woods with a river and a footbridge. Seven river fish (one only in rain) and woodland forage every season.
+- The sea and the river never freeze; winter fishing there needs no ice hole.
+
 ## v42: Crab pots, legends and the gold pan
 - Crab pots (40 wood, 3 iron bars): set them on the Wilds pond from the kit and bait them; each morning a pond crayfish, a mud snail, a reed winkle or some trash. The pickaxe or axe takes an empty pot back.
 - Four legendary fish, one of each to catch: Old Mossjaw (spring, in rain, fishing 10), Sunfin (summer, fishing 5), Dusk angler (autumn, fishing 3) and Frostcrown (winter, at the ice hole, fishing 6).

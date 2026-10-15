@@ -27,7 +27,7 @@ function renderBackground(mapId, season) {
     else if (map.base === 'greenhouse' && t !== 'E') drawGreenhouseFloor(g, x, y, t);
     else if (t === 'P' || t === 'E') drawPath(g, x, y, p);
     else if (t === 'q') drawQuarry(g, x, y, p);
-    else if (t === 'z') drawSand(g, x, y, p);
+    else if (t === 'z' || (map.ground === 'z' && t !== 'T')) drawSand(g, x, y, p);   // v43: the beach's rocks sit on sand
     else drawGrass(g, x, y, p, map.salt);
   }
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {

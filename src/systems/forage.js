@@ -16,7 +16,7 @@ const AREA = 'wilds';
 
 export function spawnForage() {
   const grid = MAPS[AREA].grid, season = today().season;
-  const pool = Object.keys(FORAGE).filter((k) => FORAGE[k].season === season);
+  const pool = Object.keys(FORAGE).filter((k) => FORAGE[k].season === season && !FORAGE[k].area);   // v43: area forage grows elsewhere
   const out = [], lilies = G.S.weather === 'mist' ? MIST.lilies : 0;   // Silvermist days add mist lilies
   const spots = FORAGE_PER_DAY + lilies + (has('tracker') ? 2 : 0);   // v34: tracker
   for (let guard = 0; pool.length && out.length < spots && guard < 600; guard++) {

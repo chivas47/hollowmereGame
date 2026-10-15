@@ -71,7 +71,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['layouts', 'sites', 'professions', 'cooking', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots'];
+  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots', 'areas'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -134,6 +134,7 @@ const { LODGE_SHOP } = await load('data/guild.js');
 const { readBook } = await load('systems/books.js');
 const { finishReel, stepReel, buyBait } = await load('systems/fishing.js');
 const { placePot, usePot, panAt } = await load('systems/pots.js');
+const { pickAreaForage } = await load('systems/areas.js');
 const REACT = 0.25;   // seconds between the bot's decisions on the catch bar (an average player)
 const { BOOKS } = await load('data/books.js');
 
@@ -487,6 +488,13 @@ function simulate(runSeed) {
     if (!s.forage.length) return;
     spend(TIME.travel);
     for (const f of [...s.forage]) { use('wilds', f.x, f.y, 'hoe'); spend(TIME.forage); }
+    // v43: the beach and the forest each take a walk there and back.
+    for (const map of ['beach', 'forest']) {
+      const list = s.areaForage?.[map];
+      if (!list?.length || late()) continue;
+      spend(TIME.travel * 2);
+      for (const f of [...list]) { pickAreaForage(map, f.x, f.y); spend(TIME.forage); }
+    }
   }
 
   // v42: pond chores: set crab pots on the pond's edge, empty and re-bait them (buying bait), pan the shimmer spot.
