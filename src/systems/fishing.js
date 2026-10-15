@@ -29,15 +29,15 @@ const frozen = () => today().season === 'Winter';
 const atHole = (tx, ty, mapId) => mapId === ICE_HOLE.map && tx === ICE_HOLE.x && ty === ICE_HOLE.y;
 
 // v42: the season's legendary fish, if you qualify and have not caught it yet.
-export function legendHere(ice) {
+export function legendHere(ice, water = 'pond') {
   const S = G.S, season = today().season;
-  return Object.keys(FISH).find((k) => { const f = FISH[k]; return f.legendary && f.seasons.includes(season) && !!f.ice === !!ice
+  return Object.keys(FISH).find((k) => { const f = FISH[k]; return f.legendary && (f.water || 'pond') === water && f.seasons.includes(season) && !!f.ice === !!ice
     && (!f.rain || S.weather === 'rain' || S.weather === 'storm') && skillLevel('fishing') >= f.level && !S.legends.includes(k); }) || null;
 }
 // v43: which water a map holds: the Wilds pond, the sea at the beach, the river in the forest, the mountain lake.
-export const WATERS = { wilds: 'pond', beach: 'sea', forest: 'river', mountain: 'lake' };   // v44: the mountain lake
+export const WATERS = { wilds: 'pond', beach: 'sea', forest: 'river', mountain: 'lake', grove: 'grove', sewer: 'sewer' };   // v44: the mountain lake
 function pickFish(ice, water = 'pond') {
-  const S = G.S, season = today().season, legend = water === 'pond' ? legendHere(ice) : null;
+  const S = G.S, season = today().season, legend = legendHere(ice, water);
   if (legend && Math.random() < LEGEND_CHANCE) return legend;
   const wet = S.weather === 'rain' || S.weather === 'storm';
   const pool = Object.entries(FISH).filter(([, f]) => !f.legendary && f.seasons.includes(season) && (f.water || 'pond') === water && (!f.rain || wet)

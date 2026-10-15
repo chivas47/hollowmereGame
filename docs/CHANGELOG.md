@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v45: The grove, the railway and the sewer
+- A fallen log at the forest's west edge: the copper axe cuts through to a hidden grove with a still pond (the Glade skipper), grove forage and six big stumps that grow back every morning, 2 hardwood each.
+- Rubble east of the Wilds clears on Summer 3 of the first year: the railway beyond has forage and a hot spring. Soak in it for an hour to get back 60 energy and half your health.
+- The chest on Hollow floor 40 now also holds a rusty key (saves that already opened it get the key on load). It opens the grate in the village's west corner: the sewer below has the Gutter pike, the Crooked carp (a legend) and, after dark, the Lamplighter, who sells a wishfruit once, a starstone a day, cinder shards and the Starlit Primer.
+
 ## v44: The mountain lake and the quarry
 - Cragmoor, up a new path from the Wilds' north edge: a lake with six lake fish, pines and mountain forage every season.
 - The quarry, east of the mountain: rocks of stone, copper, iron and gold come back every morning, with a geode now and then.

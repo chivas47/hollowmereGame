@@ -12,12 +12,14 @@ import { ITEMS } from '../data/items.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { FLOOR_FINDS, WEAPONS } from '../data/weapons.js';
 import { CAVERN } from '../data/cavern.js';
+import { GATES } from '../data/hidden.js';
 import { BOMBS, FUSE, BLAST_RING, CHEST_CHANCE, CHEST_SPOT, chestLoot, GEODE_LOOT, CRACK_COST } from '../data/guild.js';
 import { drawBomb, drawBlast } from '../render/sprites.js';
 import { MINE, breakRock } from './mine.js';
 import { slimes, hitMonster, monstersOn } from './monsters.js';
 import { hurtPlayer } from './health.js';
 import { giveFind, wearing } from './gear.js';
+import { giveKey } from './hidden.js';
 
 const roll = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
 
@@ -113,6 +115,7 @@ export function openChest() {
     S.finds.push(MINE.floor);
     giveFind(c.find, 'In the chest you found');
     got = ITEMS[c.find]?.name || c.find;
+    if (MINE.floor === GATES.keyFloor) giveKey();   // v45: the sewer key lies with floor 40's find
   } else {
     const loot = chestLoot(MINE.eff).filter(([k]) => !(WEAPONS[k] && S.weapons.includes(k)));   // v38: a weapon only once
     const [k, a, b] = loot[Math.floor(Math.random() * loot.length)], n = roll(a, b);

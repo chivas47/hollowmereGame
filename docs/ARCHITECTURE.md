@@ -31,6 +31,7 @@ src/
     angling.js        CATCH (the catch bar), BAIT, TACKLE, BOBBERS, TRASH, RECYCLE, FISH_TREASURE (v41)
     books.js          BOOKS (skill, primer, power), BOOK_FIND, MASTERY_XP, PERKS, SHRINE (v40)
     forge.js          VENT, FORGE_GEMS, enchantments, TRINKETS (v39)
+    hidden.js         GATES (grove log, railway rubble, sewer key), GROVE stumps, SPRING, TRADER stock (v45)
     cavern.js         CAVERN (the Sunken Cavern's door, strength, ores, shafts, chests), HOLLOW_GOLD (v38)
     guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item
@@ -59,6 +60,7 @@ src/
     gear.js           weapons owned and in use, rings worn, giveFind(), forge bonuses (forgeBonus, toolEnchant), trinkets worn
     areas.js          the beach, the forest and the mountain: their daily forage (G.S.areaForage)
     quarry.js         the quarry's daily rocks (G.S.quarryRocks) and breaking them
+    hidden.js         the grove, railway and sewer gates (G.S.gates), grove stumps (G.S.groveStumps), the hot spring, the sewer trader (G.S.trader)
     pots.js           crab pots on the Wilds pond (G.S.pots), the gold pan and its shimmer spot (G.S.shimmer)
     books.js          reading books (G.S.read), mastery XP and perks (G.S.mastery), the shrine door and pedestals
     forge.js          the forge: forgeGem(), enchantWeapon(), enchantTool(); trinket effects underground
@@ -109,6 +111,7 @@ src/
     house.js          the catalogue dialog
     clothing.js       sewing machine, dye pots and mannequin dialogs; the wardrobe in the bag
     creation.js       the new game screen (opens when G.S.profile is null)
+    trader.js         the sewer trader's dialog (v45)
     dom.js toast.js modal.js hud.js hotbar.js dialogs.js inventory.js
     workshop.js mine.js input.js debugPanel.js
     crafting.js (craft menu, placed-object dialog) barn.js village.js (board, festival)
@@ -147,7 +150,9 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 72 | pets.js | The water bowl b (the can fills it) |
 | 72 | mill.js | Mill m, shed s (enter), clock tower k |
 | 72 | ponds.js | Fish pond u, slime pen j (the can fills its trough) |
-| 45 | areas.js, forage.js | Picking forage on the beach, in the forest and in the Wilds |
+| 45 | areas.js, forage.js | Picking forage on the beach, in the forest, the mountain, the grove, the railway and in the Wilds |
+| 72 | hidden.js | Fallen log \| in the forest, rubble } in the Wilds, sewer grate ; in the village, hot spring { on the railway, trader ? in the sewer |
+| 63 | hidden.js | Axe on a grove stump |
 | 72 | books.js | Shrine door @ in the Wilds, pedestals + in the shrine |
 | 68 | pots.js | Facing a crab pot on the pond (collect, bait, take back) |
 | 66 | pots.js | The gold pan in slot 9 on pond water |
@@ -264,6 +269,7 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | f, X | cave floor, cave wall | no, yes |
 | r, c, i | stone, copper, iron rock | yes |
 | U, L | ladder up, ladder down | yes |
+| \|, }, ;, {, ? | fallen log, rubble, sewer grate, hot spring, sewer trader (v45; the gates become P once open) | yes |
 
 `objects` on a map draw building art from `OBJECT_ART` in render/tiles.js. Maps with `base: 'cave'` use cave floor art and skip the night tint; `base: 'greenhouse'` uses plank floor and soil-bed art.
 

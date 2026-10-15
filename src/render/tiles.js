@@ -320,6 +320,7 @@ const CAVE_COLS = {
   rock:  { floor: ['#3b3430', '#463e39', '#302a26'], wall: ['#1f1a18', '#2a2421', '#2e2724'] },
   sand:  { floor: ['#7a5a38', '#8a6a44', '#6a4c2e'], wall: ['#3f2c1c', '#4f3824', '#5a4026'] },
   ember: { floor: ['#3a2422', '#4a2c26', '#2e1c1a'], wall: ['#1a0f0e', '#2a1612', '#3a1a14'] },
+  sewer: { floor: ['#3a4038', '#454c42', '#30362e'], wall: ['#1c221e', '#262e28', '#2e3830'] },   // v45
 };
 const colsFor = (p) => CAVE_COLS[p?.theme] || CAVE_COLS.rock;
 export function drawCaveFloor(g, x, y, p) {
@@ -411,6 +412,25 @@ function pedestal(g, x, y, p) {
   r(g, X + 6, Y + 1, 4, 4, SHRINE.colors[skill] || '#e9c46a'); r(g, X + 7, Y + 2, 1, 1, '#ffffff');
 }
 
+// v45: the fallen log, the rubble, the sewer grate, the hot spring and the trader's corner.
+function fallenLog(g, x, y, p) {
+  const X = x * T, Y = y * T;
+  drawGrass(g, x, y, p, 29); r(g, X, Y + 6, T, 8, '#6e4626'); r(g, X, Y + 6, T, 2, '#8a5a32'); r(g, X + 12, Y + 6, 4, 8, '#c9a06a'); r(g, X + 13, Y + 8, 2, 4, '#a07a4a');
+}
+function rubble(g, x, y, p) {
+  const X = x * T, Y = y * T;
+  drawGrass(g, x, y, p, 23); [[1, 6, 7], [7, 3, 8], [4, 9, 9], [10, 8, 6]].forEach(([a, b, s]) => { r(g, X + a, Y + b, s, s - 2, '#8d857d'); r(g, X + a, Y + b, s, 1, '#a8a199'); });
+}
+function grate(g, x, y, p) {
+  const X = x * T, Y = y * T;
+  drawGrass(g, x, y, p, 37); r(g, X + 2, Y + 2, 12, 12, '#3f4850'); for (let i = 0; i < 4; i++) r(g, X + 3 + i * 3, Y + 3, 1, 10, '#1a1f22'); r(g, X + 2, Y + 2, 12, 1, '#6f7880');
+}
+function hotSpring(g, x, y) {
+  const X = x * T, Y = y * T;
+  r(g, X, Y, T, T, '#4f9aa8'); r(g, X + 2, Y + 3, 4, 1, '#bfe6ec'); r(g, X + 9, Y + 9, 5, 1, '#bfe6ec'); r(g, X + 6, Y + 1, 1, 3, 'rgba(255,255,255,.4)');
+}
+function traderSpot(g, x, y, p) { drawCaveFloor(g, x, y, p); r(g, x * T + 2, y * T + 12, 12, 3, '#2b2a2e'); }
+
 export const CAVE_ART = {
   y: caveMouth, t: caveCrate, $: chest,
   X: caveWall, U: ladderUp, L: ladderDown,
@@ -418,6 +438,7 @@ export const CAVE_ART = {
   '%': mineRock('#e9c46a'), '*': mineRock('#9a7ae0'), '^': cavernDoor, '!': shaft,
   '#': mineRock('#e9862a'), '~': lava, '>': ventDoor, '=': forgeAnvil,
   '@': shrineDoor, '+': pedestal,
+  '|': fallenLog, '}': rubble, ';': grate, '{': hotSpring, '?': traderSpot,
 };
 
 // v22 farm layouts: quarry floor and sand.
