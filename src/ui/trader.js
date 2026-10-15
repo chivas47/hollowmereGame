@@ -3,13 +3,13 @@ import { G } from '../core/game.js';
 import { on } from '../core/events.js';
 import { TRADER } from '../data/hidden.js';
 import { ITEMS } from '../data/items.js';
-import { left, buyFromTrader } from '../systems/hidden.js';
+import { left, buyFromTrader, stocked } from '../systems/hidden.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
 
 function trader() {
   const S = G.S;
-  const rows = TRADER.stock.map((o) => {
+  const rows = TRADER.stock.filter(stocked).map((o) => {
     const n = left(o), what = o.note || (o.daily ? `${n} left today.` : '');
     return `<div class="shoprow"><div><b>${ITEMS[o.key].name}</b><span>${what} ${o.cost.toLocaleString('en-US')}g</span></div>
       <div class="btns">${n <= 0 ? '<span class="role">Sold</span>' : `<button data-trade="${o.key}" ${S.gold < o.cost ? 'disabled' : ''}>Buy</button>`}</div></div>`;

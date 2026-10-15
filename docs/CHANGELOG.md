@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v53: Children, divorce and a roommate
+- Married with a nursery and 10 hearts, your spouse may ask at bedtime about a child. Two weeks after a yes, a baby arrives and you choose the name. Up to two children, who grow from baby to crawler to toddler; give them a hug each day.
+- A town hall on the town's north edge: divorce costs 50,000g. Your spouse moves out; the children stay with you.
+- The Lamplighter is now someone you can befriend. At 10 hearts he sells a shadow lantern; give it back to him and he moves in as your roommate.
+
 ## v52: Marriage
 - On rainy days an old boatman waits at the end of the beach pier with a sea-glass pendant (5,000g). Give it to the person you are dating at 10 hearts, once the farmhouse has been extended, and they will say yes.
 - Three days later the whole valley comes to the wedding, and your spouse moves into the farmhouse. They can reach 14 hearts, have a 14-heart scene and sometimes help in the morning: watering the crops, feeding the coop, filling the pet's bowl or making breakfast.

@@ -208,6 +208,20 @@ export const NPCS = [
     ],
     react: { loved: 'A {item}! This is perfect. This is so perfect.', liked: 'A {item}! I can use this.', neutral: 'Oh. Thanks.', disliked: 'A {item}. Mum makes me eat that.', hated: 'Frost kale? I would rather eat a gear.', birthday: 'My birthday present? Best day. Best.' },
   },
+  // ---- v53: the Lamplighter, the sewer's trader (Stardew's Krobus): a friend, and a possible roommate. He keeps to
+  // the sewer after dark, never posts quests and stays away from festivals.
+  {
+    id: 'lamp', name: 'The Lamplighter', role: 'Trades in the sewer after dark', seed: 16, noQuests: true, noFestival: true,
+    loves: ['pumpkin', 'gutterpike'], likes: ['cinder', 'mushroom', 'geode', 'frostgeode', 'magmageode', 'crookcarp'], dislikes: ['sugar', 'honey'], hates: ['sunfin'],
+    birthday: { season: 'Winter', d: 1 },
+    pal: { hat: null, hair: '#2b2a2e', shirt: '#3a3550', pants: '#2b2a2e', shoes: '#1a1a1a', skin: '#8a8aa8', long: true },
+    lines: [
+      ['Few come down here. Fewer stay to talk.', 'The lamps above are for people. The ones down here are for me.'],
+      ['You come back. Most do not. I have noticed.', 'The water in the channel is very old. Older than the town.', 'Good evening, {name}.'],
+      ['You are my friend. I have not said that to anyone in a long time.', 'If you ever want quiet, there is always quiet down here.'],
+    ],
+    react: { loved: 'A {item}. For me? You are very kind, {name}.', liked: 'A {item}. I will keep it by the lamp.', neutral: 'Thank you. Truly.', disliked: 'A {item}. It is... bright. Thank you.', hated: 'That one is too much like the sun. Please, no.', birthday: 'You know my birthday? I did not know anyone knew.' },
+  },
 ];
 
 // v50: seasonal outfits (Stardew 1.6 dresses villagers for winter and some for summer): drawn over pal by season.

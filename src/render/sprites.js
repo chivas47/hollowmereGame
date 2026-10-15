@@ -117,6 +117,18 @@ const HATS = {
   bucket: (c, x, y, h, b) => { r(c, x + 1, y + 1, 8, 2, h); r(c, x + 2, y - 1, 6, 2, h); r(c, x + 1, y + 2, 8, 1, b === h ? 'rgba(0,0,0,.2)' : b); },
 };
 
+// v53: a child of the farm: a baby wrapped in the crib, a crawler on the floor, a toddler standing. i picks the colours.
+const KIDS = [{ hair: '#7a4a2a', shirt: '#e2a33a', skin: '#f0c8a0' }, { hair: '#2b2a2e', shirt: '#5f8fb5', skin: '#d9a37e' }];
+export function drawChild(c, px, py, stage, i) {
+  const k = KIDS[i % 2], x = Math.round(px), y = Math.round(py);
+  if (stage === 'baby') { r(c, x - 4, y - 8, 8, 5, '#f4ead2'); r(c, x - 3, y - 10, 4, 3, k.skin); r(c, x - 3, y - 11, 4, 1, k.hair); r(c, x - 4, y - 5, 8, 1, '#c9b68e'); return; }
+  r(c, x - 4, y, 8, 1, 'rgba(0,0,0,.25)');
+  if (stage === 'crawler') { r(c, x - 4, y - 5, 7, 4, k.shirt); r(c, x + 2, y - 7, 4, 4, k.skin); r(c, x + 2, y - 8, 4, 1, k.hair); r(c, x - 4, y - 1, 2, 1, k.skin); r(c, x + 1, y - 1, 2, 1, k.skin); return; }
+  r(c, x - 2, y - 3, 2, 3, '#3f4a5a'); r(c, x + 1, y - 3, 2, 3, '#3f4a5a');
+  r(c, x - 3, y - 7, 6, 4, k.shirt); r(c, x - 2, y - 11, 5, 4, k.skin); r(c, x - 2, y - 12, 5, 2, k.hair);
+  r(c, x - 1, y - 9, 1, 1, '#2b211a'); r(c, x + 1, y - 9, 1, 1, '#2b211a');
+}
+
 export function drawPerson(c, px, py, dir, moving, walkT, p) {
   const x = Math.round(px) - 5, y = Math.round(py) - 15, st = moving ? Math.floor(walkT * 8) % 2 : 0, eye = '#2b211a';
   r(c, x + 1, y + 14, 8, 2, 'rgba(0,0,0,.25)');

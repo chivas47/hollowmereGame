@@ -40,4 +40,5 @@ export const SPOUSE_LINES = {
   pell: ['I marked papers in the kitchen. The cat helped. Badly.', 'Tell me about your day. All of it. I like the boring parts too.'],
   juno: ['Your mailbox is my favourite stop. Our mailbox. That will take getting used to.', 'I walked the long way home just to come home to you.'],
   corvin: ['Sharpened every tool in the shed. Do not thank me, just use them.', 'Hm. Good morning. I made coffee. It is strong. Like me.'],
+  lamp: ['I lit the lamps before you woke. The house is quieter than the sewer. I like it.', 'Thank you for the room. And the company.'],   // v53: the roommate
 };

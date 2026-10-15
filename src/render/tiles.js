@@ -302,6 +302,7 @@ const FRONT = {
   carpenter: { wall: '#b08d55', line: '#987745', roof: '#5d7a4a', door: '#6e4626' },
   tavern:    { wall: '#8a5a32', line: '#6e4626', roof: '#7a2f2a', door: '#3f2f22' },   // v47
   clinic:    { wall: '#eef2f4', line: '#d0d8dc', roof: '#4f7a9a', door: '#5a6a7a' },
+  hall:      { wall: '#d9c9a6', line: '#c0ae86', roof: '#5a4a6a', door: '#5c371e' },   // v53
 };
 function storefront(g, p, o) {
   const X = o.x * T, Y = o.y * T, f = FRONT[o.kind];
@@ -321,6 +322,7 @@ function storefront(g, p, o) {
     r(g, X + 40, Y + 26, 6, 5, '#c9a06a'); r(g, X + 40, Y + 26, 6, 1, '#a07a4a'); }
   if (o.kind === 'tavern') { r(g, X + 21, Y + 12, 5, 4, '#e9b44c'); r(g, X + 21, Y + 12, 5, 1, '#f4ead2'); r(g, X + 26, Y + 13, 2, 2, '#e9b44c');
     r(g, X + 3, Y + 26, 2, 4, '#2b211a'); r(g, X + 2, Y + 24, 4, 3, '#e9b44c'); }
+  if (o.kind === 'hall') { r(g, X + 22, Y + 12, 4, 4, '#e9b44c'); r(g, X + 23, Y + 13, 2, 2, '#5c371e'); r(g, X + 23, Y - 10, 2, 8, '#6b5a48'); r(g, X + 25, Y - 10, 5, 3, '#c0443a'); }
   if (o.kind === 'clinic') { r(g, X + 23, Y + 12, 2, 4, '#4f9a6a'); r(g, X + 22, Y + 13, 4, 2, '#4f9a6a'); }
 }
 

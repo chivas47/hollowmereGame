@@ -7,7 +7,7 @@ const H = 60;
 const PLAZA_IN = [16, 8];                               // first village waypoint, reached from the east road
 const home = (x) => [PLAZA_IN, [16, 4], [x, 4]];        // walk to the front door of a cottage
 
-export const ENTRIES = { farm: [1, 4], village: [22, 8], town: [10, 15], wilds: [1, 4], beach: [11, 0], forest: [10, 0], house: [11, 11] };   // where neighbours step onto each map
+export const ENTRIES = { farm: [1, 4], village: [22, 8], town: [10, 15], wilds: [1, 4], beach: [11, 0], forest: [10, 0], house: [11, 11], sewer: [3, 2] };   // where neighbours step onto each map
 
 const VILLAGE_PATHS = {
   ines:  [PLAZA_IN, [16, 6], [9, 6], [9, 10], [16, 10]],
@@ -39,6 +39,7 @@ const town = {
   rook: () => [walkAbout(8, 17, 'beach', [[11, 1], [11, 8], [6, 8], [6, 9], [16, 9], [16, 8]]), walkAbout(17, 21, 'town', TAVERN_STEP), stay(21, 22, 'village', [PLAZA_IN, [17, 14], [7, 14]])],
   esme: () => [walkAbout(9, 16, 'forest', [[10, 1], [10, 4], [4, 4], [4, 6], [16, 6], [16, 3], [10, 3]]), walkAbout(16, 19, 'village', [PLAZA_IN, [9, 6], [9, 12], [16, 12]]), stay(19, 22, 'village', [PLAZA_IN, [17, 14], [15, 14]])],
   kit: (rest) => (rest ? [walkAbout(9, 17, 'beach', [[11, 1], [11, 6], [4, 6], [18, 6]])] : [walkAbout(8, 12, 'town', [[10, 14], [10, 8], [9, 8], [9, 7], [13, 8]]), walkAbout(12, 17, 'village', [PLAZA_IN, [13, 7], [13, 10], [10, 10], [10, 7]])]).concat(stay(17, 21, 'village', [PLAZA_IN, [17, 14], [19, 14]])),
+  lamp: () => [{ from: 18 * H, to: 26 * H, map: 'sewer', path: [[3, 2], [3, 4], [20, 4], [20, 3]], stay: true, exit: false }],   // v53
 };
 const TOWN_REST = { wren: 2, pell: 5, kit: 5 };   // (day - 1) % 7: Wren on Wednesday (the store shuts), Pell and Kit on Saturday
 

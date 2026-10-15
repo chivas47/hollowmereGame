@@ -55,7 +55,7 @@ function festivalUpdate() {
   for (const n of NPCRT) {
     n.moving = false;
     if (G.talking === n.id) continue;
-    if (!open) { n.visible = false; continue; }
+    if (!open || n.def.noFestival) { n.visible = false; continue; }   // v53: the Lamplighter stays below
     if (!n.visible) {
       const [x, y] = FESTIVAL_SPOTS[n.id] || [12, 7];
       Object.assign(n, { visible: true, map: 'village', x: x * T + 8, y: y * T + 12, dir: 'down' });
@@ -199,10 +199,27 @@ function givePendant(n) {
   emit('ui:talk', { npc: n, text, extra });
 }
 
+// v53: the shadow lantern: the Lamplighter moves in as your roommate in three days.
+function giveLantern(n) {
+  const S = G.S, st = S.npcs[n.id];
+  let text, extra = '';
+  if (n.id !== 'lamp') text = 'A dark lantern? It is not meant for me.';
+  else if (S.spouse || S.wedding) text = 'You already share your home. Thank you, though.';
+  else if (hearts(st) < 10) text = 'Not yet. But perhaps, one day.';
+  else {
+    S.bag.shadowlantern--; S.wedding = { id: n.id, day: S.day + WEDDING_DAYS, roommate: true };
+    text = 'You would share your home? With me? ...Yes. I would like that very much.';
+    extra = `The Lamplighter moves in in ${WEDDING_DAYS} days.`;
+    changed();
+  }
+  emit('ui:talk', { npc: n, text, extra });
+}
+
 export function giveGift(n, item) {
   const st = G.S.npcs[n.id], d = n.def;
   if (item === 'bouquet') { giveBouquet(n); return; }
   if (item === 'pendant') { givePendant(n); return; }
+  if (item === 'shadowlantern') { giveLantern(n); return; }
   // v52: a gift to another candidate makes your spouse jealous
   if (spouse() && spouse() !== n.id && isCandidate(n.id)) gain(spouse(), -JEALOUSY);
   G.S.bag[item]--; st.gifted = G.S.day;

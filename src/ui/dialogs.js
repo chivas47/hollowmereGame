@@ -29,6 +29,8 @@ import { hearts, heartStr, giftOptions, giveGift, chooseScene } from '../systems
 import { openModal, closeModal } from './modal.js';
 import { $, esc } from './dom.js';
 import { SHOPS } from '../data/town.js';
+import { askingTonight, answerChild } from '../systems/family.js';
+import { NPCS } from '../data/npcs.js';
 import { BOUQUET } from '../data/romance.js';
 import { bouquetOnSale, buyBouquet } from '../systems/town.js';
 
@@ -36,6 +38,12 @@ const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
 on('ui:sleep', () => {
   const late = G.S.time >= 22 * 60;   // the day ends at 2 am, or 3 am with street lamps
+  if (askingTonight()) {   // v53: your spouse asks about a child at bedtime
+    const who = NPCS.find((n) => n.id === G.S.spouse)?.name || 'Your spouse';
+    openModal(`<h2>Before you sleep</h2><p>${esc(who)} sits on the edge of the bed. "Have you ever thought about having a child?"</p>`,
+      [['Not now', () => { answerChild(false); closeModal(); sleep(false); }], ['Yes', () => { answerChild(true); closeModal(); sleep(false); }, true]]);
+    return;
+  }
   openModal(
     `<h2>Go to bed?</h2><p>Watered crops grow one day. Anything in the bin gets paid. ${late ? 'It is getting late.' : 'There is still daylight left.'}</p>`,
     [['Not yet', closeModal], ['Sleep', () => { closeModal(); sleep(false); }, true]],

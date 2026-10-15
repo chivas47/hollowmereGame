@@ -72,7 +72,8 @@ export function newState() {
     ventOpen: false, ventDeepest: 0,                    // v39: the Ember Vent; floor 10 is the forge
     forged: {}, weaponEnch: {}, toolEnch: {}, trinket: null,   // v39: weapon -> gem counts, weapon -> enchant, tool -> enchant, worn trinket
     quarryRocks: null,                                 // v44: today's rocks in the quarry (systems/quarry.js)
-    spouse: null, wedding: null,                     // v52: your spouse's villager id; a wedding { id, day } to come
+    spouse: null, wedding: null, roommate: false,      // v52: your spouse's villager id, a wedding { id, day } to come; v53: a roommate
+    children: [], baby: null, childAsk: 0,            // v53: children { name, born, hug, love }; a baby on the way { due }
     mail: [], mailRead: [],                          // v48: letters waiting in the mailbox, letters read (systems/mail.js)
     gates: { log: false, rubble: false, key: false },  // v45: the grove log, the railway rubble, the sewer key
     groveStumps: null, trader: { day: 0, bought: {}, once: [] },   // v45: systems/hidden.js
@@ -128,7 +129,7 @@ export function merge(saved) {
   if (!Array.isArray(s.goalsClaimed)) s.goalsClaimed = [];
   if (!s.fridge || typeof s.fridge !== 'object') s.fridge = {};
   s.gates = Object.assign(newState().gates, saved.gates || {});   // v45
-  for (const k of ['mail', 'mailRead']) if (!Array.isArray(s[k])) s[k] = [];   // v48
+  for (const k of ['mail', 'mailRead', 'children']) if (!Array.isArray(s[k])) s[k] = [];   // v48, v53
   if (saved.day > 3 && !saved.mailRead) s.mailRead.push('welcome');   // v48: no welcome letter for a farm already under way
   s.trader = { day: saved.trader?.day || 0, bought: { ...(saved.trader?.bought || {}) }, once: [...(saved.trader?.once || [])] };
   if (!s.wish || typeof s.wish !== 'object') s.wish = {};   // v34: skills already at 5 or 10 offer their picks
