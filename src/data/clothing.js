@@ -26,6 +26,7 @@ export const CLOTHES = {
   straw:     { name: 'Straw hat',        slot: 'hat', color: '#d9a441', band: '#b5452f', style: 'straw' },
   cap:       { name: 'Red cap',          slot: 'hat', color: '#c8352f', style: 'cap', from: 'radish' },
   beanie:    { name: 'Hollow beanie',    slot: 'hat', color: '#7a4a2a', style: 'beanie', from: 'mushroom' },
+  eggwreath: { name: 'Egg-hunt wreath',  slot: 'hat', color: '#f2a0c0', band: '#f4ead2', style: 'garland' },   // v54: the egg hunt's prize
   garland:   { name: 'Sorrel garland',   slot: 'hat', color: '#8fd06a', band: '#e9b44c', style: 'garland', from: 'sorrel' },
   tophat:    { name: 'Gel top hat',      slot: 'hat', color: '#3f4850', band: '#7fbf5a', style: 'top', from: 'gel' },
   bucket:    { name: 'Bucket hat',       slot: 'hat', color: '#5d8a4a', style: 'bucket', from: 'snappea' },

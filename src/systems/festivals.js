@@ -3,7 +3,10 @@
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addInteraction, addLayer } from '../core/registry.js';
+import { addInteraction, addLayer, addUpdater } from '../core/registry.js';
+import { MAPS, SOLID } from '../data/maps.js';
+import { CLOTHES } from '../data/clothing.js';
+import { playerTile } from './world.js';
 import { today, dateParts, fmtTime } from '../core/time.js';
 import { PRODUCE } from '../data/crops.js';
 import { FORAGE } from '../data/forage.js';
@@ -83,7 +86,7 @@ addInteraction(72, ({ tile, mapId }) => {
 });
 
 // Decorations on festival days.
-const COLORS = { blossom: ['#f4ead2', '#e2707a', '#e9b44c'], catch: ['#69aedb', '#f4ead2', '#86b86a'], weighin: ['#e8862a', '#d9644a', '#e9b44c'], frostlight: ['#ffd98a', '#cfe3ee', '#e2707a'] };
+const COLORS = { egghunt: ['#f2a0c0', '#9fd8f0', '#f4e3a0'], blossom: ['#f4ead2', '#e2707a', '#e9b44c'], catch: ['#69aedb', '#f4ead2', '#86b86a'], weighin: ['#e8862a', '#d9644a', '#e9b44c'], frostlight: ['#ffd98a', '#cfe3ee', '#e2707a'] };
 addLayer(30, (c) => {
   if (G.S.map !== 'village') return;
   const f = festivalToday(); if (!f) return;
@@ -96,3 +99,54 @@ addLayer(97, (c) => {
   [[8, 6], [15, 6], [8, 11], [15, 11]].forEach(([x, y]) => drawGlow(c, x * T, y * T - 8, 0.45));
 });
 
+
+// ---- v54: the egg hunt ----
+// hunt: the hunt under way (eggs on village tiles, seconds left, eggs found), or off.
+export const hunt = { on: false, t: 0, found: 0, eggs: [] };
+const huntSpots = () => {
+  const g = MAPS.village.grid, out = [];
+  for (let y = 1; y < g.length - 1; y++) for (let x = 1; x < g[0].length - 1; x++) if (!SOLID.has(g[y][x]) && g[y][x] !== 'E') out.push([x, y]);
+  return out;
+};
+export function startHunt(rand = Math.random) {
+  const f = festivalToday();
+  if (!f || f.kind !== 'hunt' || !festivalOpen() || entry(f) || hunt.on || G.S.map !== 'village') return false;
+  const spots = huntSpots(), here = playerTile(), eggs = [];
+  while (eggs.length < f.hunt.eggs && spots.length) {
+    const [x, y] = spots.splice(Math.floor(rand() * spots.length), 1)[0];
+    if (Math.abs(x - here.tx) + Math.abs(y - here.ty) > 2) eggs.push({ x, y, c: eggs.length % 3 });
+  }
+  Object.assign(hunt, { on: true, t: f.hunt.seconds, found: 0, eggs });
+  notify(`Go! Find ${f.hunt.need} eggs in ${f.hunt.seconds} seconds.`);
+  return true;
+}
+export function endHunt() {
+  const f = festivalToday(), S = G.S;
+  if (!hunt.on) return null;
+  hunt.on = false;
+  const won = hunt.found >= f.hunt.need;
+  let prize = null;
+  if (won && !S.wardrobe[f.hunt.prize]) { S.wardrobe[f.hunt.prize] = true; prize = CLOTHES[f.hunt.prize].name; }
+  else if (won) { S.gold += f.hunt.gold; prize = `${f.hunt.gold}g`; }
+  S.festivals[entryKey(f)] = { found: hunt.found, won };
+  hunt.eggs = [];
+  emit('ui:message', { title: won ? 'You won the egg hunt!' : 'Time!', text: won ? `You found ${hunt.found} eggs. The prize: ${prize}.${prize === CLOTHES[f.hunt.prize].name ? ' Wear it from the bag (I).' : ''}` : `You found ${hunt.found} of the ${f.hunt.need} eggs needed. Maybe next year.` });
+  changed();
+  return { found: hunt.found, won, prize };
+}
+addUpdater((dt) => {
+  if (!hunt.on || G.paused) return;
+  if (G.S.map !== 'village') { endHunt(); return; }
+  hunt.t -= dt;
+  const p = playerTile(), i = hunt.eggs.findIndex((e) => e.x === p.tx && e.y === p.ty);
+  if (i >= 0) { hunt.eggs.splice(i, 1); hunt.found++; emit('sfx', 'pickup'); }
+  if (hunt.t <= 0 || !hunt.eggs.length) endHunt();
+});
+addLayer(31, (c) => {
+  if (!hunt.on || G.S.map !== 'village') return;
+  const EGG = [['#f2a0c0', '#fbe0ea'], ['#9fd8f0', '#e0f4fb'], ['#f4e3a0', '#fff6d6']];
+  hunt.eggs.forEach((e) => { const [a, b] = EGG[e.c], X = e.x * T, Y = e.y * T; r(c, X + 5, Y + 8, 6, 6, a); r(c, X + 6, Y + 7, 4, 1, a); r(c, X + 6, Y + 10, 4, 1, b); r(c, X + 5, Y + 14, 6, 1, 'rgba(0,0,0,.2)'); });
+  c.fillStyle = 'rgba(20,16,12,.75)'; c.fillRect(4, 4, 112, 14);
+  c.fillStyle = '#f4ead2'; c.font = '9px monospace'; c.fillText(`Eggs ${hunt.found}  ${Math.max(0, Math.ceil(hunt.t))}s`, 8, 14);
+});
+on('day:start', () => { hunt.on = false; hunt.eggs = []; });

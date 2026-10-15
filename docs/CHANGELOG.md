@@ -2,6 +2,9 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v54: The Egg Hunt
+- A new spring festival on Spring 13: talk to the festival table, then find nine painted eggs hidden around the village in 50 seconds. The first win earns the egg-hunt wreath.
+
 ## v53: Children, divorce and a roommate
 - Married with a nursery and 10 hearts, your spouse may ask at bedtime about a child. Two weeks after a yes, a baby arrives and you choose the name. Up to two children, who grow from baby to crawler to toddler; give them a hug each day.
 - A town hall on the town's north edge: divorce costs 50,000g. Your spouse moves out; the children stay with you.

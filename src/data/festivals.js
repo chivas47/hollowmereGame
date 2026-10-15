@@ -1,5 +1,6 @@
-// One festival per season in the village square. kind 'contest': enter one item, judged by its sell value.
-// kind 'market': a stall with festival-only goods. Neighbours spend the festival in the square.
+// Festivals in the village square (v54: two a season). kind 'contest': enter one item, judged by its sell value.
+// kind 'market': a stall with festival-only goods. kind 'hunt' (v54): a timed egg hunt. Neighbours spend the
+// festival in the square.
 export const FESTIVALS = [
   {
     key: 'blossom', name: 'Blossom Show', season: 'Spring', day: 9, kind: 'contest', accepts: 'produce',
@@ -10,6 +11,20 @@ export const FESTIVALS = [
       bram: 'I judged this once. Never again. Everyone has a cousin.',
       odile: 'I only come for the bread stall. Do not tell the judges.',
       tavi: 'I mapped every flower bed in the square. Twenty-three. Nobody asked.',
+    },
+  },
+  // v54. Stardew's Egg Festival (Spring 13): find 9 eggs in 50 seconds to win, a straw hat the first time.
+  {
+    key: 'egghunt', name: 'Egg Hunt', season: 'Spring', day: 13, kind: 'hunt',
+    intro: 'Painted eggs are hidden all over the village. Find nine before the whistle blows to win.',
+    hunt: { eggs: 18, need: 9, seconds: 50, prize: 'eggwreath', gold: 1000 },
+    lines: {
+      ines: 'I painted half the eggs. The bees helped with the yellow ones.',
+      bram: 'I hid one in the fountain once. Nobody found it for a week.',
+      odile: 'I never win. I stop to look at the ducks.',
+      tavi: 'I know where every egg is. I am not allowed to play any more.',
+      kit: 'This year I am winning. I have a system.',
+      lio: 'I play a little tune when someone finds one. Listen for it!',
     },
   },
   {
