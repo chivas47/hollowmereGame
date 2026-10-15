@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v51: Dating
+- Eight villagers can be dated: Ines, Odile, Tavi, Esme, Rook, Pell, Juno and Corvin. Their friendship stops at 8 hearts until you give them a bouquet (200g at the general store once anyone reaches 8 hearts).
+- Dating opens hearts 9 and 10, new lines, and a 10-heart scene. You can date more than one person, but a gift to one makes the others jealous.
+- New heart scenes at 2 and 6 hearts for Esme, Rook, Pell, Juno and Corvin. The social menu shows who is single and who you are dating.
+
 ## v50: Six more villagers and seasonal outfits
 - Pell the teacher and Juno the mail carrier move into cottages on the town's north edge; Nell, Rook, Esme and Kit into a new row of cottages on the village's south lane. Rook works on the beach and Esme paints in the forest, so you will meet people there now.
 - Every villager dresses for winter, and some for summer.

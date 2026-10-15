@@ -1,6 +1,6 @@
 // Heart scenes: the first talk after reaching 4 and 8 hearts plays a short scene with a choice.
 // Each choice adds friendship points and gets its own reply. Plain text, no em dashes.
-export const SCENE_HEARTS = [4, 8];
+export const SCENE_HEARTS = [2, 4, 6, 8, 10];   // v51: 2, 6 and 10 for the marriage candidates (10 only while dating)
 
 export const SCENES = {
   ines: {
@@ -100,3 +100,85 @@ export const SCENES = {
     },
   },
 };
+
+// v51: the marriage candidates' scenes. dating: true plays only while you are dating them (the 10-heart scene).
+const S = (title, text, a, b, dating = false) => ({ title, text, choices: [a, b], dating });
+const C = (label, pts, reply) => ({ label, pts, reply });
+Object.assign(SCENES.ines, {
+  10: S('Under the lime trees', [
+    'Ines has spread a blanket under the lime trees past the east road. The bees are loud in the blossom above you, drunk on it.',
+    '"My mother said you know someone is right when the bees do not mind them." A bee lands on your sleeve, walks a slow circle, and leaves. Ines laughs. "There. Settled."',
+  ], C('Take her hand', 100, 'Her hand is warm and a little sticky with honey. "Good," she says quietly. "I hoped you would." You stay until the blossom smell turns to evening.'),
+  C('Tell her you have never been so happy', 80, '"Me neither," Ines says, and she says it like she is surprised to hear herself. The bees go on humming as if nothing has changed. Everything has.'), true),
+});
+Object.assign(SCENES.odile, {
+  10: S('Low tide', [
+    'Odile meets you on the pier at low tide with no rods at all. The sea has pulled back so far that the rocks are bare and shining.',
+    '"I have never brought anyone here without a reason," she says. "This is the first time I had no reason." She is looking at the horizon, not at you. "Except you."',
+  ], C('Stand beside her until the tide turns', 100, 'You stand together while the water creeps back over the rocks. When it reaches your boots she finally looks at you, and she does not look away.'),
+  C('Tell her you would follow her to any boat', 80, '"Do not say that unless you mean it," she says. You mean it. She can tell. She takes your arm, and the two of you walk back along the pier in the dark.'), true),
+});
+Object.assign(SCENES.tavi, {
+  10: S('The finished map', [
+    'Tavi unrolls a map on your kitchen table, so big it hangs off both ends. The whole valley, every path, every tree. The ink is still drying.',
+    'In the corner, where a mapmaker signs their name, there are two names. Tavi has written yours beside their own. "I did not ask first," Tavi says. "Is that all right?"',
+  ], C('Tell Tavi it is the best thing anyone has made you', 100, 'Tavi goes red to the ears and grins like a kid. "It is not done. It will never be done. There will always be another path." A pause. "Walk them with me?"'),
+  C('Add a small star by the farmhouse', 80, 'You dip the pen and draw a tiny star. Tavi watches, then laughs and draws a second one right next to it. "Not standard," they say. "I do not care."'), true),
+});
+Object.assign(SCENES, {
+  esme: {
+    2: S('Wet paint', ['You find Esme in the forest glaring at a canvas. A smear of green runs right through the middle of it.', '"A crow landed on it," she says. "Of course it did." She holds out a brush. "Well? You might as well try."'],
+      C('Paint something into the smear', 50, 'You turn the smear into a clumsy frog. Esme stares at it, then laughs out loud for the first time since you have known her. "I am keeping that."'),
+      C('Help her clean it off', 25, 'You scrape and wipe together. The canvas is saved, mostly. "Thank you," she says, a little stiff. But she looks at you differently afterwards.')),
+    6: S('The portrait', ['Esme asks you to sit on a stump in the clearing. "Do not move. Do not talk. Do not look at me like that."', 'An hour passes. The light changes twice. She turns the canvas around. It is you, but softer than you think of yourself.'],
+      C('Tell her it is how she sees you', 60, '"It is how you are," she says, cleaning her brush. "Most people just do not look long enough." She does not let you pay for it.'),
+      C('Ask if you can sit for her again', 40, '"Every week," she says at once, then blushes. "For practice. Faces are hard."')),
+    10: S('The gallery of one', ['Esme leads you into her cottage. Every wall is covered in canvases, and in every one of them, somewhere, there is you. In a field. On a path. A small blue dot.', '"I did not plan it," she says. "You just kept walking into the paintings."'],
+      C('Kiss her paint-stained hand', 100, 'She lets out a breath she seems to have held for a year. "Good," she whispers. "I was running out of wall."'),
+      C('Ask her to paint the two of you together', 80, '"I have already started," she admits, and pulls a sheet off a canvas in the corner. Two small figures on a hill. Side by side.'), true),
+  },
+  rook: {
+    2: S('A loose plank', ['Rook is on his back under a half-built hull, cursing at a plank that will not sit flat.', '"Hold that end. No, the other end. Yes. Now do not let go, whatever I say."'],
+      C('Hold it until he is done', 50, 'You hold it for twenty minutes while he hammers and swears. When he slides out, he looks almost pleased. "Good grip. Come back tomorrow."'),
+      C('Suggest a wedge under it', 25, 'He stops, considers, and jams a wedge in. It sits flat. "Huh," he says. "Fine. You can stay."')),
+    6: S('First launch', ['The little boat is finished. Rook drags it to the waterline at dawn and stands there with his hands in his pockets.', '"If it sinks, I am never building another. If it floats..." He does not finish.'],
+      C('Push it out with him', 60, 'You push together and it floats, rocking, perfect. Rook makes a sound that might be a laugh. "Get in," he says. "You earned the first ride."'),
+      C('Tell him it will float', 40, '"How do you know?" "Because you built it." He looks at you a long moment, then shoves it out. It floats. He does not say anything. He does not need to.')),
+    10: S('The name on the hull', ['Rook takes you out in the new boat at sunset. Halfway across the bay he stops rowing.', 'Painted on the side, in careful white letters, is a name. Your name. "Boats need a name before they go far," he says. "This one is going far."'],
+      C('Take the oars and row him home', 100, 'He laughs, really laughs, and lets you. Halfway back he puts his hand over yours on the oar and leaves it there.'),
+      C('Tell him to keep rowing out', 80, '"Out where?" "Anywhere." He looks at you, then at the horizon, then rows. You come back in the dark, very late, very happy.'), true),
+  },
+  pell: {
+    2: S('Spelling test', ['Pell is in the town hall marking papers, surrounded by sharpened pencils. "Can you spell parsnip?" she asks without looking up. "The class cannot agree."'],
+      C('Spell it slowly for her', 50, '"Thank you. Three of them are right, then." She makes a note. "You would be a good student. You pay attention."'),
+      C('Ask what the children wrote instead', 25, 'She smiles and reads you three wrong spellings, each worse than the last. By the end you are both laughing.')),
+    6: S('The lost book', ['Pell is searching the town hall shelves, frantic. "My grandmother\'s book. I always keep it here. Someone has borrowed it."', 'You find it under a desk, a little crumpled, a child\'s bookmark inside.'],
+      C('Smooth the pages before you hand it back', 60, 'She takes it carefully, as if it might break. "You did not have to do that." She keeps the child\'s bookmark in it anyway.'),
+      C('Hand it straight back', 40, '"Thank you," she says, holding it to her chest. "I would have been lost without it. That sounds silly. It is true."')),
+    10: S('After class', ['The children have gone home. Pell has written something on the board in her neat round hand. It is not a lesson.', 'It says: I would like to keep learning things with you. Underneath, smaller: This is not on the test.'],
+      C('Write your answer under it', 100, 'You take the chalk and write: Yes. Pell reads it twice, then puts her hand over her mouth and laughs, and does not rub it out for a week.'),
+      C('Say it aloud to her', 80, '"Yes," you say. She lets out a breath. "Good," she says. "I was going to have to rub it out before the morning."'), true),
+  },
+  juno: {
+    2: S('A heavy bag', ['Juno is sitting on the village steps with the mailbag spilled open around her. "The strap broke. Of course it did. On the longest round of the week."'],
+      C('Carry half the round with her', 50, 'You walk the whole route together. She talks the entire way. At the end she grins and says, "Same time tomorrow?" She is only half joking.'),
+      C('Knot the strap back together', 25, 'It holds. Mostly. "You are a lifesaver," she says, and dashes off before you can answer.')),
+    6: S('A letter with no stamp', ['Juno hands you an envelope with no stamp and no return address. "Not official mail," she says quickly. "Do not open it in front of me."', 'Inside is a drawing of your farm from the road, and the words: My favourite stop.'],
+      C('Write a reply and give it to her', 60, 'You hand it over the next morning. She reads it right there in the road, then tucks it in her coat pocket instead of her bag. "Private mail," she says.'),
+      C('Tell her it was your favourite letter', 40, '"Good," she says, pink in the face. "Because I wrote six versions."')),
+    10: S('The last delivery', ['Juno knocks on your door after dark, out of uniform, holding a single envelope.', '"No more rounds today. This one is not for the bag." It is addressed to you, in her hand. It says: Come walking with me. Not for work. Just because.'],
+      C('Take her hand and go', 100, 'You walk the long roads in the dark together, no mail, no hurry. She knows every gate and every dog. At your door she does not want to say goodnight.'),
+      C('Write back: Every night', 80, 'She reads it by your lamp and laughs. "That is a lot of walking." "I know." "Good." She is already pulling you out of the door.'), true),
+  },
+  corvin: {
+    2: S('Sparks', ['Corvin is hammering at the anvil, sweating. A spark lands on his sleeve and he does not even notice it smouldering.'],
+      C('Pat the spark out', 50, 'He blinks at his sleeve, then at you. "Huh. Thanks." He goes back to hammering, but slower, and he glances at you twice.'),
+      C('Tell him his sleeve is on fire', 25, 'He slaps it out, unbothered. "Happens." Then, after a moment: "Good eyes."')),
+    6: S('The ring', ['You find Corvin at the forge late, working on something tiny with a fine hammer. It is a ring, plain and smooth.', '"Practice," he says, too fast. "Small work. Keeps the hands steady."'],
+      C('Say it is beautiful work', 60, 'He turns it in the light. "It is not done." He puts it in his apron pocket, very carefully, and does not say who it is for.'),
+      C('Ask who it is for', 40, '"Nobody," he says. Then, quieter, "Not yet." The fire crackles. He does not look up, but he is smiling.')),
+    10: S('Tempered', ['Corvin closes the smithy early and walks you to the quiet end of the lane. He takes the plain ring out of his apron.', '"I do not have words. I have this." He holds it out. "I made it for whoever made me stop and look up from the anvil. It took me a while to admit it was you."'],
+      C('Put it on', 100, 'It fits perfectly. Of course it does. Corvin lets out a long breath and laughs, rough and surprised. "Good," he says. "Good."'),
+      C('Close his hand around it and kiss him', 80, '"That a yes?" he asks, very close. It is. He keeps the ring until you are ready to wear it, and tells you he will make a better one anyway.'), true),
+  },
+});

@@ -11,6 +11,7 @@ import { festivalOn, FESTIVAL_HOURS, FESTIVAL_SPOTS } from '../data/festivals.js
 import { scheduleFor, ENTRIES } from '../data/schedules.js';
 import { SCENES, SCENE_HEARTS } from '../data/scenes.js';
 import { GIFT_POINTS, BIRTHDAY_MULT, UNIVERSAL } from '../data/gifts.js';
+import { CANDIDATES, HEART_CAP, BOUQUET, JEALOUSY, DATE_LINES } from '../data/romance.js';
 import { drawPerson, drawBubble } from '../render/sprites.js';
 import { tileOf } from './world.js';
 import { recalcStats } from './upgrades.js';
@@ -20,6 +21,15 @@ const TALK_POINTS = 20, MAX_POINTS = 1000;
 
 export const NPCRT = NPCS.map((def) => ({ id: def.id, def, map: 'farm', x: 0, y: 0, dir: 'down', visible: false, wi: 0, wait: 0, moving: false, walkT: 0, block: null, gone: false }));
 export const hearts = (st) => Math.min(10, Math.floor(st.pts / 100));
+
+// v51: a candidate you are not dating stops at 8 hearts (points already above it from before v51 are kept).
+export const isCandidate = (id) => CANDIDATES.includes(id);
+export const dating = (id) => !!G.S.npcs[id]?.dating;
+const capFor = (id) => (isCandidate(id) && !dating(id) ? HEART_CAP : MAX_POINTS);
+function gain(id, pts) {
+  const st = G.S.npcs[id];
+  st.pts = pts >= 0 ? Math.max(st.pts, Math.min(capFor(id), st.pts + pts)) : Math.max(0, st.pts + pts);
+}
 export const heartStr = (st) => '♥'.repeat(hearts(st)) + '♡'.repeat(10 - hearts(st));
 
 // v48: how a neighbour takes a gift: their own lists first, then the universal tastes.
@@ -114,8 +124,8 @@ function applyReward(n) {
 
 // Friendship from outside a conversation (quest deliveries). The 3-heart reward still waits for a talk or gift.
 export function addPoints(id, pts) {
-  const st = G.S.npcs[id]; if (!st) return;
-  st.pts = Math.min(MAX_POINTS, st.pts + pts);
+  if (!G.S.npcs[id]) return;
+  gain(id, pts);
   changed();
 }
 
@@ -125,19 +135,19 @@ export function startTalk(n) {
   n.dir = OPPOSITE[G.S.dir];
   let extra = '';
   if (st.talked !== G.S.day) {
-    st.talked = G.S.day; st.pts = Math.min(MAX_POINTS, st.pts + TALK_POINTS * (fest ? 2 : 1));   // festival talks count double
+    st.talked = G.S.day; gain(n.id, TALK_POINTS * (fest ? 2 : 1));   // festival talks count double
     extra = applyReward(n); changed();
   }
   const h = hearts(st), scene = pendingScene(n);
   if (scene) { emit('ui:scene', { npc: n, ...scene, extra }); return; }
-  const lines = d.lines[h >= 5 ? 2 : h >= 2 ? 1 : 0];
+  const lines = st.dating && DATE_LINES[d.id] ? DATE_LINES[d.id] : d.lines[h >= 5 ? 2 : h >= 2 ? 1 : 0];   // v51: partners talk like partners
   emit('ui:talk', { npc: n, text: fest?.lines?.[d.id] || lines[(G.S.day + d.seed) % lines.length], extra });
 }
 
 // The first heart scene reached and not yet seen, if any.
 function pendingScene(n) {
   const st = G.S.npcs[n.id], seen = st.scenes || [];
-  const at = SCENE_HEARTS.find((h) => hearts(st) >= h && !seen.includes(h) && SCENES[n.id]?.[h]);
+  const at = SCENE_HEARTS.find((h) => hearts(st) >= h && !seen.includes(h) && SCENES[n.id]?.[h] && (!SCENES[n.id][h].dating || st.dating));
   return at ? { at, scene: SCENES[n.id][at] } : null;
 }
 
@@ -145,7 +155,7 @@ function pendingScene(n) {
 export function chooseScene(n, at, i) {
   const st = G.S.npcs[n.id], choice = SCENES[n.id][at].choices[i];
   st.scenes = [...(st.scenes || []), at];
-  st.pts = Math.min(MAX_POINTS, st.pts + choice.pts);
+  gain(n.id, choice.pts);
   changed();
   return choice.reply;
 }
@@ -155,11 +165,29 @@ export function giftOptions(n) {
   return st.gifted === G.S.day ? [] : Object.keys(G.S.bag).filter((k) => G.S.bag[k] > 0);
 }
 
+// v51: the bouquet. A candidate at 8 hearts or more starts dating you; anyone else hands it back.
+function giveBouquet(n) {
+  const st = G.S.npcs[n.id], d = n.def;
+  let text;
+  if (!isCandidate(n.id)) text = 'A bouquet? Oh, you are sweet. But no, keep it for someone else.';
+  else if (st.dating) text = 'Another one? You already have my answer.';
+  else if (hearts(st) < BOUQUET.hearts) text = 'Flowers? I... I do not know you well enough for that yet. Keep them.';
+  else {
+    G.S.bag.bouquet--; st.dating = true;
+    text = 'Flowers? For me? Oh. Yes. Yes, I would like that very much.';
+    changed();
+  }
+  emit('ui:talk', { npc: n, text, extra: st.dating ? `You are dating ${d.name}.` : '' });
+}
+
 export function giveGift(n, item) {
   const st = G.S.npcs[n.id], d = n.def;
+  if (item === 'bouquet') { giveBouquet(n); return; }
   G.S.bag[item]--; st.gifted = G.S.day;
+  // v51: giving a gift to one partner while dating others upsets the others
+  if (st.dating) for (const id of CANDIDATES) if (id !== n.id && dating(id)) gain(id, -JEALOUSY);
   const kind = giftTier(d, item), bday = isBirthday(d);
-  st.pts = Math.max(0, Math.min(MAX_POINTS, st.pts + GIFT_POINTS[kind] * (bday ? BIRTHDAY_MULT : 1)));
+  gain(n.id, GIFT_POINTS[kind] * (bday ? BIRTHDAY_MULT : 1));
   st.known = { ...(st.known || {}), [item]: kind };   // v48: shown in the social menu
   const extra = applyReward(n);
   changed();
