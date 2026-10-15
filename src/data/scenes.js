@@ -1,6 +1,6 @@
 // Heart scenes: the first talk after reaching 4 and 8 hearts plays a short scene with a choice.
 // Each choice adds friendship points and gets its own reply. Plain text, no em dashes.
-export const SCENE_HEARTS = [2, 4, 6, 8, 10];   // v51: 2, 6 and 10 for the marriage candidates (10 only while dating)
+export const SCENE_HEARTS = [2, 4, 6, 8, 10, 14];   // v51: 2, 6 and 10 for the marriage candidates (10 only while dating)
 
 export const SCENES = {
   ines: {
@@ -182,3 +182,33 @@ Object.assign(SCENES, {
       C('Close his hand around it and kiss him', 80, '"That a yes?" he asks, very close. It is. He keeps the ring until you are ready to wear it, and tells you he will make a better one anyway.'), true),
   },
 });
+
+// v52: the spouse's 14-heart scene (married: true plays only for your spouse).
+const M = (title, text, a, b) => ({ title, text, choices: [a, b], married: true });
+const spouse14 = {
+  ines: M('A new hive', ['Ines has set up a hive at the edge of the farm, painted the same colour as your door.', '"Ours," she says. "The first hive that is not my mother\'s. I wanted it to be here."'],
+    C('Help her settle the bees', 120, 'You work together until dusk, slow and careful. When the last bee goes in, Ines leans on you and laughs. "Home," she says.'),
+    C('Name the hive together', 80, 'You argue happily over names until it is dark. She writes the winner on the lid in her neat hand.')),
+  odile: M('The net', ['Odile has mended an old net and hung it across the farmhouse porch. Woven into it, in blue thread, are both your initials.', '"Nets hold things," she says. "That is what they are for."'],
+    C('Kiss her by the net', 120, 'She laughs into your shoulder. "Sentimental," she accuses. She does not take the net down.'),
+    C('Tell her it is the best thing on the farm', 80, '"Second best," Odile says, and looks at you until you understand.')),
+  tavi: M('The last blank space', ['Tavi spreads the valley map on the kitchen table. Every corner is drawn now, except one small square: the farmhouse.', '"I left it blank," Tavi says. "I wanted us to draw it together."'],
+    C('Draw it together', 120, 'Two hands on one pen. The farmhouse comes out a little crooked. Tavi says it is the most accurate thing on the map.'),
+    C('Draw a star on it', 80, 'Tavi laughs. "Not standard." Then they draw a second star next to yours.')),
+  esme: M('The portrait', ['Esme finally finishes the painting she has hidden from you all season. It is the two of you on the porch, in the evening light.', '"I could never get your face right," she says. "Then I stopped painting you alone."'],
+    C('Hang it above the fireplace', 120, 'You hang it together. Esme steps back, tilts her head, and for once does not want to change a single thing.'),
+    C('Ask her to sign both your names', 80, 'She signs it twice, then laughs at herself and adds a small heart between the names.')),
+  rook: M('The second boat', ['Rook has built a second, smaller boat in the barn. Its hull is painted with the name of your farm.', '"The first one was for going out," he says. "This one is for coming home."'],
+    C('Launch it together at dawn', 120, 'It floats. Of course it floats. Rook rows you round the bay and back and does not stop smiling the whole way.'),
+    C('Tell him it is beautiful', 80, '"So is the farm," he says. "So are you. I say it less than I should."')),
+  pell: M('The lesson plan', ['Pell leaves a lesson plan on your pillow. The subject: Us. Lesson one: breakfast together. Lesson two: a walk. Lesson three: ask me anything.', '"There is a test at the end," she says. "You will pass."'],
+    C('Follow the whole plan', 120, 'Breakfast, the walk, and you ask her everything. By evening Pell gives you full marks and a gold star on the back of your hand.'),
+    C('Write a lesson for her', 80, 'You write: Lesson four: stay. She reads it twice and tucks it inside her grandmother\'s book.')),
+  juno: M('No more rounds', ['Juno comes home early, hangs up her mailbag, and sits on the porch step.', '"I asked for the short round," she says. "The one that ends here. I want to come home earlier. To you."'],
+    C('Sit with her until sunset', 120, 'She leans on your shoulder and tells you every dog and gate on the valley roads. You listen to all of it.'),
+    C('Bring her tea', 80, '"Perfect," she sighs, and kicks off her boots. "This is the best stop on any round."')),
+  corvin: M('Two rings', ['Corvin opens his apron pocket and takes out two rings: the plain one he made long ago, and a new one, finer, with a thread of gold through it.', '"Told you I would make a better one," he says.'],
+    C('Wear both', 120, 'He slides them on, rough hands careful. "Good," he says, very quietly. "Good."'),
+    C('Give him the old one to keep', 80, 'He closes his hand around it. "I will keep it on the anvil," he says. "So I remember why I look up."')),
+};
+for (const [id, sc] of Object.entries(spouse14)) SCENES[id][14] = sc;

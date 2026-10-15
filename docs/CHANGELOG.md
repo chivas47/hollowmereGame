@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v52: Marriage
+- On rainy days an old boatman waits at the end of the beach pier with a sea-glass pendant (5,000g). Give it to the person you are dating at 10 hearts, once the farmhouse has been extended, and they will say yes.
+- Three days later the whole valley comes to the wedding, and your spouse moves into the farmhouse. They can reach 14 hearts, have a 14-heart scene and sometimes help in the morning: watering the crops, feeding the coop, filling the pet's bowl or making breakfast.
+
 ## v51: Dating
 - Eight villagers can be dated: Ines, Odile, Tavi, Esme, Rook, Pell, Juno and Corvin. Their friendship stops at 8 hearts until you give them a bouquet (200g at the general store once anyone reaches 8 hearts).
 - Dating opens hearts 9 and 10, new lines, and a 10-heart scene. You can date more than one person, but a gift to one makes the others jealous.

@@ -18,3 +18,26 @@ export const DATE_LINES = {
   juno: ['Your mailbox is the last stop now. On purpose.', 'I took the long way round today. Past your field. Twice.'],
   corvin: ['Made you something. Do not make a fuss.', 'The forge is too quiet when you are not around.'],
 };
+
+// v52: marriage. Stardew: the Mermaid's Pendant, 5,000g from the Old Mariner on the beach on rainy days, given to a
+// partner at 10 hearts once the house has its first upgrade; the wedding follows three days later; a spouse can reach
+// 14 hearts and each morning may do a chore (water the crops, feed the animals, fill the pet's bowl) or make breakfast.
+export const PENDANT = { cost: 5000, hearts: 10, houseTier: 1, seller: { map: 'beach', x: 6, y: 12 } };
+export const WEDDING_DAYS = 3;
+export const SPOUSE_CAP = 1400;   // 14 hearts
+export const CHORE_CHANCE = 0.4;  // a morning chore, one at random among those that apply
+export const BREAKFASTS = ['friedegg', 'omelet', 'pancakes', 'hashbrown'];
+export const MARRIAGE_ITEMS = { pendant: { name: 'Sea-glass pendant', sell: 2500 } };
+export const BOATMAN = { name: 'The old boatman', look: { skin: '#c99a74', hair: '#d0d0d0', shirt: '#3f4a5a', pants: '#2b2f36', shoes: '#1a1a1a', beard: true, hat: '#2b2f36', band: '#c9b083' } };
+
+// What a spouse says at home.
+export const SPOUSE_LINES = {
+  ines: ['I left honey on the table for your tea. Do not argue, just drink it.', 'The bees have settled in by the farmhouse. They like it here. So do I.'],
+  odile: ['I fixed the gate this morning. It squeaked. I could not stand it.', 'Wake me early tomorrow. The tide is good and I want you with me.'],
+  tavi: ['I added our farm to every map I own. In ink.', 'Breakfast first, then you can save the world. Or the turnips.'],
+  esme: ['The light in the kitchen is perfect at this hour. Do not move.', 'I am painting the farm in every season. This is the best one, because you are in it.'],
+  rook: ['Fixed the roof where it was leaking. Built it like a hull.', 'When the work is done, we are taking the boat out. That is the deal.'],
+  pell: ['I marked papers in the kitchen. The cat helped. Badly.', 'Tell me about your day. All of it. I like the boring parts too.'],
+  juno: ['Your mailbox is my favourite stop. Our mailbox. That will take getting used to.', 'I walked the long way home just to come home to you.'],
+  corvin: ['Sharpened every tool in the shed. Do not thank me, just use them.', 'Hm. Good morning. I made coffee. It is strong. Like me.'],
+};
