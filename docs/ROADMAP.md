@@ -43,7 +43,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 19 | Books and mastery | feature | done (chivas47/hollowmereGame#35) | Skill books, a book that gives XP in every skill, power books with special perks, mastery progression after level 10 in every skill. |
 | 20a | Fishing overhaul: the catch bar | feature | done (chivas47/hollowmereGame#36) | The catch minigame (moving fish, catch bar, hold Use), bait, tackle and the ironwood rod, bobber styles, fishing treasure, trash and the recycler. |
 | 20b | Fishing overhaul: pots, legends and panning | feature | done (chivas47/hollowmereGame#37) | Crab pots, legendary fish, an upgradeable gold pan on shimmer spots in the Wilds pond. |
-| 21a | New areas: beach and forest | feature | done | Saltreach Beach south of the village (sea fish, shells) and Brackenwood south of the farm (a river, river fish, woodland forage). |
+| 21a | New areas: beach and forest | feature | done (chivas47/hollowmereGame#38) | Saltreach Beach south of the village (sea fish, shells) and Brackenwood south of the farm (a river, river fish, woodland forage). |
 | 21b | New areas: mountain lake and quarry | feature | next | North of the Wilds past the Hollow: a lake with its own fish and forage, a quarry with rocks to break. |
 | 21c | New areas: hidden grove, railway and sewer | feature | queued | The grove inside the forest, the railway north-east of the Wilds, the sewer under the village; each with fishing and forage. |
 | 22 | Town and shops | feature | queued | Town expansion: blacksmith (tool upgrades, geodes), carpenter (buildings), general store, tavern, clinic; shop hours, closing days; a phone to call shops. |
