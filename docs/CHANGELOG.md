@@ -2,6 +2,9 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v55: The Summer Potluck
+- A new summer festival on Summer 11: add one ingredient to the village's giant soup pot. A magnificent soup raises every villager's friendship with you; a thin one, or trash, lowers it.
+
 ## v54: The Egg Hunt
 - A new spring festival on Spring 13: talk to the festival table, then find nine painted eggs hidden around the village in 50 seconds. The first win earns the egg-hunt wreath.
 

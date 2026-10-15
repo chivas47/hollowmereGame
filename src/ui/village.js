@@ -1,6 +1,6 @@
 // Dialogs for the quest board and festivals in the village.
 import { G } from '../core/game.js';
-import { on, notify } from '../core/events.js';
+import { on, emit, notify } from '../core/events.js';
 import { ITEMS } from '../data/items.js';
 import { NPCS } from '../data/npcs.js';
 import { QUEST_NOTES } from '../data/quests.js';
@@ -8,7 +8,7 @@ import { canDeliver, deliver } from '../systems/quests.js';
 import { PROJECTS } from '../data/projects.js';
 import { funded, fundProject } from '../systems/projects.js';
 import { affordable } from '../systems/upgrades.js';
-import { nextFestival, contestItems, enterContest, buyStall, entry, festivalToday, hoursText, ACCEPT_TEXT, startHunt } from '../systems/festivals.js';
+import { nextFestival, contestItems, enterContest, buyStall, entry, festivalToday, hoursText, ACCEPT_TEXT, startHunt, potItems, addToPot } from '../systems/festivals.js';
 import { CLOTHES } from '../data/clothing.js';
 import { openModal, closeModal } from './modal.js';
 import { counts, unitValue } from '../systems/quality.js';
@@ -48,6 +48,15 @@ function festival() {
         ? items.map((k) => `<div class="shoprow"><div><b>${best(k) ? `${QUALITY[best(k)].name} ` : ''}${ITEMS[k].name}</b><span>Worth ${unitValue(k, best(k))}g. Your best one is entered.</span></div><div class="btns"><button data-enter="${k}">Enter</button></div></div>`).join('')
         : `<p class="role">Bring ${ACCEPT_TEXT[f.accepts]} to enter. One entry per year.</p>`;
     }
+  } else if (f.kind === 'pot') {   // v55
+    const done = entry(f);
+    if (done) html += `<p class="gift">You added your ${ITEMS[done.item].name.toLowerCase()}. Hob's verdict: ${done.label}. See you next year.</p>`;
+    else {
+      const best = (k) => { const c = counts(k); let t = 3; while (t > 0 && !c[t]) t--; return t; };
+      const items = potItems().sort((a, b) => unitValue(b, best(b)) - unitValue(a, best(a)));
+      html += `<p class="role">The better the ingredient, the happier everyone is with you: a magnificent soup raises every neighbour's friendship, a poor one lowers it. Your best one goes in.</p>`
+        + (items.length ? items.map((k) => `<div class="shoprow"><div><b>${best(k) ? `${QUALITY[best(k)].name} ` : ''}${ITEMS[k].name}</b><span>Worth ${unitValue(k, best(k))}g.</span></div><div class="btns"><button data-pot="${k}">Add</button></div></div>`).join('') : '<p class="role">Bring something to eat: a crop, fish, forage, an animal product, an artisan good or a dish.</p>');
+    }
   } else if (f.kind === 'hunt') {   // v54
     const done = entry(f);
     html += done ? `<p class="gift">You found ${done.found} eggs${done.won ? ' and won' : ''}. See you next year.</p>`
@@ -73,6 +82,8 @@ $('#mbody').addEventListener('click', (e) => {
     festival(); return;
   }
   if (e.target.closest('[data-hunt]')) { closeModal(); startHunt(); return; }   // v54
+  const pt = e.target.closest('[data-pot]');   // v55
+  if (pt) { const v = addToPot(pt.dataset.pot); if (v) emit('ui:message', { title: v.label, text: `${v.text} ${v.pts > 0 ? `Everyone's friendship with you rises.` : v.pts < 0 ? `Everyone's friendship with you drops.` : ''}` }); return; }
   const st = e.target.closest('[data-stall]');
   if (st && !st.disabled) { buyStall(st.dataset.stall); festival(); }
 });

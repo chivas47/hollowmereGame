@@ -7,6 +7,13 @@ import { addInteraction, addLayer, addUpdater } from '../core/registry.js';
 import { MAPS, SOLID } from '../data/maps.js';
 import { CLOTHES } from '../data/clothing.js';
 import { playerTile } from './world.js';
+import { NPCS } from '../data/npcs.js';
+import { PRODUCTS } from '../data/products.js';
+import { ARTISAN } from '../data/artisan.js';
+import { FRUIT } from '../data/trees.js';
+import { DISHES } from '../data/cooking.js';
+import { TRASH } from '../data/angling.js';
+import { addPoints } from './npcs.js';
 import { today, dateParts, fmtTime } from '../core/time.js';
 import { PRODUCE } from '../data/crops.js';
 import { FORAGE } from '../data/forage.js';
@@ -22,6 +29,7 @@ const ACCEPTS = {
   produce: (k) => k in PRODUCE || k in FORAGE,
   crop: (k) => k in PRODUCE,
   fish: (k) => k in FISH,
+  food: (k) => k in PRODUCE || k in FORAGE || k in FISH || k in PRODUCTS || k in ARTISAN || k in FRUIT || (k in DISHES && DISHES[k].from !== 'clinic') || k in TRASH,   // v55: the potluck
 };
 export const ACCEPT_TEXT = { produce: 'a fresh crop or forage item', crop: 'a crop', fish: 'a fish' };
 
@@ -86,7 +94,7 @@ addInteraction(72, ({ tile, mapId }) => {
 });
 
 // Decorations on festival days.
-const COLORS = { egghunt: ['#f2a0c0', '#9fd8f0', '#f4e3a0'], blossom: ['#f4ead2', '#e2707a', '#e9b44c'], catch: ['#69aedb', '#f4ead2', '#86b86a'], weighin: ['#e8862a', '#d9644a', '#e9b44c'], frostlight: ['#ffd98a', '#cfe3ee', '#e2707a'] };
+const COLORS = { potluck: ['#e8862a', '#86b86a', '#f4ead2'], egghunt: ['#f2a0c0', '#9fd8f0', '#f4e3a0'], blossom: ['#f4ead2', '#e2707a', '#e9b44c'], catch: ['#69aedb', '#f4ead2', '#86b86a'], weighin: ['#e8862a', '#d9644a', '#e9b44c'], frostlight: ['#ffd98a', '#cfe3ee', '#e2707a'] };
 addLayer(30, (c) => {
   if (G.S.map !== 'village') return;
   const f = festivalToday(); if (!f) return;
@@ -150,3 +158,21 @@ addLayer(31, (c) => {
   c.fillStyle = '#f4ead2'; c.font = '9px monospace'; c.fillText(`Eggs ${hunt.found}  ${Math.max(0, Math.ceil(hunt.t))}s`, 8, 14);
 });
 on('day:start', () => { hunt.on = false; hunt.eggs = []; });
+
+// ---- v55: the potluck soup ----
+export const potItems = () => Object.keys(G.S.bag).filter((k) => G.S.bag[k] > 0 && ACCEPTS.food(k));
+export function potVerdict(item, tier = 0) {
+  const f = festivalToday();
+  if (item in TRASH) return { ...f.pot.gross, score: 0 };
+  const score = unitValue(item, tier);
+  return { ...f.pot.tiers.find((t) => score >= t.min), score };
+}
+export function addToPot(item) {
+  const f = festivalToday(), S = G.S;
+  if (!f || f.kind !== 'pot' || !festivalOpen() || entry(f) || !(S.bag[item] > 0) || !ACCEPTS.food(item)) return null;
+  const tier = takeBest(item), v = potVerdict(item, tier);
+  for (const d of NPCS) if (!d.noFestival) addPoints(d.id, v.pts);
+  S.festivals[entryKey(f)] = { item, label: v.label, pts: v.pts };
+  changed();
+  return v;
+}
