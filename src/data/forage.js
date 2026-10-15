@@ -26,6 +26,16 @@ export const FORAGE = {
   narcissus:  { name: 'Wood narcissus', sell: 30,  season: 'Spring', area: 'forest' },
   vetch:      { name: 'Sweet vetch',    sell: 50,  season: 'Summer', area: 'forest' },
   frostberry: { name: 'Frost berry',    sell: 150, season: 'Winter', area: 'forest' },
+  // v44: mountain forage (Stardew's mountain: dandelion 40g, spice berry 80g, wild plum 80g, snow yam 100g, crocus 60g).
+  dandelion:  { name: 'Hill dandelion', sell: 40,  season: 'Spring', area: 'mountain' },
+  fireberry:  { name: 'Fire berry',     sell: 80,  season: 'Summer', area: 'mountain' },
+  wildplum:   { name: 'Wild plum',      sell: 80,  season: 'Autumn', area: 'mountain' },
+  snowyam:    { name: 'Snow yam',       sell: 100, season: 'Winter', area: 'mountain' },
+  crocus:     { name: 'Snow crocus',    sell: 60,  season: 'Winter', area: 'mountain' },
+  // Stardew's mountain also has leeks (60g), grapes (80g) and blackberries (20g).
+  cragleek:   { name: 'Crag leek',      sell: 60,  season: 'Spring', area: 'mountain' },
+  hillgrape:  { name: 'Hill grape',     sell: 80,  season: 'Summer', area: 'mountain' },
+  bramble:    { name: 'Bramble berry',  sell: 20,  season: 'Autumn', area: 'mountain' },
   // Only on Silvermist days (systems/weather.js), never in the daily spawn.
   mistlily:  { name: 'Mist lily',   sell: 90,  season: null },
 };

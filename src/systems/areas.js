@@ -14,7 +14,7 @@ import { has } from './professions.js';
 import { luck } from './buffs.js';
 
 // ground: the tile forage grows on; perDay: spots each morning (Stardew's beach and forest both have a handful).
-export const AREAS = { beach: { ground: 'z', perDay: 5 }, forest: { ground: 'g', perDay: 5 } };
+export const AREAS = { beach: { ground: 'z', perDay: 5 }, forest: { ground: 'g', perDay: 5 }, mountain: { ground: 'g', perDay: 4 } };   // v44: the mountain
 
 export function spawnAreaForage() {
   const S = G.S, season = today().season;

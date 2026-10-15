@@ -52,6 +52,7 @@ function wildsGrid() {
   put(m, [[7, 6], [4, 11], [18, 5], [9, 10]], 'R');
   fill(m, 15, 2, 17, 3, '&'); m[3][14] = '&';   // v37: the Wardens' Lodge, its keeper by the door
   m[1][8] = '@';                                  // v40: the shrine door
+  fill(m, 21, 1, 21, 3, 'P'); m[0][21] = 'E';     // v44: the path north to the mountain
   fill(m, 13, 4, 16, 4, 'P');
   return m;
 }
@@ -94,6 +95,24 @@ function forestGrid() {
   fill(m, 1, 8, W - 2, 9, 'O');
   fill(m, 10, 1, 10, 13, 'P');                     // the path and the bridge over the river
   put(m, [[3, 2], [6, 3], [14, 2], [17, 4], [20, 2], [2, 5], [8, 5], [13, 6], [19, 6], [4, 11], [7, 13], [12, 11], [15, 12], [18, 11], [21, 13], [2, 13]], 'T');
+  return m;
+}
+
+// v44: the mountain north of the Wilds: a lake, pines, and the way east to the quarry.
+function mountainGrid() {
+  const m = emptyGrid();
+  m[15][21] = 'E'; fill(m, 21, 8, 21, 14, 'P');
+  fill(m, 15, 7, W - 1, 7, 'P'); m[7][W - 1] = 'E';
+  fill(m, 3, 3, 12, 9, 'O');
+  put(m, [[3, 3], [12, 3], [3, 9], [12, 9]], 'g');
+  put(m, [[15, 2], [18, 3], [20, 2], [16, 11], [6, 12], [10, 13], [2, 12], [18, 13], [14, 4]], 'T');
+  put(m, [[17, 5], [5, 11], [13, 12]], 'R');
+  return m;
+}
+// v44: the quarry east of the mountain: open stone floor where rocks come back every morning.
+function quarryGrid() {
+  const m = Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => (x === 0 || y === 0 || x === W - 1 || y === H - 1 ? 'R' : 'q')));
+  m[7][0] = 'E';
   return m;
 }
 
@@ -154,7 +173,7 @@ export const MAPS = {
   wilds: {
     name: 'Ashgrove Wilds', salt: 23, grid: wildsGrid(),
     objects: [{ art: 'cave', x: 11, y: 0 }, { art: 'lodge', x: 15, y: 2 }],
-    exits: { '0,4': { to: 'farm', x: W - 2, y: 4, dir: 'left' } },
+    exits: { '0,4': { to: 'farm', x: W - 2, y: 4, dir: 'left' }, '21,0': { to: 'mountain', x: 21, y: 14, dir: 'up' } },   // v44: the mountain
   },
   village: {
     name: 'Hollowmere Village', salt: 37, grid: villageGrid(),
@@ -185,6 +204,14 @@ export const MAPS = {
   forest: {
     name: 'Brackenwood', salt: 29, grid: forestGrid(), objects: [],
     exits: { '10,0': { to: 'farm', x: 10, y: 14, dir: 'up' } },
+  },
+  mountain: {
+    name: 'Cragmoor', salt: 53, grid: mountainGrid(), objects: [],
+    exits: { '21,15': { to: 'wilds', x: 21, y: 1, dir: 'down' }, [`${W - 1},7`]: { to: 'quarry', x: 1, y: 7, dir: 'right' } },
+  },
+  quarry: {
+    name: 'The quarry', salt: 59, grid: quarryGrid(), objects: [], ground: 'q',
+    exits: { '0,7': { to: 'mountain', x: W - 2, y: 7, dir: 'left' } },
   },
   shrine: {
     name: 'The shrine', salt: 19, base: 'cave', grid: shrineGrid(),

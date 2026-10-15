@@ -34,6 +34,14 @@ export const FISH = {
   stripetrout:{ name: 'Striped trout',  sell: 150, difficulty: 4, color: '#c98a6a', seasons: ['Autumn', 'Winter'], water: 'river' },
   goldfin:   { name: 'Goldfin',         sell: 100, difficulty: 5, color: '#e9b44c', seasons: ['Summer'], water: 'river' },
   mudcat:    { name: 'Mud catfish',     sell: 200, difficulty: 5, color: '#6b5a48', seasons: ['Spring', 'Autumn'], water: 'river', rain: true },
+  // v44: lake fish on the mountain (Stardew's mountain lake: carp 30g, bullhead 75g, chub 50g, largemouth bass
+  // 100g, sturgeon 200g in summer and winter, midnight carp 150g in autumn and winter).
+  lakecarp:  { name: 'Lake carp',       sell: 30,  difficulty: 1, color: '#8a7a5a', seasons: ['Spring', 'Summer', 'Autumn'], water: 'lake' },
+  bullhead:  { name: 'Stone bullhead',  sell: 75,  difficulty: 2, color: '#6b5a48', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], water: 'lake' },
+  chub:      { name: 'Ridge chub',      sell: 50,  difficulty: 2, color: '#9fb0a3', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], water: 'lake' },
+  lakebass:  { name: 'Big-mouth bass',  sell: 100, difficulty: 3, color: '#5d8a4a', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], water: 'lake' },
+  mooncarp:  { name: 'Moon carp',       sell: 150, difficulty: 4, color: '#8b86b0', seasons: ['Autumn', 'Winter'], water: 'lake' },
+  sturgeon:  { name: 'Old sturgeon',    sell: 200, difficulty: 5, color: '#5a6a7a', seasons: ['Summer', 'Winter'], water: 'lake' },
   // v42: crab pot catches (spot 'pot': never on the rod). Stardew's freshwater pot: crayfish 75g, snail 65g, periwinkle 20g.
   crayfish: { name: 'Pond crayfish',   sell: 75,  difficulty: 1, color: '#c8553f', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], spot: 'pot' },
   snail:    { name: 'Mud snail',       sell: 65,  difficulty: 1, color: '#8a6a44', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], spot: 'pot' },

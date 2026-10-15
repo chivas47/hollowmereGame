@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v44: The mountain lake and the quarry
+- Cragmoor, up a new path from the Wilds' north edge: a lake with six lake fish, pines and mountain forage every season.
+- The quarry, east of the mountain: rocks of stone, copper, iron and gold come back every morning, with a geode now and then.
+
 ## v43: The beach and the forest
 - Saltreach Beach, down a new path south of the village: sand, a short pier and the sea. Eight sea fish and shells, coral and urchins to gather.
 - Brackenwood, down a new path south of the farm: woods with a river and a footbridge. Seven river fish (one only in rain) and woodland forage every season.
