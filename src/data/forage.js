@@ -36,6 +36,11 @@ export const FORAGE = {
   cragleek:   { name: 'Crag leek',      sell: 60,  season: 'Spring', area: 'mountain' },
   hillgrape:  { name: 'Hill grape',     sell: 80,  season: 'Summer', area: 'mountain' },
   bramble:    { name: 'Bramble berry',  sell: 20,  season: 'Autumn', area: 'mountain' },
+  // v45: the grove (Stardew's secret woods: mushrooms, moss) and the railway (Stardew's railroad: wild flowers and berries).
+  woodear:    { name: 'Wood ear',       sell: 70,  season: 'all', area: 'grove' },
+  glademint:  { name: 'Glade mint',     sell: 60,  season: 'all', area: 'grove' },
+  trackpoppy: { name: 'Track poppy',    sell: 45,  season: 'all', area: 'railway' },
+  cinderberry:{ name: 'Cinder berry',   sell: 60,  season: 'Summer', area: 'railway' },
   // Only on Silvermist days (systems/weather.js), never in the daily spawn.
   mistlily:  { name: 'Mist lily',   sell: 90,  season: null },
 };

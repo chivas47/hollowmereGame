@@ -71,7 +71,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['layouts', 'sites', 'professions', 'cooking', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots', 'areas', 'quarry'];
+  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots', 'areas', 'quarry', 'hidden'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -136,6 +136,7 @@ const { finishReel, stepReel, buyBait } = await load('systems/fishing.js');
 const { placePot, usePot, panAt } = await load('systems/pots.js');
 const { pickAreaForage } = await load('systems/areas.js');
 const { hitQuarryRock } = await load('systems/quarry.js');
+const { chopStump } = await load('systems/hidden.js');
 const REACT = 0.25;   // seconds between the bot's decisions on the catch bar (an average player)
 const { BOOKS } = await load('data/books.js');
 
@@ -489,12 +490,16 @@ function simulate(runSeed) {
     if (!s.forage.length) return;
     spend(TIME.travel);
     for (const f of [...s.forage]) { use('wilds', f.x, f.y, 'hoe'); spend(TIME.forage); }
-    // v43: the beach and the forest each take a walk there and back.
-    for (const map of ['beach', 'forest', 'mountain']) {
+    // v43: the beach and the forest each take a walk there and back. v45: the grove and the railway once open.
+    if (!s.gates.log && s.upgrades.axe >= 1) use('forest', 1, 12, 'axe');
+    const open = { grove: s.gates.log, railway: s.gates.rubble };
+    for (const map of ['beach', 'forest', 'mountain', 'grove', 'railway']) {
       const list = s.areaForage?.[map];
-      if (!list?.length || late()) continue;
+      if (open[map] === false || !list?.length || late()) continue;
       spend(TIME.travel * 2);
       for (const f of [...list]) { pickAreaForage(map, f.x, f.y); spend(TIME.forage); }
+      // v45: the grove's stumps for hardwood while energy is spare
+      if (map === 'grove') for (const k of Object.keys(s.groveStumps || {})) { const [x, y] = k.split(',').map(Number); while (s.groveStumps[k] && s.energy > 60 && !late()) { chopStump(x, y); spend(TIME.rock); } }
     }
   }
 

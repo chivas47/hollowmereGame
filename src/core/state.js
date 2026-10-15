@@ -72,6 +72,8 @@ export function newState() {
     ventOpen: false, ventDeepest: 0,                    // v39: the Ember Vent; floor 10 is the forge
     forged: {}, weaponEnch: {}, toolEnch: {}, trinket: null,   // v39: weapon -> gem counts, weapon -> enchant, tool -> enchant, worn trinket
     quarryRocks: null,                                 // v44: today's rocks in the quarry (systems/quarry.js)
+    gates: { log: false, rubble: false, key: false },  // v45: the grove log, the railway rubble, the sewer key
+    groveStumps: null, trader: { day: 0, bought: {}, once: [] },   // v45: systems/hidden.js
     areaForage: {}, areaForageDay: 0,                 // v43: forage on the beach and in the forest (systems/areas.js)
     pots: {}, legends: [], shimmer: null,              // v42: crab pots on the Wilds pond ('x,y' -> { bait, catch }), legends caught, today's pan spot
     bait: null, tackle: null, tackleUses: 0, bobber: 0, // v41: bait and tackle on the rod, bobber style
@@ -122,6 +124,8 @@ export function merge(saved) {
   for (const k of ['forged', 'weaponEnch', 'toolEnch']) if (!s[k] || typeof s[k] !== 'object') s[k] = {};
   if (!Array.isArray(s.goalsClaimed)) s.goalsClaimed = [];
   if (!s.fridge || typeof s.fridge !== 'object') s.fridge = {};
+  s.gates = Object.assign(newState().gates, saved.gates || {});   // v45
+  s.trader = { day: saved.trader?.day || 0, bought: { ...(saved.trader?.bought || {}) }, once: [...(saved.trader?.once || [])] };
   if (!s.wish || typeof s.wish !== 'object') s.wish = {};   // v34: skills already at 5 or 10 offer their picks
   s.barnGoods = Object.assign(newState().barnGoods, saved.barnGoods || {});
   if (!s.placed || typeof s.placed !== 'object') s.placed = {};

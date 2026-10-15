@@ -270,6 +270,23 @@ Stardew's mountain lake and quarry by role. The Wilds' path north (21, 1) leads 
 - Mountain forage (Stardew's): hill dandelion 40g, crag leek 60g (spring); fire berry 80g, hill grape 80g (summer); wild plum 80g, bramble berry 20g (autumn); snow yam 100g, snow crocus 60g (winter).
 - The quarry: 16 rocks every morning (half stone, a quarter copper, 17% iron, 8% gold; the Hollow's hit points and drops), 2 energy a swing, the pickaxe's tier and enchantment apply; 4% of rocks also give a geode (70%) or frost geode. Stardew's quarry opens after the bridge is mended (item 26); ours is open from the start.
 
+### The grove, the railway and the sewer (v45)
+
+Stardew's secret woods, railroad and sewers by role.
+
+| Place | Way in (Stardew) | What is there |
+|---|---|---|
+| Hidden grove (forest, west) | Fallen log at (1, 12): the copper axe, our second axe (the steel axe's large log) | Pond with the Glade skipper (75g, d3, all year; Stardew's woodskip); 3 forage a morning: wood ear 70g, glade mint 60g; 6 big stumps, 10 hits with the copper axe, 2 hardwood each, back every morning (Stardew's 6 large stumps) |
+| Railway (Wilds, east) | Rubble at (22, 3) clears on Summer 3, year 1 (the landslide, same day) | 3 forage a morning: track poppy 45g, cinder berry 60g (summer); hot spring: an hour's soak gives 60 energy and half your health (the spa) |
+| Sewer (village, west corner) | Grate at (2, 11): the rusty key in the floor 40 chest (Stardew's rusty key, from 60 museum donations) | Gutter pike 60g, d3, all year (Stardew's sewer has only the legend; scaled like a common river fish, the chub); Crooked carp 1,000g, d6, legend (Stardew's mutant carp, 1,000g); the Lamplighter from 18:00 |
+
+| The Lamplighter sells | Cost | Limit | Stardew (Krobus) |
+|---|---|---|---|
+| Wishfruit | 20,000g | once | stardrop, 20,000g |
+| Starstone | 5,000g | 1 a day | no direct counterpart (Krobus's rare daily item); about 7 times its 750g sell price |
+| Cinder shard | 100g | 20 a day | solar and void essence, 80 to 100g |
+| The Starlit Primer | 15,000g | once | Book of Stars, 15,000g at the bookseller |
+
 ### Fish (pond in the Wilds, 8 energy per cast)
 
 | Fish | Sells | Difficulty | Seasons |
@@ -722,6 +739,8 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
 - The worm bin and bait maker are not built; bait is crafted from gel (v41). The balance bot's catch rate comes from playing the real catch bar with a quarter-second reaction (tools/balance.mjs REACT); real players may do better or worse.
+- v45: the balance bot cuts the grove log once it has the copper axe, forages the grove and the railway once open and chops the grove stumps with spare energy; over 15 runs forage income rises about 16% and fish income falls about 15% (less time at the pond), gold at the end of year 1 about 4% lower. It does not soak, visit the sewer or buy from the trader.
+- v45: the railway's tracks draw as a plain path, and the sewer's channel as ordinary water.
 - v44: the balance bot breaks quarry rocks holding the ore its next purchase needs before going down the Hollow, and forages Cragmoor; over 15 runs gold at the end of year 1 rises about 19% (summer +41%) as it spends less time in the Hollow and more fishing.
 - v43: crab pots and the gold pan still work only on the Wilds pond, not the sea or the river.
 - v43: the balance bot walks to the beach and the forest each day for their forage; forage income rises about 3.75 times and gold at the end of year 1 about 32% over 15 runs.

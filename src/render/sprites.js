@@ -91,6 +91,10 @@ const FORAGE_ART = {
   cragleek: (c, X, Y, cx) => { r(c, cx, Y + 4, 1, 7, '#4f8f3a'); r(c, cx - 2, Y + 3, 1, 6, '#6fae45'); r(c, cx + 2, Y + 4, 1, 6, '#6fae45'); r(c, cx - 1, Y + 11, 3, 3, '#e8e0d0'); },
   hillgrape: (c, X, Y) => { r(c, X + 7, Y + 3, 1, 3, '#6b4a2b'); [[5, 6], [8, 6], [6, 8], [9, 8], [7, 10], [6, 12]].forEach(([a, b]) => r(c, X + a, Y + b, 2, 2, '#6a4a9a')); r(c, X + 8, Y + 4, 3, 2, '#5da34a'); },
   bramble: (c, X, Y) => { r(c, X + 3, Y + 7, 10, 7, '#3f6a3a'); [[5, 8], [9, 9], [7, 11], [11, 12]].forEach(([a, b]) => r(c, X + a, Y + b, 2, 2, '#2b1a3a')); },
+  woodear: (c, X, Y) => { r(c, X + 4, Y + 11, 8, 3, '#6b4a2b'); r(c, X + 4, Y + 8, 4, 3, '#c9a77a'); r(c, X + 8, Y + 9, 4, 2, '#b08a5a'); r(c, X + 5, Y + 7, 2, 1, '#e0c49a'); },
+  glademint: (c, X, Y, cx) => { r(c, cx, Y + 6, 1, 8, '#3f7a3a'); [[-3, 6], [1, 7], [-3, 9], [1, 10]].forEach(([a, b]) => r(c, cx + a, Y + b, 3, 2, '#7fd08a')); },
+  trackpoppy: (c, X, Y, cx) => { r(c, cx, Y + 8, 1, 6, '#5da34a'); r(c, cx - 2, Y + 4, 5, 4, '#d8402f'); r(c, cx, Y + 5, 1, 2, '#2b1a1a'); },
+  cinderberry: (c, X, Y) => { r(c, X + 4, Y + 8, 8, 6, '#4f6b3a'); [[5, 8], [9, 9], [6, 11], [10, 12]].forEach(([a, b]) => r(c, X + a, Y + b, 2, 2, '#e0702f')); },
   crocus: (c, X, Y, cx) => { r(c, cx, Y + 9, 1, 5, '#5da34a'); r(c, cx - 2, Y + 5, 5, 5, '#b98ae0'); r(c, cx - 1, Y + 6, 3, 2, '#e9c46a'); },
   icemoss: (c, X, Y) => {
     r(c, X + 3, Y + 11, 10, 3, '#5f9e9a'); r(c, X + 4, Y + 10, 8, 1, '#8fc2c0'); r(c, X + 5, Y + 9, 5, 1, '#a8d8d4');
