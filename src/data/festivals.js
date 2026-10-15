@@ -1,7 +1,7 @@
 // Festivals in the village square (v54: two a season). kind 'contest': enter one item, judged by its sell value.
 // kind 'market': a stall with festival-only goods. kind 'hunt' (v54): a timed egg hunt. kind 'pot' (v55): add one
 // item to the communal soup; how good it is changes everyone's friendship. kind 'maze' (v56): a hedge maze at night.
-// kind 'exchange' (v57): a gift for your secret friend, and one back.
+// kind 'exchange' (v57): a gift for your secret friend, and one back. kind 'dance' (v58): ask someone to dance.
 // Neighbours spend the
 // festival in the square.
 export const FESTIVALS = [
@@ -51,6 +51,21 @@ export const FESTIVALS = [
       tavi: 'Someone put a boot in once. We do not talk about it.',
       hob: 'I taste whatever goes in. Whatever. Please be kind.',
       nell: 'In my day we put in what we grew. Simple is best.',
+    },
+  },
+  // v58. Stardew's Flower Dance (Spring 24): ask a marriage candidate to dance; they say yes from 4 hearts (or as
+  // your partner or spouse), and dancing together is worth 250 points there, one heart. Here a heart is 100 points.
+  {
+    key: 'ribbondance', name: 'Ribbon Dance', season: 'Spring', day: 24, kind: 'dance',
+    intro: 'A ribbon pole stands in the meadow by the square. Couples dance around it, weaving the ribbons as they go.',
+    dance: { hearts: 4, pts: 100 },
+    lines: {
+      ines: 'The ribbons are dyed with my own flowers. The blue is from cornflowers. Mostly.',
+      bram: 'I set the pole. Straight as a plumb line. The dancing I leave to others.',
+      odile: 'I dance like I row. Steady, and nobody gets wet.',
+      tavi: 'The ribbon pattern makes a map, if you look from above. I checked from the roof.',
+      pell: 'The children practised for weeks. Please clap whatever happens.',
+      lio: 'I play the dance tune. Two fiddles, one of them borrowed.',
     },
   },
   {

@@ -13,7 +13,8 @@ import { ARTISAN } from '../data/artisan.js';
 import { FRUIT } from '../data/trees.js';
 import { DISHES } from '../data/cooking.js';
 import { TRASH } from '../data/angling.js';
-import { addPoints, giftTier } from './npcs.js';
+import { addPoints, giftTier, hearts } from './npcs.js';
+import { CANDIDATES } from '../data/romance.js';
 import { GIFT_POINTS } from '../data/gifts.js';
 import { today, dateParts, fmtTime } from '../core/time.js';
 import { PRODUCE } from '../data/crops.js';
@@ -95,13 +96,18 @@ addInteraction(72, ({ tile, mapId }) => {
 });
 
 // Decorations on festival days.
-const COLORS = { longnight: ['#e9b44c', '#c0443a', '#f4ead2'], mazenight: ['#e8862a', '#5a3a5a', '#e9b44c'], potluck: ['#e8862a', '#86b86a', '#f4ead2'], egghunt: ['#f2a0c0', '#9fd8f0', '#f4e3a0'], blossom: ['#f4ead2', '#e2707a', '#e9b44c'], catch: ['#69aedb', '#f4ead2', '#86b86a'], weighin: ['#e8862a', '#d9644a', '#e9b44c'], frostlight: ['#ffd98a', '#cfe3ee', '#e2707a'] };
+const COLORS = { ribbondance: ['#e2707a', '#69aedb', '#f4e3a0'], longnight: ['#e9b44c', '#c0443a', '#f4ead2'], mazenight: ['#e8862a', '#5a3a5a', '#e9b44c'], potluck: ['#e8862a', '#86b86a', '#f4ead2'], egghunt: ['#f2a0c0', '#9fd8f0', '#f4e3a0'], blossom: ['#f4ead2', '#e2707a', '#e9b44c'], catch: ['#69aedb', '#f4ead2', '#86b86a'], weighin: ['#e8862a', '#d9644a', '#e9b44c'], frostlight: ['#ffd98a', '#cfe3ee', '#e2707a'] };
 addLayer(30, (c) => {
   if (G.S.map !== 'village') return;
   const f = festivalToday(); if (!f) return;
   drawBunting(c, 8 * T, 16 * T, 6 * T - 6, COLORS[f.key]);
   drawBunting(c, 8 * T, 16 * T, 11 * T + 2, COLORS[f.key]);
   r(c, 13 * T + 4, 11 * T + 2, 6, 3, '#f4ead2'); r(c, 14 * T + 6, 11 * T + 1, 4, 4, COLORS[f.key][1]);   // things on the table
+  if (f.kind === 'dance') {   // v58: the ribbon pole, its ribbons swaying out to the dancers
+    const px = 10 * T + 7, top = 8 * T - 6, foot = 10 * T, sway = Math.round(Math.sin(performance.now() / 400) * 2);
+    r(c, px, top, 2, foot - top, '#8a6a48'); r(c, px - 1, top - 2, 4, 2, '#e9b44c');
+    COLORS[f.key].forEach((col, i) => { for (let k = 0; k < 10; k++) r(c, px + (i - 1) * k + sway * (k > 5 ? 1 : 0), top + 1 + k * 2, 1, 2, col); });
+  }
 });
 addLayer(97, (c) => {
   if (G.S.map !== 'village' || festivalToday()?.key !== 'frostlight' || G.S.time < 17 * 60) return;
@@ -238,4 +244,20 @@ export function giveExchange(item) {
   S.festivals[entryKey(f)] = { to: id, item, tier, got: back };
   changed();
   return { to: def.name, tier, pts, got: back };
+}
+
+// ---- v58: the ribbon dance ----
+// G.S.festivals[key-year] = { with, refused: [] }: a partner once one says yes; who said no this year.
+// A spouse is the only one you can ask; otherwise any candidate you have met.
+export const danceAsk = () => (G.S.spouse ? [G.S.spouse] : CANDIDATES.filter((id) => G.S.npcs[id]?.talked || G.S.npcs[id]?.pts > 0));
+export function askDance(id) {
+  const f = festivalToday(), S = G.S;
+  if (!f || f.kind !== 'dance' || !festivalOpen() || !danceAsk().includes(id)) return null;
+  const e = S.festivals[entryKey(f)] || (S.festivals[entryKey(f)] = { with: null, refused: [] });
+  if (e.with || e.refused.includes(id)) return null;
+  const st = S.npcs[id], yes = id === S.spouse || st.dating || hearts(st) >= f.dance.hearts;
+  if (!yes) { e.refused.push(id); changed(); return { yes: false, id }; }
+  e.with = id;
+  addPoints(id, f.dance.pts);
+  return { yes: true, id };
 }

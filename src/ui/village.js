@@ -3,12 +3,13 @@ import { G } from '../core/game.js';
 import { on, emit, notify } from '../core/events.js';
 import { ITEMS } from '../data/items.js';
 import { NPCS } from '../data/npcs.js';
+import { heartStr } from '../systems/npcs.js';
 import { QUEST_NOTES } from '../data/quests.js';
 import { canDeliver, deliver } from '../systems/quests.js';
 import { PROJECTS } from '../data/projects.js';
 import { funded, fundProject } from '../systems/projects.js';
 import { affordable } from '../systems/upgrades.js';
-import { nextFestival, contestItems, enterContest, buyStall, entry, festivalToday, hoursText, ACCEPT_TEXT, startHunt, potItems, addToPot, enterMaze, secretFriend, giveExchange } from '../systems/festivals.js';
+import { nextFestival, contestItems, enterContest, buyStall, entry, festivalToday, hoursText, ACCEPT_TEXT, startHunt, potItems, addToPot, enterMaze, secretFriend, giveExchange, danceAsk, askDance } from '../systems/festivals.js';
 import { CLOTHES } from '../data/clothing.js';
 import { openModal, closeModal } from './modal.js';
 import { counts, unitValue } from '../systems/quality.js';
@@ -47,6 +48,15 @@ function festival() {
       html += items.length
         ? items.map((k) => `<div class="shoprow"><div><b>${best(k) ? `${QUALITY[best(k)].name} ` : ''}${ITEMS[k].name}</b><span>Worth ${unitValue(k, best(k))}g. Your best one is entered.</span></div><div class="btns"><button data-enter="${k}">Enter</button></div></div>`).join('')
         : `<p class="role">Bring ${ACCEPT_TEXT[f.accepts]} to enter. One entry per year.</p>`;
+    }
+  } else if (f.kind === 'dance') {   // v58
+    const done = entry(f);
+    if (done?.with) html += `<p class="gift">You danced with ${npcName(done.with)} around the ribbon pole. See you next spring.</p>`;
+    else {
+      const who = danceAsk(), refused = done?.refused || [];
+      html += `<p class="role">Ask someone to be your partner. They say yes once they like you enough (${f.dance.hearts} hearts), and dancing together brings you closer.</p>`
+        + (who.length ? who.map((id) => `<div class="shoprow"><div><b>${npcName(id)}</b><span>${refused.includes(id) ? 'Said no this year.' : `${heartStr(G.S.npcs[id])}`}</span></div><div class="btns"><button data-dance="${id}" ${refused.includes(id) ? 'disabled' : ''}>Ask</button></div></div>`).join('')
+          : '<p class="role">You do not know anyone well enough to ask yet. Watch the dancers, and meet the villagers.</p>');
     }
   } else if (f.kind === 'exchange') {   // v57
     const done = entry(f), who = NPCS.find((n) => n.id === secretFriend())?.name;
@@ -94,6 +104,13 @@ $('#mbody').addEventListener('click', (e) => {
   }
   if (e.target.closest('[data-hunt]')) { closeModal(); startHunt(); return; }   // v54
   if (e.target.closest('[data-maze]')) { closeModal(); enterMaze(); return; }   // v56
+  const dn = e.target.closest('[data-dance]');   // v58
+  if (dn && !dn.disabled) {
+    const r = askDance(dn.dataset.dance);
+    if (r?.yes) emit('ui:message', { title: 'The Ribbon Dance', text: `${npcName(r.id)} takes your hand. The fiddles start, and the two of you weave your ribbons around the pole with everyone else. When the music stops, ${npcName(r.id)} is still smiling.` });
+    else if (r) { notify(`${npcName(r.id)} smiles, but shakes their head. "Maybe next year."`); festival(); }
+    return;
+  }
   const xg = e.target.closest('[data-xgift]');   // v57
   if (xg) { const r = giveExchange(xg.dataset.xgift); if (r) emit('ui:message', { title: 'Happy Longnight', text: `${r.to} unwraps your gift: ${{ loved: 'they are overjoyed', liked: 'they are delighted', neutral: 'they thank you warmly', disliked: 'they try to look pleased', hated: 'an awkward silence' }[r.tier]}. Then a small parcel finds its way to you: a ${ITEMS[r.got].name.toLowerCase()}.` }); return; }
   const pt = e.target.closest('[data-pot]');   // v55

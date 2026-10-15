@@ -2,6 +2,9 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v58: The Ribbon Dance
+- A new spring festival on Spring 24: a ribbon pole goes up in the square. Ask someone to dance; they say yes once they like you enough (4 hearts), and dancing together is worth a heart. Married? Your spouse is waiting.
+
 ## v57: The Longnight Feast
 - A new winter festival on Winter 25. A week before, a note names your secret friend; bring them a gift to the feast. It counts five times as much as usual, and a present finds its way back to you.
 
