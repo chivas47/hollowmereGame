@@ -177,7 +177,7 @@ const PLOTS = { farm: { field: FIELD, centres: CENTRES, well: [12, 3] }, greenho
 const TREE_SLOTS = [[8, 12], [10, 12], [12, 12], [9, 14], [11, 14], [13, 14]];   // clear of the animal yards
 const MACHINE_SLOTS = []; for (let y = 5; y <= 9; y++) for (let x = 1; x <= 5; x++) MACHINE_SLOTS.push([x, y]);
 // v58: when the corner is full (or buildings wall its last tiles in), machines go along the farm's bottom edge, clear of the field.
-const SPARE_SLOTS = []; for (let x = 1; x <= 22; x++) SPARE_SLOTS.push([x, 13]);
+const SPARE_SLOTS = []; for (let x = 15; x <= 21; x++) SPARE_SLOTS.push([x, 13]);
 
 // ---- One simulated run ----
 function simulate(runSeed) {
@@ -227,7 +227,7 @@ function simulate(runSeed) {
   for (const k of Object.keys(BARN.tools)) GOAL[k] = { cost: () => BARN.tools[k].cost, needs: () => ({}), ok: () => !S().ranch[k], buy: () => track('upgrades', () => buyTool(k)) };
   for (const [k, s] of Object.entries(SITES).filter(([, x]) => x.placed)) {
     GOAL[k] = { shop: 'carpenter', cost: () => s.def.cost, needs: () => s.def.needs, ok: () => !S().built[k],
-      buy: () => track('buildings', () => { const at = botSite(k); if (!at) GOAL[k].noSite = true; return !!at && siteAt(k, 'new', at.x, at.y); }) };
+      site: true, buy: () => track('buildings', () => { const at = botSite(k); return !!at && siteAt(k, 'new', at.x, at.y); }) };
   }
   GOAL.grassstarter = { shop: 'store', cost: () => SUPPLIES.grassstarter, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply('grassstarter', 1)) };
   for (const k of Object.keys(PROJECTS)) GOAL[k] = { cost: () => PROJECTS[k].cost, needs: () => PROJECTS[k].needs, ok: () => !funded(k), buy: () => track('projects', () => fundProject(k)) };
@@ -266,18 +266,22 @@ function simulate(runSeed) {
       const key = goals[0], g = GOAL[key];
       if (!g.ok()) { goals.shift(); continue; }
       if (g.wait?.()) return;
-      if (!affordable(g.cost() + reserve, g.needs()) || (g.shop && !goShop(g.shop))) return;
-      if (!g.buy()) {
-        if (!g.noSite) return;
-        log.skipped.push({ goal: key, day: S().day });   // a full farm: no spot left for this building, so the list moves on
-        goals.shift(); continue;
-      }
+      // A full farm: no spot left for this building, so the list moves on before any material is gathered for it.
+      if (g.site && !siteExists(key)) { log.skipped.push({ goal: key, day: S().day }); goals.shift(); continue; }
+      if (!affordable(g.cost() + reserve, g.needs()) || (g.shop && !goShop(g.shop)) || !g.buy()) return;
       log.purchases.push({ goal: key, day: S().day });
       goals.shift();
     }
     if (log.goalsDone === null) log.goalsDone = S().day;
   }
 
+  // Whether botSite would find a spot, without clearing anything.
+  function siteExists(k) {
+    if (findSite(k)) return true;
+    const { w, h } = SITES[k].def.footprint;
+    for (let y = 13; y >= 5; y--) for (let x = 22 - w; x >= 1; x--) if (/^Clear the/.test(noFit(k, x, y) || '')) return true;
+    return false;
+  }
   // A spot for a new building: a free one, or else one where only debris is in the way (cleared first).
   function botSite(k) {
     if (k === 'helperhut') {   // the helpers reach 8 tiles: as close to the middle of the field as fits
@@ -707,7 +711,7 @@ function simulate(runSeed) {
       if (needFiber() && s.wildWeeds.length) { spend(TIME.travel); for (const w of [...s.wildWeeds]) { cutWildWeed(w.x, w.y); spend(TIME.tile); } }
     }
     plantCones();
-    if (Object.keys(missingMats()).filter((k) => !['wood', 'fiber', 'cloth'].includes(k)).length && !late()) mine();   // saving up for something that needs ore: mine first (not for fiber or cloth)
+    if (Object.keys(missingMats()).filter((k) => !['wood', 'fiber', 'cloth'].includes(k) && !(k in CROPS)).length && !late()) mine();   // saving up for something that needs ore: mine first (not for fiber, cloth or a crop)
     if (!late()) farm('farm', true);
     if (!late() && greenhouseBuilt()) farm('greenhouse', true);
     // v35: with a kitchen, eggs become pan eggs (50 energy each) eaten when energy runs low, for more fishing.
