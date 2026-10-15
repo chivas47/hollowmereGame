@@ -3,11 +3,12 @@ import { G } from '../core/game.js';
 import { has } from './professions.js';
 import { on, emit, changed } from '../core/events.js';
 import { addUpdater } from '../core/registry.js';
-import { MAPS } from '../data/maps.js';
+import { CLINIC_BED } from '../data/maps.js';
+import { SHOPS, CLINIC } from '../data/town.js';
 import { blocked, placePlayer } from './world.js';
 import { defense } from './clothing.js';
 
-const INVULNERABLE = 1, KNOCKBACK = 10, FAINT_GOLD_SHARE = 0.15, FAINT_GOLD_MAX = 500;
+const INVULNERABLE = 1, KNOCKBACK = 10;
 
 export function hurtPlayer(dmg, fromX, fromY) {
   if (G.hurtT > 0 || G.paused) return;
@@ -23,17 +24,19 @@ export function hurtPlayer(dmg, fromX, fromY) {
   if (S.hp <= 0) faint();
 }
 
+// v47: you come to at the clinic in town and pay the doctor's bill (Stardew's Harvey: up to 1,000g).
 function faint() {
-  const S = G.S, lost = Math.min(FAINT_GOLD_MAX, Math.floor(S.gold * FAINT_GOLD_SHARE));
-  S.gold -= lost;
+  const S = G.S, bill = Math.min(CLINIC.billMax, Math.floor(S.gold * CLINIC.billShare));
+  S.gold -= bill;
   S.hp = Math.round(S.maxHp / 2);
   G.hurtT = 0;
   const inMine = S.map === 'mine';
-  if (inMine) emit('mine:faint');
-  else { const sp = MAPS.farm.spawn; placePlayer('farm', sp.x, sp.y, sp.dir); emit('map:changed', 'farm'); }
+  if (inMine) emit('mine:faint');   // the Hollow lets go of you first
+  placePlayer('town', CLINIC_BED.x, CLINIC_BED.y, CLINIC_BED.dir);
+  emit('map:changed', 'town');
   emit('ui:message', {
     title: 'You blacked out',
-    text: `${inMine ? 'Ines found you at the mouth of the Hollow and helped you out.' : 'You came to on your doorstep, sore and muddy.'}${lost ? ` You lost ${lost}g along the way.` : ''}`,
+    text: `${inMine ? 'Someone found you in the Hollow and carried you to town.' : 'Someone found you and carried you to town.'} You come to at ${SHOPS.clinic.name}.${bill ? ` ${SHOPS.clinic.keeper} patched you up: the bill is ${bill}g.` : ` ${SHOPS.clinic.keeper} waves away the bill.`}`,
   });
   changed();
 }

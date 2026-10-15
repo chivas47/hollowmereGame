@@ -1,6 +1,7 @@
 // Cooking (v35). Dishes follow Stardew's by role: sell price, energy (health is 45% of it), buffs and their sources.
 // Our own names and our ingredients. from: 'start' (known from day 1), 'tv' (the cooking show, in this order),
-// 'npc:<id>:<hearts>' (a neighbour sends it), or { stall: price } (sold at the seed stall).
+// 'npc:<id>:<hearts>' (a neighbour sends it), { tavern: price } (sold at the tavern; at the seed stall before v47),
+// or 'clinic' (bought ready-made at the clinic, never cooked).
 // buff: { skill levels farming/fishing/mining/foraging, speed, defense, luck, attack, maxEnergy }, mins: how long.
 // drink: a drink buff, kept apart from the food buff (Stardew keeps one of each).
 export const DISHES = {
@@ -30,10 +31,11 @@ export const DISHES = {
   wrapfish:   { name: 'Wrapped fish',       needs: { rudd: 1, bread: 1, mayo: 1 }, sell: 500, energy: 165, from: 'npc:odile:7', buff: { fishing: 2 }, mins: 470 },   // fish taco
   trailbun:   { name: 'Trail bun',          needs: { bread: 1, carrot: 1, squash: 1 }, sell: 180, energy: 125, from: 'npc:tavi:3', buff: { foraging: 3 }, mins: 470 },   // survival burger
   feast:      { name: "Wanderer's feast",   needs: { frostkale: 1, lingon: 1, broccoli: 1 }, sell: 220, energy: 160, from: 'npc:tavi:7', buff: { maxEnergy: 40, speed: 1 }, mins: 180 },   // super meal
-  flatcake:   { name: 'Corn flatcake',      needs: { corn: 1 }, sell: 50, energy: 50, from: { stall: 100 } },   // tortilla
-  slices:     { name: 'Raw slices',         needs: { perch: 1 }, sell: 75, energy: 75, from: { stall: 150 } },   // sashimi
-  skillet:    { name: 'Skillet caps',       needs: { mushroom: 2, oil: 1 }, sell: 200, energy: 135, from: { stall: 250 }, buff: { attack: 2 }, mins: 600 },   // fried mushroom
-  triplebrew: { name: 'Triple thyme brew',  needs: { thyme: 3, honey: 1 }, sell: 450, energy: 8, from: { stall: 5000 }, buff: { speed: 1 }, mins: 420, drink: true },   // triple shot espresso
+  flatcake:   { name: 'Corn flatcake',      needs: { corn: 1 }, sell: 50, energy: 50, from: { tavern: 100 } },   // tortilla
+  slices:     { name: 'Raw slices',         needs: { perch: 1 }, sell: 75, energy: 75, from: { tavern: 150 } },   // sashimi
+  skillet:    { name: 'Skillet caps',       needs: { mushroom: 2, oil: 1 }, sell: 200, energy: 135, from: { tavern: 250 }, buff: { attack: 2 }, mins: 600 },   // fried mushroom
+  tonic:      { name: 'Energy tonic',       needs: {}, sell: 250, energy: 500, from: 'clinic' },   // v47: Stardew's energy tonic
+  triplebrew: { name: 'Triple thyme brew',  needs: { thyme: 3, honey: 1 }, sell: 450, energy: 8, from: { tavern: 5000 }, buff: { speed: 1 }, mins: 420, drink: true },   // triple shot espresso
 };
 export const TV_RECIPES = Object.keys(DISHES).filter((k) => DISHES[k].from === 'tv');
 export const HEALTH_PER_ENERGY = 0.45;   // Stardew: health restored is 45% of the energy

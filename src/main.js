@@ -83,6 +83,7 @@ import './ui/guild.js';
 import './ui/forge.js';
 import './ui/books.js';
 import './ui/trader.js';
+import './ui/town.js';
 import { buildHotbar } from './ui/hotbar.js';
 import { initInput } from './ui/input.js';
 import { initDebug } from './ui/debugPanel.js';

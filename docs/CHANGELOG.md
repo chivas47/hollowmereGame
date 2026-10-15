@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v47: The tavern, the clinic and the phone
+- The Lantern, on the town's lower lane, 12:00 to midnight: dishes at twice their sell price, a dish of the day, and the recipes the seed stall used to sell.
+- Hollowmere Clinic, 9:00 to 3:00 pm: the energy tonic (1,000g, +500 energy).
+- Fainting now wakes you at the clinic, where Doctor Maren charges 15% of your gold, up to 1,000g (it was up to 500g).
+- A phone on the farmhouse wall: every shop's hours, tomorrow's weather, and Bram takes building orders by phone while his carpentry is open.
+
 ## v46: The town
 - Hollowmere Town, up a new lane north of the village, with three shops: Fenn's Provisions (seeds, supplies, bait, saplings, hats, recipes), The Anvil (tool upgrades, geodes, coal) and Bram's Carpentry (the farmhouse, buildings, renovations, wood and stone).
 - Shops keep hours: the store and the carpentry 9:00 to 5:00 pm, the smithy 9:00 to 4:00 pm. The store shuts on Wednesdays, the carpentry on Tuesdays, and all three on festival days. The HUD now shows the weekday.

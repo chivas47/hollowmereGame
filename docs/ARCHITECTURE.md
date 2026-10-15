@@ -31,7 +31,7 @@ src/
     angling.js        CATCH (the catch bar), BAIT, TACKLE, BOBBERS, TRASH, RECYCLE, FISH_TREASURE (v41)
     books.js          BOOKS (skill, primer, power), BOOK_FIND, MASTERY_XP, PERKS, SHRINE (v40)
     forge.js          VENT, FORGE_GEMS, enchantments, TRINKETS (v39)
-    town.js           SHOPS: name, keeper, hours, closing weekdays, dialog event (v46)
+    town.js           SHOPS: name, keeper, hours, closing weekdays, dialog event, phone (v46); TAVERN, CLINIC (v47)
     hidden.js         GATES (grove log, railway rubble, sewer key), GROVE stumps, SPRING, TRADER stock (v45)
     cavern.js         CAVERN (the Sunken Cavern's door, strength, ores, shafts, chests), HOLLOW_GOLD (v38)
     guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
@@ -74,7 +74,7 @@ src/
     economy.js        ship(), buy(), overnight payout; materials are never shipped
     npcs.js           schedules across farm and village, talk, gifts, hearts, 3-heart rewards, heart scenes
     upgrades.js       smithy and carpentry purchases, material costs, recalcStats()
-    town.js           the town's shops: opening hours and closing days (isOpen, closedWhy), doors, keepers; the farm stall and workbench point to town
+    town.js           the town's shops: opening hours and closing days (isOpen, closedWhy), doors, keepers; the farm stall and workbench point to town; v47 the tavern (special, buyDish), the clinic (buyClinic) and the phone
     livestock.js      shared animal rules: coop and barn levels, room, buying and hatching, friendship, grazing, products, quality
     coop.js           coop placement, coop animals, petting, feed
     mine.js           floor generation for the Hollow, the Sunken Cavern and the Ember Vent (MINE.zone, MINE.eff), the forge room, rocks, breakRock(), ladders, shafts, lighting
@@ -114,6 +114,7 @@ src/
     clothing.js       sewing machine, dye pots and mannequin dialogs; the wardrobe in the bag
     creation.js       the new game screen (opens when G.S.profile is null)
     trader.js         the sewer trader's dialog (v45)
+    town.js           the tavern, clinic and phone dialogs (v47)
     dom.js toast.js modal.js hud.js hotbar.js dialogs.js inventory.js
     workshop.js mine.js input.js debugPanel.js
     crafting.js (craft menu, placed-object dialog) barn.js village.js (board, festival)
@@ -165,7 +166,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 57 | treasure.js | Kit slot with a bomb (throws it at the faced tile, Hollow only) |
 | 72 | helpers.js | Helper hut a, waystones e and d (warp), cave mouth y, the cave's crate t |
 | 57 | helpers.js | Kit slot with a home charm (warp home) |
-| 72 | town.js | Shop doors ( ) ] in the town (dialog, or the hours and closing day) |
+| 72 | town.js | Shop doors ( ) ] [ / in the town (dialog, or the hours and closing day); the phone _ in the farmhouse |
 | 70 | town.js | The farm's old stall S and workbench K (a note pointing to town) |
 | 72 | coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Coop C, barn A, greenhouse G, mine entrance M, ladders U/L, the cavern door ^, shafts !, the vent door > and the forge =, placed object Y, quest board Q, festival table J |
 | 71 | village.js | Fountain F, cottage V (flavour text) |
@@ -263,7 +264,8 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | B | shipping bin | yes |
 | W | well | yes |
 | K | Bram's old workbench (a note since v46) | yes |
-| (, ), ] | the town's general store, smithy and carpentry, each with its keeper's spot (v46) | yes |
+| (, ), ], [, / | the town's general store, smithy, carpentry, tavern and clinic, each with its keeper's spot (v46, v47) | yes |
+| _ | the phone on the farmhouse wall (v47; drawn as a wall face) | yes |
 | C | chicken coop (written at runtime) | yes |
 | A | barn (written at runtime) | yes |
 | G | greenhouse building on the farm (written at runtime) | yes |
