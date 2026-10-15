@@ -31,6 +31,7 @@ src/
     angling.js        CATCH (the catch bar), BAIT, TACKLE, BOBBERS, TRASH, RECYCLE, FISH_TREASURE (v41)
     books.js          BOOKS (skill, primer, power), BOOK_FIND, MASTERY_XP, PERKS, SHRINE (v40)
     forge.js          VENT, FORGE_GEMS, enchantments, TRINKETS (v39)
+    family.js         CHILD, CHILD_NAMES, DIVORCE, ROOMMATE, HALL, the shadow lantern (v53)
     romance.js        CANDIDATES, HEART_CAP, BOUQUET, JEALOUSY, DATE_LINES, the bouquet item (v51); PENDANT, WEDDING_DAYS, SPOUSE_CAP, CHORE_CHANCE, SPOUSE_LINES, the pendant (v52)
     gifts.js          GIFT_POINTS, BIRTHDAY_MULT, UNIVERSAL tastes, TIER_NAMES (v48)
     mail.js           LETTERS (when, text, attach), MAILBOX (v48)
@@ -77,6 +78,7 @@ src/
     economy.js        ship(), buy(), overnight payout; materials are never shipped
     npcs.js           schedules across farm and village, talk, gifts, hearts, 3-heart rewards, heart scenes
     upgrades.js       smithy and carpentry purchases, material costs, recalcStats()
+    family.js         children (G.S.children, G.S.baby, G.S.childAsk), growing up, hugs; divorce at the town hall (v53)
     marriage.js       the old boatman and the pendant, the wedding (G.S.wedding, G.S.spouse), the spouse's morning chores (v52)
     mail.js           letters arriving each morning (G.S.mail, G.S.mailRead), readLetter(), the mailbox on the farmhouse front
     town.js           the town's shops: opening hours and closing days (isOpen, closedWhy), doors, keepers; the farm stall and workbench point to town; v47 the tavern (special, buyDish), the clinic (buyClinic) and the phone
@@ -120,6 +122,7 @@ src/
     creation.js       the new game screen (opens when G.S.profile is null)
     trader.js         the sewer trader's dialog (v45)
     town.js           the tavern, clinic and phone dialogs (v47)
+    family.js         naming a newborn, the town hall dialog (v53)
     social.js         the social menu (F, or a click on the neighbours panel) and letters (v48)
     dom.js toast.js modal.js hud.js hotbar.js dialogs.js inventory.js
     workshop.js mine.js input.js debugPanel.js
@@ -271,6 +274,7 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | B | shipping bin | yes |
 | W | well | yes |
 | K | Bram's old workbench (a note since v46) | yes |
+| - | the town hall (v53) | yes |
 | (, ), ], [, / | the town's general store, smithy, carpentry, tavern and clinic, each with its keeper's spot (v46, v47) | yes |
 | _ | the phone on the farmhouse wall (v47; drawn as a wall face) | yes |
 | C | chicken coop (written at runtime) | yes |

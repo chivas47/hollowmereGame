@@ -37,10 +37,11 @@ on('day:start', () => {
   const S = G.S, w = S.wedding;
   if (!w || S.day < w.day) return;
   S.wedding = null;
-  S.spouse = w.id;
+  S.spouse = w.id; S.roommate = !!w.roommate;   // v53: a roommate lives like a spouse, without romance or children
   const st = S.npcs[w.id];
-  st.married = true; st.dating = true;
-  emit('ui:message', { title: 'Your wedding', text: `The whole valley gathers in the square. ${nameOf(w.id)} is waiting under an arch of flowers, and when you say the words, the square cheers. ${nameOf(w.id)} moves into the farmhouse today.` });
+  st.married = true; st.dating = !w.roommate;
+  if (w.roommate) emit('ui:message', { title: 'A new roommate', text: `${nameOf(w.id)} arrives at dusk with a single trunk and a lantern, and takes the quiet corner of the farmhouse. "Thank you," he says. "For the light."` });
+  else emit('ui:message', { title: 'Your wedding', text: `The whole valley gathers in the square. ${nameOf(w.id)} is waiting under an arch of flowers, and when you say the words, the square cheers. ${nameOf(w.id)} moves into the farmhouse today.` });
   changed();
 });
 

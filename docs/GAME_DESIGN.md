@@ -356,6 +356,10 @@ Dating (v51, data/romance.js; Stardew's rules): Ines, Odile, Tavi, Esme, Rook, P
 
 Marriage (v52, Stardew's rules): on rainy days an old boatman sits at the end of the beach pier and sells the sea-glass pendant (5,000g; Stardew's Mermaid's Pendant from the Old Mariner). Give it to the person you are dating at 10 hearts, once the farmhouse has its first upgrade, and they say yes; the wedding is three days later and they move into the farmhouse. A spouse can reach 14 hearts and has a 14-heart scene, talks like family, spends mornings and evenings in the farmhouse and the day in the yard, and each morning has a 40% chance to do one chore: water every crop on the farm (not on rainy days), add a night's feed for the coop, fill the pet's bowl, or leave breakfast in your bag (pan egg, farm omelette, griddle cakes or crisp turnip cakes). Gifts to other candidates cost your spouse 20 points.
 
+Family (v53, data/family.js; Stardew's rules): married (not a roommate) with 10+ hearts and the nursery (the second farmhouse upgrade), your spouse has a 5% chance each morning to ask about a child at bedtime. Say yes and a baby is born 14 days later; you name it. Up to two children: a baby in the crib, a crawler from 13 days, a toddler from 27 days. Hug each child once a day. Divorce costs 50,000g at the new town hall on the town's north edge (9:00 to 17:00): your spouse moves out and their friendship drops to 0; the children stay with you (Stardew: 50,000g at the mayor's; there the children leave).
+
+The roommate (v53): the Lamplighter, the sewer trader, is now a villager (no quests, no festivals; Winter 1 birthday) who stands by his counter after dark. At 10 hearts he sells a shadow lantern (200,000g; Stardew's void ghost pendant from Krobus). Give it to him and he moves into the farmhouse in three days: he lives and helps like a spouse, reaches 14 hearts, but there is no romance and no children.
+
 Heart scenes (data/scenes.js): the first talk after reaching 4 and 8 hearts plays a scene with two choices. The warmer choice gives 60 points at 4 hearts and 80 at 8; the other gives 25 and 50. Scenes: Ines, a swarm in the hedge and the honey ledger; Bram, the bin hinge and the old porch plans; Odile, mending nets at dawn and the boat south; Tavi, a runaway map page and the finished map.
 
 ### The town and its shops (v46)
@@ -784,6 +788,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
 - The worm bin and bait maker are not built; bait is crafted from gel (v41). The balance bot's catch rate comes from playing the real catch bar with a quarter-second reaction (tools/balance.mjs REACT); real players may do better or worse.
+- v53: children do not grow past toddler; there is no child bed, and a third farmhouse room is not needed. The roommate has no 14-heart scene.
 - v52: the chore chance (40%) is ours: Stardew's odds vary by chore and friendship. No wedding ceremony scene, just a message; no spouse room. The beach does not show rain, so check the weather in the top bar for the boatman.
 - v51: no group 10-heart event when dating several (Stardew has one); jealousy is a flat 20 points per gift to another partner, not tied to who sees it.
 - v50: all twelve newer villagers (v49 and v50) have no heart scenes, 3-heart rewards or mail letters yet, and never visit the farm. Villagers walk through houses between waypoints (they ignore walls, as before).

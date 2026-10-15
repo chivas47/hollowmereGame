@@ -3,12 +3,12 @@
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addInteraction, addLayer, addEntities } from '../core/registry.js';
+import { addInteraction, addLayer } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
 import { ITEMS } from '../data/items.js';
 import { tier } from '../data/upgrades.js';
 import { GATES, GROVE, SPRING, TRADER } from '../data/hidden.js';
-import { drawDebris, drawPerson } from '../render/sprites.js';
+import { drawDebris } from '../render/sprites.js';
 import { useEnergy, placePlayer } from './world.js';
 import { swingAt } from './effects.js';
 import { addItem } from './quality.js';
@@ -110,9 +110,11 @@ export function left(o) {
   if (o.once) return t.once.includes(o.key) ? 0 : 1;
   return o.daily ? o.daily - (t.bought[o.key] || 0) : Infinity;
 }
+// v53: the shadow lantern is only offered to a friend of 10 hearts who has no spouse.
+export const stocked = (o) => !o.hearts || (Math.floor((G.S.npcs.lamp?.pts || 0) / 100) >= o.hearts && !G.S.spouse && !G.S.wedding);
 export function buyFromTrader(key) {
   const S = G.S, o = TRADER.stock.find((x) => x.key === key), t = traderState();
-  if (!o || S.gold < o.cost || left(o) <= 0) return false;
+  if (!o || S.gold < o.cost || left(o) <= 0 || !stocked(o)) return false;
   S.gold -= o.cost;
   if (o.key === 'wishfruit') S.wish.trader = true;   // the trader's wishfruit is one of the valley's sources
   addItem(o.key, 1);
@@ -122,4 +124,4 @@ export function buyFromTrader(key) {
   changed();
   return true;
 }
-addEntities(() => (G.S.map !== 'sewer' || G.S.time < TRADER.opens ? [] : [{ y: 3 * T + 14, draw: (c) => drawPerson(c, 19 * T + 8, 3 * T + 14, 'down', false, 0, { skin: '#8a8aa8', hair: '#2b2a2e', shirt: '#3a3550', pants: '#2b2a2e', shoes: '#1a1a1a', long: true }) }]));
+// v53: the Lamplighter is a villager now (data/npcs.js) and stands by the counter after dark.

@@ -62,6 +62,7 @@ import './systems/hidden.js';
 import './systems/town.js';
 import './systems/mail.js';
 import './systems/marriage.js';
+import './systems/family.js';
 
 // UI
 import './ui/toast.js';
@@ -87,6 +88,7 @@ import './ui/books.js';
 import './ui/trader.js';
 import './ui/town.js';
 import './ui/social.js';
+import './ui/family.js';
 import { buildHotbar } from './ui/hotbar.js';
 import { initInput } from './ui/input.js';
 import { initDebug } from './ui/debugPanel.js';

@@ -17,5 +17,6 @@ export const TRADER = {
     { key: 'starstone', cost: 5000, daily: 1 },
     { key: 'cinder', cost: 100, daily: 20 },
     { key: 'bk_stars', cost: 15000, once: true },
+    { key: 'shadowlantern', cost: 200000, once: true, hearts: 10, note: 'For a friend who would share your roof.' },   // v53
   ],
 };

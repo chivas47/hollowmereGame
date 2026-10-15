@@ -34,7 +34,7 @@ function makeQuest() {
   const items = pool(), taken = new Set(G.S.quests.map((q) => q.item));
   const free = items.filter((k) => !taken.has(k));
   if (!free.length) return null;
-  const def = pick(NPCS), liked = free.filter((k) => def.likes.includes(k) || def.loves.includes(k));
+  const def = pick(NPCS.filter((d) => !d.noQuests)), liked = free.filter((k) => def.likes.includes(k) || def.loves.includes(k));
   const item = liked.length && Math.random() < 0.5 ? pick(liked) : pick(free), it = ITEMS[item];
   const n = it.material ? Math.max(3, Math.min(25, Math.round(60 / it.sell))) : Math.max(1, Math.min(5, Math.round(150 / it.sell)));
   const reward = Math.round((it.sell * n * QUEST.markup + QUEST.base) / 5) * 5;
