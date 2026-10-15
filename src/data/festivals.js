@@ -1,6 +1,7 @@
 // Festivals in the village square (v54: two a season). kind 'contest': enter one item, judged by its sell value.
 // kind 'market': a stall with festival-only goods. kind 'hunt' (v54): a timed egg hunt. kind 'pot' (v55): add one
 // item to the communal soup; how good it is changes everyone's friendship. kind 'maze' (v56): a hedge maze at night.
+// kind 'exchange' (v57): a gift for your secret friend, and one back.
 // Neighbours spend the
 // festival in the square.
 export const FESTIVALS = [
@@ -103,6 +104,21 @@ export const FESTIVALS = [
       bram: 'I carved the lantern frames. Every one of them. My hands ache.',
       odile: 'Too cold to fish. Not too cold for cider.',
       tavi: 'I am drawing the square by lantern light. The shadows keep moving.',
+    },
+  },
+  // v57. Stardew's Feast of the Winter Star (Winter 25): a secret friend is named a week before; your gift to them
+  // counts five times, and someone gives you a present in return.
+  {
+    key: 'longnight', name: 'Longnight Feast', season: 'Winter', day: 25, kind: 'exchange',
+    intro: 'Long tables in the square, candles in the snow. Everyone brings a gift for their secret friend.',
+    exchange: { reveal: 18, mult: 5, presents: ['heartstone', 'tidestone', 'frosttear', 'honeycake', 'wine_fig', 'biscuit', 'bk_stars', 'jar_berry'] },
+    lines: {
+      ines: 'I knitted my gift. It has a hole in it. That is part of the charm.',
+      bram: 'I carved something. Do not shake it.',
+      odile: 'Best night of the year. Nobody works, everybody eats.',
+      tavi: 'I mapped who gave what to whom for ten years. Do not ask to see it.',
+      juno: 'Every gift in this square passed through my mailbag at some point.',
+      pell: 'The children made decorations. Please admire every one of them.',
     },
   },
 ];

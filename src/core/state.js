@@ -73,6 +73,7 @@ export function newState() {
     forged: {}, weaponEnch: {}, toolEnch: {}, trinket: null,   // v39: weapon -> gem counts, weapon -> enchant, tool -> enchant, worn trinket
     quarryRocks: null,                                 // v44: today's rocks in the quarry (systems/quarry.js)
     spouse: null, wedding: null, roommate: false,      // v52: your spouse's villager id, a wedding { id, day } to come; v53: a roommate
+    secretFriend: null,                              // v57: { year, id } for the Longnight Feast
     children: [], baby: null, childAsk: 0,            // v53: children { name, born, hug, love }; a baby on the way { due }
     mail: [], mailRead: [],                          // v48: letters waiting in the mailbox, letters read (systems/mail.js)
     gates: { log: false, rubble: false, key: false },  // v45: the grove log, the railway rubble, the sewer key

@@ -8,7 +8,7 @@ import { canDeliver, deliver } from '../systems/quests.js';
 import { PROJECTS } from '../data/projects.js';
 import { funded, fundProject } from '../systems/projects.js';
 import { affordable } from '../systems/upgrades.js';
-import { nextFestival, contestItems, enterContest, buyStall, entry, festivalToday, hoursText, ACCEPT_TEXT, startHunt, potItems, addToPot, enterMaze } from '../systems/festivals.js';
+import { nextFestival, contestItems, enterContest, buyStall, entry, festivalToday, hoursText, ACCEPT_TEXT, startHunt, potItems, addToPot, enterMaze, secretFriend, giveExchange } from '../systems/festivals.js';
 import { CLOTHES } from '../data/clothing.js';
 import { openModal, closeModal } from './modal.js';
 import { counts, unitValue } from '../systems/quality.js';
@@ -48,6 +48,14 @@ function festival() {
         ? items.map((k) => `<div class="shoprow"><div><b>${best(k) ? `${QUALITY[best(k)].name} ` : ''}${ITEMS[k].name}</b><span>Worth ${unitValue(k, best(k))}g. Your best one is entered.</span></div><div class="btns"><button data-enter="${k}">Enter</button></div></div>`).join('')
         : `<p class="role">Bring ${ACCEPT_TEXT[f.accepts]} to enter. One entry per year.</p>`;
     }
+  } else if (f.kind === 'exchange') {   // v57
+    const done = entry(f), who = NPCS.find((n) => n.id === secretFriend())?.name;
+    if (done) html += `<p class="gift">You gave ${NPCS.find((n) => n.id === done.to).name} your ${ITEMS[done.item].name.toLowerCase()}, and someone left you a ${ITEMS[done.got].name.toLowerCase()}. Happy Longnight.</p>`;
+    else {
+      const items = Object.keys(G.S.bag).filter((k) => G.S.bag[k] > 0 && ITEMS[k] && !ITEMS[k].material).sort((a, b) => ITEMS[b].sell - ITEMS[a].sell);
+      html += `<p class="role">Your secret friend is <b>${who}</b>. Your gift counts ${f.exchange.mult} times as much as usual, so choose well.</p>`
+        + (items.length ? items.map((k) => `<div class="shoprow"><div><b>${ITEMS[k].name}</b><span>You have ${G.S.bag[k]}.</span></div><div class="btns"><button data-xgift="${k}">Give</button></div></div>`).join('') : '<p class="role">Bring something to give.</p>');
+    }
   } else if (f.kind === 'maze') {   // v56
     const done = entry(f);
     html += `<p class="role">The maze is open ${hoursText()}. ${done ? 'You already found this year\'s prize, but you can walk it again.' : 'Find the chest at its heart.'}</p><div class="btns"><button data-maze>Enter the maze</button></div>`;
@@ -86,6 +94,8 @@ $('#mbody').addEventListener('click', (e) => {
   }
   if (e.target.closest('[data-hunt]')) { closeModal(); startHunt(); return; }   // v54
   if (e.target.closest('[data-maze]')) { closeModal(); enterMaze(); return; }   // v56
+  const xg = e.target.closest('[data-xgift]');   // v57
+  if (xg) { const r = giveExchange(xg.dataset.xgift); if (r) emit('ui:message', { title: 'Happy Longnight', text: `${r.to} unwraps your gift: ${{ loved: 'they are overjoyed', liked: 'they are delighted', neutral: 'they thank you warmly', disliked: 'they try to look pleased', hated: 'an awkward silence' }[r.tier]}. Then a small parcel finds its way to you: a ${ITEMS[r.got].name.toLowerCase()}.` }); return; }
   const pt = e.target.closest('[data-pot]');   // v55
   if (pt) { const v = addToPot(pt.dataset.pot); if (v) emit('ui:message', { title: v.label, text: `${v.text} ${v.pts > 0 ? `Everyone's friendship with you rises.` : v.pts < 0 ? `Everyone's friendship with you drops.` : ''}` }); return; }
   const st = e.target.closest('[data-stall]');
