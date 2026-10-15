@@ -276,7 +276,7 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | G | greenhouse building on the farm (written at runtime) | yes |
 | w, p | greenhouse glass wall, greenhouse floor | yes, no |
 | Y | crafted object, fruit tree, fence or closed gate (written at runtime from `G.S.placed`), giant crop (from `G.S.giants`), debris or alder (from `G.S.debris`) | yes |
-| V, Q, F, J | village cottage, quest board, fountain, festival table | yes |
+| V, Q, F, J | village cottage (also Lio's in the town, v49), quest board, fountain, festival table | yes |
 | M | mine entrance | yes |
 | f, X | cave floor, cave wall | no, yes |
 | r, c, i | stone, copper, iron rock | yes |

@@ -60,4 +60,78 @@ export const NPCS = [
     react: { loved: 'A {item}! I will keep it in my map case. Thank you!', liked: 'Oh, a {item}. I will sketch it before I eat it.', neutral: 'Thank you. I will note it down.', disliked: 'A {item}... I will note it down. Under "no".', hated: 'Mayonnaise? Ugh. I would rather eat my compass.', birthday: 'A birthday present! I am marking this day on every map I own.' },
     reward: { kind: 'seeds', crop: 'fava', amount: 5, text: 'Tavi tucked a folded map square into your bag. Inside: 5 Fava bean seeds.' },
   },
+  // ---- v49: six more villagers. The shopkeepers live at their shops, Hale at the lodge, Lio in a town cottage.
+  // No 3-heart reward or heart scenes yet (the first four keep theirs). Schedules in data/schedules.js.
+  {
+    id: 'wren', name: 'Wren Fenn', role: "Keeps Fenn's Provisions in town", seed: 4,
+    loves: ['jar_tomato', 'wine_fig'], likes: ['tomato', 'corn', 'egg', 'flour', 'lettuce'], dislikes: ['quartz', 'slices'], hates: ['frostroot'],
+    birthday: { season: 'Spring', d: 4 },
+    pal: { hat: null, hair: '#7a3b22', shirt: '#c0443a', pants: '#3f4a5a', skin: '#e0b48a', long: true },
+    lines: [
+      ['Seeds are in the bins by the door. Mind the turnips, they roll.', 'If it grows in this valley, I sell the seed for it. Mostly.'],
+      ['You buy more seed than anyone since the old farmer. I like you already.', 'Shut on Wednesdays. Even a shop needs a day to breathe.', 'Morning, {name}. The {fav} seed came in fresh.'],
+      ['I keep the best packets back for you. Do not tell the others.', 'This shop was my father\'s. Some days I think he would have liked you.'],
+    ],
+    react: { loved: 'A {item}! You have good taste, {name}.', liked: 'A {item}. I can sell that, or eat it. Thank you.', neutral: 'Thank you. Every bit helps a shopkeeper.', disliked: 'A {item}. Hm. Not really my line.', hated: 'Frost root? It ruined a whole winter\'s stock once. Take it away.', birthday: 'You remembered my birthday? Nobody remembers a shopkeeper\'s birthday!' },
+  },
+  {
+    id: 'corvin', name: 'Corvin', role: 'The smith at the Anvil', seed: 5,
+    loves: ['goldbar', 'pizza'], likes: ['ironbar', 'copperbar', 'coal', 'umbritebar', 'emberquartz'], dislikes: ['salad', 'lettuce'], hates: ['jar_berry'],
+    birthday: { season: 'Summer', d: 26 },
+    pal: { hat: null, hair: '#2b2a2e', shirt: '#5a5f66', pants: '#3a2f28', skin: '#a8714f', beard: true },
+    lines: [
+      ['Bring me bars, not ore. I can smelt, but I would rather hammer.', 'The forge is hot. Do not touch anything that glows.'],
+      ['Your tools come back to me less bent these days. You are learning.', 'Cracked a geode this morning. Nothing in it. Story of my life.', '{name}. Good steel, that hoe of yours.'],
+      ['I made the hinges on half the doors in this town. Yours too, now.', 'When the fire is low I think about my father\'s anvil. This one is better. Do not tell him.'],
+    ],
+    react: { loved: 'A {item}. Now that is something worth having.', liked: 'A {item}. Useful. Thanks.', neutral: 'Hm. Thanks.', disliked: 'Rabbit food. I eat iron and bread.', hated: 'Jam? Sticks to the tongs. No.', birthday: 'A birthday gift. Huh. Nobody does that.' },
+  },
+  {
+    id: 'hob', name: 'Hob', role: 'Runs the Lantern tavern', seed: 6,
+    loves: ['wine_persimmon', 'trout'], likes: ['corn', 'wheat', 'pepper', 'pike', 'cheese'], dislikes: ['coral', 'urchin'], hates: ['mushroom'],
+    birthday: { season: 'Autumn', d: 15 },
+    pal: { hat: null, hair: '#5a3a22', shirt: '#f4ead2', pants: '#3a2f28', skin: '#c99a74', beard: true },
+    lines: [
+      ['Kitchen opens at noon. Before that, I am a man with a mop.', 'The Lantern has stood here longer than the town. That is what I tell people.'],
+      ['Your spot at the bar is free whenever you want it.', 'I tried a new stew today. Corvin ate three bowls. That is a review.', 'Evening, {name}. Something warm?'],
+      ['When the farm is done for the day, come here. That is what taverns are for.', 'I kept a recipe of my mother\'s for twenty years. Maybe I will teach it to you.'],
+    ],
+    react: { loved: 'A {item}! That is going on tonight\'s menu, with your name on it.', liked: 'A {item}. I can cook with this.', neutral: 'Kind of you. Thank you.', disliked: 'A {item}. I will find a shelf for it.', hated: 'Mushrooms. I cannot stand the things. Never could.', birthday: 'My birthday! Drinks are on me tonight. Well, one drink.' },
+  },
+  {
+    id: 'maren', name: 'Doctor Maren', role: 'Runs the clinic in town', seed: 7,
+    loves: ['tidestone', 'thymetea'], likes: ['carrot', 'lettuce', 'salad', 'trout', 'pear'], dislikes: ['sugar', 'biscuit'], hates: ['embereel'],
+    birthday: { season: 'Winter', d: 3 },
+    pal: { hat: null, hair: '#2b2a2e', shirt: '#e8eef2', pants: '#5a6a7a', skin: '#e0b48a', long: true },
+    lines: [
+      ['Clinic hours are nine to three. Emergencies, whenever you faint.', 'Wear sturdy boots in the Hollow. I am tired of sprained ankles.'],
+      ['You look rested. That is rarer than you would think in a farming town.', 'I sorted the herb drawer today. It was very satisfying.', 'Hello, {name}. Eating properly?'],
+      ['I worry less about this town since you came. More vegetables, fewer accidents.', 'I trained in the city. I stayed here because people actually say thank you.'],
+    ],
+    react: { loved: 'A {item}! How thoughtful. Thank you.', liked: 'A {item}. Good for you, and for me.', neutral: 'Thank you, that is kind.', disliked: 'A {item}... as your doctor, I disapprove.', hated: 'Spicy eel? My stomach is turning just looking at it.', birthday: 'For my birthday? I will not even lecture you about sugar today.' },
+  },
+  {
+    id: 'hale', name: 'Warden Hale', role: "Keeps the Wardens' Lodge by the Hollow", seed: 8,
+    loves: ['umbritebar', 'skillet'], likes: ['iron', 'gold', 'pike', 'emberquartz', 'quarrysnack'], dislikes: ['crocus', 'narcissus'], hates: ['pancakes'],
+    birthday: { season: 'Spring', d: 27 },
+    pal: { hat: null, hair: '#8d939a', shirt: '#4f6b3a', pants: '#3f3226', shoes: '#2b211a', skin: '#c99a74', beard: true },
+    lines: [
+      ['Keep your blade sharp and your lantern full. The Hollow does not forgive.', 'I have been down further than most. Not as far as I would like.'],
+      ['You fight like someone who has been taught. Or someone who learns fast.', 'Slimes again on the upper floors. They breed like rabbits.', '{name}. Still breathing. Good.'],
+      ['When I retire, someone has to keep the lodge. Think on it.', 'I lost a friend in the deep floors, years ago. I go down for him, a little.'],
+    ],
+    react: { loved: 'A {item}. You know what a warden needs.', liked: 'A {item}. That will see use.', neutral: 'Thank you.', disliked: 'Flowers? I am a warden, not a garden.', hated: 'Griddle cakes. Soft food for soft days. No.', birthday: 'You found out my birthday. A warden notices a good scout.' },
+  },
+  {
+    id: 'lio', name: 'Lio', role: 'Young fiddler who plays in the square', seed: 9,
+    loves: ['honeycake', 'frosttear'], likes: ['plum', 'pear', 'biscuit', 'glademint', 'berry'], dislikes: ['coal', 'clam'], hates: ['frostkale'],
+    birthday: { season: 'Summer', d: 2 },
+    pal: { hat: '#3f5f6e', band: '#2b4352', hair: '#d9a441', shirt: '#7a4a8a', pants: '#3f3a33', skin: '#f0c8a0' },
+    lines: [
+      ['Want a song? I only know four. Well, three and a half.', 'The fountain makes good echoes. Better than my room, anyway.'],
+      ['I wrote a tune about your farm. It goes da-da-dum. Still working on it.', 'Hob lets me play at the Lantern on busy nights. Sometimes people even listen.', 'Hi, {name}! Listen to this one.'],
+      ['When I am famous I will say I started here, playing to you and the pigeons.', 'You are the only one who claps at the end. Thank you for that.'],
+    ],
+    react: { loved: 'A {item}! I am writing a song about this. Right now.', liked: 'A {item}! Thanks, that is great.', neutral: 'Oh, thanks!', disliked: 'A {item}... thank you? I think?', hated: 'Frost kale? It tastes like a cold puddle. Sorry.', birthday: 'You know my birthday? This is the best day ever!' },
+  },
 ];
