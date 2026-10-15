@@ -125,7 +125,7 @@ const BAR_ORE = { copperbar: 'copper', ironbar: 'iron' };
 const { pickUp } = await load('systems/placeables.js');
 const { accepted, loadMachine, collectMachine } = await load('systems/artisan.js');
 const { canDeliver, deliver } = await load('systems/quests.js');
-const { festivalToday, festivalOpen, contestItems, enterContest, nextFestival } = await load('systems/festivals.js');
+const { festivalToday, festivalOpen, contestItems, enterContest, nextFestival, grangeItems, grangeKind, judgeGrange } = await load('systems/festivals.js');
 const { MINE, enterMine, leaveMine, checkpoints } = await load('systems/mine.js');
 const { skillLevel } = await load('systems/skills.js');
 const { bombs, throwBomb, openChest, crackGeode, GEODES } = await load('systems/treasure.js');
@@ -641,15 +641,22 @@ function simulate(runSeed) {
 
   function village() {
     const s = S(), f = festivalToday(), ready = s.quests.filter(canDeliver);
-    const contest = f && f.kind === 'contest' && contestItems(f).length && !s.festivals[`${f.key}-${today().year}`];
+    const contest = f && ((f.kind === 'contest' && contestItems(f).length) || (f.kind === 'grange' && grangeItems().length)) && !s.festivals[`${f.key}-${today().year}`];
     if (!ready.length && !contest) return;
     spend(TIME.travel * 2);
     ready.forEach((q) => track('quests', () => deliver(q.id)));
     if (contest) {
       if (s.time < 9 * 60) s.time = 9 * 60;
       if (festivalOpen()) {
-        const best = contestItems(f).sort((a, b) => ITEMS[b].sell - ITEMS[a].sell)[0];
-        track('contests', () => enterContest(best));
+        if (f.kind === 'grange') {   // v59: the most valuable thing of each kind first, then the most valuable left
+          const byValue = grangeItems().sort((a, b) => ITEMS[b].sell - ITEMS[a].sell), seen = new Set(), pick = [];
+          for (const k of byValue) if (!seen.has(grangeKind(k))) { seen.add(grangeKind(k)); pick.push(k); }
+          for (const k of byValue) if (!pick.includes(k)) pick.push(k);
+          track('contests', () => judgeGrange(pick.slice(0, f.grange.slots)));
+        } else {
+          const best = contestItems(f).sort((a, b) => ITEMS[b].sell - ITEMS[a].sell)[0];
+          track('contests', () => enterContest(best));
+        }
       }
     }
   }

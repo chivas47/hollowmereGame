@@ -20,10 +20,11 @@ import { today, dateParts, fmtTime } from '../core/time.js';
 import { PRODUCE } from '../data/crops.js';
 import { FORAGE } from '../data/forage.js';
 import { FISH } from '../data/fish.js';
+import { MINERALS } from '../data/minerals.js';
 import { ITEMS } from '../data/items.js';
 import { hoursOf, festivalOn } from '../data/festivals.js';
 import { drawBunting, drawGlow } from '../render/sprites.js';
-import { takeBest, unitValue } from './quality.js';
+import { takeBest, unitValue, counts } from './quality.js';
 import { QUALITY } from '../data/quality.js';
 import { r } from '../render/pixel.js';
 
@@ -96,7 +97,7 @@ addInteraction(72, ({ tile, mapId }) => {
 });
 
 // Decorations on festival days.
-const COLORS = { ribbondance: ['#e2707a', '#69aedb', '#f4e3a0'], longnight: ['#e9b44c', '#c0443a', '#f4ead2'], mazenight: ['#e8862a', '#5a3a5a', '#e9b44c'], potluck: ['#e8862a', '#86b86a', '#f4ead2'], egghunt: ['#f2a0c0', '#9fd8f0', '#f4e3a0'], blossom: ['#f4ead2', '#e2707a', '#e9b44c'], catch: ['#69aedb', '#f4ead2', '#86b86a'], weighin: ['#e8862a', '#d9644a', '#e9b44c'], frostlight: ['#ffd98a', '#cfe3ee', '#e2707a'] };
+const COLORS = { grangefair: ['#d9644a', '#e9b44c', '#86b86a'], ribbondance: ['#e2707a', '#69aedb', '#f4e3a0'], longnight: ['#e9b44c', '#c0443a', '#f4ead2'], mazenight: ['#e8862a', '#5a3a5a', '#e9b44c'], potluck: ['#e8862a', '#86b86a', '#f4ead2'], egghunt: ['#f2a0c0', '#9fd8f0', '#f4e3a0'], blossom: ['#f4ead2', '#e2707a', '#e9b44c'], catch: ['#69aedb', '#f4ead2', '#86b86a'], weighin: ['#e8862a', '#d9644a', '#e9b44c'], frostlight: ['#ffd98a', '#cfe3ee', '#e2707a'] };
 addLayer(30, (c) => {
   if (G.S.map !== 'village') return;
   const f = festivalToday(); if (!f) return;
@@ -260,4 +261,41 @@ export function askDance(id) {
   e.with = id;
   addPoints(id, f.dance.pts);
   return { yes: true, id };
+}
+
+// ---- v59: the grange fair ----
+// The kind of an item, for the variety score (Stardew's eight grange categories).
+export function grangeKind(k) {
+  if (k in PRODUCE) return 'crop';
+  if (k in FRUIT) return 'fruit';
+  if (k in FORAGE) return 'forage';
+  if (k in FISH) return 'fish';
+  if (k in PRODUCTS) return 'animal';
+  if (k in ARTISAN) return 'artisan';
+  if (k in DISHES && DISHES[k].from !== 'clinic') return 'dish';
+  if (MINERALS[k]?.gem) return 'mineral';
+  return null;
+}
+export const grangeItems = () => Object.keys(G.S.bag).filter((k) => G.S.bag[k] > 0 && grangeKind(k));
+const bestTier = (k) => { const c = counts(k); let t = 3; while (t > 0 && !c[t]) t--; return t; };
+// Score for a list of item keys (each shown at its best quality on hand).
+export function grangeScore(list, f = festivalToday()) {
+  const g = f.grange;
+  let score = g.base + g.empty * -Math.max(0, g.slots - list.length);
+  for (const k of list) {
+    const t = bestTier(k), v = unitValue(k, t);
+    score += g.quality[t] + (g.price.find(([min]) => v >= min)?.[1] || 0);
+  }
+  score += g.perKind * Math.min(g.kinds, new Set(list.map(grangeKind)).size);
+  return Math.max(0, score);
+}
+export function judgeGrange(list) {
+  const f = festivalToday(), S = G.S;
+  if (!f || f.kind !== 'grange' || !festivalOpen() || entry(f)) return null;
+  const items = [...new Set(list)].filter((k) => S.bag[k] > 0 && grangeKind(k)).slice(0, f.grange.slots);
+  const score = grangeScore(items, f), rank = f.grange.ranks.find((rk) => score >= rk.min);
+  S.gold += rank.gold;
+  S.festivals[entryKey(f)] = { items, score, rank: rank.label, gold: rank.gold };
+  changed();
+  return { score, rank };
 }
