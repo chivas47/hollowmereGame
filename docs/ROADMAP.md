@@ -48,7 +48,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 21c | New areas: hidden grove, railway and sewer | feature | done (chivas47/hollowmereGame#40) | The grove inside the forest, the railway north-east of the Wilds, the sewer under the village; each with fishing and forage. |
 | 22a | Town and shops: the town, store, smithy and carpentry | feature | done (chivas47/hollowmereGame#41) | A town north of the village with the general store, the smithy (tool upgrades, geodes) and Bram's carpentry (buildings); shop hours and closing days; the farm stall and workbench move there. |
 | 22b | Town and shops: tavern, clinic and phone | feature | done (chivas47/hollowmereGame#42) | The tavern, the clinic, and a phone to call shops. |
-| 23a | More villagers and mail: gift tiers, birthdays, social menu, mail | feature | done (PR pending) | Five gift-taste tiers, birthdays, a social menu and letters and mail, for the four neighbours. |
+| 23a | More villagers and mail: gift tiers, birthdays, social menu, mail | feature | done (chivas47/hollowmereGame#43) | Five gift-taste tiers, birthdays, a social menu and letters and mail, for the four neighbours. |
 | 23b | More villagers and mail: six new villagers | feature | next | Six new original villagers (shopkeepers among them) with homes in the town and village, schedules, birthdays and tastes. |
 | 23c | More villagers and mail: six more and outfits | feature | queued | Six more villagers and seasonal outfits. |
 | 24 | Dating, marriage and family | feature | queued | Bouquet, dating, heart scenes up to 10 (14 for spouses), proposal, wedding, spouse chores and gifts, children who grow up, divorce, a roommate option. |
