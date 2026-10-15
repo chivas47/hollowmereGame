@@ -31,6 +31,8 @@ src/
     angling.js        CATCH (the catch bar), BAIT, TACKLE, BOBBERS, TRASH, RECYCLE, FISH_TREASURE (v41)
     books.js          BOOKS (skill, primer, power), BOOK_FIND, MASTERY_XP, PERKS, SHRINE (v40)
     forge.js          VENT, FORGE_GEMS, enchantments, TRINKETS (v39)
+    gifts.js          GIFT_POINTS, BIRTHDAY_MULT, UNIVERSAL tastes, TIER_NAMES (v48)
+    mail.js           LETTERS (when, text, attach), MAILBOX (v48)
     town.js           SHOPS: name, keeper, hours, closing weekdays, dialog event, phone (v46); TAVERN, CLINIC (v47)
     hidden.js         GATES (grove log, railway rubble, sewer key), GROVE stumps, SPRING, TRADER stock (v45)
     cavern.js         CAVERN (the Sunken Cavern's door, strength, ores, shafts, chests), HOLLOW_GOLD (v38)
@@ -74,6 +76,7 @@ src/
     economy.js        ship(), buy(), overnight payout; materials are never shipped
     npcs.js           schedules across farm and village, talk, gifts, hearts, 3-heart rewards, heart scenes
     upgrades.js       smithy and carpentry purchases, material costs, recalcStats()
+    mail.js           letters arriving each morning (G.S.mail, G.S.mailRead), readLetter(), the mailbox on the farmhouse front
     town.js           the town's shops: opening hours and closing days (isOpen, closedWhy), doors, keepers; the farm stall and workbench point to town; v47 the tavern (special, buyDish), the clinic (buyClinic) and the phone
     livestock.js      shared animal rules: coop and barn levels, room, buying and hatching, friendship, grazing, products, quality
     coop.js           coop placement, coop animals, petting, feed
@@ -115,6 +118,7 @@ src/
     creation.js       the new game screen (opens when G.S.profile is null)
     trader.js         the sewer trader's dialog (v45)
     town.js           the tavern, clinic and phone dialogs (v47)
+    social.js         the social menu (F, or a click on the neighbours panel) and letters (v48)
     dom.js toast.js modal.js hud.js hotbar.js dialogs.js inventory.js
     workshop.js mine.js input.js debugPanel.js
     crafting.js (craft menu, placed-object dialog) barn.js village.js (board, festival)
@@ -170,6 +174,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 70 | town.js | The farm's old stall S and workbench K (a note pointing to town) |
 | 72 | coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Coop C, barn A, greenhouse G, mine entrance M, ladders U/L, the cavern door ^, shafts !, the vent door > and the forge =, placed object Y, quest board Q, festival table J |
 | 71 | village.js | Fountain F, cottage V (flavour text) |
+| 71 | mail.js | The mailbox on the farmhouse front (farm H tile at 5,3) |
 | 71 | cooking.js | Farmhouse stove o (cook) and counters n (fridge) |
 | 70 | buildings.js, house.js | Bin B; farm door D (enter), bed Z, lectern l, kitchen and cellar fittings |
 | 66 | mine.js | Pickaxe on mine rocks |

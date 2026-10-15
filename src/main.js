@@ -60,6 +60,7 @@ import './systems/areas.js';
 import './systems/quarry.js';
 import './systems/hidden.js';
 import './systems/town.js';
+import './systems/mail.js';
 
 // UI
 import './ui/toast.js';
@@ -84,6 +85,7 @@ import './ui/forge.js';
 import './ui/books.js';
 import './ui/trader.js';
 import './ui/town.js';
+import './ui/social.js';
 import { buildHotbar } from './ui/hotbar.js';
 import { initInput } from './ui/input.js';
 import { initDebug } from './ui/debugPanel.js';

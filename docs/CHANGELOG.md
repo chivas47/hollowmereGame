@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v48: Gift tastes, birthdays and mail
+- Gifts now land in five tiers: loved, liked, neutral, disliked and hated. Disliked and hated gifts cost friendship. Everyone loves starstone and likes gems, artisan goods and fruit; ores and raw materials are disliked and trash is hated.
+- Each neighbour has a birthday: a gift on the day counts eight times. The neighbours panel and a morning notice say whose it is.
+- A social menu (F, or click the neighbours panel): hearts, birthdays, today's talk and gift, and every taste you have learned.
+- A mailbox on the farmhouse front: a welcome letter, Fenn's seasonal notices, and letters with gifts from neighbours at 4 and 7 hearts.
+
 ## v47: The tavern, the clinic and the phone
 - The Lantern, on the town's lower lane, 12:00 to midnight: dishes at twice their sell price, a dish of the day, and the recipes the seed stall used to sell.
 - Hollowmere Clinic, 9:00 to 3:00 pm: the energy tonic (1,000g, +500 energy).

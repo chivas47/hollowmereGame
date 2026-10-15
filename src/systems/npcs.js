@@ -1,8 +1,8 @@
 // Neighbours: daily schedules across the farm and village, talking, gifts, friendship,
-// rewards and heart scenes.
+// rewards and heart scenes. v48: five gift tiers, birthdays and the tastes you have learned (G.S.npcs[id].known).
 import { G } from '../core/game.js';
 import { T, OPPOSITE } from '../core/constants.js';
-import { on, emit, changed } from '../core/events.js';
+import { on, emit, changed, notify } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { ITEMS } from '../data/items.js';
@@ -10,16 +10,27 @@ import { NPCS } from '../data/npcs.js';
 import { festivalOn, FESTIVAL_HOURS, FESTIVAL_SPOTS } from '../data/festivals.js';
 import { scheduleFor, ENTRIES } from '../data/schedules.js';
 import { SCENES, SCENE_HEARTS } from '../data/scenes.js';
+import { GIFT_POINTS, BIRTHDAY_MULT, UNIVERSAL } from '../data/gifts.js';
 import { drawPerson, drawBubble } from '../render/sprites.js';
 import { tileOf } from './world.js';
 import { recalcStats } from './upgrades.js';
 
 const SPEED = 28, HEAD_OUT = 30;   // minutes before a block ends that they start walking off the map
-const GIFT_POINTS = { loved: 80, liked: 45, neutral: 20 }, TALK_POINTS = 20, MAX_POINTS = 1000;
+const TALK_POINTS = 20, MAX_POINTS = 1000;
 
 export const NPCRT = NPCS.map((def) => ({ id: def.id, def, map: 'farm', x: 0, y: 0, dir: 'down', visible: false, wi: 0, wait: 0, moving: false, walkT: 0, block: null, gone: false }));
 export const hearts = (st) => Math.min(10, Math.floor(st.pts / 100));
 export const heartStr = (st) => '♥'.repeat(hearts(st)) + '♡'.repeat(10 - hearts(st));
+
+// v48: how a neighbour takes a gift: their own lists first, then the universal tastes.
+const OWN = { loved: 'loves', liked: 'likes', disliked: 'dislikes', hated: 'hates' };
+export function giftTier(def, item) {
+  for (const [tier, key] of Object.entries(OWN)) if (def[key]?.includes(item)) return tier;
+  for (const tier of ['loved', 'liked', 'disliked', 'hated']) if (UNIVERSAL[tier].includes(item)) return tier;
+  return 'neutral';
+}
+export const isBirthday = (def) => { const d = today(); return def.birthday?.season === d.season && def.birthday.d === d.d; };
+on('day:start', () => { const n = NPCS.find((d) => isBirthday(d)); if (n) notify(`It's ${n.name}'s birthday today. A gift counts eight times over.`); });
 
 // On a festival day neighbours skip the farm and stand in the village square during festival hours.
 const festival = () => festivalOn(today());
@@ -147,11 +158,14 @@ export function giftOptions(n) {
 export function giveGift(n, item) {
   const st = G.S.npcs[n.id], d = n.def;
   G.S.bag[item]--; st.gifted = G.S.day;
-  const kind = d.loves === item ? 'loved' : d.likes.includes(item) ? 'liked' : 'neutral';
-  st.pts = Math.min(MAX_POINTS, st.pts + GIFT_POINTS[kind]);
+  const kind = giftTier(d, item), bday = isBirthday(d);
+  st.pts = Math.max(0, Math.min(MAX_POINTS, st.pts + GIFT_POINTS[kind] * (bday ? BIRTHDAY_MULT : 1)));
+  st.known = { ...(st.known || {}), [item]: kind };   // v48: shown in the social menu
   const extra = applyReward(n);
   changed();
-  emit('ui:talk', { npc: n, text: d.react[kind].replace('{item}', ITEMS[item].name.toLowerCase()), extra });
+  const name = ITEMS[item].name.toLowerCase(), an = /^[aeiou]/.test(name);
+  const said = d.react[kind].replace(/\b([Aa]) \{item\}/g, (_, a) => `${an ? `${a}n` : a} ${name}`).replace('{item}', name);   // v48: a/an
+  emit('ui:talk', { npc: n, text: bday && GIFT_POINTS[kind] > 0 ? `${d.react.birthday} ${said}` : said, extra });
 }
 
 addEntities(() => NPCRT.filter((n) => n.visible && n.map === G.S.map).map((n) => ({
