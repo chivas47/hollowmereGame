@@ -176,6 +176,8 @@ const GH_FIELD = GH_CENTRES.flatMap(([cx, cy]) => [[-1, -1], [0, -1], [1, -1], [
 const PLOTS = { farm: { field: FIELD, centres: CENTRES, well: [12, 3] }, greenhouse: { field: GH_FIELD, centres: GH_CENTRES, well: [2, 12] } };
 const TREE_SLOTS = [[8, 12], [10, 12], [12, 12], [9, 14], [11, 14], [13, 14]];   // clear of the animal yards
 const MACHINE_SLOTS = []; for (let y = 5; y <= 9; y++) for (let x = 1; x <= 5; x++) MACHINE_SLOTS.push([x, y]);
+// v58: when the corner is full (or buildings wall its last tiles in), machines go along the farm's bottom edge, clear of the field.
+const SPARE_SLOTS = []; for (let x = 1; x <= 22; x++) SPARE_SLOTS.push([x, 13]);
 
 // ---- One simulated run ----
 function simulate(runSeed) {
@@ -185,7 +187,7 @@ function simulate(runSeed) {
   emit('game:reset'); emit('game:loaded');
 
   const goals = [...STRATEGIES[STRATEGY]];
-  const log = { income: {}, spend: {}, purchases: [], days: [], goalsDone: null };
+  const log = { income: {}, spend: {}, purchases: [], skipped: [], days: [], goalsDone: null };
   const add = (book, k, v) => { if (v > 0) book[k] = (book[k] || 0) + v; };
   const track = (k, fn) => { const g0 = S().gold; const r = fn(); add(log.spend, k, g0 - S().gold); add(log.income, k, S().gold - g0); return r; };
   // v46: shops are in town with hours and closing days. The bot shops on the days a shop opens, before it shuts
@@ -225,7 +227,7 @@ function simulate(runSeed) {
   for (const k of Object.keys(BARN.tools)) GOAL[k] = { cost: () => BARN.tools[k].cost, needs: () => ({}), ok: () => !S().ranch[k], buy: () => track('upgrades', () => buyTool(k)) };
   for (const [k, s] of Object.entries(SITES).filter(([, x]) => x.placed)) {
     GOAL[k] = { shop: 'carpenter', cost: () => s.def.cost, needs: () => s.def.needs, ok: () => !S().built[k],
-      buy: () => track('buildings', () => { const at = botSite(k); return !!at && siteAt(k, 'new', at.x, at.y); }) };
+      buy: () => track('buildings', () => { const at = botSite(k); if (!at) GOAL[k].noSite = true; return !!at && siteAt(k, 'new', at.x, at.y); }) };
   }
   GOAL.grassstarter = { shop: 'store', cost: () => SUPPLIES.grassstarter, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply('grassstarter', 1)) };
   for (const k of Object.keys(PROJECTS)) GOAL[k] = { cost: () => PROJECTS[k].cost, needs: () => PROJECTS[k].needs, ok: () => !funded(k), buy: () => track('projects', () => fundProject(k)) };
@@ -264,7 +266,12 @@ function simulate(runSeed) {
       const key = goals[0], g = GOAL[key];
       if (!g.ok()) { goals.shift(); continue; }
       if (g.wait?.()) return;
-      if (!affordable(g.cost() + reserve, g.needs()) || (g.shop && !goShop(g.shop)) || !g.buy()) return;
+      if (!affordable(g.cost() + reserve, g.needs()) || (g.shop && !goShop(g.shop))) return;
+      if (!g.buy()) {
+        if (!g.noSite) return;
+        log.skipped.push({ goal: key, day: S().day });   // a full farm: no spot left for this building, so the list moves on
+        goals.shift(); continue;
+      }
       log.purchases.push({ goal: key, day: S().day });
       goals.shift();
     }
@@ -325,7 +332,7 @@ function simulate(runSeed) {
       }
     }
     for (const kind of [...Object.keys(MACHINES), 'silo']) {
-      for (const [x, y] of MACHINE_SLOTS) {
+      for (const [x, y] of [...MACHINE_SLOTS, ...SPARE_SLOTS]) {   // the spare tiles only once the corner is full or walled in
         if (s.kit[kind] <= 0) break;
         if (s.placed[`${x},${y}`] || !clear('farm', x, y)) continue;
         s.kitSel = kind; use('farm', x, y, 'kit');
@@ -693,9 +700,11 @@ function simulate(runSeed) {
     layoutChores();
     getCoal(); getMaterials();
     if (missingMats().wood && !late()) chopWood();
-    if (missingMats().fiber && !late()) {   // fiber: weeds on the farm, then the Wilds' weeds
+    // Cloth is woven from 5 fiber, so a cloth shortfall is a fiber shortfall too.
+    const needFiber = () => missingMats().fiber || (missingMats().cloth || 0) * 5 > (s.bag.fiber || 0);
+    if (needFiber() && !late()) {   // fiber: weeds on the farm, then the Wilds' weeds
       for (const [k, d] of Object.entries(s.debris || {})) if (d.kind === 'weeds') clear('farm', ...k.split(',').map(Number));
-      if (missingMats().fiber && s.wildWeeds.length) { spend(TIME.travel); for (const w of [...s.wildWeeds]) { cutWildWeed(w.x, w.y); spend(TIME.tile); } }
+      if (needFiber() && s.wildWeeds.length) { spend(TIME.travel); for (const w of [...s.wildWeeds]) { cutWildWeed(w.x, w.y); spend(TIME.tile); } }
     }
     plantCones();
     if (Object.keys(missingMats()).filter((k) => !['wood', 'fiber', 'cloth'].includes(k)).length && !late()) mine();   // saving up for something that needs ore: mine first (not for fiber or cloth)
@@ -768,6 +777,8 @@ const R = {
   endGold: avg(runs.map((r) => r.endGold)),
   goalsDone: doneDays.length === runs.length ? median(doneDays) : null,
   goalsLeft: avg(runs.map((r) => r.goalsLeft)),
+  skipped: [...new Set(runs.flatMap((r) => r.skipped.map((x) => x.goal)))],
+  skippedAvg: avg(runs.map((r) => r.skipped.length)),
   energyLimited: avg(runs.map((r) => r.days.filter((d) => d.energyLeft < 3).length / r.days.length)),
   skills: Object.fromEntries(Object.keys(SKILLS).map((k) => [k, avg(runs.map((r) => r.skills[k]))])),
   deepest: avg(runs.map((r) => r.deepest)),
@@ -821,7 +832,7 @@ const lines = [
   '| Sink | Total |', '|---|---|',
   ...sinks.map((s) => `| ${s.name} | ${fmt(s.total)} |`), '',
   '## When things get bought', '',
-  `Shopping list: ${STRATEGIES[STRATEGY].length} items. ${R.goalsDone ? `All bought by day ${R.goalsDone} (${dayName(R.goalsDone)}, median).` : `Not finished in ${DAYS} days; ${R.goalsLeft.toFixed(1)} items left on average.`}`, '',
+  `Shopping list: ${STRATEGIES[STRATEGY].length} items. ${R.goalsDone ? `All bought by day ${R.goalsDone} (${dayName(R.goalsDone)}, median).` : `Not finished in ${DAYS} days; ${R.goalsLeft.toFixed(1)} items left on average.`}${R.skippedAvg ? ` Skipped for lack of farm space: ${R.skippedAvg.toFixed(1)} on average (${R.skipped.join(', ')}).` : ''}`, '',
   '| # | Purchase | Median day | Range | Runs |', '|---|---|---|---|---|',
   ...R.timeline.map((t, i) => `| ${i + 1} | ${t.goal} | ${dayName(t.median)} | ${t.min} to ${t.max} | ${t.runs}/${RUNS} |`), '',
   '## End state', '',
