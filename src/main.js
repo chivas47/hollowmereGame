@@ -59,6 +59,7 @@ import './systems/pots.js';
 import './systems/areas.js';
 import './systems/quarry.js';
 import './systems/hidden.js';
+import './systems/town.js';
 
 // UI
 import './ui/toast.js';

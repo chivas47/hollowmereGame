@@ -12,7 +12,7 @@ function render() {
   const S = G.S, d = today();
   const farm = `${S.profile?.farm || 'Hollowmere'} Farm`;
   if ($('h1').textContent !== farm) { $('h1').textContent = farm; document.title = farm; }
-  $('#date').textContent = `${d.season} ${d.d}, Year ${d.year}, ${weatherNow().name.toLowerCase()}`;
+  $('#date').textContent = `${d.wd}, ${d.season} ${d.d}, Year ${d.year}, ${weatherNow().name.toLowerCase()}`;
   $('#place').textContent = MAPS[S.map].name;
   $('#time').textContent = fmtTime(S.time);
   $('#gold').textContent = `${S.gold}g`;

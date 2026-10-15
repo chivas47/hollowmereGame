@@ -295,7 +295,31 @@ function lodge(g, p, o) {
   for (let i = 0; i < 6; i++) { r(g, X + 20 + i, Y + 9 + i, 1, 1, '#d6dde3'); r(g, X + 27 - i, Y + 9 + i, 1, 1, '#d6dde3'); }
 }
 
-export const OBJECT_ART = { lodge, helperhut, waystone, pond, slimepen, shed, mill, clocktower, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
+// v46: a town shop, 3 by 2 tiles: walls, roof and a sign by kind (store, smithy, carpenter).
+const FRONT = {
+  store:     { wall: '#e2cda0', line: '#c9b083', roof: '#c0443a', door: '#7a4b2a' },
+  smithy:    { wall: '#8a8f96', line: '#6f747a', roof: '#3f3a36', door: '#3f2f22' },
+  carpenter: { wall: '#b08d55', line: '#987745', roof: '#5d7a4a', door: '#6e4626' },
+};
+function storefront(g, p, o) {
+  const X = o.x * T, Y = o.y * T, f = FRONT[o.kind];
+  r(g, X + 1, Y + 31, 46, 1, 'rgba(0,0,0,.3)');
+  r(g, X + 2, Y + 10, 44, 21, f.wall);
+  for (let i = 0; i < 4; i++) r(g, X + 2, Y + 14 + i * 4, 44, 1, f.line);
+  for (let j = 0; j < 10; j++) r(g, X + 12 - j, Y - 2 + j, 24 + 2 * j, 1, j % 3 === 2 ? 'rgba(0,0,0,.25)' : f.roof);
+  r(g, X + 12, Y - 4, 24, 2, f.roof);
+  if (p.snow) for (let j = 0; j < 3; j++) r(g, X + 12 - j, Y - 4 + j, 24 + 2 * j, 1, SNOW);
+  r(g, X + 19, Y + 18, 10, 13, f.door); r(g, X + 26, Y + 24, 1, 2, '#e9b44c');
+  [X + 5, X + 34].forEach((wx) => { r(g, wx, Y + 17, 9, 7, '#3f2f22'); r(g, wx + 1, Y + 18, 7, 5, '#7fc4e8'); });
+  r(g, X + 16, Y + 11, 16, 6, '#4e3a26'); r(g, X + 17, Y + 12, 14, 4, '#e8d9b5');
+  if (o.kind === 'store') { r(g, X + 19, Y + 13, 3, 2, '#7fbf5a'); r(g, X + 23, Y + 13, 3, 2, '#d8484a'); r(g, X + 27, Y + 13, 2, 2, '#e8862a');
+    for (let i = 0; i < 6; i++) r(g, X + 2 + i * 7, Y + 9, 7, 3, i % 2 ? '#f4ead2' : '#c0443a'); }
+  if (o.kind === 'smithy') { r(g, X + 20, Y + 13, 8, 2, '#3f3a36'); r(g, X + 22, Y + 15, 4, 1, '#3f3a36'); r(g, X + 38, Y - 8, 5, 10, '#5f5a52'); r(g, X + 39, Y - 11, 3, 3, 'rgba(200,200,200,.5)'); }
+  if (o.kind === 'carpenter') { r(g, X + 19, Y + 13, 9, 2, '#a9b4bd'); for (let i = 0; i < 4; i++) r(g, X + 19 + i * 2, Y + 15, 1, 1, '#7f8a93'); r(g, X + 28, Y + 12, 2, 4, '#8a5a32');
+    r(g, X + 40, Y + 26, 6, 5, '#c9a06a'); r(g, X + 40, Y + 26, 6, 1, '#a07a4a'); }
+}
+
+export const OBJECT_ART = { storefront, lodge, helperhut, waystone, pond, slimepen, shed, mill, clocktower, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
 
 // ---- Greenhouse interior (ignores seasons) ----
 export function drawGreenhouseFloor(g, x, y, t) {

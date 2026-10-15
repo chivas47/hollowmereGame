@@ -71,7 +71,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['layouts', 'sites', 'professions', 'cooking', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots', 'areas', 'quarry', 'hidden'];
+  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots', 'areas', 'quarry', 'hidden', 'town'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -137,6 +137,8 @@ const { placePot, usePot, panAt } = await load('systems/pots.js');
 const { pickAreaForage } = await load('systems/areas.js');
 const { hitQuarryRock } = await load('systems/quarry.js');
 const { chopStump } = await load('systems/hidden.js');
+const { openToday } = await load('systems/town.js');
+const { SHOPS } = await load('data/town.js');
 const REACT = 0.25;   // seconds between the bot's decisions on the catch bar (an average player)
 const { BOOKS } = await load('data/books.js');
 
@@ -185,19 +187,27 @@ function simulate(runSeed) {
   const log = { income: {}, spend: {}, purchases: [], days: [], goalsDone: null };
   const add = (book, k, v) => { if (v > 0) book[k] = (book[k] || 0) + v; };
   const track = (k, fn) => { const g0 = S().gold; const r = fn(); add(log.spend, k, g0 - S().gold); add(log.income, k, S().gold - g0); return r; };
+  // v46: shops are in town with hours and closing days. The bot shops on the days a shop opens, before it shuts
+  // (it fits the walk around its morning chores), and pays one walk to town and back a day.
+  let tripDay = 0;
+  const goShop = (k) => {
+    if (!openToday(k) || S().time >= SHOPS[k].close) return false;
+    if (tripDay !== S().day) { tripDay = S().day; spend(TIME.travel * 2); }
+    return true;
+  };
 
   // -- purchases --
   const GOAL = {
-    can: { cost: () => nextTier('can')?.cost, needs: () => nextTier('can')?.needs, ok: () => !!nextTier('can'), buy: () => track('upgrades', () => buyUpgrade('can')) },
-    axe: { cost: () => nextTier('axe')?.cost, needs: () => nextTier('axe')?.needs, ok: () => !!nextTier('axe'), buy: () => track('upgrades', () => buyUpgrade('axe')) },
-    hoe: { cost: () => nextTier('hoe')?.cost, needs: () => nextTier('hoe')?.needs, ok: () => !!nextTier('hoe'), buy: () => track('upgrades', () => buyUpgrade('hoe')) },
-    rod: { cost: () => nextTier('rod')?.cost, needs: () => nextTier('rod')?.needs, ok: () => !!nextTier('rod'), buy: () => track('upgrades', () => buyUpgrade('rod')) },
-    pick: { cost: () => nextTier('pick')?.cost, needs: () => nextTier('pick')?.needs, ok: () => !!nextTier('pick'), buy: () => track('upgrades', () => buyUpgrade('pick')) },   // v39
-    house: { cost: () => nextTier('house')?.cost, needs: () => nextTier('house')?.needs, ok: () => !!nextTier('house'), buy: () => track('upgrades', () => buyUpgrade('house')) },
-    coop: { cost: () => COOP.cost, needs: () => COOP.needs, ok: () => !S().built.coop, buy: () => track('buildings', orderCoop) },
-    barn: { cost: () => BARN.cost, needs: () => BARN.needs, ok: () => !S().built.barn, buy: () => track('buildings', orderBarn) },
-    stable: { cost: () => STABLE.cost, needs: () => STABLE.needs, ok: () => !S().built.stable, buy: () => track('buildings', orderStable) },
-    greenhouse: { cost: () => GREENHOUSE.cost, needs: () => GREENHOUSE.needs, ok: () => !S().built.greenhouse, buy: () => track('buildings', orderGreenhouse) },
+    can: { shop: 'smithy', cost: () => nextTier('can')?.cost, needs: () => nextTier('can')?.needs, ok: () => !!nextTier('can'), buy: () => track('upgrades', () => buyUpgrade('can')) },
+    axe: { shop: 'smithy', cost: () => nextTier('axe')?.cost, needs: () => nextTier('axe')?.needs, ok: () => !!nextTier('axe'), buy: () => track('upgrades', () => buyUpgrade('axe')) },
+    hoe: { shop: 'smithy', cost: () => nextTier('hoe')?.cost, needs: () => nextTier('hoe')?.needs, ok: () => !!nextTier('hoe'), buy: () => track('upgrades', () => buyUpgrade('hoe')) },
+    rod: { shop: 'smithy', cost: () => nextTier('rod')?.cost, needs: () => nextTier('rod')?.needs, ok: () => !!nextTier('rod'), buy: () => track('upgrades', () => buyUpgrade('rod')) },
+    pick: { shop: 'smithy', cost: () => nextTier('pick')?.cost, needs: () => nextTier('pick')?.needs, ok: () => !!nextTier('pick'), buy: () => track('upgrades', () => buyUpgrade('pick')) },   // v39
+    house: { shop: 'carpenter', cost: () => nextTier('house')?.cost, needs: () => nextTier('house')?.needs, ok: () => !!nextTier('house'), buy: () => track('upgrades', () => buyUpgrade('house')) },
+    coop: { shop: 'carpenter', cost: () => COOP.cost, needs: () => COOP.needs, ok: () => !S().built.coop, buy: () => track('buildings', orderCoop) },
+    barn: { shop: 'carpenter', cost: () => BARN.cost, needs: () => BARN.needs, ok: () => !S().built.barn, buy: () => track('buildings', orderBarn) },
+    stable: { shop: 'carpenter', cost: () => STABLE.cost, needs: () => STABLE.needs, ok: () => !S().built.stable, buy: () => track('buildings', orderStable) },
+    greenhouse: { shop: 'carpenter', cost: () => GREENHOUSE.cost, needs: () => GREENHOUSE.needs, ok: () => !S().built.greenhouse, buy: () => track('buildings', orderGreenhouse) },
   };
   // v28: every animal for sale waits for its building and level, and is skipped when there is no room.
   for (const [k, d] of [...Object.entries(COOP.animals), ...Object.entries(BARN.animals)].filter(([, d]) => !d.hatched)) {
@@ -207,17 +217,17 @@ function simulate(runSeed) {
   }
   for (const [key, home, lv] of [['bigcoop', 'coop', 1], ['deluxecoop', 'coop', 2], ['bigbarn', 'barn', 1], ['deluxebarn', 'barn', 2]]) {
     const def = HOMES[home].def.levels[lv];
-    GOAL[key] = { cost: () => def.cost, needs: () => def.needs, wait: () => S().built[home] !== true || level(home) < lv - 1 || S().levelUp[home],
+    GOAL[key] = { shop: 'carpenter', cost: () => def.cost, needs: () => def.needs, wait: () => S().built[home] !== true || level(home) < lv - 1 || S().levelUp[home],
       ok: () => level(home) < lv, buy: () => track('buildings', () => orderLevel(home)) };
   }
   for (const k of Object.keys(BARN.tools)) GOAL[k] = { cost: () => BARN.tools[k].cost, needs: () => ({}), ok: () => !S().ranch[k], buy: () => track('upgrades', () => buyTool(k)) };
   for (const [k, s] of Object.entries(SITES).filter(([, x]) => x.placed)) {
-    GOAL[k] = { cost: () => s.def.cost, needs: () => s.def.needs, ok: () => !S().built[k],
+    GOAL[k] = { shop: 'carpenter', cost: () => s.def.cost, needs: () => s.def.needs, ok: () => !S().built[k],
       buy: () => track('buildings', () => { const at = botSite(k); return !!at && siteAt(k, 'new', at.x, at.y); }) };
   }
-  GOAL.grassstarter = { cost: () => SUPPLIES.grassstarter, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply('grassstarter', 1)) };
+  GOAL.grassstarter = { shop: 'store', cost: () => SUPPLIES.grassstarter, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply('grassstarter', 1)) };
   for (const k of Object.keys(PROJECTS)) GOAL[k] = { cost: () => PROJECTS[k].cost, needs: () => PROJECTS[k].needs, ok: () => !funded(k), buy: () => track('projects', () => fundProject(k)) };
-  for (const k of Object.keys(TREES)) GOAL[k] = { cost: () => TREES[k].cost, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply(k, 1)) };
+  for (const k of Object.keys(TREES)) GOAL[k] = { shop: 'store', cost: () => TREES[k].cost, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply(k, 1)) };
   // v37: weapons from the Wardens' Lodge; skipped when the bot has not reached the floor that sells them.
   for (const o of LODGE_SHOP) GOAL[`lodge:${o.key}`] = { cost: () => o.cost, needs: () => ({}), ok: () => !owns(o.key) && S().mineDeepest >= o.floor, buy: () => track('weapons', () => buyGear(o.key)) };
   for (const k of Object.keys(RECIPES)) GOAL[k] = { cost: () => RECIPES[k].cost, needs: () => RECIPES[k].needs, ok: () => true, buy: () => track('crafting', () => craft(k)) };
@@ -237,14 +247,14 @@ function simulate(runSeed) {
   // Coal: buy it from Bram when the gold is there (the kiln makes more from wood once it is built).
   function getCoal() {
     const need = missingMats().coal || 0, s = S();
-    if (need && s.gold > COAL_COST * need + 500) track('coal', () => buyCoal(need));
+    if (need && s.gold > COAL_COST * need + 500 && goShop('smithy')) track('coal', () => buyCoal(need));
   }
   // Wood and stone: bought from Bram when the gold is there with the purchase itself still affordable.
   function getMaterials() {
     const m = missingMats(), s = S(), g = GOAL[goals[0]];
     for (const k of Object.keys(MATERIAL_COST)) {
       const need = m[k] || 0, cost = MATERIAL_COST[k] * need;
-      if (need && g && s.gold > cost + (g.cost() || 0) + 500) track('materials', () => buyMaterial(k, need));
+      if (need && g && s.gold > cost + (g.cost() || 0) + 500 && goShop('carpenter')) track('materials', () => buyMaterial(k, need));
     }
   }
   function purchases(reserve) {
@@ -252,7 +262,7 @@ function simulate(runSeed) {
       const key = goals[0], g = GOAL[key];
       if (!g.ok()) { goals.shift(); continue; }
       if (g.wait?.()) return;
-      if (!affordable(g.cost() + reserve, g.needs()) || !g.buy()) return;
+      if (!affordable(g.cost() + reserve, g.needs()) || (g.shop && !goShop(g.shop)) || !g.buy()) return;
       log.purchases.push({ goal: key, day: S().day });
       goals.shift();
     }
@@ -426,8 +436,8 @@ function simulate(runSeed) {
     if (!crop) return false;
     // Spread rich soil booster first once the farm can afford it (it stays in the soil).
     const t = tile(map, x, y);
-    if (t && !t.fert && s.gold > 3000 && (s.kit.booster2 > 0 || track('fertilizer', () => buySupply('booster2', 1)))) { s.kitSel = 'booster2'; use(map, x, y, 'kit'); }
-    if (s.seeds[crop] <= 0 && !track('seeds', () => buy(crop, 1))) return false;
+    if (t && !t.fert && s.gold > 3000 && (s.kit.booster2 > 0 || (goShop('store') && track('fertilizer', () => buySupply('booster2', 1))))) { s.kitSel = 'booster2'; use(map, x, y, 'kit'); }
+    if (s.seeds[crop] <= 0 && !(goShop('store') && track('seeds', () => buy(crop, 1)))) return false;
     s.seedSel = crop; use(map, x, y, 'seeds');
     return !!tile(map, x, y)?.crop;
   }
@@ -471,7 +481,22 @@ function simulate(runSeed) {
     const crop = bestCrop('farm') || Object.keys(CROPS).filter((k) => !CROPS[k].packet && CROPS[k].seasons.includes('Autumn')).sort((a, b) => perDay(b) - perDay(a))[0];
     const want = GH_FIELD.length * Math.floor(28 / CROPS[crop].days) - s.seeds[crop];
     const n = Math.min(want, Math.floor((s.gold * 0.6) / CROPS[crop].seed));
-    if (n > 0) track('seeds', () => buy(crop, n));
+    if (n > 0 && goShop('store')) track('seeds', () => buy(crop, n));
+  }
+  // v46: the store shuts on Wednesdays and festival days, and before the evening: stock the day's seeds in the
+  // morning (twice as many before a closed day), with a few spare for new tiles.
+  function stockSeeds() {
+    const s = S();
+    if (!goShop('store')) return;
+    const shutTomorrow = SHOPS.store.closed.includes(dateParts(s.day + 1).wd);
+    for (const map of ['farm', ...(greenhouseBuilt() ? ['greenhouse'] : [])]) {
+      const crop = bestCrop(map);
+      if (!crop) continue;
+      const free = PLOTS[map].field.filter(([x, y]) => { const t = tile(map, x, y); return t && (!t.crop || t.crop.dead || t.crop.age >= (t.crop.need || CROPS[t.crop.type].days) && !CROPS[t.crop.type].regrow); }).length;
+      const want = (free + (map === 'farm' ? 12 : 0)) * (shutTomorrow ? 2 : 1) - s.seeds[crop];
+      const n = Math.min(want, Math.floor((s.gold * 0.5) / CROPS[crop].seed));
+      if (n > 0) track('seeds', () => buy(crop, n));
+    }
   }
 
   // Farm layouts: break quarry rocks and crates, pick forage in the farm's wood.
@@ -510,7 +535,7 @@ function simulate(runSeed) {
     for (const [x, y] of POT_SPOTS) if (s.kit.crabpot > 0 && !s.pots[`${x},${y}`]) placePot(x, y);
     const pots = Object.keys(s.pots);
     if (pots.length) {
-      if ((s.bag.bait || 0) < pots.length) track('bait', () => buyBait(10));
+      if ((s.bag.bait || 0) < pots.length && goShop('store')) track('bait', () => buyBait(10));
       for (const k of pots) { const [x, y] = k.split(',').map(Number); usePot(x, y); if (!s.pots[k].bait) usePot(x, y); }
       spend(TIME.chore);
     }
@@ -596,7 +621,7 @@ function simulate(runSeed) {
   // v37: Bram cracks geodes for 25g once there is gold to spare; what is inside ships or goes to purchases.
   function geodes() {
     const s = S();
-    if (s.gold < 500 || !GEODES.some((k) => s.bag[k] > 0)) return;
+    if (s.gold < 500 || !GEODES.some((k) => s.bag[k] > 0) || !goShop('smithy')) return;
     for (const k of GEODES) while (s.bag[k] > 0 && track('geodes', () => crackGeode(k)));
     spend(TIME.chore);
   }
@@ -620,6 +645,7 @@ function simulate(runSeed) {
     const s = S(), out = {};
     s.quests.forEach((q) => { out[q.item] = (out[q.item] || 0) + q.n; });
     for (const [k, n] of Object.entries(GOAL[goals[0]]?.needs?.() || {})) if (k in CROPS) out[k] = (out[k] || 0) + n;
+    for (const k of GEODES) if (s.bag[k]) out[k] = s.bag[k];   // v46: kept for the smithy's morning trip
     if (s.bag.friedegg) out.friedegg = s.bag.friedegg;   // pan eggs are kept to eat, not shipped   // crops the next purchase needs (the helper hut's gleamfruit)
     const n = nextFestival();
     if (n && n.inDays <= 7 && n.f.kind === 'contest') {
@@ -653,6 +679,8 @@ function simulate(runSeed) {
     let reserved = reserves();
     machines(reserved);
     purchases(today().season === 'Winter' ? 0 : 150);
+    geodes();   // v46: the smithy shuts at 16:00, so geodes go on the morning trip
+    stockSeeds();
     stockForWinter();
     placeKit();
     farm('farm', false);
@@ -685,7 +713,6 @@ function simulate(runSeed) {
     }
     if (s.built.helperhut === true) collectHut();
     if (s.cave.open) { chooseCave('bats'); collectCave(); }
-    geodes();
     for (const k of Object.keys(BOOKS)) while (S().bag[k] > 0 && readBook(k));   // v40: books are read; power books already known are sold
     shipAll(reserves());
     const energyLeft = s.energy;
@@ -803,7 +830,8 @@ const lines = [
   '- Plants the best profit-per-day crop that can still ripen this season, waters what sprinklers miss, expands the field while energy and gold allow.',
   '- Forages every day, delivers quests it can fill, enters every contest with its most valuable eligible item.',
   '- Spends leftover energy mining when the next purchase needs materials, otherwise fishing.',
-  '- Fishing success: zone width and difficulty based, scaled by --fish-skill.', '',
+  '- Fishing success: zone width and difficulty based, scaled by --fish-skill.',
+  '- Shops in town: buys on the days a shop opens and before it shuts (fitting the walk around its morning), one walk to town a day; stocks seeds in the morning, double before the store shuts.', '',
 ];
 const md = lines.join('\n');
 if (OUT) writeFileSync(OUT, md); else console.log(md);

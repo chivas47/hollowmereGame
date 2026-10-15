@@ -44,7 +44,7 @@ export function usePot(x, y, item) {
   }
   if ((item === 'pick' || item === 'axe') && !p.bait) { delete S.pots[k]; S.kit.crabpot = (S.kit.crabpot || 0) + 1; notify('Picked up the crab pot.'); changed(); return true; }
   if (p.bait) { notify('The pot is baited. Check it in the morning.'); return true; }
-  if (!(S.bag.bait > 0)) { notify('The pot needs bait (craft it from gel, or buy it at the stall).'); return true; }
+  if (!(S.bag.bait > 0)) { notify('The pot needs bait (craft it from gel, or buy it at the general store in town).'); return true; }
   S.bag.bait--; p.bait = true;
   notify('Baited the crab pot.');
   changed();

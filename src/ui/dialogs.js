@@ -28,6 +28,7 @@ const WEATHER_LINES = {
 import { hearts, heartStr, giftOptions, giveGift, chooseScene } from '../systems/npcs.js';
 import { openModal, closeModal } from './modal.js';
 import { $, esc } from './dom.js';
+import { SHOPS } from '../data/town.js';
 
 const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
@@ -73,7 +74,7 @@ on('ui:shop', () => {
   const recipes = Object.entries(DISHES).filter(([, d]) => d.from?.stall).map(([k, d]) => `
     <div class="shoprow"><div><b>${d.name} recipe</b><span>${d.from.stall.toLocaleString('en-US')}g.${knows(k) ? ' You know it.' : ''}</span></div>
     <div class="btns"><button data-recipe="${k}" ${knows(k) || G.S.gold < d.from.stall ? 'disabled' : ''}>Buy</button></div></div>`).join('');
-  openModal(`<h2>Seed stall</h2><p>You have <b id="shopGold">${G.S.gold}g</b>.</p>${note}${rows}<h3>Farm supplies</h3>${supplies}<h3>Fishing</h3>${baitRow}<h3>Fruit saplings</h3>${saplings}${hats ? `<h3>Pet hats</h3>${hats}` : ''}${recipes ? `<h3>Recipes</h3>${recipes}` : ''}`, [['Leave', closeModal, true]]);
+  openModal(`<h2>${SHOPS.store.name}</h2><p>You have <b id="shopGold">${G.S.gold}g</b>.</p>${note}${rows}<h3>Farm supplies</h3>${supplies}<h3>Fishing</h3>${baitRow}<h3>Fruit saplings</h3>${saplings}${hats ? `<h3>Pet hats</h3>${hats}` : ''}${recipes ? `<h3>Recipes</h3>${recipes}` : ''}`, [['Leave', closeModal, true]]);
   refreshShop();
 });
 
@@ -179,7 +180,7 @@ function petDialog() {
   let html = `<h2>${esc(p.name)}</h2><p class="role">Your ${p.kind}. ${p.patDay === G.S.day ? 'Patted today.' : 'Wants a pat.'} ${p.bowlDay === G.S.day ? 'The water bowl is full.' : 'The water bowl is empty: fill it with the watering can.'}</p>`;
   html += `<p class="hearts" aria-label="${h} of ${PET.max / PET.heart} hearts">${'♥'.repeat(h)}${'♡'.repeat(PET.max / PET.heart - h)}</p>`;
   if (p.friend >= PET.giftFrom) html += `<p class="gift">${esc(p.name)} adores you and sometimes leaves gifts by the bowl.</p>`;
-  html += p.hats.length ? `<h3>Hat</h3><div class="pick">${hats}<button data-wear="">No hat</button></div>` : '<p class="role">The seed stall sells pet hats.</p>';
+  html += p.hats.length ? `<h3>Hat</h3><div class="pick">${hats}<button data-wear="">No hat</button></div>` : '<p class="role">The general store in town sells pet hats.</p>';
   openModal(html, [['Goodbye', closeModal, true]]);
 }
 on('ui:pet', petDialog);

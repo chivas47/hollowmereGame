@@ -10,7 +10,7 @@ You take over the overgrown Hollowmere plot. Farm through the seasons, fish and 
 2. Day: till, plant, water; forage, fish or mine; tend animals; fill machines; talk to and gift neighbours; take requests from the village quest board.
 3. Ship crops, forage, fish, animal products and artisan goods in the bin (ore and stone are kept).
 4. Night: sleep in the farmhouse. Watered crops grow, the bin pays out, petted animals produce, machines work.
-5. Spend gold and materials at the seed stall, Bram's workbench, the crafting menu, the barn and festival stalls.
+5. Spend gold and materials at the town's shops (v46: the general store, the smithy and Bram's carpentry), the crafting menu, the barn and festival stalls.
 
 ## Time
 
@@ -57,7 +57,7 @@ The farm door leads inside; the bed ends the day and you wake beside it. Rooms c
 
 The catalogue lectern sells 30 pieces of furniture, 12 wallpapers and 12 floorings (Stardew's furniture shop prices: chairs 300 to 750, tables 750 to 1,500, rugs 1,000 to 1,500, a tall clock 2,000; patterns 100g each). Furniture goes to the kit (slot 7) and is placed on the floor; face it to pick it up. Rugs can be walked over. Doorways stay clear. The full catalogue (30,000g, as in Stardew) makes everything in it free.
 
-Renovations at Bram's workbench: open-plan living room (10,000g, removes the bed corner's wall) and a reading nook (5,000g, a bay in the north wall).
+Renovations at Bram's Carpentry: open-plan living room (10,000g, removes the bed corner's wall) and a reading nook (5,000g, a bay in the north wall).
 
 ## Clothing (v25)
 
@@ -74,7 +74,7 @@ Defense: each point takes 1 off a hit, to a minimum of 1 (Stardew's boots give 1
 
 ## Farm buildings: placing (v30)
 
-Bram's workbench moves any building for free: choose the spot by facing where its top-left corner goes and pressing Use (Escape, or facing the workbench, stops). The coop and barn take their yards and animals along; the stable takes the horse's spot. Buildings need open grass below the path (empty tilled soil is fine since v34; it is cleared), clear of crops, placed objects, debris and other buildings' yards. Grass tufts under a new building go.
+Bram's Carpentry moves any building for free: back on the farm, choose the spot by facing where its top-left corner goes and pressing Use (Escape, or facing the old workbench, stops). The coop and barn take their yards and animals along; the stable takes the horse's spot. Buildings need open grass below the path (empty tilled soil is fine since v34; it is cleared), clear of crops, placed objects, debris and other buildings' yards. Grass tufts under a new building go.
 
 | Building | Gold | Materials | Size | Effect | Stardew counterpart |
 |---|---|---|---|---|---|
@@ -110,7 +110,7 @@ Bram's workbench moves any building for free: choose the spot by facing where it
 
 ## Materials from Bram (v29)
 
-Wood 10g and stone 20g each at Bram's workbench, in tens and fifties (Stardew's carpenter prices). Coal stays 150g. Materials are never shipped, so buying them is a one-way cost.
+Wood 10g and stone 20g each at Bram's Carpentry, in tens and fifties (Stardew's carpenter prices). Coal stays 150g. Materials are never shipped, so buying them is a one-way cost.
 
 ## Smelting (v26)
 
@@ -173,7 +173,7 @@ Seed packets: wild seeds (40g, one per season, 6 days) grow one of that season's
 
 Giant crops: melon, pumpkin and fava bean (Stardew role: melon, pumpkin, cauliflower). A ripe 3x3 block on the farm has a 1% chance each night to merge into a giant crop; chopping it (hoe, pickaxe or sword, 6 energy, Stardew's 3 axe swings) gives 15 to 21 plain crops. Not in the greenhouse.
 
-### Fruit trees (stall, slot 7)
+### Fruit trees (general store, slot 7)
 
 Saplings grow 28 days in any season, then grow one fruit each morning of their season (every morning in the greenhouse), holding up to 3. Fruit quality rises one tier a year after the tree matures (fine, prime, heirloom). Trees need a free tile between them. Fruit left on a tree drops when its season ends.
 
@@ -320,7 +320,7 @@ Five fish per season. Bite odds are weighted toward easy fish (weight 6 minus di
 | Name | Who | Loves | Likes | 3-heart reward |
 |---|---|---|---|---|
 | Ines | Beekeeper | Pumpkin | Turnip, sunberry, melon, golden carp, egg | 5 pumpkin seeds |
-| Bram | Retired carpenter, runs the workbench | Radish | Pumpkin, hollow cap, frost root, trout, pike, iron ore | +10 watering can capacity |
+| Bram | Retired carpenter, runs the carpentry in town | Radish | Pumpkin, hollow cap, frost root, trout, pike, iron ore | +10 watering can capacity |
 | Odile | Net mender who fishes the Wilds pond | Dusk grayling | Spotted dace, copper rudd, frost char, sweet pepper, wild thyme, cucumber | 6 cucumber seeds |
 | Tavi | Young mapmaker | Rosehip | Wood sorrel, fava bean, celeriac, melon, copper ore, egg | 5 fava bean seeds |
 
@@ -330,7 +330,19 @@ Schedule (data/schedules.js): village square 8:00 to 11:00, the farm 11:00 to 18
 
 Heart scenes (data/scenes.js): the first talk after reaching 4 and 8 hearts plays a scene with two choices. The warmer choice gives 60 points at 4 hearts and 80 at 8; the other gives 25 and 50. Scenes: Ines, a swarm in the hedge and the honey ledger; Bram, the bin hinge and the old porch plans; Odile, mending nets at dawn and the boat south; Tavi, a runaway map page and the finished map.
 
-### Bram's workbench
+### The town and its shops (v46)
+
+Hollowmere Town, up a lane from the village's north edge (10, 0). The farm's stall and workbench now only point the way. Hours and closing days are Stardew's for the same roles; every shop shuts on a festival day. The 1st of each season is a Monday; the HUD shows the weekday.
+
+| Shop | Keeper | Sells | Hours | Shut | Stardew |
+|---|---|---|---|---|---|
+| Fenn's Provisions | Wren Fenn | seeds, farm supplies, bait, saplings, pet hats, recipes (the old seed stall) | 9:00 to 17:00 | Wednesdays | Pierre's: 9 to 5, shut Wednesdays |
+| The Anvil | Corvin | tool upgrades, cracking geodes, coal | 9:00 to 16:00 | never | Clint's: 9 to 4 |
+| Bram's Carpentry | Bram | the farmhouse, buildings and their upgrades, moving buildings, renovations, wood and stone | 9:00 to 17:00 | Tuesdays | Robin's: 9 to 5, shut Tuesdays |
+
+Buildings ordered in town are placed on the farm: walk home and face the spot (Escape stops). Prices are unchanged.
+
+### Upgrades and buildings (the smithy and the carpentry)
 
 | Purchase | Gold | Materials | Effect |
 |---|---|---|---|
@@ -739,6 +751,8 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
 - The worm bin and bait maker are not built; bait is crafted from gel (v41). The balance bot's catch rate comes from playing the real catch bar with a quarter-second reaction (tools/balance.mjs REACT); real players may do better or worse.
+- v46: shops have no interiors yet; the keepers stand by their doors while open. Tool upgrades are still instant (Stardew's take two days). Animals are still bought at the coop and barn.
+- v46: the balance bot shops on open days only, pays one walk to town a day and stocks seeds in the morning (double before Wednesday); over 15 runs earnings are flat to +4% a season and gold at the end of year 1 about 3% lower as it buys more buildings and animals sooner.
 - v45: the balance bot cuts the grove log once it has the copper axe, forages the grove and the railway once open and chops the grove stumps with spare energy; over 15 runs forage income rises about 16% and fish income falls about 15% (less time at the pond), gold at the end of year 1 about 4% lower. It does not soak, visit the sewer or buy from the trader.
 - v45: the railway's tracks draw as a plain path, and the sewer's channel as ordinary water.
 - v44: the balance bot breaks quarry rocks holding the ore its next purchase needs before going down the Hollow, and forages Cragmoor; over 15 runs gold at the end of year 1 rises about 19% (summer +41%) as it spends less time in the Hollow and more fishing.

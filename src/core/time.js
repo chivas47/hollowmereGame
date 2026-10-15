@@ -1,5 +1,5 @@
 import { G } from './game.js';
-import { SEASONS, SEASON_LENGTH } from '../data/seasons.js';
+import { SEASONS, SEASON_LENGTH, WEEKDAYS } from '../data/seasons.js';
 import { END } from './constants.js';
 import { LAMPS_EXTRA_MINUTES } from '../data/projects.js';
 
@@ -11,6 +11,7 @@ export function dateParts(day) {
   return {
     season: SEASONS[Math.floor(i / SEASON_LENGTH) % SEASONS.length],
     d: (i % SEASON_LENGTH) + 1,
+    wd: WEEKDAYS[i % 7],
     year: Math.floor(i / (SEASON_LENGTH * SEASONS.length)) + 1,
   };
 }

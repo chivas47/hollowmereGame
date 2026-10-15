@@ -80,7 +80,7 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
     if (!s) { notify('Till the ground first.'); return true; }
     if (s.crop) { notify('Something is already growing here.'); return true; }
     if (!indoors && !c.seasons.includes(season)) { notify(`${c.name} won't grow in ${season}. Plant it in ${c.seasons.join(' or ')}. Press Q to switch seeds.`); return true; }
-    if (S.seeds[seed] <= 0) { notify(`No ${c.name} seeds left. The stall sells them, or press Q to switch.`); return true; }
+    if (S.seeds[seed] <= 0) { notify(`No ${c.name} seeds left. The general store in town sells them, or press Q to switch.`); return true; }
     // Mixed seeds become a random crop that grows here and now.
     const pool = c.packet === 'mixed' ? Object.keys(CROPS).filter((k) => !CROPS[k].packet && (indoors || CROPS[k].seasons.includes(season))) : null;
     const type = pool ? pool[Math.floor(Math.random() * pool.length)] : seed, grow = CROPS[type].days;

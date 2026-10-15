@@ -8,7 +8,6 @@ import { placeKey } from './world.js';
 import { pickUp } from './placeables.js';
 
 addInteraction(70, ({ tile }) => {
-  if (tile === 'S') { emit('ui:shop'); return true; }
   if (tile === 'B') { ship(); return true; }
   return false;
 });
