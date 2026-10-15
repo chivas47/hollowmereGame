@@ -150,6 +150,28 @@ function townGrid() {
   return m;
 }
 
+// v56: the hedge maze for Maze Night: a fixed maze (the same every year) carved from hedges, the entrance at the
+// bottom, the prize chest ($) near the middle.
+export const MAZE = { start: { x: 11, y: 14 }, prize: { x: 11, y: 7 } };
+function mazeGrid() {
+  const m = Array.from({ length: H }, () => Array.from({ length: W }, () => 'T'));
+  let seed = 2701;
+  const rand = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+  const stack = [[11, 13]], seen = new Set(['11,13']);
+  m[13][11] = 'g';
+  while (stack.length) {
+    const [x, y] = stack[stack.length - 1];
+    const next = [[2, 0], [-2, 0], [0, 2], [0, -2]].map(([a, b]) => [x + a, y + b, x + a / 2, y + b / 2])
+      .filter(([nx, ny]) => nx >= 1 && nx <= W - 3 && ny >= 1 && ny <= H - 3 && !seen.has(`${nx},${ny}`));
+    if (!next.length) { stack.pop(); continue; }
+    const [nx, ny, wx, wy] = next[Math.floor(rand() * next.length)];
+    m[wy][wx] = 'g'; m[ny][nx] = 'g'; seen.add(`${nx},${ny}`); stack.push([nx, ny]);
+  }
+  m[14][11] = 'g'; m[15][11] = 'E';
+  m[MAZE.prize.y][MAZE.prize.x] = '$';
+  return m;
+}
+
 // v45: the sewer under the village: stone walks either side of a dark channel, and someone in the corner.
 function sewerGrid() {
   const m = Array.from({ length: H }, () => Array.from({ length: W }, () => 'X'));
@@ -281,6 +303,10 @@ export const MAPS = {
     name: 'Hollowmere Town', salt: 83, grid: townGrid(),
     objects: [...Object.entries(SHOP_SPOTS).map(([kind, s]) => ({ art: 'storefront', kind, x: s.x, y: s.y })), { art: 'cottage', x: 13, y: 1, roof: '#7a4a8a' }, { art: 'cottage', x: 4, y: 1, roof: '#5f8fb5' }, { art: 'cottage', x: 18, y: 1, roof: '#a5432f' }, { art: 'storefront', kind: 'hall', x: 9, y: 1 }],
     exits: { [`10,${H - 1}`]: { to: 'village', x: 10, y: 1, dir: 'down' } },
+  },
+  maze: {
+    name: 'The hedge maze', salt: 97, grid: mazeGrid(), objects: [],
+    exits: { [`11,${H - 1}`]: { to: 'village', x: 13, y: 13, dir: 'up' } },
   },
   sewer: {
     name: 'The sewer', salt: 71, base: 'cave', theme: 'sewer', grid: sewerGrid(), objects: [],

@@ -2,6 +2,9 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v56: Maze Night
+- A new autumn festival on the night of Autumn 27, 10:00 to 11:50 pm: find your way through a hedge maze to the chest at its heart. Inside, a gilded gourd that every villager would love as a gift.
+
 ## v55: The Summer Potluck
 - A new summer festival on Summer 11: add one ingredient to the village's giant soup pot. A magnificent soup raises every villager's friendship with you; a thin one, or trash, lowers it.
 
