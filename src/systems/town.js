@@ -2,21 +2,17 @@
 // clinic. Each opens its dialog from its door during opening hours (data/town.js); the farm's old stall and
 // workbench point the way. v47: the farmhouse phone (hours, the forecast, Bram's orders) and the tavern and clinic stock.
 import { G } from '../core/game.js';
-import { T } from '../core/constants.js';
 import { emit, changed, notify } from '../core/events.js';
-import { addInteraction, addEntities } from '../core/registry.js';
+import { addInteraction } from '../core/registry.js';
 import { SHOPS, DAY_NAMES, TAVERN, CLINIC } from '../data/town.js';
 import { DISHES, TV_RECIPES } from '../data/cooking.js';
 import { ITEMS } from '../data/items.js';
 import { addItem } from './quality.js';
 import { SHOP_SPOTS } from '../data/maps.js';
-import { NPCS } from '../data/npcs.js';
 import { today, fmtTime } from '../core/time.js';
-import { drawPerson } from '../render/sprites.js';
 import { festivalToday } from './festivals.js';
 
 const BY_TILE = Object.fromEntries(Object.entries(SHOP_SPOTS).map(([k, s]) => [s.tile, k]));
-const look = (k) => SHOPS[k].look || NPCS.find((n) => n.id === 'bram').pal;
 
 // Whether a shop opens at all today: not on its closing day or a festival day.
 export const openToday = (k) => !festivalToday() && !SHOPS[k].closed.includes(today().wd);
@@ -46,11 +42,7 @@ addInteraction(70, ({ tile, mapId }) => {
   return false;
 });
 
-// Keepers stand by their doors while the shop is open.
-addEntities(() => (G.S.map !== 'town' ? [] : Object.entries(SHOP_SPOTS).filter(([k]) => isOpen(k)).map(([k, s]) => {
-  const [x, y] = s.keeper;
-  return { y: y * T + 14, draw: (c) => drawPerson(c, x * T + 8, y * T + 14, 'down', false, 0, look(k)) };
-})));
+// v49: the keepers are villagers now (data/npcs.js, data/schedules.js) and stand by their doors while open.
 
 // ---- v47: the phone on the farmhouse wall ----
 addInteraction(72, ({ tile, mapId }) => {

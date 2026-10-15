@@ -139,7 +139,8 @@ function townGrid() {
   for (const s of Object.values(SHOP_SPOTS)) if (s.y < 8) m[7][s.x + 1] = 'P';
   fill(m, 10, 9, 10, H - 1, 'P'); m[H - 1][10] = 'E';
   fill(m, 2, 12, 21, 12, 'P');   // v47: the lower lane past the tavern and the clinic
-  put(m, [[3, 2], [7, 3], [14, 2], [20, 3], [7, 14], [19, 10], [21, 14], [2, 14], [17, 14]], 'T');
+  put(m, [[3, 2], [7, 3], [20, 3], [7, 14], [19, 10], [21, 14], [2, 14], [17, 14]], 'T');
+  fill(m, 13, 1, 15, 2, 'V'); fill(m, 14, 3, 14, 7, 'P');   // v49: Lio's cottage on the north edge
   return m;
 }
 
@@ -271,7 +272,7 @@ export const MAPS = {
   },
   town: {
     name: 'Hollowmere Town', salt: 83, grid: townGrid(),
-    objects: Object.entries(SHOP_SPOTS).map(([kind, s]) => ({ art: 'storefront', kind, x: s.x, y: s.y })),
+    objects: [...Object.entries(SHOP_SPOTS).map(([kind, s]) => ({ art: 'storefront', kind, x: s.x, y: s.y })), { art: 'cottage', x: 13, y: 1, roof: '#7a4a8a' }],
     exits: { [`10,${H - 1}`]: { to: 'village', x: 10, y: 1, dir: 'down' } },
   },
   sewer: {

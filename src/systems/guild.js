@@ -1,14 +1,12 @@
 // The Wardens' Lodge (v37): a cabin in the Wilds by the Hollow. Warden Hale sells weapons and boots as you go
 // deeper and keeps the slaying goals: G.S.slain counts monsters by kind, G.S.goalsClaimed lists goals rewarded.
 import { G } from '../core/game.js';
-import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addInteraction, addEntities } from '../core/registry.js';
+import { addInteraction } from '../core/registry.js';
 import { LODGE, LODGE_SHOP, GOALS } from '../data/guild.js';
 import { WEAPONS } from '../data/weapons.js';
 import { CLOTHES } from '../data/clothing.js';
 import { MAPS } from '../data/maps.js';
-import { drawPerson } from '../render/sprites.js';
 import { giveFind } from './gear.js';
 
 export const KEEPER = { x: 14, y: 3 };   // Hale's spot by the door (a solid '&' tile)
@@ -63,5 +61,4 @@ addInteraction(72, ({ tile, mapId }) => {
   emit('ui:lodge');
   return true;
 });
-
-addEntities(() => (G.S.map !== 'wilds' ? [] : [{ y: KEEPER.y * T + 14, draw: (c) => drawPerson(c, KEEPER.x * T + 8, KEEPER.y * T + 14, 'down', false, 0, LODGE.look) }]));
+// v49: Hale is a villager now (data/npcs.js) and stands by the lodge door through the day.

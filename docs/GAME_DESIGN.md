@@ -323,10 +323,18 @@ Five fish per season. Bite odds are weighted toward easy fish (weight 6 minus di
 | Bram | Retired carpenter, runs the carpentry in town | Autumn 6 | Radish, hardwood | Pumpkin, hollow cap, frost root, trout, pike, iron ore | Syrup, sugar | Meadow honey | +10 watering can capacity |
 | Odile | Net mender who fishes the Wilds pond | Summer 9 | Dusk grayling, smoked grayling | Spotted dace, copper rudd, frost char, sweet pepper, wild thyme, cucumber | Frost kale, flour | Corn oil | 6 cucumber seeds |
 | Tavi | Young mapmaker | Winter 17 | Rosehip, trail bun | Wood sorrel, fava bean, celeriac, melon, copper ore, egg | Cheese, butter | Mayonnaise | 5 fava bean seeds |
+| Wren Fenn (v49) | Keeps Fenn's Provisions | Spring 4 | Tomato jam, fig wine | Tomato, corn, egg, flour, lettuce | Hollow quartz, raw slices | Frost root | none |
+| Corvin (v49) | The smith at the Anvil | Summer 26 | Gold bar, flatbread supper | Iron, copper and umbrite bars, coal, ember quartz | Spring greens bowl, lettuce | Sunberry jam | none |
+| Hob (v49) | Runs the Lantern | Autumn 15 | Persimmon wine, trout | Corn, wheat, sweet pepper, pike, cheese | Coral, sea urchin | Hollow cap | none |
+| Doctor Maren (v49) | Runs the clinic | Winter 3 | Tidestone, thyme tea | Carrot, lettuce, spring greens bowl, trout, pear | Sugar, sugar biscuit | Ember eel | none |
+| Warden Hale (v49) | Keeps the Wardens' Lodge | Spring 27 | Umbrite bar, skillet caps | Iron and gold ore, pike, ember quartz, quarry snack | Snow crocus, narcissus | Griddle cakes | none |
+| Lio (v49) | Young fiddler, lives in a cottage on the town's north edge | Summer 2 | Honey cake, frost tear | Plum, pear, sugar biscuit, glade mint, sunberry | Coal, clam | Frost kale | none |
 
 Universal tastes (v48, after a neighbour's own lists; Stardew's): everyone loves starstone; gems, artisan goods (not oil, flour or sugar) and tree fruit are liked; ores, coal, cinder, stone, wood, hardwood, fiber and gel are disliked; trash is hated. Everything else is neutral.
 
 Points: talk 20/day, gift 80 loved, 45 liked, 20 neutral, -20 disliked, -40 hated (v48, Stardew's; 1 gift/day; friendship never drops below 0). On a neighbour's birthday a gift counts eight times, loss or gain (Stardew's x8); the morning notice and the neighbours panel say whose birthday it is. 100 points per heart, 10 hearts max. Dialogue changes at 2 and 5 hearts.
+
+Schedules (v49) for the six town villagers: shopkeepers stand by their shop door through opening hours and live at their shop (Wren rests on Wednesdays in the village); Corvin, Hale and Lio meet outside the Lantern in the evening; Hob strolls the village before opening; Maren walks the village after the clinic shuts; Hale keeps the lodge door 8:00 to 18:00; Lio plays in the square in the morning. Everyone gathers in the square for festivals.
 
 Schedule (data/schedules.js): village square 8:00 to 11:00, the farm 11:00 to 18:00 (entering from the village road on the west), their cottage door 18:00 to 21:00, then indoors. One rest day a week in the village all day: Ines on day 1 of each week, Bram day 3, Odile day 5, Tavi day 7. Festival days override the schedule.
 
@@ -762,6 +770,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Fruit trees cannot be moved or removed, even with the axe. Plant them where they can stay.
 - Giant crops need a 3x3 block with no sprinkler inside, so a field laid out in sprinkler rings never makes one. The balance bot farms that way, so the simulator never sees a giant crop.
 - The worm bin and bait maker are not built; bait is crafted from gel (v41). The balance bot's catch rate comes from playing the real catch bar with a quarter-second reaction (tools/balance.mjs REACT); real players may do better or worse.
+- v49: the six new villagers have no heart scenes, 3-heart rewards or mail letters yet, and they never visit the farm.
 - v48: gifts stay one a day per neighbour; Stardew allows two a week plus the birthday. The four existing neighbours only: new villagers, homes and outfits come in items 23b and 23c.
 - v47: the clinic has no muscle remedy (Stardew's cures exhaustion, which we do not have). The phone does not report tool upgrades (ours are instant) or sell animals.
 - v46: shops have no interiors yet; the keepers stand by their doors while open. Tool upgrades are still instant (Stardew's take two days). Animals are still bought at the coop and barn.

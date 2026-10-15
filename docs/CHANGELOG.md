@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v49: Six new villagers
+- Wren Fenn, Corvin, Hob and Doctor Maren now live at their shops and walk the town and village on their own schedules; Warden Hale keeps the lodge by day and comes to town in the evening; and Lio, a young fiddler, plays in the square and lives in a new cottage in town.
+- Each has a birthday, gift tastes and their own lines; they gather in the square for festivals and post quests on the board like everyone else.
+
 ## v48: Gift tastes, birthdays and mail
 - Gifts now land in five tiers: loved, liked, neutral, disliked and hated. Disliked and hated gifts cost friendship. Everyone loves starstone and likes gems, artisan goods and fruit; ores and raw materials are disliked and trash is hated.
 - Each neighbour has a birthday: a gift on the day counts eight times. The neighbours panel and a morning notice say whose it is.
