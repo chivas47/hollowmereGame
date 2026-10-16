@@ -33,6 +33,7 @@ src/
     forge.js          VENT, FORGE_GEMS, enchantments, TRINKETS (v39)
     family.js         CHILD, CHILD_NAMES, DIVORCE, ROOMMATE, HALL, the shadow lantern (v53)
     restoration.js    ROOMS and their bundles, ROOM_GOLD, RIVAL (v60)
+    orders.js         ORDERS, ORDER_POINTS, ORDERS_FROM, ORDERS_OFFERED (v61)
     romance.js        CANDIDATES, HEART_CAP, BOUQUET, JEALOUSY, DATE_LINES, the bouquet item (v51); PENDANT, WEDDING_DAYS, SPOUSE_CAP, CHORE_CHANCE, SPOUSE_LINES, the pendant (v52)
     gifts.js          GIFT_POINTS, BIRTHDAY_MULT, UNIVERSAL tastes, TIER_NAMES (v48)
     mail.js           LETTERS (when, text, attach), MAILBOX (v48)
@@ -80,6 +81,7 @@ src/
     npcs.js           schedules across farm and village, talk, gifts, hearts, 3-heart rewards, heart scenes
     upgrades.js       smithy and carpentry purchases, material costs, recalcStats()
     family.js         children (G.S.children, G.S.baby, G.S.childAsk), growing up, hugs; divorce at the town hall (v53)
+    orders.js         special orders on the quest board: the weekly offer, takeOrder(), handIn() (G.S.orders) (v61)
     restoration.js    the town hall's old wing: donate(), payVault(), joinRival(), buyRoom() (G.S.restore) (v60)
     marriage.js       the old boatman and the pendant, the wedding (G.S.wedding, G.S.spouse), the spouse's morning chores (v52)
     mail.js           letters arriving each morning (G.S.mail, G.S.mailRead), readLetter(), the mailbox on the farmhouse front
