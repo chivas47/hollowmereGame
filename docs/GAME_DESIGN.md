@@ -661,6 +661,23 @@ One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up 
 
 Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (wide 3), water 2, clear withered crop 1, cast 8, pickaxe 2, axe 2 a swing. Cutting weeds with the sword is free (Stardew's scythe). Warm cider restores 60.
 
+## Special orders (v61)
+
+From Autumn 1 of the first year the quest board also posts special orders (Stardew's special orders board, from Fall 2). Each Monday two are offered; take one at a time and hand in what it asks for before it runs out, a few at a time if you like. A finished order pays its gold and 100 friendship points (one heart) with the villager who asked; a missed one simply lapses.
+
+| Order | Asks | Days | Pays |
+|---|---|---|---|
+| Odile: fish for the pier supper | 10 fish, any kind | 7 | 1,500g |
+| Ines: honey for the market | 10 meadow honey | 7 | 1,800g |
+| Bram: hardwood for the bridge | 50 hardwood | 14 | 2,500g |
+| Corvin: iron for the forge | 10 iron bars | 7 | 2,500g |
+| Hob: eggs for the kitchen | 20 eggs | 7 | 1,200g |
+| Maren: herbs for the clinic | 10 forage, any kind | 7 | 1,500g |
+| Tavi: stones for the survey | 5 gems, any kind | 14 | 2,500g |
+| Pell: vegetables for the school | 30 crops, any kind | 7 | 1,500g |
+| Esme: fruit for a still life | 15 fruit, any kind | 7 | 1,500g |
+| Rook: gel for the hull | 50 slime gel | 7 | 1,500g |
+
 ## The old wing (v60)
 
 Behind the clerk's desk at the town hall (open 9:00 am to 5:00 pm), "The old wing" opens five rooms of bundles: Stardew's Community Center, scaled from six rooms and 30 bundles to five and 19. A bundle takes one of each item listed (or the amounts given); items can be given a few at a time. A finished bundle leaves its reward; a finished room adds 5,000g. When every room is restored, the coach road and the harbour reopen (`G.S.restore.done`), the way to item 27.
@@ -790,6 +807,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 Balance warnings from tools/balance.mjs are information only since v11: values follow the Stardew scale instead of being tuned to the checks. Latest run (strategy full, 2 years, 5 runs, v12): about 989,000g at the end (+40% from the greenhouse); crops are 55% of income; the greenhouse is bought around Summer 16 of year 1.
 
+- v61: orders pay gold and a heart rather than Stardew's mix of gold, recipes and items; the friendship is our choice. Fixed in v61: since v49 a request from one of the twelve later villagers (no note text) crashed the quest board; they all have notes now, with a fallback line for any new villager. In the simulator the bot takes an order when its bag already holds a third of it, keeps those items back from shipping and hands them in at the board.
 - v60: the old wing's rooms give items and gold; restoring them all only sets `G.S.restore.done`, which item 27 (the desert bus and the island boat) will use. Stardew's room unlocks (greenhouse, quarry bridge, minecarts) already exist here from the start or for gold, so Nuno chose new rewards over moving them. In the simulator the bot keeps bundle items back from shipping, plants one tile of each crop a bundle needs, gives on a walk to the hall and pays the vault from spare gold; it never fishes the sea or lake or digs cinder shards, so it rarely finishes the fish tank or the boiler room. Reward machines it places take farm space, so more buildings are skipped for lack of room.
 - Sprinklers make watering free once you have the ore. That is intended, but it removes a daily energy cost; watch whether energy still matters by mid-summer.
 - Hotbar changed in v8: crops moved from keys 6 to 9 into one seed slot on key 6. Old saves keep the crop they had selected. v9 adds slot 7 (kit) at the end, so no key moved.

@@ -71,7 +71,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['layouts', 'sites', 'professions', 'cooking', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots', 'areas', 'quarry', 'hidden', 'town', 'mail', 'restoration'];
+  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots', 'areas', 'quarry', 'hidden', 'town', 'mail', 'restoration', 'orders'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -125,6 +125,8 @@ const BAR_ORE = { copperbar: 'copper', ironbar: 'iron' };
 const { pickUp } = await load('systems/placeables.js');
 const { accepted, loadMachine, collectMachine } = await load('systems/artisan.js');
 const { canDeliver, deliver } = await load('systems/quests.js');
+const { ordersOpen, orderItems, takeOrder, handIn } = await load('systems/orders.js');
+const { ORDERS } = await load('data/orders.js');
 const { BUNDLES, stillNeeds, bundleDone, donate, payVault } = await load('systems/restoration.js');
 const { HALL } = await load('data/family.js');
 const { festivalToday, festivalOpen, contestItems, enterContest, nextFestival, grangeItems, grangeKind, judgeGrange } = await load('systems/festivals.js');
@@ -659,12 +661,28 @@ function simulate(runSeed) {
     spend(TIME.chore);
   }
 
+  // v61: special orders. The bot takes an offered order when its bag already holds a third of what it asks, keeps
+  // those items back from shipping, and hands them in whenever it is at the board.
+  function orders() {
+    const s = S();
+    if (!ordersOpen()) return false;
+    if (!s.orders.active) {
+      const k = s.orders.offer.find((key) => orderItems(key).reduce((a, it) => a + s.bag[it], 0) * 3 >= ORDERS[key].n);
+      if (!k) return false;
+      takeOrder(k);
+    }
+    const items = orderItems(s.orders.active.key);
+    for (const it of items) if (s.orders.active) track('orders', () => handIn(it));
+    return items.length > 0;
+  }
   function village() {
     const s = S(), f = festivalToday(), ready = s.quests.filter(canDeliver);
     const contest = f && ((f.kind === 'contest' && contestItems(f).length) || (f.kind === 'grange' && grangeItems().length)) && !s.festivals[`${f.key}-${today().year}`];
-    if (!ready.length && !contest) return;
+    const canOrder = ordersOpen() && (s.orders.active ? orderItems(s.orders.active.key).length : s.orders.offer.some((key) => orderItems(key).reduce((a, it) => a + s.bag[it], 0) * 3 >= ORDERS[key].n));
+    if (!ready.length && !contest && !canOrder) return;
     spend(TIME.travel * 2);
     ready.forEach((q) => track('quests', () => deliver(q.id)));
+    if (canOrder) orders();
     if (contest) {
       if (s.time < 9 * 60) s.time = 9 * 60;
       if (festivalOpen()) {
@@ -701,6 +719,7 @@ function simulate(runSeed) {
 
   function reserves() {
     const s = S(), out = {};
+    if (s.orders.active) for (const it of orderItems(s.orders.active.key)) out[it] = s.bag[it];   // v61: kept for the order
     for (const key of Object.keys(BUNDLES)) if (!bundleDone(key)) for (const [k, n] of Object.entries(stillNeeds(key))) if (!ITEMS[k]?.material) out[k] = Math.max(out[k] || 0, n);
     s.quests.forEach((q) => { out[q.item] = (out[q.item] || 0) + q.n; });
     for (const [k, n] of Object.entries(GOAL[goals[0]]?.needs?.() || {})) if (k in CROPS) out[k] = (out[k] || 0) + n;

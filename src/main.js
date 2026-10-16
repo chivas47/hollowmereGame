@@ -64,6 +64,7 @@ import './systems/mail.js';
 import './systems/marriage.js';
 import './systems/family.js';
 import './systems/restoration.js';
+import './systems/orders.js';
 
 // UI
 import './ui/toast.js';

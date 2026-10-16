@@ -75,6 +75,7 @@ export function newState() {
     spouse: null, wedding: null, roommate: false,      // v52: your spouse's villager id, a wedding { id, day } to come; v53: a roommate
     secretFriend: null,                              // v57: { year, id } for the Longnight Feast
     restore: { given: {}, bundles: {}, rooms: {}, rival: false, done: false },   // v60: systems/restoration.js
+    orders: { week: -1, offer: [], active: null, done: 0 },   // v61: systems/orders.js
     children: [], baby: null, childAsk: 0,            // v53: children { name, born, hug, love }; a baby on the way { due }
     mail: [], mailRead: [],                          // v48: letters waiting in the mailbox, letters read (systems/mail.js)
     gates: { log: false, rubble: false, key: false },  // v45: the grove log, the railway rubble, the sewer key
@@ -133,6 +134,8 @@ export function merge(saved) {
   s.gates = Object.assign(newState().gates, saved.gates || {});   // v45
   for (const k of ['mail', 'mailRead', 'children']) if (!Array.isArray(s[k])) s[k] = [];   // v48, v53
   if (saved.day > 3 && !saved.mailRead) s.mailRead.push('welcome');   // v48: no welcome letter for a farm already under way
+  const so = saved.orders || {};   // v61
+  s.orders = { week: so.week ?? -1, offer: [...(so.offer || [])], active: so.active ? { ...so.active } : null, done: so.done || 0 };
   const rs = saved.restore || {};   // v60
   s.restore = { given: { ...(rs.given || {}) }, bundles: { ...(rs.bundles || {}) }, rooms: { ...(rs.rooms || {}) }, rival: !!rs.rival, done: !!rs.done };
   s.trader = { day: saved.trader?.day || 0, bought: { ...(saved.trader?.bought || {}) }, once: [...(saved.trader?.once || [])] };

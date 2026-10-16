@@ -11,6 +11,8 @@ import { funded, fundProject } from '../systems/projects.js';
 import { affordable } from '../systems/upgrades.js';
 import { nextFestival, contestItems, enterContest, buyStall, entry, festivalToday, hoursText, ACCEPT_TEXT, startHunt, potItems, addToPot, enterMaze, secretFriend, giveExchange, danceAsk, askDance, grangeItems, grangeKind, judgeGrange } from '../systems/festivals.js';
 import { CLOTHES } from '../data/clothing.js';
+import { ORDERS } from '../data/orders.js';
+import { ordersOpen, orderLeft, orderItems, takeOrder, handIn } from '../systems/orders.js';
 import { openModal, closeModal } from './modal.js';
 import { counts, unitValue } from '../systems/quality.js';
 import { QUALITY } from '../data/quality.js';
@@ -23,7 +25,7 @@ function board() {
   const S = G.S;
   const notes = S.quests.length ? S.quests.map((q) => {
     const it = ITEMS[q.item], left = q.due - S.day;
-    const text = QUEST_NOTES[q.npc].replace('{n}', q.n).replace('{item}', it.name.toLowerCase());
+    const text = (QUEST_NOTES[q.npc] || `${npcName(q.npc)}: Could someone bring {n} {item}?`).replace('{n}', q.n).replace('{item}', it.name.toLowerCase());
     return `<div class="shoprow"><div><b>${text}</b><span>Pays ${q.reward}g and ${npcName(q.npc)}'s friendship. You have ${S.bag[q.item]}. ${left ? `${left + 1} days left` : 'Last day'}.</span></div>
       <div class="btns"><button data-quest="${q.id}" ${canDeliver(q) ? '' : 'disabled'}>Deliver</button></div></div>`;
   }).join('') : '<p class="role">No requests today. A new one goes up most mornings.</p>';
@@ -33,7 +35,20 @@ function board() {
   const projects = `<h3>Village projects</h3>` + Object.entries(PROJECTS).map(([k, p]) => (funded(k)
     ? `<div class="shoprow"><div><b>${p.name}</b><span>Built. ${p.desc}</span></div></div>`
     : `<div class="shoprow"><div><b>${p.name}</b><span>${p.desc} ${p.cost.toLocaleString('en-US')}g<br>Needs ${needs(p)}</span></div><div class="btns"><button data-project="${k}" ${affordable(p.cost, p.needs) ? '' : 'disabled'}>Fund</button></div></div>`)).join('');
-  openModal(`<h2>Quest board</h2><p class="role">Requests from your neighbours. Requests completed: ${S.questsDone || 0}. You have <b>${S.gold}g</b>.</p>${notes}${fest}${projects}`, [['Close', closeModal, true]]);
+  // v61: special orders, from Autumn of the first year.
+  let orders = '';
+  if (ordersOpen()) {
+    const a = S.orders.active, what = (o) => `${o.n} ${o.item ? ITEMS[o.item].name.toLowerCase() : `${o.kind === 'mineral' ? 'gem' : o.kind} item${o.n > 1 ? 's' : ''} of any kind`}`;
+    orders = `<h3>Special orders</h3>`;
+    if (a) {
+      const o = ORDERS[a.key], left = a.due - S.day;
+      orders += `<div class="shoprow"><div><b>${o.name}</b><span>${npcName(o.npc)}: "${o.text}" ${a.given} of ${o.n} handed in. ${left ? `${left + 1} days left` : 'Last day'}. Pays ${o.gold.toLocaleString('en-US')}g.</span></div></div>`
+        + (orderItems(a.key).map((k) => `<div class="shoprow"><div><b>${ITEMS[k].name}</b><span>You have ${S.bag[k]}.</span></div><div class="btns"><button data-hand="${k}">Hand in ${Math.min(S.bag[k], orderLeft())}</button></div></div>`).join('') || '<p class="role">Nothing in your bag for this order yet.</p>');
+    }
+    orders += S.orders.offer.length ? S.orders.offer.map((k) => { const o = ORDERS[k]; return `<div class="shoprow"><div><b>${o.name}</b><span>${npcName(o.npc)} wants ${what(o)} within ${o.days} days. Pays ${o.gold.toLocaleString('en-US')}g and their thanks.</span></div><div class="btns"><button data-order="${k}" ${a ? 'disabled' : ''}>Take</button></div></div>`; }).join('') + (a ? '<p class="role">Finish your order before taking another.</p>' : '')
+      : '<p class="role">New orders go up on Monday.</p>';
+  }
+  openModal(`<h2>Quest board</h2><p class="role">Requests from your neighbours. Requests completed: ${S.questsDone || 0}. You have <b>${S.gold}g</b>.</p>${notes}${orders}${fest}${projects}`, [['Close', closeModal, true]]);
 }
 
 function festival() {
@@ -108,6 +123,9 @@ on('ui:festival', festival);
 $('#mbody').addEventListener('click', (e) => {
   const q = e.target.closest('[data-quest]');
   if (q && !q.disabled) { if (deliver(q.dataset.quest)) board(); return; }
+  const od = e.target.closest('[data-order]'), hd = e.target.closest('[data-hand]');   // v61
+  if (od && !od.disabled) { if (takeOrder(od.dataset.order)) board(); return; }
+  if (hd) { handIn(hd.dataset.hand); board(); return; }
   const pj = e.target.closest('[data-project]');
   if (pj && !pj.disabled) { if (fundProject(pj.dataset.project)) board(); return; }
   const en = e.target.closest('[data-enter]');
