@@ -330,7 +330,14 @@ function storefront(g, p, o) {
   if (o.kind === 'clinic') { r(g, X + 23, Y + 12, 2, 4, '#4f9a6a'); r(g, X + 22, Y + 13, 4, 2, '#4f9a6a'); }
 }
 
-export const OBJECT_ART = { storefront, lodge, helperhut, waystone, pond, slimepen, shed, mill, clocktower, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
+// v65: a small wooden boat on the water.
+function boat(g, p, o) {
+  const X = o.x * T, Y = o.y * T;
+  r(g, X + 1, Y + 12, 30, 2, 'rgba(0,0,0,.25)');
+  for (let j = 0; j < 5; j++) r(g, X + 2 + j, Y + 6 + j, 28 - 2 * j, 1, j === 0 ? '#c9a06a' : '#8a5a32');
+  r(g, X + 15, Y - 8, 2, 14, '#6e4626'); r(g, X + 17, Y - 7, 9, 9, '#f4ead2'); r(g, X + 17, Y - 7, 9, 1, '#e8d9b5');
+}
+export const OBJECT_ART = { boat, storefront, lodge, helperhut, waystone, pond, slimepen, shed, mill, clocktower, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
 
 // ---- Greenhouse interior (ignores seasons) ----
 export function drawGreenhouseFloor(g, x, y, t) {

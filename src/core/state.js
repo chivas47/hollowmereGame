@@ -26,6 +26,7 @@ export function newState() {
     qbag: {},           // item -> [fine, prime, heirloom] counts within bag (see systems/quality.js)
     soil: {},           // farm: "x,y" -> { w: watered, crop: { type, age, dead } | null }
     greenSoil: {},      // greenhouse beds, same shape
+    islandSoil: {}, boatFixed: false,   // v65: the island farm's soil; Rook's boat repaired
     forage: [], forageDay: 0,
     wildWeeds: [],      // v33: weeds in the Wilds, cut for fiber (systems/forage.js)
     fishLog: {},        // fish key -> number caught
@@ -116,6 +117,7 @@ export function merge(saved) {
   if (saved.feed === undefined) s.feed = s.chickens.length * 7;
   if (!s.projects || typeof s.projects !== 'object') s.projects = {};
   if (!s.greenSoil || typeof s.greenSoil !== 'object') s.greenSoil = {};
+  if (!s.islandSoil || typeof s.islandSoil !== 'object') s.islandSoil = {};   // v65
   if (!s.qbag || typeof s.qbag !== 'object') s.qbag = {};
   s.kit = Object.assign(newState().kit, saved.kit || {});
   s.skills = Object.assign(newState().skills, saved.skills || {});

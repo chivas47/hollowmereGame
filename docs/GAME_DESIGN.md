@@ -661,6 +661,10 @@ One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up 
 
 Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (wide 3), water 2, clear withered crop 1, cast 8, pickaxe 2, axe 2 a swing. Cutting weeds with the sword is free (Stardew's scythe). Warm cider restores 60.
 
+## The island (v65)
+
+Rook's old boat is moored at the end of the beach pier. Repair it with 200 hardwood, 5 umbrite bars and 5 storm cells (Stardew's boat: 200 hardwood, 5 iridium bars, 5 battery packs), then Rook sails you to the island and back for 1,000g, 9:00 am to 5:00 pm. The island's grass can all be tilled, and crops there ignore the seasons (Stardew's island farm); a pond fills the can. The nut currency, trader and dig site come in 27c, the dungeon and puzzles in 27d.
+
 ## The dunes (v64)
 
 Once the old wing is restored, a coach leaves from the east end of the town lane, 10:00 am to 5:00 pm, for 500g; the ride home is free (Stardew's bus to the Calico Desert). The dunes have:
@@ -831,6 +835,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 Balance warnings from tools/balance.mjs are information only since v11: values follow the Stardew scale instead of being tuned to the checks. Latest run (strategy full, 2 years, 5 runs, v12): about 989,000g at the end (+40% from the greenhouse); crops are 55% of income; the greenhouse is bought around Summer 16 of year 1.
 
+- v65: the balance bot does not repair the boat or farm the island yet; island crops are not watered by rain (only the farm's soil is).
 - v64: the coach needs the whole old wing restored (or bought from Ashgrove), which the balance bot rarely manages, so it never visits the dunes; it also never buys the Oasis's seeds in town. Adding a crop shifts the simulator's random draws (mixed seeds), so its report moves by about 1% with no change in play.
 - v63 (simulator only): the farm has room for the full field and every building (about 175 free tiles outdoors, and the shed holds machines inside); the bot was the one running out, by putting every machine outdoors and by giving up on a building when clearing debris for one spot freed another. It now buys the shed after the greenhouse and puts its machines inside, and buildings skipped for lack of room fell from about 3 a run to 0.4.
 - v62: in the simulator the bot takes Sable's challenges when its bag holds a third of one and spends its moonstones on heirloom boosters, but by the second year its field already holds rich boosters (they stay in the soil), so the moonstones buy it nothing: the challenges cost it about 3% of its gold (crops handed in instead of sold). That is the trade a player makes for the shop's rare items.

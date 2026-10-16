@@ -22,7 +22,7 @@
 // exits: "x,y" of an E tile -> where it leads.
 import { W, H } from '../core/constants.js';
 
-export const SOLID = new Set(['0', '1', '2', '3', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
+export const SOLID = new Set(['0', '1', '2', '3', '4', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
 
 function emptyGrid() {
   return Array.from({ length: H }, (_, y) =>
@@ -94,6 +94,7 @@ function beachGrid() {
   const m = Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => (y === 0 ? 'T' : y >= 10 ? 'O' : x === 0 || x === W - 1 ? 'R' : 'z')));
   m[0][11] = 'E';
   fill(m, 6, 9, 6, 12, 'P');                      // the pier
+  m[12][5] = '4';                                  // v65: Rook's old boat, moored at the end of the pier
   put(m, [[3, 3], [19, 2], [15, 6], [21, 8], [2, 8]], 'R');
   return m;
 }
@@ -148,6 +149,19 @@ function townGrid() {
   fill(m, 18, 1, 20, 2, 'V'); fill(m, 19, 3, 20, 3, 'P'); fill(m, 20, 4, 20, 7, 'P');   // v50: Juno's cottage
   fill(m, 9, 1, 11, 2, '-'); fill(m, 8, 3, 10, 3, 'P'); fill(m, 8, 4, 8, 7, 'P');      // v53: the town hall
   m[8][22] = 'P'; m[7][22] = '0';   // v64: the coach stop at the east end of the lane
+  return m;
+}
+
+// v65: the island: a beach and dock in the south, a farm plot (tillable g) in the middle, a pond to fill the can.
+function islandGrid() {
+  const m = emptyGrid();
+  fill(m, 0, 0, W - 1, 0, 'T'); fill(m, 0, 0, 0, H - 1, 'T'); fill(m, W - 1, 0, W - 1, H - 1, 'T');
+  fill(m, 0, 12, W - 1, 13, 'z'); fill(m, 0, 14, W - 1, H - 1, 'O');
+  fill(m, 11, 12, 11, 14, 'P'); m[14][10] = '4';
+  fill(m, 4, 3, 17, 8, 'g');
+  fill(m, 19, 3, 21, 5, 'O');
+  fill(m, 4, 10, 18, 10, 'P'); fill(m, 11, 9, 11, 11, 'P');
+  put(m, [[2, 2], [2, 9], [20, 8], [21, 10], [3, 11]], 'T');
   return m;
 }
 
@@ -297,13 +311,17 @@ export const MAPS = {
     objects: [],
     exits: { '11,12': { to: 'farm', x: 8, y: 1, dir: 'down' } },
   },
+  island: {   // v65
+    name: 'The island', salt: 31, grid: islandGrid(), objects: [{ art: 'boat', x: 10, y: 14 }],
+    exits: {},
+  },
   desert: {   // v64
     name: 'The Dunes', salt: 29, grid: desertGrid(), ground: 'z',
     objects: [{ art: 'storefront', kind: 'oasis', x: 4, y: 2 }, { art: 'storefront', kind: 'casino', x: 15, y: 2 }, { art: 'board', x: 1, y: 7 }, { art: 'table', x: 12, y: 10 }],
     exits: {},
   },
   beach: {
-    name: 'Saltreach Beach', salt: 41, grid: beachGrid(), objects: [], ground: 'z',
+    name: 'Saltreach Beach', salt: 41, grid: beachGrid(), objects: [{ art: 'boat', x: 5, y: 12 }], ground: 'z',
     exits: { '11,0': { to: 'village', x: 11, y: 14, dir: 'up' } },
   },
   forest: {
