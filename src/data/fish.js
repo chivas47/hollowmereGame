@@ -27,6 +27,9 @@ export const FISH = {
   inkfish:   { name: 'Inkfish',         sell: 80,  difficulty: 3, color: '#e8e0d0', seasons: ['Winter'], water: 'sea' },
   blowfish:  { name: 'Spiny blowfish',  sell: 200, difficulty: 5, color: '#e9c46a', seasons: ['Summer'], water: 'sea' },
   octopus:   { name: 'Rock octopus',    sell: 150, difficulty: 5, color: '#a5432f', seasons: ['Summer'], water: 'sea' },
+  // v64: the dunes' oasis pond (Stardew's desert: sandfish 75g, scorpion carp 150g; any season).
+  dunedarter:  { name: 'Dune darter',   sell: 75,  difficulty: 3, color: '#d9b16a', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], water: 'desert' },
+  stingcarp:   { name: 'Stinger carp',  sell: 150, difficulty: 5, color: '#b5652a', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], water: 'desert' },
   redfin:    { name: 'Redfin',          sell: 30,  difficulty: 1, color: '#d9898f', seasons: ['Spring', 'Summer'], water: 'river' },
   riverbass: { name: 'River bass',      sell: 50,  difficulty: 2, color: '#5d8a4a', seasons: ['Spring', 'Autumn'], water: 'river' },
   shad:      { name: 'Silver shad',     sell: 60,  difficulty: 2, color: '#c9ccd6', seasons: ['Spring', 'Summer', 'Autumn'], water: 'river' },

@@ -35,6 +35,7 @@ src/
     restoration.js    ROOMS and their bundles, ROOM_GOLD, RIVAL (v60)
     orders.js         ORDERS, ORDER_POINTS, ORDERS_FROM, ORDERS_OFFERED (v61)
     challenges.js     CHALLENGES, CHALLENGE_FROM, MOON_SHOP (v62)
+    desert.js         COACH, OASIS, DESERT_TRADES, CASINO (v64)
     romance.js        CANDIDATES, HEART_CAP, BOUQUET, JEALOUSY, DATE_LINES, the bouquet item (v51); PENDANT, WEDDING_DAYS, SPOUSE_CAP, CHORE_CHANCE, SPOUSE_LINES, the pendant (v52)
     gifts.js          GIFT_POINTS, BIRTHDAY_MULT, UNIVERSAL tastes, TIER_NAMES (v48)
     mail.js           LETTERS (when, text, attach), MAILBOX (v48)
@@ -82,6 +83,7 @@ src/
     npcs.js           schedules across farm and village, talk, gifts, hearts, 3-heart rewards, heart scenes
     upgrades.js       smithy and carpentry purchases, material costs, recalcStats()
     family.js         children (G.S.children, G.S.baby, G.S.childAsk), growing up, hugs; divorce at the town hall (v53)
+    desert.js         the dunes: the coach (town tile 0), the Oasis (1), the casino (2) and its slot machine, the desert trader (3) (G.S.casino, G.S.desertTraded) (v64)
     challenges.js     Sable in the Lantern: challenges, moonstones (G.S.challenge), buyMoon() (v62)
     orders.js         special orders on the quest board: the weekly offer, takeOrder(), handIn() (G.S.orders) (v61)
     restoration.js    the town hall's old wing: donate(), payVault(), joinRival(), buyRoom() (G.S.restore) (v60)
@@ -130,6 +132,7 @@ src/
     town.js           the tavern, clinic and phone dialogs (v47); Sable's table (ui:sable, v62)
     family.js         naming a newborn, the town hall dialog (v53)
     restoration.js    the old wing's bundles and the rival's offer (ui:restore, v60)
+    desert.js         the coach, the Oasis, the desert trader and the casino (ui:coach, ui:oasis, ui:dtrader, ui:casino, v64)
     social.js         the social menu (F, or a click on the neighbours panel) and letters (v48)
     dom.js toast.js modal.js hud.js hotbar.js dialogs.js inventory.js
     workshop.js mine.js input.js debugPanel.js

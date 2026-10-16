@@ -2,6 +2,9 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v64: The dunes
+- Once the old wing is restored, a coach runs from the east end of the town lane to the dunes (500g, the ride home is free). There: the Oasis with ruby stalk seeds you can't buy anywhere else, a trader who swaps one thing a day, two new fish in the oasis pond, and the Gilded Dune, a casino with a slot machine and a prize counter.
+
 ## v62: Sable
 - From the second year, a stranger called Sable sits in the corner of the Lantern. He sets hard two-week challenges and pays in moonstones, which only his shop takes: heirloom boosters, strong growth tonic, bait, great bombs, a gem copier and a mask of his own.
 

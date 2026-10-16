@@ -35,6 +35,8 @@ export const CROPS = {
   wheat:    { name: 'Wheat',        days: 4, seed: 10, sell: 25,  color: '#d9b45a', top: null,      line: '#b8913a', shape: 'leafy', seasons: ['Summer', 'Autumn'] },
   beet:     { name: 'Beet',         days: 6, seed: 20, sell: 100, color: '#8a2a4a', top: '#5d9a4a', line: null,      shape: 'root',  seasons: ['Autumn'] },
   frostkale:{ name: 'Frost kale',   days: 6, seed: 50, sell: 100, color: '#8fb8b0', top: null,      line: '#5f8f88', shape: 'leafy', seasons: ['Winter'] },
+  // v64: sold only at the Oasis in the dunes (shop: 'oasis'; Stardew: rhubarb, 100g seeds, 13 days, sells 220g, spring).
+  rubystalk: { name: 'Ruby stalk', days: 13, seed: 100, sell: 220, color: '#c0445a', top: '#7fbf5a', line: '#8a2a3a', shape: 'leafy', seasons: ['Spring'], shop: 'oasis' },
   // v17: seed packets
   wildspring: { name: 'Spring wild seeds', days: 6, seed: 40, sell: 0, color: '#86b964', top: null, line: '#5e8d45', shape: 'leafy', seasons: ['Spring'], packet: 'wild', produce: ['leek', 'sorrel'] },
   wildsummer: { name: 'Summer wild seeds', days: 6, seed: 40, sell: 0, color: '#93be58', top: null, line: '#618a3a', shape: 'leafy', seasons: ['Summer'], packet: 'wild', produce: ['berry', 'thyme'] },

@@ -661,6 +661,15 @@ One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up 
 
 Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (wide 3), water 2, clear withered crop 1, cast 8, pickaxe 2, axe 2 a swing. Cutting weeds with the sword is free (Stardew's scythe). Warm cider restores 60.
 
+## The dunes (v64)
+
+Once the old wing is restored, a coach leaves from the east end of the town lane, 10:00 am to 5:00 pm, for 500g; the ride home is free (Stardew's bus to the Calico Desert). The dunes have:
+
+- The Oasis (Salma, Stardew's Sandy): ruby stalk seeds, sold nowhere else (100g, 13 days, sells 220g, spring; Stardew's rhubarb), honey cake 300g and bait 5g.
+- The desert trader: one barter a day, a different deal each weekday (5 Hollow quartz for a frost tear, 3 iron bars for a gold bar, 10 cinder shards for 3 geodes, 3 sea coral for 50 bait, 2 gold bars for an umbrite bar, 3 dune darters for 5 strong growth tonic, a stinger carp for 5 heirloom boosters).
+- The Gilded Dune, a casino (Stardew's Club; Nuno chose to include it): club coins at 100 for 1,000g, never bought back. The slot machine takes bets of 10 or 100: three cherries pay 4 times the bet, bells 10, stars 18, moons 40, sevens 100, and two cherries 1.5; it returns about 93% of what goes in. The prize counter: the dealer's hat (8,000 coins, once), 20 strong growth tonic (1,000), 20 heirloom boosters (1,500), a gem copier (12,000).
+- An oasis pond with two desert fish, any season: the dune darter (75g, difficulty 3) and the stinger carp (150g, difficulty 5), Stardew's sandfish and scorpion carp.
+
 ## Sable's challenges (v62)
 
 From Spring 1 of the second year, a stranger called Sable sits in the corner of the Lantern (12:00 pm to midnight): Stardew's Mr. Qi. Each week he offers two challenges, harder and longer than the board's orders, paid in moonstones, a currency only he takes (Stardew's Qi gems; Nuno chose a new currency here).
@@ -822,6 +831,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 Balance warnings from tools/balance.mjs are information only since v11: values follow the Stardew scale instead of being tuned to the checks. Latest run (strategy full, 2 years, 5 runs, v12): about 989,000g at the end (+40% from the greenhouse); crops are 55% of income; the greenhouse is bought around Summer 16 of year 1.
 
+- v64: the coach needs the whole old wing restored (or bought from Ashgrove), which the balance bot rarely manages, so it never visits the dunes; it also never buys the Oasis's seeds in town. Adding a crop shifts the simulator's random draws (mixed seeds), so its report moves by about 1% with no change in play.
 - v63 (simulator only): the farm has room for the full field and every building (about 175 free tiles outdoors, and the shed holds machines inside); the bot was the one running out, by putting every machine outdoors and by giving up on a building when clearing debris for one spot freed another. It now buys the shed after the greenhouse and puts its machines inside, and buildings skipped for lack of room fell from about 3 a run to 0.4.
 - v62: in the simulator the bot takes Sable's challenges when its bag holds a third of one and spends its moonstones on heirloom boosters, but by the second year its field already holds rich boosters (they stay in the soil), so the moonstones buy it nothing: the challenges cost it about 3% of its gold (crops handed in instead of sold). That is the trade a player makes for the shop's rare items.
 - v61: orders pay gold and a heart rather than Stardew's mix of gold, recipes and items; the friendship is our choice. Fixed in v61: since v49 a request from one of the twelve later villagers (no note text) crashed the quest board; they all have notes now, with a fallback line for any new villager. In the simulator the bot takes an order when its bag already holds a third of it, keeps those items back from shipping and hands them in at the board.
