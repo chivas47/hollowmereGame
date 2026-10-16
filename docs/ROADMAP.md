@@ -64,7 +64,10 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 26b | Town restoration: special orders board | feature | done (chivas47/hollowmereGame#57) | Timed orders from villagers with bigger rewards (Stardew's special orders). |
 | 26c | Town restoration: the challenge-giver | feature | done (chivas47/hollowmereGame#58) | Hard orders paid in a gem currency, spent at a gem shop (Stardew's Mr. Qi and Qi gems; Nuno chose the currency). |
 | 26d | Balance bot: farm space | fix | done (chivas47/hollowmereGame#59) | The bot ran out of farm room for buildings (about 3 skipped a run). The game has room; the bot now buys the shed early and puts its machines inside, and re-checks for a spot after clearing debris. |
-| 27 | Desert and island | feature | next | A bus to the desert (shop, casino, desert fishing), a boat to a tropical island (island farm, a collectible nut currency, island trader, dig site, island dungeon, hidden puzzles). |
+| 27a | Desert | feature | done (chivas47/hollowmereGame#60) | A coach to the dunes once the old wing is restored: the Oasis shop and its own seeds, a barter trader, desert fishing and a casino (Nuno chose to include it). |
+| 27b | Island: the boat and the island farm | feature | next | The harbour boat (after the old wing), the island and a farm plot there. |
+| 27c | Island: the nut currency, trader and dig site | feature | queued | A found nut currency (Nuno: yes, found not bought) that opens island areas and buys from the island trader; a dig site. |
+| 27d | Island: the dungeon and hidden puzzles | feature | queued | An island dungeon and the hidden puzzles that give nuts. |
 | 28 | Museum and collections | feature | queued | Artifacts and minerals, geodes, museum donations with rewards, collections menu, secret notes, achievements, a completion tracker. |
 | 29 | Economy extras | feature | queued | Travelling cart, bookseller, an expanding critter shop, prize tickets and a prize machine, mystery boxes. |
 | 30 | Minigames and theatre | feature | queued | Two original arcade cabinet games, a movie theatre with neighbours. |

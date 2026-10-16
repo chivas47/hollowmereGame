@@ -303,6 +303,8 @@ const FRONT = {
   tavern:    { wall: '#8a5a32', line: '#6e4626', roof: '#7a2f2a', door: '#3f2f22' },   // v47
   clinic:    { wall: '#eef2f4', line: '#d0d8dc', roof: '#4f7a9a', door: '#5a6a7a' },
   hall:      { wall: '#d9c9a6', line: '#c0ae86', roof: '#5a4a6a', door: '#5c371e' },   // v53
+  oasis:     { wall: '#e8cf9a', line: '#d0b47a', roof: '#3f8a8a', door: '#6e4626' },   // v64: the dunes
+  casino:    { wall: '#5a3a5a', line: '#4a2e4a', roof: '#c9a43a', door: '#2b211a' },
 };
 function storefront(g, p, o) {
   const X = o.x * T, Y = o.y * T, f = FRONT[o.kind];
@@ -323,6 +325,8 @@ function storefront(g, p, o) {
   if (o.kind === 'tavern') { r(g, X + 21, Y + 12, 5, 4, '#e9b44c'); r(g, X + 21, Y + 12, 5, 1, '#f4ead2'); r(g, X + 26, Y + 13, 2, 2, '#e9b44c');
     r(g, X + 3, Y + 26, 2, 4, '#2b211a'); r(g, X + 2, Y + 24, 4, 3, '#e9b44c'); }
   if (o.kind === 'hall') { r(g, X + 22, Y + 12, 4, 4, '#e9b44c'); r(g, X + 23, Y + 13, 2, 2, '#5c371e'); r(g, X + 23, Y - 10, 2, 8, '#6b5a48'); r(g, X + 25, Y - 10, 5, 3, '#c0443a'); }
+  if (o.kind === 'oasis') { r(g, X + 19, Y + 13, 3, 2, '#7fbf5a'); r(g, X + 23, Y + 13, 3, 2, '#c0445a'); r(g, X + 27, Y + 13, 2, 2, '#f2d14a'); }
+  if (o.kind === 'casino') { for (let i = 0; i < 5; i++) r(g, X + 18 + i * 3, Y + 13, 2, 2, i % 2 ? '#e9b44c' : '#c0443a'); }
   if (o.kind === 'clinic') { r(g, X + 23, Y + 12, 2, 4, '#4f9a6a'); r(g, X + 22, Y + 13, 4, 2, '#4f9a6a'); }
 }
 

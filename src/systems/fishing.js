@@ -35,7 +35,7 @@ export function legendHere(ice, water = 'pond') {
     && (!f.rain || S.weather === 'rain' || S.weather === 'storm') && skillLevel('fishing') >= f.level && !S.legends.includes(k); }) || null;
 }
 // v43: which water a map holds: the Wilds pond, the sea at the beach, the river in the forest, the mountain lake.
-export const WATERS = { wilds: 'pond', beach: 'sea', forest: 'river', mountain: 'lake', grove: 'grove', sewer: 'sewer' };   // v44: the mountain lake
+export const WATERS = { wilds: 'pond', beach: 'sea', forest: 'river', mountain: 'lake', grove: 'grove', sewer: 'sewer', desert: 'desert' };   // v44: the mountain lake
 function pickFish(ice, water = 'pond') {
   const S = G.S, season = today().season, legend = legendHere(ice, water);
   if (legend && Math.random() < LEGEND_CHANCE) return legend;

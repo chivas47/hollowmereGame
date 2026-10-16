@@ -22,7 +22,7 @@
 // exits: "x,y" of an E tile -> where it leads.
 import { W, H } from '../core/constants.js';
 
-export const SOLID = new Set(['-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
+export const SOLID = new Set(['0', '1', '2', '3', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
 
 function emptyGrid() {
   return Array.from({ length: H }, (_, y) =>
@@ -147,6 +147,20 @@ function townGrid() {
   fill(m, 4, 1, 6, 2, 'V'); fill(m, 5, 3, 5, 7, 'P');        // v50: Pell's cottage
   fill(m, 18, 1, 20, 2, 'V'); fill(m, 19, 3, 20, 3, 'P'); fill(m, 20, 4, 20, 7, 'P');   // v50: Juno's cottage
   fill(m, 9, 1, 11, 2, '-'); fill(m, 8, 3, 10, 3, 'P'); fill(m, 8, 4, 8, 7, 'P');      // v53: the town hall
+  m[8][22] = 'P'; m[7][22] = '0';   // v64: the coach stop at the east end of the lane
+  return m;
+}
+
+// v64: the dunes, a coach ride from town once the old wing is restored. 0 the coach stop, 1 the Oasis, 2 the casino,
+// 3 the desert trader's table; a pond with desert fish.
+function desertGrid() {
+  const m = emptyGrid();
+  fill(m, 0, 0, W - 1, 0, 'T'); fill(m, 0, H - 1, W - 1, H - 1, 'T'); fill(m, 0, 0, 0, H - 1, 'T'); fill(m, W - 1, 0, W - 1, H - 1, 'T');
+  m[7][1] = '0'; fill(m, 1, 8, 20, 8, 'P');
+  fill(m, 4, 2, 6, 3, '1'); fill(m, 5, 4, 5, 7, 'P');
+  fill(m, 15, 2, 17, 3, '2'); fill(m, 16, 4, 16, 7, 'P');
+  m[10][12] = '3'; fill(m, 12, 9, 12, 9, 'P');
+  fill(m, 3, 11, 8, 13, 'O');
   return m;
 }
 
@@ -283,6 +297,11 @@ export const MAPS = {
     objects: [],
     exits: { '11,12': { to: 'farm', x: 8, y: 1, dir: 'down' } },
   },
+  desert: {   // v64
+    name: 'The Dunes', salt: 29, grid: desertGrid(), ground: 'z',
+    objects: [{ art: 'storefront', kind: 'oasis', x: 4, y: 2 }, { art: 'storefront', kind: 'casino', x: 15, y: 2 }, { art: 'board', x: 1, y: 7 }, { art: 'table', x: 12, y: 10 }],
+    exits: {},
+  },
   beach: {
     name: 'Saltreach Beach', salt: 41, grid: beachGrid(), objects: [], ground: 'z',
     exits: { '11,0': { to: 'village', x: 11, y: 14, dir: 'up' } },
@@ -301,7 +320,7 @@ export const MAPS = {
   },
   town: {
     name: 'Hollowmere Town', salt: 83, grid: townGrid(),
-    objects: [...Object.entries(SHOP_SPOTS).map(([kind, s]) => ({ art: 'storefront', kind, x: s.x, y: s.y })), { art: 'cottage', x: 13, y: 1, roof: '#7a4a8a' }, { art: 'cottage', x: 4, y: 1, roof: '#5f8fb5' }, { art: 'cottage', x: 18, y: 1, roof: '#a5432f' }, { art: 'storefront', kind: 'hall', x: 9, y: 1 }],
+    objects: [{ art: 'board', x: 22, y: 7 }, ...Object.entries(SHOP_SPOTS).map(([kind, s]) => ({ art: 'storefront', kind, x: s.x, y: s.y })), { art: 'cottage', x: 13, y: 1, roof: '#7a4a8a' }, { art: 'cottage', x: 4, y: 1, roof: '#5f8fb5' }, { art: 'cottage', x: 18, y: 1, roof: '#a5432f' }, { art: 'storefront', kind: 'hall', x: 9, y: 1 }],
     exits: { [`10,${H - 1}`]: { to: 'village', x: 10, y: 1, dir: 'down' } },
   },
   maze: {

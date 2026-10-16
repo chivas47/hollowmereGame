@@ -462,8 +462,8 @@ function simulate(runSeed) {
   function bestCrop(map) {
     const d = today(), left = 28 - d.d, s = S();
     const ok = map === 'greenhouse'
-      ? (k) => !CROPS[k].packet && (s.seeds[k] > 0 || CROPS[k].seasons.includes(d.season))
-      : (k) => !CROPS[k].packet && CROPS[k].seasons.includes(d.season) && CROPS[k].days <= left;
+      ? (k) => !CROPS[k].packet && !CROPS[k].shop && (s.seeds[k] > 0 || CROPS[k].seasons.includes(d.season))
+      : (k) => !CROPS[k].packet && !CROPS[k].shop && CROPS[k].seasons.includes(d.season) && CROPS[k].days <= left;   // v64: not the Oasis's seeds
     const span = map === 'greenhouse' ? 28 : left;
     return Object.keys(CROPS).filter(ok).sort((a, b) => perDay(b, span) - perDay(a, span))[0] || null;
   }
