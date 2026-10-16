@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v60: The old wing
+- The town hall's old wing can be restored: five rooms of bundles to fill with crops, forage, fish, minerals and gold. Each bundle leaves a reward, each room 5,000g, and restoring them all will reopen the coach road and the harbour.
+- Or join Ashgrove Trading Co. for 5,000g and buy each room outright, giving up the bundles and their rewards.
+
 ## v59: The Grange Fair
 - A new autumn festival on Autumn 16: set out a display of up to nine things from your bag. The judges like variety, quality and value; first prize is 1,000g, and everything comes back to you after the judging.
 

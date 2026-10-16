@@ -661,6 +661,20 @@ One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up 
 
 Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (wide 3), water 2, clear withered crop 1, cast 8, pickaxe 2, axe 2 a swing. Cutting weeds with the sword is free (Stardew's scythe). Warm cider restores 60.
 
+## The old wing (v60)
+
+Behind the clerk's desk at the town hall (open 9:00 am to 5:00 pm), "The old wing" opens five rooms of bundles: Stardew's Community Center, scaled from six rooms and 30 bundles to five and 19. A bundle takes one of each item listed (or the amounts given); items can be given a few at a time. A finished bundle leaves its reward; a finished room adds 5,000g. When every room is restored, the coach road and the harbour reopen (`G.S.restore.done`), the way to item 27.
+
+| Room | Bundles (items) | Rewards (Stardew's in brackets) |
+|---|---|---|
+| The larder | Spring crops (turnip, lettuce, fava bean, carrot); summer crops (cherry tomato, sweet pepper, radish, melon); autumn crops (sweet corn, celeriac, pumpkin, red onion); farmyard (milk, egg, wool, duck egg) | 20 growth tonic (20 speed-gro); iron sprinkler (quality sprinkler); bee box (bee house); cheese vat (cheese press) |
+| The workroom | Spring, summer, autumn and winter forage (3 or 4 each); construction (99 wood, 99 stone, 10 hardwood) | 30 wild seeds of the season each (the same); charcoal kiln (the same) |
+| The fish tank | River fish, sea fish, lake fish (4 each); prize fish (golden carp, lantern koi, spiny blowfish) | 30 bait, a spinner (5 dressed spinners), 30 bait, 15 bait (a dish o' the sea) |
+| The boiler room | Blacksmith (copper, iron, gold bar); geologist (Hollow quartz, Hollow amber, frost tear, cinder shard); adventurer (99 slime gel, 10 coal) | furnace (the same); 5 geodes (5 omni geodes); 5 great bombs (a magnet ring) |
+| The vault | 2,500g, 5,000g, 10,000g, 25,000g | 3 honey cakes (3 chocolate cakes), 30 rich soil booster (30 quality fertilizer), lightning rod (the same), gem copier (crystalarium) |
+
+Ashgrove Trading Co. (Stardew's Joja route): a 5,000g membership closes the bundles for good, then each room is rebuilt for gold with no bundle rewards: the boiler room 15,000g, the fish tank 20,000g, the workroom 25,000g, the larder 35,000g, the vault 40,000g (Stardew: minecarts, panning, bridge, greenhouse, bus).
+
 ## Quality and fertilizer
 
 | Tier | Price | Colour |
@@ -776,6 +790,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 Balance warnings from tools/balance.mjs are information only since v11: values follow the Stardew scale instead of being tuned to the checks. Latest run (strategy full, 2 years, 5 runs, v12): about 989,000g at the end (+40% from the greenhouse); crops are 55% of income; the greenhouse is bought around Summer 16 of year 1.
 
+- v60: the old wing's rooms give items and gold; restoring them all only sets `G.S.restore.done`, which item 27 (the desert bus and the island boat) will use. Stardew's room unlocks (greenhouse, quarry bridge, minecarts) already exist here from the start or for gold, so Nuno chose new rewards over moving them. In the simulator the bot keeps bundle items back from shipping, plants one tile of each crop a bundle needs, gives on a walk to the hall and pays the vault from spare gold; it never fishes the sea or lake or digs cinder shards, so it rarely finishes the fish tank or the boiler room. Reward machines it places take farm space, so more buildings are skipped for lack of room.
 - Sprinklers make watering free once you have the ore. That is intended, but it removes a daily energy cost; watch whether energy still matters by mid-summer.
 - Hotbar changed in v8: crops moved from keys 6 to 9 into one seed slot on key 6. Old saves keep the crop they had selected. v9 adds slot 7 (kit) at the end, so no key moved.
 - Winter crops only grow in the greenhouse; outdoors winter has 2 forage items, 5 pond fish and 2 ice-hole fish.

@@ -71,7 +71,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['layouts', 'sites', 'professions', 'cooking', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots', 'areas', 'quarry', 'hidden', 'town', 'mail'];
+  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots', 'areas', 'quarry', 'hidden', 'town', 'mail', 'restoration'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -125,6 +125,8 @@ const BAR_ORE = { copperbar: 'copper', ironbar: 'iron' };
 const { pickUp } = await load('systems/placeables.js');
 const { accepted, loadMachine, collectMachine } = await load('systems/artisan.js');
 const { canDeliver, deliver } = await load('systems/quests.js');
+const { BUNDLES, stillNeeds, bundleDone, donate, payVault } = await load('systems/restoration.js');
+const { HALL } = await load('data/family.js');
 const { festivalToday, festivalOpen, contestItems, enterContest, nextFestival, grangeItems, grangeKind, judgeGrange } = await load('systems/festivals.js');
 const { MINE, enterMine, leaveMine, checkpoints } = await load('systems/mine.js');
 const { skillLevel } = await load('systems/skills.js');
@@ -227,7 +229,7 @@ function simulate(runSeed) {
   for (const k of Object.keys(BARN.tools)) GOAL[k] = { cost: () => BARN.tools[k].cost, needs: () => ({}), ok: () => !S().ranch[k], buy: () => track('upgrades', () => buyTool(k)) };
   for (const [k, s] of Object.entries(SITES).filter(([, x]) => x.placed)) {
     GOAL[k] = { shop: 'carpenter', cost: () => s.def.cost, needs: () => s.def.needs, ok: () => !S().built[k],
-      site: true, buy: () => track('buildings', () => { const at = botSite(k); return !!at && siteAt(k, 'new', at.x, at.y); }) };
+      site: true, buy: () => track('buildings', () => { const at = botSite(k); if (!at) GOAL[k].noSite = true; return !!at && siteAt(k, 'new', at.x, at.y); }) };
   }
   GOAL.grassstarter = { shop: 'store', cost: () => SUPPLIES.grassstarter, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply('grassstarter', 1)) };
   for (const k of Object.keys(PROJECTS)) GOAL[k] = { cost: () => PROJECTS[k].cost, needs: () => PROJECTS[k].needs, ok: () => !funded(k), buy: () => track('projects', () => fundProject(k)) };
@@ -268,7 +270,11 @@ function simulate(runSeed) {
       if (g.wait?.()) return;
       // A full farm: no spot left for this building, so the list moves on before any material is gathered for it.
       if (g.site && !siteExists(key)) { log.skipped.push({ goal: key, day: S().day }); goals.shift(); continue; }
-      if (!affordable(g.cost() + reserve, g.needs()) || (g.shop && !goShop(g.shop)) || !g.buy()) return;
+      if (!affordable(g.cost() + reserve, g.needs()) || (g.shop && !goShop(g.shop))) return;
+      if (!g.buy()) {   // a spot that looked clearable but is not (a placed machine in the way): skipped too
+        if (g.noSite) { log.skipped.push({ goal: key, day: S().day }); goals.shift(); continue; }
+        return;
+      }
       log.purchases.push({ goal: key, day: S().day });
       goals.shift();
     }
@@ -444,8 +450,22 @@ function simulate(runSeed) {
     const span = map === 'greenhouse' ? 28 : left;
     return Object.keys(CROPS).filter(ok).sort((a, b) => perDay(b, span) - perDay(a, span))[0] || null;
   }
+  // v60: a crop an open bundle still needs, in season, not in the bag and not already growing: one tile of it.
+  function bundleCrop(map) {
+    if (map !== 'farm') return null;
+    const s = S(), d = today(), left = 28 - d.d;
+    const growing = new Set(Object.values(s.soil).map((t) => t.crop?.type).filter(Boolean));
+    for (const key of Object.keys(BUNDLES)) {
+      if (bundleDone(key)) continue;
+      for (const k of Object.keys(stillNeeds(key))) {
+        const c = CROPS[k];
+        if (c && c.seasons.includes(d.season) && c.days <= left && !(s.bag[k] > 0) && !growing.has(k)) return k;
+      }
+    }
+    return null;
+  }
   function plant(map, x, y) {
-    const s = S(), crop = bestCrop(map);
+    const s = S(), crop = bundleCrop(map) || bestCrop(map);
     if (!crop) return false;
     // Spread rich soil booster first once the farm can afford it (it stays in the soil).
     const t = tile(map, x, y);
@@ -661,8 +681,27 @@ function simulate(runSeed) {
     }
   }
 
+  // v60: the town hall's old wing. Bundle items are kept back from shipping and given on a walk to the hall while it
+  // is open; materials only when the next purchase can spare them. Vault bundles are paid from spare gold.
+  function restoreTrip() {
+    const s = S(), goalNeeds = GOAL[goals[0]]?.needs?.() || {};
+    if (s.time >= HALL.close) return;
+    const gifts = [];
+    for (const key of Object.keys(BUNDLES)) {
+      if (bundleDone(key)) continue;
+      for (const [k, n] of Object.entries(stillNeeds(key))) if ((s.bag[k] || 0) - (ITEMS[k]?.material ? goalNeeds[k] || 0 : 0) >= (ITEMS[k]?.material ? n : 1)) gifts.push([key, k]);
+    }
+    const vault = Object.values(BUNDLES).filter((b) => b.gold && !bundleDone(b.key) && s.gold > b.gold * 4 + (GOAL[goals[0]]?.cost?.() || 0));
+    if (!gifts.length && !vault.length) return;
+    if (tripDay !== s.day) { tripDay = s.day; spend(TIME.travel * 2); }
+    if (s.time < HALL.open) s.time = HALL.open;
+    for (const [key, k] of gifts) track('restoration', () => donate(key, k));
+    for (const b of vault) track('restoration', () => payVault(b.key));
+  }
+
   function reserves() {
     const s = S(), out = {};
+    for (const key of Object.keys(BUNDLES)) if (!bundleDone(key)) for (const [k, n] of Object.entries(stillNeeds(key))) if (!ITEMS[k]?.material) out[k] = Math.max(out[k] || 0, n);
     s.quests.forEach((q) => { out[q.item] = (out[q.item] || 0) + q.n; });
     for (const [k, n] of Object.entries(GOAL[goals[0]]?.needs?.() || {})) if (k in CROPS) out[k] = (out[k] || 0) + n;
     for (const k of GEODES) if (s.bag[k]) out[k] = s.bag[k];   // v46: kept for the smithy's morning trip
@@ -706,6 +745,7 @@ function simulate(runSeed) {
     farm('farm', false);
     if (greenhouseBuilt()) { spend(TIME.travel); farm('greenhouse', false); }
     village();
+    restoreTrip();
     reserved = reserves();
     forage();
     layoutChores();
