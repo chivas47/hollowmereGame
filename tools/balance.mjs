@@ -71,7 +71,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['layouts', 'sites', 'professions', 'cooking', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots', 'areas', 'quarry', 'hidden', 'town', 'mail', 'restoration', 'orders'];
+  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots', 'areas', 'quarry', 'hidden', 'town', 'mail', 'restoration', 'orders', 'challenges'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -126,6 +126,8 @@ const { pickUp } = await load('systems/placeables.js');
 const { accepted, loadMachine, collectMachine } = await load('systems/artisan.js');
 const { canDeliver, deliver } = await load('systems/quests.js');
 const { ordersOpen, orderItems, takeOrder, handIn } = await load('systems/orders.js');
+const { sableHere, challengeItems, takeChallenge, handInChallenge, buyMoon } = await load('systems/challenges.js');
+const { CHALLENGES } = await load('data/challenges.js');
 const { ORDERS } = await load('data/orders.js');
 const { BUNDLES, stillNeeds, bundleDone, donate, payVault } = await load('systems/restoration.js');
 const { HALL } = await load('data/family.js');
@@ -471,7 +473,8 @@ function simulate(runSeed) {
     if (!crop) return false;
     // Spread rich soil booster first once the farm can afford it (it stays in the soil).
     const t = tile(map, x, y);
-    if (t && !t.fert && s.gold > 3000 && (s.kit.booster2 > 0 || (goShop('store') && track('fertilizer', () => buySupply('booster2', 1))))) { s.kitSel = 'booster2'; use(map, x, y, 'kit'); }
+    if (t && !t.fert && s.kit.booster3 > 0) { s.kitSel = 'booster3'; use(map, x, y, 'kit'); }   // v62: Sable's heirloom boosters first
+    else if (t && !t.fert && s.gold > 3000 && (s.kit.booster2 > 0 || (goShop('store') && track('fertilizer', () => buySupply('booster2', 1))))) { s.kitSel = 'booster2'; use(map, x, y, 'kit'); }
     if (s.seeds[crop] <= 0 && !(goShop('store') && track('seeds', () => buy(crop, 1)))) return false;
     s.seedSel = crop; use(map, x, y, 'seeds');
     return !!tile(map, x, y)?.crop;
@@ -675,6 +678,17 @@ function simulate(runSeed) {
     for (const it of items) if (s.orders.active) track('orders', () => handIn(it));
     return items.length > 0;
   }
+  // v62: Sable's challenges, the same way (they pay moonstones, which the bot keeps; it buys nothing with them).
+  const bagOf = (items) => items.reduce((a, it) => a + S().bag[it], 0);
+  function challenges() {
+    const s = S(), c = s.challenge;
+    if (!sableHere() || !openToday('tavern') || s.time >= SHOPS.tavern.close) return;
+    if (!c.active) { const k = c.offer.find((key) => bagOf(challengeItems(key)) * 3 >= CHALLENGES[key].n); if (!k) return; takeChallenge(k); }
+    if (!challengeItems(c.active.key).length) return;
+    if (tripDay !== s.day) { tripDay = s.day; spend(TIME.travel * 2); }
+    for (const it of challengeItems(c.active.key)) if (c.active) handInChallenge(it);
+    while (c.gems >= 2 && buyMoon('booster3'));   // moonstones become heirloom boosters for the field
+  }
   function village() {
     const s = S(), f = festivalToday(), ready = s.quests.filter(canDeliver);
     const contest = f && ((f.kind === 'contest' && contestItems(f).length) || (f.kind === 'grange' && grangeItems().length)) && !s.festivals[`${f.key}-${today().year}`];
@@ -720,6 +734,7 @@ function simulate(runSeed) {
   function reserves() {
     const s = S(), out = {};
     if (s.orders.active) for (const it of orderItems(s.orders.active.key)) out[it] = s.bag[it];   // v61: kept for the order
+    if (s.challenge.active) for (const it of challengeItems(s.challenge.active.key)) out[it] = s.bag[it];   // v62: and for Sable
     for (const key of Object.keys(BUNDLES)) if (!bundleDone(key)) for (const [k, n] of Object.entries(stillNeeds(key))) if (!ITEMS[k]?.material) out[k] = Math.max(out[k] || 0, n);
     s.quests.forEach((q) => { out[q.item] = (out[q.item] || 0) + q.n; });
     for (const [k, n] of Object.entries(GOAL[goals[0]]?.needs?.() || {})) if (k in CROPS) out[k] = (out[k] || 0) + n;
@@ -765,6 +780,7 @@ function simulate(runSeed) {
     if (greenhouseBuilt()) { spend(TIME.travel); farm('greenhouse', false); }
     village();
     restoreTrip();
+    challenges();
     reserved = reserves();
     forage();
     layoutChores();

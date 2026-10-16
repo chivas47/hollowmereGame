@@ -661,6 +661,21 @@ One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up 
 
 Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (wide 3), water 2, clear withered crop 1, cast 8, pickaxe 2, axe 2 a swing. Cutting weeds with the sword is free (Stardew's scythe). Warm cider restores 60.
 
+## Sable's challenges (v62)
+
+From Spring 1 of the second year, a stranger called Sable sits in the corner of the Lantern (12:00 pm to midnight): Stardew's Mr. Qi. Each week he offers two challenges, harder and longer than the board's orders, paid in moonstones, a currency only he takes (Stardew's Qi gems; Nuno chose a new currency here).
+
+| Challenge | Asks (any of the kind) | Days | Moonstones |
+|---|---|---|---|
+| A mountain of produce | 200 crops | 14 | 15 |
+| The full net | 50 fish | 14 | 10 |
+| A gem for every finger | 20 gems | 14 | 15 |
+| The artisan's trial | 50 artisan goods | 14 | 20 |
+| A banquet for strangers | 20 dishes | 14 | 25 |
+| The orchard's whole crop | 100 fruit | 14 | 10 |
+
+The moonstone shop: 10 heirloom boosters 2, 10 strong growth tonics 2, 30 bait 5, 10 great bombs 5, a gem copier 15, Sable's mask (a hat, once) 25 (Stardew's Qi gem shop by role: deluxe fertilizer, hyper speed-gro, magic bait, a cask, his own hat).
+
 ## Special orders (v61)
 
 From Autumn 1 of the first year the quest board also posts special orders (Stardew's special orders board, from Fall 2). Each Monday two are offered; take one at a time and hand in what it asks for before it runs out, a few at a time if you like. A finished order pays its gold and 100 friendship points (one heart) with the villager who asked; a missed one simply lapses.
@@ -807,6 +822,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 Balance warnings from tools/balance.mjs are information only since v11: values follow the Stardew scale instead of being tuned to the checks. Latest run (strategy full, 2 years, 5 runs, v12): about 989,000g at the end (+40% from the greenhouse); crops are 55% of income; the greenhouse is bought around Summer 16 of year 1.
 
+- v62: in the simulator the bot takes Sable's challenges when its bag holds a third of one and spends its moonstones on heirloom boosters, but by the second year its field already holds rich boosters (they stay in the soil), so the moonstones buy it nothing: the challenges cost it about 3% of its gold (crops handed in instead of sold). That is the trade a player makes for the shop's rare items.
 - v61: orders pay gold and a heart rather than Stardew's mix of gold, recipes and items; the friendship is our choice. Fixed in v61: since v49 a request from one of the twelve later villagers (no note text) crashed the quest board; they all have notes now, with a fallback line for any new villager. In the simulator the bot takes an order when its bag already holds a third of it, keeps those items back from shipping and hands them in at the board.
 - v60: the old wing's rooms give items and gold; restoring them all only sets `G.S.restore.done`, which item 27 (the desert bus and the island boat) will use. Stardew's room unlocks (greenhouse, quarry bridge, minecarts) already exist here from the start or for gold, so Nuno chose new rewards over moving them. In the simulator the bot keeps bundle items back from shipping, plants one tile of each crop a bundle needs, gives on a walk to the hall and pays the vault from spare gold; it never fishes the sea or lake or digs cinder shards, so it rarely finishes the fish tank or the boiler room. Reward machines it places take farm space, so more buildings are skipped for lack of room.
 - Sprinklers make watering free once you have the ore. That is intended, but it removes a daily energy cost; watch whether energy still matters by mid-summer.

@@ -34,6 +34,7 @@ src/
     family.js         CHILD, CHILD_NAMES, DIVORCE, ROOMMATE, HALL, the shadow lantern (v53)
     restoration.js    ROOMS and their bundles, ROOM_GOLD, RIVAL (v60)
     orders.js         ORDERS, ORDER_POINTS, ORDERS_FROM, ORDERS_OFFERED (v61)
+    challenges.js     CHALLENGES, CHALLENGE_FROM, MOON_SHOP (v62)
     romance.js        CANDIDATES, HEART_CAP, BOUQUET, JEALOUSY, DATE_LINES, the bouquet item (v51); PENDANT, WEDDING_DAYS, SPOUSE_CAP, CHORE_CHANCE, SPOUSE_LINES, the pendant (v52)
     gifts.js          GIFT_POINTS, BIRTHDAY_MULT, UNIVERSAL tastes, TIER_NAMES (v48)
     mail.js           LETTERS (when, text, attach), MAILBOX (v48)
@@ -81,6 +82,7 @@ src/
     npcs.js           schedules across farm and village, talk, gifts, hearts, 3-heart rewards, heart scenes
     upgrades.js       smithy and carpentry purchases, material costs, recalcStats()
     family.js         children (G.S.children, G.S.baby, G.S.childAsk), growing up, hugs; divorce at the town hall (v53)
+    challenges.js     Sable in the Lantern: challenges, moonstones (G.S.challenge), buyMoon() (v62)
     orders.js         special orders on the quest board: the weekly offer, takeOrder(), handIn() (G.S.orders) (v61)
     restoration.js    the town hall's old wing: donate(), payVault(), joinRival(), buyRoom() (G.S.restore) (v60)
     marriage.js       the old boatman and the pendant, the wedding (G.S.wedding, G.S.spouse), the spouse's morning chores (v52)
@@ -125,7 +127,7 @@ src/
     clothing.js       sewing machine, dye pots and mannequin dialogs; the wardrobe in the bag
     creation.js       the new game screen (opens when G.S.profile is null)
     trader.js         the sewer trader's dialog (v45)
-    town.js           the tavern, clinic and phone dialogs (v47)
+    town.js           the tavern, clinic and phone dialogs (v47); Sable's table (ui:sable, v62)
     family.js         naming a newborn, the town hall dialog (v53)
     restoration.js    the old wing's bundles and the rival's offer (ui:restore, v60)
     social.js         the social menu (F, or a click on the neighbours panel) and letters (v48)

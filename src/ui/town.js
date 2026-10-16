@@ -10,6 +10,8 @@ import { isOpen, openToday, special, dishPrice, buyDish, buyClinic } from '../sy
 import { knows, buyRecipe } from '../systems/cooking.js';
 import { PENDANT, BOATMAN } from '../data/romance.js';
 import { buyPendant } from '../systems/marriage.js';
+import { CHALLENGES, MOON_SHOP } from '../data/challenges.js';
+import { sableHere, challengeLeft, challengeItems, takeChallenge, handInChallenge, buyMoon } from '../systems/challenges.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
 
@@ -22,7 +24,22 @@ function tavern() {
   const recipes = Object.entries(DISHES).filter(([, d]) => d.from?.tavern).map(([k, d]) => row(`${d.name} recipe`, `${g(d.from.tavern)}.${knows(k) ? ' You know it.' : ''}`,
     `<button data-recipe="${k}" ${knows(k) || S.gold < d.from.tavern ? 'disabled' : ''}>Buy</button>`)).join('');
   openModal(`<h2>${SHOPS.tavern.name}</h2><p class="role">${SHOPS.tavern.keeper} polishes a mug. "Sit, eat. Today's special is the ${DISHES[sp].name.toLowerCase()}." You have <b>${g(S.gold)}</b>.</p>
-    <h3>Menu</h3>${TAVERN.menu.map(dish).join('')}<h3>Dish of the day</h3>${dish(sp)}<h3>Recipes</h3>${recipes}`, [['Leave', closeModal, true]]);
+    <h3>Menu</h3>${TAVERN.menu.map(dish).join('')}<h3>Dish of the day</h3>${dish(sp)}<h3>Recipes</h3>${recipes}`, sableHere() ? [['The stranger in the corner', sable], ['Leave', closeModal, true]] : [['Leave', closeModal, true]]);
+}
+
+// v62: Sable, his challenges and his moonstone shop.
+function sable() {
+  const S = G.S, c = S.challenge, a = c.active;
+  const what = (ch) => `${ch.n} ${ch.kind === 'mineral' ? 'gem' : ch.kind} items, any kind, in ${ch.days} days`;
+  let html = `<h2>Sable</h2><p class="role">A stranger in a grey coat, a cup of something dark in front of him. "You look like someone who finishes things. Let us see." You have <b>${c.gems} moonstone${c.gems === 1 ? '' : 's'}</b>.</p><h3>Challenges</h3>`;
+  if (a) {
+    const ch = CHALLENGES[a.key], left = a.due - S.day;
+    html += row(ch.name, `"${ch.text}" ${a.given} of ${ch.n}. ${left ? `${left + 1} days left` : 'Last day'}. Pays ${ch.gems} moonstones.`, '')
+      + (challengeItems(a.key).map((k) => row(ITEMS[k].name, `You have ${S.bag[k]}.`, `<button data-chand="${k}">Hand in ${Math.min(S.bag[k], challengeLeft())}</button>`)).join('') || '<p class="role">Nothing in your bag for this challenge.</p>');
+  }
+  html += c.offer.map((k) => { const ch = CHALLENGES[k]; return row(ch.name, `${what(ch)}. Pays ${ch.gems} moonstones.`, `<button data-chal="${k}" ${a ? 'disabled' : ''}>Accept</button>`); }).join('') || '<p class="role">"Come back next week."</p>';
+  html += '<h3>Moonstone shop</h3>' + MOON_SHOP.map((o) => { const owned = o.once && c.bought.includes(o.key); return row(o.label, owned ? 'You have it.' : `${o.gems} moonstones.`, `<button data-moon="${o.key}" ${owned || c.gems < o.gems ? 'disabled' : ''}>Buy</button>`); }).join('');
+  openModal(html, [['Back', tavern], ['Leave', closeModal, true]]);
 }
 
 function clinic() {
@@ -45,6 +62,7 @@ function phone() {
 }
 
 on('ui:tavern', tavern);
+on('ui:sable', sable);
 on('ui:clinic', clinic);
 on('ui:phone', phone);
 
@@ -67,3 +85,9 @@ function boatman() {
 }
 on('ui:boatman', boatman);
 $('#mbody').addEventListener('click', (e) => { const b = e.target.closest('[data-pendant]'); if (b && !b.disabled && buyPendant()) boatman(); });
+$('#mbody').addEventListener('click', (e) => {   // v62: Sable
+  const ch = e.target.closest('[data-chal]'), hd = e.target.closest('[data-chand]'), mn = e.target.closest('[data-moon]');
+  if (ch && !ch.disabled) { if (takeChallenge(ch.dataset.chal)) sable(); return; }
+  if (hd) { handInChallenge(hd.dataset.chand); sable(); return; }
+  if (mn && !mn.disabled) { buyMoon(mn.dataset.moon); sable(); }
+});
