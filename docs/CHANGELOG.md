@@ -2,6 +2,9 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v62: Sable
+- From the second year, a stranger called Sable sits in the corner of the Lantern. He sets hard two-week challenges and pays in moonstones, which only his shop takes: heirloom boosters, strong growth tonic, bait, great bombs, a gem copier and a mask of his own.
+
 ## v61: Special orders
 - From the first autumn, the quest board posts two special orders every Monday: bigger requests from the villagers, with a week or two to fill them. Take one at a time; it pays 1,200g to 2,500g and earns a heart with whoever asked.
 - Fixed: the quest board could fail to open when one of the newer villagers had posted a request.

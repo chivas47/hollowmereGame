@@ -62,8 +62,8 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 25f | Festival calendar: grange fair | feature | done (chivas47/hollowmereGame#55) | Autumn: a display of nine items judged for variety, quality and value, with gold prizes (Stardew's Fair grange display; Nuno: gold, not tokens). |
 | 26a | Town restoration: bundles and the rival | feature | done (chivas47/hollowmereGame#56) | The town hall's old wing: five rooms of bundles with item and gold rewards, or Ashgrove Trading Co. buying each room (Stardew's Community Center and Joja). Restoring it all sets the flag item 27 needs. |
 | 26b | Town restoration: special orders board | feature | done (chivas47/hollowmereGame#57) | Timed orders from villagers with bigger rewards (Stardew's special orders). |
-| 26c | Town restoration: the challenge-giver | feature | next | Hard orders paid in a gem currency, spent at a gem shop (Stardew's Mr. Qi and Qi gems; Nuno chose the currency). |
-| 27 | Desert and island | feature | queued | A bus to the desert (shop, casino, desert fishing), a boat to a tropical island (island farm, a collectible nut currency, island trader, dig site, island dungeon, hidden puzzles). |
+| 26c | Town restoration: the challenge-giver | feature | done (PR_LINK) | Hard orders paid in a gem currency, spent at a gem shop (Stardew's Mr. Qi and Qi gems; Nuno chose the currency). |
+| 27 | Desert and island | feature | next | A bus to the desert (shop, casino, desert fishing), a boat to a tropical island (island farm, a collectible nut currency, island trader, dig site, island dungeon, hidden puzzles). |
 | 28 | Museum and collections | feature | queued | Artifacts and minerals, geodes, museum donations with rewards, collections menu, secret notes, achievements, a completion tracker. |
 | 29 | Economy extras | feature | queued | Travelling cart, bookseller, an expanding critter shop, prize tickets and a prize machine, mystery boxes. |
 | 30 | Minigames and theatre | feature | queued | Two original arcade cabinet games, a movie theatre with neighbours. |
