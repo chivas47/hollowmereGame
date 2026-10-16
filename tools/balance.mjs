@@ -40,13 +40,14 @@ const ORCHARD = ['figtree', 'peartree', 'nectarinetree', 'persimmontree', 'plumt
 // What the bot saves up for, in order. Upgrade lines (can, hoe, rod, house) buy their next tier.
 const STRATEGIES = {
   full: ['furnace', 'can', 'coop', 'grassstarter', 'grassstarter', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'kiln', 'house',
-    'barn', 'pail', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'silo', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, 'stable', 'lodge:club', 'bigcoop', 'duck', 'duck', 'duck', 'duck', ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'pick', 'rod', 'can', 'pick',
-    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'shed', 'pond', 'crabpot', 'crabpot', 'house',
+    'barn', 'pail', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'silo', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', 'shed', ...ORCHARD, 'stable', 'lodge:club', 'bigcoop', 'duck', 'duck', 'duck', 'duck', ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'pick', 'rod', 'can', 'pick',
+    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'pond', 'crabpot', 'crabpot', 'house',
     'brewbarrel', 'brewbarrel', 'eggpress', 'beebox', 'beebox', 'dryer', 'smoker', 'mushroomlog',   // wood-hungry, so last
     // v28: more livestock. The big coop comes in year one like a player's; the rest take hundreds of wood, so they come last.
     'bigbarn', 'cow', 'cow', 'goat', 'goat',
     'deluxecoop', 'rabbit', 'rabbit', 'deluxebarn', 'shears', 'sheep', 'sheep', 'pig', 'pig',
-    // v30: the mill needs cloth, so a loom comes first (the shed is earlier). The bot picks the first free spot from the bottom right.
+    // v30: the mill needs cloth, so a loom comes first. v63: the shed comes right after the greenhouse, so machines go
+    // inside it and the farm keeps room for buildings. The bot picks the first free spot from the bottom right.
     'lodge:saber', 'lodge:cutlass',   // v37: the lodge's weapons, skipped if the bot has not been deep enough
     'loom', 'mill', 'helperhut'],   // the hut's 100 fiber come slowly from weeds
   crops: ['furnace', 'can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
@@ -184,6 +185,8 @@ const TREE_SLOTS = [[8, 12], [10, 12], [12, 12], [9, 14], [11, 14], [13, 14]];  
 const MACHINE_SLOTS = []; for (let y = 5; y <= 9; y++) for (let x = 1; x <= 5; x++) MACHINE_SLOTS.push([x, y]);
 // v58: when the corner is full (or buildings wall its last tiles in), machines go along the farm's bottom edge, clear of the field.
 const SPARE_SLOTS = []; for (let x = 15; x <= 21; x++) SPARE_SLOTS.push([x, 13]);
+// Inside the shed (v30 shed map, floor x 4-19, y 3-11): rows of machines with walkways between and the door column free.
+const SHED_SLOTS = []; for (const y of [4, 6, 8, 10]) for (let x = 5; x <= 18; x++) if (x !== 11) SHED_SLOTS.push([x, y]);
 
 // ---- One simulated run ----
 function simulate(runSeed) {
@@ -233,7 +236,7 @@ function simulate(runSeed) {
   for (const k of Object.keys(BARN.tools)) GOAL[k] = { cost: () => BARN.tools[k].cost, needs: () => ({}), ok: () => !S().ranch[k], buy: () => track('upgrades', () => buyTool(k)) };
   for (const [k, s] of Object.entries(SITES).filter(([, x]) => x.placed)) {
     GOAL[k] = { shop: 'carpenter', cost: () => s.def.cost, needs: () => s.def.needs, ok: () => !S().built[k],
-      site: true, buy: () => track('buildings', () => { const at = botSite(k); if (!at) GOAL[k].noSite = true; return !!at && siteAt(k, 'new', at.x, at.y); }) };
+      site: true, buy: () => track('buildings', () => { const at = botSite(k); GOAL[k].noSite = !at; return !!at && siteAt(k, 'new', at.x, at.y); }) };
   }
   GOAL.grassstarter = { shop: 'store', cost: () => SUPPLIES.grassstarter, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply('grassstarter', 1)) };
   for (const k of Object.keys(PROJECTS)) GOAL[k] = { cost: () => PROJECTS[k].cost, needs: () => PROJECTS[k].needs, ok: () => !funded(k), buy: () => track('projects', () => fundProject(k)) };
@@ -308,7 +311,7 @@ function simulate(runSeed) {
       for (let ty = y; ty < y + h; ty++) for (let tx = x; tx < x + w; tx++) clear('farm', tx, ty);
       if (!noFit(k, x, y)) return { x, y };
     }
-    return null;
+    return findSite(k);   // clearing for one spot can free another
   }
 
   // Clears debris or a wild tree from a farm tile with the right tool. False if it cannot (yet).
@@ -345,8 +348,18 @@ function simulate(runSeed) {
         s.kitSel = kind; use('farm', x, y, 'kit');
       }
     }
+    // v63: once the shed stands, machines go inside it (lightning rods and the silo stay out), so the farm keeps
+    // its room for buildings. Before that, the corner and then the spare tiles.
+    const shed = S().built.shed === true;
     for (const kind of [...Object.keys(MACHINES), 'silo']) {
-      for (const [x, y] of [...MACHINE_SLOTS, ...SPARE_SLOTS]) {   // the spare tiles only once the corner is full or walled in
+      if (shed && kind !== 'lightningrod' && kind !== 'silo') {
+        for (const [x, y] of SHED_SLOTS) {
+          if (s.kit[kind] <= 0) break;
+          if (s.placed[`shed:${x},${y}`]) continue;
+          s.kitSel = kind; use('shed', x, y, 'kit');
+        }
+      }
+      for (const [x, y] of [...MACHINE_SLOTS, ...(shed ? [] : SPARE_SLOTS)]) {   // the spare tiles only once the corner is full or walled in
         if (s.kit[kind] <= 0) break;
         if (s.placed[`${x},${y}`] || !clear('farm', x, y)) continue;
         s.kitSel = kind; use('farm', x, y, 'kit');
