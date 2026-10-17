@@ -35,7 +35,7 @@ export function placePlayer(mapId, x, y, dir) {
 }
 
 // Maps with soil. Farm keys stay plain "x,y" so older saves keep working.
-export const soilOf = (mapId) => (mapId === 'farm' ? G.S.soil : mapId === 'greenhouse' ? G.S.greenSoil : null);
+export const soilOf = (mapId) => (mapId === 'farm' ? G.S.soil : mapId === 'greenhouse' ? G.S.greenSoil : mapId === 'island' ? G.S.islandSoil : null);   // v65: the island farm
 export const placeKey = (mapId, x, y) => (mapId === 'farm' ? `${x},${y}` : `${mapId}:${x},${y}`);
 export function parsePlaceKey(k) {
   const i = k.indexOf(':'), [x, y] = k.slice(i + 1).split(',').map(Number);

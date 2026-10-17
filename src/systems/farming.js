@@ -22,7 +22,7 @@ const ENERGY = { hoe: 2, wideHoe: 3, water: 2, clear: 1 };
 export const isRipe = (crop) => crop.age >= (crop.need || CROPS[crop.type].days);   // need: days after growth tonics
 const fertOf = (s) => (s?.fert ? PLACEABLES[s.fert] : null);
 
-// Soil lives on the farm and in the greenhouse; greenhouse crops ignore seasons.
+// Soil lives on the farm, in the greenhouse and on the island (v65); greenhouse and island crops ignore seasons.
 // Takes the ripe crop off a soil tile (a regrowing plant stays) and says what came off. Also used by the
 // helper hut (systems/helpers.js). Quality is rolled here.
 export function harvest(s) {
@@ -40,7 +40,7 @@ export function harvest(s) {
 addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
   const soil = soilOf(mapId);
   if (!soil || tile !== 'g') return false;
-  const S = G.S, key = `${tx},${ty}`, s = soil[key], indoors = mapId === 'greenhouse';
+  const S = G.S, key = `${tx},${ty}`, s = soil[key], indoors = mapId === 'greenhouse' || mapId === 'island';   // v65: the island ignores seasons too
   const seed = item === 'seeds' ? S.seedSel : null;
 
   if (s?.crop?.dead) {
@@ -93,7 +93,7 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
 });
 
 on('day:end', (report) => {
-  for (const s of [...Object.values(G.S.soil), ...Object.values(G.S.greenSoil)]) {
+  for (const s of [...Object.values(G.S.soil), ...Object.values(G.S.greenSoil), ...Object.values(G.S.islandSoil)]) {
     if (s.crop && !s.crop.dead && (s.w || CROPS[s.crop.type].dry) && !isRipe(s.crop)) { s.crop.age++; report.grown++; }
     const keep = fertOf(s)?.retain || 0;
     s.w = keep > 0 && Math.random() < keep;   // mulch can keep the soil damp
@@ -118,5 +118,5 @@ addLayer(10, (c) => {
 
 // Used by the debug panel.
 export function ripenAll() {
-  for (const s of [...Object.values(G.S.soil), ...Object.values(G.S.greenSoil)]) if (s.crop && !s.crop.dead) s.crop.age = s.crop.need || CROPS[s.crop.type].days;
+  for (const s of [...Object.values(G.S.soil), ...Object.values(G.S.greenSoil), ...Object.values(G.S.islandSoil)]) if (s.crop && !s.crop.dead) s.crop.age = s.crop.need || CROPS[s.crop.type].days;
 }

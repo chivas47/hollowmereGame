@@ -2,6 +2,9 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v65: The island
+- Rook's old boat, moored at the end of the beach pier, can be repaired with hardwood, umbrite bars and storm cells. Then Rook sails you to the island for 1,000g: a green shore where anything grows in any season.
+
 ## v64: The dunes
 - Once the old wing is restored, a coach runs from the east end of the town lane to the dunes (500g, the ride home is free). There: the Oasis with ruby stalk seeds you can't buy anywhere else, a trader who swaps one thing a day, two new fish in the oasis pond, and the Gilded Dune, a casino with a slot machine and a prize counter.
 
