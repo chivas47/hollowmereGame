@@ -10,6 +10,7 @@ import { SLIME } from '../data/minerals.js';
 import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL } from '../data/weapons.js';
 import { CAVERN } from '../data/cavern.js';
 import { VENT } from '../data/forge.js';
+import { PEAK } from '../data/nuts.js';
 import { ITEMS } from '../data/items.js';
 import { drawSlime, drawMonster } from '../render/sprites.js';
 import { solidAt } from './world.js';
@@ -33,9 +34,9 @@ function make(kind, floor, px, py, R) {
 on('mine:floor', ({ floor: n, rng: R, zone, eff: floor }) => {
   slimes.length = 0; slimeMap = 'mine';
   // v38: in the Sunken Cavern only its own monsters and those marked cavern, at the cavern's strength.
-  const cav = zone === 'cavern', vent = zone === 'vent', g = MAPS.mine.grid, D = MONSTERS;
+  const cav = zone === 'cavern', peak = zone === 'peak', vent = zone === 'vent' || peak, g = MAPS.mine.grid, D = MONSTERS;   // v67: the peak has the vent's monsters
   const kinds = Object.keys(D).filter((k) => (vent ? D[k].vent || D[k].ventOnly : cav ? D[k].cavern || D[k].cavernOnly : !D[k].cavernOnly && !D[k].ventOnly && floor >= D[k].from));
-  const count = vent ? (n >= VENT.floors ? 0 : VENT.monsters(n)) : cav ? CAVERN.monsters(n) : MONSTER_COUNT(floor);   // v39: the forge room is safe
+  const count = peak ? (n >= PEAK.floors ? 0 : PEAK.monsters(n)) : vent ? (n >= VENT.floors ? 0 : VENT.monsters(n)) : cav ? CAVERN.monsters(n) : MONSTER_COUNT(floor);   // v39: the forge room is safe
   for (let guard = 0; slimes.length < count && guard < 500; guard++) {
     const x = 1 + Math.floor(R() * (W - 2)), y = 1 + Math.floor(R() * (H - 2));
     if (g[y][x] !== 'f' || (x < 7 && y < 6)) continue;

@@ -16,26 +16,28 @@ import { GEODE_CHANCE, geodeFor } from '../data/guild.js';
 import { CAVERN, HOLLOW_GOLD } from '../data/cavern.js';
 import { VENT } from '../data/forge.js';
 import { tier } from '../data/upgrades.js';
+import { PEAK } from '../data/nuts.js';
 
 const ENTRANCE = { map: 'wilds', x: 12, y: 2, dir: 'down' };
 const SPAWN = { x: 2, y: 1 };          // ladder up sits just above, at (2, 0)
 const CHECKPOINT_EVERY = 5, PICK_ENERGY = 2;
 
-// zone: 'hollow' or 'cavern' (v38: the Sunken Cavern reuses the mine map); eff: the Hollow-floor strength of this floor.
+// zone: 'hollow', 'cavern' (v38: the Sunken Cavern reuses the mine map), 'vent' (v39) or 'peak' (v67); eff: the Hollow-floor strength of this floor.
 export const MINE = { floor: 0, rocks: {}, ladder: null, zone: 'hollow', eff: 0 };
 
 const solidGrid = () => Array.from({ length: H }, () => Array(W).fill('X'));
 MAPS.mine = { name: 'The Hollow', salt: 0, base: 'cave', grid: solidGrid(), objects: [], exits: {} };
 
 export function genFloor(n, zone = 'hollow') {
-  const cav = zone === 'cavern', vent = zone === 'vent', eff = vent ? VENT.eff(n) : cav ? CAVERN.eff(n) : n;
-  const R = rng(n * 7919 + G.S.day * 104729 + (vent ? 77777 : cav ? 31337 : 13)), g = solidGrid();
-  for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) g[y][x] = R() < (cav || vent ? 0.08 : 0.05) ? 'X' : vent && R() < VENT.lava ? '~' : 'f';
+  const cav = zone === 'cavern', vent = zone === 'vent', peak = zone === 'peak', eff = peak ? PEAK.eff(n) : vent ? VENT.eff(n) : cav ? CAVERN.eff(n) : n;
+  const R = rng(n * 7919 + G.S.day * 104729 + (peak ? 55555 : vent ? 77777 : cav ? 31337 : 13)), g = solidGrid(), hot = vent || peak;
+  for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) g[y][x] = R() < (cav || hot ? 0.08 : 0.05) ? 'X' : hot && R() < (peak ? PEAK.lava : VENT.lava) ? '~' : 'f';
   for (let y = 1; y <= 4; y++) for (let x = 1; x <= 4; x++) g[y][x] = 'f';   // clear landing area
   g[0][SPAWN.x] = 'U';
-  if (!cav && !vent && n === CAVERN.doorFloor) g[CAVERN.door.y][CAVERN.door.x] = '^';   // v38: the sealed door to the Sunken Cavern
+  if (!cav && !hot && n === CAVERN.doorFloor) g[CAVERN.door.y][CAVERN.door.x] = '^';   // v38: the sealed door to the Sunken Cavern
   if (cav && n === VENT.doorFloor) g[CAVERN.door.y][CAVERN.door.x] = '>';             // v39: the door to the Ember Vent
   if (vent && n >= VENT.floors) return forgeRoom(n, eff, g);
+  if (peak && n >= PEAK.floors) return summitRoom(n, eff, g);
 
   MINE.rocks = {};
   const keys = [], copperChance = Math.min(0.3, 0.1 + n * 0.02);
@@ -43,7 +45,9 @@ export function genFloor(n, zone = 'hollow') {
     if (g[y][x] !== 'f' || (x <= 4 && y <= 4) || R() > (cav ? 0.4 : 0.3)) continue;
     const roll = R();
     let t;
-    if (vent) {   // v39: the vent: cinder, umbrite, gold and stone
+    if (peak) {   // v67: the peak: cinder, umbrite, gold and stone
+      t = roll < PEAK.cinder ? '#' : roll < PEAK.cinder + PEAK.umbrite ? '*' : roll < PEAK.cinder + PEAK.umbrite + PEAK.gold ? '%' : 'r';
+    } else if (vent) {   // v39: the vent: cinder, umbrite, gold and stone
       t = roll < VENT.cinder ? '#' : roll < VENT.cinder + VENT.umbrite ? '*' : roll < VENT.cinder + VENT.umbrite + VENT.gold ? '%' : 'r';
     } else if (cav) {   // v38: the cavern: umbrite, gold, iron and stone
       const um = CAVERN.umbrite(n);
@@ -57,9 +61,10 @@ export function genFloor(n, zone = 'hollow') {
   MINE.ladder = keys.length ? keys[Math.floor(R() * keys.length)] : null;
   if (!MINE.ladder) g[8][12] = 'L';
 
-  Object.assign(MAPS.mine, { grid: g, name: vent ? `${VENT.name}, floor ${n}` : cav ? `${CAVERN.name}, floor ${n}` : `The Hollow, floor ${n}`, theme: vent ? 'ember' : cav ? 'sand' : null });
+  Object.assign(MAPS.mine, { grid: g, name: peak ? `${PEAK.name}, floor ${n}` : vent ? `${VENT.name}, floor ${n}` : cav ? `${CAVERN.name}, floor ${n}` : `The Hollow, floor ${n}`, theme: peak ? 'peak' : vent ? 'ember' : cav ? 'sand' : null });
   Object.assign(MINE, { floor: n, zone, eff });
-  if (vent) G.S.ventDeepest = Math.max(G.S.ventDeepest || 0, n);
+  if (peak) G.S.nuts.peakDeepest = Math.max(G.S.nuts.peakDeepest, n);
+  else if (vent) G.S.ventDeepest = Math.max(G.S.ventDeepest || 0, n);
   else if (cav) G.S.cavernDeepest = Math.max(G.S.cavernDeepest || 0, n);
   else G.S.mineDeepest = Math.max(G.S.mineDeepest, n);
   emit('world:changed');
@@ -79,6 +84,19 @@ function forgeRoom(n, eff, g) {
   emit('mine:floor', { floor: n, rng: () => 1, zone: 'vent', eff });
 }
 
+// v67: the peak's summit: a quiet room with the nut cache (systems/nuts.js), no rocks and no monsters.
+function summitRoom(n, eff, g) {
+  for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) g[y][x] = 'f';
+  g[0][SPAWN.x] = 'U';
+  if (!G.S.nuts.summit) g[6][12] = '<';
+  MINE.rocks = {}; MINE.ladder = null;
+  Object.assign(MAPS.mine, { grid: g, name: `${PEAK.name}: the summit`, theme: 'peak' });
+  Object.assign(MINE, { floor: n, zone: 'peak', eff });
+  G.S.nuts.peakDeepest = Math.max(G.S.nuts.peakDeepest, n);
+  emit('world:changed');
+  emit('mine:floor', { floor: n, rng: () => 1, zone: 'peak', eff });
+}
+
 export function enterMine(n, zone = 'hollow') {
   genFloor(n, zone);
   placePlayer('mine', SPAWN.x, SPAWN.y, 'down');
@@ -89,8 +107,9 @@ export function enterMine(n, zone = 'hollow') {
 }
 
 export function leaveMine() {
-  placePlayer(ENTRANCE.map, ENTRANCE.x, ENTRANCE.y, ENTRANCE.dir);
-  emit('map:changed', ENTRANCE.map);
+  const out = MINE.zone === 'peak' ? { map: 'island', x: PEAK.entrance.x, y: PEAK.entrance.y + 1, dir: 'down' } : ENTRANCE;   // v67
+  placePlayer(out.map, out.x, out.y, out.dir);
+  emit('map:changed', out.map);
   changed();
 }
 
@@ -146,6 +165,7 @@ export function breakRock(tx, ty, quiet = false) {
   if (key === MINE.ladder) {
     const shaft = MINE.zone === 'cavern' && Math.random() < CAVERN.shaft;   // v38
     MAPS.mine.grid[ty][tx] = shaft ? '!' : 'L'; notify(shaft ? 'You found a shaft! It drops several floors.' : 'You found a ladder down!');
+    emit('mine:ladder', { floor: MINE.floor, zone: MINE.zone });   // v67: the peak's nut floors
   }
   else { MAPS.mine.grid[ty][tx] = 'f'; if (!quiet && (rock.item !== 'stone' || coal)) notify(`+${n} ${ITEMS[rock.item].name}${coal ? ', +1 Coal' : ''}`); }
   emit('world:changed');

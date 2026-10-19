@@ -1,12 +1,16 @@
 // v66: tide nuts (data/nuts.js): found on the island by digging, farming and fishing, spent on the dig site bridge
 // and at the island trader. G.S.nuts = { have, found: [beach dig keys], crops: [types], fish, digDay, digs: ['x,y'],
-// siteDigs, bridge, bought: [shop keys] }.
+// siteDigs, bridge, bought: [shop keys] }. v67: the Smoke Peak (peak, peakDeepest, peakNuts: [floors], summit) and
+// the hidden puzzles (puzzles: [keys], chime: shells struck in order so far, stones: watered basins, stonesDay).
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer } from '../core/registry.js';
-import { placePlayer } from './world.js';
-import { NUT, BEACH_DIGS, NUT_CROPS, NUT_FISH, BRIDGE, DIG_SITE, ISLAND_SHOP } from '../data/nuts.js';
+import { placePlayer, useEnergy } from './world.js';
+import { enterMine } from './mine.js';
+import { swingAt } from './effects.js';
+import { takeBest } from './quality.js';
+import { NUT, BEACH_DIGS, NUT_CROPS, NUT_FISH, BRIDGE, DIG_SITE, ISLAND_SHOP, PEAK, PUZZLE_NUTS, CHIMES, STONES, ALTAR, LANTERN } from '../data/nuts.js';
 import { ITEMS } from '../data/items.js';
 import { MAPS } from '../data/maps.js';
 import { r } from '../render/pixel.js';
@@ -97,4 +101,83 @@ addInteraction(72, ({ tile, mapId }) => {
   if (N().bridge) { placePlayer('digsite', 1, 10, 'right'); emit('map:changed', 'digsite'); changed(); return true; }
   emit('ui:bridge');
   return true;
+});
+
+// v67: the Smoke Peak: opened for nuts, a nut with the first ladder of each nut floor, the summit's cache.
+export function openPeak() {
+  if (N().peak || N().have < PEAK.nuts) return false;
+  N().have -= PEAK.nuts; N().peak = true;
+  notify('The parrot flutters up the slope and the old rope ladder drops down the rocks. The way up the peak is open.');
+  changed();
+  return true;
+}
+on('mine:ladder', ({ floor, zone }) => {
+  if (zone !== 'peak' || !PEAK.nutFloors.includes(floor) || N().peakNuts.includes(floor)) return;
+  N().peakNuts.push(floor);
+  giveNuts(1, 'A nut rolls out of the broken rock.');
+});
+addInteraction(72, ({ tile, mapId }) => {
+  if (tile === '7' && mapId === 'island') { if (N().peak) enterMine(1, 'peak'); else emit('ui:peak'); return true; }
+  if (tile === '<' && mapId === 'mine') {
+    N().summit = true; MAPS.mine.grid[6][12] = 'f'; emit('world:changed');
+    giveNuts(PEAK.summitNuts, 'The cache at the summit is full of old nuts.');
+    return true;
+  }
+  return false;
+});
+
+// v67: the hidden puzzles, PUZZLE_NUTS each, once.
+const solved = (k) => N().puzzles.includes(k);
+function solve(k, why) { N().puzzles.push(k); giveNuts(PUZZLE_NUTS, why); }
+const at = (list, tx, ty) => list.findIndex(([x, y]) => x === tx && y === ty);
+addInteraction(72, ({ tx, ty, tile, mapId }) => {
+  if (mapId !== 'island') return false;
+  if (tile === '8') {   // the shell chimes, smallest to largest
+    if (solved('chimes')) { notify('The shells hum softly.'); return true; }
+    const i = at(CHIMES, tx, ty);
+    N().chime = i === N().chime ? N().chime + 1 : i === 0 ? 1 : 0;
+    emit('sfx', N().chime ? 'coin' : 'miss');
+    if (N().chime >= CHIMES.length) solve('chimes', 'The three shells ring together and sand slides off a buried pouch.');
+    else notify(N().chime ? 'The shell rings.' : 'A flat, dull note.');
+    changed();
+    return true;
+  }
+  if (tile === '<') {   // the altar takes an island crop
+    if (solved('altar')) { notify('The altar is bare, and somehow content.'); return true; }
+    if (!(G.S.bag[ALTAR.item] > 0)) { notify(`An old stone altar. Carved fruit circle its rim, round and bright like ${ITEMS[ALTAR.item].name.toLowerCase()}.`); return true; }
+    takeBest(ALTAR.item);
+    solve('altar', `You leave the ${ITEMS[ALTAR.item].name.toLowerCase()} on the altar. When you look again it is gone.`);
+    return true;
+  }
+  if (tile === '`') {   // the lantern, lit with coal after dark
+    if (solved('lantern')) { notify('The lantern burns steady.'); return true; }
+    if (G.S.time < LANTERN.from) { notify('A cold stone lantern facing the sea. It must be meant for the night.'); return true; }
+    if ((G.S.bag.coal || 0) < LANTERN.coal) { notify('A cold stone lantern. A lump of coal would light it.'); return true; }
+    G.S.bag.coal -= LANTERN.coal; emit('world:changed');
+    solve('lantern', 'The lantern flares. Out at sea something flashes back, and a nut drops from the lantern\'s roof.');
+    return true;
+  }
+  return false;
+});
+addInteraction(56, ({ tx, ty, tile, mapId, item }) => {   // the dry basins, filled with the watering can on one day
+  if (mapId !== 'island' || tile !== '9' || item !== 'can') return false;
+  if (solved('stones')) { notify('The basins are full.'); return true; }
+  if (G.S.water <= 0) { notify('The can is empty.'); return true; }
+  if (!useEnergy(2)) return true;
+  if (G.S.toolEnch.can !== 'bottomless') G.S.water--;
+  swingAt(tx, ty, 'can');
+  if (N().stonesDay !== G.S.day) { N().stones = []; N().stonesDay = G.S.day; }
+  const k = `${tx},${ty}`;
+  if (!N().stones.includes(k)) N().stones.push(k);
+  if (N().stones.length >= STONES.length) solve('stones', 'The last basin fills and the water drains away with a gurgle, leaving something behind.');
+  else notify('The basin fills. The sun is already drinking it.');
+  changed();
+  return true;
+});
+// Water in today's basins, and the lit lantern.
+addLayer(13, (c) => {
+  if (G.S.map !== 'island') return;
+  const wet = solved('stones') ? STONES.map(([x, y]) => `${x},${y}`) : N().stonesDay === G.S.day ? N().stones : [];
+  for (const k of wet) { const [x, y] = k.split(',').map(Number); r(c, x * T + 4, y * T + 8, 8, 3, '#5aa0c8'); }
+  if (solved('lantern')) { r(c, LANTERN.x * T + 6, LANTERN.y * T + 4, 4, 2, '#f2c14e'); r(c, LANTERN.x * T + 7, LANTERN.y * T + 4, 2, 1, '#fff2b0'); }
 });

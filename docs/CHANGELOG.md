@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v67: The Smoke Peak and the island's puzzles
+- For 5 tide nuts the parrot opens the way up the Smoke Peak, a ten-floor dungeon of lava, cinder, umbrite and gold with the strongest monsters. Floors 2, 4, 6 and 8 hide a nut behind their first ladder, and a cache at the summit holds 3 more.
+- Four puzzles are hidden around the island, 2 nuts each: shells on the beach, dry stone basins, an old altar and a cold lantern.
+
 ## v66: Tide nuts
 - The island hides tide nuts: in the beach sand, in your first harvests and catches there. A parrot fixes the old bridge east for 10 of them, and beyond it a dig site turns up geodes and gems every morning. The island trader takes nuts too.
 - Island waters now hold sea fish.

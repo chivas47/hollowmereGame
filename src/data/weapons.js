@@ -61,6 +61,6 @@ export const FLOOR_FINDS = {
   40: 'cutlass', 45: 'glowring', 55: 'mallet', 60: 'emberboots', 65: 'tidering', 70: 'greatsword', 80: 'deepboots',
 };
 // Rare drops by depth.
-export const DROP_POOL = (f, zone) => (zone === 'cavern' || zone === 'vent' ? ['duneblade', 'leechring', 'thiefring'] : [
+export const DROP_POOL = (f, zone) => (zone === 'cavern' || zone === 'vent' || zone === 'peak' ? ['duneblade', 'leechring', 'thiefring'] : [
   ...(f >= 3 ? ['dirk'] : []), ...(f >= 12 ? ['slimeward', 'mossring'] : []), ...(f >= 30 ? ['leechring', 'thiefring'] : []), ...(f >= 50 ? ['shank'] : []),
 ]);

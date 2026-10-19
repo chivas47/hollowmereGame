@@ -2,6 +2,7 @@
 import { T } from '../core/constants.js';
 import { r, rng } from './pixel.js';
 import { SHRINE } from '../data/books.js';
+import { CHIMES } from '../data/nuts.js';
 
 const SNOW = '#f2f6f8';
 
@@ -363,6 +364,7 @@ const CAVE_COLS = {
   sand:  { floor: ['#7a5a38', '#8a6a44', '#6a4c2e'], wall: ['#3f2c1c', '#4f3824', '#5a4026'] },
   ember: { floor: ['#3a2422', '#4a2c26', '#2e1c1a'], wall: ['#1a0f0e', '#2a1612', '#3a1a14'] },
   sewer: { floor: ['#3a4038', '#454c42', '#30362e'], wall: ['#1c221e', '#262e28', '#2e3830'] },   // v45
+  peak:  { floor: ['#4a3a34', '#56443c', '#3e302a'], wall: ['#221816', '#30201c', '#3c2620'] },   // v67: the Smoke Peak
 };
 const colsFor = (p) => CAVE_COLS[p?.theme] || CAVE_COLS.rock;
 export function drawCaveFloor(g, x, y, p) {
@@ -473,6 +475,29 @@ function hotSpring(g, x, y) {
 }
 function traderSpot(g, x, y, p) { drawCaveFloor(g, x, y, p); r(g, x * T + 2, y * T + 12, 12, 3, '#2b2a2e'); }
 
+// v67: the Smoke Peak's mouth, the shell chimes, the dry basins, the altar (the summit's nut cache in the peak) and the lantern.
+function peakMouth(g, x, y, p) {
+  caveMouth(g, x, y, p); r(g, x * T + 3, y * T + 14, 10, 2, '#7a2a14'); r(g, x * T + 6, y * T + 1, 4, 2, 'rgba(200,200,200,.5)');
+}
+function shell(g, x, y, p) {
+  const X = x * T, Y = y * T, i = CHIMES.findIndex(([a, b]) => a === x && b === y), s = 4 + 2 * Math.max(0, i);
+  drawSand(g, x, y, p); r(g, X + 8 - s / 2, Y + 13 - s, s, s, '#f0c8b8'); r(g, X + 8 - s / 2, Y + 13 - s, s, 1, '#fbe6dc');
+  for (let k = 1; k < s; k += 2) r(g, X + 8 - s / 2 + k, Y + 13 - s, 1, s, '#d89c88');
+}
+function basin(g, x, y, p) {
+  const X = x * T, Y = y * T;
+  drawGrass(g, x, y, p, 41); r(g, X + 2, Y + 7, 12, 7, '#8d857d'); r(g, X + 2, Y + 7, 12, 1, '#a8a199'); r(g, X + 4, Y + 8, 8, 3, '#5f5a52');
+}
+function altar(g, x, y, p) {
+  const X = x * T, Y = y * T;
+  if (p.theme === 'peak') { chest(g, x, y, p); r(g, X + 6, Y + 2, 4, 2, '#c9a06a'); return; }
+  drawGrass(g, x, y, p, 43); r(g, X + 1, Y + 9, 14, 6, '#6f6862'); r(g, X + 1, Y + 8, 14, 2, '#a8a199'); r(g, X + 4, Y + 11, 8, 1, '#4f8f3a');
+}
+function lantern(g, x, y, p) {
+  const X = x * T, Y = y * T;
+  drawGrass(g, x, y, p, 47); r(g, X + 6, Y + 7, 4, 8, '#8d857d'); r(g, X + 4, Y + 2, 8, 6, '#6f6862'); r(g, X + 6, Y + 4, 4, 2, '#2b2a2e'); r(g, X + 3, Y + 1, 10, 1, '#a8a199');
+}
+
 export const CAVE_ART = {
   y: caveMouth, t: caveCrate, $: chest,
   X: caveWall, U: ladderUp, L: ladderDown,
@@ -481,6 +506,7 @@ export const CAVE_ART = {
   '#': mineRock('#e9862a'), '~': lava, '>': ventDoor, '=': forgeAnvil,
   '@': shrineDoor, '+': pedestal,
   '|': fallenLog, '}': rubble, ';': grate, '{': hotSpring, '?': traderSpot,
+  '7': peakMouth, '8': shell, '9': basin, '<': altar, '`': lantern,
 };
 
 // v22 farm layouts: quarry floor and sand.

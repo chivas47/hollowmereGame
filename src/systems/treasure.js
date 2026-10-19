@@ -91,7 +91,7 @@ addLayer(60, (c) => { if (G.S.map === 'mine') blasts.forEach((k) => drawBlast(c,
 // MINE.chest: { x, y, find } for the chest on this floor (find: a FLOOR_FINDS key), or null.
 on('mine:floor', ({ floor, rng: R, zone, eff }) => {
   MINE.chest = null;
-  const cav = zone === 'cavern', g = MAPS.mine.grid, find = cav ? null : FLOOR_FINDS[floor];   // v38: the cavern has loot chests only, more often
+  const cav = zone === 'cavern' || zone === 'peak', g = MAPS.mine.grid, find = cav ? null : FLOOR_FINDS[floor];   // v38: the cavern has loot chests only, more often; v67: so does the peak
   if (find && !G.S.finds.includes(floor)) MINE.chest = { ...CHEST_SPOT, find };
   else if (eff >= 10 && R() < (cav ? CAVERN.chest : CHEST_CHANCE)) {
     for (let guard = 0; guard < 200 && !MINE.chest; guard++) {

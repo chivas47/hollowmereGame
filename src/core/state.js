@@ -26,7 +26,7 @@ export function newState() {
     qbag: {},           // item -> [fine, prime, heirloom] counts within bag (see systems/quality.js)
     soil: {},           // farm: "x,y" -> { w: watered, crop: { type, age, dead } | null }
     greenSoil: {},      // greenhouse beds, same shape
-    islandSoil: {}, boatFixed: false, nuts: { have: 0, found: [], crops: [], fish: 0, digDay: 0, digs: [], siteDigs: 0, bridge: false, bought: [] },   // v66: tide nuts
+    islandSoil: {}, boatFixed: false, nuts: { have: 0, found: [], crops: [], fish: 0, digDay: 0, digs: [], siteDigs: 0, bridge: false, bought: [], peak: false, peakDeepest: 0, peakNuts: [], summit: false, puzzles: [], chime: 0, stones: [], stonesDay: 0 },   // v66: tide nuts; v67: the peak and puzzles
       // v65: the island farm's soil; Rook's boat repaired
     forage: [], forageDay: 0,
     wildWeeds: [],      // v33: weeds in the Wilds, cut for fiber (systems/forage.js)
@@ -120,7 +120,7 @@ export function merge(saved) {
   if (!s.greenSoil || typeof s.greenSoil !== 'object') s.greenSoil = {};
   if (!s.islandSoil || typeof s.islandSoil !== 'object') s.islandSoil = {};   // v65
   s.nuts = { ...newState().nuts, ...(saved.nuts || {}) };   // v66
-  for (const k of ['found', 'crops', 'digs', 'bought']) s.nuts[k] = [...(s.nuts[k] || [])];
+  for (const k of ['found', 'crops', 'digs', 'bought', 'peakNuts', 'puzzles', 'stones']) s.nuts[k] = [...(s.nuts[k] || [])];
   if (!s.qbag || typeof s.qbag !== 'object') s.qbag = {};
   s.kit = Object.assign(newState().kit, saved.kit || {});
   s.skills = Object.assign(newState().skills, saved.skills || {});

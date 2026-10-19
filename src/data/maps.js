@@ -22,7 +22,7 @@
 // exits: "x,y" of an E tile -> where it leads.
 import { W, H } from '../core/constants.js';
 
-export const SOLID = new Set(['0', '1', '2', '3', '4', '5', '6', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
+export const SOLID = new Set(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
 
 function emptyGrid() {
   return Array.from({ length: H }, (_, y) =>
@@ -164,6 +164,10 @@ function islandGrid() {
   put(m, [[2, 2], [2, 9], [20, 8], [3, 11]], 'T');
   m[9][14] = '5';                                  // v66: the island trader's table
   fill(m, 19, 10, 22, 10, 'P'); m[10][23] = '6';   // v66: the old bridge east to the dig site
+  m[1][12] = '7'; m[2][12] = 'P';                  // v67: the way up the Smoke Peak
+  put(m, [[13, 13], [18, 13], [15, 12]], '8');      // v67: the puzzles: shells, basins, the altar, the lantern
+  put(m, [[2, 4], [2, 6], [2, 8]], '9');
+  m[6][22] = '<'; m[11][9] = '`';
   return m;
 }
 
