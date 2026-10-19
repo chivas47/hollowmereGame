@@ -342,11 +342,31 @@ Universal tastes (v48, after a neighbour's own lists; Stardew's): everyone loves
 
 Points: talk 20/day, gift 80 loved, 45 liked, 20 neutral, -20 disliked, -40 hated (v48, Stardew's; 1 gift/day; friendship never drops below 0). On a neighbour's birthday a gift counts eight times, loss or gain (Stardew's x8); the morning notice and the neighbours panel say whose birthday it is. 100 points per heart, 10 hearts max. Dialogue changes at 2 and 5 hearts.
 
-Schedules (v50) for the six newest: Pell teaches in town 9:00 to 15:00 (Saturdays in the forest); Juno walks mail rounds through the village and town; Nell gardens on the south lane; Rook works on the beach 8:00 to 17:00 and visits the Lantern; Esme paints in the forest 9:00 to 16:00; Kit tinkers by the smithy and plays in the square (Saturdays on the beach).
+Homes and routines (v76, data/homes.js and data/schedules.js). Every neighbour starts the day at home and walks back there at the end of it, finding their own way around anything solid (keeping to paths over grass) and through map edges and doors; they set off 30 minutes early when their next place is on another map. Loading mid-day puts them where the hour has them.
 
-Schedules (v49) for the six town villagers: shopkeepers stand by their shop door through opening hours and live at their shop (Wren rests on Wednesdays in the village); Corvin, Hale and Lio meet outside the Lantern in the evening; Hob strolls the village before opening; Maren walks the village after the clinic shuts; Hale keeps the lodge door 8:00 to 18:00; Lio plays in the square in the morning. Everyone gathers in the square for festivals.
+| Neighbour | Home | Routine (rest day) |
+|---|---|---|
+| Ines | Village, north row, first cottage | Hives in the Wilds meadow 7:00 to 11:00, your field to 15:00, the square to 18:00 (Sunday: the square, then the beach) |
+| Bram | Village, north row, second | The carpentry counter 9:00 to 17:00, outside the Lantern to 19:00 (Tuesday, the shop's closing day: the square, then your farm) |
+| Odile | Village, north row, third | The Wilds pond at dawn 6:00 to 10:00, your field to 14:00, mending nets on the pier to 18:00 (Friday: the pond, then the square) |
+| Tavi | Village, north row, fourth | Mon, Wed, Fri: the village lanes, your fence line, the forest. Tue, Thu, Sat: the town lanes, the beach, the square (Sunday: the square) |
+| Wren | Over the store | The store counter 9:00 to 17:00, the square to 20:00 (Wednesday: the village and the beach) |
+| Corvin | Behind the Anvil | The anvil 9:00 to 16:00, the Lantern to 20:00 |
+| Hob | Over the Lantern | Errands in the village 9:00 to 11:00, the Lantern from noon to midnight |
+| Maren | Over the clinic | A walk 8:00, the clinic 9:00 to 15:00, house calls on the south lane and the square to 18:00, the Lantern to 21:00 |
+| Hale | The lodge | The lodge door 8:00 to 18:00, the Lantern to 21:00 |
+| Lio | Town, north edge | Fiddling by the fountain 10:00 to 13:00, the town lane to 17:00, outside the Lantern to 22:00 |
+| Pell | Town, north edge | The town hall school 9:00 to 15:00, the square to 18:00, the Lantern to 21:00 (Saturday: the forest, then the town) |
+| Juno | Town, north edge | Mail: every village door 7:00 to 10:00, your farm to 12:00, the town's doors to 17:00, the Lantern to 21:00 |
+| Nell | Village, south row, first | Her garden 7:00 to 11:00, the old mine mouth in the Wilds to 15:00, a seat by the square to 19:00 |
+| Rook | Village, south row, second | The beach and the pier 8:00 to 17:00, the Lantern to 21:00 |
+| Esme | Village, south row, third | Painting in the forest 9:00 to 16:00, the square to 19:00, the shore at dusk to 21:00 |
+| Kit | Village, south row, fourth | By the Anvil 8:00 to 12:00, the square to 17:00, outside home to 21:00 (Saturday: the beach) |
+| The Lamplighter | A corner of the sewer | The sewer 18:00 to 2:00 |
 
-Schedule (data/schedules.js): village square 8:00 to 11:00, the farm 11:00 to 18:00 (entering from the village road on the west), their cottage door 18:00 to 21:00, then indoors. One rest day a week in the village all day: Ines on day 1 of each week, Bram day 3, Odile day 5, Tavi day 7. Festival days override the schedule.
+Rest days are counted from Monday: (day - 1) % 7, 0 = Monday. Festival days: everyone walks to their place in the square for the festival's hours (the Lamplighter stays below), then home. A spouse lives in the farmhouse (indoors in the morning and evening, the yard 10:00 to 17:00).
+
+Cottages (v76): all eleven cottages can be entered from the front (the middle of the bottom row), 8:00 to 20:00 (Stardew's door hours), or at any hour with 2 hearts for the person who lives there. Shut during festival hours. Inside: one room with the owner's bed and furniture; they are home there at night and before they go out. Shopkeepers live over their shops, Hale at the lodge and the Lamplighter in the sewer: no inside to visit, so they are out of sight while home.
 
 The social menu (v48, F or a click on the neighbours panel): hearts, role, birthday, whether you talked and gave a gift today, and every taste you have learned by giving gifts.
 
@@ -621,7 +641,7 @@ Original where Stardew's mechanic does not exist here: Bountiful, Quickgrow, See
 
 ### Village and quest board
 
-- West exit of the farm (path row, left edge) leads to Hollowmere Village: four cottages, a quest board, a fountain and the festival table.
+- West exit of the farm (path row, left edge) leads to Hollowmere Village: eight cottages (v76: each can be entered), a quest board, a fountain and the festival table.
 - Up to 3 requests at once; one new request most mornings; each lasts 5 days.
 - A request asks for 1 to 5 of an item you can get this season (in-season crops, forage, fish up to difficulty 3, stone, copper; iron after floor 6; eggs and milk once you own the animals). Materials ask for 3 to 25.
 - Reward: sell value x quantity x 3, rounded to 5g, paid at once, plus 50 friendship points with the neighbour who asked.
@@ -959,7 +979,7 @@ Balance warnings from tools/balance.mjs are information only since v11: values f
 - Four neighbours with scenes at 4 and 8 hearts only. Quest friendship can pass 3 hearts; the reward then arrives on the next talk or gift.
 - The week has no names; rest days are only visible by where neighbours are.
 - Two placed objects can wall the player in; picking one up from the inside fixes it, but nothing prevents it.
-- Neighbours walk straight through trees and the coop on their way out; they have no collision.
+- Neighbours do not block the player, and a neighbour walled in by placed objects walks straight to their next spot. (Fixed in v76: they used to walk straight through trees and buildings.)
 - Chickens never leave the yard.
 - Existing recipes still use stone and ore where Stardew uses wood (the v11 substitution). Switching them to wood now that wood exists is Nuno's call; it would raise costs on saves that have no wood yet.
 - Hardwood only comes from the large stumps a farm starts with (2 each). More sources arrive with new areas (roadmap item 21).

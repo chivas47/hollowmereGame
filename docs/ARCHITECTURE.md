@@ -52,7 +52,8 @@ src/
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item, underSky()
     atmosphere.js     LIGHT keyframes, WATERFALLS, WILDLIFE, AMBIENCE by area (v72)
     animation.js      SWINGS (tool arcs and timings), COMBO (weapon combo steps), PICKUP, CRAFTED, PLACE, IMPACT colours (v74)
-    schedules.js      neighbour daily schedules, rest days, map entry points
+    schedules.js      neighbour daily routines by weekday (go: walk a loop of spots, at: walk there and stay), spouse and festival days
+    homes.js          where each neighbour lives: door, cottage, its inside (bed, furniture, the owner's spot), door hours (v76)
     scenes.js         heart scenes at 4 and 8 hearts
   systems/            one feature per file
     layouts.js        rebuilds the farm grid for G.S.layout on game:loaded (imported first), startLayout()
@@ -118,7 +119,9 @@ src/
     skills.js         XP from 'gather' events, bonus items, energy milestones
     quests.js         quest board requests, deliver()
     festivals.js      festival day logic, contests, market stall, decorations
-    village.js        fountain and cottage flavour text
+    village.js        fountain flavour text
+    homes.js          v76: entering neighbours' cottages (door hours, 2 hearts after dark), their furniture, looking around
+    routes.js         v76: tilePath() (weighted grid search, paths before grass) and nextHop() (doors and map edges) for neighbours
     projects.js       village projects: fundProject(), funded()
     greenhouse.js     greenhouse placement on the farm, ordering, entering
     trees.js          fruit trees (placed objects of kind 'tree'): growth, fruit, picking, drawing
@@ -219,7 +222,9 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 72 | town.js | Shop doors ( ) ] [ / £ and the museum : in the town (dialog, or the hours and closing day); the phone _ in the farmhouse |
 | 70 | town.js | The farm's old stall S and workbench K (a note pointing to town) |
 | 72 | coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Coop C, barn A, greenhouse G, mine entrance M, ladders U/L, the cavern door ^, shafts !, the vent door > and the forge =, placed object Y, quest board Q, festival table J |
-| 71 | village.js | Fountain F, cottage V (flavour text) |
+| 72 | homes.js | Cottage V front row (enter the owner's cottage, or why it is locked) (v76) |
+| 71 | homes.js | A neighbour's bed Z or furniture Y inside their cottage (a line about the place) (v76) |
+| 71 | village.js | Fountain F, cottage V away from its front (where the door is) |
 | 71 | mail.js | The mailbox on the farmhouse front (farm H tile at 5,3) |
 | 71 | cooking.js | Farmhouse stove o (cook) and counters n (fridge) |
 | 70 | buildings.js, house.js | Bin B; farm door D (enter), bed Z, lectern l, kitchen and cellar fittings |
@@ -345,7 +350,7 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | U, L | ladder up, ladder down | yes |
 | \|, }, ;, {, ? | fallen log, rubble, sewer grate, hot spring, sewer trader (v45; the gates become P once open) | yes |
 
-`objects` on a map draw building art from `OBJECT_ART` in render/tiles.js. Maps with `base: 'cave'` use cave floor art and skip the night tint; `base: 'greenhouse'` uses plank floor and soil-bed art.
+`objects` on a map draw building art from `OBJECT_ART` in render/tiles.js. Maps with `base: 'cave'` use cave floor art and skip the night tint; `home_<id>` maps (v76) are the neighbours' cottages, `base: 'house'` with a `home` owner id; `base: 'greenhouse'` uses plank floor and soil-bed art.
 
 Soil is per map: `soilOf(mapId)` returns `G.S.soil` (farm) or `G.S.greenSoil` (greenhouse). Placed objects are keyed by `placeKey(map, x, y)`: plain `"x,y"` on the farm (so old saves keep working), `"greenhouse:x,y"` inside.
 
@@ -354,7 +359,7 @@ Soil is per map: `soilOf(mapId)` returns `G.S.soil` (farm) or `G.S.greenSoil` (g
 - **Crop:** entry in `data/crops.js` (add `regrow`, `yield` or `packet` as needed). `CROPS` is everything plantable; `PRODUCE` is the crops that are items (no seed packets): use `PRODUCE` for anything about items.
 - **Fish:** entry in `data/fish.js`.
 - **Forage:** entry in `data/forage.js` plus art in `FORAGE_ART` (render/sprites.js).
-- **Neighbour:** entry in `data/npcs.js` (farm path), plus a village path, home and rest day in `data/schedules.js`, and scenes in `data/scenes.js`. Paths are walked x first, then y; keep each leg clear.
+- **Neighbour:** entry in `data/npcs.js` (farm path), a home in `data/homes.js` (a cottage gets a `home_<id>` inside automatically), a routine in `data/schedules.js` and scenes in `data/scenes.js`. Routine spots are only the places that matter: neighbours find their own way around anything solid and from map to map (systems/routes.js); a spot may be a solid counter they stand behind.
 - **Upgrade tier:** append to a line in `data/upgrades.js`; read effects with `tier(G.S, 'line')`.
 - **Building:** follow systems/coop.js: order at the carpentry (ui/workshop.js), build on `day:start`, write tiles at runtime, emit `world:changed`.
 - **Tool:** key in `data/hotbar.js` (+ `TOOL_NAMES`), icon in `render/icons.js`, an interaction in its system.

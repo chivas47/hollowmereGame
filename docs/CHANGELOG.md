@@ -2,6 +2,15 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v76: Neighbours live at home
+- Fix: neighbours no longer pop into view at the edge of a map when their day starts. Every neighbour starts the day at home and walks out, and walks home again at the end of the day.
+- Every neighbour has a routine that fits who they are: Odile fishes the Wilds pond at dawn and mends nets on the pier; Bram keeps his carpentry counter (Tuesdays he visits your farm); Juno carries the mail to every door; Pell teaches at the town hall; Nell gardens and visits the old mine; Lio fiddles by the fountain and outside the Lantern; and so on. Rest days vary by person. Full table in GAME_DESIGN.
+- Neighbours find their own way: around trees, buildings and anything you place, keeping to paths over grass, and from map to map through edges and doors. They set off early when their next place is on another map.
+- All eleven cottages can be entered from the front door, 8 am to 8 pm, or at any hour with 2 hearts for the person who lives there. Each has its owner's bed and furniture, and its owner is home there at night.
+- Shopkeepers live over their shops, Hale at the lodge and the Lamplighter in the sewer, and step out of their doors.
+- On festival days neighbours walk to their places in the square instead of appearing there.
+- Saves: no new fields. A save made inside a cottage loads back inside it.
+
 ## v75: No tool spamming
 - Fix: pressing Use faster than a tool swings no longer works faster. Before, every press chopped, mined, tilled or watered at once (in a 2 second test, 86 swings spamming against 6 pressing steadily); now each swing has to finish first. A press in the last 0.2 s of a swing is kept and runs as it ends, so steady play feels the same. Weapons keep their own combo timing.
 

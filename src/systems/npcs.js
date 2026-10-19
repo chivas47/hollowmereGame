@@ -1,25 +1,27 @@
-// Neighbours: daily schedules across the farm and village, talking, gifts, friendship,
+// Neighbours: daily schedules from home and back (v76), talking, gifts, friendship,
 // rewards and heart scenes. v48: five gift tiers, birthdays and the tastes you have learned (G.S.npcs[id].known).
 import { G } from '../core/game.js';
-import { T, OPPOSITE } from '../core/constants.js';
+import { T, OPPOSITE, START } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { ITEMS } from '../data/items.js';
 import { NPCS, OUTFITS } from '../data/npcs.js';
 import { festivalOn, hoursOf, FESTIVAL_SPOTS } from '../data/festivals.js';
-import { scheduleFor, spouseDay, ENTRIES } from '../data/schedules.js';
+import { scheduleFor, spouseDay, festivalDay } from '../data/schedules.js';
+import { HOMES, homeMap, SPOUSE_HOME } from '../data/homes.js';
 import { SCENES, SCENE_HEARTS } from '../data/scenes.js';
 import { GIFT_POINTS, BIRTHDAY_MULT, UNIVERSAL } from '../data/gifts.js';
 import { CANDIDATES, HEART_CAP, BOUQUET, JEALOUSY, DATE_LINES, PENDANT, WEDDING_DAYS, SPOUSE_CAP, SPOUSE_LINES } from '../data/romance.js';
 import { drawPerson, drawBubble } from '../render/sprites.js';
 import { tileOf } from './world.js';
+import { tilePath, nextHop } from './routes.js';
 import { recalcStats } from './upgrades.js';
 
-const SPEED = 28, HEAD_OUT = 30;   // minutes before a block ends that they start walking off the map
+const SPEED = 28, LEAD = 30;   // minutes before a block on another map that they set off for it
 const TALK_POINTS = 20, MAX_POINTS = 1000;
 
-export const NPCRT = NPCS.map((def) => ({ id: def.id, def, map: 'farm', x: 0, y: 0, dir: 'down', visible: false, wi: 0, wait: 0, moving: false, walkT: 0, block: null, gone: false }));
+export const NPCRT = NPCS.map((def) => ({ id: def.id, def, map: 'farm', x: 0, y: 0, dir: 'down', visible: false, wi: 0, wait: 0, moving: false, walkT: 0, goal: null, inside: false, route: null, routeTo: null, snap: true }));
 export const hearts = (st) => Math.min(st.married ? 14 : 10, Math.floor(st.pts / 100));   // v52: a spouse reaches 14
 
 // v51: a candidate you are not dating stops at 8 hearts (points already above it from before v51 are kept).
@@ -43,27 +45,42 @@ export function giftTier(def, item) {
 export const isBirthday = (def) => { const d = today(); return def.birthday?.season === d.season && def.birthday.d === d.d; };
 on('day:start', () => { const n = NPCS.find((d) => isBirthday(d)); if (n) notify(`It's ${n.name}'s birthday today. A gift counts eight times over.`); });
 
-// On a festival day neighbours skip the farm and stand in the village square during festival hours.
+// On a festival day neighbours skip their rounds and walk to their place in the village square for its hours.
 const festival = () => festivalOn(today());
 
-const hideAll = () => NPCRT.forEach((n) => { Object.assign(n, { visible: false, block: null, gone: false }); });
-on('day:start', hideAll);
-on('game:reset', hideAll);
+// v76: each neighbour lives somewhere (data/homes.js) and starts and ends the day there, walking (systems/routes.js)
+// between home and the places on their schedule.
+const homeOf = (n) => (spouse() === n.id ? SPOUSE_HOME : HOMES[n.id]);
+const houseOf = (n) => (spouse() === n.id ? SPOUSE_HOME.house : HOMES[n.id].cottage ? homeMap(n.id) : null);
+// snap: put them where the hour has them (on a new day or a load); at the start of the day that is always home,
+// so they walk out to their first place.
+const snapAll = () => NPCRT.forEach((n) => { n.snap = true; });
+on('day:start', snapAll);
+on('game:reset', snapAll);
+on('game:loaded', snapAll);
 
-function festivalUpdate() {
-  const h = hoursOf(festival()), open = G.S.time >= h.from && G.S.time < h.to;
-  for (const n of NPCRT) {
-    n.moving = false;
-    if (G.talking === n.id) continue;
-    if (!open || n.def.noFestival) { n.visible = false; continue; }   // v53: the Lamplighter stays below
-    if (!n.visible) {
-      const [x, y] = FESTIVAL_SPOTS[n.id] || [12, 7];
-      Object.assign(n, { visible: true, map: 'village', x: x * T + 8, y: y * T + 12, dir: 'down' });
-    }
-  }
+function blocksOf(n) {
+  const f = festival();
+  if (f) return n.def.noFestival ? [] : festivalDay(FESTIVAL_SPOTS[n.id] || [12, 7], hoursOf(f));   // v53: the Lamplighter stays below
+  return spouse() === n.id ? spouseDay() : scheduleFor(n.def, G.S.day);
+}
+const active = (blocks, t) => blocks.find((b) => t >= b.from && t < b.to) || null;
+const keyOf = (b) => (b ? `${b.map}@${b.from}` : 'home');   // blocks are built fresh, so compare by key
+// The block they are in, or the next one when it is on another map and starts within LEAD minutes (null: home).
+function goalOf(blocks, t) {
+  const now = active(blocks, t), soon = active(blocks, t + LEAD);
+  return keyOf(soon) !== keyOf(now) && (soon?.map || 'home') !== (now?.map || 'home') ? soon : now;
 }
 
-const place = (n, map, [x, y]) => Object.assign(n, { visible: true, gone: false, map, x: x * T + 8, y: y * T + 12, wi: 0, wait: 0 });
+const place = (n, map, [x, y]) => Object.assign(n, { map, x: x * T + 8, y: y * T + 12, route: null });
+
+function settle(n, b) {
+  const h = homeOf(n), house = houseOf(n);
+  n.snap = false; n.goal = keyOf(b); n.wait = 0; n.inside = false; n.visible = true; n.dir = 'down';
+  if (b) { place(n, b.map, b.stay ? b.path[b.path.length - 1] : b.path[0]); n.wi = b.stay ? b.path.length : 1; return; }
+  n.wi = 1;   // home and settled
+  if (house) place(n, house, h.spot); else { place(n, h.map, h.door); n.inside = true; n.visible = false; }
+}
 
 // Steps toward a tile, x first then y. Returns true on arrival.
 function walk(n, [gx, gy], step, dt) {
@@ -75,27 +92,50 @@ function walk(n, [gx, gy], step, dt) {
   return false;
 }
 
+// Walks a found path toward a tile on their own map. Returns true on arrival.
+function walkTo(n, tile, step, dt) {
+  const k = `${n.map}:${tile}`;
+  if (n.routeTo !== k || !n.route) {
+    const here = tileOf(n.x, n.y), here2 = [here.tx, here.ty];
+    n.route = [here2, ...(tilePath(n.map, here2, tile) || [tile])]; n.routeTo = k;
+  }
+  while (n.route.length) {
+    if (!walk(n, n.route[0], step, dt)) return false;
+    n.route.shift();
+  }
+  return true;
+}
+
+// Walks toward a tile on any map, through doors and over map edges. Returns true on arrival.
+function travel(n, map, tile, step, dt) {
+  if (n.map === map) return walkTo(n, tile, step, dt);
+  const hop = nextHop(n.map, map);
+  if (!hop) { place(n, map, tile); return true; }
+  if (walkTo(n, hop.at, step, dt)) place(n, hop.to, hop.arrive);
+  return false;
+}
+
 addUpdater((dt) => {
-  if (festival()) { festivalUpdate(); return; }
   const t = G.S.time, step = SPEED * dt;
   for (const n of NPCRT) {
     if (G.talking === n.id) { n.moving = false; continue; }
-    const blocks = spouse() === n.id ? spouseDay() : scheduleFor(n.def, G.S.day), b = blocks.find((x) => t >= x.from && t < x.to) || null;
-    if (!b) { n.visible = false; n.block = null; continue; }
-    const key = `${b.map}@${b.from}`;   // scheduleFor builds fresh objects, so compare blocks by key
-    if (n.block !== key) {
-      const sameMap = n.visible && n.map === b.map;
-      n.block = key;
-      if (sameMap) Object.assign(n, { wi: 0, wait: 0 }); else place(n, b.map, ENTRIES[b.map]);
-    }
-    if (n.gone) continue;
+    const blocks = blocksOf(n), b = goalOf(blocks, t);
+    if (n.snap) settle(n, t <= START ? null : b);
+    if (n.goal !== keyOf(b)) Object.assign(n, { goal: keyOf(b), wi: 0, wait: 0 });
     if (n.wait > 0) { n.wait -= dt; n.moving = false; continue; }
-    const next = blocks[blocks.indexOf(b) + 1];
-    const headingOut = b.exit !== false && t >= b.to - HEAD_OUT && (!next || next.map !== b.map);
-    if (headingOut) { if (walk(n, ENTRIES[b.map], step, dt)) { n.visible = false; n.gone = true; } continue; }
+    const h = homeOf(n), house = houseOf(n);
+    if (!b) {   // home: indoors where there is an inside, else in at the door and out of sight
+      if (n.wi > 0) { n.moving = false; continue; }
+      if (travel(n, house || h.map, house ? h.spot : h.door, step, dt)) {
+        n.wi = 1; n.dir = 'down';
+        if (!house) Object.assign(n, { inside: true, visible: false });
+      }
+      continue;
+    }
+    if (n.inside) Object.assign(n, { inside: false, visible: true });   // stepping out of the shop or lodge
     const last = b.path.length - 1;
-    if (b.stay && n.wi > last) { n.moving = false; continue; }   // home: standing at the door
-    if (walk(n, b.path[Math.min(n.wi, last)], step, dt)) {
+    if (b.stay && n.wi > last) { n.moving = false; continue; }   // standing at their place
+    if (travel(n, b.map, b.path[Math.min(n.wi, last)], step, dt)) {
       if (b.stay) { n.wi++; if (n.wi > last) n.dir = 'down'; }
       else { n.wi = (n.wi + 1) % b.path.length; n.wait = 2 + Math.random() * 3; }
     }
