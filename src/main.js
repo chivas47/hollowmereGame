@@ -73,6 +73,7 @@ import './systems/museum.js';
 import './systems/market.js';   // v69
 import './systems/theatre.js';   // v70
 import './systems/storage.js';   // v71: chests, signs, the farm computer, the lost and found
+import './systems/atmosphere.js';   // v72: waterfalls, splashes, lightning, wildlife
 
 // UI
 import './ui/toast.js';
@@ -114,6 +115,7 @@ import { initDebug } from './ui/debugPanel.js';
 import { initSound } from './ui/sound.js';
 import { initSaveFile } from './ui/saveFile.js';
 import './audio/sfx.js';
+import './audio/ambience.js';   // v72
 import { $ } from './ui/dom.js';
 
 const canvas = $('#game'), ctx = canvas.getContext('2d');

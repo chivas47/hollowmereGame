@@ -49,7 +49,8 @@ src/
     hidden.js         GATES (grove log, railway rubble, sewer key), GROVE stumps, SPRING, TRADER stock (v45)
     cavern.js         CAVERN (the Sunken Cavern's door, strength, ores, shafts, chests), HOLLOW_GOLD (v38)
     guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
-    weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item
+    weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item, underSky()
+    atmosphere.js     LIGHT keyframes, WATERFALLS, WILDLIFE, AMBIENCE by area (v72)
     schedules.js      neighbour daily schedules, rest days, map entry points
     scenes.js         heart scenes at 4 and 8 hearts
   systems/            one feature per file
@@ -121,6 +122,7 @@ src/
     trees.js          fruit trees (placed objects of kind 'tree'): growth, fruit, picking, drawing
     giants.js         giant crops: merging ripe 3x3 blocks, chopping, solid 'Y' tiles
     weather.js        today's weather and the forecast, rain watering, lightning, the rain/snow/mist overlay
+    atmosphere.js     waterfalls, rain splashes, storm bolts and thunder, birds, butterflies, fireflies (v72, drawn only)
     clearing.js       debris and wild alders (G.S.debris), axe use, creeping debris, alder cones, gates, fences and paths
     quality.js        item quality: counts(), addItem(), valueOf(), takeBest(), quality rolls
     debug.js          DEBUG actions for the debug panel
@@ -135,6 +137,7 @@ src/
     engine.js         context, buses, settings (localStorage), tone() and noise()
     sfx.js            listens for 'sfx' and other events, plays effects
     music.js          generated loop per mood (data/music.js)
+    ambience.js       ambient sound by area: noise beds and calls (v72, data/atmosphere.js)
   ui/
     sound.js          footer toggles, M key, unlock on first input
     saveFile.js       Export save / Import save buttons, file download and upload
@@ -234,21 +237,26 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 
 | z | Owner | Draws |
 |---|---|---|
+| 8 | atmosphere.js | Waterfalls |
 | 9 | clearing.js, house.js | Paths, rugs |
 | 10 | farming.js, forage.js | Soil, crops, forage (soil of the current map) |
+| 11 | atmosphere.js | Rain splashes |
 | 12 | fishing.js | Ice hole in winter |
 | 20 | placeables.js | Sprinklers, machines, lanterns |
 | 30 | festivals.js | Bunting on festival days |
+| 40 | atmosphere.js | Birds |
 | (entities) | player, npcs, coop, barn, monsters, treasure (lit bombs), guild (Warden Hale), trees, giants, clearing, house (furniture) | y-sorted characters, fruit trees, giant crops, debris, alders, fences, gates |
 | 55 | fishing.js | Line and bobber |
 | 60 | effects.js | Tool swing |
+| 70 | atmosphere.js | Butterflies |
 | 90 | fishing.js | Reel bar |
 | 60 | treasure.js | Bomb blasts in the Hollow |
 | 95 | mine.js | Darkness around the player |
-| 96 | weather.js | Rain, storm flashes, snow, mist (outdoor maps) |
+| 96 | weather.js, atmosphere.js | Rain, snow, mist (open-air maps, `underSky()`); lightning bolt and flash |
 | 97 | placeables.js, festivals.js | Lantern glow after dark |
+| 1000+ | atmosphere.js | Fireflies (drawn after the light tint) |
 
-The night tint is drawn by renderer.js after all layers (not in caves).
+The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after layers up to 999 (not in caves or houses); after 8 pm it opens around the player. Layers 1000 and up draw over it.
 
 ## Events (`core/events.js`)
 

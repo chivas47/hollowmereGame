@@ -8,7 +8,7 @@ import { addLayer } from '../core/registry.js';
 import { dateParts } from '../core/time.js';
 import { FESTIVALS } from '../data/festivals.js';
 import { MAPS } from '../data/maps.js';
-import { WEATHER, ODDS, LIGHTNING, MIST, OUTDOORS } from '../data/weather.js';
+import { WEATHER, ODDS, LIGHTNING, MIST, underSky } from '../data/weather.js';
 import { r } from '../render/pixel.js';
 
 export const weatherNow = () => WEATHER[G.S.weather] || WEATHER.sun;
@@ -67,11 +67,11 @@ on('game:loaded', () => {
   if (!WEATHER[S.forecast]) S.forecast = roll(S.day + 1);
 });
 
-// ---- Drawing: rain streaks, a storm's flashes, snowflakes, the silver mist ----
+// ---- Drawing: rain streaks, snowflakes, the silver mist (lightning and splashes: systems/atmosphere.js) ----
 const drops = Array.from({ length: 140 }, (_, i) => ({ x: (i * 97) % (W * T), y: (i * 53) % (H * T), s: 0.8 + ((i * 37) % 10) / 20 }));
 addLayer(96, (c) => {
   const S = G.S, kind = S.weather;
-  if (!OUTDOORS.includes(S.map) || kind === 'sun' || !WEATHER[kind]) return;
+  if (!underSky(S.map) || kind === 'sun' || !WEATHER[kind]) return;
   const t = performance.now() / 1000, w = W * T, h = H * T;
   if (kind === 'rain' || kind === 'storm') {
     c.fillStyle = kind === 'storm' ? 'rgba(20,30,50,.28)' : 'rgba(40,60,90,.16)'; c.fillRect(0, 0, w, h);
@@ -79,7 +79,6 @@ addLayer(96, (c) => {
       const x = (d.x - t * 60 * d.s) % w, y = (d.y + t * 260 * d.s) % h;
       r(c, Math.floor((x + w) % w), Math.floor(y), 1, 5, 'rgba(180,205,235,.55)');
     }
-    if (kind === 'storm' && (t % 7) < 0.12) { c.fillStyle = 'rgba(255,255,240,.45)'; c.fillRect(0, 0, w, h); }
   } else if (kind === 'snow') {
     for (const d of drops) {
       const x = (d.x + Math.sin(t + d.y) * 6 + w) % w, y = (d.y + t * 22 * d.s) % h;

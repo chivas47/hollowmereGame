@@ -60,3 +60,13 @@ export function noise({ dur = 0.15, vol = 0.15, filter = 'lowpass', freq = 800, 
   g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
   src.connect(f); f.connect(g); g.connect(a.sfx); src.start(t); src.stop(t + dur + 0.02);
 }
+
+// v72: a looping noise bed (rain, wind, falling water, surf) for audio/ambience.js. Returns its gain to fade.
+export function bed({ filter = 'lowpass', freq = 800, q = 0.7 }) {
+  const a = audio(); if (!a) return null;
+  noise({ dur: 0.01, vol: 0.0001 });   // builds the shared buffer
+  const src = a.ctx.createBufferSource(), f = a.ctx.createBiquadFilter(), g = a.ctx.createGain();
+  src.buffer = noiseBuf; src.loop = true; f.type = filter; f.frequency.value = freq; f.Q.value = q; g.gain.value = 0;
+  src.connect(f); f.connect(g); g.connect(a.sfx); src.start();
+  return g;
+}
