@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v73: Smoother collision
+- Walking into a wall stops you flush against it instead of a few pixels short, and the stutter along walls is gone.
+- Walking into a corner or a narrow gap slides you around it when you are up to 6 px off line, so doorways and gaps between objects no longer catch you.
+- Fix: placing a sprinkler, machine, chest or anything else on a tile you were partly standing on trapped you in place. Anything solid under you (placed, spawned or grown) no longer blocks you, so you can always walk out.
+- Fast movement (the horse, a slow frame) is moved in short steps so it cannot skip through a wall. Knockback and cave monsters use the same collision and slide along walls.
+
 ## v72: Atmosphere
 - Weather now shows on every open-air map (the beach, forest, grove, mountain, town, island and more), not only the farm, the Wilds and the village. The Dunes stay dry.
 - Rain splashes on the ground. Storms throw a lightning bolt every 6 to 14 seconds, with thunder a moment later.

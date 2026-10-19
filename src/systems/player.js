@@ -6,7 +6,7 @@ import { addUpdater, addEntities } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
 import { drawPerson, drawHorse } from '../render/sprites.js';
 import { STABLE } from '../data/upgrades.js';
-import { blocked, playerTile, currentMap, placePlayer } from './world.js';
+import { moveBox, playerTile, currentMap, placePlayer } from './world.js';
 import { outfitPal } from './clothing.js';
 
 const SPEED = 62; // pixels per second
@@ -20,8 +20,7 @@ addUpdater((dt) => {
   if (!G.moving) return;
   S.dir = dx && !dy ? (dx < 0 ? 'left' : 'right') : (dy < 0 ? 'up' : 'down');
   const step = SPEED * (G.riding ? STABLE.speed : 1) * speedMult() * dt * (dx && dy ? 0.7071 : 1);   // v35: speed buffs
-  const nx = S.x + dx * step; if (!blocked(nx, S.y)) S.x = nx;
-  const ny = S.y + dy * step; if (!blocked(S.x, ny)) S.y = ny;
+  moveBox(S, dx * step, dy * step);
   G.walkT += dt;
 
   const { tx, ty } = playerTile();

@@ -13,7 +13,7 @@ import { VENT } from '../data/forge.js';
 import { PEAK } from '../data/nuts.js';
 import { ITEMS } from '../data/items.js';
 import { drawSlime, drawMonster } from '../render/sprites.js';
-import { solidAt } from './world.js';
+import { moveBox } from './world.js';
 import { hurtPlayer } from './health.js';
 import { has } from './professions.js';
 import { attackMult } from './buffs.js';
@@ -23,7 +23,7 @@ const AGGRO = 110, HOP = 1.2, HOP_ACTIVE = 0.5, TOUCH = 11;
 export const slimes = [];   // every monster on the map (named before v36, when there were only slimes); exported for tests
 let slimeMap = 'mine';     // the map the current slimes live on
 
-const blockedAt = (x, y) => solidAt(x - 4, y - 3) || solidAt(x + 3.99, y - 3) || solidAt(x - 4, y) || solidAt(x + 3.99, y);
+const BOX = { l: 4, r: 4, t: 3, b: 1 };   // v73: swept and sliding like the player's (world.js moveBox)
 
 function make(kind, floor, px, py, R) {
   const d = MONSTERS[kind];
@@ -60,8 +60,9 @@ on('day:start', () => { slimes.length = 0; });
 
 function step(m, vx, vy, dist) {
   const fly = MONSTERS[m.kind || 'slime'].move === 'fly', inside = (x, y) => x > 8 && y > 8 && x < W * T - 8 && y < H * T - 4;
-  const nx = m.x + vx * dist; if (fly ? inside(nx, m.y) : !blockedAt(nx, m.y)) m.x = nx; else m.tx = m.x;
-  const ny = m.y + vy * dist; if (fly ? inside(m.x, ny) : !blockedAt(m.x, ny)) m.y = ny; else m.ty = m.y;
+  if (!fly) { const hit = moveBox(m, vx * dist, vy * dist, BOX); if (hit.x) m.tx = m.x; if (hit.y) m.ty = m.y; return; }
+  const nx = m.x + vx * dist; if (inside(nx, m.y)) m.x = nx; else m.tx = m.x;
+  const ny = m.y + vy * dist; if (inside(m.x, ny)) m.y = ny; else m.ty = m.y;
 }
 
 addUpdater((dt) => {

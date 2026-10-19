@@ -5,7 +5,7 @@ import { on, emit, changed } from '../core/events.js';
 import { addUpdater } from '../core/registry.js';
 import { CLINIC_BED } from '../data/maps.js';
 import { SHOPS, CLINIC } from '../data/town.js';
-import { blocked, placePlayer } from './world.js';
+import { moveBox, placePlayer } from './world.js';
 import { defense } from './clothing.js';
 
 const INVULNERABLE = 1, KNOCKBACK = 10;
@@ -17,9 +17,7 @@ export function hurtPlayer(dmg, fromX, fromY) {
   G.hurtT = INVULNERABLE;
   emit('sfx', 'hurt');
   const dx = S.x - fromX, dy = S.y - fromY, d = Math.hypot(dx, dy) || 1;
-  const nx = S.x + (dx / d) * KNOCKBACK, ny = S.y + (dy / d) * KNOCKBACK;
-  if (!blocked(nx, S.y)) S.x = nx;
-  if (!blocked(S.x, ny)) S.y = ny;
+  moveBox(S, (dx / d) * KNOCKBACK, (dy / d) * KNOCKBACK);   // v73: slides along walls, stops flush
   changed();
   if (S.hp <= 0) faint();
 }
