@@ -26,6 +26,7 @@ export function newState() {
     qbag: {},           // item -> [fine, prime, heirloom] counts within bag (see systems/quality.js)
     soil: {},           // farm: "x,y" -> { w: watered, crop: { type, age, dead } | null }
     greenSoil: {},      // greenhouse beds, same shape
+    museum: { donated: [], rewards: [], notes: [], dug: [], spots: {}, spotDay: 0, ach: [] },   // v68: donations, rewards claimed, secret notes, note treasures dug, artifact spots, achievements
     islandSoil: {}, boatFixed: false, nuts: { have: 0, found: [], crops: [], fish: 0, digDay: 0, digs: [], siteDigs: 0, bridge: false, bought: [], peak: false, peakDeepest: 0, peakNuts: [], summit: false, puzzles: [], chime: 0, stones: [], stonesDay: 0 },   // v66: tide nuts; v67: the peak and puzzles
       // v65: the island farm's soil; Rook's boat repaired
     forage: [], forageDay: 0,
@@ -119,6 +120,8 @@ export function merge(saved) {
   if (!s.projects || typeof s.projects !== 'object') s.projects = {};
   if (!s.greenSoil || typeof s.greenSoil !== 'object') s.greenSoil = {};
   if (!s.islandSoil || typeof s.islandSoil !== 'object') s.islandSoil = {};   // v65
+  const mu = saved.museum || {};   // v68
+  s.museum = { donated: [...(mu.donated || [])], rewards: [...(mu.rewards || [])], notes: [...(mu.notes || [])], dug: [...(mu.dug || [])], spots: { ...(mu.spots || {}) }, spotDay: mu.spotDay || 0, ach: [...(mu.ach || [])] };
   s.nuts = { ...newState().nuts, ...(saved.nuts || {}) };   // v66
   for (const k of ['found', 'crops', 'digs', 'bought', 'peakNuts', 'puzzles', 'stones']) s.nuts[k] = [...(s.nuts[k] || [])];
   if (!s.qbag || typeof s.qbag !== 'object') s.qbag = {};

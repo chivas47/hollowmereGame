@@ -24,7 +24,8 @@ export function initInput(canvas) {
     if (e.code === 'Backquote') { toggleDebug(); return; }
     if (e.code === 'KeyI') { emit('ui:inventory'); return; }
     if (e.code === 'KeyC') { emit('ui:craft'); return; }
-    if (e.code === 'KeyF') { emit('ui:social'); return; }   // v48: the social menu
+    if (e.code === 'KeyF') { emit('ui:social'); return; }
+    if (e.code === 'KeyJ') { emit('ui:journal'); return; }   // v68: collections, notes, achievements, completion   // v48: the social menu
     if (e.code === 'KeyM') { toggleAll(); return; }
     if (e.code === 'KeyH') { whistle(); return; }
     if (e.code === 'KeyQ') { if (!e.repeat) selectSlot(SEED_SLOT); return; }   // pick seeds, again to switch type

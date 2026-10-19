@@ -146,6 +146,7 @@ export function crackGeode(kind) {
   for (const row of table) { if (r < row[1]) { pick = row; break; } r -= row[1]; }
   const [item, , min = 1, max = 1] = pick, n = roll(min, max);
   S.bag[item] = (S.bag[item] || 0) + n;
+  emit('geode:cracked', { kind });   // v68: the museum's artifact chance
   emit('gather', { skill: 'mining', xp: 3 });   // no item: the mining bonus does not copy what is inside
   emit('sfx', 'pickup');
   changed();
