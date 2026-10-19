@@ -661,6 +661,21 @@ One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up 
 
 Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (wide 3), water 2, clear withered crop 1, cast 8, pickaxe 2, axe 2 a swing. Cutting weeds with the sword is free (Stardew's scythe). Warm cider restores 60.
 
+## The Smoke Peak and the island's puzzles (v67)
+
+The island's dungeon (Stardew's volcano dungeon by role; Nuno chose to run it on the mine engine). A cave mouth at the top of the island; the parrot opens it for 5 nuts. Ten floors, rebuilt each visit like the Hollow's: 6% lava (solid), rocks 20% cinder, 8% umbrite, 12% gold, the rest stone; the Ember Vent's monsters at strength 100 + 3 per floor (between the cavern and the vent), 7 to 12 per floor; loot chests as in the cavern. Floors 2, 4, 6 and 8 give a nut with their first ladder; floor 10, the summit, is a quiet room with a cache of 3 nuts. The ladder up, or fainting, brings you out at the cave mouth.
+
+Hidden puzzles, 2 nuts each, once (Stardew's island puzzles give 1 to 5 walnuts):
+
+| Puzzle | Where | Solve |
+|---|---|---|
+| Shell chimes | three shells on the beach | strike them smallest to largest; a wrong shell starts over |
+| Dry basins | three stone basins west of the farm | water all three with the can on one day |
+| The altar | east of the pond | leave a gleamfruit on it |
+| The lantern | south of the path | light it with 1 coal after 8:00 pm |
+
+With 27c, the island holds 30 nuts: the bridge takes 10, the peak 5, the rest goes to the trader.
+
 ## Tide nuts (v66)
 
 The island's own currency, found and never bought (Stardew's golden walnuts; Nuno chose a found nut). Each source gives its nuts once:
