@@ -18,6 +18,9 @@ import { hurtPlayer } from './health.js';
 import { has } from './professions.js';
 import { attackMult } from './buffs.js';
 import { weapon, weaponKind, wearing, giveFind, forgeBonus, weaponEnchant } from './gear.js';
+import { COMBO, SLAM_RADIUS, HIT_STOP, IMPACT } from '../data/animation.js';
+import { HOTBAR } from '../data/hotbar.js';
+import { playAnim, shake, holdSwing, ring, burst } from './animation.js';
 
 const AGGRO = 110, HOP = 1.2, HOP_ACTIVE = 0.5, TOUCH = 11;
 export const slimes = [];   // every monster on the map (named before v36, when there were only slimes); exported for tests
@@ -95,8 +98,16 @@ addUpdater((dt) => {
 
 // The weapon: swings anywhere, only hurts monsters. Priority 58 sits below neighbours, chickens, buildings and
 // ladders, so holding it never blocks talking or opening things. Daggers swing fast, clubs slowly and hit hard.
-let cooldown = 0;
-addUpdater((dt) => { if (cooldown > 0) cooldown -= dt; });
+// v74: combos (data/animation.js COMBO). Pressing again within the window chains the next step; a press late in a
+// swing is buffered. The last step is the finisher: a spin (sword), a lunging stab (dagger) or a slam (club).
+let cooldown = 0, since = 99, combo = 0, buffered = false;
+addUpdater((dt) => {
+  if (cooldown > 0) {
+    cooldown -= dt;
+    if (cooldown <= 0 && buffered) { buffered = false; if (!G.paused && HOTBAR[G.S.slot] === 'sword') strike(); }
+  } else since += dt;
+});
+on('map:changed', () => { cooldown = 0; buffered = false; combo = 0; since = 99; });
 export function damageOf() {
   return weapon().damage * attackMult() * (has('fighter') ? 1.1 : 1) * (has('brute') ? 1.15 : 1) * (wearing('emberring') ? 1.1 : 1) * forgeBonus().damage * (G.S.mastery.claimed.includes('combat') ? 1.15 : 1);   // v39: heartstones; v40: combat mastery
 }
@@ -116,28 +127,50 @@ function defeat(m) {
   emit('monster:slain', { kind: m.kind || 'slime', x: m.x, y: m.y, map: slimeMap });   // v37: the lodge's goals, the blast ring
   changed();
 }
-// v37: hurts a monster (bombs and the blast ring use it too); knock: [kx, ky] push.
-export function hitMonster(m, dmg, kx = 0, ky = 0) {
+// v37: hurts a monster (bombs and the blast ring use it too); knock: [kx, ky] push. v74: crit marks a critical hit
+// for the damage number (systems/animation.js listens to monster:hit).
+export function hitMonster(m, dmg, kx = 0, ky = 0, crit = false) {
   if (!slimes.includes(m)) return;
   m.hp -= dmg; m.hurt = 0.25; m.kx = kx; m.ky = ky;
+  emit('monster:hit', { x: m.x, y: m.y, dmg, crit, kx, ky });
   if (m.hp <= 0) defeat(m);
 }
 export const monstersOn = () => slimeMap;
-addInteraction(58, ({ item, mapId }) => {
-  if (item !== 'sword') return false;
-  if (cooldown > 0) return true;
-  const wk = weaponKind(), [dx, dy] = DIRS[G.S.dir], px = G.S.x + dx * 12, py = G.S.y - 4 + dy * 12;
-  const fb = forgeBonus();
-  cooldown = wk.cooldown * (weapon().slow ? 1.5 : 1) * fb.speed;   // v39: ember quartz
-  G.swing = { tx: Math.floor(px / T), ty: Math.floor(py / T), kind: 'sword', t: 0.3 };
+
+function strike() {
+  const wk = weaponKind(), kind = weapon().kind, steps = COMBO[kind] || COMBO.sword, fb = forgeBonus();
+  if (since > COMBO.window || combo >= steps.length) combo = 0;
+  const st = steps[combo], last = combo === steps.length - 1;
+  combo = last ? 0 : combo + 1; since = 0;
+  const base = wk.cooldown * (weapon().slow ? 1.5 : 1) * fb.speed;   // v39: ember quartz
+  cooldown = base + (st.recover || 0);
+  const [dx, dy] = DIRS[G.S.dir];
+  moveBox(G.S, dx * st.lunge, dy * st.lunge);   // a short step into the swing (v73: stops at walls)
+  playAnim('sword', { dur: base * (st.spin ? 1.3 : 1), from: st.arc[0], to: st.arc[1], strike: st.slam ? 0.4 : 0.1, root: base * 0.6,
+    weapon: kind === 'sword' ? 'sword' : kind, trail: !st.thrust, spin: st.spin, thrust: st.thrust, reach: st.spin ? 14 : 12 });
   emit('sfx', 'sword');
-  if (mapId !== slimeMap) return true;
+  if (st.shake) shake(st.shake, 0.15);
+  const reachK = st.reach || 1, px = G.S.x + dx * 12 * reachK, py = G.S.y - 4 + dy * 12 * reachK;
+  if (st.slam) { ring(px, py + 4, 'rgba(255,241,184,.9)', SLAM_RADIUS, 0.35); burst(px, py + 4, IMPACT.stone, 10, { speed: 60, up: 40, size: 2, life: 0.45, shrink: true }); }
+  if (G.S.map !== slimeMap) return;
+  const cx = st.spin ? G.S.x : px, cy = st.spin ? G.S.y - 4 : py, reach = st.spin ? wk.reach + 6 : st.slam ? SLAM_RADIUS : wk.reach * reachK;
+  let hits = 0;
   for (const m of [...slimes]) {
-    if (Math.hypot(m.x - px, m.y - 4 - py) > wk.reach) continue;
+    const ox = m.x - cx, oy = m.y - 4 - cy, d = Math.hypot(ox, oy);
+    if (d > reach) continue;
     const critChance = (has('scout') ? 0.1 : 0) + (wearing('tidering') ? 0.1 : 0) + fb.crit;
     const crit = Math.random() < critChance ? (has('desperado') ? 3 : 2) * (wearing('mossring') ? 1.5 : 1) * fb.critPower : 1;   // v34 scout, desperado; v36 rings; v39 forge
-    hitMonster(m, damageOf() * crit * versus(m.kind), dx * wk.knock * fb.knock, dy * wk.knock * fb.knock);
+    const kn = wk.knock * fb.knock * (st.knock || 1), [ux, uy] = st.spin || st.slam ? [ox / (d || 1), oy / (d || 1)] : [dx, dy];   // spins and slams push outward
+    m.frozen = Math.max(m.frozen || 0, HIT_STOP);
+    hitMonster(m, damageOf() * crit * versus(m.kind) * st.mult, ux * kn, uy * kn, crit > 1);
+    hits++;
   }
+  if (hits) holdSwing(HIT_STOP);
+}
+addInteraction(58, ({ item }) => {
+  if (item !== 'sword') return false;
+  if (cooldown > 0) { if (cooldown <= COMBO.buffer) buffered = true; return true; }
+  strike();
   return true;
 });
 

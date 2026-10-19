@@ -51,6 +51,7 @@ src/
     guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item, underSky()
     atmosphere.js     LIGHT keyframes, WATERFALLS, WILDLIFE, AMBIENCE by area (v72)
+    animation.js      SWINGS (tool arcs and timings), COMBO (weapon combo steps), PICKUP, CRAFTED, PLACE, IMPACT colours (v74)
     schedules.js      neighbour daily schedules, rest days, map entry points
     scenes.js         heart scenes at 4 and 8 hearts
   systems/            one feature per file
@@ -65,7 +66,8 @@ src/
     clock.js          advances time, pass out at END
     days.js           sleep(): day:end -> date++ -> season:changed -> day:start -> day:report
     interact.js       act(): builds {tx, ty, tile, mapId, item} and runs interactions
-    effects.js        tool swing animation (swingAt)
+    effects.js        tool swing feedback (swingAt: the water and seed overlay, starts the player's swing)
+    animation.js      v74: player action poses (playAnim, rooted), pickups flying in, particles (burst, ring), damage numbers (floatText), screen shake (shake), hit-stop (holdSwing); cosmetic only, its own RNG
     farming.js        till (wide hoe), water, plant, harvest, growth, withering
     forage.js         daily forage spawns in the Wilds
     fishing.js        cast, bite, the catch bar (v41: hold Use, G.useHeld), bait, tackle, treasure, trash, fish log
@@ -107,7 +109,7 @@ src/
     coop.js           coop placement, coop animals, petting, feed
     mine.js           floor generation for the Hollow, the Sunken Cavern the Ember Vent and the Smoke Peak (MINE.zone, MINE.eff), the forge room and the summit (v67), rocks, breakRock(), ladders, shafts, lighting
     health.js         hurtPlayer(), fainting
-    monsters.js       mine monsters by kind and floor (and the wild farm's slimes), the weapon swing, drops
+    monsters.js       mine monsters by kind and floor (and the wild farm's slimes), the weapon swing and its combos (v74), drops
     placeables.js     kit slot, placing/picking up crafted objects ('Y' tiles), drawing, lantern glow
     crafting.js       craft(): gold + materials -> kit
     sprinklers.js     water soil on day:start and on placement
@@ -132,6 +134,7 @@ src/
     sprites.js        per-frame art: soil, crops, forage, people, chickens, slimes, fruit trees, giant crops, effects
     icons.js          16x16 hotbar icons
     arcade.js         the arcade cabinets' screens (v70)
+    animation.js      v74: the tool or weapon in hand (drawHeld, rotated hotbar icons), the rod (drawRod), the crafted pose, item pictures, particles and labels (drawFx)
     renderer.js       composes a frame, caches backgrounds per map + season
   audio/              Web Audio output (like render/, but for sound); imported only by main.js and ui/
     engine.js         context, buses, settings (localStorage), tone() and noise()
@@ -245,9 +248,10 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 20 | placeables.js | Sprinklers, machines, lanterns |
 | 30 | festivals.js | Bunting on festival days |
 | 40 | atmosphere.js | Birds |
-| (entities) | player, npcs, coop, barn, monsters, treasure (lit bombs), guild (Warden Hale), trees, giants, clearing, house (furniture) | y-sorted characters, fruit trees, giant crops, debris, alders, fences, gates |
+| (entities) | player (with the tool in hand, v74), npcs, coop, barn, monsters, treasure (lit bombs), guild (Warden Hale), trees, giants, clearing, house (furniture) | y-sorted characters, fruit trees, giant crops, debris, alders, fences, gates |
 | 55 | fishing.js | Line and bobber |
-| 60 | effects.js | Tool swing |
+| 60 | effects.js | Tool swing (water and seed overlay) |
+| 61 | animation.js | Particles, flying pickups, damage numbers and labels (v74) |
 | 70 | atmosphere.js | Butterflies |
 | 90 | fishing.js | Reel bar |
 | 60 | treasure.js | Bomb blasts in the Hollow |
@@ -277,6 +281,8 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `quest:done` | quest | quests.js | market.js (a prize ticket, v69) |
 | `order:done` | order key | orders.js | market.js (a prize ticket, v69) |
 | `mine:ladder` | {floor, zone} | mine.js | nuts.js (peak nut floors, v67) |
+| `monster:hit` | {x, y, dmg, crit, kx, ky} | monsters.js hitMonster() (v74) | animation (damage number, sparks) |
+| `crafted` | {key, n, kit} | crafting.js (v74) | animation (the crafted pose) |
 | `monster:slain` | {kind, x, y, map} | monsters.js | guild (goal counts), treasure (blast ring) |
 | `mine:faint` | none | health.js | mine.js (carry out) |
 | `gather` | {skill, xp, item?, n?} | farming, giants, clearing, forage, fishing, mine, monsters, coop, barn, books | skills.js (XP, bonus item), books.js (mastery XP, book finds) |

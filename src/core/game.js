@@ -8,6 +8,10 @@ export const G = {
   hurtT: 0,         // seconds of invulnerability left after being hit
   talking: null,    // id of the NPC in conversation
   swing: null,      // current tool effect {tx, ty, kind, t}
+  anim: null,       // v74: the player's current action pose (systems/animation.js)
+  fx: { parts: [], floats: [], pickups: [] },   // v74: particles, labels and flying pickups
+  shake: null,      // v74: screen shake {mag, t}
+  bounce: 0,        // v74: the little hop when a pickup lands
   moving: false,
   walkT: 0,
   clockAcc: 0,

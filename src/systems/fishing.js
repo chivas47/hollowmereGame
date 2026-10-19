@@ -211,7 +211,7 @@ addLayer(55, (c) => {
   const f = G.fishing;
   if (!f) return;
   const bx = f.tx * T + 8, dip = f.phase === 'wait' ? Math.round(Math.sin(performance.now() / 300)) : 2;
-  const by = f.ty * T + 8 + dip, hx = Math.round(G.S.x), hy = Math.round(G.S.y) - 12;
+  const by = f.ty * T + 8 + dip, tip = G.rodTip, hx = Math.round(tip ? tip.x : G.S.x), hy = Math.round(tip ? tip.y : G.S.y - 12);   // v74: from the rod's tip
   c.strokeStyle = 'rgba(244,234,210,.7)'; c.lineWidth = 1;
   c.beginPath(); c.moveTo(hx + 0.5, hy + 0.5); c.lineTo(bx + 0.5, by + 0.5); c.stroke();
   const bob = BOBBERS[Math.min(G.S.bobber || 0, bobberStyles() - 1)] || BOBBERS[0];   // v41: bobber styles

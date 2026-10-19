@@ -537,6 +537,15 @@ Slot 5 (no hotbar change) swings the weapon chosen in the bag. Damage is Stardew
 | Burrow shank | dagger | 8 | drop, floor 50+ | Burglar's shank |
 
 - Swords swing every 0.3 s, daggers every 0.16 s with shorter reach, clubs every 0.6 s with longer reach and three times the knockback of a dagger.
+- v74 combos (data/animation.js COMBO): press again within 0.45 s of the last swing ending; a press in the last 0.25 s of a swing is buffered.
+
+| Kind | Steps | Finisher | Recovery after it |
+|---|---|---|---|
+| Sword | slash, back-slash, spin | x1.5 damage, hits everything within reach + 6 px, x1.5 knockback outward | 0.15 s |
+| Dagger | cut, cut, stab | x1.5 damage, x1.5 reach, x1.4 knockback, 6 px lunge | 0.08 s |
+| Club | swing, slam | x1.5 damage, a 26 px shockwave around the impact, x1.6 knockback outward | 0.3 s |
+
+  Stardew has no combo chain. The finisher's multiplier and recovery are set so a full combo deals the same damage per second as plain swings did (sword 3.33, dagger 6.25, club 1.67 times weapon damage a second), keeping Stardew's weapon scale; the gain is reach and crowd control.
 - Monsters (count grows to 10 a floor): slime (floor 1+, gel 60%), Hollow mite (3+, crawls, fiber 30%), cave bat (12+, flies, coal 20%), bone walker (30+, iron ore 30%), Hollow serpent (50+, flies, violet stone 5%). Combat XP 3, 2, 6, 15, 20. Any kill: 1% chance of a weapon or ring from the floor's pool.
 - Rings (two worn; Stardew's ruby, topaz, aquamarine, jade, vampire, slime charmer, burglar's and glow rings): Ember +10% damage, Stone +1 defense, Tide +10% critical chance, Moss criticals x1.5, Leech +2 health a kill, Slime ward (slimes do no harm), Thief's (double drops), Glow (40% more light). Floors 15, 35, 45 and 65 give one; the rest drop.
 - Boots found on floors 30, 60 and 80: Tunnel boots (3), Ember boots (4), Deepstone boots (5 defense).
@@ -660,6 +669,13 @@ One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up 
 ### Energy costs
 
 Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (wide 3), water 2, clear withered crop 1, cast 8, pickaxe 2, axe 2 a swing. Cutting weeds with the sword is free (Stardew's scythe). Warm cider restores 60.
+
+## Animation (v74)
+
+Nothing here is saved or touches the economy (cosmetic randomness has its own generator, so the balance simulator's runs are unchanged).
+- Tool swings (data/animation.js SWINGS): hoe 0.32 s, pickaxe and axe 0.34 s, can 0.42 s, seeds 0.26 s, cast 0.4 s. You are held in place for the first 0.12 to 0.3 s.
+- Pickups fly in over 0.32 s, at most 6 kinds at once; labels stack. The crafted pose lasts 1 s; placing 0.25 s.
+- Hit-stop 0.06 s on contact; screen shake on stone, criticals, the spin and slam finishers, and when you are hurt.
 
 ## Atmosphere (v72)
 
