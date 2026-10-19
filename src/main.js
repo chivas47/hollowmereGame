@@ -12,6 +12,7 @@ import './systems/sites.js';     // second: moves building footprints and writes
 import './systems/player.js';
 import './systems/clock.js';
 import './systems/effects.js';
+import './systems/animation.js';   // v74: action poses, combos, pickups, particles, screen shake
 import './systems/farming.js';
 import './systems/seeds.js';
 import './systems/forage.js';

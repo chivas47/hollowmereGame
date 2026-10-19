@@ -460,13 +460,11 @@ export function drawSlime(c, px, py, color, hurt, phase) {
   r(c, x + 3, y + 3, 1, 2, '#1c1712'); r(c, x + 6, y + 3, 1, 2, '#1c1712');
 }
 
+// v74: the tool itself and its chips are drawn by render/animation.js; this keeps the water and seed overlay.
 export function drawSwing(c, s) {
   const X = s.tx * T, Y = s.ty * T, k = 1 - s.t / 0.3;
-  if (s.kind === 'sword') { for (let i = 0; i < 6; i++) r(c, X + 2 + i * 2, Y + 12 - i * 2 - Math.round(k * 2), 2, 1, i < 2 ? '#c9ccd6' : '#f4ead2'); return; }
-  if (s.kind === 'pick' || s.kind === 'axe') { for (let i = 0; i < 4; i++) r(c, X + 3 + i * 3, Y + 9 - k * 6 - (i % 2) * 2, 2, 2, '#9a928a'); return; }
   if (s.kind === 'can') { for (let i = 0; i < 5; i++) r(c, X + 2 + i * 3, Y + 2 + ((k * 10 + i * 3) % 11), 1, 2, '#9fd3f2'); }
-  else if (s.kind === 'hoe') { for (let i = 0; i < 4; i++) r(c, X + 3 + i * 3, Y + 10 - k * 6 - (i % 2) * 2, 2, 2, '#a87a4f'); }
-  else r(c, X + 7, Y + 4 + k * 6, 2, 2, '#e3cf8a');
+  else if (s.kind === 'seed') r(c, X + 7, Y + 4 + k * 6, 2, 2, '#e3cf8a');
 }
 
 // Fruit trees. stage 0 to 3 while growing, 4 mature; bare in winter outdoors. The canopy reaches a tile up.
@@ -648,3 +646,6 @@ export function drawTap(c, X, Y, ready) {
   r(c, X + 9, Y + 6, 3, 1, '#8d939a'); r(c, X + 10, Y + 7, 4, 5, '#a5753f'); r(c, X + 10, Y + 7, 4, 1, '#c9955a');
   if (ready && blink(450)) r(c, X + 11, Y + 5, 2, 1, '#e8a35e');
 }
+
+// v74: one forage item's art at a tile's top-left (render/animation.js draws pickups with it).
+export function drawForageArt(c, X, Y, type) { (FORAGE_ART[type] || FORAGE_ART.leek)(c, X, Y, X + 8); }

@@ -2,6 +2,16 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v74: Animation
+- Tools swing in your hands: the hoe, pickaxe and axe wind up and strike, the can tilts and pours, the rod casts and stays in your hand while you fish, bending when a fish bites and while you reel. The line now runs from the rod's tip. You stand still for the wind-up (about a quarter second), as in the genre.
+- Impacts throw dirt, stone chips, wood chips, splashes or seeds; breaking stone shakes the screen a little.
+- Weapon combos: press Use again within 0.45 s of a swing ending (or late in the swing, the press is buffered) to chain. Swords: slash, back-slash, then a spin that hits all around. Daggers: two quick cuts, then a lunging stab with 1.5 times the reach. Clubs: a swing, then an overhead slam with a shockwave. The last hit of a combo does 1.5 times damage and pushes harder, then needs a short recovery, so damage per second is what it was before; the finisher only moves damage into one stronger, wider hit. Each swing steps you slightly forward.
+- Hits show damage numbers (criticals larger, in gold), sparks and a brief hit-stop; defeated monsters burst into a puff. Taking a hit shakes the screen.
+- Pickups: anything new in the bag (harvests, forage, fish, ore, drops) flies from where you got it into your hands, with a "+n Name" label. Taking a placed object back up flies it to you too.
+- Placing: a crouch, a dust puff and a ring where the object lands.
+- Crafting: when the menu closes you hold up what you made, with sparkles and a "Made" label.
+- Dust at your feet as you walk, more on the horse.
+
 ## v73: Smoother collision
 - Walking into a wall stops you flush against it instead of a few pixels short, and the stutter along walls is gone.
 - Walking into a corner or a narrow gap slides you around it when you are up to 6 px off line, so doorways and gaps between objects no longer catch you.

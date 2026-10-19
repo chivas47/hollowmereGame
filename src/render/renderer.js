@@ -46,6 +46,9 @@ function background() {
 
 export function draw(c) {
   c.imageSmoothingEnabled = false;
+  const sk = G.shake;   // v74: screen shake (systems/animation.js)
+  c.save();
+  if (sk) { const m = sk.mag * Math.min(1, sk.t / sk.max * 1.5); c.fillStyle = '#000'; c.fillRect(0, 0, W * T, H * T); c.translate(Math.round((Math.random() - 0.5) * 2 * m), Math.round((Math.random() - 0.5) * 2 * m)); }
   c.drawImage(background(), 0, 0);
   drawLayers(c, 0, 49);
   const f = facing(), t = tileAt(f.tx, f.ty);
@@ -54,6 +57,7 @@ export function draw(c) {
   drawLayers(c, 50, 999);
   if (MAPS[G.S.map].base !== 'cave' && MAPS[G.S.map].base !== 'house') tint(c);
   drawLayers(c, 1000, 1999);   // v72: above the tint (fireflies)
+  c.restore();
 }
 
 // v72: the light of the hour (data/atmosphere.js LIGHT); after dark it opens around the player.

@@ -1,6 +1,6 @@
 // Crafting: turn materials and gold into sprinklers and machines. Open the menu with C or the Craft button.
 import { G } from '../core/game.js';
-import { changed, notify } from '../core/events.js';
+import { changed, notify, emit } from '../core/events.js';
 import { RECIPES, PLACEABLES } from '../data/crafting.js';
 import { affordable } from './upgrades.js';
 import { CROPS } from '../data/crops.js';
@@ -22,6 +22,7 @@ export function craft(key) {
   const n = rc.makes || 1;
   if (rc.item) {   // v41: bait and tackle go to the bag
     S.bag[key] = (S.bag[key] || 0) + n;
+    emit('crafted', { key, n, kit: false });   // v74: the crafted pose (systems/animation.js)
     notify(`Crafted ${n > 1 ? `${n} ` : 'a '}${ITEMS[key].name.toLowerCase()}. Fix it to the rod from the bag (I).`);
     changed();
     return true;
@@ -33,6 +34,7 @@ export function craft(key) {
     return true;
   }
   S.kit[key] += n;
+  emit('crafted', { key, n, kit: true });
   if (S.kit[S.kitSel] <= 0) S.kitSel = key;
   notify(`Crafted ${n > 1 ? `${n} x ` : 'a '}${PLACEABLES[key].name}. Select slot 7 to place it.`);
   changed();
