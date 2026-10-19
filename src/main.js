@@ -71,6 +71,7 @@ import './systems/island.js';
 import './systems/nuts.js';
 import './systems/museum.js';
 import './systems/market.js';   // v69
+import './systems/theatre.js';   // v70
 
 // UI
 import './ui/toast.js';
@@ -103,6 +104,8 @@ import './ui/island.js';
 import './ui/nuts.js';
 import './ui/museum.js';
 import './ui/market.js';
+import './ui/theatre.js';
+import './ui/arcade.js';
 import { buildHotbar } from './ui/hotbar.js';
 import { initInput } from './ui/input.js';
 import { initDebug } from './ui/debugPanel.js';

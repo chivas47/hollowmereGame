@@ -24,7 +24,7 @@ function tavern() {
   const recipes = Object.entries(DISHES).filter(([, d]) => d.from?.tavern).map(([k, d]) => row(`${d.name} recipe`, `${g(d.from.tavern)}.${knows(k) ? ' You know it.' : ''}`,
     `<button data-recipe="${k}" ${knows(k) || S.gold < d.from.tavern ? 'disabled' : ''}>Buy</button>`)).join('');
   openModal(`<h2>${SHOPS.tavern.name}</h2><p class="role">${SHOPS.tavern.keeper} polishes a mug. "Sit, eat. Today's special is the ${DISHES[sp].name.toLowerCase()}." You have <b>${g(S.gold)}</b>.</p>
-    <h3>Menu</h3>${TAVERN.menu.map(dish).join('')}<h3>Dish of the day</h3>${dish(sp)}<h3>Recipes</h3>${recipes}`, sableHere() ? [['The stranger in the corner', sable], ['Leave', closeModal, true]] : [['Leave', closeModal, true]]);
+    <h3>Menu</h3>${TAVERN.menu.map(dish).join('')}<h3>Dish of the day</h3>${dish(sp)}<h3>Recipes</h3>${recipes}`, [...(sableHere() ? [['The stranger in the corner', sable]] : []), ['The arcade cabinets', () => emit('ui:arcade')], ['Leave', closeModal, true]]);   // v70: the cabinets
 }
 
 // v62: Sable, his challenges and his moonstone shop.

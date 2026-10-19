@@ -70,7 +70,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 27d | Island: the dungeon and hidden puzzles | feature | done (chivas47/hollowmereGame#63) | An island dungeon and the hidden puzzles that give nuts. |
 | 28 | Museum and collections | feature | done (chivas47/hollowmereGame#64) | Artifacts and minerals, geodes, museum donations with rewards, collections menu, secret notes, achievements, a completion tracker. |
 | 29 | Economy extras | feature | done (chivas47/hollowmereGame#65) | Travelling cart, bookseller, an expanding critter shop, prize tickets and a prize machine, mystery boxes. |
-| 30 | Minigames and theatre | feature | queued | Two original arcade cabinet games, a movie theatre with neighbours. |
+| 30 | Minigames and theatre | feature | done (chivas47/hollowmereGame#66) | Two original arcade cabinet games, a movie theatre with neighbours. |
 | 31 | Management tools | feature | queued | Chests and big chests, signs, a farm computer, calendar, quest journal, live world map, animal tab, lost and found. |
 | 32 | Atmosphere | feature | queued | Rain and storm effects, waterfalls, wildlife, ambient sound per area, revised lighting. |
 | 33 | Local two-player | feature | needs decision | Same-screen co-op is possible without a server but touches every system. Nuno to decide whether it is worth it. |

@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v70: Minigames and theatre
+- The Starlight Picture House opens on the town's lower lane once the old wing is whole, by bundles or by the rival (9:00 to 21:00, shut on festival days). One film a season, a second set in even years. A ticket is 1,000g; bring a neighbour you have met for a second ticket and buy them a snack. They gain friendship by their taste in films and snacks. You can see one showing a day, each neighbour once a week; a showing takes two hours.
+- Two arcade cabinets in the tavern, free to play: Crow Patrol (throw seeds at diving crows) and Lantern Run (jump a mine cart over gaps and rocks). Best scores are kept; beating each game's target once gives a prize ticket.
+
 ## v69: Economy extras
 - Odile's wagon stops in the forest on Fridays and Sundays (6:00 to 20:00) with ten random goods at three to five times their sell price.
 - The Paper Lantern, a bookseller, sets up in town on the 5th and 19th of each season: skill books, the starlit primer and power books you have not read.
