@@ -24,6 +24,8 @@
 // exits: "x,y" of an E tile -> where it leads.
 import { W, H } from '../core/constants.js';
 import { MACHINE } from './market.js';
+import { FURNITURE } from './furniture.js';
+import { HOMES, homeMap } from './homes.js';
 
 export const SOLID = new Set(['Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
 
@@ -269,6 +271,21 @@ export function houseGrid(tier = 0, renos = []) {
   return m;
 }
 
+// v76: a neighbour's cottage inside: one room, their bed, their furniture (Y, solid unless it is a rug) and the door.
+function homeGrid(h) {
+  const m = Array.from({ length: H }, () => Array.from({ length: W }, () => '.'));
+  fill(m, 5, 2, 18, 12, 'I'); fill(m, 6, 4, 17, 11, 'h');
+  put(m, [h.bed, [h.bed[0], h.bed[1] + 1]], 'Z');
+  for (const [k, x, y] of h.furniture) if (!FURNITURE[k].walk) m[y][x] = 'Y';
+  m[12][11] = 'E';
+  return m;
+}
+const homeMaps = () => Object.fromEntries(Object.entries(HOMES).filter(([, h]) => h.cottage).map(([id, h]) => [homeMap(id), {
+  name: `${id[0].toUpperCase()}${id.slice(1)}'s cottage`, salt: 17, base: 'house', grid: homeGrid(h), home: id,
+  decor: { wall: h.decor[0], floor: h.decor[1] }, objects: [],
+  exits: { '11,12': { to: h.map, x: h.door[0], y: h.door[1], dir: 'down' } },
+}]));
+
 // The shed inside (v30): one plank room. Machines, decorations and furniture go on its floor (h).
 function shedGrid() {
   const m = Array.from({ length: H }, () => Array.from({ length: W }, () => '.'));
@@ -401,4 +418,5 @@ export const MAPS = {
     objects: [{ art: 'trough', x: 2, y: 12 }],
     exits: { [`12,${H - 1}`]: { to: 'farm', x: 10, y: 3, dir: 'down' } },
   },
+  ...homeMaps(),   // v76: the neighbours' cottages
 };

@@ -1,66 +1,88 @@
-// Where neighbours spend the day. Blocks run from..to (minutes); each walks a looping path of
-// tile waypoints (walked x first, then y, so keep every leg clear) on one map.
-// stay: walk the path once and stand at the last point. exit: false means they vanish where they
-// stand at the end of the block (going indoors) instead of walking off the map.
-// One day a week each neighbour rests and stays in the village all day.
+// Where neighbours spend the day. v76: every day starts and ends at home (data/homes.js); between, blocks run
+// from..to (minutes) on one map each. go: walk the path's spots in a loop, pausing at each. at: walk the spots once
+// and stand at the last one. Neighbours find their own way between spots and from map to map (systems/routes.js),
+// setting off a little early when the next block is on another map, so a path is just the places that matter.
+// Rest days: (day - 1) % 7, 0 = Monday.
 const H = 60;
-const PLAZA_IN = [16, 8];                               // first village waypoint, reached from the east road
-const home = (x) => [PLAZA_IN, [16, 4], [x, 4]];        // walk to the front door of a cottage
+const go = (from, to, map, ...path) => ({ from: from * H, to: to * H, map, path });
+const at = (from, to, map, ...path) => ({ from: from * H, to: to * H, map, path, stay: true });
 
-export const ENTRIES = { farm: [1, 4], village: [22, 8], town: [10, 15], wilds: [1, 4], beach: [11, 0], forest: [10, 0], house: [11, 11], sewer: [3, 2] };   // where neighbours step onto each map
+// Places they share.
+const SQUARE = [[9, 7], [14, 7], [14, 10], [9, 10]];               // around the fountain
+const BOARD = [11, 6];                                              // in front of the quest board
+const LANE = [[3, 8], [12, 8], [21, 8], [12, 8]];                   // the town's upper lane
+const LOWER = [[3, 12], [12, 12], [20, 12], [12, 12]];              // the town's lower lane
+// Outside the Lantern in the evening, each in their own place.
+const TAVERN = { bram: [6, 12], corvin: [7, 12], maren: [9, 12], hale: [3, 12], lio: [5, 12], juno: [8, 12], rook: [4, 12], wren: [6, 13], pell: [8, 13] };
+// Every front door in the village, for Juno's round.
+const DOORS = [[2, 4], [6, 4], [17, 4], [21, 4], [19, 14], [15, 14], [7, 14], [3, 14]];
 
-const VILLAGE_PATHS = {
-  ines:  [PLAZA_IN, [16, 6], [9, 6], [9, 10], [16, 10]],
-  bram:  [PLAZA_IN, [15, 10], [10, 10], [10, 7], [15, 7]],
-  odile: [PLAZA_IN, [16, 12], [9, 12], [9, 10], [16, 10]],
-  tavi:  [PLAZA_IN, [16, 4], [4, 4], [4, 6], [16, 6]],
+const DAYS = {
+  // Ines keeps hives in the Wilds meadow and lets the bees work your field; Sundays in the square and on the shore.
+  ines: (wd, def) => (wd === 6
+    ? [go(9, 12, 'village', ...SQUARE), go(12, 16, 'beach', [8, 4], [16, 5], [12, 7])]
+    : [go(7, 11, 'wilds', [5, 6], [8, 11], [3, 12], [6, 9]), go(11, 15, 'farm', ...def.path), go(15, 18, 'village', [9, 7], BOARD, [14, 10])]),
+  // Bram runs the carpentry in town, shut on Tuesdays; then he checks on the bin he built you and the square.
+  bram: (wd, def) => (wd === 1
+    ? [go(9, 12, 'village', ...SQUARE), go(12, 17, 'farm', ...def.path)]
+    : [at(9, 17, 'town', [16, 6]), at(17, 19, 'town', TAVERN.bram)]),
+  // Odile fishes the Wilds pond at dawn, walks the farm, then mends nets on the pier. Fridays she only fishes.
+  odile: (wd, def) => (wd === 4
+    ? [at(6, 11, 'wilds', [14, 10]), go(11, 17, 'village', ...SQUARE)]
+    : [at(6, 10, 'wilds', [14, 10]), go(10, 14, 'farm', ...def.path), at(14, 18, 'beach', [7, 9])]),
+  // Tavi charts the valley: the village lanes, your fence line and the forest one day, the town and the shore the next.
+  tavi: (wd, def) => (wd === 6
+    ? [go(10, 16, 'village', ...SQUARE)]
+    : wd % 2 === 0
+      ? [go(8, 11, 'village', [1, 5], [22, 5], [22, 10], [17, 11]), go(11, 15, 'farm', ...def.path), go(15, 18, 'forest', [3, 3], [20, 5], [12, 13])]
+      : [go(8, 12, 'town', [2, 9], [21, 9], [21, 13], [2, 13]), go(12, 16, 'beach', [2, 2], [21, 4], [12, 8]), go(16, 18, 'village', ...SQUARE)]),
+  // Wren keeps the store 9 to 5 (shut Wednesdays), then a stroll through the village.
+  wren: (wd) => (wd === 2
+    ? [go(10, 16, 'village', ...SQUARE, [8, 14], [18, 14]), go(16, 19, 'beach', [10, 3], [18, 6])]
+    : [at(9, 17, 'town', [2, 6]), go(17, 20, 'village', ...SQUARE)]),
+  // Corvin at his anvil, then the Lantern.
+  corvin: () => [at(9, 16, 'town', [9, 6]), at(16, 20, 'town', TAVERN.corvin)],
+  // Hob does his errands in the village, then keeps the Lantern from noon to midnight.
+  hob: () => [go(9, 11, 'village', BOARD, [9, 10], [14, 7]), at(12, 24, 'town', [3, 11])],
+  // Doctor Maren: a morning walk, the clinic 9 to 3, house calls on the south lane, the Lantern.
+  maren: () => [go(8, 9, 'town', ...LANE), at(9, 15, 'town', [13, 11]), go(15, 18, 'village', [3, 14], [7, 14], ...SQUARE), at(18, 21, 'town', TAVERN.maren)],
+  // Warden Hale keeps the lodge all day and walks into town for the evening.
+  hale: () => [at(8, 18, 'wilds', [14, 3]), at(18, 21, 'town', TAVERN.hale)],
+  // Lio fiddles by the fountain, wanders the town, then plays outside the Lantern.
+  lio: () => [at(10, 13, 'village', [12, 10]), go(13, 17, 'town', ...LANE), at(17, 22, 'town', TAVERN.lio)],
+  // Pell teaches at the town hall, shut Saturdays; Saturdays are for the forest.
+  pell: (wd) => (wd === 5
+    ? [go(9, 16, 'forest', [4, 4], [16, 6], [3, 10]), go(16, 19, 'town', ...LOWER)]
+    : [at(9, 15, 'town', [10, 3]), go(15, 18, 'village', ...SQUARE), at(18, 21, 'town', TAVERN.pell)]),
+  // Juno carries the mail: every village door, your farm, the town's doors, then the Lantern.
+  juno: () => [go(7, 10, 'village', ...DOORS), go(10, 12, 'farm', [4, 4], [12, 4], [20, 5]), go(12, 17, 'town', [4, 7], [11, 7], [16, 7], [5, 12], [15, 12], [19, 12], [14, 3]), at(17, 21, 'town', TAVERN.juno)],
+  // Nell tends the garden between the south cottages, visits the old mine mouth, then sits by the square.
+  nell: () => [go(7, 11, 'village', [5, 12], [4, 11], [6, 11]), go(11, 15, 'wilds', [12, 2], [10, 4], [13, 5]), at(15, 19, 'village', [8, 11])],
+  // Rook works on the beach all day, then the Lantern.
+  rook: () => [go(8, 17, 'beach', [6, 11], [6, 9], [8, 7], [4, 8]), at(17, 21, 'town', TAVERN.rook)],
+  // Esme paints in the forest, then the village, then the shore at dusk.
+  esme: () => [go(9, 16, 'forest', [4, 4], [16, 6], [6, 11]), go(16, 19, 'village', ...SQUARE), at(19, 21, 'beach', [12, 4])],
+  // Kit hangs about the Anvil in the morning and the square after; Saturdays at the beach.
+  kit: (wd) => (wd === 5
+    ? [go(9, 17, 'beach', [4, 6], [18, 6])]
+    : [at(8, 12, 'town', [12, 8]), go(12, 17, 'village', ...SQUARE), at(17, 21, 'village', [20, 14])]),
+  // The Lamplighter only comes out after dark.
+  lamp: () => [at(18, 26, 'sewer', [20, 3])],
 };
-const HOMES = { ines: 2, bram: 6, odile: 17, tavi: 21 };
-export const REST_DAY = { ines: 0, bram: 2, odile: 4, tavi: 6 };   // (day - 1) % 7
-
-// v49: the six town villagers. Shopkeepers stand by their door through opening hours (data/town.js) and live at
-// their shops; a few meet outside the Lantern in the evening. Rest days match the shop's closing day.
-const stay = (from, to, map, path, exit = false) => ({ from: from * H, to: to * H, map, path, stay: true, exit });
-const walkAbout = (from, to, map, path) => ({ from: from * H, to: to * H, map, path });
-const LANE = [[10, 14], [10, 8], [4, 8], [16, 8], [10, 8]];          // the town's upper lane
-const TAVERN_STEP = [[10, 14], [10, 12], [6, 12], [8, 12]];          // outside the Lantern
-// Town and village villagers (v49, v50).
-const town = {
-  wren: (rest) => (rest ? [walkAbout(9, 17, 'village', [PLAZA_IN, [9, 6], [9, 12], [16, 12]])] : [walkAbout(8, 9, 'town', LANE), stay(9, 17, 'town', [[10, 14], [10, 8], [2, 8], [2, 6]], false)]).concat(stay(17, 21, 'town', [[10, 14], [10, 8], [4, 8], [4, 7]])),
-  corvin: () => [stay(9, 16, 'town', [[10, 14], [10, 8], [9, 8], [9, 6]], false), walkAbout(16, 20, 'town', TAVERN_STEP), stay(20, 22, 'town', [[10, 14], [10, 8], [11, 8], [11, 7]])],
-  hob: () => [walkAbout(10, 12, 'village', [PLAZA_IN, [16, 10], [9, 10]]), stay(12, 24, 'town', [[10, 14], [10, 12], [3, 12], [3, 11]])],
-  maren: () => [walkAbout(8, 9, 'town', LANE), stay(9, 15, 'town', [[10, 14], [10, 12], [13, 12], [13, 11]], false), walkAbout(15, 18, 'village', [PLAZA_IN, [16, 6], [9, 6], [9, 10]]), stay(18, 21, 'town', [[10, 14], [10, 12], [15, 12]])],
-  hale: () => [stay(8, 18, 'wilds', [[13, 4], [13, 3], [14, 3]], false), walkAbout(18, 21, 'town', TAVERN_STEP)],
-  lio: () => [walkAbout(9, 13, 'village', [PLAZA_IN, [13, 7], [13, 10], [10, 10], [10, 7]]), walkAbout(13, 17, 'town', LANE), walkAbout(17, 22, 'town', TAVERN_STEP), stay(22, 23, 'town', [[10, 14], [10, 8], [14, 8], [14, 3]])],
-  // v50
-  pell: (rest) => (rest ? [walkAbout(9, 17, 'forest', [[10, 1], [10, 6], [4, 6], [4, 3], [10, 3]])] : [walkAbout(8, 9, 'village', [PLAZA_IN, [9, 6], [9, 10]]), walkAbout(9, 15, 'town', [[10, 14], [10, 8], [16, 8], [16, 9], [4, 9], [4, 8]]), walkAbout(15, 18, 'village', [PLAZA_IN, [13, 7], [13, 10]])]).concat(stay(18, 22, 'town', [[10, 14], [10, 8], [5, 8], [5, 3]])),
-  juno: () => [walkAbout(7, 11, 'village', [PLAZA_IN, [16, 4], [2, 4], [2, 5], [21, 5], [21, 4], [16, 4]]), walkAbout(11, 15, 'town', [[10, 14], [10, 8], [21, 8], [21, 12], [2, 12], [2, 8]]), walkAbout(15, 18, 'village', [PLAZA_IN, [17, 14], [3, 14], [17, 14]]), walkAbout(18, 21, 'town', TAVERN_STEP), stay(21, 22, 'town', [[10, 14], [10, 8], [20, 8], [20, 3], [19, 3]])],
-  nell: () => [walkAbout(7, 12, 'village', [PLAZA_IN, [17, 14], [3, 14], [8, 14]]), walkAbout(12, 16, 'village', [PLAZA_IN, [9, 6], [9, 10], [15, 10], [15, 6]]), stay(16, 20, 'village', [PLAZA_IN, [17, 14], [3, 14]])],
-  rook: () => [walkAbout(8, 17, 'beach', [[11, 1], [11, 8], [6, 8], [6, 9], [16, 9], [16, 8]]), walkAbout(17, 21, 'town', TAVERN_STEP), stay(21, 22, 'village', [PLAZA_IN, [17, 14], [7, 14]])],
-  esme: () => [walkAbout(9, 16, 'forest', [[10, 1], [10, 4], [4, 4], [4, 6], [16, 6], [16, 3], [10, 3]]), walkAbout(16, 19, 'village', [PLAZA_IN, [9, 6], [9, 12], [16, 12]]), stay(19, 22, 'village', [PLAZA_IN, [17, 14], [15, 14]])],
-  kit: (rest) => (rest ? [walkAbout(9, 17, 'beach', [[11, 1], [11, 6], [4, 6], [18, 6]])] : [walkAbout(8, 12, 'town', [[10, 14], [10, 8], [9, 8], [9, 7], [13, 8]]), walkAbout(12, 17, 'village', [PLAZA_IN, [13, 7], [13, 10], [10, 10], [10, 7]])]).concat(stay(17, 21, 'village', [PLAZA_IN, [17, 14], [19, 14]])),
-  lamp: () => [{ from: 18 * H, to: 26 * H, map: 'sewer', path: [[3, 2], [3, 4], [20, 4], [20, 3]], stay: true, exit: false }],   // v53
-};
-const TOWN_REST = { wren: 2, pell: 5, kit: 5 };   // (day - 1) % 7: Wren on Wednesday (the store shuts), Pell and Kit on Saturday
 
 // Farm paths are each neighbour's route through the field (data/npcs.js path).
 export function scheduleFor(def, day) {
-  if (town[def.id]) return town[def.id]((day - 1) % 7 === TOWN_REST[def.id]);
-  const village = VILLAGE_PATHS[def.id], evening = { from: 18 * H, to: 21 * H, map: 'village', path: home(HOMES[def.id]), stay: true, exit: false };
-  if ((day - 1) % 7 === REST_DAY[def.id]) return [{ from: 8 * H, to: 18 * H, map: 'village', path: village }, evening];
-  return [
-    { from: 8 * H, to: 11 * H, map: 'village', path: village },
-    { from: 11 * H, to: 18 * H, map: 'farm', path: def.path },
-    evening,
-  ];
+  return DAYS[def.id] ? DAYS[def.id]((day - 1) % 7, def) : [];
 }
 
 // v52: a spouse lives at the farm: the farmhouse in the morning, about the yard by the house through the day,
 // home again in the evening.
 export function spouseDay() {
   return [
-    { from: 6 * H, to: 10 * H, map: 'house', path: [[11, 11], [11, 7], [13, 7]], stay: true },
-    { from: 10 * H, to: 17 * H, map: 'farm', path: [[3, 4], [3, 5], [7, 5], [7, 6], [3, 6]] },
-    { from: 17 * H, to: 24 * H, map: 'house', path: [[11, 11], [11, 8], [14, 8]], stay: true, exit: false },
+    at(6, 10, 'house', [11, 7], [13, 7]),
+    go(10, 17, 'farm', [3, 5], [7, 5], [7, 6], [3, 6]),
   ];
 }
+
+// v76: a festival day: everyone walks to their place in the square for the festival's hours, then home.
+export const festivalDay = (spot, hours) => [{ from: hours.from, to: hours.to, map: 'village', path: [spot], stay: true }];

@@ -1,3 +1,5 @@
+import { HOMES, homeMap } from './homes.js';
+
 // v71: management tools. Chests and signs are placed from the kit (data/crafting.js); the farm computer reads
 // the farm; the lost and found at the town hall keeps what a chest still held when you took it up.
 
@@ -13,4 +15,5 @@ export const WORLD = {
   island: [0, 3], digsite: [1, 3],
 };
 // Rooms and caves show as the place you enter them from.
-export const WORLD_PARENT = { house: 'farm', cave: 'farm', shed: 'farm', greenhouse: 'farm', maze: 'village', sewer: 'village', shrine: 'wilds', mine: 'wilds' };
+export const WORLD_PARENT = { house: 'farm', cave: 'farm', shed: 'farm', greenhouse: 'farm', maze: 'village', sewer: 'village', shrine: 'wilds', mine: 'wilds',
+  ...Object.fromEntries(Object.entries(HOMES).filter(([, h]) => h.cottage).map(([id, h]) => [homeMap(id), h.map])) };   // v76: the neighbours' cottages
