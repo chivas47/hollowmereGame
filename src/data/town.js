@@ -24,6 +24,10 @@ export const SHOPS = {
   museum: {
     name: 'Hollowmere Museum', keeper: 'Curator Aldous', open: 8 * 60, close: 18 * 60, closed: [], ui: 'ui:museum',
   },
+  // v69. Stardew's animal shop: 9:00 to 16:00, shut Mondays and Tuesdays.
+  ranch: {
+    name: "Tamsin's Ranch Supply", keeper: 'Tamsin', open: 9 * 60, close: 16 * 60, closed: ['Mon', 'Tue'], ui: 'ui:ranch',
+  },
 };
 
 // The tavern (Stardew's Saloon sells dishes at twice their sell price, and a dish of the day).

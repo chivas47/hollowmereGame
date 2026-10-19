@@ -661,6 +661,17 @@ One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up 
 
 Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (wide 3), water 2, clear withered crop 1, cast 8, pickaxe 2, axe 2 a swing. Cutting weeds with the sword is free (Stardew's scythe). Warm cider restores 60.
 
+## Economy extras (v69)
+Stardew 1.6 by role, original names. Data in `data/market.js`, the ranch's hours in `data/town.js`.
+| Part | Ours | Stardew counterpart |
+|---|---|---|
+| Travelling cart | Odile's wagon, forest, Fri and Sun 6:00 to 20:00; 10 goods (crops, forage, fish, artisan goods, fruit, dishes), 1 to 5 of each, at the higher of 100 to 1,000g or 3 to 5 times sell | The travelling cart, same days, hours and price rule |
+| Bookseller | The Paper Lantern in town, days 5 and 19 of each season, 9:00 to 17:00; skill books 5,000g, the primer 15,000g, power books 20,000g (not once read) | The bookseller's visits and stock |
+| Ranch counter | Tamsin's Ranch Supply in town, 9:00 to 16:00, shut Mon and Tue; feed 50g, hay 50g, pail and shears 1,000g, animals at their coop and barn prices, new animals in stock with each upgrade | The animal shop |
+| Prize tickets | 1 per delivered board quest and per finished special order; a bag item, never shipped | Prize tickets from help-wanted quests and orders |
+| Prize machine | By the town hall; 1 ticket a turn; 10 prizes in a fixed order: mystery box, 5 copper bars, 3 frost geodes, 2 mystery boxes, 5 iron bars, energy tonic, 3 magma geodes, 3 mystery boxes, 3 gold bars, a starstone | The prize machine's set sequence |
+| Mystery boxes | 0.4% per gather, and from the machine; opened from the bag: coal, copper, iron, geodes, hardwood, cloth, heartstone, starstone or a skill book | Mystery boxes |
+
 ## The museum and collections (v68)
 Stardew by role, original names. Data in `data/museum.js`.
 | Part | Ours | Stardew counterpart |
@@ -872,6 +883,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v69: Tamsin, Odile and Quill are names on their counters, not villagers with schedules or gifts. The balance bot opens mystery boxes and spends prize tickets but does not shop at the cart, the bookseller or the ranch counter (same prices as the coop and barn).
 - v68: the balance bot does not dig artifact spots or donate: artifacts are a small side income (about 40g a spot) and rewards are kit items. The excavator profession still only doubles gem and egg finds, not artifacts.
 
 ### Simulated balance (advisory)

@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v69: Economy extras
+- Odile's wagon stops in the forest on Fridays and Sundays (6:00 to 20:00) with ten random goods at three to five times their sell price.
+- The Paper Lantern, a bookseller, sets up in town on the 5th and 19th of each season: skill books, the starlit primer and power books you have not read.
+- Tamsin's Ranch Supply opens in town (9:00 to 16:00, shut Mondays and Tuesdays): feed, hay, the pail and shears, and animals. Each coop and barn upgrade adds its animals to the stock. The coop and barn still sell them too.
+- Every quest delivered from the board and every special order finished gives a prize ticket. The prize machine by the town hall takes one a turn; its ten prizes come round in a set order.
+- Mystery boxes turn up while you work and from the prize machine. Open them from the bag for ore, coal, geodes, hardwood and now and then a gem or a book.
+
 ## v68: The museum and collections
 - Hollowmere Museum opens in town, east of the clinic (8:00 to 18:00 every day). Curator Aldous takes one of each of 15 artifacts and 8 gems, with rewards at 5, 10, 15 and 20 donations and a wishfruit for the full collection.
 - Wriggling marks appear each morning in the Wilds, on the beach, in the forest and on the mountain: dig them with the hoe for artifacts and geodes. Cracked geodes sometimes hold an artifact too.

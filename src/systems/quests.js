@@ -69,6 +69,7 @@ export function deliver(id) {
   S.quests = S.quests.filter((x) => x !== q);
   S.questsDone = (S.questsDone || 0) + 1;
   notify(`Delivered. +${q.reward}g and ${NPCS.find((d) => d.id === q.npc).name} is grateful.`);
+  emit('quest:done', q);   // v69: a prize ticket (systems/market.js)
   changed();
   return true;
 }
