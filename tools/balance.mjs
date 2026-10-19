@@ -126,6 +126,7 @@ const BAR_ORE = { copperbar: 'copper', ironbar: 'iron' };
 const { pickUp } = await load('systems/placeables.js');
 const { accepted, loadMachine, collectMachine } = await load('systems/artisan.js');
 const { canDeliver, deliver } = await load('systems/quests.js');
+const { openBox, pullPrize } = await load('systems/market.js');   // v69
 const { ordersOpen, orderItems, takeOrder, handIn } = await load('systems/orders.js');
 const { sableHere, challengeItems, takeChallenge, handInChallenge, buyMoon } = await load('systems/challenges.js');
 const { CHALLENGES } = await load('data/challenges.js');
@@ -710,6 +711,8 @@ function simulate(runSeed) {
     spend(TIME.travel * 2);
     ready.forEach((q) => track('quests', () => deliver(q.id)));
     if (canOrder) orders();
+    while (s.bag.prizeticket > 0 && pullPrize());   // v69: tickets at the machine, then every box opened
+    while (s.bag.mysterybox > 0 && openBox());
     if (contest) {
       if (s.time < 9 * 60) s.time = 9 * 60;
       if (festivalOpen()) {

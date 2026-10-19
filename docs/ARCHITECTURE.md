@@ -37,6 +37,7 @@ src/
     challenges.js     CHALLENGES, CHALLENGE_FROM, MOON_SHOP (v62)
     desert.js         COACH, OASIS, DESERT_TRADES, CASINO (v64)
     museum.js         ARTIFACTS, MUSEUM_ITEMS, SPOTS, GEODE_ARTIFACT, REWARDS, NOTES, ACHIEVEMENTS, COMPLETION (v68)
+    market.js         CART, BOOKSELLER, MACHINE, PRIZES, MYSTERY, the ticket and box items (v69)
     island.js         BOAT: repair materials, fare and hours (v65)
     nuts.js           NUT, BEACH_DIGS, NUT_CROPS, NUT_FISH, BRIDGE, DIG_SITE, ISLAND_SHOP (v66); PEAK, PUZZLE_NUTS, CHIMES, STONES, ALTAR, LANTERN (v67)
     romance.js        CANDIDATES, HEART_CAP, BOUQUET, JEALOUSY, DATE_LINES, the bouquet item (v51); PENDANT, WEDDING_DAYS, SPOUSE_CAP, CHORE_CHANCE, SPOUSE_LINES, the pendant (v52)
@@ -197,7 +198,8 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 57 | treasure.js | Kit slot with a bomb (throws it at the faced tile, Hollow only) |
 | 72 | helpers.js | Helper hut a, waystones e and d (warp), cave mouth y, the cave's crate t |
 | 57 | helpers.js | Kit slot with a home charm (warp home) |
-| 72 | town.js | Shop doors ( ) ] [ / and the museum : in the town (dialog, or the hours and closing day); the phone _ in the farmhouse |
+| 72 | market.js | The travelling cart ¢ in the forest, the bookseller § and the prize machine ¤ in the town (v69) |
+| 72 | town.js | Shop doors ( ) ] [ / £ and the museum : in the town (dialog, or the hours and closing day); the phone _ in the farmhouse |
 | 70 | town.js | The farm's old stall S and workbench K (a note pointing to town) |
 | 72 | coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Coop C, barn A, greenhouse G, mine entrance M, ladders U/L, the cavern door ^, shafts !, the vent door > and the forge =, placed object Y, quest board Q, festival table J |
 | 71 | village.js | Fountain F, cottage V (flavour text) |
@@ -253,6 +255,8 @@ The night tint is drawn by renderer.js after all layers (not in caves).
 | `day:report` | report | days.js | ui/dialogs.js morning summary |
 | `mine:floor` | {floor, rng, zone, eff} | mine.js | monsters (spawn), treasure (chest) |
 | `geode:cracked` | {kind} | treasure.js | museum.js (artifact chance, v68) |
+| `quest:done` | quest | quests.js | market.js (a prize ticket, v69) |
+| `order:done` | order key | orders.js | market.js (a prize ticket, v69) |
 | `mine:ladder` | {floor, zone} | mine.js | nuts.js (peak nut floors, v67) |
 | `monster:slain` | {kind, x, y, map} | monsters.js | guild (goal counts), treasure (blast ring) |
 | `mine:faint` | none | health.js | mine.js (carry out) |
@@ -300,6 +304,7 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | K | Bram's old workbench (a note since v46) | yes |
 | - | the town hall (v53) | yes |
 | : | the museum in town (v68) | yes |
+| ¢, §, ¤, £ | the travelling cart (forest, Fri and Sun), the bookseller (town, two days a season), the prize machine, the ranch counter (v69; the cart and bookseller written at runtime) | yes |
 | (, ), ], [, / | the town's general store, smithy, carpentry, tavern and clinic, each with its keeper's spot (v46, v47) | yes |
 | _ | the phone on the farmhouse wall (v47; drawn as a wall face) | yes |
 | C | chicken coop (written at runtime) | yes |

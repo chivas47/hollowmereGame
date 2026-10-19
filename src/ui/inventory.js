@@ -22,6 +22,7 @@ import { BAIT, TACKLE, BOBBERS, BOBBER_EVERY } from '../data/angling.js';
 import { baitOk, tackleOk, bobberStyles, fixTackle } from '../systems/fishing.js';
 import { readBook, hasRead, masteryOpen } from '../systems/books.js';
 import { masteryText } from './books.js';
+import { openBox } from '../systems/market.js';
 import { openModal, closeModal } from './modal.js';
 import { esc } from './dom.js';
 import { wardrobeHtml } from './clothing.js';
@@ -91,6 +92,7 @@ on('ui:inventory', () => {
     ${worn || spare ? `<h3>Rings <span class="role">two at a time</span></h3>${worn}${spare}` : ''}
     ${trinkets ? `<h3>Trinket <span class="role">one at a time</span></h3>${trinkets}` : ''}
     ${books ? `<h3>Books</h3>${books}` : ''}
+    ${S.bag.mysterybox > 0 || S.bag.prizeticket > 0 ? `<h3>Boxes and tickets</h3>${S.bag.mysterybox > 0 ? row(`Mystery box × ${S.bag.mysterybox}`, '<button data-openbox>Open</button>') : ''}${S.bag.prizeticket > 0 ? row(`Prize ticket × ${S.bag.prizeticket} <span class="role">for the machine by the town hall</span>`, '') : ''}` : ''}
     <h3>Rod <span class="role">bait, tackle and bobber</span></h3>${rod}
     <h3>Skills <span class="role">each level: ${Math.round(BONUS_PER_LEVEL * 100)}% chance of a bonus item</span></h3>${skills}
     <h3>Wardrobe <span class="role">sew clothes at a sewing machine</span></h3>${wardrobeHtml()}
@@ -109,6 +111,7 @@ document.querySelector('#mbody').addEventListener('click', (e) => {
   const bt = e.target.closest('[data-bait]'); if (bt && !bt.disabled) { G.S.bait = bt.dataset.bait; emit('ui:inventory'); return; }   // v41
   const tk = e.target.closest('[data-tackle]'); if (tk && !tk.disabled) { fixTackle(tk.dataset.tackle); emit('ui:inventory'); return; }
   const bb = e.target.closest('[data-bobber]'); if (bb) { G.S.bobber = +bb.dataset.bobber; emit('ui:inventory'); return; }
+  if (e.target.closest('[data-openbox]') && openBox()) { emit('ui:inventory'); return; }   // v69
   const rd = e.target.closest('[data-read]'); if (rd && readBook(rd.dataset.read)) { emit('ui:inventory'); return; }   // v40
   const tr = e.target.closest('[data-trinket]'); if (tr && wearTrinket(tr.dataset.trinket)) { emit('ui:inventory'); return; }   // v39
   if (e.target.closest('[data-trinketoff]') && removeTrinket()) { emit('ui:inventory'); return; }

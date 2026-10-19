@@ -69,7 +69,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 27c | Island: the nut currency, trader and dig site | feature | done (chivas47/hollowmereGame#62) | A found nut currency (Nuno: yes, found not bought) that opens island areas and buys from the island trader; a dig site. |
 | 27d | Island: the dungeon and hidden puzzles | feature | done (chivas47/hollowmereGame#63) | An island dungeon and the hidden puzzles that give nuts. |
 | 28 | Museum and collections | feature | done (chivas47/hollowmereGame#64) | Artifacts and minerals, geodes, museum donations with rewards, collections menu, secret notes, achievements, a completion tracker. |
-| 29 | Economy extras | feature | queued | Travelling cart, bookseller, an expanding critter shop, prize tickets and a prize machine, mystery boxes. |
+| 29 | Economy extras | feature | in progress | Travelling cart, bookseller, an expanding critter shop, prize tickets and a prize machine, mystery boxes. |
 | 30 | Minigames and theatre | feature | queued | Two original arcade cabinet games, a movie theatre with neighbours. |
 | 31 | Management tools | feature | queued | Chests and big chests, signs, a farm computer, calendar, quest journal, live world map, animal tab, lost and found. |
 | 32 | Atmosphere | feature | queued | Rain and storm effects, waterfalls, wildlife, ambient sound per area, revised lighting. |

@@ -306,6 +306,7 @@ const FRONT = {
   hall:      { wall: '#d9c9a6', line: '#c0ae86', roof: '#5a4a6a', door: '#5c371e' },   // v53
   oasis:     { wall: '#e8cf9a', line: '#d0b47a', roof: '#3f8a8a', door: '#6e4626' },   // v64: the dunes
   museum:    { wall: '#cfc6b4', line: '#b5ab96', roof: '#3f5a6a', door: '#4e3a26' },   // v68
+  ranch:     { wall: '#c98a5a', line: '#a87048', roof: '#7a2f2a', door: '#5c371e' },   // v69
   casino:    { wall: '#5a3a5a', line: '#4a2e4a', roof: '#c9a43a', door: '#2b211a' },
 };
 function storefront(g, p, o) {
@@ -330,6 +331,7 @@ function storefront(g, p, o) {
   if (o.kind === 'oasis') { r(g, X + 19, Y + 13, 3, 2, '#7fbf5a'); r(g, X + 23, Y + 13, 3, 2, '#c0445a'); r(g, X + 27, Y + 13, 2, 2, '#f2d14a'); }
   if (o.kind === 'casino') { for (let i = 0; i < 5; i++) r(g, X + 18 + i * 3, Y + 13, 2, 2, i % 2 ? '#e9b44c' : '#c0443a'); }
   if (o.kind === 'museum') { for (let i = 0; i < 4; i++) r(g, X + 3 + i * 13, Y + 10, 3, 21, '#ece6d8'); r(g, X + 21, Y + 12, 6, 4, '#c9a43a'); r(g, X + 23, Y + 13, 2, 2, '#4e3a26'); }
+  if (o.kind === 'ranch') { r(g, X + 20, Y + 13, 8, 2, '#e9c46a'); r(g, X + 22, Y + 12, 4, 1, '#f4ead2'); r(g, X + 38, Y + 26, 7, 5, '#e2c46a'); r(g, X + 38, Y + 28, 7, 1, '#b0943a'); }
   if (o.kind === 'clinic') { r(g, X + 23, Y + 12, 2, 4, '#4f9a6a'); r(g, X + 22, Y + 13, 4, 2, '#4f9a6a'); }
 }
 
@@ -500,7 +502,30 @@ function lantern(g, x, y, p) {
   drawGrass(g, x, y, p, 47); r(g, X + 6, Y + 7, 4, 8, '#8d857d'); r(g, X + 4, Y + 2, 8, 6, '#6f6862'); r(g, X + 6, Y + 4, 4, 2, '#2b2a2e'); r(g, X + 3, Y + 1, 10, 1, '#a8a199');
 }
 
+// v69: the travelling cart, the bookseller's stall and the prize machine.
+function cartTile(g, x, y, p) {
+  const X = x * T, Y = y * T;
+  drawGrass(g, x, y, p, 53); r(g, X + 1, Y + 15, 14, 1, 'rgba(0,0,0,.3)');
+  r(g, X + 1, Y + 5, 14, 7, '#7a4a8a'); r(g, X + 1, Y + 5, 14, 1, '#9a6aaa'); r(g, X, Y + 2, 16, 3, '#e9c46a');
+  r(g, X + 4, Y + 7, 3, 3, '#7fbf5a'); r(g, X + 9, Y + 7, 3, 3, '#d8484a');
+  [X + 2, X + 10].forEach((wx) => { r(g, wx, Y + 11, 4, 4, '#3f2f22'); r(g, wx + 1, Y + 12, 2, 2, '#c9a06a'); });
+}
+function bookStall(g, x, y, p) {
+  const X = x * T, Y = y * T;
+  drawGrass(g, x, y, p, 59); r(g, X + 1, Y + 15, 14, 1, 'rgba(0,0,0,.3)');
+  r(g, X + 1, Y + 1, 14, 3, '#3f5a6a'); r(g, X + 2, Y + 4, 1, 11, '#6e4626'); r(g, X + 13, Y + 4, 1, 11, '#6e4626');
+  r(g, X + 1, Y + 9, 14, 5, '#8a5a32'); r(g, X + 1, Y + 9, 14, 1, '#a07a4a');
+  ['#c0443a', '#5fa8d3', '#e9c46a', '#7fbf5a', '#a070c8'].forEach((c, i) => r(g, X + 3 + i * 2, Y + 6, 2, 3, c));
+}
+function prizeMachine(g, x, y, p) {
+  const X = x * T, Y = y * T;
+  drawGrass(g, x, y, p, 61); r(g, X + 3, Y + 15, 10, 1, 'rgba(0,0,0,.3)');
+  r(g, X + 3, Y + 2, 10, 13, '#c9a43a'); r(g, X + 3, Y + 2, 10, 1, '#e9c46a'); r(g, X + 5, Y + 4, 6, 4, '#7fc4e8');
+  r(g, X + 6, Y + 5, 2, 2, '#d8484a'); r(g, X + 13, Y + 7, 2, 1, '#6b5a48'); r(g, X + 14, Y + 5, 1, 3, '#6b5a48'); r(g, X + 6, Y + 11, 4, 2, '#3f2f22');
+}
+
 export const CAVE_ART = {
+  '¢': cartTile, '§': bookStall, '¤': prizeMachine,
   y: caveMouth, t: caveCrate, $: chest,
   X: caveWall, U: ladderUp, L: ladderDown,
   r: mineRock(null), c: mineRock('#d0874a'), i: mineRock('#c9ccd6'),

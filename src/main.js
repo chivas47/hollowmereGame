@@ -70,6 +70,7 @@ import './systems/desert.js';
 import './systems/island.js';
 import './systems/nuts.js';
 import './systems/museum.js';
+import './systems/market.js';   // v69
 
 // UI
 import './ui/toast.js';
@@ -101,6 +102,7 @@ import './ui/desert.js';
 import './ui/island.js';
 import './ui/nuts.js';
 import './ui/museum.js';
+import './ui/market.js';
 import { buildHotbar } from './ui/hotbar.js';
 import { initInput } from './ui/input.js';
 import { initDebug } from './ui/debugPanel.js';

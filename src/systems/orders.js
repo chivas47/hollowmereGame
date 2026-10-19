@@ -1,7 +1,7 @@
 // v61: special orders on the quest board (data/orders.js).
 // G.S.orders = { week, offer: [keys], active: { key, due, given } | null, done: n }.
 import { G } from '../core/game.js';
-import { on, changed, notify } from '../core/events.js';
+import { on, emit, changed, notify } from '../core/events.js';
 import { ORDERS, ORDER_POINTS, ORDERS_FROM, ORDERS_OFFERED } from '../data/orders.js';
 import { NPCS } from '../data/npcs.js';
 import { addPoints } from './npcs.js';
@@ -55,6 +55,7 @@ export function handIn(item) {
     addPoints(o.npc, ORDER_POINTS);
     O().active = null; O().done = (O().done || 0) + 1;
     notify(`Order complete: ${o.name}. +${o.gold.toLocaleString('en-US')}g, and ${nameOf(o.npc)} is delighted.`);
+    emit('order:done', a.key);   // v69: a prize ticket (systems/market.js)
   } else notify(`Handed in ${n}. ${orderLeft()} more to go.`);
   changed();
   return n;
