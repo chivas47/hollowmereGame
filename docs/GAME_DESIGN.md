@@ -661,6 +661,17 @@ One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up 
 
 Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (wide 3), water 2, clear withered crop 1, cast 8, pickaxe 2, axe 2 a swing. Cutting weeds with the sword is free (Stardew's scythe). Warm cider restores 60.
 
+## Minigames and theatre (v70)
+Stardew 1.6 by role, original names, films and games. Data in `data/theatre.js`.
+| Part | Ours | Stardew counterpart |
+|---|---|---|
+| Picture house | Town lower lane, built when the old wing is whole (either route); 9:00 to 21:00, shut on festivals; a showing takes 2 hours | The movie theater after the Community Center or Joja; 9:00 to 21:00 |
+| Tickets | 1,000g each; you once a day, each neighbour once a week | Ticket and invitation 1,000g; each villager once a week |
+| Films | 8, one a season, a second set in even years; kinds: drama, comedy, adventure, romance, nature, mystery, spooky | 8 films rotating by season and year |
+| Guest friendship | Film loved 80, liked 40, disliked 0; snack loved 20, liked 10, disliked 0 (100 a heart) | 200, 100, 0 and 50, 25, 0 (250 a heart) |
+| Snacks | 8, 50g to 200g, kinds salty, sweet, drink, fresh | Concessions, 30g to 250g |
+| Arcade | Crow Patrol and Lantern Run in the tavern, free; best scores kept; a prize ticket the first time past 2,000 and 1,500 | The Saloon's two cabinets, no rewards |
+
 ## Economy extras (v69)
 Stardew 1.6 by role, original names. Data in `data/market.js`, the ranch's hours in `data/town.js`.
 | Part | Ours | Stardew counterpart |
@@ -883,6 +894,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v70: The balance bot ignores the picture house (it skips friendship) and the cabinets (no gold). Neighbours go to the films whatever their schedule says.
 - v69: Tamsin, Odile and Quill are names on their counters, not villagers with schedules or gifts. The balance bot opens mystery boxes and spends prize tickets but does not shop at the cart, the bookseller or the ranch counter (same prices as the coop and barn).
 - v68: the balance bot does not dig artifact spots or donate: artifacts are a small side income (about 40g a spot) and rewards are kit items. The excavator profession still only doubles gem and egg finds, not artifacts.
 

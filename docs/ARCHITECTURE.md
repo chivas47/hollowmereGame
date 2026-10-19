@@ -38,6 +38,7 @@ src/
     desert.js         COACH, OASIS, DESERT_TRADES, CASINO (v64)
     museum.js         ARTIFACTS, MUSEUM_ITEMS, SPOTS, GEODE_ARTIFACT, REWARDS, NOTES, ACHIEVEMENTS, COMPLETION (v68)
     market.js         CART, BOOKSELLER, MACHINE, PRIZES, MYSTERY, the ticket and box items (v69)
+    theatre.js        THEATRE, FILMS, SNACKS, TASTES (guests' film and snack kinds), ARCADE (v70)
     island.js         BOAT: repair materials, fare and hours (v65)
     nuts.js           NUT, BEACH_DIGS, NUT_CROPS, NUT_FISH, BRIDGE, DIG_SITE, ISLAND_SHOP (v66); PEAK, PUZZLE_NUTS, CHIMES, STONES, ALTAR, LANTERN (v67)
     romance.js        CANDIDATES, HEART_CAP, BOUQUET, JEALOUSY, DATE_LINES, the bouquet item (v51); PENDANT, WEDDING_DAYS, SPOUSE_CAP, CHORE_CHANCE, SPOUSE_LINES, the pendant (v52)
@@ -89,6 +90,8 @@ src/
     family.js         children (G.S.children, G.S.baby, G.S.childAsk), growing up, hugs; divorce at the town hall (v53)
     nuts.js           tide nuts (G.S.nuts): beach digs, first island harvests and catches, the dig site bridge (tile 6) and its daily dig spots, the island trader (tile 5) (v66); the Smoke Peak gate (tile 7), its nut floors and summit cache (tile < in the mine), the puzzles: shells 8, basins 9, altar <, lantern ` (v67)
     museum.js         artifact spots (G.S.museum.spots) dug with the hoe, secret notes and their treasures, donate(), achievements, completion() (v68)
+    theatre.js        the picture house Þ once the old wing is whole: today's film, watch() with a guest and snack; arcade best scores and prize tickets (v70)
+    arcade.js         the two cabinet games' rules, pure state steps (newCrows/stepCrows, newRunner/stepRunner) (v70)
     island.js         Rook's boat (beach and island tile 4): repairBoat(), sail(), sailHome() (G.S.boatFixed); the island farm soil is G.S.islandSoil (v65)
     desert.js         the dunes: the coach (town tile 0), the Oasis (1), the casino (2) and its slot machine, the desert trader (3) (G.S.casino, G.S.desertTraded) (v64)
     challenges.js     Sable in the Lantern: challenges, moonstones (G.S.challenge), buyMoon() (v62)
@@ -124,6 +127,7 @@ src/
     tiles.js          static art: grass, path, trees, water, rocks, buildings, cave tiles
     sprites.js        per-frame art: soil, crops, forage, people, chickens, slimes, fruit trees, giant crops, effects
     icons.js          16x16 hotbar icons
+    arcade.js         the arcade cabinets' screens (v70)
     renderer.js       composes a frame, caches backgrounds per map + season
   audio/              Web Audio output (like render/, but for sound); imported only by main.js and ui/
     engine.js         context, buses, settings (localStorage), tone() and noise()
@@ -141,6 +145,8 @@ src/
     restoration.js    the old wing's bundles and the rival's offer (ui:restore, v60)
     desert.js         the coach, the Oasis, the desert trader and the casino (ui:coach, ui:oasis, ui:dtrader, ui:casino, v64)
     museum.js         the museum's donations (ui:museum) and the journal (J, ui:journal): collections, notes, achievements, completion (v68)
+    theatre.js        the picture house dialog: guest, snack, the showing (ui:theatre) (v70)
+    arcade.js         the cabinets (ui:arcade, from the tavern): a canvas, its own keys and touch while a game runs (v70)
     island.js         Rook's boat dialog (ui:boat, v65)
     nuts.js           the bridge and the island trader (ui:bridge, ui:islandshop, v66; ui:peak, v67)
     social.js         the social menu (F, or a click on the neighbours panel) and letters (v48)
@@ -199,6 +205,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 72 | helpers.js | Helper hut a, waystones e and d (warp), cave mouth y, the cave's crate t |
 | 57 | helpers.js | Kit slot with a home charm (warp home) |
 | 72 | market.js | The travelling cart ¢ in the forest, the bookseller § and the prize machine ¤ in the town (v69) |
+| 72 | theatre.js | The picture house Þ on the town's lower lane (dialog, or its hours) (v70) |
 | 72 | town.js | Shop doors ( ) ] [ / £ and the museum : in the town (dialog, or the hours and closing day); the phone _ in the farmhouse |
 | 70 | town.js | The farm's old stall S and workbench K (a note pointing to town) |
 | 72 | coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Coop C, barn A, greenhouse G, mine entrance M, ladders U/L, the cavern door ^, shafts !, the vent door > and the forge =, placed object Y, quest board Q, festival table J |
