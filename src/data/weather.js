@@ -1,3 +1,5 @@
+import { MAPS } from './maps.js';
+
 // Weather. Odds follow Stardew's: rain 18.3% in spring and autumn, 12% (+0.3% a day of the month)
 // in summer; a rainy day is a storm 25% of the time in spring and autumn, 85% in summer; winter
 // snows 63% of days. Festival days and the first day of a new farm are always fair.
@@ -24,7 +26,10 @@ export const LIGHTNING = { strikes: 3 };
 // Silvermist: one random summer day (not a festival) between these days each year.
 export const MIST = { from: 5, to: 25, lilies: 6 };
 
-export const OUTDOORS = ['farm', 'wilds', 'village'];
+export const OUTDOORS = ['farm', 'wilds', 'village'];   // where the horse can go
+
+// v72: where weather is drawn and heard: every open-air map but the Dunes (it never rains there).
+export const underSky = (id) => !!MAPS[id] && !MAPS[id].base && id !== 'desert';
 
 // Items. Stardew roles: battery pack (500g) and a rare summer forage item (fiddlehead fern, 90g).
 export const WEATHER_ITEMS = {

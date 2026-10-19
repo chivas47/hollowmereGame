@@ -661,6 +661,21 @@ One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up 
 
 Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (wide 3), water 2, clear withered crop 1, cast 8, pickaxe 2, axe 2 a swing. Cutting weeds with the sword is free (Stardew's scythe). Warm cider restores 60.
 
+## Atmosphere (v72)
+
+Nothing here is saved or touches the economy.
+
+| Part | Where | When |
+|---|---|---|
+| Rain, storm, snow, mist | every open-air map but the Dunes | the day's weather |
+| Lightning and thunder | open-air maps | storms, every 6 to 14 s |
+| Waterfalls | mountain lake (7..8, rows 0 to 2), grove pool (6..7, rows 0 to 3) | always |
+| Birds (4, fly off within 2.5 tiles) | farm, Wilds, village, forest, grove, mountain, beach, town, railway, island | before 7 pm, not in rain, storms or mist |
+| Butterflies (4) | farm, Wilds, forest, grove, mountain, village | spring and summer, sunny, 8 am to 6 pm |
+| Fireflies (10) | farm, Wilds, forest, grove, mountain | summer, from 8 pm, not in rain |
+| Ambient sound | country, shore, town, cave, wind areas (data/atmosphere.js) | by time and weather |
+| Light | all but caves and houses | violet dawn, golden hour 5 to 6:30 pm, night from 8 pm, darkest at 2 am |
+
 ## Management tools (v71)
 Data in `data/storage.js` and `data/crafting.js`; logic in `systems/storage.js`; dialogs and journal tabs in `ui/storage.js`.
 | Part | Ours | Stardew counterpart |
@@ -905,6 +920,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v72: Wildlife is drawn only: you cannot catch or befriend it, and it is not in the balance bot. The new light is darker than before from 8 pm (half dark at 10 pm, was about a third). The ambient sound has no volume control of its own; it follows the Sound button.
 - v71: The bag still has no item limit, so chests organise and protect items rather than add room (Nuno's choice; a bag limit would be its own roadmap item). The balance bot ignores chests, signs and the computer (no gold). Signs show their text only when you face them. The world map is a grid of places without the connecting paths.
 - v70: The balance bot ignores the picture house (it skips friendship) and the cabinets (no gold). Neighbours go to the films whatever their schedule says.
 - v69: Tamsin, Odile and Quill are names on their counters, not villagers with schedules or gifts. The balance bot opens mystery boxes and spends prize tickets but does not shop at the cart, the bookseller or the ranch counter (same prices as the coop and barn).

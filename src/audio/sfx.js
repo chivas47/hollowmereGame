@@ -20,6 +20,8 @@ const SFX = {
   place:   () => noise({ dur: 0.1, vol: 0.18, freq: 300 }),
   door:    () => noise({ dur: 0.35, vol: 0.08, filter: 'bandpass', freq: 300, sweep: 900 }),
   boom:    () => { noise({ dur: 0.6, vol: 0.35, freq: 220, sweep: 60 }); tone({ freq: 90, dur: 0.4, type: 'square', vol: 0.08, slide: 40 }); },   // v37: a bomb
+  thunder: () => { noise({ dur: 2.2, vol: 0.3, freq: 180, sweep: 40, at: 0.5 }); noise({ dur: 0.5, vol: 0.18, freq: 900, sweep: 200, at: 0.45 }); },   // v72
+  flap:    () => [0, 0.06, 0.12].forEach((at) => noise({ dur: 0.05, vol: 0.06, filter: 'bandpass', freq: 1400, at })),   // v72: a bird takes off
   ui:      () => tone({ freq: 700, dur: 0.04, type: 'triangle', vol: 0.05 }),
   morning: () => [784, 988, 1175].forEach((f, i) => tone({ freq: f, dur: 0.25, type: 'sine', vol: 0.06, at: i * 0.12 })),
 };

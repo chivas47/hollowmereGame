@@ -117,6 +117,7 @@ function groveGrid() {
   const m = emptyGrid();
   m[12][W - 1] = 'E'; fill(m, 14, 12, W - 2, 12, 'P');
   fill(m, 4, 4, 9, 8, 'O'); put(m, [[4, 4], [9, 4], [4, 8], [9, 8]], 'g');
+  fill(m, 6, 1, 7, 3, 'O');   // v72: the falls into the pool (data/atmosphere.js)
   put(m, [[2, 2], [12, 2], [17, 3], [20, 6], [2, 11], [7, 13], [12, 10], [16, 9], [21, 2], [14, 14]], 'T');
   return m;
 }
@@ -237,6 +238,7 @@ function mountainGrid() {
   m[15][21] = 'E'; fill(m, 21, 8, 21, 14, 'P');
   fill(m, 15, 7, W - 1, 7, 'P'); m[7][W - 1] = 'E';
   fill(m, 3, 3, 12, 9, 'O');
+  fill(m, 7, 1, 8, 2, 'O');   // v72: the falls into the lake (data/atmosphere.js)
   put(m, [[3, 3], [12, 3], [3, 9], [12, 9]], 'g');
   put(m, [[15, 2], [18, 3], [20, 2], [16, 11], [6, 12], [10, 13], [2, 12], [18, 13], [14, 4]], 'T');
   put(m, [[17, 5], [5, 11], [13, 12]], 'R');
