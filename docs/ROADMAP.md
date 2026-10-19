@@ -75,7 +75,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 32 | Atmosphere | feature | done (chivas47/hollowmereGame#68) | Rain and storm effects, waterfalls, wildlife, ambient sound per area, revised lighting. |
 | 34 | Animation | feature | done (chivas47/hollowmereGame#70) | Tools swung in hand, weapon combos with finishers, pickups that fly into your hands, placing and crafting poses, particles, damage numbers, hit-stop and screen shake. Added by Nuno, October 2026. |
 | 34b | Animation: no tool spamming | fix | in progress (chivas47/hollowmereGame#71) | Spamming Use chopped, mined and tilled faster than the swing. One action per swing now. Reported by Nuno after v74. |
-| 34c | Neighbours live at home | fix | in progress | Neighbours start and end the day at home and walk between places (no more appearing at map edges), a routine per neighbour, pathfinding, and every cottage can be entered. Asked for by Nuno after v75. |
+| 34c | Neighbours live at home | fix | in progress (chivas47/hollowmereGame#72) | Neighbours start and end the day at home and walk between places (no more appearing at map edges), a routine per neighbour, pathfinding, and every cottage can be entered. Asked for by Nuno after v75. |
 | 33 | Local two-player | feature | needs decision | Same-screen co-op is possible without a server but touches every system. Nuno to decide whether it is worth it. |
 
 ## Done
