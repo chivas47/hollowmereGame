@@ -31,7 +31,7 @@ function syncGrid() {
   written.clear();
   for (const k of Object.keys(G.S.placed)) {
     const { map, x, y } = parsePlaceKey(k), grid = MAPS[map]?.grid;
-    if (!grid || grid[y][x] !== ground(map) || reserved(map, x, y)) { G.S.kit[G.S.placed[k].kind]++; delete G.S.placed[k]; continue; }
+    if (!grid || grid[y][x] !== ground(map) || reserved(map, x, y)) { G.S.kit[G.S.placed[k].kind]++; emit('picked', G.S.placed[k]); delete G.S.placed[k]; continue; }
     grid[y][x] = tileFor(G.S.placed[k]); written.add(k);
   }
 }
@@ -67,6 +67,7 @@ export function pickUp(tx, ty) {
   const key = placeKey(G.S.map, tx, ty), p = G.S.placed[key], grid = MAPS[G.S.map].grid;
   if (!p || p.item) return false;
   G.S.kit[p.kind]++;
+  emit('picked', p);   // v71: storage.js sends what a chest held to the lost and found
   delete G.S.placed[key];
   if (written.has(key)) grid[ty][tx] = ground(G.S.map);
   written.delete(key);
@@ -85,8 +86,8 @@ addInteraction(55, ({ tx, ty, tile, mapId, item }) => {
   if (INDOORS.has(mapId)) {   // furniture in the house; furniture, machines and decorations in the shed
     if (tile !== 'h') return false;
     if (!owned(S.kitSel)) { announceKit(); return true; }
-    const fits = def.kind === 'furniture' || (mapId === 'shed' && ['machine', 'decor', 'bin'].includes(def.kind));
-    if (!fits) { notify(mapId === 'shed' ? 'Machines, decorations and furniture go in the shed.' : 'That belongs outdoors.'); return true; }
+    const fits = ['furniture', 'chest', 'sign', 'computer'].includes(def.kind) || (mapId === 'shed' && ['machine', 'decor', 'bin'].includes(def.kind));
+    if (!fits) { notify(mapId === 'shed' ? 'Machines, chests, decorations and furniture go in the shed.' : 'That belongs outdoors.'); return true; }
     if (S.placed[key]) { notify('Something is already there.'); return true; }
     if (MAPS[mapId].keepClear.includes(`${tx},${ty}`)) { notify('Keep the doorway clear.'); return true; }
     S.kit[S.kitSel]--;

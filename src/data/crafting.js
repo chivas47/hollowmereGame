@@ -68,6 +68,12 @@ export const PLACEABLES = {
   emberbomb:  { name: 'Ember bomb',       short: 'Ember bmb', kind: 'bomb' },
   blastbomb:  { name: 'Blast bomb',       short: 'Bomb',      kind: 'bomb' },
   greatbomb:  { name: 'Great bomb',       short: 'Great bmb', kind: 'bomb' },
+  // v71: management tools (systems/storage.js). A chest holds items out of the bag; a sign shows what you write on it;
+  // the farm computer reports on the farm.
+  chest:      { name: 'Chest',            short: 'Chest',     kind: 'chest' },
+  bigchest:   { name: 'Big chest',        short: 'Big chest', kind: 'chest' },
+  sign:       { name: 'Wood sign',        short: 'Sign',      kind: 'sign' },
+  farmcomputer: { name: 'Farm computer',  short: 'Computer',  kind: 'computer' },
   // v24: furniture, placed inside the farmhouse (bought from the catalogue there).
   ...Object.fromEntries(Object.entries(FURNITURE).map(([k, f]) => [k, { name: f.name, short: f.name.length > 10 ? f.name.split(' ').pop() : f.name, kind: 'furniture', walk: !!f.walk }])),
 };
@@ -138,6 +144,12 @@ export const RECIPES = {
   crabpot:   { cost: 0, needs: { wood: 40, ironbar: 3 }, desc: 'Set it on the Wilds pond and bait it: each morning a crayfish, a snail, a winkle or some trash.' },
   // Stardew's recycling machine: 25 wood, 25 stone, 1 iron bar.
   recycler:  { cost: 0, needs: { wood: 25, stone: 25, ironbar: 1 }, desc: 'Turns trash from the pond into wood, coal, fiber, quartz, stone or ore overnight.' },
+  // v71. Stardew: chest 50 wood; big chest 120 wood, 2 copper bars; wood sign 25 wood; farm computer 10 dwarf gadgets,
+  // a battery pack, 10 refined quartz (ours: 2 iron bars for the gadgets, a storm cell for the battery, quartz for the quartz).
+  chest:      { cost: 0, needs: { wood: 50 }, desc: 'Holds 36 kinds of item out of your bag, safe from gifts, orders, machines and the bin. Place it on the farm, in the shed or in the house.' },
+  bigchest:   { cost: 0, needs: { wood: 120, copperbar: 2 }, desc: 'Holds 70 kinds of item.' },
+  sign:       { cost: 0, needs: { wood: 25 }, desc: 'Write a few words on it to label a field or a row of machines.' },
+  farmcomputer: { cost: 0, needs: { ironbar: 2, stormcell: 1, quartz: 10 }, desc: 'Reports on the farm: crops ready and unwatered, machines ready, animals not yet petted, hay in the loft.' },
   silo:       { cost: 100, needs: { stone: 110, copperbar: 5 }, desc: 'With a silo on the farm, cutting grass gives hay for the barn loft half the time.' },
 };
 

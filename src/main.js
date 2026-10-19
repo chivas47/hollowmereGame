@@ -72,6 +72,7 @@ import './systems/nuts.js';
 import './systems/museum.js';
 import './systems/market.js';   // v69
 import './systems/theatre.js';   // v70
+import './systems/storage.js';   // v71: chests, signs, the farm computer, the lost and found
 
 // UI
 import './ui/toast.js';
@@ -105,6 +106,7 @@ import './ui/nuts.js';
 import './ui/museum.js';
 import './ui/market.js';
 import './ui/theatre.js';
+import './ui/storage.js';   // v71
 import './ui/arcade.js';
 import { buildHotbar } from './ui/hotbar.js';
 import { initInput } from './ui/input.js';

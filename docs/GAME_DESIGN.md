@@ -661,6 +661,17 @@ One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up 
 
 Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (wide 3), water 2, clear withered crop 1, cast 8, pickaxe 2, axe 2 a swing. Cutting weeds with the sword is free (Stardew's scythe). Warm cider restores 60.
 
+## Management tools (v71)
+Data in `data/storage.js` and `data/crafting.js`; logic in `systems/storage.js`; dialogs and journal tabs in `ui/storage.js`.
+| Part | Ours | Stardew counterpart |
+|---|---|---|
+| Chest | 50 wood; 36 kinds of item (our bag has no limit, so a slot is a kind) | Chest: 50 wood, 36 slots |
+| Big chest | 120 wood, 2 copper bars; 70 kinds | Big chest: 120 wood, 2 copper bars, 70 slots |
+| Wood sign | 25 wood; up to 40 letters of text | Wood sign: 25 wood, shows an item |
+| Farm computer | 2 iron bars, a storm cell, 10 Hollow quartz; reports on the farm or greenhouse it stands in | 10 dwarf gadgets, a battery pack, 10 refined quartz |
+| Lost and found | Town hall; keeps what a chest held when taken up | The mayor's lost and found box |
+| Journal | Calendar, quests, live map, animals tabs | Calendar, quest log, map, animals tab |
+
 ## Minigames and theatre (v70)
 Stardew 1.6 by role, original names, films and games. Data in `data/theatre.js`.
 | Part | Ours | Stardew counterpart |
@@ -894,6 +905,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v71: The bag still has no item limit, so chests organise and protect items rather than add room (Nuno's choice; a bag limit would be its own roadmap item). The balance bot ignores chests, signs and the computer (no gold). Signs show their text only when you face them. The world map is a grid of places without the connecting paths.
 - v70: The balance bot ignores the picture house (it skips friendship) and the cabinets (no gold). Neighbours go to the films whatever their schedule says.
 - v69: Tamsin, Odile and Quill are names on their counters, not villagers with schedules or gifts. The balance bot opens mystery boxes and spends prize tickets but does not shop at the cart, the bookseller or the ranch counter (same prices as the coop and barn).
 - v68: the balance bot does not dig artifact spots or donate: artifacts are a small side income (about 40g a spot) and rewards are kit items. The excavator profession still only doubles gem and egg finds, not artifacts.

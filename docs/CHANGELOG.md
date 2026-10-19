@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v71: Management tools
+- Chests (50 wood, 36 kinds of item) and big chests (120 wood and 2 copper bars, 70 kinds), placed on the farm, in the greenhouse, the shed or the farmhouse. What is inside keeps all its qualities and stays out of the bin, gifts, orders and machines. Add to matching and Take all buttons.
+- Taking up a chest that still holds items sends them to the lost and found, a new button in the town hall (9:00 to 17:00).
+- Wood signs (25 wood): write up to 40 letters on one to label a field.
+- The farm computer (2 iron bars, a storm cell, 10 Hollow quartz): crops ready and unwatered, machines ready or empty, animals not petted, products waiting, hay, feed and chests.
+- Four new journal tabs (J): a calendar of the season's festivals and birthdays, the quest journal (board requests, the special order, Sable's challenge, with days left), a live world map with where you are and how many neighbours are out in each place, and the animals (hearts and petted today, the pet and horse, feed and hay).
+
 ## v70: Minigames and theatre
 - The Starlight Picture House opens on the town's lower lane once the old wing is whole, by bundles or by the rival (9:00 to 21:00, shut on festival days). One film a season, a second set in even years. A ticket is 1,000g; bring a neighbour you have met for a second ticket and buy them a snack. They gain friendship by their taste in films and snacks. You can see one showing a day, each neighbour once a week; a showing takes two hours.
 - Two arcade cabinets in the tavern, free to play: Crow Patrol (throw seeds at diving crows) and Lantern Run (jump a mine cart over gaps and rocks). Best scores are kept; beating each game's target once gives a prize ticket.

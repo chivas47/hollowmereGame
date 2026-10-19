@@ -21,10 +21,13 @@ function museum() {
 }
 
 const TABS = [['museum', 'Museum'], ['fish', 'Fish'], ['notes', 'Notes'], ['ach', 'Achievements'], ['done', 'Completion']];
+const EXTRA = {};   // v71: tabs added by other ui modules (ui/storage.js: calendar, quests, map, animals)
+export function addJournalTab(key, label, render) { TABS.push([key, label]); EXTRA[key] = render; }
 function journal(tab = 'museum') {
   const S = G.S, M = S.museum, st = stats();
   let body = '';
-  if (tab === 'museum') {
+  if (EXTRA[tab]) body = EXTRA[tab]();
+  else if (tab === 'museum') {
     const cell = (k) => (M.donated.includes(k) ? `<li>${ITEMS[k].name}</li>` : '<li class="role">Not yet donated</li>');
     body = `<p>Donated ${M.donated.length} of ${MUSEUM_ITEMS.length}.</p><h3>Artifacts</h3><ul>${Object.keys(ARTIFACTS).map(cell).join('')}</ul><h3>Minerals</h3><ul>${MUSEUM_MINERALS.map(cell).join('')}</ul>`;
   } else if (tab === 'fish') {
