@@ -25,6 +25,7 @@ export function rideOut() {
 export function rideHome() {
   placePlayer('town', 21, 8, 'left'); emit('map:changed', 'town');
   notify('The coach rattles you back to town. The driver waves off your coin.');
+  changed();
   return true;
 }
 

@@ -37,6 +37,7 @@ src/
     challenges.js     CHALLENGES, CHALLENGE_FROM, MOON_SHOP (v62)
     desert.js         COACH, OASIS, DESERT_TRADES, CASINO (v64)
     island.js         BOAT: repair materials, fare and hours (v65)
+    nuts.js           NUT, BEACH_DIGS, NUT_CROPS, NUT_FISH, BRIDGE, DIG_SITE, ISLAND_SHOP (v66)
     romance.js        CANDIDATES, HEART_CAP, BOUQUET, JEALOUSY, DATE_LINES, the bouquet item (v51); PENDANT, WEDDING_DAYS, SPOUSE_CAP, CHORE_CHANCE, SPOUSE_LINES, the pendant (v52)
     gifts.js          GIFT_POINTS, BIRTHDAY_MULT, UNIVERSAL tastes, TIER_NAMES (v48)
     mail.js           LETTERS (when, text, attach), MAILBOX (v48)
@@ -84,6 +85,7 @@ src/
     npcs.js           schedules across farm and village, talk, gifts, hearts, 3-heart rewards, heart scenes
     upgrades.js       smithy and carpentry purchases, material costs, recalcStats()
     family.js         children (G.S.children, G.S.baby, G.S.childAsk), growing up, hugs; divorce at the town hall (v53)
+    nuts.js           tide nuts (G.S.nuts): beach digs, first island harvests and catches, the dig site bridge (tile 6) and its daily dig spots, the island trader (tile 5) (v66)
     island.js         Rook's boat (beach and island tile 4): repairBoat(), sail(), sailHome() (G.S.boatFixed); the island farm soil is G.S.islandSoil (v65)
     desert.js         the dunes: the coach (town tile 0), the Oasis (1), the casino (2) and its slot machine, the desert trader (3) (G.S.casino, G.S.desertTraded) (v64)
     challenges.js     Sable in the Lantern: challenges, moonstones (G.S.challenge), buyMoon() (v62)
@@ -136,6 +138,7 @@ src/
     restoration.js    the old wing's bundles and the rival's offer (ui:restore, v60)
     desert.js         the coach, the Oasis, the desert trader and the casino (ui:coach, ui:oasis, ui:dtrader, ui:casino, v64)
     island.js         Rook's boat dialog (ui:boat, v65)
+    nuts.js           the bridge and the island trader (ui:bridge, ui:islandshop, v66)
     social.js         the social menu (F, or a click on the neighbours panel) and letters (v48)
     dom.js toast.js modal.js hud.js hotbar.js dialogs.js inventory.js
     workshop.js mine.js input.js debugPanel.js

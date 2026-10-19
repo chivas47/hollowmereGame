@@ -68,6 +68,7 @@ import './systems/orders.js';
 import './systems/challenges.js';
 import './systems/desert.js';
 import './systems/island.js';
+import './systems/nuts.js';
 
 // UI
 import './ui/toast.js';
@@ -97,6 +98,7 @@ import './ui/family.js';
 import './ui/restoration.js';
 import './ui/desert.js';
 import './ui/island.js';
+import './ui/nuts.js';
 import { buildHotbar } from './ui/hotbar.js';
 import { initInput } from './ui/input.js';
 import { initDebug } from './ui/debugPanel.js';

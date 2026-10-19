@@ -661,6 +661,17 @@ One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up 
 
 Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (wide 3), water 2, clear withered crop 1, cast 8, pickaxe 2, axe 2 a swing. Cutting weeds with the sword is free (Stardew's scythe). Warm cider restores 60.
 
+## Tide nuts (v66)
+
+The island's own currency, found and never bought (Stardew's golden walnuts; Nuno chose a found nut). Each source gives its nuts once:
+
+- 4 hidden dig spots on the island beach (a small cross in the sand): dig with the hoe, 1 nut each.
+- The first harvest of each of 5 different crops on the island farm, 1 nut each.
+- The first 3 fish caught in the island's waters (sea fish), 1 nut each.
+- The dig site's first 3 digs, 1 nut each.
+
+Nuts open the old bridge east to the dig site (10 nuts, Stardew's dig site bridge), where 4 fresh dig spots each morning give a geode (35%), a frost geode (20%), Hollow quartz (20%), Hollow amber (15%) or a frost tear (10%). The island trader takes nuts: 10 heirloom boosters 3, 10 strong growth tonic 2, 5 gleamfruit seeds 2, a steel sprinkler 5, the palm-leaf hat 10 (once). That is 15 nuts from this part; the dungeon and puzzles (27d) add more.
+
 ## The island (v65)
 
 Rook's old boat is moored at the end of the beach pier. Repair it with 200 hardwood, 5 umbrite bars and 5 storm cells (Stardew's boat: 200 hardwood, 5 iridium bars, 5 battery packs), then Rook sails you to the island and back for 1,000g, 9:00 am to 5:00 pm. The island's grass can all be tilled, and crops there ignore the seasons (Stardew's island farm); a pond fills the can. The nut currency, trader and dig site come in 27c, the dungeon and puzzles in 27d.
