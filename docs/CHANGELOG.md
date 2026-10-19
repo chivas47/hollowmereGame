@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v68: The museum and collections
+- Hollowmere Museum opens in town, east of the clinic (8:00 to 18:00 every day). Curator Aldous takes one of each of 15 artifacts and 8 gems, with rewards at 5, 10, 15 and 20 donations and a wishfruit for the full collection.
+- Wriggling marks appear each morning in the Wilds, on the beach, in the forest and on the mountain: dig them with the hoe for artifacts and geodes. Cracked geodes sometimes hold an artifact too.
+- Eight secret notes turn up at dig spots and while foraging; two lead to buried treasure.
+- The journal (J, or the Journal button) shows the museum, fish caught, notes, 16 achievements and how complete your farm is.
+
 ## v67: The Smoke Peak and the island's puzzles
 - For 5 tide nuts the parrot opens the way up the Smoke Peak, a ten-floor dungeon of lava, cinder, umbrite and gold with the strongest monsters. Floors 2, 4, 6 and 8 hide a nut behind their first ladder, and a cache at the summit holds 3 more.
 - Four puzzles are hidden around the island, 2 nuts each: shells on the beach, dry stone basins, an old altar and a cold lantern.

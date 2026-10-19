@@ -661,6 +661,21 @@ One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up 
 
 Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (wide 3), water 2, clear withered crop 1, cast 8, pickaxe 2, axe 2 a swing. Cutting weeds with the sword is free (Stardew's scythe). Warm cider restores 60.
 
+## The museum and collections (v68)
+Stardew by role, original names. Data in `data/museum.js`.
+| Part | Ours | Stardew counterpart |
+|---|---|---|
+| Museum | Hollowmere Museum in town, 8:00 to 18:00 every day; 15 artifacts + 8 gems | The museum, 8:00 to 18:00; 42 artifacts + 53 minerals |
+| Artifacts | Sell 20g to 500g (sea glass 20, spoon 25, sherd and flint 40, doll 60, fossils 80 to 100, tablet 200, elder egg 350, sun mask 500) | Glass shards 20, rusty spoon 25, arrowhead 40, ancient doll 60, nautilus 80, bone flute 100, elvish jewelry 200, dinosaur egg 350, golden mask 500 |
+| Artifact spots | One a morning each in the Wilds, beach, forest, mountain; hoe, 2 energy; per-map loot with geodes; elder egg 2% | Artifact spots, per-location loot |
+| Geodes | 8% chance of an extra artifact (bell, tablet, mask) | Artifact troves, omni geodes |
+| Rewards | 5: 10 strong growth tonic; 10: steel sprinkler; 15: 10 heirloom booster; 20: 2 steel sprinklers; 23: a wishfruit | Curator rewards by count; a stardrop for the full collection |
+| Secret notes | 8; 15% per spot dug, 2% per forage pick; notes 3 and 6 mark buried treasure (starstone, sun mask) | Secret notes and their treasures |
+| Achievements | 16: earnings 15k/50k/250k/1M, fish 10/all, museum 10/all, hearts, 10 recipes, Hollow floor 100, skills at 10, all notes. No rewards | Greenhorn to Millionaire, Ol' Mariner, Treasure Trove, friendship, Cook, The Bottom, mastery |
+| Completion | Museum 15, fish 15, friendship (8 hearts each) 15, skills 15, recipes 10, achievements 20, notes 10 | The perfection tracker |
+
+The wishfruit from the museum is a sixth source (Stardew has seven stardrops).
+
 ## The Smoke Peak and the island's puzzles (v67)
 
 The island's dungeon (Stardew's volcano dungeon by role; Nuno chose to run it on the mine engine). A cave mouth at the top of the island; the parrot opens it for 5 nuts. Ten floors, rebuilt each visit like the Hollow's: 6% lava (solid), rocks 20% cinder, 8% umbrite, 12% gold, the rest stone; the Ember Vent's monsters at strength 100 + 3 per floor (between the cavern and the vent), 7 to 12 per floor; loot chests as in the cavern. Floors 2, 4, 6 and 8 give a nut with their first ladder; floor 10, the summit, is a quiet room with a cache of 3 nuts. The ladder up, or fainting, brings you out at the cave mouth.
@@ -856,6 +871,8 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 | Ranching | animal products one quality higher |
 
 ## Known issues and open questions
+
+- v68: the balance bot does not dig artifact spots or donate: artifacts are a small side income (about 40g a spot) and rewards are kit items. The excavator profession still only doubles gem and egg finds, not artifacts.
 
 ### Simulated balance (advisory)
 

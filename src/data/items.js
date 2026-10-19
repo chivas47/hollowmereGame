@@ -18,7 +18,8 @@ import { RING_ITEMS } from './weapons.js';
 import { TRINKET_ITEMS } from './forge.js';
 import { BOOK_ITEMS } from './books.js';
 import { ANGLING_ITEMS, TRASH_ITEMS } from './angling.js';
+import { ARTIFACTS } from './museum.js';
 
 const DISH_ITEMS = Object.fromEntries(Object.entries(DISHES).map(([k, d]) => [k, { name: d.name, sell: d.sell, dish: true }]));
 
-export const ITEMS = { ...PRODUCE, ...FORAGE, ...FISH, ...PRODUCTS, ...MINERALS, ...ARTISAN, ...FRUIT, ...WOODS, ...WEATHER_ITEMS, ...CLOTH_ITEMS, ...PONDS_ITEMS, ...AGED_ROE, ...DISH_ITEMS, ...WISH_ITEMS, ...ROMANCE_ITEMS, ...MARRIAGE_ITEMS, ...FAMILY_ITEMS, ...FESTIVAL_ITEMS, ...RING_ITEMS, ...TRINKET_ITEMS, ...BOOK_ITEMS, ...ANGLING_ITEMS, ...TRASH_ITEMS };
+export const ITEMS = { ...PRODUCE, ...FORAGE, ...FISH, ...PRODUCTS, ...MINERALS, ...ARTISAN, ...FRUIT, ...WOODS, ...WEATHER_ITEMS, ...CLOTH_ITEMS, ...PONDS_ITEMS, ...AGED_ROE, ...DISH_ITEMS, ...WISH_ITEMS, ...ROMANCE_ITEMS, ...MARRIAGE_ITEMS, ...FAMILY_ITEMS, ...FESTIVAL_ITEMS, ...RING_ITEMS, ...TRINKET_ITEMS, ...BOOK_ITEMS, ...ANGLING_ITEMS, ...TRASH_ITEMS , ...ARTIFACTS };

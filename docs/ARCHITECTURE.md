@@ -36,6 +36,7 @@ src/
     orders.js         ORDERS, ORDER_POINTS, ORDERS_FROM, ORDERS_OFFERED (v61)
     challenges.js     CHALLENGES, CHALLENGE_FROM, MOON_SHOP (v62)
     desert.js         COACH, OASIS, DESERT_TRADES, CASINO (v64)
+    museum.js         ARTIFACTS, MUSEUM_ITEMS, SPOTS, GEODE_ARTIFACT, REWARDS, NOTES, ACHIEVEMENTS, COMPLETION (v68)
     island.js         BOAT: repair materials, fare and hours (v65)
     nuts.js           NUT, BEACH_DIGS, NUT_CROPS, NUT_FISH, BRIDGE, DIG_SITE, ISLAND_SHOP (v66); PEAK, PUZZLE_NUTS, CHIMES, STONES, ALTAR, LANTERN (v67)
     romance.js        CANDIDATES, HEART_CAP, BOUQUET, JEALOUSY, DATE_LINES, the bouquet item (v51); PENDANT, WEDDING_DAYS, SPOUSE_CAP, CHORE_CHANCE, SPOUSE_LINES, the pendant (v52)
@@ -86,6 +87,7 @@ src/
     upgrades.js       smithy and carpentry purchases, material costs, recalcStats()
     family.js         children (G.S.children, G.S.baby, G.S.childAsk), growing up, hugs; divorce at the town hall (v53)
     nuts.js           tide nuts (G.S.nuts): beach digs, first island harvests and catches, the dig site bridge (tile 6) and its daily dig spots, the island trader (tile 5) (v66); the Smoke Peak gate (tile 7), its nut floors and summit cache (tile < in the mine), the puzzles: shells 8, basins 9, altar <, lantern ` (v67)
+    museum.js         artifact spots (G.S.museum.spots) dug with the hoe, secret notes and their treasures, donate(), achievements, completion() (v68)
     island.js         Rook's boat (beach and island tile 4): repairBoat(), sail(), sailHome() (G.S.boatFixed); the island farm soil is G.S.islandSoil (v65)
     desert.js         the dunes: the coach (town tile 0), the Oasis (1), the casino (2) and its slot machine, the desert trader (3) (G.S.casino, G.S.desertTraded) (v64)
     challenges.js     Sable in the Lantern: challenges, moonstones (G.S.challenge), buyMoon() (v62)
@@ -137,6 +139,7 @@ src/
     family.js         naming a newborn, the town hall dialog (v53)
     restoration.js    the old wing's bundles and the rival's offer (ui:restore, v60)
     desert.js         the coach, the Oasis, the desert trader and the casino (ui:coach, ui:oasis, ui:dtrader, ui:casino, v64)
+    museum.js         the museum's donations (ui:museum) and the journal (J, ui:journal): collections, notes, achievements, completion (v68)
     island.js         Rook's boat dialog (ui:boat, v65)
     nuts.js           the bridge and the island trader (ui:bridge, ui:islandshop, v66; ui:peak, v67)
     social.js         the social menu (F, or a click on the neighbours panel) and letters (v48)
@@ -189,11 +192,12 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 72 | treasure.js | Treasure chest $ in the Hollow |
 | 72 | guild.js | Wardens' Lodge & in the Wilds (dialog, or a barred door before floor 1) |
 | 72 | nuts.js | Smoke Peak gate 7 and shells 8, altar <, lantern ` on the island; the summit cache < in the mine (v67) |
+| 55 | museum.js | The hoe on an artifact spot or a read note's treasure (Wilds, beach, forest, mountain) (v68) |
 | 56 | nuts.js | Dry basins 9 on the island, with the can (v67) |
 | 57 | treasure.js | Kit slot with a bomb (throws it at the faced tile, Hollow only) |
 | 72 | helpers.js | Helper hut a, waystones e and d (warp), cave mouth y, the cave's crate t |
 | 57 | helpers.js | Kit slot with a home charm (warp home) |
-| 72 | town.js | Shop doors ( ) ] [ / in the town (dialog, or the hours and closing day); the phone _ in the farmhouse |
+| 72 | town.js | Shop doors ( ) ] [ / and the museum : in the town (dialog, or the hours and closing day); the phone _ in the farmhouse |
 | 70 | town.js | The farm's old stall S and workbench K (a note pointing to town) |
 | 72 | coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Coop C, barn A, greenhouse G, mine entrance M, ladders U/L, the cavern door ^, shafts !, the vent door > and the forge =, placed object Y, quest board Q, festival table J |
 | 71 | village.js | Fountain F, cottage V (flavour text) |
@@ -248,6 +252,7 @@ The night tint is drawn by renderer.js after all layers (not in caves).
 | `day:start` | report | days.js | forage, npcs, coop (build), health, fishing, monsters, trees (age, fruit), giants (merge), clearing (creep, alder growth), weather (rain waters soil) |
 | `day:report` | report | days.js | ui/dialogs.js morning summary |
 | `mine:floor` | {floor, rng, zone, eff} | mine.js | monsters (spawn), treasure (chest) |
+| `geode:cracked` | {kind} | treasure.js | museum.js (artifact chance, v68) |
 | `mine:ladder` | {floor, zone} | mine.js | nuts.js (peak nut floors, v67) |
 | `monster:slain` | {kind, x, y, map} | monsters.js | guild (goal counts), treasure (blast ring) |
 | `mine:faint` | none | health.js | mine.js (carry out) |
@@ -294,6 +299,7 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | W | well | yes |
 | K | Bram's old workbench (a note since v46) | yes |
 | - | the town hall (v53) | yes |
+| : | the museum in town (v68) | yes |
 | (, ), ], [, / | the town's general store, smithy, carpentry, tavern and clinic, each with its keeper's spot (v46, v47) | yes |
 | _ | the phone on the farmhouse wall (v47; drawn as a wall face) | yes |
 | C | chicken coop (written at runtime) | yes |

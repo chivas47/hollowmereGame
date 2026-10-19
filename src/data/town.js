@@ -20,6 +20,10 @@ export const SHOPS = {
   clinic: {
     name: 'Hollowmere Clinic', keeper: 'Doctor Maren', open: 9 * 60, close: 15 * 60, closed: [], ui: 'ui:clinic',
   },
+  // v68. Stardew's museum: 8:00 to 18:00, every day.
+  museum: {
+    name: 'Hollowmere Museum', keeper: 'Curator Aldous', open: 8 * 60, close: 18 * 60, closed: [], ui: 'ui:museum',
+  },
 };
 
 // The tavern (Stardew's Saloon sells dishes at twice their sell price, and a dish of the day).
