@@ -5,7 +5,7 @@ Newest first. Version numbers match published versions of the playable page.
 ## v72: Atmosphere
 - Weather now shows on every open-air map (the beach, forest, grove, mountain, town, island and more), not only the farm, the Wilds and the village. The Dunes stay dry.
 - Rain splashes on the ground. Storms throw a lightning bolt every 6 to 14 seconds, with thunder a moment later.
-- Waterfalls into the mountain lake and the grove pool. They are water tiles: you cannot walk there (two tiles each).
+- Waterfalls into the mountain lake and the grove pool. Their tiles are water: 4 grass tiles at the mountain and 6 in the grove can no longer be walked on.
 - Wildlife: birds peck on the grass by day and fly off when you come near; butterflies on fair spring and summer days; fireflies on summer nights.
 - Ambient sound by area: birdsong and night crickets in the country, surf and gulls on the shore, a far bell in town, drips and a low hum in caves, wind in the Dunes, the quarry and winter, rain on the roof indoors, and the rush of the falls as you get near. The Sound button mutes it.
 - New light through the day: a violet dawn, a golden hour from 5 pm, then deepening blue. After 8 pm the dark opens around you.
