@@ -73,7 +73,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 30 | Minigames and theatre | feature | done (chivas47/hollowmereGame#66) | Two original arcade cabinet games, a movie theatre with neighbours. |
 | 31 | Management tools | feature | done (chivas47/hollowmereGame#67) | Chests and big chests, signs, a farm computer, calendar, quest journal, live world map, animal tab, lost and found. |
 | 32 | Atmosphere | feature | done (chivas47/hollowmereGame#68) | Rain and storm effects, waterfalls, wildlife, ambient sound per area, revised lighting. |
-| 34 | Animation | feature | in progress | Tools swung in hand, weapon combos with finishers, pickups that fly into your hands, placing and crafting poses, particles, damage numbers, hit-stop and screen shake. Added by Nuno, October 2026. |
+| 34 | Animation | feature | in progress (chivas47/hollowmereGame#70) | Tools swung in hand, weapon combos with finishers, pickups that fly into your hands, placing and crafting poses, particles, damage numbers, hit-stop and screen shake. Added by Nuno, October 2026. |
 | 33 | Local two-player | feature | needs decision | Same-screen co-op is possible without a server but touches every system. Nuno to decide whether it is worth it. |
 
 ## Done
