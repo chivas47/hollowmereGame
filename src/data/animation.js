@@ -1,16 +1,19 @@
 // v74: animation timings, tool swing arcs and weapon combos. Drawing is in render/animation.js, logic in systems/animation.js.
 // Angles are degrees relative to the way the player faces (0 = straight ahead, negative = raised/back, positive = down/forward).
 // A swing runs from `from` to `to`; `strike` is the share of the time spent winding up before the fast part.
+// gate (v75): Use does nothing else until the swing ends, so pressing faster never works faster; one press in the last
+// TOOL_BUFFER seconds is kept and runs as the swing ends.
 
+export const TOOL_BUFFER = 0.2;
 export const SWINGS = {
-  hoe:   { dur: 0.32, from: -125, to: 25,  strike: 0.4, root: 0.22, impact: 'dirt' },
-  pick:  { dur: 0.34, from: -140, to: 30,  strike: 0.45, root: 0.24, impact: 'stone' },
-  axe:   { dur: 0.34, from: -135, to: 35,  strike: 0.45, root: 0.24, impact: 'wood' },
-  can:   { dur: 0.42, from: -20,  to: 40,  strike: 0.25, root: 0.3,  impact: 'water' },   // tilt and pour
-  seed:  { dur: 0.26, from: -60,  to: 20,  strike: 0.2,  root: 0.12, impact: 'seed' },    // a sowing toss
+  hoe:   { gate: true, dur: 0.32, from: -125, to: 25,  strike: 0.4, root: 0.22, impact: 'dirt' },
+  pick:  { gate: true, dur: 0.34, from: -140, to: 30,  strike: 0.45, root: 0.24, impact: 'stone' },
+  axe:   { gate: true, dur: 0.34, from: -135, to: 35,  strike: 0.45, root: 0.24, impact: 'wood' },
+  can:   { gate: true, dur: 0.42, from: -20,  to: 40,  strike: 0.25, root: 0.3,  impact: 'water' },   // tilt and pour
+  seed:  { gate: true, dur: 0.26, from: -60,  to: 20,  strike: 0.2,  root: 0.12, impact: 'seed' },    // a sowing toss
   rod:   { dur: 0.4,  from: -150, to: 10,  strike: 0.5,  root: 0 },                       // the cast
-  sword: { dur: 0.28, from: -100, to: 60, strike: 0.1,  root: 0.1, trail: true },           // the blade used as a tool (weeds)
-  pan:   { dur: 0.4,  from: -10,  to: 10,  strike: 0.2,  root: 0.3,  impact: 'water' },
+  sword: { gate: true, dur: 0.28, from: -100, to: 60, strike: 0.1,  root: 0.1, trail: true },           // the blade used as a tool (weeds)
+  pan:   { gate: true, dur: 0.4,  from: -10,  to: 10,  strike: 0.2,  root: 0.3,  impact: 'water' },
 };
 
 // Weapon combos: press Use again within `window` seconds of the previous swing ending to chain the next step.
