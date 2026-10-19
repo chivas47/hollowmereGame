@@ -22,7 +22,7 @@
 // exits: "x,y" of an E tile -> where it leads.
 import { W, H } from '../core/constants.js';
 
-export const SOLID = new Set(['0', '1', '2', '3', '4', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
+export const SOLID = new Set(['0', '1', '2', '3', '4', '5', '6', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
 
 function emptyGrid() {
   return Array.from({ length: H }, (_, y) =>
@@ -161,7 +161,18 @@ function islandGrid() {
   fill(m, 4, 3, 17, 8, 'g');
   fill(m, 19, 3, 21, 5, 'O');
   fill(m, 4, 10, 18, 10, 'P'); fill(m, 11, 9, 11, 11, 'P');
-  put(m, [[2, 2], [2, 9], [20, 8], [21, 10], [3, 11]], 'T');
+  put(m, [[2, 2], [2, 9], [20, 8], [3, 11]], 'T');
+  m[9][14] = '5';                                  // v66: the island trader's table
+  fill(m, 19, 10, 22, 10, 'P'); m[10][23] = '6';   // v66: the old bridge east to the dig site
+  return m;
+}
+
+// v66: the dig site east of the island: sand, old trenches, the bridge back west (6).
+function digsiteGrid() {
+  const m = emptyGrid();
+  fill(m, 0, 0, W - 1, 0, 'T'); fill(m, 0, H - 1, W - 1, H - 1, 'T'); fill(m, W - 1, 0, W - 1, H - 1, 'T'); fill(m, 0, 0, 0, H - 1, 'T');
+  m[10][0] = '6'; fill(m, 1, 10, 4, 10, 'P');
+  put(m, [[6, 3], [12, 2], [19, 4], [17, 12], [7, 13]], 'R');
   return m;
 }
 
@@ -312,7 +323,11 @@ export const MAPS = {
     exits: { '11,12': { to: 'farm', x: 8, y: 1, dir: 'down' } },
   },
   island: {   // v65
-    name: 'The island', salt: 31, grid: islandGrid(), objects: [{ art: 'boat', x: 10, y: 14 }],
+    name: 'The island', salt: 31, grid: islandGrid(), objects: [{ art: 'boat', x: 10, y: 14 }, { art: 'table', x: 14, y: 9 }],
+    exits: {},
+  },
+  digsite: {   // v66
+    name: 'The dig site', salt: 37, grid: digsiteGrid(), ground: 'z', objects: [],
     exits: {},
   },
   desert: {   // v64

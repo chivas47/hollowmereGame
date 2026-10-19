@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v66: Tide nuts
+- The island hides tide nuts: in the beach sand, in your first harvests and catches there. A parrot fixes the old bridge east for 10 of them, and beyond it a dig site turns up geodes and gems every morning. The island trader takes nuts too.
+- Island waters now hold sea fish.
+
 ## v65: The island
 - Rook's old boat, moored at the end of the beach pier, can be repaired with hardwood, umbrite bars and storm cells. Then Rook sails you to the island for 1,000g: a green shore where anything grows in any season.
 

@@ -30,6 +30,7 @@ export function sail() {
 export function sailHome() {
   placePlayer('beach', 6, 11, 'up'); emit('map:changed', 'beach');
   notify('Rook brings you back across the bay.');
+  changed();
   return true;
 }
 addInteraction(72, ({ tile, mapId }) => {
