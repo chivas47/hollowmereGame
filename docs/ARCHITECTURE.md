@@ -65,7 +65,7 @@ src/
     player.js         movement, map exits, player sprite (respects G.lock)
     clock.js          advances time, pass out at END
     days.js           sleep(): day:end -> date++ -> season:changed -> day:start -> day:report
-    interact.js       act(): builds {tx, ty, tile, mapId, item} and runs interactions
+    interact.js       act(): builds {tx, ty, tile, mapId, item} and runs interactions; v75: waits out a tool swing (animation.js busy())
     effects.js        tool swing feedback (swingAt: the water and seed overlay, starts the player's swing)
     animation.js      v74: player action poses (playAnim, rooted), pickups flying in, particles (burst, ring), damage numbers (floatText), screen shake (shake), hit-stop (holdSwing); cosmetic only, its own RNG
     farming.js        till (wide hoe), water, plant, harvest, growth, withering

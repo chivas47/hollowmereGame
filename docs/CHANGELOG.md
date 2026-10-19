@@ -2,6 +2,9 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v75: No tool spamming
+- Fix: pressing Use faster than a tool swings no longer works faster. Before, every press chopped, mined, tilled or watered at once (in a 2 second test, 86 swings spamming against 6 pressing steadily); now each swing has to finish first. A press in the last 0.2 s of a swing is kept and runs as it ends, so steady play feels the same. Weapons keep their own combo timing.
+
 ## v74: Animation
 - Tools swing in your hands: the hoe, pickaxe and axe wind up and strike, the can tilts and pours, the rod casts and stays in your hand while you fish, bending when a fish bites and while you reel. The line now runs from the rod's tip. You stand still for the wind-up (about a quarter second), as in the genre.
 - Impacts throw dirt, stone chips, wood chips, splashes or seeds; breaking stone shakes the screen a little.

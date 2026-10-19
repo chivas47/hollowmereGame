@@ -146,7 +146,7 @@ function strike() {
   cooldown = base + (st.recover || 0);
   const [dx, dy] = DIRS[G.S.dir];
   moveBox(G.S, dx * st.lunge, dy * st.lunge);   // a short step into the swing (v73: stops at walls)
-  playAnim('sword', { dur: base * (st.spin ? 1.3 : 1), from: st.arc[0], to: st.arc[1], strike: st.slam ? 0.4 : 0.1, root: base * 0.6,
+  playAnim('sword', { gate: false, dur: base * (st.spin ? 1.3 : 1), from: st.arc[0], to: st.arc[1], strike: st.slam ? 0.4 : 0.1, root: base * 0.6,
     weapon: kind === 'sword' ? 'sword' : kind, trail: !st.thrust, spin: st.spin, thrust: st.thrust, reach: st.spin ? 14 : 12 });
   emit('sfx', 'sword');
   if (st.shake) shake(st.shake, 0.15);

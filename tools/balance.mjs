@@ -171,6 +171,7 @@ function standFacing(map, tx, ty) {
 function use(map, tx, ty, item) {
   if (!standFacing(map, tx, ty)) return false;
   S().slot = HOTBAR.indexOf(item);
+  G.anim = null;   // v75: Use waits out a tool swing; the bot pays game time per action instead
   act();
   G.talking = null;   // bumping into a neighbour opens a talk; there is no dialog to close it
   return true;

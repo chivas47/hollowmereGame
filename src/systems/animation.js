@@ -21,6 +21,9 @@ export function playAnim(kind, opts = {}) {
   G.anim = { kind, t: 0, dur: 0.3, from: 0, to: 0, strike: 0.3, root: 0, ...base, ...opts, dir: G.S.dir, hold: 0, hit: false };
   return G.anim;
 }
+// v75: a tool swing is under way; Use waits for it (systems/interact.js).
+export const busy = () => !!G.anim?.gate && G.anim.t < G.anim.dur;
+export const busyLeft = () => (busy() ? G.anim.dur - G.anim.t : 0);
 // The player cannot walk during the first part of a tool action (the wind-up and the strike).
 export const rooted = () => !!G.anim && G.anim.t < (G.anim.root || 0);
 export const shake = (mag, t = 0.18) => { if (!G.shake || G.shake.mag <= mag) G.shake = { mag, t, max: t }; };

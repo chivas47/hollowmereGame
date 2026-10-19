@@ -674,6 +674,7 @@ Max energy 270 (300 and 340 with house upgrades, plus skill milestones). Hoe 2 (
 
 Nothing here is saved or touches the economy (cosmetic randomness has its own generator, so the balance simulator's runs are unchanged).
 - Tool swings (data/animation.js SWINGS): hoe 0.32 s, pickaxe and axe 0.34 s, can 0.42 s, seeds 0.26 s, cast 0.4 s. You are held in place for the first 0.12 to 0.3 s.
+- v75: one action per swing. Use is ignored until the tool's swing ends (one press in its last 0.2 s is kept), so the swing time is also the fastest a tool can be used: about 3 axe, pickaxe or hoe strokes a second, 2.4 waterings.
 - Pickups fly in over 0.32 s, at most 6 kinds at once; labels stack. The crafted pose lasts 1 s; placing 0.25 s.
 - Hit-stop 0.06 s on contact; screen shake on stone, criticals, the spin and slam finishers, and when you are hurt.
 
