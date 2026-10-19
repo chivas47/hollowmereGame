@@ -88,3 +88,15 @@ button:focus-visible{outline:3px solid var(--water);outline-offset:2px}
 .furnrow canvas{width:32px;height:44px;image-rendering:pixelated;background:var(--seam);border-radius:4px;flex:none}
 .furnrow div{display:flex;flex-direction:column}
 .decor{width:32px;height:32px;border-radius:4px;border:2px solid rgba(0,0,0,.35);flex:none}
+/* v71: the journal's calendar and world map */
+.calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:8px}
+.calhead{font-size:16px;color:var(--straw);text-align:center}
+.cal{min-height:56px;padding:4px;border:2px solid var(--seam);border-radius:4px;font-size:16px;overflow-wrap:anywhere;color:var(--leaf)}
+.cal span{display:block;color:var(--cream)}
+.cal.past{opacity:.55}
+.cal.now{border-color:var(--harvest)}
+.worldmap{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin:8px 0}
+.wm{padding:4px;border:2px solid var(--seam);border-radius:4px;font-size:16px;overflow-wrap:break-word;background:var(--bark);color:var(--straw)}
+.wm span{display:block;color:var(--leaf)}
+.wm.here{border-color:var(--harvest);background:var(--harvest);color:var(--soil)}
+.wm.here span{color:var(--soil)}

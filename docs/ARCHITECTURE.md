@@ -38,6 +38,7 @@ src/
     desert.js         COACH, OASIS, DESERT_TRADES, CASINO (v64)
     museum.js         ARTIFACTS, MUSEUM_ITEMS, SPOTS, GEODE_ARTIFACT, REWARDS, NOTES, ACHIEVEMENTS, COMPLETION (v68)
     market.js         CART, BOOKSELLER, MACHINE, PRIZES, MYSTERY, the ticket and box items (v69)
+    storage.js        CHEST_ROOM, SIGN_LENGTH, WORLD (the journal's map grid), WORLD_PARENT (v71)
     theatre.js        THEATRE, FILMS, SNACKS, TASTES (guests' film and snack kinds), ARCADE (v70)
     island.js         BOAT: repair materials, fare and hours (v65)
     nuts.js           NUT, BEACH_DIGS, NUT_CROPS, NUT_FISH, BRIDGE, DIG_SITE, ISLAND_SHOP (v66); PEAK, PUZZLE_NUTS, CHIMES, STONES, ALTAR, LANTERN (v67)
@@ -90,6 +91,7 @@ src/
     family.js         children (G.S.children, G.S.baby, G.S.childAsk), growing up, hugs; divorce at the town hall (v53)
     nuts.js           tide nuts (G.S.nuts): beach digs, first island harvests and catches, the dig site bridge (tile 6) and its daily dig spots, the island trader (tile 5) (v66); the Smoke Peak gate (tile 7), its nut floors and summit cache (tile < in the mine), the puzzles: shells 8, basins 9, altar <, lantern ` (v67)
     museum.js         artifact spots (G.S.museum.spots) dug with the hoe, secret notes and their treasures, donate(), achievements, completion() (v68)
+    storage.js        chests (p.store in G.S.placed: store, take, storeMatching, takeAll), the lost and found (G.S.lostFound, claimLost), signs (writeSign), the farm computer (farmReport) (v71)
     theatre.js        the picture house Þ once the old wing is whole: today's film, watch() with a guest and snack; arcade best scores and prize tickets (v70)
     arcade.js         the two cabinet games' rules, pure state steps (newCrows/stepCrows, newRunner/stepRunner) (v70)
     island.js         Rook's boat (beach and island tile 4): repairBoat(), sail(), sailHome() (G.S.boatFixed); the island farm soil is G.S.islandSoil (v65)
@@ -145,6 +147,7 @@ src/
     restoration.js    the old wing's bundles and the rival's offer (ui:restore, v60)
     desert.js         the coach, the Oasis, the desert trader and the casino (ui:coach, ui:oasis, ui:dtrader, ui:casino, v64)
     museum.js         the museum's donations (ui:museum) and the journal (J, ui:journal): collections, notes, achievements, completion (v68)
+    storage.js        chest, sign, farm computer and lost and found dialogs (ui:chest, ui:sign, ui:computer, ui:lostfound); journal tabs calendar, quests, map, animals via addJournalTab() in ui/museum.js (v71)
     theatre.js        the picture house dialog: guest, snack, the showing (ui:theatre) (v70)
     arcade.js         the cabinets (ui:arcade, from the tavern): a canvas, its own keys and touch while a game runs (v70)
     island.js         Rook's boat dialog (ui:boat, v65)
@@ -184,6 +187,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 73 | clothing.js | Facing a sewing machine, dye pots or mannequin in the farmhouse |
 | 74 | clearing.js | Facing a fence, gate or path (gate opens; axe or pickaxe takes it up) |
 | 73 | trees.js | Facing a fruit tree (pick fruit) |
+| 73 | storage.js | Facing a chest, sign or farm computer (its own dialog, ahead of placed objects at 72) (v71) |
 | 73 | buildings.js | Facing a mini shipping bin (ships; axe or pickaxe takes it up) |
 | 72 | pets.js | The water bowl b (the can fills it) |
 | 72 | mill.js | Mill m, shed s (enter), clock tower k |
@@ -271,6 +275,7 @@ The night tint is drawn by renderer.js after all layers (not in caves).
 | `skill:level` | {skill, level} | skills.js | professions (offer a choice, combat health) |
 | `upgraded` | key | upgrades.js | house.js (rebuild the farmhouse rooms) |
 | `site:moved` | building key | sites.js | coop, barn (animals back in the yard), stable (horse home) |
+| `picked` | the placed object | placeables.js (pick up, or knocked out of place on load) | storage.js (a chest's contents to the lost and found, v71) |
 | `placed` | {map, x, y, kind} | placeables.js | sprinklers.js (water now), audio/sfx.js |
 | `sfx` | name | effects, monsters, fishing, health, economy, skills, coop, barn, ui/modal | audio/sfx.js |
 | `ui:scene` | {npc, at, scene, extra} | npcs.js | ui/dialogs.js heart scene with choices |

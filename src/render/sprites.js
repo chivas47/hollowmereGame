@@ -293,6 +293,11 @@ export function drawBlast(c, px, py, radius, k) {
   c.fillStyle = g; c.fillRect(px - radius, py - radius, radius * 2, radius * 2);
 }
 
+function chestArt(c, X, Y, body, dark, trim) {
+  r(c, X + 1, Y + 14, 14, 1, 'rgba(0,0,0,.25)'); r(c, X + 2, Y + 6, 12, 8, body); r(c, X + 2, Y + 4, 12, 3, dark);
+  r(c, X + 2, Y + 4, 12, 1, trim); r(c, X + 2, Y + 7, 12, 1, dark); r(c, X + 7, Y + 7, 2, 3, '#e9c46a');
+}
+
 const PLACED_ART = {
   emberbomb: (c, X, Y) => bombArt(c, X, Y, 'emberbomb'),
   blastbomb: (c, X, Y) => bombArt(c, X, Y, 'blastbomb'),
@@ -300,6 +305,17 @@ const PLACED_ART = {
   slimepress: (c, X, Y) => {
     r(c, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.25)'); r(c, X + 3, Y + 6, 10, 8, '#5f6870'); r(c, X + 3, Y + 6, 10, 1, '#8d939a');
     r(c, X + 5, Y + 2, 6, 4, '#3f4850'); r(c, X + 7, Y, 2, 2, '#3f4850'); r(c, X + 5, Y + 9, 6, 3, '#7fcf6a'); r(c, X + 6, Y + 9, 2, 1, '#a6e88f');
+  },
+  // v71: management tools.
+  chest: (c, X, Y) => chestArt(c, X, Y, '#a5753f', '#8a5a32', '#c9a06a'),
+  bigchest: (c, X, Y) => { chestArt(c, X, Y, '#94673d', '#6e4626', '#c9a06a'); r(c, X + 2, Y + 8, 12, 1, '#b8733e'); r(c, X + 2, Y + 12, 12, 1, '#b8733e'); },
+  sign: (c, X, Y) => {
+    r(c, X + 7, Y + 9, 2, 6, '#6e4626'); r(c, X + 5, Y + 14, 6, 1, 'rgba(0,0,0,.25)');
+    r(c, X + 2, Y + 3, 12, 7, '#8a5a32'); r(c, X + 3, Y + 4, 10, 5, '#c9a06a'); r(c, X + 4, Y + 5, 7, 1, '#6e4626'); r(c, X + 4, Y + 7, 5, 1, '#6e4626');
+  },
+  farmcomputer: (c, X, Y) => {
+    r(c, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.25)'); r(c, X + 3, Y + 11, 10, 3, '#8d939a'); r(c, X + 2, Y + 2, 12, 9, '#5f6870');
+    r(c, X + 3, Y + 3, 10, 7, '#1f3a2e'); r(c, X + 4, Y + 5, 5, 1, '#7fcf6a'); r(c, X + 4, Y + 7, 7, 1, '#7fcf6a'); r(c, X + 11, Y + 12, 1, 1, '#e9b44c');
   },
   minibin: (c, X, Y) => {
     r(c, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.25)'); r(c, X + 3, Y + 7, 10, 7, '#a5753f'); r(c, X + 3, Y + 10, 10, 1, '#8a5a32');

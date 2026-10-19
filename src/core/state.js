@@ -26,6 +26,7 @@ export function newState() {
     qbag: {},           // item -> [fine, prime, heirloom] counts within bag (see systems/quality.js)
     soil: {},           // farm: "x,y" -> { w: watered, crop: { type, age, dead } | null }
     greenSoil: {},      // greenhouse beds, same shape
+    lostFound: {},      // v71: item -> [plain, fine, prime, heirloom] left by chests taken up (systems/storage.js)
     theatre: { day: 0, seen: {} }, arcade: { best: {}, prized: [] },   // v70: last film day, neighbours' week seen; cabinet best scores, prizes won
     market: { day: 0, bought: {}, pulls: 0 },   // v69: the cart's sales today, prize machine turns (systems/market.js)
     museum: { donated: [], rewards: [], notes: [], dug: [], spots: {}, spotDay: 0, ach: [] },   // v68: donations, rewards claimed, secret notes, note treasures dug, artifact spots, achievements
@@ -122,6 +123,7 @@ export function merge(saved) {
   if (!s.projects || typeof s.projects !== 'object') s.projects = {};
   if (!s.greenSoil || typeof s.greenSoil !== 'object') s.greenSoil = {};
   if (!s.islandSoil || typeof s.islandSoil !== 'object') s.islandSoil = {};   // v65
+  if (!s.lostFound || typeof s.lostFound !== 'object') s.lostFound = {};   // v71
   s.theatre = { day: saved.theatre?.day || 0, seen: { ...(saved.theatre?.seen || {}) } };   // v70
   s.arcade = { best: { ...(saved.arcade?.best || {}) }, prized: [...(saved.arcade?.prized || [])] };
   s.market = { day: saved.market?.day || 0, bought: { ...(saved.market?.bought || {}) }, pulls: saved.market?.pulls || 0 };   // v69
