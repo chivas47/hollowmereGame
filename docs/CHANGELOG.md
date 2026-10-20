@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v104: Seasonal motion
+- Spring: blossom petals drift down from the trees. Summer: seed fluff floats up off open grass. Autumn: leaves tumble down, flat then on edge. Winter: snow slips off the branches in small clumps (not on snow days, when it is already snowing).
+- They drift with the wind (v103), rest on the ground a moment and fade. Rain, storms and mist halve them. At most 40 at once, on open-air maps only.
+- Drawn only: no save fields, no prices. Under 0.05 ms a frame.
+
 ## v103: Wind in grass, trees and washing
 - Wind: outdoors, tree crowns lean downwind in a wave that rolls across the map, stronger in rain and storms (faster too), barely there in mist, and breezier on some days than others. Indoors nothing moves.
 - Trees: every map's trees, wild alders and fruit trees bend at the crown while the trunk stays put.

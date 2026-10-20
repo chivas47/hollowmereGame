@@ -95,3 +95,15 @@ export const CLOTHESLINES = {
   village: [{ x: 2, y: 6, w: 3, wash: ['#d8d0b8', '#8a5a9a', '#f2f2ee', '#5f8fb5'] }, { x: 17, y: 10, w: 3, wash: ['#c0504a', '#f2f2ee', '#e9b44c'] }],
   town: [{ x: 13, y: 13, w: 3, wash: ['#f2f2ee', '#4a7a5a', '#d8d0b8', '#a5432f'] }],
 };
+
+// v104: seasonal motion, drawn only. Each season something drifts down from the map's tree crowns (fluff rises
+// off open grass instead): rate a second while you stand on an open-air map, fall speed [min, max] px a second,
+// drift in px a second at full wind lean, how long it rests on the ground (seconds) before fading, and its colours.
+// Wet days and mist halve the rate; snow days skip the winter clumps (it is snowing already).
+export const SEASONAL = {
+  Spring: { kind: 'petal', rate: 2.5, fall: [8, 14], drift: 18, rest: 3, colors: ['#f4c2d0', '#f8e4ea', '#ffffff'] },
+  Summer: { kind: 'fluff', rate: 0.6, fall: [-3, 2], drift: 14, rest: 0, colors: ['#ffffff', '#f2f0e0'] },
+  Autumn: { kind: 'leaf', rate: 4, fall: [12, 20], drift: 24, rest: 4, colors: ['#e8862a', '#c0502a', '#e0b030', '#b04020'] },
+  Winter: { kind: 'clump', rate: 0.5, fall: [40, 55], drift: 6, rest: 1.5, colors: ['#ffffff', '#e6f2fa'] },
+};
+export const SEASONAL_MAX = 40;
