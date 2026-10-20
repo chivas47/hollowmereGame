@@ -16,12 +16,13 @@ export function openModal(html, actions) {
   if ($('#modal').hidden) emit('sfx', 'ui');
   $('#modal').hidden = false;
   G.paused = true; G.keys = {};
-  (box.querySelector('.primary') || box.querySelector('button'))?.focus();
+  $('#modal .card').scrollTop = 0;   // long dialogs start at the top, not at the focused button
+  (box.querySelector('.primary') || box.querySelector('button'))?.focus({ preventScroll: true });
 }
 
 export function closeModal() {
   $('#modal').hidden = true;
-  G.paused = false; G.talking = null;
+  G.paused = !$('#menu').hidden; G.talking = null;
   document.activeElement?.blur();   // so the next Space press reaches the game, not a hidden button
 }
 

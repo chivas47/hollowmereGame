@@ -2,6 +2,17 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v96: Modern screen layout and accessibility
+- The game fills the window like a console game instead of scrolling like a web page. The field is scaled to the largest size that fits, framed in wood, and nothing scrolls on desktop, phone or tablet.
+- Wide screens with a mouse get a side column: the clock panel (farm, date, weather, time, place, gold, the bin), the energy, health and water bars, and the menu buttons. Other screens stack them above the field.
+- Meters show their value as text (Energy 270/270) and to screen readers; energy and health pulse when low.
+- Menu buttons show their key (Bag I, Craft C, Journal J, Friends F, Menu Esc). The neighbours' heart rows left the main screen for the Friends button, which gets a dot on a neighbour's birthday.
+- Hotbar slots show their key number, and the selected slot is lifted and lit.
+- New pause menu on Esc or the Menu button: sound and music, save export and import, new farm, debug tools, a controls table and a short getting-started guide (it replaces the paragraph of help under the field). Esc still closes dialogs first and stops placing a building.
+- Phones: the pad and Use button only show on touch screens. Held upright, the hotbar is one row of icons with the held tool named above it; held sideways, the pad and Use sit either side of the field.
+- Dialogs open at the top (long ones like the bag used to open scrolled to the bottom), keep their buttons visible while scrolling, and fade in (not with reduced motion). Messages are announced to screen readers.
+- Hotbar keys and saves unchanged: no new fields.
+
 ## v95: Variant prop sheet
 - The props that change with the place or the season draw from a new sheet, `assets/sprites/variants.png`, one picture per variant (17 in all): the shrine door (plain, snowy), the six skill pedestals (each with its skill's colour), the farm cave mouth and the Smoke Peak mouth (plain, snowy), the island's three chime shells (small to large) and the altar (the island's stone altar, the summit's chest).
 - Which picture a tile shows is chosen in code (`PROP_VARIANT` in `src/render/tiles.js`), so an artist can redraw each one exactly.

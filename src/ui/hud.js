@@ -4,7 +4,7 @@ import { today, fmtTime } from '../core/time.js';
 import { ITEMS } from '../data/items.js';
 import { NPCS } from '../data/npcs.js';
 import { MAPS } from '../data/maps.js';
-import { hearts, heartStr, isBirthday } from '../systems/npcs.js';
+import { isBirthday } from '../systems/npcs.js';
 import { weatherNow } from '../systems/weather.js';
 import { $ } from './dom.js';
 
@@ -12,21 +12,31 @@ function render() {
   const S = G.S, d = today();
   const farm = `${S.profile?.farm || 'Hollowmere'} Farm`;
   if ($('h1').textContent !== farm) { $('h1').textContent = farm; document.title = farm; }
-  $('#date').textContent = `${d.wd}, ${d.season} ${d.d}, Year ${d.year}, ${weatherNow().name.toLowerCase()}`;
+  // v96: spans so phones held sideways can drop the weekday and year
+  $('#date').innerHTML = `<span class="wd">${d.wd}, </span>${d.season} ${d.d}<span class="yr">, Year ${d.year}</span>, ${weatherNow().name.toLowerCase()}`;
   $('#place').textContent = MAPS[S.map].name;
   $('#time').textContent = fmtTime(S.time);
   $('#gold').textContent = `${S.gold}g`;
-  $('#energy i').style.width = `${(S.energy / S.maxEnergy) * 100}%`;
+  meter('#energy', S.energy, S.maxEnergy);
   $('#energy').classList.toggle('low', S.energy < S.maxEnergy * 0.25);
-  $('#water i').style.width = `${(S.water / S.maxw) * 100}%`;
-  $('#health i').style.width = `${(S.hp / S.maxHp) * 100}%`;
+  meter('#water', S.water, S.maxw);
+  meter('#health', S.hp, S.maxHp);
+  $('#health').classList.toggle('low', S.hp < S.maxHp * 0.25);
   const items = Object.keys(S.bag).filter((k) => S.bag[k]).map((k) => `${ITEMS[k].name} ${S.bag[k]}`);
   $('#basket').textContent = items.length ? items.join(', ') : 'empty';
+  $('#basket').parentElement.title = $('#basket').textContent;
   $('#bin').textContent = `${S.bin}g`;
-  $('#friends').innerHTML = NPCS.map((n) => {
-    const st = S.npcs[n.id];
-    return `<div><b>${n.name}</b>${isBirthday(n) ? ' <span class="role">birthday</span>' : ''} <span class="hearts" aria-label="${hearts(st)} of ${st.married ? 14 : 10} hearts">${heartStr(st)}</span></div>`;
-  }).join('');
+  const bday = NPCS.find(isBirthday);   // v96: the neighbours row became the Friends button; a birthday shows on it
+  $('#friends').classList.toggle('dot', !!bday);
+  $('#friends').setAttribute('aria-label', bday ? `Friends, F. ${bday.name}'s birthday today` : 'Friends, F');
+}
+
+// v96: a bar plus its value, as text for the eye and the screen reader.
+function meter(sel, v, max) {
+  const m = $(sel), n = Math.max(0, Math.round(v));
+  m.querySelector('i').style.width = `${(Math.max(0, v) / max) * 100}%`;
+  m.setAttribute('aria-valuenow', n); m.setAttribute('aria-valuemax', max);
+  m.dataset.v = `${n}/${max}`;
 }
 
 on('state:changed', render);

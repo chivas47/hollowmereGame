@@ -10,6 +10,7 @@ import { closeModal, modalOpen } from './modal.js';
 import { selectSlot } from './hotbar.js';
 import { confirmReset } from './dialogs.js';
 import { toggleDebug } from './debugPanel.js';
+import { openMenu, closeMenu, menuOpen } from './menu.js';
 import { toggleAll } from './sound.js';
 import { whistle } from '../systems/stable.js';
 import { cancelSiting } from '../systems/sites.js';
@@ -20,7 +21,9 @@ const KEYMAP = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', Arr
 export function initInput(canvas) {
   addEventListener('keydown', (e) => {
     if (modalOpen()) { if (e.code === 'Escape') closeModal(); return; }
+    if (menuOpen()) { if (e.code === 'Escape') closeMenu(); return; }
     if (e.code === 'Escape' && G.siting) { cancelSiting(); return; }   // stop placing a building
+    if (e.code === 'Escape') { openMenu(); return; }
     if (e.code === 'Backquote') { toggleDebug(); return; }
     if (e.code === 'KeyI') { emit('ui:inventory'); return; }
     if (e.code === 'KeyC') { emit('ui:craft'); return; }
@@ -64,6 +67,7 @@ export function initInput(canvas) {
 
   $('#bagBtn').addEventListener('click', (e) => { emit('ui:inventory'); e.currentTarget.blur(); });
   $('#craftBtn').addEventListener('click', (e) => { emit('ui:craft'); e.currentTarget.blur(); });
+  $('#reset').addEventListener('click', closeMenu);
   $('#reset').addEventListener('click', confirmReset);
   $('#debugToggle').addEventListener('click', toggleDebug);
   document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
