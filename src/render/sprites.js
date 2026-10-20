@@ -3,7 +3,7 @@ import { T } from '../core/constants.js';
 import { CROPS } from '../data/crops.js';
 import { r, blink } from './pixel.js';
 import { ready, tinted, frame, sheet } from './sheets.js';
-import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET } from '../data/sprites.js';
+import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET } from '../data/sprites.js';
 
 const FERT_DOT = { booster: '#c9b68e', booster2: '#e9b44c', booster3: '#b98ae0', tonic: '#86b86a', tonic2: '#5fd36a', mulch: '#a0805a', mulch2: '#7a5a3a' };
 export function drawSoil(c, X, Y, wet, fert) {
@@ -119,7 +119,7 @@ const FORAGE_ART = {
 };
 export function drawForage(c, f) {
   const X = f.x * T, Y = f.y * T;
-  (FORAGE_ART[f.type] || FORAGE_ART.leek)(c, X, Y, X + 8);
+  drawForageArt(c, X, Y, f.type);
   if (blink(500, 4)) r(c, X + 13, Y + 3, 1, 1, '#fffbe8');
 }
 
@@ -533,7 +533,13 @@ export function drawSwing(c, s) {
 // Fruit trees. stage 0 to 3 while growing, 4 mature; bare in winter outdoors. The canopy reaches a tile up.
 const FRUIT_SPOTS = [[1, -6], [10, -8], [5, 0]];
 export function drawFruitTree(c, X, Y, fruit, stage, count, bare) {
-  const cx = X + 8, trunk = '#7a5a3a';
+  const cx = X + 8, trunk = '#7a5a3a', S = TREES_SHEET;
+  if (ready(S.sheet)) {   // v82: from the tree sheet tinted to the leaf colour once it has loaded
+    const f = bare && stage >= 3 ? S.bare : stage;
+    c.drawImage(tinted(S.sheet, S.layers, [['leaf', fruit.leaf], ['ink', null]], S.h), f * S.w, 0, S.w, S.h, X + S.origin[0], Y + S.origin[1], S.w, S.h);
+    if (f === 4) FRUIT_SPOTS.slice(0, count).forEach(([a, b]) => { r(c, X + a, Y + b, 3, 3, fruit.color); r(c, X + a, Y + b, 1, 1, 'rgba(255,255,255,.45)'); });
+    return;
+  }
   r(c, X + 2, Y + 14, 12, 2, 'rgba(0,0,0,.2)');
   if (stage === 0) { r(c, cx, Y + 8, 1, 6, trunk); r(c, cx - 3, Y + 8, 3, 2, fruit.leaf); r(c, cx + 1, Y + 6, 3, 2, fruit.leaf); return; }
   if (stage === 1) { r(c, cx, Y + 6, 1, 8, trunk); r(c, cx - 3, Y + 2, 7, 5, fruit.leaf); r(c, cx - 2, Y + 1, 5, 1, fruit.leaf); return; }
@@ -733,4 +739,9 @@ export function drawTap(c, X, Y, ready) {
 }
 
 // v74: one forage item's art at a tile's top-left (render/animation.js draws pickups with it).
-export function drawForageArt(c, X, Y, type) { (FORAGE_ART[type] || FORAGE_ART.leek)(c, X, Y, X + 8); }
+// v82: from the forage sheet once it has loaded, else drawn in code.
+export function drawForageArt(c, X, Y, type) {
+  const F = FORAGE_SHEET, i = F.order.indexOf(type);
+  if (i >= 0 && ready(F.sheet)) return frame(c, sheet(F.sheet).img, i % F.per, F.size, X, Y, Math.floor(i / F.per));
+  (FORAGE_ART[type] || FORAGE_ART.leek)(c, X, Y, X + 8);
+}

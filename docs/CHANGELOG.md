@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v82: Forage and fruit tree sprite sheets
+- All 34 forage pictures now draw from a new sheet, `assets/sprites/forage.png`, outlined and shaded, on the ground and when picked up.
+- Fruit trees draw from `assets/sprites/trees.png`: every stage and the bare winter tree, outlined and shaded, tinted to each tree's leaf colour. Fruit is drawn on top as before.
+- If either sheet fails to load, they are drawn in code exactly as in v81. Giant crops are still drawn in code.
+- The scripts that build the placeholder sheets are now kept in `tools/sprites/`.
+- Saves: no new fields.
+
 ## v81: Crop sprite sheet
 - Every crop now draws from a new layered sheet, `assets/sprites/crops.png` (original placeholder art): outlined and shaded at every stage (seed, sprout, young, ripe, dead), the ripe crop by its shape and tinted to its own colours.
 - If the sheet fails to load, crops are drawn in code exactly as in v80. Giant crops, fruit trees and forage are still drawn in code.
