@@ -715,6 +715,10 @@ Nothing here is saved or touches the economy.
 | Fireflies (10) | farm, Wilds, forest, grove, mountain | summer, from 8 pm, not in rain |
 | Ambient sound | country, shore, town, cave, wind areas (data/atmosphere.js) | by time and weather |
 | Light | all but caves and houses | violet dawn, golden hour 5 to 6:30 pm, night from 8 pm, darkest at 2 am |
+| Indoor light (v100) | farmhouse, shed, cottages, buildings | rooms dim with the hour (at least half dark after 8 pm) and on wet days; hearths, stoves, lamps, lanterns, candles and the television light the room around them, fires flicker |
+| Rain on windows (v100) | every window indoors, and two to four new ones on the farmhouse's north wall | while it rains outside that building's door (never in the Oasis or the casino); taps on the glass |
+| Hearth crackle (v100) | within 7 tiles of a hearth, stove or range, a neighbour's or one you placed | always |
+| Ambience volume (v100) | the menu's Ambience slider, 0 to 100% | Sound off still mutes it |
 
 ## Management tools (v71)
 Data in `data/storage.js` and `data/crafting.js`; logic in `systems/storage.js`; dialogs and journal tabs in `ui/storage.js`.
@@ -962,7 +966,8 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 - v99: Undo covers only kit objects (`G.S.placed`): not fertilizer, crab pots, tilling, planting or buildings. It is forgotten overnight and on load. Fruit trees still cannot be picked up (Stardew's cannot either). The new side and back views of seats are drawn in code; the furniture sheet holds the front views only. Turning is looks only: neighbours and the player do not sit.
 
-- v72: Wildlife is drawn only: you cannot catch or befriend it, and it is not in the balance bot. The new light is darker than before from 8 pm (half dark at 10 pm, was about a third). The ambient sound has no volume control of its own; it follows the Sound button.
+- v100: The farmhouse windows sit at fixed spots on the north wall (two, a third with the reading nook, one in the kitchen); placed furniture can stand under them. Indoor light is looks only: a dark room does not slow anything. The ambience volume is a per-browser setting like Sound and Music, not part of the save.
+- v72: Wildlife is drawn only: you cannot catch or befriend it, and it is not in the balance bot. The new light is darker than before from 8 pm (half dark at 10 pm, was about a third). (v100: the ambient sound has its own volume slider.)
 - v71: The bag still has no item limit, so chests organise and protect items rather than add room (Nuno's choice; a bag limit would be its own roadmap item). The balance bot ignores chests, signs and the computer (no gold). Signs show their text only when you face them. The world map is a grid of places without the connecting paths.
 - v70: The balance bot ignores the picture house (it skips friendship) and the cabinets (no gold). Neighbours go to the films whatever their schedule says.
 - v69: Tamsin, Odile and Quill are names on their counters, not villagers with schedules or gifts. The balance bot opens mystery boxes and spends prize tickets but does not shop at the cart, the bookseller or the ranch counter (same prices as the coop and barn).

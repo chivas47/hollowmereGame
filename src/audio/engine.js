@@ -1,9 +1,10 @@
-// Web Audio plumbing: one context, a master, effects and music bus, and two primitives (tone, noise).
+// Web Audio plumbing: one context, a master, effects, music and ambient bus, and two primitives (tone, noise).
+// v100: the ambient bus has its own volume (settings.ambient, 0 to 1) and is silent while Sound is off.
 // The context starts on the first key press or tap (browsers block audio before that).
 // Settings are a per-browser convenience in localStorage, not part of the save.
 const KEY = 'hollowmere-audio';
 let ctx = null, buses = null;
-export const settings = { sfx: true, music: true };
+export const settings = { sfx: true, music: true, ambient: 1 };
 try { Object.assign(settings, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { /* storage unavailable */ }
 
 export const stats = { sfx: 0, notes: 0 };   // counters for tests
@@ -15,9 +16,9 @@ export function unlock() {
   const AC = window.AudioContext || window.webkitAudioContext;
   if (!AC) return;
   ctx = new AC();
-  const master = ctx.createGain(), sfx = ctx.createGain(), music = ctx.createGain();
-  sfx.connect(master); music.connect(master); master.connect(ctx.destination);
-  buses = { master, sfx, music };
+  const master = ctx.createGain(), sfx = ctx.createGain(), music = ctx.createGain(), ambient = ctx.createGain();
+  sfx.connect(master); music.connect(master); ambient.connect(master); master.connect(ctx.destination);
+  buses = { master, sfx, music, ambient };
   apply();
 }
 
@@ -25,9 +26,10 @@ function apply() {
   if (!buses) return;
   buses.sfx.gain.value = settings.sfx ? 1 : 0;
   buses.music.gain.value = settings.music ? 1 : 0;
+  buses.ambient.gain.value = settings.sfx ? Math.max(0, Math.min(1, +settings.ambient || 0)) : 0;
 }
 
-export function setSetting(key, on) {
+export function setSetting(key, on) {   // on: a flag, or the ambient volume
   settings[key] = on;
   try { localStorage.setItem(KEY, JSON.stringify(settings)); } catch (e) { /* storage unavailable */ }
   apply();
@@ -48,7 +50,7 @@ export function tone({ freq, dur = 0.12, type = 'square', vol = 0.12, slide = nu
 
 // A filtered noise burst for thuds, splashes and whooshes.
 let noiseBuf = null;
-export function noise({ dur = 0.15, vol = 0.15, filter = 'lowpass', freq = 800, sweep = null, at = 0 }) {
+export function noise({ dur = 0.15, vol = 0.15, filter = 'lowpass', freq = 800, sweep = null, at = 0, bus = 'sfx' }) {
   const a = audio(); if (!a) return;
   if (!noiseBuf) {
     noiseBuf = a.ctx.createBuffer(1, a.ctx.sampleRate, a.ctx.sampleRate);
@@ -58,7 +60,7 @@ export function noise({ dur = 0.15, vol = 0.15, filter = 'lowpass', freq = 800, 
   src.buffer = noiseBuf; f.type = filter; f.frequency.setValueAtTime(freq, t);
   if (sweep) f.frequency.exponentialRampToValueAtTime(sweep, t + dur);
   g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-  src.connect(f); f.connect(g); g.connect(a.sfx); src.start(t); src.stop(t + dur + 0.02);
+  src.connect(f); f.connect(g); g.connect(a[bus]); src.start(t); src.stop(t + dur + 0.02);
 }
 
 // v72: a looping noise bed (rain, wind, falling water, surf) for audio/ambience.js. Returns its gain to fade.
@@ -67,6 +69,6 @@ export function bed({ filter = 'lowpass', freq = 800, q = 0.7 }) {
   noise({ dur: 0.01, vol: 0.0001 });   // builds the shared buffer
   const src = a.ctx.createBufferSource(), f = a.ctx.createBiquadFilter(), g = a.ctx.createGain();
   src.buffer = noiseBuf; src.loop = true; f.type = filter; f.frequency.value = freq; f.Q.value = q; g.gain.value = 0;
-  src.connect(f); f.connect(g); g.connect(a.sfx); src.start();
+  src.connect(f); f.connect(g); g.connect(a.ambient); src.start();   // v100: on the ambient bus
   return g;
 }

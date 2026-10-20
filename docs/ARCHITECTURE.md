@@ -50,7 +50,7 @@ src/
     cavern.js         CAVERN (the Sunken Cavern's door, strength, ores, shafts, chests), HOLLOW_GOLD (v38)
     guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item, underSky()
-    atmosphere.js     LIGHT keyframes, WATERFALLS, WILDLIFE, AMBIENCE by area (v72)
+    atmosphere.js     LIGHT keyframes, WATERFALLS, WILDLIFE, AMBIENCE by area (v72); indoor LIGHTS, HOUSE_WINDOWS, CRACKLE_RANGE (v100)
     animation.js      SWINGS (tool arcs and timings), COMBO (weapon combo steps), PICKUP, CRAFTED, PLACE, IMPACT colours (v74)
     schedules.js      neighbour daily routines by weekday (go: walk a loop of spots, at: walk there and stay), spouse and festival days
     homes.js          where each neighbour lives: door, cottage, door hours (v76); homeEntry() inside the front door (v97)
@@ -134,6 +134,7 @@ src/
     giants.js         giant crops: merging ripe 3x3 blocks, chopping, solid 'Y' tiles
     weather.js        today's weather and the forecast, rain watering, lightning, the rain/snow/mist overlay
     atmosphere.js     waterfalls, rain splashes, storm bolts and thunder, birds, butterflies, fireflies (v72, drawn only)
+    indoors.js        indoor dark and light pools, the farmhouse windows, G.indoorRain and G.fires for the window art and ambience (v100, drawn only)
     clearing.js       debris and wild alders (G.S.debris), axe use, creeping debris, alder cones, gates, fences and paths
     quality.js        item quality: counts(), addItem(), valueOf(), takeBest(), quality rolls
     debug.js          DEBUG actions for the debug panel
@@ -151,7 +152,7 @@ src/
     engine.js         context, buses, settings (localStorage), tone() and noise()
     sfx.js            listens for 'sfx' and other events, plays effects
     music.js          generated loop per mood (data/music.js)
-    ambience.js       ambient sound by area: noise beds and calls (v72, data/atmosphere.js)
+    ambience.js       ambient sound by area: noise beds and calls (v72, data/atmosphere.js); rain taps indoors, hearth crackle; on the ambient bus with its own volume (v100)
   ui/
     sound.js          footer toggles, M key, unlock on first input
     saveFile.js       Export save / Import save buttons, file download and upload
@@ -276,9 +277,10 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 95 | mine.js | Darkness around the player |
 | 96 | weather.js, atmosphere.js | Rain, snow, mist (open-air maps, `underSky()`); lightning bolt and flash |
 | 97 | placeables.js, festivals.js | Lantern glow after dark |
+| 990 | indoors.js | Indoor dark and light pools (houses, cottages, buildings), v100 |
 | 1000+ | atmosphere.js | Fireflies (drawn after the light tint) |
 
-The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after layers up to 999 (not in caves or houses); after 8 pm it opens around the player. Layers 1000 and up draw over it.
+The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after layers up to 999 (not in caves or houses); after 8 pm it opens around the player. Layers 1000 and up draw over it. Indoors, indoors.js draws its own dark at 990 from the same keyframes (`lightAt()` in renderer.js), with pools cut out around LIGHTS (v100).
 
 ## Events (`core/events.js`)
 

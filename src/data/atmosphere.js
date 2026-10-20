@@ -38,3 +38,28 @@ export const AMBIENCE = {
   desert: 'wind', quarry: 'wind',
 };
 export const AMBIENT_VOLUME = 0.05;
+
+// v100: indoor light. Rooms dim with the hour (INDOOR_DARK of the outdoor light's darkness, never below the
+// floor of INDOOR_MIN after 8 pm) and on wet days (INDOOR_WET by day); lights cut warm pools out of the dark.
+// Light sources by shape: r is the radius in tiles, rgb the colour of the glow, flicker for open flames.
+// Neighbours' rooms light their own pieces (and candles and lamps on them); the farmhouse and shed light the
+// furniture the player placed.
+export const INDOOR_DARK = 1.1;
+export const INDOOR_MIN = 0.45;
+export const INDOOR_WET = 0.2;
+export const LIGHTS = {
+  hearth:    { r: 4.5, rgb: '255,150,60', flicker: true, fire: true },
+  stove:     { r: 3, rgb: '255,150,60', flicker: true, fire: true },
+  range:     { r: 3, rgb: '255,150,60', flicker: true, fire: true },
+  floorlamp: { r: 3.5, rgb: '255,214,140' },
+  tablelamp: { r: 3, rgb: '255,214,140' },
+  lamp:      { r: 2.5, rgb: '255,214,140' },
+  lantern:   { r: 3, rgb: '255,200,110', flicker: true },
+  candle:    { r: 1.75, rgb: '255,190,100', flicker: true },
+  tv:        { r: 1.75, rgb: '140,180,255' },
+};
+// The farmhouse's windows on its north wall, [x, y] (the nook moves its window up a row; the kitchen has its own).
+export const HOUSE_WINDOWS = { main: [[8, 2], [15, 2]], nook: [12, 1], kitchen: [20, 2] };
+
+// v100: a hearth or stove crackles within this many tiles, loudest beside it.
+export const CRACKLE_RANGE = 7;
