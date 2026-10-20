@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v93: Bomb, glow and bunting sheets
+- Lit bombs in the mines draw from the placed sheet's bomb pictures (the same as the bombs in the kit), outlined. The spark still flickers in code.
+- The glow around lanterns after dark and at the Frostlight festival draws from a new sheet, `assets/sprites/glow.png`, at full strength and faded to the glow's strength, so it can be redrawn by hand (dithered rings, for example). It looks as before.
+- Festival flags draw from `assets/sprites/bunting.png`, one flag tinted to each colour of the festival, outlined. The rope is still drawn in code.
+- The blast (it grows to each bomb's radius) and the watering can's drops and the seed in the swing stay in code: they are shapes that move, not pictures.
+- If a sheet fails to load, these are drawn in code exactly as in v92.
+- Saves: no new fields.
+
 ## v92: Children sheet
 - The farm's children (the baby in the crib, the crawler, the toddler) draw from a new sheet, `assets/sprites/children.png`, outlined. Each child keeps its own colours, drawn into the sheet: one row per child.
 - Made from the game's own code art, so they look the same apart from the outline. If the sheet fails to load, they are drawn in code exactly as in v91.

@@ -172,6 +172,16 @@ The placeholder sheets are built by the scripts in `tools/sprites/`.
 - **Columns (3):** baby (in the crib), crawler, toddler.
 - **Rows (2):** one per child (the first and second child's hair, shirt and skin). Colours are drawn in; nothing is tinted.
 
+## glow.png
+
+56 x 52. The glow around a lantern at full strength; the lantern's tile is at x 20, y 22 (`GLOW_SHEET.origin`). It is drawn see-through by the glow's strength (up to 55% at night), so paint it as bright as it should be at full strength. Not outlined.
+
+## bunting.png
+
+8 x 8. One festival flag, greyscale, tinted to each of the festival's colours in turn (like person.png: white becomes the colour). Its spot on the rope is x 3, y 1 (`BUNTING_SHEET.origin`). The rope is drawn in code.
+
+Lit bombs use the bomb frames of placed.png.
+
 ## Credits
 
 | File | Author | Licence |
@@ -193,3 +203,4 @@ The placeholder sheets are built by the scripts in `tools/sprites/`.
 | tools.png, packet.png | Hollowmere Farm (original placeholder, v90, from the game's code art) | same as the game |
 | alders.png, fences.png, fixtures.png | Hollowmere Farm (original placeholder, v91, from the game's code art) | same as the game |
 | children.png | Hollowmere Farm (original placeholder, v92, from the game's code art) | same as the game |
+| glow.png, bunting.png | Hollowmere Farm (original placeholder, v93, from the game's code art) | same as the game |

@@ -135,3 +135,10 @@ export const FIXTURES_SHEET = { sheet: 'fixtures', size: 16, order: ['gate-acros
 // from the feet). Columns: baby, crawler, toddler (CHILDREN_SHEET.stages); a row per child's colours (KIDS in
 // render/sprites.js), drawn in.
 export const CHILDREN_SHEET = { sheet: 'children', size: 16, origin: [-8, -14], stages: ['baby', 'crawler', 'toddler'] };
+
+// v93 glow.png: the lantern glow at full strength, 56x52 (origin: from the lantern tile's top-left), drawn see-through
+// by the glow's strength. bunting.png: one festival flag, 8x8 (origin: from the flag's spot on the rope), band main
+// tinted to the flag's colour. Lit bombs use the placed sheet's bomb frames; their spark, the blast and the swing's
+// water and seed are drawn in code.
+export const GLOW_SHEET = { sheet: 'glow', w: 56, h: 52, origin: [-20, -22] };
+export const BUNTING_SHEET = { sheet: 'bunting', size: 8, origin: [-3, -1], layers: ['main'] };
