@@ -7,7 +7,7 @@ import { today, dayEnd } from '../core/time.js';
 import { MAPS } from '../data/maps.js';
 import { PAL } from '../data/seasons.js';
 import { LIGHT, NIGHT_FROM } from '../data/atmosphere.js';
-import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, drawQuarry, drawSand, drawBowl, drawHouseTile, drawTerrain, drawFlowers, drawBuilding, HOUSE_ART, CAVE_ART } from './tiles.js';
+import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, drawQuarry, drawSand, drawBowl, drawHouseTile, drawTerrain, drawFlowers, drawBuilding, drawProp, HOUSE_ART, CAVE_ART, PROP_ART, PROP_GROUND } from './tiles.js';
 import { facing, tileAt } from '../systems/world.js';
 import { WALLPAPERS, FLOORS } from '../data/furniture.js';
 import { TERRAIN_SHEET, CAVE_SHEET } from '../data/sprites.js';
@@ -26,7 +26,7 @@ function renderBackground(mapId, season) {
   const g = c.getContext('2d'), map = MAPS[mapId], p = map.theme ? { ...PAL[season], theme: map.theme } : PAL[season];   // v38: theme (the cavern's sand)
   const ground = map.base === 'cave' ? CAVE_SHEET.sheet(map.theme) : TERRAIN_SHEET.sheet(season);
   const sheetGround = (!map.base || map.base === 'cave') && ready(ground);   // v85: outdoor ground (v87: and caves) from a tile set
-  if (sheetGround && map.base === 'cave') drawTerrain(g, sheet(ground).img, CAVE_SHEET, (x, y) => (map.grid[y][x] === 'X' ? 'wall' : 'floor'), 'floor', W, H);
+  if (sheetGround && map.base === 'cave') drawTerrain(g, sheet(ground).img, CAVE_SHEET, (x, y) => (map.grid[y][x] === 'X' || PROP_GROUND[map.grid[y][x]] === 'wall' ? 'wall' : 'floor'), 'floor', W, H);
   else if (sheetGround) {
     drawTerrain(g, sheet(ground).img, TERRAIN_SHEET, (x, y) => groundOf(map, map.grid[y][x]), { q: 'quarry', z: 'sand' }[map.ground] || 'grass', W, H,
       (x, y) => { if (groundOf(map, map.grid[y][x]) === 'grass') drawFlowers(g, x, y, p, map.salt); });
@@ -45,7 +45,8 @@ function renderBackground(mapId, season) {
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
     if (map.base === 'house') { const ha = HOUSE_ART[map.grid[y][x]]; if (ha) ha(g, x, y, map.grid); continue; }
     const t = map.grid[y][x], art = TILE_ART[t];
-    if (art && !(sheetGround && (map.base === 'cave' ? t === 'X' : t === 'O'))) art(g, x, y, p);   // v85: outdoor water (v87: cave walls) are in the tile set
+    if (sheetGround && PROP_ART[t]) drawProp(g, t, x, y, p);   // v89: the prop alone, its ground is in the tile set
+    else if (art && !(sheetGround && (map.base === 'cave' ? t === 'X' : t === 'O'))) art(g, x, y, p);   // v85: outdoor water (v87: cave walls) are in the tile set
   }
   map.objects.forEach((o) => drawBuilding(g, p, o));   // v88: from the building sheets
   return c;
@@ -56,7 +57,7 @@ function groundOf(map, t) {
   if (t === 'P' || t === 'E') return 'path';
   if (t === 'O') return 'water';
   if (t === 'q' || (map.ground === 'q' && t !== 'T')) return 'quarry';
-  if (t === 'z' || (map.ground === 'z' && t !== 'T')) return 'sand';
+  if (t === 'z' || (map.ground === 'z' && t !== 'T') || PROP_GROUND[t] === 'sand') return 'sand';
   return 'grass';
 }
 

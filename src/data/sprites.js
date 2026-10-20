@@ -90,6 +90,15 @@ export const DECOR_SHEETS = { walls: 'wallpapers', floors: 'floors', size: 16 };
 // snow). Where each one is: data/buildings.js, generated with the sheets by tools/sprites/.
 export const BUILDING_SHEETS = { summer: 'buildings', winter: 'buildings-winter' };
 
+// v89 props.png: things on cave and special tiles (render/tiles.js PROP_ART) without their ground, 16x16 over the tile,
+// one row in this order (props not listed, the ones that change with the place or season, are drawn in code).
+// greenhouse.png: the greenhouse floor: its soil bed, then the boards on even and odd columns.
+export const PROPS_SHEET = {
+  sheet: 'props', size: 16,
+  order: ['~', '>', '=', 'r', 'c', 'i', '%', '*', '#', 'U', '^', '!', 'L', 't', '$', '|', '}', ';', '{', '?', '9', '`', '¢', '§', '¤'],
+};
+export const GREENHOUSE_SHEET = { sheet: 'greenhouse', size: 16 };
+
 // v86 soil.png: tilled soil in the terrain layout (one 4x5 block each): dry, then watered. Drawn every frame: dry
 // on the corners of every tilled tile, watered over it on the corners of watered ones.
 export const SOIL_SHEET = { sheet: 'soil', size: 16 };

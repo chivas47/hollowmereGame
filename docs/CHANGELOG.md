@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v89: Prop and greenhouse sheets
+- The things on cave and special tiles (ladders, cave doors, mine rocks and ore, lava, the forge, chests and crates, the shaft, the market cart, the book stall, the prize machine, rubble, logs, grates, the hot spring, basins and lanterns) draw from a new sheet, `assets/sprites/props.png`, outlined, without any ground of their own.
+- Fix: those tiles used to paint their own square of ground under them, which showed as square patches in the tile-set ground since v85 (a striped wall square in the middle of rounded cave walls behind every ladder and door). The ground under them now comes from the tile sets, so it joins up.
+- The greenhouse floor draws from `assets/sprites/greenhouse.png`.
+- The pedestals, chimes, altars, the shrine door and cave mouths, which change with the place or the season, are still drawn in code, now over the tile-set ground too. If a sheet fails to load, everything is drawn in code exactly as in v88.
+- Saves: no new fields.
+
 ## v88: Building sheets
 - Every building (the farmhouse, shops and storefronts, cottages, the coop, barn, greenhouse and the other farm buildings, their construction scaffolds, the fountain, wells, boards and the rest, 57 in all) now draws from `assets/sprites/buildings.png`, one picture per building at its full size, and from `buildings-winter.png` in winter (snowy roofs, frozen water). Where each picture is: `src/data/buildings.js`.
 - Made from the game's own code art, so buildings look the same; the fish pond and fountain water use summer's colour in spring and autumn.
