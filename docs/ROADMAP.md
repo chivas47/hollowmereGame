@@ -87,7 +87,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 34l | Image sprite sheets: terrain tile sets | feature | done (chivas47/hollowmereGame#81) | Outdoor ground in the standard 16-tile corner layout (Nuno chose a standard tileset layout over the code's own rules), one full-colour sheet per season, with edges. Tilled soil, caves, floors and buildings to follow. Asked for by Nuno, October 2026. |
 | 34m | Image sprite sheets: tilled soil | feature | done (chivas47/hollowmereGame#82) | Tilled soil in the terrain's corner layout, dry and watered, drawn every frame. Continues 34l. Asked for by Nuno, October 2026. |
 | 34n | Image sprite sheets: caves and indoor floors | feature | done (chivas47/hollowmereGame#83) | Cave floors and walls in the terrain's corner layout per theme; wallpapers and floors as one swatch each. Continues 34l. Asked for by Nuno, October 2026. |
-| 34o | Image sprite sheets: buildings | feature | in progress | Every building as one full-size picture, with a winter sheet in the same layout (Nuno chose whole pictures over a kit of parts). Continues 34d. Asked for by Nuno, October 2026. |
+| 34o | Image sprite sheets: buildings | feature | in progress (chivas47/hollowmereGame#84) | Every building as one full-size picture, with a winter sheet in the same layout (Nuno chose whole pictures over a kit of parts). Continues 34d. Asked for by Nuno, October 2026. |
 | 33 | Local two-player | feature | needs decision | Same-screen co-op is possible without a server but touches every system. Nuno to decide whether it is worth it. |
 
 ## Done
