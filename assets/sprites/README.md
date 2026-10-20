@@ -138,6 +138,12 @@ To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, a
 
 48 x 16. The greenhouse floor: the soil bed, then the boards on even columns, then on odd columns.
 
+## tools.png, packet.png
+
+**tools.png**, 144 x 16: tool and weapon icons, 16 x 16, one row in the order of `TOOLS_SHEET.order`. Draw the handle at the bottom left and the head at the top right: the same picture is held in the hand and rotated when swinging.
+
+**packet.png**, 16 x 48: the seed packet in three 16 px bands like furniture.png: main (tinted to the crop's colour), second (its top colour, or its colour), ink.
+
 The placeholder sheets are built by the scripts in `tools/sprites/`.
 
 ## alders.png
@@ -177,4 +183,5 @@ The placeholder sheets are built by the scripts in `tools/sprites/`.
 | wallpapers.png, floors.png | Hollowmere Farm (original placeholder, v87, from the game's patterns) | same as the game |
 | buildings.png, buildings-winter.png | Hollowmere Farm (original placeholder, v88, from the game's code art) | same as the game |
 | props.png, greenhouse.png | Hollowmere Farm (original placeholder, v89, from the game's code art) | same as the game |
-| alders.png, fences.png, fixtures.png | Hollowmere Farm (original placeholder, v90, from the game's code art) | same as the game |
+| tools.png, packet.png | Hollowmere Farm (original placeholder, v90, from the game's code art) | same as the game |
+| alders.png, fences.png, fixtures.png | Hollowmere Farm (original placeholder, v91, from the game's code art) | same as the game |

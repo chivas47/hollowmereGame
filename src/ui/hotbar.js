@@ -5,6 +5,7 @@ import { CROPS } from '../data/crops.js';
 import { HOTBAR, SEED_SLOT, KIT_SLOT, TOOL_NAMES } from '../data/hotbar.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { drawIcon } from '../render/icons.js';
+import { onSheet } from '../render/sheets.js';
 import { cycleSeed, ensureUsefulSeed, announce } from '../systems/seeds.js';
 import { cycleKit, ensureUsefulKit, announceKit } from '../systems/placeables.js';
 import { $ } from './dom.js';
@@ -33,6 +34,7 @@ function redrawIcon(slot, kind) {
   const c = $(`#slot${slot} canvas`); if (!c) return;
   drawIcon(c.getContext('2d'), kind, selFor(kind));
 }
+onSheet(() => HOTBAR.forEach((kind, i) => redrawIcon(i, kind)));   // v90: redraw the icons once a sheet arrives
 
 export function buildHotbar() {
   const bar = $('#bar'); bar.innerHTML = '';

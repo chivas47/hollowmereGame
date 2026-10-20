@@ -9,7 +9,9 @@ const out = await p.evaluate(async () => {
   const { drawForageArt, drawFruitTree, drawDebris, drawGiant, drawPlaced, drawFurniture, drawAlder, drawTap, drawFence, drawGate, drawFloor, PLACED_KINDS, FURN_SHAPES } = await import('/src/render/sprites.js');
   const { CROPS } = await import('/src/data/crops.js');
   const { drawHouseTile, OBJECT_ART, FRONT, buildingKey, PROP_ART, drawGreenhouseFloor } = await import('/src/render/tiles.js');
-  const { PROPS_SHEET } = await import('/src/data/sprites.js');
+  const { PROPS_SHEET, TOOLS_SHEET } = await import('/src/data/sprites.js');
+  const { drawIcon } = await import('/src/render/icons.js');
+  const { EXTRA } = await import('/src/render/animation.js');
   const { MAPS } = await import('/src/data/maps.js');
   const { PAL } = await import('/src/data/seasons.js');
   const { SITES } = await import('/src/systems/sites.js');
@@ -60,7 +62,11 @@ const out = await p.evaluate(async () => {
   // Props without their ground, and the greenhouse floor (its soil bed, then boards on an even and an odd column).
   const props = PROPS_SHEET.order.map((k) => [k, grab(16, 16, (g) => PROP_ART[k](g, 0, 0, PAL.Summer))]);
   const gh = [grab(16, 16, (g) => drawGreenhouseFloor(g, 0, 0, 'g')), grab(16, 16, (g) => drawGreenhouseFloor(g, 0, 0, '.')), grab(32, 16, (g) => drawGreenhouseFloor(g, 1, 0, '.'))];
-  // v90: alders (stages 0-4, bare 1-4, the tap), fences by neighbour mask (white, then black: see-through light),
+  // Tool icons (the extra weapons from render/animation.js), and the seed packet: a probe crop coloured white with a
+  // pure red top, then all black (as for the furniture).
+  const tools = TOOLS_SHEET.order.map((k) => [k, grab(16, 16, (g) => (EXTRA[k] ? EXTRA[k](g) : drawIcon(g, k)))]);
+  const packet = (color, top) => { CROPS.__probe = { color, top }; const px = grab(16, 16, (g) => drawIcon(g, 'seeds', '__probe')); delete CROPS.__probe; return px; };
+  // v91: alders (stages 0-4, bare 1-4, the tap), fences by neighbour mask (white, then black: see-through light),
   // gates and paths. The fence's colour is drawn in code with see-through light and shade, as furniture.
   const alders = [0, 1, 2, 3, 4, 'b1', 'b2', 'b3', 'b4', 'tap'].map((s) => [String(s), grab(32, 48, (g) => (s === 'tap' ? drawTap(g, 8, 32, false)
     : typeof s === 'string' ? drawAlder(g, 8, 32, +s[1], true) : drawAlder(g, 8, 32, s, false)))]);
@@ -69,7 +75,7 @@ const out = await p.evaluate(async () => {
   const fixtures = [['gate-across', (g) => drawGate(g, 0, 0, false, true)], ['gate-across-open', (g) => drawGate(g, 0, 0, true, true)],
     ['gate-along', (g) => drawGate(g, 0, 0, false, false)], ['gate-along-open', (g) => drawGate(g, 0, 0, true, false)],
     ['woodpath', (g) => drawFloor(g, 0, 0, 'woodpath', '#b08a5a')], ['stonepath', (g) => drawFloor(g, 0, 0, 'stonepath', '#a9a49a')]].map(([k, fn]) => [k, grab(16, 16, fn)]);
-  return { forage, trees, debris, giants, placed, furniture, walls, floors, buildings, props, gh, alders, fences, fixtures };
+  return { forage, trees, debris, giants, placed, furniture, walls, floors, buildings, props, gh, tools, packet: [packet('#ffffff', '#ff0000'), packet('#000000', '#000000')], alders, fences, fixtures };
 });
 writeFileSync(process.argv[2], JSON.stringify(out));
 console.log(out.forage.length, 'forage,', out.trees.length, 'tree frames');

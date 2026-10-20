@@ -645,7 +645,7 @@ export function drawDebris(c, X, Y, kind) {
 }
 
 // A wild alder: stage 0 a cone, 1 to 3 young, 4 grown (a tall canopy reaching two tiles up).
-// v90: from the alders sheet once it has loaded, else drawn in code.
+// v91: from the alders sheet once it has loaded, else drawn in code.
 export function drawAlder(c, X, Y, stage, bare) {
   const A = ALDERS_SHEET;
   if (!ready(A.sheet)) return alderArt(c, X, Y, stage, bare);
@@ -668,7 +668,7 @@ function alderArt(c, X, Y, stage, bare) {
 }
 
 // n: [up, right, down, left] neighbours that join.
-// v90: fences, gates and paths from the fences and fixtures sheets once they have loaded, else drawn in code.
+// v91: fences, gates and paths from the fences and fixtures sheets once they have loaded, else drawn in code.
 export function drawFence(c, X, Y, col, n) {
   const F = FENCES_SHEET, m = n.reduce((a, j, i) => a | (j ? 1 << i : 0), 0);
   if (!ready(F.sheet)) return fenceArt(c, X, Y, col, n);
@@ -809,7 +809,7 @@ export function drawFurniture(c, X, Y, def) {
 }
 
 // A tree tap on an alder; ready: a drop of syrup shows.
-// v90: from the alders sheet once it has loaded (the drop in code), else drawn in code.
+// v91: from the alders sheet once it has loaded (the drop in code), else drawn in code.
 export function drawTap(c, X, Y, full) {
   const A = ALDERS_SHEET;
   if (ready(A.sheet)) c.drawImage(sheet(A.sheet).img, A.tap * A.w, 0, A.w, A.h, X + A.origin[0], Y + A.origin[1], A.w, A.h);

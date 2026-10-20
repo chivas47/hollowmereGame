@@ -99,6 +99,12 @@ export const PROPS_SHEET = {
 };
 export const GREENHOUSE_SHEET = { sheet: 'greenhouse', size: 16 };
 
+// v90 tools.png: hotbar tools and the extra weapons held in hand, 16x16, one row in this order, colours drawn in.
+// packet.png: the seed packet in bands like the furniture: main (tinted to the crop's colour), second (its top colour,
+// or its colour), ink.
+export const TOOLS_SHEET = { sheet: 'tools', size: 16, order: ['hoe', 'rod', 'pick', 'sword', 'axe', 'pan', 'can', 'dagger', 'club'] };
+export const PACKET_SHEET = { sheet: 'packet', size: 16, layers: ['main', 'second', 'ink'] };
+
 // v86 soil.png: tilled soil in the terrain layout (one 4x5 block each): dry, then watered. Drawn every frame: dry
 // on the corners of every tilled tile, watered over it on the corners of watered ones.
 export const SOIL_SHEET = { sheet: 'soil', size: 16 };
@@ -116,10 +122,10 @@ export const MONSTERS = {
   },
 };
 
-// v90 alders.png: wild alders, 32x48 frames, the tree's tile at the bottom centre (origin: the frame's top-left from
+// v91 alders.png: wild alders, 32x48 frames, the tree's tile at the bottom centre (origin: the frame's top-left from
 // the tile's), one row: stages 0 to 4, bare stages 1 to 4, then the tree tap. Colours drawn in; the tap's drop in code.
 export const ALDERS_SHEET = { sheet: 'alders', w: 32, h: 48, origin: [-8, -32], bare: 4, tap: 9 };
-// v90 fences.png: 16x18 frames (the tile's top 2 px above), a column per neighbour mask (up 1, right 2, down 4,
+// v91 fences.png: 16x18 frames (the tile's top 2 px above), a column per neighbour mask (up 1, right 2, down 4,
 // left 8). Bands: main (tinted to the fence's colour), ink (see-through light). fixtures.png: 16x16 over the tile,
 // colours drawn in, one row in this order (gate: across or along, closed or open; paths by kind).
 export const FENCES_SHEET = { sheet: 'fences', w: 16, h: 18, origin: [0, -2], layers: ['main', 'ink'] };
