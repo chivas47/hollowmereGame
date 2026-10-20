@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v78: Animal sprite sheet
+- Coop and barn animals (chicken, duck, rabbit, mossback, cow, goat, sheep, pig, strider) now draw from a new sheet, `assets/sprites/animals.png` (original placeholder art): outlined and shaded, facing left and right, with a stand and a step frame.
+- If the sheet fails to load, they are drawn in code exactly as in v77. Pets, the horse, pond fish and slimes are still drawn in code.
+- Saves: no new fields.
+
 ## v77: Image sprite sheets
 - Art can now come from PNG sprite sheets in `assets/sprites/` as well as from code. Project rule 3 changed to allow it: sheets must be original or permissively licensed and credited, and each keeps its code-drawn art as a fallback.
 - The farmer, every neighbour, the boatman and mannequins now draw from a new layered person sheet (`assets/sprites/person.png`, original placeholder art): outlined and shaded, with three walk frames per direction instead of two. Each layer is grey and tinted at runtime, so chosen colours, clothes, long hair, beards and hats work as before.

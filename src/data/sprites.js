@@ -6,3 +6,10 @@ export const PERSON = {
   layers: ['skin', 'shoes', 'pants', 'shirt', 'hair', 'long', 'beard', 'ink'],
   dirs: { down: 0, up: 1, left: 2, right: 3 }, steps: 3,
 };
+
+// v78 animals.png: 24x24 frames, one row per kind; columns are right stand, right step, left stand, left step.
+// Colours are drawn in (no tinting). origin as above: the frame's top-left from the animal's feet.
+export const ANIMALS = {
+  sheet: 'animals', size: 24, origin: [-12, -24],
+  rows: ['chicken', 'duck', 'rabbit', 'mossback', 'cow', 'goat', 'sheep', 'pig', 'strider'],
+};

@@ -48,5 +48,5 @@ export function tinted(name, layerNames, layers, size) {
   return cv;
 }
 
-// Draws frame f of a strip (a tinted canvas or an image) of square frames at x, y.
-export const frame = (c, src, f, size, x, y) => c.drawImage(src, f * size, 0, size, size, x, y, size, size);
+// Draws frame f of row (default 0) of a sheet (a tinted canvas or an image) of square frames at x, y.
+export const frame = (c, src, f, size, x, y, row = 0) => c.drawImage(src, f * size, row * size, size, size, x, y, size, size);

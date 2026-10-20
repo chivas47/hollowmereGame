@@ -2,8 +2,8 @@
 import { T } from '../core/constants.js';
 import { CROPS } from '../data/crops.js';
 import { r, blink } from './pixel.js';
-import { ready, tinted, frame } from './sheets.js';
-import { PERSON } from '../data/sprites.js';
+import { ready, tinted, frame, sheet } from './sheets.js';
+import { PERSON, ANIMALS } from '../data/sprites.js';
 
 const FERT_DOT = { booster: '#c9b68e', booster2: '#e9b44c', booster3: '#b98ae0', tonic: '#86b86a', tonic2: '#5fd36a', mulch: '#a0805a', mulch2: '#7a5a3a' };
 export function drawSoil(c, X, Y, wet, fert) {
@@ -176,7 +176,18 @@ export function drawBubble(c, px, py) {
   r(c, x, y, 5, 6, '#fffbe8'); r(c, x + 1, y + 6, 2, 1, '#fffbe8'); r(c, x + 2, y + 1, 1, 3, '#2b211a'); r(c, x + 2, y + 5, 1, 1, '#2b211a');
 }
 
+// v78: farm animals from assets/sprites/animals.png once it has loaded (false until then: callers draw in code).
+// every: the ms per hop, as in the code art.
+function sheetAnimal(c, px, py, dir, moving, kind, every) {
+  const A = ANIMALS, row = A.rows.indexOf(kind);
+  if (row < 0 || !ready(A.sheet)) return false;
+  const f = (dir === 'left' ? 2 : 0) + (moving && Math.floor(performance.now() / every) % 2 ? 1 : 0);
+  frame(c, sheet(A.sheet).img, f, A.size, Math.round(px) + A.origin[0], Math.round(py) + A.origin[1], row);
+  return true;
+}
+
 export function drawChicken(c, px, py, dir, moving) {
+  if (sheetAnimal(c, px, py, dir, moving, 'chicken', 160)) return;
   const x = Math.round(px) - 4, base = Math.round(py);
   const y = base - 9 - (moving && Math.floor(performance.now() / 160) % 2 ? 1 : 0), left = dir === 'left';
   r(c, x + 1, base - 1, 7, 1, 'rgba(0,0,0,.25)');
@@ -195,6 +206,7 @@ export function drawHeart(c, px, py) {
 
 // v28 coop animals besides the chicken: duck, rabbit, mossback (a small mossy lizard-like creature).
 export function drawCoopAnimal(c, px, py, dir, moving, kind) {
+  if (sheetAnimal(c, px, py, dir, moving, kind, 160)) return;
   const x = Math.round(px) - 4, base = Math.round(py), left = dir === 'left';
   const y = base - 9 - (moving && Math.floor(performance.now() / 160) % 2 ? 1 : 0);
   r(c, x + 1, base - 1, 7, 1, 'rgba(0,0,0,.25)');
@@ -242,6 +254,7 @@ function drawBigNew(c, x, y, base, left, moving, kind) {
 
 // Barn animals. kind 'cow' or 'goat' (v28 adds sheep, pig and strider).
 export function drawAnimal(c, px, py, dir, moving, kind) {
+  if (sheetAnimal(c, px, py, dir, moving, kind, 220)) return;
   if (kind === 'sheep' || kind === 'pig' || kind === 'strider') {
     const x = Math.round(px) - 7, base = Math.round(py);
     return drawBigNew(c, x, base - 11 - (moving && Math.floor(performance.now() / 220) % 2 ? 1 : 0), base, dir === 'left', moving, kind);
