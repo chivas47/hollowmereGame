@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v101: Hints and batch crafting
+- Batch crafting: the crafting menu adds ×5 and All (the number you can afford) next to Craft once you can make more than one. Same cost per item; one message and one crafted pose for the lot.
+- Hints: a Hints tab in the journal (J) lists up to three things worth doing right now, most pressing first: getting to bed, eating, filling the can, watering dry crops, picking ripe ones, shipping produce, planting the first seeds, buying seeds, collecting from a finished machine, placing what is in your kit, petting animals, trying the Hollow, winter's options. When nothing fits, it says the day is yours.
+- The morning report ends with the most pressing tip.
+- Pressing Use three times on the same tile with nothing happening (no message, no sound, no swing) shows a line on what the tool in hand does.
+- Tips: on in the menu turns the morning tip and the tool tips off. The Hints tab always works.
+- Saves: new field `hints` (true by default; old saves get it on load).
+
 ## v100: Rain on windows, crackling hearths and indoor light
 - Indoor light: houses, cottages and buildings dim with the hour, at least half dark after 8 pm, and grey on wet days. Hearths, stoves, ranges, lamps, lanterns, candles and the television light the room around them in warm pools; open flames flicker. The farmhouse and shed light the furniture you placed (a placed hearth, lamp or television).
 - Rain on windows: while it rains outside, every window shows a grey sky with drops running down the glass, and rain taps on it. Buildings in the dunes stay dry.

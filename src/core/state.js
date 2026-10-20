@@ -23,6 +23,7 @@ export function newState() {
     seeds: Object.fromEntries(Object.keys(CROPS).map((k) => [k, STARTING_SEEDS[k] || 0])),
     bag: Object.fromEntries(Object.keys(ITEMS).map((k) => [k, 0])),
     bin: 0,
+    hints: true,        // v101: the stuck-tool tip and the morning report's tip (systems/hints.js)
     qbag: {},           // item -> [fine, prime, heirloom] counts within bag (see systems/quality.js)
     soil: {},           // farm: "x,y" -> { w: watered, crop: { type, age, dead } | null }
     greenSoil: {},      // greenhouse beds, same shape
