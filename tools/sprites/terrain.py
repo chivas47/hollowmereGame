@@ -89,3 +89,32 @@ for b, (base, furrow, edge) in enumerate(SOIL):
         for x in range(S):
             for y in range(S): img.putpixel((b * 64 + v * S + x, 64 + y), tex(x, y, v + 1))
 img.save(f'{OUT}/soil.png', optimize=True)
+
+# cave-<theme>.png: cave ground per theme, full colour, two blocks in the terrain layout: floor (the base: only its
+# full tiles are used) and wall (16 corner tiles over the floor; edges facing down show a 4px rock face).
+# Colours come from CAVE_COLS in src/render/tiles.js.
+tiles_src = open('src/render/tiles.js').read()
+for theme, fl, wl in re.findall(r"(\w+): +\{ floor: \[([^\]]*)\], wall: \[([^\]]*)\] \}", tiles_src):
+    floor, wall = re.findall(r"#[0-9a-f]{6}", fl), re.findall(r"#[0-9a-f]{6}", wl)
+    img = Image.new('RGBA', (128, 80), (0, 0, 0, 0))
+    ftex = lambda v: texture(floor[0], [(floor[1], 3, 2, 1), (floor[2], 2, 2, 1)], 2000 + v)
+    for v in range(5):
+        t = ftex(v)
+        for x in range(S):
+            for y in range(S):
+                img.putpixel(((v % 4) * S + x if v < 4 else 15 % 4 * S + x, (64 + y) if v < 4 else (15 // 4) * S + y), t[y][x])
+    for index in range(16):
+        inside = region(index)
+        wtex = texture(wall[0], [(wall[2], 3, 3, 1)], 3000 + index)
+        get = lambda x, y: inside.get((x, y), inside[(min(max(x, 0), S - 1), min(max(y, 0), S - 1))] if y < S else (index & 12) != 0 and inside[(min(max(x, 0), S - 1), S - 1)])
+        for (x, y), on in inside.items():
+            if not on: continue
+            face = any(not get(x, y + d) for d in range(1, 5))
+            rim = any(not get(x + i, y + j) for i, j in ((1, 0), (-1, 0), (0, -1)))
+            col = hexc(wall[1]) if face else hexc(wall[2]) if rim else wtex[y][x]
+            img.putpixel((64 + (index % 4) * S + x, (index // 4) * S + y), col)
+    for v in range(4):
+        t = texture(wall[0], [(wall[2], 3, 3, 1)], 4000 + v)
+        for x in range(S):
+            for y in range(S): img.putpixel((64 + v * S + x, 64 + y), t[y][x])
+    img.save(f'{OUT}/cave-{theme}.png', optimize=True)

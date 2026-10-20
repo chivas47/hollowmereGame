@@ -89,3 +89,11 @@ for n, (shape, lit, blk) in enumerate(art['furniture']):
     for (i, j), s in shine.items(): img.putpixel((n * 16 + i, FL['ink'] * 32 + j), (255, 255, 255, s))
 img.save(f'{OUT}/furniture.png', optimize=True)
 print('FURNITURE order:', [k for k, _, _ in art['furniture']])
+
+# wallpapers.png and floors.png: 16x16 swatches in one row, catalogue order, as drawn (they repeat edge to edge,
+# so they are not outlined). A wallpaper swatch is a whole wall face, its bottom trim included.
+for name in ('walls', 'floors'):
+    img = Image.new('RGBA', (16 * len(art[name]), 16), (0, 0, 0, 0))
+    for n, (k, data) in enumerate(art[name]):
+        for (i, j), c in grid(data, 16, 16).items(): img.putpixel((n * 16 + i, j), c)
+    img.save(f"{OUT}/{'wallpapers' if name == 'walls' else 'floors'}.png", optimize=True)

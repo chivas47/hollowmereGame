@@ -1,4 +1,4 @@
-// Renders the code art for forage, fruit trees, debris, giant crops, placed objects and furniture in the browser and writes the raw RGBA frames as JSON.
+// Renders the code art for forage, fruit trees, debris, giant crops, placed objects, furniture and indoor walls and floors in the browser and writes the raw RGBA frames as JSON.
 import { chromium } from 'playwright';   // serve the repo on :8123 first (python3 -m http.server 8123)
 import { writeFileSync } from 'node:fs';
 const b = await chromium.launch();
@@ -8,6 +8,8 @@ await p.goto('http://localhost:8123/index.html'); await p.waitForTimeout(1200);
 const out = await p.evaluate(async () => {
   const { drawForageArt, drawFruitTree, drawDebris, drawGiant, drawPlaced, drawFurniture, PLACED_KINDS, FURN_SHAPES } = await import('/src/render/sprites.js');
   const { CROPS } = await import('/src/data/crops.js');
+  const { drawHouseTile } = await import('/src/render/tiles.js');
+  const { WALLPAPERS, FLOORS } = await import('/src/data/furniture.js');
   const { FORAGE } = await import('/src/data/forage.js');
   const grab = (w, h, fn) => { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; const g = cv.getContext('2d'); fn(g); return Array.from(g.getImageData(0, 0, w, h).data); };
   const forage = Object.keys(FORAGE).map((k) => [k, grab(16, 16, (g) => drawForageArt(g, 0, 0, k))]);
@@ -32,7 +34,10 @@ const out = await p.evaluate(async () => {
   const furn = (shape, a, b) => grab(16, 32, (g) => drawFurniture(g, 0, 16, { shape, colors: [a, b] }));
   const furniture = FURN_SHAPES.map((s) => [s, furn(s, '#ffffff', '#ff0000'), furn(s, '#000000', '#000000')]);
   performance.now = now;
-  return { forage, trees, debris, giants, placed, furniture };
+  // Wallpapers (a wall face, trim included) and floors: one 16x16 swatch each, in catalogue order.
+  const walls = WALLPAPERS.map((w, i) => [w.name, grab(16, 16, (g) => drawHouseTile(g, 0, 0, 'I', 'x', WALLPAPERS, FLOORS, { wall: i, floor: 0 }))]);
+  const floors = FLOORS.map((f, i) => [f.name, grab(16, 16, (g) => drawHouseTile(g, 0, 0, 'P', 'x', WALLPAPERS, FLOORS, { wall: 0, floor: i }))]);
+  return { forage, trees, debris, giants, placed, furniture, walls, floors };
 });
 writeFileSync(process.argv[2], JSON.stringify(out));
 console.log(out.forage.length, 'forage,', out.trees.length, 'tree frames');

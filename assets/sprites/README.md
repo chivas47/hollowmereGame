@@ -111,6 +111,17 @@ To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, a
 - **Blocks (2):** dry, then watered. Every tilled tile gets dry soil on its corners; watered tiles get the watered block over it, so the two blend.
 - Fertiliser dots are drawn in code.
 
+## cave-rock.png, cave-sand.png, cave-ember.png, cave-sewer.png, cave-peak.png
+
+128 x 80 each, full colour, one per cave theme (rock is the plain mines and the farm cave). The terrain layout with two blocks:
+
+- **floor** (left): the base; only its full tiles are used (tile 15 and row 4).
+- **wall** (right): the 16 corner tiles laid over the floor on `X` tiles, plus four full tiles. Draw a rock face on edges that face down.
+
+## wallpapers.png, floors.png
+
+192 x 16 each. One 16 x 16 swatch per wallpaper and per floor, in the order of `WALLPAPERS` and `FLOORS` in `src/data/furniture.js`. Each repeats edge to edge. A wallpaper swatch is a whole wall face, its bottom trim included. Adding a wallpaper or floor to the catalogue means adding its swatch at the end.
+
 The placeholder sheets are built by the scripts in `tools/sprites/`.
 
 ## Credits
@@ -127,3 +138,5 @@ The placeholder sheets are built by the scripts in `tools/sprites/`.
 | placed.png, furniture.png | Hollowmere Farm (original placeholder, v84, from the game's code art) | same as the game |
 | terrain-*.png | Hollowmere Farm (original placeholder, v85, colours from the season palettes) | same as the game |
 | soil.png | Hollowmere Farm (original placeholder, v86) | same as the game |
+| cave-*.png | Hollowmere Farm (original placeholder, v87, colours from the cave themes) | same as the game |
+| wallpapers.png, floors.png | Hollowmere Farm (original placeholder, v87, from the game's patterns) | same as the game |

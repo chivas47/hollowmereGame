@@ -3,7 +3,8 @@ import { T } from '../core/constants.js';
 import { r, rng } from './pixel.js';
 import { SHRINE } from '../data/books.js';
 import { CHIMES } from '../data/nuts.js';
-import { TERRAIN_SHEET } from '../data/sprites.js';
+import { DECOR_SHEETS } from '../data/sprites.js';
+import { ready, sheet } from './sheets.js';
 
 const SNOW = '#f2f6f8';
 
@@ -18,7 +19,7 @@ export function drawGrass(g, x, y, p, salt) {
 }
 
 // v85: the flowers drawGrass would draw on this tile (the same random draws), for grass from the terrain sheet.
-function drawFlowers(g, x, y, p, salt) {
+export function drawFlowers(g, x, y, p, salt) {
   const X = x * T, Y = y * T, R = rng(x * 92837 + y * 1237 + salt);
   for (let i = 0; i < 21; i++) R();
   if (p.fl && R() < 0.07) {
@@ -27,11 +28,12 @@ function drawFlowers(g, x, y, p, salt) {
   }
 }
 
-// v85: outdoor ground from a terrain sheet (data/sprites.js TERRAIN_SHEET). kind(x, y) names each tile's terrain.
-// base fills every tile; each other terrain is laid on the corners between tiles, the tile for each corner chosen
-// by which of its four neighbours have that terrain. Full tiles pick a variant by position.
-export function drawTerrain(g, img, kind, base, w, h, p, salt) {
-  const S = TERRAIN_SHEET, s = S.size, at = (x, y) => kind(Math.min(w - 1, Math.max(0, x)), Math.min(h - 1, Math.max(0, y)));
+// v85: ground from a corner tile set (data/sprites.js TERRAIN_SHEET, v87 CAVE_SHEET: S). kind(x, y) names each
+// tile's terrain. base fills every tile; each other terrain in S.over is laid on the corners between tiles, the tile
+// for each corner chosen by which of its four neighbours have that terrain. Full tiles pick a variant by position.
+// decorate(x, y), if given, then runs on every tile (the flowers on grass).
+export function drawTerrain(g, img, S, kind, base, w, h, decorate) {
+  const s = S.size, at = (x, y) => kind(Math.min(w - 1, Math.max(0, x)), Math.min(h - 1, Math.max(0, y)));
   const tile = (b, i, X, Y) => g.drawImage(img, b * 4 * s + (i % 4) * s, Math.floor(i / 4) * s, s, s, X, Y, s, s);
   const full = (b, x, y, X, Y) => { const v = (x * 7 + y * 13) % 5; tile(b, v === 4 ? 15 : 16 + v, X, Y); };
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) full(S.order.indexOf(base), x, y, x * s, y * s);
@@ -44,7 +46,7 @@ export function drawTerrain(g, img, kind, base, w, h, p, salt) {
       else if (i) tile(b, i, x * s - s / 2, y * s - s / 2);
     }
   }
-  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (kind(x, y) === 'grass') drawFlowers(g, x, y, p, salt);
+  if (decorate) for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) decorate(x, y);
 }
 
 export function drawPath(g, x, y, p) {
@@ -598,11 +600,15 @@ export function drawHouseTile(g, x, y, t, below, walls, floors, decor) {
   const X = x * T, Y = y * T;
   if (t === '.') { r(g, X, Y, T, T, '#14100c'); return; }
   if (t === 'I' || t === '_') {   // v47: the phone hangs on a wall face
-    if (below && below !== 'I' && below !== '.') { pattern(g, X, Y, walls[decor.wall] || walls[0], true); r(g, X, Y + 14, T, 2, '#3f3226'); return; }   // the wall's face
+    if (below && below !== 'I' && below !== '.') {   // the wall's face (v87: from the wallpaper sheet once it has loaded)
+      if (ready(DECOR_SHEETS.walls)) return g.drawImage(sheet(DECOR_SHEETS.walls).img, (walls[decor.wall] ? decor.wall : 0) * T, 0, T, T, X, Y, T, T);
+      pattern(g, X, Y, walls[decor.wall] || walls[0], true); r(g, X, Y + 14, T, 2, '#3f3226'); return;
+    }
     r(g, X, Y, T, T, '#4a3828'); r(g, X, Y, T, 1, '#5c4632'); r(g, X, Y + 15, T, 1, '#2b2018');   // wall tops
     return;
   }
-  pattern(g, X, Y, floors[decor.floor] || floors[0], false);
+  if (ready(DECOR_SHEETS.floors)) g.drawImage(sheet(DECOR_SHEETS.floors).img, (floors[decor.floor] ? decor.floor : 0) * T, 0, T, T, X, Y, T, T);   // v87
+  else pattern(g, X, Y, floors[decor.floor] || floors[0], false);
   if (t === 'E') { r(g, X + 2, Y + 3, 12, 10, '#8a5a32'); r(g, X + 3, Y + 4, 10, 8, '#b5452f'); }   // doormat
 }
 const bed = (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 1, Y, 14, T, '#7a4a2a'); r(g, X + 2, Y + 1, 12, 14, '#f4ead2'); r(g, X + 2, Y + 6, 12, 9, '#5f8fb5'); r(g, X + 2, Y + 6, 12, 1, '#3d6a8f'); };
