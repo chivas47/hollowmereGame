@@ -740,6 +740,7 @@ Nothing here is saved or touches the economy.
 | Swaying trees (v103) | the map's trees, alders, fruit trees | crowns lean up to 2 px at the top, 1 px lower down; trunks stay |
 | Swaying grass (v103) | the farm's grass patches; tufts on about 8 in 100 open grass tiles elsewhere | tufts not in winter |
 | Clotheslines (v103) | village (2), town (1), beside the farmhouse (your shirt and trousers) | hems flap up to 2 px |
+| Seasonal motion (v104) | open-air maps, from the map's tree tiles (fluff from open grass) | spring petals 2.5 a second, summer fluff 0.6, autumn leaves 4, winter snow clumps 0.5 (none on snow days); halved in rain, storms and mist; up to 40 at once; they rest 1.5 to 4 s on the ground |
 | Ambience volume (v100) | the menu's Ambience slider, 0 to 100% | Sound off still mutes it |
 
 ## Management tools (v71)
@@ -986,6 +987,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v104: Leaves and petals fall only from the map's own tree tiles, not from alders or fruit trees, so a map with few trees (the beach) sees few. They rest on whatever is below, water and roofs included, and do not pile up or need sweeping.
 - v103: Clotheslines are drawn only: you walk through their posts, and so do neighbours. The farm's line hides when anything is placed, planted or growing on a post tile, and on layouts where those tiles are not grass. Wind does not move the player's clothes, hair or buildings, and fruit and leaves do not fall. Reflections in water do not lean.
 - v102: Reflections mirror characters, animals and planted trees only: the cached map art (tree tiles, buildings, the pier) is not mirrored. The sheet's own still ripples stay under the moving ones. There is no reduced-motion setting yet.
 
