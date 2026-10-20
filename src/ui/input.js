@@ -14,6 +14,8 @@ import { openMenu, closeMenu, menuOpen } from './menu.js';
 import { toggleAll } from './sound.js';
 import { whistle } from '../systems/stable.js';
 import { cancelSiting } from '../systems/sites.js';
+import { turnFacing } from '../systems/house.js';
+import { undo } from '../systems/undo.js';
 import { $, $$ } from './dom.js';
 
 const KEYMAP = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right' };
@@ -31,6 +33,8 @@ export function initInput(canvas) {
     if (e.code === 'KeyJ') { emit('ui:journal'); return; }   // v68: collections, notes, achievements, completion   // v48: the social menu
     if (e.code === 'KeyM') { toggleAll(); return; }
     if (e.code === 'KeyH') { whistle(); return; }
+    if (e.code === 'KeyR' && !e.ctrlKey && !e.metaKey) { if (!e.repeat) turnFacing(); return; }   // v99: turn the furniture you face
+    if (e.code === 'KeyU' || (e.code === 'KeyZ' && (e.ctrlKey || e.metaKey))) { e.preventDefault(); if (!e.repeat) undo(); return; }   // v99
     if (e.code === 'KeyQ') { if (!e.repeat) selectSlot(SEED_SLOT); return; }   // pick seeds, again to switch type
     if (KEYMAP[e.code]) { G.keys[KEYMAP[e.code]] = true; e.preventDefault(); return; }
     if (e.code === 'Space' || e.code === 'KeyE') {
@@ -67,6 +71,7 @@ export function initInput(canvas) {
 
   $('#bagBtn').addEventListener('click', (e) => { emit('ui:inventory'); e.currentTarget.blur(); });
   $('#craftBtn').addEventListener('click', (e) => { emit('ui:craft'); e.currentTarget.blur(); });
+  $('#undoBtn').addEventListener('click', () => { closeMenu(); undo(); });   // v99: for touch screens
   $('#reset').addEventListener('click', closeMenu);
   $('#reset').addEventListener('click', confirmReset);
   $('#debugToggle').addEventListener('click', toggleDebug);

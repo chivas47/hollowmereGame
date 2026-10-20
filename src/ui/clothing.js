@@ -5,12 +5,14 @@ import { ITEMS } from '../data/items.js';
 import { CLOTHES, CLOTH, SLOTS } from '../data/clothing.js';
 import { weaveCloth, tailor, dye, dyeOf, dressMannequin, pieceColor, wear } from '../systems/clothing.js';
 import { pickUp } from '../systems/placeables.js';
+import { turnFurniture, canTurn } from '../systems/house.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
 
 let at = null, dyeing = null;
 const chip = (c) => `<span class="decor" style="background:${c}"></span>`;
 const pickUpAction = () => ['Pick up', () => { if (pickUp(at.x, at.y)) closeModal(); }];
+const turnAction = () => (canTurn(at.x, at.y) ? [['Turn', () => turnFurniture(at.x, at.y)]] : []);   // v99
 
 function sewing() {
   const S = G.S, cloth = S.bag.cloth || 0;
@@ -21,7 +23,7 @@ function sewing() {
   }).join('');
   openModal(`<h2>Sewing machine</h2><p class="role">Cloth: <b>${cloth}</b>. Fiber: <b>${S.bag.fiber}</b>. One cloth plus an item makes the piece that item belongs to.</p>
     <div class="btns"><button data-weave="1" ${S.bag.fiber < CLOTH.fiber ? 'disabled' : ''}>Weave 1 cloth (${CLOTH.fiber} fiber)</button><button data-weave="5" ${S.bag.fiber < CLOTH.fiber * 5 ? 'disabled' : ''}>Weave 5</button></div>${rows}`,
-  [pickUpAction(), ['Close', closeModal, true]]);
+  [...turnAction(), pickUpAction(), ['Close', closeModal, true]]);
 }
 
 function dyePots() {
@@ -37,11 +39,11 @@ function dyePots() {
     html += items.length ? items.map((k) => `<div class="shoprow"><div class="furnrow">${chip(dyeOf(k))}<div><b>${ITEMS[k].name} x ${S.bag[k]}</b></div></div><div class="btns"><button data-dye-item="${k}">Use</button></div></div>`).join('')
       : '<p class="role">Crops, fruit and fish give colour. You have none with you.</p>';
   }
-  openModal(html, [pickUpAction(), ['Close', () => { dyeing = null; closeModal(); }, true]]);
+  openModal(html, [...turnAction(), pickUpAction(), ['Close', () => { dyeing = null; closeModal(); }, true]]);
 }
 
 function mannequin() {
-  openModal('<h2>Mannequin</h2><p>It can wear a copy of what you have on.</p><div class="btns"><button data-dress>Dress it like me</button></div>', [pickUpAction(), ['Close', closeModal, true]]);
+  openModal('<h2>Mannequin</h2><p>It can wear a copy of what you have on.</p><div class="btns"><button data-dress>Dress it like me</button></div>', [...turnAction(), pickUpAction(), ['Close', closeModal, true]]);
 }
 
 on('ui:tailor', (p) => { at = p; sewing(); });

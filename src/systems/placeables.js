@@ -12,7 +12,7 @@ import { MAPS } from '../data/maps.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { COOP, BARN, GREENHOUSE, STABLE } from '../data/upgrades.js';
 import { drawPlaced, drawGlow } from '../render/sprites.js';
-import { soilOf, placeKey, parsePlaceKey } from './world.js';
+import { soilOf, placeKey, parsePlaceKey, playerTile } from './world.js';
 
 const TILE = 'Y';
 const SELF_DRAWN = new Set(['tree', 'fence', 'gate', 'floor', 'furniture']);
@@ -62,18 +62,33 @@ export function announceKit() {
 // ---- Placing and picking up ----
 export function placedAt(tx, ty) { return canPlaceOn(G.S.map) ? G.S.placed[placeKey(G.S.map, tx, ty)] || null : null; }
 
-// Returns a crafted object to the kit. Used by the pick-up button in its dialog.
-export function pickUp(tx, ty) {
-  const key = placeKey(G.S.map, tx, ty), p = G.S.placed[key], grid = MAPS[G.S.map].grid;
+// Returns a crafted object to the kit. Used by the pick-up button in its dialog, and by undo (v99) on any map.
+export function pickUp(tx, ty, mapId = G.S.map, quiet = false) {
+  const key = placeKey(mapId, tx, ty), p = G.S.placed[key], grid = MAPS[mapId].grid;
   if (!p || p.item) return false;
   G.S.kit[p.kind]++;
   emit('picked', p);   // v71: storage.js sends what a chest held to the lost and found
   delete G.S.placed[key];
-  if (written.has(key)) grid[ty][tx] = ground(G.S.map);
+  if (written.has(key)) grid[ty][tx] = ground(mapId);
   written.delete(key);
-  notify(`Picked up the ${PLACEABLES[p.kind].name}.`);
+  if (!quiet) { emit('unplaced', { map: mapId, x: tx, y: ty, p }); notify(`Picked up the ${PLACEABLES[p.kind].name}.`); }
   changed();
   return true;
+}
+
+// v99: puts a picked-up object back where it stood (undo). False with a reason when the tile is no longer free.
+export function putBack(mapId, tx, ty, p) {
+  const S = G.S, key = placeKey(mapId, tx, ty), grid = MAPS[mapId].grid;
+  if (!(S.kit[p.kind] > 0)) return 'It is no longer in your kit.';
+  if (S.placed[key] || grid[ty][tx] !== ground(mapId) || soilOf(mapId)?.[`${tx},${ty}`]) return 'Something else is on that tile now.';
+  const me = playerTile();
+  if (mapId === S.map && me.tx === tx && me.ty === ty) return 'Step off that tile first.';
+  S.kit[p.kind]--;
+  S.placed[key] = { ...p, item: null, nights: 0, store: p.store && {} };
+  if (!S.placed[key].store) delete S.placed[key].store;
+  grid[ty][tx] = tileFor(S.placed[key]); written.add(key);
+  changed();
+  return '';
 }
 
 const isTreeAt = (map, x, y) => PLACEABLES[G.S.placed[placeKey(map, x, y)]?.kind]?.kind === 'tree';

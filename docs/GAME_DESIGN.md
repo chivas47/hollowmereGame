@@ -55,7 +55,7 @@ Stable: 10,000g, 100 wood, 25 iron ore (Stardew: 10,000g, 100 hardwood, 5 iron b
 
 The farm door leads inside; the bed ends the day and you wake beside it. Rooms come with the house upgrades: the extended farmhouse adds a kitchen, the hillside manor a nursery, the manor with cellar (100,000g) a cellar of casks. Kitchen, nursery and cellar are furnished but do nothing yet (cooking, children and ageing come with roadmap items 16, 24 and 12).
 
-The catalogue lectern sells 30 pieces of furniture, 12 wallpapers and 12 floorings (Stardew's furniture shop prices: chairs 300 to 750, tables 750 to 1,500, rugs 1,000 to 1,500, a tall clock 2,000; patterns 100g each). Furniture goes to the kit (slot 7) and is placed on the floor; face it to pick it up. Rugs can be walked over. Doorways stay clear. The full catalogue (30,000g, as in Stardew) makes everything in it free.
+The catalogue lectern sells 30 pieces of furniture, 12 wallpapers and 12 floorings (Stardew's furniture shop prices: chairs 300 to 750, tables 750 to 1,500, rugs 1,000 to 1,500, a tall clock 2,000; patterns 100g each). Furniture goes to the kit (slot 7) and is placed on the floor; face it to pick it up. R (or Turn in its dialog) turns a piece you placed (v99): chairs, armchairs and sofas four ways, the long rug a quarter turn, lopsided pieces mirrored; symmetrical pieces do not change. U or Ctrl+Z undoes the day's last place, pick-up or turn (20 steps). Rugs can be walked over. Doorways stay clear. The full catalogue (30,000g, as in Stardew) makes everything in it free.
 
 Renovations at Bram's Carpentry: open-plan living room (10,000g, removes the bed corner's wall) and a reading nook (5,000g, a bay in the north wall).
 
@@ -123,6 +123,7 @@ Stardew counterparts by role: keg (wine 3 x fruit, juice 2.25 x vegetable), mayo
 ## Controls
 
 - H whistles for the horse.
+- R turns the furniture you face; U or Ctrl+Z (or Undo in the menu) undoes your last place, pick-up or turn today (v99). Neither touches neighbours' rooms or the world.
 - Hotbar: 1 Hoe, 2 Can, 3 Rod, 4 Pick, 5 Sword, 6 Seeds, 7 Kit, 8 Axe (v19, added at the end so no key moved).
 - The seed slot plants the selected seed type. Press 6 or Q again (or tap the slot again) to switch to the next type you own, in-season types first.
 - The kit slot places the selected crafted object on untilled farm grass. Press 7 again to switch. Face a placed object and press Use to open it (load, collect, pick up).
@@ -958,6 +959,8 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 | Ranching | animal products one quality higher |
 
 ## Known issues and open questions
+
+- v99: Undo covers only kit objects (`G.S.placed`): not fertilizer, crab pots, tilling, planting or buildings. It is forgotten overnight and on load. Fruit trees still cannot be picked up (Stardew's cannot either). The new side and back views of seats are drawn in code; the furniture sheet holds the front views only. Turning is looks only: neighbours and the player do not sit.
 
 - v72: Wildlife is drawn only: you cannot catch or befriend it, and it is not in the balance bot. The new light is darker than before from 8 pm (half dark at 10 pm, was about a third). The ambient sound has no volume control of its own; it follows the Sound button.
 - v71: The bag still has no item limit, so chests organise and protect items rather than add room (Nuno's choice; a bag limit would be its own roadmap item). The balance bot ignores chests, signs and the computer (no gold). Signs show their text only when you face them. The world map is a grid of places without the connecting paths.

@@ -5,6 +5,8 @@ import { DISHES } from '../data/cooking.js';
 import { ITEMS } from '../data/items.js';
 import { WEATHER } from '../data/weather.js';
 import { knows, canCook, cook, kitchen, buffText, store, takeOut, tvShow, learn, fortune } from '../systems/cooking.js';
+import { pickUp } from '../systems/placeables.js';
+import { turnFurniture } from '../systems/house.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
 
@@ -24,6 +26,7 @@ function fridgeDialog() {
   openModal(`<h2>Fridge</h2><h3>In the fridge</h3>${inRows || '<p class="role">Empty.</p>'}<h3>Cooking ingredients in your bag</h3>${bagRows || '<p class="role">None.</p>'}`, [['Close', closeModal, true]]);
 }
 
+let tvAt = null;   // v99: the set's tile, for Turn and Pick up
 function tvDialog(channel) {
   const S = G.S;
   let html = '<h2>Television</h2><div class="btns"><button data-tv="weather">Weather</button><button data-tv="fortune">Fortune</button><button data-tv="cooking">Cooking show</button></div>';
@@ -37,12 +40,12 @@ function tvDialog(channel) {
       html += `<p>${show.rerun ? 'A rerun: ' : 'Today: '}<b>${d.name}</b>. ${fresh ? 'You write the recipe down.' : 'You already know this one.'}</p>`;
     }
   }
-  openModal(html, [['Turn it off', closeModal, true]]);
+  openModal(html, [['Turn', () => turnFurniture(tvAt.x, tvAt.y)], ['Pick up', () => { if (pickUp(tvAt.x, tvAt.y)) closeModal(); }], ['Turn it off', closeModal, true]]);
 }
 
 on('ui:cook', cookDialog);
 on('ui:fridge', fridgeDialog);
-on('ui:tv', () => tvDialog(null));
+on('ui:tv', (at) => { tvAt = at; tvDialog(null); });
 
 $('#mbody').addEventListener('click', (e) => {
   const c = e.target.closest('[data-cook]');

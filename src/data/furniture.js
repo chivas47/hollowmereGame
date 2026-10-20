@@ -67,3 +67,19 @@ export const RENOVATIONS = {
   openplan: { name: 'Open-plan living room', cost: 10000, desc: 'Takes down the wall between the bed corner and the living room.' },
   nook:     { name: 'Reading nook',          cost: 5000,  desc: 'Knocks a bay into the north wall: two more tiles of floor under a window.' },
 };
+
+// v99: how a placed piece turns (systems/house.js, R key or the Turn button). By shape:
+// seat: four facings (front, side, back, the other side), drawn in render/sprites.js;
+// flat: a quarter turn (the long rug); mirror: faces the other way (lopsided pieces). Shapes not listed look the same from every side.
+// Stardew rotates most furniture; ours is one tile drawn front-on, so only these change.
+export const TURNS = {
+  chair: 'seat', armchair: 'seat', sofa: 'seat',
+  rug: 'flat',
+  tv: 'mirror', desk: 'mirror', plant: 'mirror', cactus: 'mirror', flowers: 'mirror', bookcase: 'mirror',
+  globe: 'mirror', easel: 'mirror', sewing: 'mirror', dyepots: 'mirror',
+};
+export const TURN_STEPS = { seat: 4, flat: 2, mirror: 2 };
+export const turnsOf = (kind) => TURN_STEPS[TURNS[FURNITURE[kind]?.shape]] || 1;
+
+// v99: undo (systems/undo.js) remembers this many of today's places, pick-ups and turns.
+export const UNDO_DEPTH = 20;

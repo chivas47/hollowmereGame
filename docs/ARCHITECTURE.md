@@ -63,7 +63,8 @@ src/
     layouts.js        rebuilds the farm grid for G.S.layout on game:loaded (imported first), startLayout()
     farmPerks.js      layout perks: quarry rocks, crates, regrowing stumps, farm forage, farm slimes
     clothing.js       wardrobe, outfit, tailoring, dyeing, mannequins, shoe defense
-    house.js          the farmhouse: door, bed, catalogue sales, decor, renovations, furniture drawing
+    house.js          the farmhouse: door, bed, catalogue sales, decor, renovations, furniture drawing, turning placed furniture (turnFurniture, R key, v99)
+    undo.js           undo of the player's own places, pick-ups and turns today (G.S.placed only; U, Ctrl+Z, the menu's Undo) (v99)
     pets.js           the farm pet: wandering, pats, the water bowl, gifts, hats
     stable.js         stable building, horse riding, following between maps, whistle
     world.js          tile queries, collision, facing(), placePlayer(), useEnergy(), soilOf(map), placeKey()/parsePlaceKey()
@@ -307,7 +308,9 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `upgraded` | key | upgrades.js | house.js (rebuild the farmhouse rooms) |
 | `site:moved` | building key | sites.js | coop, barn (animals back in the yard), stable (horse home) |
 | `picked` | the placed object | placeables.js (pick up, or knocked out of place on load) | storage.js (a chest's contents to the lost and found, v71) |
-| `placed` | {map, x, y, kind} | placeables.js | sprinklers.js (water now), audio/sfx.js |
+| `placed` | {map, x, y, kind} | placeables.js | sprinklers.js (water now), audio/sfx.js, undo.js (v99) |
+| `unplaced` | {map, x, y, p} | placeables.js (the player picked it up, not undo or load) | undo.js (v99) |
+| `turned` | {map, x, y, from} | house.js (the player turned furniture) | undo.js (v99) |
 | `sfx` | name | effects, monsters, fishing, health, economy, skills, coop, barn, ui/modal | audio/sfx.js |
 | `ui:scene` | {npc, at, scene, extra} | npcs.js | ui/dialogs.js heart scene with choices |
 | `ui:*` | varies | systems | ui modules open dialogs |
