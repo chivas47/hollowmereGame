@@ -50,7 +50,7 @@ src/
     cavern.js         CAVERN (the Sunken Cavern's door, strength, ores, shafts, chests), HOLLOW_GOLD (v38)
     guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item, underSky()
-    atmosphere.js     LIGHT keyframes, WATERFALLS, WILDLIFE, AMBIENCE by area (v72); indoor LIGHTS, HOUSE_WINDOWS, CRACKLE_RANGE (v100); WATER (v102)
+    atmosphere.js     LIGHT keyframes, WATERFALLS, WILDLIFE, AMBIENCE by area (v72); indoor LIGHTS, HOUSE_WINDOWS, CRACKLE_RANGE (v100); WATER (v102); WIND, CLOTHESLINES (v103)
     hints.js          HINTS (id, when(S, facts), text) most pressing first, TOOL_TIPS, STUCK_PRESSES (v101)
     animation.js      SWINGS (tool arcs and timings), COMBO (weapon combo steps), PICKUP, CRAFTED, PLACE, IMPACT colours (v74)
     schedules.js      neighbour daily routines by weekday (go: walk a loop of spots, at: walk there and stay), spouse and festival days
@@ -135,6 +135,8 @@ src/
     trees.js          fruit trees (placed objects of kind 'tree'): growth, fruit, picking, drawing
     giants.js         giant crops: merging ripe 3x3 blocks, chopping, solid 'Y' tiles
     weather.js        today's weather and the forecast, rain watering, lightning, the rain/snow/mist overlay
+    wind.js           lean(x): how far things lean in the wind now, by weather and the day (v103; no drawing, safe for the balance bot)
+    sway.js           grass tufts off the farm and clotheslines, bending with wind.js (v103, drawn only)
     water.js          moving water: ripples, sunny glints, rain rings, reflections of entities at the bank (v102, drawn only)
     atmosphere.js     waterfalls, rain splashes, storm bolts and thunder, birds, butterflies, fireflies (v72, drawn only)
     indoors.js        indoor dark and light pools, the farmhouse windows, G.indoorRain and G.fires for the window art and ambience (v100, drawn only)
@@ -263,6 +265,8 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 
 | z | Owner | Draws |
 |---|---|---|
+| 4 | renderer.js | Tree crowns of the map's tree tiles, leaning with the wind (v103) |
+| 5 | sway.js | Grass tufts (v103) |
 | 6 | water.js | Reflections, ripples, glints, rain rings on open water |
 | 8 | atmosphere.js | Waterfalls |
 | 9 | clearing.js, house.js | Paths, rugs |

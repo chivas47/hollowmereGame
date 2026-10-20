@@ -13,6 +13,9 @@ import { WALLPAPERS, FLOORS } from '../data/furniture.js';
 import { TERRAIN_SHEET, CAVE_SHEET } from '../data/sprites.js';
 import { drawHomeTile } from './interiors.js';
 import { ready, sheet, onSheet } from './sheets.js';
+import { addLayer } from '../core/registry.js';
+import { WIND } from '../data/atmosphere.js';
+import { lean, shiftOf } from '../systems/wind.js';
 
 let cache = {};
 on('season:changed', () => { cache = {}; });
@@ -22,8 +25,13 @@ onSheet(() => { cache = {}; });   // v85: redraw the background once a sheet arr
 
 const TILE_ART = { b: drawBowl, O: drawWater, T: drawTree, R: drawRock, w: drawGlassWall, ...CAVE_ART };
 
+// v103: a map's tree tiles keep only their trunk foot in the background; their crowns go to a canvas of their own
+// drawn every frame below, leaning in the wind (systems/wind.js).
+const CROWN = 12;   // rows of a tree tile that sway (drawTree's crown and its shadow)
 function renderBackground(mapId, season) {
   const c = document.createElement('canvas'); c.width = W * T; c.height = H * T;
+  const crowns = document.createElement('canvas'); crowns.width = W * T; crowns.height = H * T;
+  const k = crowns.getContext('2d'), trees = [];
   const g = c.getContext('2d'), map = MAPS[mapId], p = map.theme ? { ...PAL[season], theme: map.theme } : PAL[season];   // v38: theme (the cavern's sand)
   const ground = map.base === 'cave' ? CAVE_SHEET.sheet(map.theme) : TERRAIN_SHEET.sheet(season);
   const sheetGround = (!map.base || map.base === 'cave') && ready(ground);   // v85: outdoor ground (v87: and caves) from a tile set
@@ -48,10 +56,19 @@ function renderBackground(mapId, season) {
     if (map.base === 'house') { const ha = HOUSE_ART[map.grid[y][x]]; if (ha) ha(g, x, y, map.grid); continue; }
     const t = map.grid[y][x], art = TILE_ART[t];
     if (sheetGround && PROP_ART[t]) drawProp(g, t, x, y, p);   // v89: the prop alone, its ground is in the tile set
+    else if (art === drawTree) { art(k, x, y, p); g.drawImage(crowns, x * T, y * T + CROWN, T, T - CROWN, x * T, y * T + CROWN, T, T - CROWN); trees.push([x, y]); }
     else if (art && !(sheetGround && (map.base === 'cave' ? t === 'X' : t === 'O'))) art(g, x, y, p);   // v85: outdoor water (v87: cave walls) are in the tile set
   }
   map.objects.forEach((o) => drawBuilding(g, p, o));   // v88: from the building sheets
-  return c;
+  // One canvas per wind band (data/atmosphere.js WIND.tree) holding that band of every crown, so a column of
+  // trees leans with one copy per band.
+  const bands = WIND.tree.map(([a, b]) => {
+    const y0 = Math.round(a * CROWN), y1 = Math.round(b * CROWN), bc = document.createElement('canvas'); bc.width = W * T; bc.height = H * T;
+    const bg = bc.getContext('2d');
+    for (const [x, y] of trees) bg.drawImage(crowns, x * T, y * T + y0, T, y1 - y0, x * T, y * T + y0, T, y1 - y0);
+    return bc;
+  });
+  return { bg: c, bands, cols: [...new Set(trees.map(([x]) => x))] };
 }
 
 // v85: the terrain each outdoor tile shows on the terrain sheet (the same choice as the code art above).
@@ -63,10 +80,20 @@ function groundOf(map, t) {
   return 'grass';
 }
 
-function background() {
+function cached() {
   const key = G.S.map + '-' + today().season + (MAPS[G.S.map].theme || '');
   return cache[key] || (cache[key] = renderBackground(G.S.map, today().season));
 }
+const background = () => cached().bg;
+
+// v103: the tree crowns, under everything else, each band of each column leaning with the wind there.
+addLayer(4, (c) => {
+  const { bands, cols } = cached(), h = H * T;
+  for (const x of cols) {
+    const X = x * T, l = lean(X);
+    bands.forEach((bc, i) => c.drawImage(bc, X, 0, T, h, X + shiftOf(l, WIND.tree[i][2]), 0, T, h));
+  }
+});
 
 export function draw(c) {
   c.imageSmoothingEnabled = false;

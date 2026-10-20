@@ -80,6 +80,7 @@ import './systems/theatre.js';   // v70
 import './systems/storage.js';   // v71: chests, signs, the farm computer, the lost and found
 import './systems/atmosphere.js';   // v72: waterfalls, splashes, lightning, wildlife
 import './systems/water.js';   // v102: moving water and reflections
+import './systems/sway.js';   // v103: wind in grass, trees and washing
 import './systems/indoors.js';   // v100: indoor light, windows, rain on the glass
 
 // UI

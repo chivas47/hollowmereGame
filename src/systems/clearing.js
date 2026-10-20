@@ -21,6 +21,9 @@ import { drawDebris, drawAlder, drawFence, drawGate, drawFloor, drawTap } from '
 import { useEnergy, placeKey, parsePlaceKey } from './world.js';
 import { swingAt } from './effects.js';
 import { addItem } from './quality.js';
+import { lean } from './wind.js';
+import { drawSwaying } from '../render/sway.js';
+import { WIND } from '../data/atmosphere.js';
 import { pickUp, tileFor } from './placeables.js';
 import { giantAt } from './giants.js';
 import { has } from './professions.js';
@@ -254,7 +257,11 @@ addInteraction(74, ({ tx, ty, mapId, item }) => {
 const builtHere = () => Object.entries(G.S.placed).map(([k, p]) => ({ p, kind: PLACEABLES[p.kind].kind, ...parsePlaceKey(k) })).filter((e) => e.map === G.S.map);
 
 addLayer(9, (c) => {
-  if (G.S.map === 'farm') for (const [k, d] of Object.entries(G.S.debris || {})) if (walkable(d)) { const [x, y] = k.split(',').map(Number); drawDebris(c, x * T, y * T, d.kind); }
+  if (G.S.map === 'farm') for (const [k, d] of Object.entries(G.S.debris || {})) if (walkable(d)) {
+    const [x, y] = k.split(',').map(Number);
+    if (d.kind === 'grass') drawSwaying(c, x * T, y * T, T, T, lean(x * T), WIND.grass, (g) => drawDebris(g, x * T, y * T, d.kind));   // v103
+    else drawDebris(c, x * T, y * T, d.kind);
+  }
   for (const e of builtHere()) if (e.kind === 'floor') drawFloor(c, e.x * T, e.y * T, e.p.kind, PLACEABLES[e.p.kind].color);
 });
 
@@ -275,7 +282,7 @@ addEntities(() => {
   for (const [k, d] of Object.entries(G.S.debris)) {
     if (walkable(d)) continue;
     const [x, y] = k.split(',').map(Number);
-    out.push({ y: (y + 1) * T - 2, draw: d.kind === 'alder' ? (c) => { drawAlder(c, x * T, y * T, d.stage, bare); if (d.tap) drawTap(c, x * T, y * T, d.tap.ready); } : (c) => drawDebris(c, x * T, y * T, d.kind) });
+    out.push({ y: (y + 1) * T - 2, draw: d.kind === 'alder' ? (c) => { drawSwaying(c, x * T - 8, y * T - 32, 32, 48, lean(x * T), WIND.sprite, (g) => drawAlder(g, x * T, y * T, d.stage, bare)); if (d.tap) drawTap(c, x * T, y * T, d.tap.ready); } : (c) => drawDebris(c, x * T, y * T, d.kind) });
   }
   return out;
 });
