@@ -3,13 +3,37 @@ import { T } from '../core/constants.js';
 import { CROPS } from '../data/crops.js';
 import { r, blink } from './pixel.js';
 import { ready, tinted, frame, sheet } from './sheets.js';
-import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET, DEBRIS_SHEET, GIANTS_SHEET, PLACED_SHEET, FURN_SHEET } from '../data/sprites.js';
+import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET, DEBRIS_SHEET, GIANTS_SHEET, PLACED_SHEET, FURN_SHEET, SOIL_SHEET } from '../data/sprites.js';
 
 const FERT_DOT = { booster: '#c9b68e', booster2: '#e9b44c', booster3: '#b98ae0', tonic: '#86b86a', tonic2: '#5fd36a', mulch: '#a0805a', mulch2: '#7a5a3a' };
 export function drawSoil(c, X, Y, wet, fert) {
   r(c, X + 1, Y + 1, 14, 14, wet ? '#5a3b24' : '#8b5e3c');
   [4, 8, 12].forEach((o) => r(c, X + 2, Y + o, 12, 1, wet ? '#452c1a' : '#734c30'));
+  drawFert(c, X, Y, fert);
+}
+export function drawFert(c, X, Y, fert) {
   if (fert) [[3, 2], [10, 6], [5, 10], [12, 13]].forEach(([a, b]) => r(c, X + a, Y + b, 1, 1, FERT_DOT[fert] || '#ffffff'));
+}
+
+// v86: a whole bed of tilled soil ("x,y" -> { w }) from the soil sheet, on the corners between tiles like the
+// terrain (render/tiles.js drawTerrain). False until the sheet has loaded: callers draw each tile with drawSoil.
+export function drawSoilBed(c, soil) {
+  const S = SOIL_SHEET, s = S.size;
+  if (!ready(S.sheet)) return false;
+  const img = sheet(S.sheet).img, corners = new Map();
+  for (const k of Object.keys(soil)) {
+    const [x, y] = k.split(',').map(Number);
+    for (const [cx, cy] of [[x, y], [x + 1, y], [x, y + 1], [x + 1, y + 1]]) corners.set(`${cx},${cy}`, [cx, cy]);
+  }
+  [(x, y) => !!soil[`${x},${y}`], (x, y) => !!soil[`${x},${y}`]?.w].forEach((has, b) => {
+    for (const [x, y] of corners.values()) {
+      const i = has(x - 1, y - 1) + has(x, y - 1) * 2 + has(x - 1, y) * 4 + has(x, y) * 8;
+      if (!i) continue;
+      const v = i === 15 ? (x * 7 + y * 13) % 5 : -1, t = v < 0 ? i : v === 4 ? 15 : 16 + v;
+      c.drawImage(img, b * 4 * s + (t % 4) * s, Math.floor(t / 4) * s, s, s, x * s - s / 2, y * s - s / 2, s, s);
+    }
+  });
+  return true;
 }
 
 // Ripe art per crop shape (see data/crops.js).

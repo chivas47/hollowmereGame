@@ -69,3 +69,23 @@ for season in ['Spring', 'Summer', 'Autumn', 'Winter']:
             for x in range(S):
                 for y in range(S): img.putpixel((b * 64 + v * S + x, 64 + y), tex[y][x])
     img.save(f'{OUT}/terrain-{season.lower()}.png', optimize=True)
+
+# soil.png: tilled soil, the same layout as a terrain block: dry (block 0) and watered (block 1), not seasonal.
+# Furrows run every 4 rows so the tiles join at any offset. Fertiliser dots are drawn in code.
+SOIL = [('#8b5e3c', '#734c30', '#5f3d24'), ('#5a3b24', '#452c1a', '#34200f')]   # base, furrow, edge
+img = Image.new('RGBA', (128, 80), (0, 0, 0, 0))
+for b, (base, furrow, edge) in enumerate(SOIL):
+    def tex(x, y, v=0):
+        R = random.Random((x * 7 + v * 131 + b) * 1009 + y)
+        if y % 4 == 0: return hexc(furrow)
+        return hexc(furrow) if R.random() < 0.06 else hexc(base)
+    for index in range(16):
+        inside = region(index)
+        for (x, y), on in inside.items():
+            if not on: continue
+            border = any(not inside.get((x + i, y + j), inside[(min(max(x + i, 0), S - 1), min(max(y + j, 0), S - 1))]) for i, j in ((1, 0), (-1, 0), (0, 1), (0, -1)))
+            img.putpixel((b * 64 + (index % 4) * S + x, (index // 4) * S + y), hexc(edge) if border else tex(x, y))
+    for v in range(4):
+        for x in range(S):
+            for y in range(S): img.putpixel((b * 64 + v * S + x, 64 + y), tex(x, y, v + 1))
+img.save(f'{OUT}/soil.png', optimize=True)

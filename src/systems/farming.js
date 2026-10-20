@@ -6,7 +6,7 @@ import { addInteraction, addLayer } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { CROPS } from '../data/crops.js';
 import { ITEMS } from '../data/items.js';
-import { drawSoil, drawCrop } from '../render/sprites.js';
+import { drawSoil, drawSoilBed, drawFert, drawCrop } from '../render/sprites.js';
 import { DIRS } from '../core/constants.js';
 import { tier } from '../data/upgrades.js';
 import { useEnergy, tileAt, soilOf } from './world.js';
@@ -109,9 +109,10 @@ on('season:changed', ({ to, report }) => {
 addLayer(10, (c) => {
   const soil = soilOf(G.S.map);
   if (!soil) return;
+  const bed = drawSoilBed(c, soil);   // v86: the whole bed first (its corner tiles reach into neighbours), then crops
   for (const [key, s] of Object.entries(soil)) {
     const [x, y] = key.split(',').map(Number);
-    drawSoil(c, x * T, y * T, s.w, s.fert);
+    if (bed) drawFert(c, x * T, y * T, s.fert); else drawSoil(c, x * T, y * T, s.w, s.fert);
     if (s.crop) drawCrop(c, x * T, y * T, s.crop);
   }
 });

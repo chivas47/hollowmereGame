@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v86: Tilled soil tile set
+- Tilled soil now draws from `assets/sprites/soil.png` in the same 16-tile corner layout as the terrain: a field reads as one bed with rounded edges instead of separate squares, and watered soil blends into dry soil around it. On the farm, in the greenhouse and on the island.
+- All soil is drawn before any crop, so the bed's edges never cover a crop. Fertiliser dots are as before.
+- If the sheet fails to load, soil is drawn in code exactly as in v85.
+- Saves: no new fields.
+
 ## v85: Terrain tile sets
 - Outdoor ground (grass, paths, sand, quarry stone and water) now draws from one tile set per season, `assets/sprites/terrain-spring.png` and so on, in the standard 16-tile corner layout (Wang 2-corner, "dual grid") that Tiled and Godot use, so hand-drawn tiles can replace them directly.
 - Ground now has edges: paths, sand, stone and ponds get rounded corners and an edge line, water gets a shoreline and bank shadow. Before, every tile was drawn on its own with square edges.
