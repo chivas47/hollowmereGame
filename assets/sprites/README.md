@@ -189,6 +189,10 @@ Lit bombs use the bomb frames of placed.png.
 - **Rows (2 bands):** main (the fish only, greyscale, tinted to the fish's colour), ink (every other piece, colours drawn in).
 - Where each piece goes and how it moves is in code.
 
+## variants.png
+
+272 x 16. Props that change with the place or the season, 16 x 16 over the tile, one row in the order of `VARIANTS_SHEET.order`: shrine door, shrine door in snow, the pedestals for farming, foraging, fishing, mining, combat and ranching, the farm cave mouth (plain, snow), the Smoke Peak mouth (plain, snow), the chime shells small, middle and large, the island altar, the summit's altar chest. Cave mouths and the shrine door fill their whole tile; the rest sit over the tile-set ground.
+
 ## Credits
 
 | File | Author | Licence |
@@ -212,3 +216,4 @@ Lit bombs use the bomb frames of placed.png.
 | children.png | Hollowmere Farm (original placeholder, v92, from the game's code art) | same as the game |
 | glow.png, bunting.png | Hollowmere Farm (original placeholder, v93, from the game's code art) | same as the game |
 | pens.png | Hollowmere Farm (original placeholder, v94, from the game's code art) | same as the game |
+| variants.png | Hollowmere Farm (original placeholder, v95, from the game's code art) | same as the game |

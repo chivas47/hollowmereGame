@@ -3,7 +3,7 @@ import { T } from '../core/constants.js';
 import { r, rng } from './pixel.js';
 import { SHRINE } from '../data/books.js';
 import { CHIMES } from '../data/nuts.js';
-import { DECOR_SHEETS, BUILDING_SHEETS, PROPS_SHEET, GREENHOUSE_SHEET } from '../data/sprites.js';
+import { DECOR_SHEETS, BUILDING_SHEETS, PROPS_SHEET, GREENHOUSE_SHEET, VARIANTS_SHEET } from '../data/sprites.js';
 import { BUILDINGS } from '../data/buildings.js';
 import { ready, sheet } from './sheets.js';
 
@@ -597,10 +597,22 @@ function propGround(t, g, x, y, p) {
   else if (k === 'sand') drawSand(g, x, y, p);
   else if (k) drawGrass(g, x, y, p, +k.split(':')[1]);
 }
+// v95: props that change with the place or the season: which variant a tile shows (VARIANTS_SHEET.order keys).
+const snowy = (x, y, p) => (p.snow ? 'snow' : '');
+export const PROP_VARIANT = {
+  '@': snowy, y: snowy, 7: snowy,
+  '+': (x) => Object.keys(SHRINE.pedestals).find((k) => SHRINE.pedestals[k] === x) || '',
+  8: (x, y) => String(Math.max(0, CHIMES.findIndex(([a, b]) => a === x && b === y))),
+  '<': (x, y, p) => (p.theme === 'peak' ? 'peak' : ''),
+};
+export const variantKey = (t, x, y, p) => { const v = PROP_VARIANT[t]?.(x, y, p); return v ? `${t}:${v}` : t; };
 // v89: a prop from the props sheet once it has loaded, else drawn in code; over a ground drawn by a tile set.
+// v95: props with variants from the variants sheet, one frame per variant.
 export function drawProp(g, t, x, y, p) {
   const P = PROPS_SHEET, i = P.order.indexOf(t);
   if (i >= 0 && ready(P.sheet)) return g.drawImage(sheet(P.sheet).img, i * P.size, 0, P.size, P.size, x * T, y * T, P.size, P.size);
+  const V = VARIANTS_SHEET, j = PROP_VARIANT[t] ? V.order.indexOf(variantKey(t, x, y, p)) : -1;
+  if (j >= 0 && ready(V.sheet)) return g.drawImage(sheet(V.sheet).img, j * V.size, 0, V.size, V.size, x * T, y * T, V.size, V.size);
   PROP_ART[t](g, x, y, p);
 }
 export const CAVE_ART = Object.fromEntries([['X', caveWall], ...Object.entries(PROP_ART).map(([t, f]) => [t, (g, x, y, p) => { propGround(t, g, x, y, p); f(g, x, y, p); }])]);

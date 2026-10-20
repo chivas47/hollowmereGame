@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v95: Variant prop sheet
+- The props that change with the place or the season draw from a new sheet, `assets/sprites/variants.png`, one picture per variant (17 in all): the shrine door (plain, snowy), the six skill pedestals (each with its skill's colour), the farm cave mouth and the Smoke Peak mouth (plain, snowy), the island's three chime shells (small to large) and the altar (the island's stone altar, the summit's chest).
+- Which picture a tile shows is chosen in code (`PROP_VARIANT` in `src/render/tiles.js`), so an artist can redraw each one exactly.
+- Made from the game's own code art, outlined like the props. If the sheet fails to load, they are drawn in code exactly as in v94.
+- With this, every picture in the game has a sheet; effects that move (the blast, the swing's water and seed) and the festival rope stay in code.
+- Saves: no new fields.
+
 ## v94: Pond, pen and farm cave sheet
 - The fish in the fish pond (tinted to each fish's colour) and its roe, the slimes in the slime pen (both hop frames), their slime balls and the trough's water, and the farm cave's bats, mushroom logs and crate goods draw from a new sheet, `assets/sprites/pens.png`, outlined.
 - Where they are and how they move (fish swimming, slimes hopping, bats bobbing) is unchanged: only the pictures come from the sheet.

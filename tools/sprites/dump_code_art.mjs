@@ -8,8 +8,10 @@ await p.goto('http://localhost:8123/index.html'); await p.waitForTimeout(1200);
 const out = await p.evaluate(async () => {
   const { drawForageArt, drawFruitTree, drawDebris, drawGiant, drawPlaced, drawFurniture, drawAlder, drawTap, drawFence, drawGate, drawFloor, drawChild, drawGlow, drawFlag, drawPenPiece, PEN_PIECES, PLACED_KINDS, FURN_SHAPES } = await import('/src/render/sprites.js');
   const { CROPS } = await import('/src/data/crops.js');
-  const { drawHouseTile, OBJECT_ART, FRONT, buildingKey, PROP_ART, drawGreenhouseFloor } = await import('/src/render/tiles.js');
-  const { PROPS_SHEET, TOOLS_SHEET } = await import('/src/data/sprites.js');
+  const { drawHouseTile, OBJECT_ART, FRONT, buildingKey, PROP_ART, drawGreenhouseFloor, variantKey } = await import('/src/render/tiles.js');
+  const { SHRINE } = await import('/src/data/books.js');
+  const { CHIMES } = await import('/src/data/nuts.js');
+  const { PROPS_SHEET, TOOLS_SHEET, VARIANTS_SHEET } = await import('/src/data/sprites.js');
   const { drawIcon } = await import('/src/render/icons.js');
   const { EXTRA } = await import('/src/render/animation.js');
   const { MAPS } = await import('/src/data/maps.js');
@@ -81,7 +83,16 @@ const out = await p.evaluate(async () => {
   const glow = grab(56, 52, (g) => drawGlow(g, 20, 22, 1)), flag = grab(8, 8, (g) => drawFlag(g, 3, 1, '#ffffff'));
   // v94: pond, pen and farm cave pieces, each at x 4, y 2 of a 32x16 frame (the fish in white, for tinting).
   const pens = PEN_PIECES.map((k) => [k, grab(32, 16, (g) => drawPenPiece(g, k, 4, 2, '#ffffff'))]);
-  return { forage, trees, debris, giants, placed, furniture, walls, floors, buildings, props, gh, tools, packet: [packet('#ffffff', '#ff0000'), packet('#000000', '#000000')], alders, fences, fixtures, children, glow, flag, pens };
+  // v95: props with variants, each drawn at the tile it shows on (a pedestal's x, a shell's spot) in a palette with
+  // or without snow, or the summit's theme; checked against the key the game would look up.
+  const variants = VARIANTS_SHEET.order.map((key) => {
+    const [t, v = ''] = key.split(':'), p = { ...(v === 'snow' ? PAL.Winter : PAL.Summer), ...(v === 'peak' ? { theme: 'peak' } : {}) };
+    if (v !== 'snow') p.snow = false;
+    const [x, y] = t === '+' ? [SHRINE.pedestals[v], SHRINE.row] : t === '8' ? CHIMES[+v] : [0, 0];
+    if (variantKey(t, x, y, p) !== key) throw new Error(`variant ${key} drawn as ${variantKey(t, x, y, p)}`);
+    return [key, grab(16, 16, (g) => { g.translate(-x * 16, -y * 16); PROP_ART[t](g, x, y, p); })];
+  });
+  return { forage, trees, debris, giants, placed, furniture, walls, floors, buildings, props, gh, tools, packet: [packet('#ffffff', '#ff0000'), packet('#000000', '#000000')], alders, fences, fixtures, children, glow, flag, pens, variants };
 });
 writeFileSync(process.argv[2], JSON.stringify(out));
 console.log(out.forage.length, 'forage,', out.trees.length, 'tree frames');

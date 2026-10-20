@@ -196,3 +196,11 @@ for n, (k, data) in enumerate(art['pens']):
     for (i, j), (L, c) in tidy(grid(data, 32, 16), 32, 16).items(): img.putpixel((n * 32 + i, (0 if k == 'fish' else 16) + j), c)
 img.save(f'{OUT}/pens.png', optimize=True)
 print('PENS order:', [k for k, _ in art['pens']])
+
+# v95 variants.png: props that change with the place or season, 16x16 in one row (VARIANTS_SHEET.order), outlined like
+# props.png.
+img = Image.new('RGBA', (16 * len(art['variants']), 16), (0, 0, 0, 0))
+for n, (k, data) in enumerate(art['variants']):
+    for (i, j), (L, c) in tidy(grid(data, 16, 16), 16, 16).items(): img.putpixel((n * 16 + i, j), c)
+img.save(f'{OUT}/variants.png', optimize=True)
+print('VARIANTS order:', [k for k, _ in art['variants']])
