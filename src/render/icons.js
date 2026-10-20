@@ -6,6 +6,8 @@ import { drawFurniture, drawTap, drawDebris } from './sprites.js';
 import { FURNITURE } from '../data/furniture.js';
 import { drawPlaced, drawFruitTree, drawFence, drawGate, drawFloor, drawAlder } from './sprites.js';
 import { TREES, FRUIT } from '../data/trees.js';
+import { TOOLS_SHEET, PACKET_SHEET } from '../data/sprites.js';
+import { ready, sheet, tinted } from './sheets.js';
 
 const TOOL_ICONS = {
   hoe: (g) => { for (let i = 0; i < 9; i++) r(g, 3 + i, 13 - i, 2, 2, '#8a5a32'); r(g, 10, 2, 5, 3, '#a9b4bd'); r(g, 10, 4, 2, 2, '#7f8a93'); },
@@ -39,6 +41,8 @@ const TOOL_ICONS = {
 // sel: the crop for the 'seeds' slot, or the placeable for the 'kit' slot.
 export function drawIcon(g, kind, sel) {
   g.clearRect(0, 0, 16, 16);
+  const ti = TOOLS_SHEET.order.indexOf(kind);   // v90: tools from the tool sheet once it has loaded
+  if (ti >= 0 && ready(TOOLS_SHEET.sheet)) return g.drawImage(sheet(TOOLS_SHEET.sheet).img, ti * 16, 0, 16, 16, 0, 0, 16, 16);
   if (TOOL_ICONS[kind]) return TOOL_ICONS[kind](g);
   if (kind === 'kit') {
     const d = PLACEABLES[sel];
@@ -57,6 +61,7 @@ export function drawIcon(g, kind, sel) {
   const crop = sel;
   const c = CROPS[kind === 'seeds' ? crop : kind];
   if (!c) return;
+  if (ready(PACKET_SHEET.sheet)) return g.drawImage(tinted(PACKET_SHEET.sheet, PACKET_SHEET.layers, [['main', c.color], ['second', c.top || c.color], ['ink', null]], 16), 0, 0);   // v90
   r(g, 3, 2, 10, 12, '#e8d9b5'); r(g, 3, 2, 10, 2, '#c9b083'); r(g, 6, 7, 4, 4, c.color);
   if (c.top) r(g, 6, 7, 4, 1, c.top);
   r(g, 7, 5, 2, 2, '#6fb552'); r(g, 3, 13, 10, 1, '#c9b083');

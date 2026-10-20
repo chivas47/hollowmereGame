@@ -9,7 +9,9 @@ const out = await p.evaluate(async () => {
   const { drawForageArt, drawFruitTree, drawDebris, drawGiant, drawPlaced, drawFurniture, PLACED_KINDS, FURN_SHAPES } = await import('/src/render/sprites.js');
   const { CROPS } = await import('/src/data/crops.js');
   const { drawHouseTile, OBJECT_ART, FRONT, buildingKey, PROP_ART, drawGreenhouseFloor } = await import('/src/render/tiles.js');
-  const { PROPS_SHEET } = await import('/src/data/sprites.js');
+  const { PROPS_SHEET, TOOLS_SHEET } = await import('/src/data/sprites.js');
+  const { drawIcon } = await import('/src/render/icons.js');
+  const { EXTRA } = await import('/src/render/animation.js');
   const { MAPS } = await import('/src/data/maps.js');
   const { PAL } = await import('/src/data/seasons.js');
   const { SITES } = await import('/src/systems/sites.js');
@@ -60,7 +62,11 @@ const out = await p.evaluate(async () => {
   // Props without their ground, and the greenhouse floor (its soil bed, then boards on an even and an odd column).
   const props = PROPS_SHEET.order.map((k) => [k, grab(16, 16, (g) => PROP_ART[k](g, 0, 0, PAL.Summer))]);
   const gh = [grab(16, 16, (g) => drawGreenhouseFloor(g, 0, 0, 'g')), grab(16, 16, (g) => drawGreenhouseFloor(g, 0, 0, '.')), grab(32, 16, (g) => drawGreenhouseFloor(g, 1, 0, '.'))];
-  return { forage, trees, debris, giants, placed, furniture, walls, floors, buildings, props, gh };
+  // Tool icons (the extra weapons from render/animation.js), and the seed packet: a probe crop coloured white with a
+  // pure red top, then all black (as for the furniture).
+  const tools = TOOLS_SHEET.order.map((k) => [k, grab(16, 16, (g) => (EXTRA[k] ? EXTRA[k](g) : drawIcon(g, k)))]);
+  const packet = (color, top) => { CROPS.__probe = { color, top }; const px = grab(16, 16, (g) => drawIcon(g, 'seeds', '__probe')); delete CROPS.__probe; return px; };
+  return { forage, trees, debris, giants, placed, furniture, walls, floors, buildings, props, gh, tools, packet: [packet('#ffffff', '#ff0000'), packet('#000000', '#000000')] };
 });
 writeFileSync(process.argv[2], JSON.stringify(out));
 console.log(out.forage.length, 'forage,', out.trees.length, 'tree frames');
