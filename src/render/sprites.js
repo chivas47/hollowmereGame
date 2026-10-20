@@ -3,7 +3,7 @@ import { T } from '../core/constants.js';
 import { CROPS } from '../data/crops.js';
 import { r, blink } from './pixel.js';
 import { ready, tinted, frame, sheet } from './sheets.js';
-import { PERSON, ANIMALS, PETS, HORSE } from '../data/sprites.js';
+import { PERSON, ANIMALS, PETS, HORSE, MONSTERS } from '../data/sprites.js';
 
 const FERT_DOT = { booster: '#c9b68e', booster2: '#e9b44c', booster3: '#b98ae0', tonic: '#86b86a', tonic2: '#5fd36a', mulch: '#a0805a', mulch2: '#7a5a3a' };
 export function drawSoil(c, X, Y, wet, fert) {
@@ -443,7 +443,24 @@ export function drawBunting(c, x0, x1, y, colors) {
 
 // phase: 0 at rest, 0..1 through a hop.
 // v36: the Hollow's other monsters. t: a running clock for wing beats and legs.
+// v80: from the monster sheet tinted to color once it has loaded (false until then: callers draw in code).
+// f: the frame (0 or 1), lift: px above the kind's rest height.
+function sheetMonster(c, px, py, kind, color, hurt, f, lift) {
+  const M = MONSTERS, k = M.kinds[kind];
+  if (!k || !ready(M.sheet)) return false;
+  const x = Math.round(px), base = Math.round(py), [sx, sw, sa] = k.shadow;
+  r(c, x + sx, base - 1, sw, 1, `rgba(0,0,0,${sa})`);
+  const layers = [[`${kind}.body`, hurt ? '#ffffff' : color]];
+  if (k.glow) layers.push([`${kind}.glow`, hurt ? '#ffffff' : k.glow]);
+  layers.push([`${kind}.ink`, null]);
+  frame(c, tinted(M.sheet, M.layers, layers, M.size), f, M.size, x + M.origin[0], base + M.origin[1] - lift);
+  return true;
+}
+
 export function drawMonster(c, px, py, kind, color, hurt, t) {
+  const k = MONSTERS.kinds[kind] || {};
+  if (sheetMonster(c, px + (k.sway ? Math.round(Math.sin(t * k.sway)) : 0), py, kind, color, hurt, Math.floor(t * 8) % 2,
+    k.bob ? -Math.round(Math.sin(t * k.bob) * 2) : 0)) return;
   const x = Math.round(px), base = Math.round(py), col = hurt ? '#ffffff' : color, f = Math.floor(t * 8) % 2;
   if (kind === 'mite') {
     r(c, x - 5, base - 1, 10, 1, 'rgba(0,0,0,.35)'); r(c, x - 4, base - 6, 8, 5, col); r(c, x - 3, base - 7, 6, 1, col);
@@ -484,6 +501,7 @@ export function drawMonster(c, px, py, kind, color, hurt, t) {
 
 export function drawSlime(c, px, py, color, hurt, phase) {
   const lift = Math.round(Math.sin(phase * Math.PI) * 3), x = Math.round(px) - 5, base = Math.round(py);
+  if (sheetMonster(c, px, py, 'slime', color, hurt, lift > 1 ? 1 : 0, lift)) return;
   const y = base - 8 - lift, col = hurt ? '#ffffff' : color;
   r(c, x + 1, base - 1, 9, 1, 'rgba(0,0,0,.35)');
   r(c, x + 2, y, 6, 1, col); r(c, x + 1, y + 1, 8, 1, col); r(c, x, y + 2, 10, 5, col);

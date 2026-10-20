@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v80: Monster sprite sheet
+- Slimes and every mine monster (mite, bat, bone walker, sand wraith, scorch rex, magma sprite, ember golem, serpent) now draw from a new layered sheet, `assets/sprites/monsters.png` (original placeholder art): outlined and shaded, tinted to each monster's colour, flashing white when hit, glows kept. Slimes stretch when they hop.
+- Shadows stay on the ground while flyers bob, as before.
+- If the sheet fails to load, monsters are drawn in code exactly as in v79. The slime pen, pond fish and cave life are still drawn in code.
+- Saves: no new fields.
+
 ## v79: Pet and horse sprite sheets
 - The farm pet now draws from a new layered sheet, `assets/sprites/pets.png` (original placeholder art): outlined and shaded, tinted to each of the nine looks, with hats where they were. The new-game preview uses it too.
 - The horse draws from `assets/sprites/horse.png`, with a proper neck and head and a saddle.
