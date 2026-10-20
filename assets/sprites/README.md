@@ -16,8 +16,17 @@ Rules (PROJECT_INSTRUCTIONS rule 3): original art or a permissive licence (CC0, 
 
 To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, and reload the page.
 
+## animals.png
+
+96 x 216. Frames are 24 x 24, the animal's feet at the bottom centre (x 12, y 24). Colours are drawn in; nothing is tinted.
+
+- **Columns (4):** right stand, right step, left stand, left step (left is the right frame mirrored).
+- **Rows (9):** chicken, duck, rabbit, mossback, cow, goat, sheep, pig, strider. The order is `ANIMALS.rows` in `src/data/sprites.js`.
+- Each frame includes its ground shadow on the bottom row.
+
 ## Credits
 
 | File | Author | Licence |
 | --- | --- | --- |
 | person.png | Hollowmere Farm (original placeholder, v77) | same as the game |
+| animals.png | Hollowmere Farm (original placeholder, v78) | same as the game |
