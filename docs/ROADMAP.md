@@ -91,7 +91,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 34p | Image sprite sheets: props and the greenhouse floor | feature | done (chivas47/hollowmereGame#85) | Cave and special-tile props without their own ground (fixes square ground patches under them since v85), and the greenhouse floor. Continues 34d. Asked for by Nuno, October 2026. |
 | 34q | Image sprite sheets: tool icons and the seed packet | feature | done (chivas47/hollowmereGame#86) | Hotbar tools and hand-held weapons from one icon sheet, the seed packet tinted per crop. Continues 34d. Asked for by Nuno, October 2026. |
 | 34r | Image sprite sheets: alders, fences, gates and paths | feature | done (chivas47/hollowmereGame#87) | Wild alders and the tree tap, fences (a frame per neighbour mask, tinted per fence), gates and paths from sheets built from the code art, code art as the fallback. Continues 34d. Asked for by Nuno, October 2026. |
-| 34s | Image sprite sheets: children | feature | in progress | The baby, crawler and toddler from a sheet built from the code art, each child's colours drawn in (Nuno chose not to reuse the person sheet's tinting), code art as the fallback. Continues 34d. Asked for by Nuno, October 2026. |
+| 34s | Image sprite sheets: children | feature | in progress (chivas47/hollowmereGame#88) | The baby, crawler and toddler from a sheet built from the code art, each child's colours drawn in (Nuno chose not to reuse the person sheet's tinting), code art as the fallback. Continues 34d. Asked for by Nuno, October 2026. |
 | 33 | Local two-player | feature | needs decision | Same-screen co-op is possible without a server but touches every system. Nuno to decide whether it is worth it. |
 
 ## Done
