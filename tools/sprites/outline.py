@@ -182,3 +182,9 @@ for row, frames in enumerate(art['children']):
     for n, (st, data) in enumerate(frames):
         for (i, j), (L, c) in tidy(grid(data, 16, 16), 16, 16).items(): img.putpixel((n * 16 + i, row * 16 + j), c)
 img.save(f'{OUT}/children.png', optimize=True)
+
+# v93 glow.png: the lantern glow as drawn (soft light, not outlined). bunting.png: one flag, white, outlined (tinted).
+Image.frombytes('RGBA', (56, 52), bytes(art['glow'])).save(f'{OUT}/glow.png', optimize=True)
+img = Image.new('RGBA', (8, 8), (0, 0, 0, 0))
+for (i, j), (L, c) in tidy(grid(art['flag'], 8, 8), 8, 8).items(): img.putpixel((i, j), c)
+img.save(f'{OUT}/bunting.png', optimize=True)

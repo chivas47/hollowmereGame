@@ -3,7 +3,7 @@ import { T } from '../core/constants.js';
 import { CROPS } from '../data/crops.js';
 import { r, blink } from './pixel.js';
 import { ready, tinted, frame, sheet } from './sheets.js';
-import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET, DEBRIS_SHEET, GIANTS_SHEET, PLACED_SHEET, FURN_SHEET, SOIL_SHEET, ALDERS_SHEET, FENCES_SHEET, FIXTURES_SHEET, CHILDREN_SHEET } from '../data/sprites.js';
+import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET, DEBRIS_SHEET, GIANTS_SHEET, PLACED_SHEET, FURN_SHEET, SOIL_SHEET, ALDERS_SHEET, FENCES_SHEET, FIXTURES_SHEET, CHILDREN_SHEET, GLOW_SHEET, BUNTING_SHEET } from '../data/sprites.js';
 
 const FERT_DOT = { booster: '#c9b68e', booster2: '#e9b44c', booster3: '#b98ae0', tonic: '#86b86a', tonic2: '#5fd36a', mulch: '#a0805a', mulch2: '#7a5a3a' };
 export function drawSoil(c, X, Y, wet, fert) {
@@ -358,7 +358,7 @@ function bombArt(c, X, Y, kind) {
 }
 export function drawBomb(c, px, py, kind, t) {
   const X = Math.round(px) - 8, Y = Math.round(py) - 14;
-  bombArt(c, X, Y, kind);
+  drawPlaced(c, X, Y, kind, null);   // v93: from the placed sheet once it has loaded, the spark in code
   if (Math.floor(t * 12) % 2) { r(c, X + 10, Y, 3, 3, '#ffd98a'); r(c, X + 11, Y + 1, 1, 1, '#ffffff'); }
 }
 // A blast: a ring of fire that grows and fades. k: 0 to 1 through it.
@@ -486,7 +486,14 @@ export function drawPlaced(c, X, Y, kind, state) {
 }
 
 // A soft glow around lanterns after dark.
+// v93: from the glow sheet (at full strength, drawn see-through by a) once it has loaded, else drawn in code.
 export function drawGlow(c, X, Y, a) {
+  const G = GLOW_SHEET;
+  if (!ready(G.sheet)) return glowArt(c, X, Y, a);
+  const was = c.globalAlpha;
+  c.globalAlpha = was * a; c.drawImage(sheet(G.sheet).img, X + G.origin[0], Y + G.origin[1]); c.globalAlpha = was;
+}
+function glowArt(c, X, Y, a) {
   const g = c.createRadialGradient(X + 8, Y + 4, 2, X + 8, Y + 4, 26);
   g.addColorStop(0, `rgba(255,217,138,${a})`); g.addColorStop(1, 'rgba(255,217,138,0)');
   c.fillStyle = g; c.fillRect(X - 20, Y - 22, 56, 52);
@@ -496,9 +503,15 @@ export function drawGlow(c, X, Y, a) {
 export function drawBunting(c, x0, x1, y, colors) {
   for (let x = x0; x < x1; x++) r(c, x, y + Math.round(Math.sin((x - x0) / (x1 - x0) * Math.PI) * 4), 1, 1, '#3f3226');
   for (let x = x0 + 4, i = 0; x < x1 - 4; x += 8, i++) {
-    const yy = y + Math.round(Math.sin((x - x0) / (x1 - x0) * Math.PI) * 4) + 1, col = colors[i % colors.length];
-    r(c, x - 2, yy, 5, 2, col); r(c, x - 1, yy + 2, 3, 1, col); r(c, x, yy + 3, 1, 1, col);
+    const yy = y + Math.round(Math.sin((x - x0) / (x1 - x0) * Math.PI) * 4) + 1;
+    drawFlag(c, x, yy, colors[i % colors.length]);
   }
+}
+// v93: one flag at its spot on the rope, from the bunting sheet tinted to col once it has loaded, else drawn in code.
+export function drawFlag(c, x, y, col) {
+  const B = BUNTING_SHEET;
+  if (!ready(B.sheet)) { r(c, x - 2, y, 5, 2, col); r(c, x - 1, y + 2, 3, 1, col); r(c, x, y + 3, 1, 1, col); return; }
+  frame(c, tinted(B.sheet, B.layers, [['main', col]], B.size), 0, B.size, x + B.origin[0], y + B.origin[1]);
 }
 
 // phase: 0 at rest, 0..1 through a hop.
