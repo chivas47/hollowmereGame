@@ -10,23 +10,35 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="wrap">
-  <header><h1>Hollowmere Farm</h1><div id="date">Spring 1, Year 1</div></header>
-  <div class="hud">
-    <div class="stat"><span class="lbl">Place</span><b id="place">Farm</b></div>
-    <div class="stat"><span class="lbl">Time</span><b id="time">6:00 am</b></div>
-    <div class="stat"><span class="lbl">Gold</span><b id="gold">300g</b></div>
-    <div class="stat"><span class="lbl">Energy</span><div class="meter" id="energy"><i></i></div></div>
-    <div class="stat"><span class="lbl">Water</span><div class="meter" id="water"><i></i></div></div>
-    <div class="stat"><span class="lbl">Health</span><div class="meter" id="health"><i></i></div></div>
+<div class="game">
+  <nav class="menubar" aria-label="Menus">
+    <button class="pill" id="bagBtn" aria-keyshortcuts="I">Bag <kbd>I</kbd></button>
+    <button class="pill" id="craftBtn" aria-keyshortcuts="C">Craft <kbd>C</kbd></button>
+    <button class="pill" id="journalBtn" aria-keyshortcuts="J">Journal <kbd>J</kbd></button>
+    <button class="pill" id="friends" aria-keyshortcuts="F">Friends <kbd>F</kbd></button>
+    <button class="pill" id="menuBtn" aria-keyshortcuts="Escape" aria-expanded="false" aria-controls="menu">Menu <kbd>Esc</kbd></button>
+  </nav>
+  <div class="meters">
+    <div class="stat"><span class="lbl">Energy</span><div class="meter" id="energy" role="meter" aria-label="Energy" aria-valuemin="0"><i></i></div></div>
+    <div class="stat"><span class="lbl">Health</span><div class="meter" id="health" role="meter" aria-label="Health" aria-valuemin="0"><i></i></div></div>
+    <div class="stat"><span class="lbl">Water</span><div class="meter" id="water" role="meter" aria-label="Water in the can" aria-valuemin="0"><i></i></div></div>
   </div>
-  <div class="stage">
-    <canvas id="game" width="384" height="256" aria-label="Game world"></canvas>
-    <div class="toast" id="toast" hidden></div>
+  <div class="clock" aria-label="Day, time and gold">
+    <h1>Hollowmere Farm</h1>
+    <div id="date">Spring 1, Year 1</div>
+    <div class="clockrow"><b id="time">6:00 am</b><span id="place">Farm</span></div>
+    <div class="clockrow"><b class="gold" id="gold">300g</b><span>Bin <b id="bin">0g</b></span></div>
   </div>
-  <div class="basket"><div>Basket: <b id="basket">empty</b></div><div>In the bin: <b id="bin">0g</b></div><div class="bagbtns"><button class="ghost" id="bagBtn">Open bag (I)</button><button class="ghost" id="craftBtn">Craft (C)</button><button class="ghost" id="journalBtn">Journal (J)</button></div></div>
-  <div class="friends" id="friends"></div>
-  <div class="bar" id="bar" role="toolbar" aria-label="Tools and seeds"></div>
+  <main class="stage">
+    <div class="screen">
+      <canvas id="game" width="384" height="256" aria-label="Game world"></canvas>
+      <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    </div>
+  </main>
+  <div class="bottom">
+    <div class="basket"><span class="held">Holding: <b id="held">Hoe</b></span> Basket: <b id="basket">empty</b></div>
+    <div class="bar" id="bar" role="toolbar" aria-label="Tools and seeds"></div>
+  </div>
   <div class="controls">
     <div class="dpad">
       <button data-dir="up" aria-label="Walk up">▲</button>
@@ -36,8 +48,12 @@
     </div>
     <button id="use">Use</button>
   </div>
+</div>
+<div class="modal menu" id="menu" hidden><div class="card wide" role="dialog" aria-modal="true" aria-labelledby="menuTitle">
+  <div class="cardhead"><h2 id="menuTitle">Menu</h2><button class="close" id="menuClose" aria-label="Close menu">✕</button></div>
+  <h3>Settings</h3>
+  <div class="footbtns"><button class="ghost" id="sfxToggle" aria-pressed="true">Sound: on</button><button class="ghost" id="musicToggle" aria-pressed="true">Music: on</button><button class="ghost" id="exportSave">Export save</button><button class="ghost" id="importSave">Import save</button><button class="ghost" id="reset">New farm</button><button class="ghost" id="debugToggle" aria-expanded="false" aria-controls="debug">Debug tools</button><input type="file" id="importFile" accept=".json,application/json" hidden></div>
   <section class="debug" id="debug" hidden aria-label="Debug tools">
-    <span class="lbl">Debug</span>
     <button data-debug="day">Skip to tomorrow</button>
     <button data-debug="season">Skip to next season</button>
     <button data-debug="grow">Ripen all crops</button>
@@ -50,11 +66,22 @@
     <button data-debug="xp">+100 XP every skill</button>
     <button data-debug="festival">Skip to next festival</button>
   </section>
-  <div class="foot">
-    <p class="hint">WASD or arrows to walk. Space uses the selected tool on the outlined tile. Keys 1 to 8 pick a tool, I opens the bag, C opens crafting, F shows your neighbours (birthdays and the gifts they like), M mutes sound and music, H whistles for your horse once Bram has built a stable. Slot 6 holds your seeds: press 6 or Q again (or tap the slot again) to switch seed type. Slot 7 places crafted sprinklers and machines on untilled farm grass; press 7 again to switch. Slot 8 is the axe: chop alders and twigs for wood; the sword cuts weeds and the pickaxe breaks stones. On a phone, use the pad or tap a tile next to you. The farmhouse door takes you inside: sleep in the bed, and buy furniture from the catalogue by the window. Till, plant, water, sleep, harvest, then drop produce in the bin. Crops only grow in their season and wither when it ends. Rain waters the farm for you; the morning report gives the forecast, and a lightning rod protects crops in storms. Follow the path east to the Ashgrove Wilds to forage, refill at the pond, or face the pond with the rod to fish: wait for the bite, then stop the marker in the green. The cave at the top of the Wilds leads into the Hollow: mine rocks for stone and ore, which upgrades at Bram's workbench need, and fight slimes with the sword. Face a neighbour to talk or give a gift. The path west of the farmhouse leads to the village: its quest board posts requests, and each season has a festival at the table in the square. Bram's workbench also builds a barn for cows and goats. The day ends at 2 am. Press the backquote key to show debug tools.</p>
-    <div class="footbtns"><button class="ghost" id="sfxToggle" aria-pressed="true">Sound: on</button><button class="ghost" id="musicToggle" aria-pressed="true">Music: on</button><button class="ghost" id="debugToggle" aria-expanded="false" aria-controls="debug">Debug tools</button><button class="ghost" id="exportSave">Export save</button><button class="ghost" id="importSave">Import save</button><button class="ghost" id="reset">New farm</button><input type="file" id="importFile" accept=".json,application/json" hidden></div>
-  </div>
-</div>
+  <h3>Controls</h3>
+  <dl class="keys">
+    <dt><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or arrows</dt><dd>Walk. On a phone, use the pad or tap a tile next to you.</dd>
+    <dt><kbd>Space</kbd> or <kbd>E</kbd></dt><dd>Use the selected tool on the outlined tile, talk, open doors. Hold it to lift the fishing bar.</dd>
+    <dt><kbd>1</kbd> to <kbd>9</kbd></dt><dd>Pick a hotbar slot. Pick the seed or place slot again to switch type.</dd>
+    <dt><kbd>Q</kbd></dt><dd>Pick seeds, again to switch seed type.</dd>
+    <dt><kbd>I</kbd> <kbd>C</kbd> <kbd>J</kbd> <kbd>F</kbd></dt><dd>Bag, crafting, journal, neighbours (birthdays and liked gifts).</dd>
+    <dt><kbd>H</kbd></dt><dd>Whistle for your horse once Bram has built a stable.</dd>
+    <dt><kbd>M</kbd></dt><dd>Mute or unmute sound and music.</dd>
+    <dt><kbd>Esc</kbd></dt><dd>Open this menu, close a dialog, or stop placing a building.</dd>
+    <dt><kbd>`</kbd></dt><dd>Show or hide the debug tools.</dd>
+  </dl>
+  <h3>Getting started</h3>
+  <p class="hint">Till, plant, water, sleep, harvest, then drop produce in the bin by the house; it pays out overnight. Crops only grow in their season. Rain waters the farm for you, and the morning report gives the forecast. The day ends at 2 am: sleep in the farmhouse bed before then.</p>
+  <p class="hint">East of the farm are the Ashgrove Wilds: forage, refill your can at the pond, or face it with the rod to fish (stop the marker in the green). The cave there leads into the Hollow for stone, ore and slimes. West of the farmhouse is the village: neighbours, the quest board and a festival each season.</p>
+</div></div>
 <div class="modal" id="modal" hidden><div class="card" role="dialog" aria-modal="true"><div id="mbody"></div><div class="actions" id="mact"></div></div></div>
 <script type="module" src="src/main.js"></script>
 </body>

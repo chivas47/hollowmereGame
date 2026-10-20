@@ -164,7 +164,8 @@ src/
     arcade.js         the cabinets (ui:arcade, from the tavern): a canvas, its own keys and touch while a game runs (v70)
     island.js         Rook's boat dialog (ui:boat, v65)
     nuts.js           the bridge and the island trader (ui:bridge, ui:islandshop, v66; ui:peak, v67)
-    social.js         the social menu (F, or a click on the neighbours panel) and letters (v48)
+    social.js         the social menu (F, or the Friends button) and letters (v48)
+    menu.js           the pause menu (Esc or the Menu button): settings, save files, debug tools, controls (v96)
     dom.js toast.js modal.js hud.js hotbar.js dialogs.js inventory.js
     workshop.js mine.js input.js debugPanel.js
     crafting.js (craft menu, placed-object dialog) barn.js village.js (board, festival)

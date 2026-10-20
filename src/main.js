@@ -101,6 +101,7 @@ import './ui/books.js';
 import './ui/trader.js';
 import './ui/town.js';
 import './ui/social.js';
+import './ui/menu.js';   // v96: the pause menu
 import './ui/family.js';
 import './ui/restoration.js';
 import './ui/desert.js';

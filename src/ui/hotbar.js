@@ -40,7 +40,7 @@ export function buildHotbar() {
   const bar = $('#bar'); bar.innerHTML = '';
   HOTBAR.forEach((kind, i) => {
     const b = document.createElement('button');
-    b.className = 'slot'; b.id = `slot${i}`;
+    b.className = 'slot'; b.id = `slot${i}`; b.dataset.key = i + 1;   // v96: the key number shows in the corner
     const c = document.createElement('canvas'); c.width = 16; c.height = 16; drawIcon(c.getContext('2d'), kind, selFor(kind));
     b.append(c, document.createElement('span'));
     b.addEventListener('click', () => { selectSlot(i); b.blur(); });
@@ -58,6 +58,7 @@ function label(kind) {
 
 on('state:changed', () => {
   const season = today().season;
+  $('#held').textContent = label(HOTBAR[G.S.slot]);   // v96: phones hide slot names, so the held tool shows by the basket
   if (G.S.seedSel !== drawnSeed) { redrawIcon(SEED_SLOT, 'seeds'); drawnSeed = G.S.seedSel; }
   if (selFor('kit') !== drawnKit) { redrawIcon(KIT_SLOT, 'kit'); drawnKit = selFor('kit'); }
   HOTBAR.forEach((kind, i) => {
