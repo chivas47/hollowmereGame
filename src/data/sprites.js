@@ -80,6 +80,10 @@ export const TERRAIN_SHEET = {
   order: ['grass', 'path', 'sand', 'quarry', 'water'], over: ['grass', 'sand', 'quarry', 'path', 'water'],
 };
 
+// v86 soil.png: tilled soil in the terrain layout (one 4x5 block each): dry, then watered. Drawn every frame: dry
+// on the corners of every tilled tile, watered over it on the corners of watered ones.
+export const SOIL_SHEET = { sheet: 'soil', size: 16 };
+
 export const MONSTERS = {
   sheet: 'monsters', size: 24, origin: [-12, -24],
   layers: ['mite.body', 'mite.ink', 'bat.body', 'bat.ink', 'skeleton.body', 'skeleton.ink', 'wraith.body', 'wraith.ink',

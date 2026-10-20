@@ -104,6 +104,13 @@ To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, a
 - **Base terrain:** each map fills every tile with its base (grass, or sand on the beach, dig site and dunes, or stone in the quarry) from that block's full tiles; the others are laid over it in the order grass, sand, quarry, path, water. The grass block's corner tiles are used only on sand and stone maps (grass under trees there).
 - The edge tiles keep each terrain inside its own tiles' quadrants, so what you see matches where you can walk.
 
+## soil.png
+
+128 x 80. Tilled soil, the same layout as a terrain block (16 corner tiles in rows 0 to 3, four more full tiles in row 4), not seasonal.
+
+- **Blocks (2):** dry, then watered. Every tilled tile gets dry soil on its corners; watered tiles get the watered block over it, so the two blend.
+- Fertiliser dots are drawn in code.
+
 The placeholder sheets are built by the scripts in `tools/sprites/`.
 
 ## Credits
@@ -119,3 +126,4 @@ The placeholder sheets are built by the scripts in `tools/sprites/`.
 | debris.png, giants.png | Hollowmere Farm (original placeholder, v83, from the game's code art) | same as the game |
 | placed.png, furniture.png | Hollowmere Farm (original placeholder, v84, from the game's code art) | same as the game |
 | terrain-*.png | Hollowmere Farm (original placeholder, v85, colours from the season palettes) | same as the game |
+| soil.png | Hollowmere Farm (original placeholder, v86) | same as the game |
