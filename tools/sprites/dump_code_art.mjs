@@ -1,4 +1,4 @@
-// Renders the code art for forage, fruit trees, debris, giant crops, placed objects, furniture and indoor walls and floors in the browser and writes the raw RGBA frames as JSON.
+// Renders the code art for forage, fruit trees, debris, giant crops, placed objects, furniture, indoor walls and floors, buildings, props, alders, fences, gates and paths in the browser and writes the raw RGBA frames as JSON.
 import { chromium } from 'playwright';   // serve the repo on :8123 first (python3 -m http.server 8123)
 import { writeFileSync } from 'node:fs';
 const b = await chromium.launch();
@@ -6,7 +6,7 @@ const p = await b.newPage();
 await p.route('**/assets/sprites/**', (r) => r.abort());   // always the code art, never a sheet already built
 await p.goto('http://localhost:8123/index.html'); await p.waitForTimeout(1200);
 const out = await p.evaluate(async () => {
-  const { drawForageArt, drawFruitTree, drawDebris, drawGiant, drawPlaced, drawFurniture, PLACED_KINDS, FURN_SHAPES } = await import('/src/render/sprites.js');
+  const { drawForageArt, drawFruitTree, drawDebris, drawGiant, drawPlaced, drawFurniture, drawAlder, drawTap, drawFence, drawGate, drawFloor, PLACED_KINDS, FURN_SHAPES } = await import('/src/render/sprites.js');
   const { CROPS } = await import('/src/data/crops.js');
   const { drawHouseTile, OBJECT_ART, FRONT, buildingKey, PROP_ART, drawGreenhouseFloor } = await import('/src/render/tiles.js');
   const { PROPS_SHEET } = await import('/src/data/sprites.js');
@@ -60,7 +60,16 @@ const out = await p.evaluate(async () => {
   // Props without their ground, and the greenhouse floor (its soil bed, then boards on an even and an odd column).
   const props = PROPS_SHEET.order.map((k) => [k, grab(16, 16, (g) => PROP_ART[k](g, 0, 0, PAL.Summer))]);
   const gh = [grab(16, 16, (g) => drawGreenhouseFloor(g, 0, 0, 'g')), grab(16, 16, (g) => drawGreenhouseFloor(g, 0, 0, '.')), grab(32, 16, (g) => drawGreenhouseFloor(g, 1, 0, '.'))];
-  return { forage, trees, debris, giants, placed, furniture, walls, floors, buildings, props, gh };
+  // v90: alders (stages 0-4, bare 1-4, the tap), fences by neighbour mask (white, then black: see-through light),
+  // gates and paths. The fence's colour is drawn in code with see-through light and shade, as furniture.
+  const alders = [0, 1, 2, 3, 4, 'b1', 'b2', 'b3', 'b4', 'tap'].map((s) => [String(s), grab(32, 48, (g) => (s === 'tap' ? drawTap(g, 8, 32, false)
+    : typeof s === 'string' ? drawAlder(g, 8, 32, +s[1], true) : drawAlder(g, 8, 32, s, false)))]);
+  const mask = (m) => [0, 1, 2, 3].map((i) => !!(m & (1 << i)));
+  const fences = Array.from({ length: 16 }, (_, m) => [String(m), grab(16, 18, (g) => drawFence(g, 0, 2, '#ffffff', mask(m))), grab(16, 18, (g) => drawFence(g, 0, 2, '#000000', mask(m)))]);
+  const fixtures = [['gate-across', (g) => drawGate(g, 0, 0, false, true)], ['gate-across-open', (g) => drawGate(g, 0, 0, true, true)],
+    ['gate-along', (g) => drawGate(g, 0, 0, false, false)], ['gate-along-open', (g) => drawGate(g, 0, 0, true, false)],
+    ['woodpath', (g) => drawFloor(g, 0, 0, 'woodpath', '#b08a5a')], ['stonepath', (g) => drawFloor(g, 0, 0, 'stonepath', '#a9a49a')]].map(([k, fn]) => [k, grab(16, 16, fn)]);
+  return { forage, trees, debris, giants, placed, furniture, walls, floors, buildings, props, gh, alders, fences, fixtures };
 });
 writeFileSync(process.argv[2], JSON.stringify(out));
 console.log(out.forage.length, 'forage,', out.trees.length, 'tree frames');

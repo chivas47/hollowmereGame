@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v90: Alder, fence, gate and path sheets
+- Wild alders (every stage, and bare in winter) and the tree tap draw from a new sheet, `assets/sprites/alders.png`, outlined like the debris. The tap's syrup drop still blinks in code.
+- Fences draw from `assets/sprites/fences.png`: one frame per way a fence joins its neighbours, tinted to the wood, stone or hardwood colour, so rails meet the next post without a seam.
+- Gates (across and along, open and closed) and the wood and stone paths draw from `assets/sprites/fixtures.png`. The hotbar's kit slot uses the same art.
+- Made from the game's own code art, so they look the same apart from the outline. If a sheet fails to load, they are drawn in code exactly as in v89.
+- Saves: no new fields.
+
 ## v89: Prop and greenhouse sheets
 - The things on cave and special tiles (ladders, cave doors, mine rocks and ore, lava, the forge, chests and crates, the shaft, the market cart, the book stall, the prize machine, rubble, logs, grates, the hot spring, basins and lanterns) draw from a new sheet, `assets/sprites/props.png`, outlined, without any ground of their own.
 - Fix: those tiles used to paint their own square of ground under them, which showed as square patches in the tile-set ground since v85 (a striped wall square in the middle of rounded cave walls behind every ladder and door). The ground under them now comes from the tile sets, so it joins up.

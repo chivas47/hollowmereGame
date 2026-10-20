@@ -3,7 +3,7 @@ import { T } from '../core/constants.js';
 import { CROPS } from '../data/crops.js';
 import { r, blink } from './pixel.js';
 import { ready, tinted, frame, sheet } from './sheets.js';
-import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET, DEBRIS_SHEET, GIANTS_SHEET, PLACED_SHEET, FURN_SHEET, SOIL_SHEET } from '../data/sprites.js';
+import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET, DEBRIS_SHEET, GIANTS_SHEET, PLACED_SHEET, FURN_SHEET, SOIL_SHEET, ALDERS_SHEET, FENCES_SHEET, FIXTURES_SHEET } from '../data/sprites.js';
 
 const FERT_DOT = { booster: '#c9b68e', booster2: '#e9b44c', booster3: '#b98ae0', tonic: '#86b86a', tonic2: '#5fd36a', mulch: '#a0805a', mulch2: '#7a5a3a' };
 export function drawSoil(c, X, Y, wet, fert) {
@@ -645,7 +645,13 @@ export function drawDebris(c, X, Y, kind) {
 }
 
 // A wild alder: stage 0 a cone, 1 to 3 young, 4 grown (a tall canopy reaching two tiles up).
+// v90: from the alders sheet once it has loaded, else drawn in code.
 export function drawAlder(c, X, Y, stage, bare) {
+  const A = ALDERS_SHEET;
+  if (!ready(A.sheet)) return alderArt(c, X, Y, stage, bare);
+  c.drawImage(sheet(A.sheet).img, (bare && stage ? A.bare + stage - 1 : stage) * A.w, 0, A.w, A.h, X + A.origin[0], Y + A.origin[1], A.w, A.h);
+}
+function alderArt(c, X, Y, stage, bare) {
   const cx = X + 8, trunk = '#6b4a2b', leaf = '#2f6b3a', light = '#3f7f45';
   if (stage === 0) { r(c, cx - 2, Y + 11, 4, 3, '#8a5a32'); r(c, cx - 1, Y + 10, 2, 1, '#6e4626'); return; }
   if (stage < 4) {
@@ -662,7 +668,19 @@ export function drawAlder(c, X, Y, stage, bare) {
 }
 
 // n: [up, right, down, left] neighbours that join.
+// v90: fences, gates and paths from the fences and fixtures sheets once they have loaded, else drawn in code.
 export function drawFence(c, X, Y, col, n) {
+  const F = FENCES_SHEET, m = n.reduce((a, j, i) => a | (j ? 1 << i : 0), 0);
+  if (!ready(F.sheet)) return fenceArt(c, X, Y, col, n);
+  c.drawImage(tinted(F.sheet, F.layers, [['main', col], ['ink', null]], F.h), m * F.w, 0, F.w, F.h, X + F.origin[0], Y + F.origin[1], F.w, F.h);
+}
+const fixture = (c, X, Y, key) => {
+  const F = FIXTURES_SHEET, i = F.order.indexOf(key);
+  if (i < 0 || !ready(F.sheet)) return false;
+  frame(c, sheet(F.sheet).img, i, F.size, X, Y);
+  return true;
+};
+function fenceArt(c, X, Y, col, n) {
   r(c, X + 6, Y + 2, 4, 12, col); r(c, X + 6, Y + 2, 4, 1, 'rgba(255,255,255,.3)'); r(c, X + 6, Y + 13, 4, 1, 'rgba(0,0,0,.3)');
   if (n[1]) { r(c, X + 10, Y + 5, 6, 2, col); r(c, X + 10, Y + 10, 6, 2, col); }
   if (n[3]) { r(c, X, Y + 5, 6, 2, col); r(c, X, Y + 10, 6, 2, col); }
@@ -670,6 +688,7 @@ export function drawFence(c, X, Y, col, n) {
   if (n[2]) r(c, X + 7, Y + 14, 2, 2, col);
 }
 export function drawGate(c, X, Y, open, across) {
+  if (fixture(c, X, Y, `gate-${across ? 'across' : 'along'}${open ? '-open' : ''}`)) return;
   const col = '#a5753f', dark = '#6e4626';
   if (across) {
     r(c, X, Y + 3, 2, 11, dark); r(c, X + 14, Y + 3, 2, 11, dark);
@@ -682,6 +701,7 @@ export function drawGate(c, X, Y, open, across) {
   r(c, X + 7, Y + 2, 2, 12, col); r(c, X + 6, Y + 4, 4, 1, col); r(c, X + 6, Y + 11, 4, 1, col);
 }
 export function drawFloor(c, X, Y, kind, col) {
+  if (fixture(c, X, Y, kind)) return;
   r(c, X, Y, 16, 16, col);
   if (kind === 'woodpath') { [0, 5, 10].forEach((o) => r(c, X, Y + o + 4, 16, 1, 'rgba(0,0,0,.18)')); r(c, X + 6, Y, 1, 4, 'rgba(0,0,0,.18)'); r(c, X + 11, Y + 5, 1, 5, 'rgba(0,0,0,.18)'); return; }
   r(c, X + 1, Y + 1, 6, 6, 'rgba(255,255,255,.15)'); r(c, X + 9, Y + 2, 6, 5, 'rgba(0,0,0,.08)'); r(c, X + 2, Y + 9, 5, 6, 'rgba(0,0,0,.08)'); r(c, X + 9, Y + 9, 6, 6, 'rgba(255,255,255,.12)');
@@ -789,9 +809,15 @@ export function drawFurniture(c, X, Y, def) {
 }
 
 // A tree tap on an alder; ready: a drop of syrup shows.
-export function drawTap(c, X, Y, ready) {
+// v90: from the alders sheet once it has loaded (the drop in code), else drawn in code.
+export function drawTap(c, X, Y, full) {
+  const A = ALDERS_SHEET;
+  if (ready(A.sheet)) c.drawImage(sheet(A.sheet).img, A.tap * A.w, 0, A.w, A.h, X + A.origin[0], Y + A.origin[1], A.w, A.h);
+  else tapArt(c, X, Y);
+  if (full && blink(450)) r(c, X + 11, Y + 5, 2, 1, '#e8a35e');
+}
+function tapArt(c, X, Y) {
   r(c, X + 9, Y + 6, 3, 1, '#8d939a'); r(c, X + 10, Y + 7, 4, 5, '#a5753f'); r(c, X + 10, Y + 7, 4, 1, '#c9955a');
-  if (ready && blink(450)) r(c, X + 11, Y + 5, 2, 1, '#e8a35e');
 }
 
 // v74: one forage item's art at a tile's top-left (render/animation.js draws pickups with it).
