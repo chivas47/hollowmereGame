@@ -2,6 +2,8 @@
 // floors to grass; nextHop() picks the next door or map edge on the way to another map. Pure helpers, no registration.
 import { MAPS, SOLID } from '../data/maps.js';
 import { HOMES, homeMap, HOME_ENTRY, homeEntry, SPOUSE_HOME } from '../data/homes.js';
+import { VENUES, venueMap, venueFront } from '../data/venues.js';
+import { doorOf } from '../data/interiors.js';
 
 const OUTDOORS = ['farm', 'village', 'town', 'beach', 'forest', 'wilds', 'sewer'];
 const COST = { P: 1, z: 1, h: 1, f: 1, E: 1 };   // anything else walkable (grass) costs 3, so they keep to paths
@@ -10,8 +12,11 @@ const COST = { P: 1, z: 1, h: 1, f: 1, E: 1 };   // anything else walkable (gras
 function links() {
   const out = [], open = new Set([...OUTDOORS, SPOUSE_HOME.house]);
   for (const [id, h] of Object.entries(HOMES)) if (h.cottage) open.add(homeMap(id));
+  const fronts = Object.entries(VENUES).map(([id, V]) => [id, V, venueFront(V, MAPS[V.map].grid)]).filter(([, V, f]) => f && open.has(V.map));   // v98
+  for (const [id] of fronts) open.add(venueMap(id));
   for (const id of open) for (const [k, e] of Object.entries(MAPS[id].exits)) if (open.has(e.to)) out.push({ from: id, at: k.split(',').map(Number), to: e.to, arrive: [e.x, e.y] });
   for (const [id, h] of Object.entries(HOMES)) if (h.cottage) out.push({ from: h.map, at: h.door, to: homeMap(id), arrive: homeEntry(id) });
+  for (const [id, V, f] of fronts) out.push({ from: V.map, at: f, to: venueMap(id), arrive: doorOf(id).entry }, { from: venueMap(id), at: doorOf(id).door, to: V.map, arrive: f });
   out.push({ from: SPOUSE_HOME.map, at: SPOUSE_HOME.door, to: SPOUSE_HOME.house, arrive: HOME_ENTRY });
   out.push({ from: 'village', at: [2, 12], to: 'sewer', arrive: [3, 2] });
   return out;

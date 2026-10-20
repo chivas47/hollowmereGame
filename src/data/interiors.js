@@ -9,6 +9,7 @@
 // rooms: [x0, y0, x1, y1, wallpaper, floor] (indexes into data/furniture.js), the wall faces above a room use its
 // wallpaper. rugs: [x, y, w, h, colours, pattern] under everything. spot: where the owner stands while home.
 // Pieces are decor only: never sold, never moved.
+import { VENUES } from './venues.js';
 
 export const PIECES = {
   // sleeping and dressing
@@ -85,6 +86,27 @@ export const PIECES = {
   oars:       { name: 'oars', shape: 'oars', c: ['#c9955a', '#5f8fb5'] },
   rods:       { name: 'fishing rods', shape: 'rods', c: ['#8a5a32', '#c9ccd6'] },
   schooldesk: { name: 'school desk', shape: 'schooldesk', c: ['#a5753f', '#6e4626'] },
+  // v98: shops, halls and farm buildings
+  sign:       { name: 'sign', shape: 'sign', c: ['#6e4626', '#e9c46a'], wall: true },
+  screen:     { name: 'screen', shape: 'cinema', c: ['#f4ead2', '#8a2f22'], wall: true },
+  ladder:     { name: 'ladder', shape: 'ladder', c: ['#a5753f', '#6e4626'], wall: true },
+  weapons:    { name: 'weapon rack', shape: 'weapons', c: ['#6e4626', '#c9ccd6'], wall: true },
+  forge:      { name: 'forge', shape: 'forge', c: ['#6a6e72', '#3f4850'] },
+  bellows:    { name: 'bellows', shape: 'bellows', c: ['#8a5a32', '#5c371e'] },
+  grindstone: { name: 'grindstone', shape: 'grindstone', c: ['#a9a49a', '#6e4626'] },
+  anvil:      { name: 'anvil', shape: 'anvil', c: ['#3f4850', '#6e4626'] },
+  sack:       { name: 'sack', shape: 'sack', c: ['#e3cf9a', '#a5935e'] },
+  haybale:    { name: 'hay bale', shape: 'haybale', c: ['#e3c56a', '#b8983a'] },
+  case:       { name: 'display case', shape: 'case', c: ['#6e4626', '#bfe0f2'] },
+  pedestal:   { name: 'pedestal', shape: 'pedestal', c: ['#d9d4cc', '#a9a49a'] },
+  fossil:     { name: 'fossil', shape: 'fossil', c: ['#e8dcc0', '#8a5a32'] },
+  seats:      { name: 'row of seats', shape: 'seats', c: ['#8a2f22', '#5c1a12'] },
+  nestbox:    { name: 'nest boxes', shape: 'nestbox', c: ['#a5753f', '#e3c56a'] },
+  hopper:     { name: 'hopper', shape: 'hopper', c: ['#a5753f', '#6e4626'] },
+  trough:     { name: 'trough', shape: 'trough', c: ['#8a5a32', '#7fa9c4'] },
+  stall:      { name: 'stall', shape: 'stall', c: ['#a5753f', '#6e4626'] },
+  attendant:  { name: 'attendant', shape: 'attendant', c: ['#000', '#000'] },   // drawn as a person by systems/venues.js
+  stage:      { name: 'stage', shape: 'stage', c: ['#8a5a32', '#5c371e'], walk: true },
   // on the floor, walked over
   boots:      { name: 'boots', shape: 'boots', c: ['#5c371e', '#3f3226'], walk: true },
   shavings:   { name: 'wood shavings', shape: 'shavings', c: ['#e3cf9a', '#c9a35a'], walk: true },
@@ -711,11 +733,14 @@ export const INTERIORS = {
   },
 };
 
-// Pieces of a cottage, read from its plan: [{ k, x, y, w, h, wall, walk, ...options }]. Cached.
+// v98: a floor plan by id: a cottage (above) or a building you walk into (data/venues.js).
+export const planOf = (id) => INTERIORS[id] || VENUES[id];
+
+// Pieces of a floor plan: [{ k, x, y, w, h, wall, walk, ...options }]. Cached.
 const parsed = {};
 export function piecesOf(id) {
   if (parsed[id]) return parsed[id];
-  const I = INTERIORS[id], seen = new Set(), out = [];
+  const I = planOf(id), seen = new Set(), out = [];
   if (!I) return (parsed[id] = out);
   const at = (x, y) => I.plan[y]?.[x];
   I.plan.forEach((row, y) => [...row].forEach((ch, x) => {
@@ -730,9 +755,9 @@ export function piecesOf(id) {
   return (parsed[id] = out);
 }
 
-// The map tiles of a cottage: I wall, h floor, Y a piece you cannot walk through, E the door, . outside.
+// The map tiles of a floor plan: I wall, h floor, Y a piece you cannot walk through, E the door, . outside.
 export function interiorGrid(id) {
-  const I = INTERIORS[id];
+  const I = planOf(id);
   return I.plan.map((row) => [...row].map((ch) => {
     if (ch === ' ') return '.';
     if (ch === '#') return 'I';
@@ -744,10 +769,10 @@ export function interiorGrid(id) {
 
 // The front door tile and the tile you stand on just inside it.
 export function doorOf(id) {
-  const y = INTERIORS[id].plan.findIndex((row) => row.includes('E'));
-  const x = INTERIORS[id].plan[y].indexOf('E');
+  const y = planOf(id).plan.findIndex((row) => row.includes('E'));
+  const x = planOf(id).plan[y].indexOf('E');
   return { door: [x, y], entry: [x, y - 1] };
 }
 
 // The room a floor tile belongs to, or null.
-export const roomAt = (id, x, y) => INTERIORS[id]?.rooms.find(([x0, y0, x1, y1]) => x >= x0 && x <= x1 && y >= y0 && y <= y1) || null;
+export const roomAt = (id, x, y) => planOf(id)?.rooms.find(([x0, y0, x1, y1]) => x >= x0 && x <= x1 && y >= y0 && y <= y1) || null;

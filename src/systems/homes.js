@@ -1,16 +1,13 @@
 // v76: the neighbours' cottages. Face a cottage from its front to walk in (open 8 am to 8 pm, or later with 2 hearts
 // for someone who lives there); inside, their furniture is drawn and looking around shows a line about the place.
 import { G } from '../core/game.js';
-import { T } from '../core/constants.js';
 import { emit, changed, notify } from '../core/events.js';
-import { addInteraction, addLayer, addEntities } from '../core/registry.js';
+import { addInteraction } from '../core/registry.js';
 import { fmtTime, today } from '../core/time.js';
 import { MAPS } from '../data/maps.js';
 import { HOMES, homeMap, homeEntry, HOME_OPEN } from '../data/homes.js';
 import { NPCS } from '../data/npcs.js';
 import { festivalOn, hoursOf } from '../data/festivals.js';
-import { INTERIORS, PIECES, piecesOf } from '../data/interiors.js';
-import { drawPiece, drawRug } from '../render/interiors.js';
 import { placePlayer } from './world.js';
 
 const nameOf = (id) => NPCS.find((d) => d.id === id)?.name || id;
@@ -47,23 +44,4 @@ addInteraction(72, ({ tx, ty, tile, mapId }) => {
   return true;
 });
 
-// Looking at their things. v97: each piece in the floor plan has its own line, or says what it is; windows and
-// pictures on the walls too.
-addInteraction(71, ({ tx, ty, mapId }) => {
-  const id = MAPS[mapId]?.home;
-  if (!id) return false;
-  const p = piecesOf(id).find((q) => !q.walk && tx >= q.x && tx < q.x + q.w && ty >= q.y && ty < q.y + q.h);
-  if (!p) return false;
-  notify(p.note || (p.k === 'bed' ? `${nameOf(id)}'s bed. Best leave it made.` : `${nameOf(id)}'s ${PIECES[p.k].name}.`));
-  return true;
-});
-
-// Rugs, things on the floor and things on the walls under everyone; furniture sorted with the people in the room.
-const piecesHere = () => { const id = MAPS[G.S.map]?.home; return id ? piecesOf(id) : []; };
-addLayer(9, (c) => {
-  const id = MAPS[G.S.map]?.home;
-  if (!id) return;
-  for (const rug of INTERIORS[id].rugs) drawRug(c, rug);
-  for (const p of piecesHere()) if (p.walk || p.wall) drawPiece(c, p);
-});
-addEntities(() => piecesHere().filter((p) => !p.walk && !p.wall).map((p) => ({ y: (p.y + p.h) * T - 3, draw: (c) => drawPiece(c, p) })));
+// v98: their rooms are drawn, and looked at, by systems/venues.js with every other floor plan.

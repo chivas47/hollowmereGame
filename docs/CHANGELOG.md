@@ -2,6 +2,15 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v98: Building interiors
+- Every building whose door used to open a menu now has an inside, laid out the same way as the cottages (one floor plan each, in `src/data/venues.js`): Fenn's Provisions, the Anvil, Bram's Carpentry, the Lantern, the clinic, the museum, Tamsin's Ranch Supply, the town hall, the picture house, the Wardens' Lodge, the Oasis, the casino, the coop and the barn.
+- Each is planned around its trade: a shop floor of seed bins and crates with shelves behind the counter and a storeroom; the forge, anvil and quench barrel behind the smith's counter; a showroom of Bram's furniture and his workshop; the Lantern's bar, tables, fire and stage; a waiting room, examining room and ward; a gallery of glass cases round a fossil; feed and hay with a tack room; the clerk's office and Pell's schoolroom; a lobby and a screen with rows of seats; the lodge's trophies, map of the Hollow and Hale's bunk room; the Oasis's baskets and cushions; card and dice tables; nest boxes, hay racks and stalls.
+- The door goes in during the same hours as before, or gives the same note when shut. Inside, the counter (the coop's and barn's hoppers) opens the old dialog. You come out where you went in.
+- Wren, Corvin, Bram, Hob, Maren and Hale work behind their counters, and Pell teaches in the schoolroom. Staff who are not villagers (the curator, Tamsin, Salma, the clerk, the usher, the cashier and dealers) stand behind theirs while open. In the evening the regulars sit inside the Lantern, with Lio on the stage.
+- Fainting wakes you in the clinic's ward.
+- 20 new pieces (forge, anvil, display cases, the fossil, rows of seats, nest boxes, troughs, stalls, hay bales and more) and 13 new small things. `tools/check_interiors.mjs` checks the buildings too, and that each has something that opens its dialog.
+- Saves: no new fields.
+
 ## v97: Lived-in cottages
 - Every neighbour's cottage is now a whole house instead of one empty room. Each is drawn from its own floor plan (`src/data/interiors.js`): several rooms with doorways, each room with its own wallpaper and floor, and a front door where that house needs it.
 - Furniture is drawn at its real size (double beds, long tables, counter runs, sofas, bookcases that reach up the wall) and placed the way a home is used: beds against a wall with a nightstand, chairs facing their table, seating around a hearth or a rug, kitchens along a wall under the windows. Windows, paintings, shelves, nets, maps and tool racks hang on the walls.

@@ -1,13 +1,14 @@
-// Checks every cottage floor plan in src/data/interiors.js (v97). Run: node tools/check_interiors.mjs
+// Checks every cottage floor plan in src/data/interiors.js (v97) and building in src/data/venues.js (v98). Run: node tools/check_interiors.mjs
 // Size, known characters, rectangular pieces, wall pieces on a wall face, every floor tile reachable from the door,
 // every piece reachable to look at, the owner's spot reachable, every floor tile in a room.
 import { INTERIORS, PIECES, piecesOf, interiorGrid, doorOf } from '../src/data/interiors.js';
+import { VENUES } from '../src/data/venues.js';
 
 let bad = 0;
 const fail = (id, msg) => { bad++; console.log(`${id}: ${msg}`); };
 const floor = (t) => t === 'h';
 
-for (const [id, I] of Object.entries(INTERIORS)) {
+for (const [id, I] of Object.entries({ ...INTERIORS, ...VENUES })) {   // v98: and the buildings you walk into
   if (I.plan.length !== 16) fail(id, `${I.plan.length} rows, want 16`);
   I.plan.forEach((row, y) => {
     if (row.length !== 24) fail(id, `row ${y} is ${row.length} wide, want 24`);
@@ -54,6 +55,7 @@ for (const [id, I] of Object.entries(INTERIORS)) {
     const doorway = (g[y][x - 1] === 'I' && g[y][x + 1] === 'I') || (g[y - 1][x] === 'I' && g[y + 1][x] === 'I');
     if (!doorway && !I.rooms.some(([x0, y0, x1, y1]) => x >= x0 && x <= x1 && y >= y0 && y <= y1)) fail(id, `${x},${y} is in no room`);
   }));
+  if (I.ui && !ps.some((p) => p.opens)) fail(id, 'nothing inside opens its dialog');
   console.log(`${id}: ${ps.length} pieces, ${reach.size} floor tiles`);
 }
 if (bad) { console.log(`${bad} problems`); process.exit(1); }
