@@ -37,6 +37,18 @@ export const CROPS_SHEET = {
   cols: { dead: 0, seed: 1, sprout: 2, young: 3, root: 4, round: 5, leafy: 6, pod: 7 },
 };
 
+// v82 forage.png: 16x16 frames over the tile, 8 a row, in this order (forage not listed is drawn in code).
+export const FORAGE_SHEET = {
+  sheet: 'forage', size: 16, per: 8,
+  order: ['leek', 'sorrel', 'berry', 'thyme', 'mushroom', 'rosehip', 'frostroot', 'icemoss', 'clam', 'cockle', 'coral', 'urchin',
+    'spiralshell', 'morel', 'fiddlehead', 'chanterelle', 'hazelnut', 'holly', 'narcissus', 'vetch', 'frostberry', 'dandelion',
+    'fireberry', 'wildplum', 'snowyam', 'crocus', 'cragleek', 'hillgrape', 'bramble', 'woodear', 'glademint', 'trackpoppy',
+    'cinderberry', 'mistlily'],
+};
+// v82 trees.png: fruit trees, 24x32 frames (columns: stages 0 to 4, then bare in winter); origin: the frame's top-left
+// from the tile's. Bands: leaf (tinted to the fruit's leaf colour), ink (trunk, snow, shadow). Fruit is drawn in code.
+export const TREES_SHEET = { sheet: 'trees', w: 24, h: 32, origin: [-4, -16], layers: ['leaf', 'ink'], bare: 5 };
+
 export const MONSTERS = {
   sheet: 'monsters', size: 24, origin: [-12, -24],
   layers: ['mite.body', 'mite.ink', 'bat.body', 'bat.ink', 'skeleton.body', 'skeleton.ink', 'wraith.body', 'wraith.ink',

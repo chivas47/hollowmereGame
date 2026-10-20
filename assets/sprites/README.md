@@ -54,6 +54,20 @@ To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, a
 - The fruit band under a root's top is painted in full, so crops without a top colour still have whole roots.
 - The ripe sparkle is drawn in code.
 
+## forage.png
+
+128 x 80. Frames are 16 x 16 over the tile, 8 a row, in the order of `FORAGE_SHEET.order` in `src/data/sprites.js`. Colours are drawn in. The sparkle is drawn in code.
+
+## trees.png
+
+144 x 64. Fruit trees. Frames are 24 x 32; the tree's tile is at x 4, y 16 in the frame.
+
+- **Columns (6):** stages 0 to 4, then the bare winter tree.
+- **Rows (2 bands):** leaf (tinted to the fruit's leaf colour), ink (trunk, snow, shadow; drawn as is).
+- Fruit is drawn in code over stage 4.
+
+The placeholder sheets are built by the scripts in `tools/sprites/`.
+
 ## Credits
 
 | File | Author | Licence |
@@ -63,3 +77,4 @@ To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, a
 | pets.png, horse.png | Hollowmere Farm (original placeholder, v79) | same as the game |
 | monsters.png | Hollowmere Farm (original placeholder, v80) | same as the game |
 | crops.png | Hollowmere Farm (original placeholder, v81) | same as the game |
+| forage.png, trees.png | Hollowmere Farm (original placeholder, v82, from the game's code art) | same as the game |

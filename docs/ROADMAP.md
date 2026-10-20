@@ -80,7 +80,8 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 34e | Image sprite sheets: farm animals | feature | done (chivas47/hollowmereGame#74) | Coop and barn animals from an animals sheet, code art as the fallback. Continues 34d. Asked for by Nuno, October 2026. |
 | 34f | Image sprite sheets: pet and horse | feature | done (chivas47/hollowmereGame#75) | The pet (tinted to its look, hats kept) and the horse from sheets, code art as the fallback. Continues 34d. Asked for by Nuno, October 2026. |
 | 34g | Image sprite sheets: monsters | feature | done (chivas47/hollowmereGame#76) | Slimes and mine monsters from a tinted sheet, code art as the fallback. Continues 34d. Asked for by Nuno, October 2026. |
-| 34h | Image sprite sheets: crops | feature | in progress (chivas47/hollowmereGame#77) | Every crop stage from a tinted sheet, code art as the fallback. Continues 34d. Asked for by Nuno, October 2026. |
+| 34h | Image sprite sheets: crops | feature | done (chivas47/hollowmereGame#77) | Every crop stage from a tinted sheet, code art as the fallback. Continues 34d. Asked for by Nuno, October 2026. |
+| 34i | Image sprite sheets: forage and fruit trees | feature | in progress (chivas47/hollowmereGame#78) | Forage and fruit trees from sheets, code art as the fallback; the sheet generators kept in tools/sprites/. Continues 34d. Asked for by Nuno, October 2026. |
 | 33 | Local two-player | feature | needs decision | Same-screen co-op is possible without a server but touches every system. Nuno to decide whether it is worth it. |
 
 ## Done
