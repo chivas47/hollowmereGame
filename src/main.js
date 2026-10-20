@@ -82,6 +82,7 @@ import './systems/atmosphere.js';   // v72: waterfalls, splashes, lightning, wil
 import './systems/water.js';   // v102: moving water and reflections
 import './systems/sway.js';   // v103: wind in grass, trees and washing
 import './systems/falling.js';   // v104: petals, fluff, leaves and snow drifting down
+import './systems/nightlights.js';   // v105: lit windows, lamp posts and lantern light outdoors
 import './systems/indoors.js';   // v100: indoor light, windows, rain on the glass
 
 // UI

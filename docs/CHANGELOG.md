@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v105: Night lights outdoors
+- Lit windows: from 6:30 pm the windows of the farmhouse, the cottages, the shops and the guild lodge glow warm and light the ground below. Homes go dark one by one between 10:30 pm and midnight; shops between 8 and 9:30 pm, the town hall earlier, the picture house at 11, the tavern not until about 1 am.
+- Lamp posts: four along the village paths and three in the town, lit all night.
+- Placed lanterns now light the ground around them too.
+- The night outside opens around every light instead of only around you.
+- Drawn only: no save fields, no prices. About 0.8 ms more a frame at night.
+
 ## v104: Seasonal motion
 - Spring: blossom petals drift down from the trees. Summer: seed fluff floats up off open grass. Autumn: leaves tumble down, flat then on edge. Winter: snow slips off the branches in small clumps (not on snow days, when it is already snowing).
 - They drift with the wind (v103), rest on the ground a moment and fade. Rain, storms and mist halve them. At most 40 at once, on open-air maps only.

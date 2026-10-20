@@ -107,3 +107,23 @@ export const SEASONAL = {
   Winter: { kind: 'clump', rate: 0.5, fall: [40, 55], drift: 6, rest: 1.5, colors: ['#ffffff', '#e6f2fa'] },
 };
 export const SEASONAL_MAX = 40;
+
+// v105: outdoor night lights. From FROM the dark outside (renderer.js tint) opens around lights, each with a warm
+// glow: lit windows, lamp posts in the village and town, and placed lanterns. Windows are glass rects in pixels from
+// the building's tile (the same on the code art and the sheets); each building goes dark at its until (minutes
+// from midnight, past 24 * 60 is after midnight) less up to `early` minutes, rolled per building and day.
+export const NIGHT_LIGHTS = {
+  from: 18 * 60 + 30,
+  windows: {
+    house: { glass: [[9, 30, 10, 8], [61, 30, 10, 8]], until: 24 * 60 },
+    cottage: { glass: [[8, 19, 6, 5], [34, 19, 6, 5]], until: 24 * 60 },
+    storefront: { glass: [[6, 18, 7, 5], [35, 18, 7, 5]], until: 21 * 60 + 30, kinds: { tavern: 26 * 60, hall: 20 * 60, theatre: 23 * 60 } },
+    lodge: { glass: [[7, 18, 6, 4], [35, 18, 6, 4]], until: 24 * 60 },
+  },
+  early: 90,
+  window: { r: 1.6, rgb: '255,200,110' },
+  lamp: { r: 3.5, rgb: '255,214,140' },
+  lantern: { r: 3, rgb: '255,200,110' },
+  // Lamp posts, drawn only (you walk past them): [x, y] tiles, lit the whole night.
+  lamps: { village: [[8, 5], [15, 5], [7, 10], [16, 10]], town: [[11, 9], [9, 13], [11, 13]] },
+};
