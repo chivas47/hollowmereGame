@@ -188,3 +188,11 @@ Image.frombytes('RGBA', (56, 52), bytes(art['glow'])).save(f'{OUT}/glow.png', op
 img = Image.new('RGBA', (8, 8), (0, 0, 0, 0))
 for (i, j), (L, c) in tidy(grid(art['flag'], 8, 8), 8, 8).items(): img.putpixel((i, j), c)
 img.save(f'{OUT}/bunting.png', optimize=True)
+
+# v94 pens.png: 32x16 frames, a column per piece (PENS_SHEET.order), outlined; the fish in the main band (row 0,
+# tinted), every other piece in the ink band (row 1).
+img = Image.new('RGBA', (32 * len(art['pens']), 32), (0, 0, 0, 0))
+for n, (k, data) in enumerate(art['pens']):
+    for (i, j), (L, c) in tidy(grid(data, 32, 16), 32, 16).items(): img.putpixel((n * 32 + i, (0 if k == 'fish' else 16) + j), c)
+img.save(f'{OUT}/pens.png', optimize=True)
+print('PENS order:', [k for k, _ in art['pens']])

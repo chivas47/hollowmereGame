@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v94: Pond, pen and farm cave sheet
+- The fish in the fish pond (tinted to each fish's colour) and its roe, the slimes in the slime pen (both hop frames), their slime balls and the trough's water, and the farm cave's bats, mushroom logs and crate goods draw from a new sheet, `assets/sprites/pens.png`, outlined.
+- Where they are and how they move (fish swimming, slimes hopping, bats bobbing) is unchanged: only the pictures come from the sheet.
+- If the sheet fails to load, they are drawn in code exactly as in v93.
+- Saves: no new fields.
+
 ## v93: Bomb, glow and bunting sheets
 - Lit bombs in the mines draw from the placed sheet's bomb pictures (the same as the bombs in the kit), outlined. The spark still flickers in code.
 - The glow around lanterns after dark and at the Frostlight festival draws from a new sheet, `assets/sprites/glow.png`, at full strength and faded to the glow's strength, so it can be redrawn by hand (dithered rings, for example). It looks as before.
