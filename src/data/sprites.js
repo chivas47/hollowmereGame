@@ -99,6 +99,12 @@ export const PROPS_SHEET = {
 };
 export const GREENHOUSE_SHEET = { sheet: 'greenhouse', size: 16 };
 
+// v90 tools.png: hotbar tools and the extra weapons held in hand, 16x16, one row in this order, colours drawn in.
+// packet.png: the seed packet in bands like the furniture: main (tinted to the crop's colour), second (its top colour,
+// or its colour), ink.
+export const TOOLS_SHEET = { sheet: 'tools', size: 16, order: ['hoe', 'rod', 'pick', 'sword', 'axe', 'pan', 'can', 'dagger', 'club'] };
+export const PACKET_SHEET = { sheet: 'packet', size: 16, layers: ['main', 'second', 'ink'] };
+
 // v86 soil.png: tilled soil in the terrain layout (one 4x5 block each): dry, then watered. Drawn every frame: dry
 // on the corners of every tilled tile, watered over it on the corners of watered ones.
 export const SOIL_SHEET = { sheet: 'soil', size: 16 };

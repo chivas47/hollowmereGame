@@ -9,23 +9,26 @@ import { FORAGE } from '../data/forage.js';
 import { FRUIT } from '../data/trees.js';
 import { MINERALS } from '../data/minerals.js';
 import { ITEMS } from '../data/items.js';
+import { onSheet, ready } from './sheets.js';
+import { TOOLS_SHEET } from '../data/sprites.js';
 
 const RAD = Math.PI / 180;
 const FACE = { right: 0, down: 90, left: 0, up: -90 };   // left is drawn mirrored
 const HAND = { right: [4, -6], left: [-4, -6], down: [4, -5], up: [-4, -7] };   // from the feet
 
 // Extra weapon shapes beside the hotbar sword. Handle at the bottom left, head at the top right, like the icons.
-const EXTRA = {
+export const EXTRA = {
   dagger: (g) => { for (let i = 0; i < 5; i++) r(g, 7 + i, 9 - i, 2, 2, '#d7dce2'); r(g, 12, 4, 1, 1, '#ffffff'); r(g, 5, 9, 4, 2, '#8a5a32'); r(g, 4, 11, 2, 2, '#6e4626'); },
   club: (g) => { for (let i = 0; i < 6; i++) r(g, 4 + i, 12 - i, 2, 2, '#8a5a32'); r(g, 9, 3, 5, 5, '#6e4626'); r(g, 10, 2, 4, 2, '#a5753f'); r(g, 12, 5, 2, 2, '#5c371e'); },
 };
-const sprites = {};
+let sprites = {};
+onSheet(() => { sprites = {}; });   // v90: remake the hand-held tools once a sheet arrives
 function sprite(kind, sel) {
   const key = kind + (sel || '');
   if (sprites[key]) return sprites[key];
   const cv = document.createElement('canvas'); cv.width = cv.height = 16;
   const g = cv.getContext('2d');
-  if (EXTRA[kind]) EXTRA[kind](g); else drawIcon(g, kind, sel);
+  if (EXTRA[kind] && !ready(TOOLS_SHEET.sheet)) EXTRA[kind](g); else drawIcon(g, kind, sel);
   return (sprites[key] = cv);
 }
 

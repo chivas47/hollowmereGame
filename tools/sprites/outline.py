@@ -72,9 +72,9 @@ print('PLACED order:', [k for k, _ in art['placed']])
 # probe with the black one: pixels that match are fixed colours (ink); red ones are the second colour, the rest the
 # main; their grey is the shade drawn over them, and light on the black probe is a see-through shine (white in ink).
 FL = {'main': 0, 'second': 1, 'ink': 2}
-img = Image.new('RGBA', (16 * len(art['furniture']), 32 * 3), (0, 0, 0, 0))
-for n, (shape, lit, blk) in enumerate(art['furniture']):
-    A, B = grid(lit, 16, 32), grid(blk, 16, 32)
+def two_colour(img, n, lit, blk, w, h):
+    """Splits a white/red probe and a black probe of one picture into the main, second and ink bands of column n."""
+    A, B = grid(lit, w, h), grid(blk, w, h)
     px, band, shine = {}, {}, {}
     for k, c in A.items():
         d = B.get(k)
@@ -85,8 +85,10 @@ for n, (shape, lit, blk) in enumerate(art['furniture']):
             band[k], v, s = 'main', c[0], (d[0] if d and d[0] == d[1] == d[2] else 0)
         px[k] = (v, v, v, 255) if not s else (255, 255, 255, 255)
         if s: shine[k] = s
-    for (i, j), (L, c) in tidy(px, 16, 32, lambda k, c: band.get(k, 'ink')).items(): img.putpixel((n * 16 + i, FL[L] * 32 + j), c)
-    for (i, j), s in shine.items(): img.putpixel((n * 16 + i, FL['ink'] * 32 + j), (255, 255, 255, s))
+    for (i, j), (L, c) in tidy(px, w, h, lambda k, c: band.get(k, 'ink')).items(): img.putpixel((n * w + i, FL[L] * h + j), c)
+    for (i, j), s in shine.items(): img.putpixel((n * w + i, FL['ink'] * h + j), (255, 255, 255, s))
+img = Image.new('RGBA', (16 * len(art['furniture']), 32 * 3), (0, 0, 0, 0))
+for n, (shape, lit, blk) in enumerate(art['furniture']): two_colour(img, n, lit, blk, 16, 32)
 img.save(f'{OUT}/furniture.png', optimize=True)
 print('FURNITURE order:', [k for k, _, _ in art['furniture']])
 
@@ -136,3 +138,13 @@ for n, data in enumerate(art['gh']):
     for (i, j), c in grid(data, w, 16).items():
         if n < 2 or i >= 16: img.putpixel((n * 16 + i - (16 if n == 2 else 0), j), c)
 img.save(f'{OUT}/greenhouse.png', optimize=True)
+
+# tools.png: tool and weapon icons, 16x16 in one row (TOOLS_SHEET.order), outlined. packet.png: the seed packet in the
+# three bands (main, second, ink), one 16x16 column.
+img = Image.new('RGBA', (16 * len(art['tools']), 16), (0, 0, 0, 0))
+for n, (k, data) in enumerate(art['tools']):
+    for (i, j), (L, c) in tidy(grid(data, 16, 16), 16, 16).items(): img.putpixel((n * 16 + i, j), c)
+img.save(f'{OUT}/tools.png', optimize=True)
+img = Image.new('RGBA', (16, 48), (0, 0, 0, 0))
+two_colour(img, 0, art['packet'][0], art['packet'][1], 16, 16)
+img.save(f'{OUT}/packet.png', optimize=True)
