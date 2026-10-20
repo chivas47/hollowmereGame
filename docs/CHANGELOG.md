@@ -2,6 +2,15 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v97: Lived-in cottages
+- Every neighbour's cottage is now a whole house instead of one empty room. Each is drawn from its own floor plan (`src/data/interiors.js`): several rooms with doorways, each room with its own wallpaper and floor, and a front door where that house needs it.
+- Furniture is drawn at its real size (double beds, long tables, counter runs, sofas, bookcases that reach up the wall) and placed the way a home is used: beds against a wall with a nightstand, chairs facing their table, seating around a hearth or a rug, kitchens along a wall under the windows. Windows, paintings, shelves, nets, maps and tool racks hang on the walls.
+- Each house follows its owner's personality and tastes: Ines's honey room and pumpkin soup on a wood stove (never coal), Bram's workshop you enter through and his one armchair, Odile's mending table and nets (and no oilskin), Tavi's studio of maps, Nell's seedlings, two teacups and a cold miner's lamp, Rook's boat shop full of shavings, Esme's long studio under north light, Kit's bedroom-workshop and a bathtub full of pipe, Lio's music room with a quilt against the echo, Pell's study of six hundred books, Juno's hall, sofa and sorting cubbies.
+- Facing any piece, on the floor or on a wall, says what it is; about 130 of the 350 pieces have a line of their own about the person who lives there. Windows turn dusky and dark with the hour; fires and stoves flicker.
+- About 60 new pieces are drawn in code (beds, counters, stoves, chairs facing each way, hearths, windows, shelves, hives, sawhorses, cubbies, contraptions and more), plus 35 small things that sit on surfaces. They are decor only: not sold, not moved.
+- `tools/check_interiors.mjs` checks every plan (every floor tile and piece reachable from the door, the owner's spot reachable, wall pieces on a wall face); CI runs it.
+- Neighbours still walk in through their front door and stand at their own spot inside. Saves: no new fields.
+
 ## v96: Modern screen layout and accessibility
 - The game fills the window like a console game instead of scrolling like a web page. The field is scaled to the largest size that fits, framed in wood, and nothing scrolls on desktop, phone or tablet.
 - Wide screens with a mouse get a side column: the clock panel (farm, date, weather, time, place, gold, the bin), the energy, health and water bars, and the menu buttons. Other screens stack them above the field.

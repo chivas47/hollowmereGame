@@ -1,7 +1,7 @@
 // v76: how neighbours find their way. tilePath() walks the tile grid around anything solid, preferring paths and
 // floors to grass; nextHop() picks the next door or map edge on the way to another map. Pure helpers, no registration.
 import { MAPS, SOLID } from '../data/maps.js';
-import { HOMES, homeMap, HOME_ENTRY, SPOUSE_HOME } from '../data/homes.js';
+import { HOMES, homeMap, HOME_ENTRY, homeEntry, SPOUSE_HOME } from '../data/homes.js';
 
 const OUTDOORS = ['farm', 'village', 'town', 'beach', 'forest', 'wilds', 'sewer'];
 const COST = { P: 1, z: 1, h: 1, f: 1, E: 1 };   // anything else walkable (grass) costs 3, so they keep to paths
@@ -11,7 +11,7 @@ function links() {
   const out = [], open = new Set([...OUTDOORS, SPOUSE_HOME.house]);
   for (const [id, h] of Object.entries(HOMES)) if (h.cottage) open.add(homeMap(id));
   for (const id of open) for (const [k, e] of Object.entries(MAPS[id].exits)) if (open.has(e.to)) out.push({ from: id, at: k.split(',').map(Number), to: e.to, arrive: [e.x, e.y] });
-  for (const [id, h] of Object.entries(HOMES)) if (h.cottage) out.push({ from: h.map, at: h.door, to: homeMap(id), arrive: HOME_ENTRY });
+  for (const [id, h] of Object.entries(HOMES)) if (h.cottage) out.push({ from: h.map, at: h.door, to: homeMap(id), arrive: homeEntry(id) });
   out.push({ from: SPOUSE_HOME.map, at: SPOUSE_HOME.door, to: SPOUSE_HOME.house, arrive: HOME_ENTRY });
   out.push({ from: 'village', at: [2, 12], to: 'sewer', arrive: [3, 2] });
   return out;

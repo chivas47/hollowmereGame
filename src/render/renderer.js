@@ -11,6 +11,7 @@ import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, draw
 import { facing, tileAt } from '../systems/world.js';
 import { WALLPAPERS, FLOORS } from '../data/furniture.js';
 import { TERRAIN_SHEET, CAVE_SHEET } from '../data/sprites.js';
+import { drawHomeTile } from './interiors.js';
 import { ready, sheet, onSheet } from './sheets.js';
 
 let cache = {};
@@ -33,6 +34,7 @@ function renderBackground(mapId, season) {
   }
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
     const t = map.grid[y][x];
+    if (map.home) { drawHomeTile(g, x, y, map); continue; }   // v97: a cottage's own rooms
     if (map.base === 'house') { drawHouseTile(g, x, y, t, map.grid[y + 1]?.[x], WALLPAPERS, FLOORS, map.decor); continue; }
     if (sheetGround) continue;
     if (map.base === 'cave') drawCaveFloor(g, x, y, p);

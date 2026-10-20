@@ -40,6 +40,9 @@ jobs:
         run: |
           if [ -f base/tools/balance.mjs ]; then node base/tools/balance.mjs $SIM --json base.json --out base.md || echo "Base simulation failed; comparing against nothing"; else echo "Base has no simulator"; fi
 
+      - name: Check the cottage floor plans
+        run: node tools/check_interiors.mjs
+
       - name: Simulate this branch
         id: head
         run: |
