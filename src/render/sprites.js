@@ -3,7 +3,7 @@ import { T } from '../core/constants.js';
 import { CROPS } from '../data/crops.js';
 import { r, blink } from './pixel.js';
 import { ready, tinted, frame, sheet } from './sheets.js';
-import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET, DEBRIS_SHEET, GIANTS_SHEET, PLACED_SHEET, FURN_SHEET, SOIL_SHEET, ALDERS_SHEET, FENCES_SHEET, FIXTURES_SHEET } from '../data/sprites.js';
+import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET, DEBRIS_SHEET, GIANTS_SHEET, PLACED_SHEET, FURN_SHEET, SOIL_SHEET, ALDERS_SHEET, FENCES_SHEET, FIXTURES_SHEET, CHILDREN_SHEET } from '../data/sprites.js';
 
 const FERT_DOT = { booster: '#c9b68e', booster2: '#e9b44c', booster3: '#b98ae0', tonic: '#86b86a', tonic2: '#5fd36a', mulch: '#a0805a', mulch2: '#7a5a3a' };
 export function drawSoil(c, X, Y, wet, fert) {
@@ -159,8 +159,14 @@ const HATS = {
 
 // v53: a child of the farm: a baby wrapped in the crib, a crawler on the floor, a toddler standing. i picks the colours.
 const KIDS = [{ hair: '#7a4a2a', shirt: '#e2a33a', skin: '#f0c8a0' }, { hair: '#2b2a2e', shirt: '#5f8fb5', skin: '#d9a37e' }];
+// v92: from the children sheet once it has loaded, else drawn in code.
 export function drawChild(c, px, py, stage, i) {
-  const k = KIDS[i % 2], x = Math.round(px), y = Math.round(py);
+  const C = CHILDREN_SHEET, col = C.stages.indexOf(stage), x = Math.round(px), y = Math.round(py);
+  if (col < 0 || !ready(C.sheet)) return childArt(c, x, y, stage, i);
+  frame(c, sheet(C.sheet).img, col, C.size, x + C.origin[0], y + C.origin[1], i % KIDS.length);
+}
+function childArt(c, x, y, stage, i) {
+  const k = KIDS[i % 2];
   if (stage === 'baby') { r(c, x - 4, y - 8, 8, 5, '#f4ead2'); r(c, x - 3, y - 10, 4, 3, k.skin); r(c, x - 3, y - 11, 4, 1, k.hair); r(c, x - 4, y - 5, 8, 1, '#c9b68e'); return; }
   r(c, x - 4, y, 8, 1, 'rgba(0,0,0,.25)');
   if (stage === 'crawler') { r(c, x - 4, y - 5, 7, 4, k.shirt); r(c, x + 2, y - 7, 4, 4, k.skin); r(c, x + 2, y - 8, 4, 1, k.hair); r(c, x - 4, y - 1, 2, 1, k.skin); r(c, x + 1, y - 1, 2, 1, k.skin); return; }

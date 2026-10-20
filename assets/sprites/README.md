@@ -165,6 +165,13 @@ The placeholder sheets are built by the scripts in `tools/sprites/`.
 
 96 x 16. 16 x 16 over the tile, colours drawn in, one row in the order of `FIXTURES_SHEET.order`: the gate across (closed, open), the gate along (closed, open), the wood path, the stone path. The paths repeat edge to edge.
 
+## children.png
+
+48 x 32. The farm's children, 16 x 16 frames, the child's feet at x 8, y 14 (`CHILDREN_SHEET.origin`).
+
+- **Columns (3):** baby (in the crib), crawler, toddler.
+- **Rows (2):** one per child (the first and second child's hair, shirt and skin). Colours are drawn in; nothing is tinted.
+
 ## Credits
 
 | File | Author | Licence |
@@ -185,3 +192,4 @@ The placeholder sheets are built by the scripts in `tools/sprites/`.
 | props.png, greenhouse.png | Hollowmere Farm (original placeholder, v89, from the game's code art) | same as the game |
 | tools.png, packet.png | Hollowmere Farm (original placeholder, v90, from the game's code art) | same as the game |
 | alders.png, fences.png, fixtures.png | Hollowmere Farm (original placeholder, v91, from the game's code art) | same as the game |
+| children.png | Hollowmere Farm (original placeholder, v92, from the game's code art) | same as the game |

@@ -130,3 +130,8 @@ export const ALDERS_SHEET = { sheet: 'alders', w: 32, h: 48, origin: [-8, -32], 
 // colours drawn in, one row in this order (gate: across or along, closed or open; paths by kind).
 export const FENCES_SHEET = { sheet: 'fences', w: 16, h: 18, origin: [0, -2], layers: ['main', 'ink'] };
 export const FIXTURES_SHEET = { sheet: 'fixtures', size: 16, order: ['gate-across', 'gate-across-open', 'gate-along', 'gate-along-open', 'woodpath', 'stonepath'] };
+
+// v92 children.png: the farm's children, 16x16 frames, the child's feet at x 8, y 14 (origin: the frame's top-left
+// from the feet). Columns: baby, crawler, toddler (CHILDREN_SHEET.stages); a row per child's colours (KIDS in
+// render/sprites.js), drawn in.
+export const CHILDREN_SHEET = { sheet: 'children', size: 16, origin: [-8, -14], stages: ['baby', 'crawler', 'toddler'] };
