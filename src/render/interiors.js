@@ -16,7 +16,7 @@ const shadow = (c, X, Y, W, H) => r(c, X + 1, Y + H - 2, W - 2, 2, SHADE);
 const isRoom = (t) => t && t !== 'I' && t !== '.';
 export function drawHomeTile(g, x, y, map) {
   const m = map.grid, t = m[y][x], below = m[y + 1]?.[x];
-  const room = (rx, ry) => roomAt(map.home, rx, ry);
+  const room = (rx, ry) => roomAt(map.plan, rx, ry);
   if (t === 'I') {
     // the lower face sits right above a room; a north wall has a second, upper face above that
     // (only on a wall that runs east to west: the end of a wall between two rooms has one face, not two)
@@ -77,6 +77,19 @@ const TOPS = {
   beet: (c, x, y) => { r(c, x - 2, y - 3, 4, 3, '#8a2f4a'); r(c, x - 1, y - 6, 1, 3, '#5d8a4a'); },
   plum: (c, x, y) => { r(c, x - 2, y - 3, 4, 3, '#6a3a7a'); r(c, x - 1, y - 3, 1, 1, '#9a6aaa'); },
   cake: (c, x, y) => { r(c, x - 4, y - 4, 8, 4, '#e9c46a'); r(c, x - 4, y - 4, 8, 1, '#f4ead2'); r(c, x - 4, y - 2, 8, 1, '#c98a3a'); },
+  packet: (c, x, y) => { r(c, x - 2, y - 5, 4, 5, '#f4ead2'); r(c, x - 1, y - 4, 2, 2, ['#5d8a4a', '#e8862a', '#c8352f', '#8a5aa8'][(x * 3) % 4]); },
+  till: (c, x, y) => { r(c, x - 4, y - 6, 8, 6, '#c9a35a'); r(c, x - 3, y - 8, 6, 2, '#a5753f'); r(c, x - 3, y - 5, 6, 2, '#3f3226'); r(c, x - 2, y - 2, 1, 1, CREAM); r(c, x + 1, y - 2, 1, 1, CREAM); },
+  bars: (c, x, y) => { r(c, x - 4, y - 2, 4, 2, '#e9c46a'); r(c, x, y - 2, 4, 2, '#c9ccd6'); r(c, x - 2, y - 4, 4, 2, '#d9844a'); },
+  ore: (c, x, y) => { r(c, x - 3, y - 3, 6, 3, '#8d8a84'); r(c, x - 2, y - 3, 2, 1, '#d9844a'); r(c, x + 1, y - 2, 1, 1, '#c9ccd6'); },
+  coal: (c, x, y) => { r(c, x - 3, y - 3, 6, 3, '#2b2a28'); r(c, x - 1, y - 3, 1, 1, '#5c5a58'); },
+  tool: (c, x, y) => { r(c, x - 4, y - 1, 7, 1, '#6e4626'); r(c, x + 3, y - 3, 2, 3, '#c9ccd6'); },
+  gem: (c, x, y) => { r(c, x - 1, y - 5, 3, 5, '#8a5aa8'); r(c, x - 2, y - 3, 5, 2, '#aa7ac8'); r(c, x, y - 4, 1, 1, '#ffffff'); },
+  shard: (c, x, y) => { r(c, x - 3, y - 3, 5, 3, '#c98a5a'); r(c, x - 2, y - 4, 3, 1, '#a5703f'); r(c, x - 2, y - 2, 2, 1, '#6e4626'); },
+  pail: (c, x, y) => { r(c, x - 2, y - 4, 5, 4, '#c9ccd6'); r(c, x - 2, y - 5, 5, 1, '#8d939a'); r(c, x - 1, y - 4, 3, 1, '#f4ead2'); },
+  popcorn: (c, x, y) => { r(c, x - 2, y - 4, 4, 4, '#c8352f'); r(c, x - 1, y - 4, 1, 4, CREAM); r(c, x - 3, y - 6, 6, 2, '#f4e3a4'); },
+  coins: (c, x, y) => { r(c, x - 3, y - 2, 3, 2, '#e9c46a'); r(c, x, y - 3, 3, 3, '#e9c46a'); r(c, x, y - 3, 3, 1, '#f6cf74'); },
+  cards: (c, x, y) => { r(c, x - 3, y - 3, 3, 3, CREAM); r(c, x + 1, y - 3, 3, 3, CREAM); r(c, x - 2, y - 2, 1, 1, '#c8352f'); r(c, x + 2, y - 2, 1, 1, INK); },
+  dice: (c, x, y) => { r(c, x - 3, y - 3, 3, 3, CREAM); r(c, x + 1, y - 3, 3, 3, CREAM); r(c, x - 2, y - 2, 1, 1, INK); r(c, x + 2, y - 2, 1, 1, INK); },
   yarn: (c, x, y) => { r(c, x - 2, y - 3, 4, 3, '#e2707a'); r(c, x - 1, y - 2, 2, 1, '#f4a0a8'); },
 };
 function tops(c, p, X, y, W) {
@@ -295,6 +308,53 @@ const ART = {
   rods: (c, X, Y, W, H, a, b) => { [3, 7, 11].forEach((o, i) => { r(c, X + o, Y - 12 + i * 2, 1, H + 10 - i * 2, a); r(c, X + o - 1, Y + H - 8, 3, 2, b); r(c, X + o + 1, Y - 10 + i * 2, 1, 6, '#e8eef2'); }); r(c, X + 2, Y + H - 3, 12, 2, SHADE); },
   oars: (c, X, Y, W, H, a, b) => { [3, 9].forEach((o) => { r(c, X + o, Y - 12, 2, H + 10, a); r(c, X + o - 1, Y + H - 9, 4, 7, b); }); },
   schooldesk: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); r(c, X + 2, Y + 4, 12, 4, a); r(c, X + 2, Y + 4, 12, 1, GLINT); r(c, X + 3, Y + 8, 2, 7, b); r(c, X + 11, Y + 8, 2, 7, b); r(c, X + 4, Y + 2, 6, 3, '#3f4850'); r(c, X + 4, Y + 2, 6, 1, '#a5753f'); },
+  // ---- v98: shops, halls and farm buildings ----
+  sign: (c, X, Y, W, H, a, b) => { r(c, X + 1, Y + 3, W - 2, H - 6, a); r(c, X + 1, Y + 3, W - 2, 1, GLINT); r(c, X + 1, Y + H - 3, W - 2, 1, SHADE); for (let i = X + 5; i < X + W - 6; i += 4) r(c, i, Y + 6, 3, H - 12, b); },
+  cinema: (c, X, Y, W, H, a, b) => {
+    r(c, X, Y + 1, W, H - 2, b); r(c, X + 6, Y + 3, W - 12, H - 7, a);
+    const t = Math.floor(performance.now() / 1500) % 3;   // the picture changes now and then
+    r(c, X + 10, Y + H - 12, W - 20, 6, ['#86b86a', '#5f8fb5', '#e8862a'][t]); r(c, X + W / 2 - 4 + t * 3, Y + 7, 6, 6, '#3f3226');
+    for (let i = 1; i < 6; i += 2) { r(c, X + i, Y + 1, 1, H - 2, '#5c1a12'); r(c, X + W - 1 - i, Y + 1, 1, H - 2, '#5c1a12'); }
+  },
+  ladder: (c, X, Y, W, H, a, b) => { r(c, X + 3, Y, 2, H, a); r(c, X + 11, Y, 2, H, a); for (let j = 3; j < H; j += 5) r(c, X + 3, Y + j, 10, 2, b); r(c, X, Y, W, 2, '#3f2a1a'); },
+  weapons: (c, X, Y, W, H, a, b) => { r(c, X + 1, Y + 3, W - 2, 2, a); r(c, X + 1, Y + 12, W - 2, 2, a); for (let x = X + 4; x < X + W - 3; x += 6) { r(c, x, Y + 1, 2, 12, b); r(c, x - 1, Y + 11, 4, 1, '#c9a35a'); r(c, x, Y + 12, 2, 3, '#6e4626'); } },
+  forge: (c, X, Y, W, H, a, b) => {
+    r(c, X + 4, Y - 14, W - 8, 16, b); r(c, X + 4, Y - 14, W - 8, 1, GLINT);   // the hood and chimney
+    r(c, X, Y + 2, W, 13, a); r(c, X, Y + 2, W, 2, '#8d8a84');
+    r(c, X + 4, Y + 5, W - 8, 7, '#1f1812'); const f = blink(160, 3);
+    r(c, X + 6, Y + 8, W - 12, 4, '#e8862a'); r(c, X + 8 + (f ? 1 : 0), Y + 6, W - 16, 3, '#ffd46a'); r(c, X + W / 2 - 1, Y + 5, 2, 2, f ? '#fff3c4' : '#ffd46a');
+  },
+  bellows: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); r(c, X + 2, Y + 7, 10, 6, a); r(c, X + 3, Y + 8, 8, 4, b); r(c, X + 12, Y + 9, 3, 2, '#3f4850'); r(c, X + 1, Y + 6, 4, 1, '#6e4626'); },
+  grindstone: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); r(c, X + 3, Y + 10, 10, 5, b); r(c, X + 4, Y + 2, 8, 9, a); r(c, X + 5, Y + 3, 6, 7, '#c9c4ba'); r(c, X + 7, Y + 6, 2, 2, b); r(c, X + 12, Y + 6, 3, 1, b); },
+  anvil: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); r(c, X + 5, Y + 11, 6, 4, b); r(c, X + 6, Y + 8, 4, 3, a); r(c, X + 2, Y + 4, 12, 4, a); r(c, X, Y + 5, 3, 2, a); r(c, X + 2, Y + 4, 12, 1, '#8d939a'); r(c, X + 12, Y + 2, 3, 5, '#c9a35a'); },
+  sack: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); r(c, X + 3, Y + 5, 10, 10, a); r(c, X + 2, Y + 8, 12, 6, a); r(c, X + 5, Y + 3, 6, 3, b); r(c, X + 6, Y + 9, 4, 3, b); r(c, X + 3, Y + 5, 2, 9, 'rgba(255,255,255,.15)'); },
+  haybale: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); r(c, X + 1, Y + 3, W - 2, H - 4, a); r(c, X + 1, Y + 3, W - 2, 2, '#f0d98a'); for (let i = X + 3; i < X + W - 2; i += 3) r(c, i, Y + 6, 1, H - 8, b); r(c, X + 1, Y + 7, W - 2, 1, '#8a6a3a'); r(c, X + 1, Y + H - 5, W - 2, 1, '#8a6a3a'); },
+  case: (c, X, Y, W, H, a, b, p) => {
+    shadow(c, X, Y, W, H); box(c, X + 1, Y + 9, W - 2, 6, a, '#3f2a1a');
+    r(c, X + 2, Y + 1, W - 4, 9, b); r(c, X + 2, Y + 1, W - 4, 1, '#ffffff'); r(c, X + 3, Y + 2, 2, 6, 'rgba(255,255,255,.5)');
+    tops(c, p, X, Y + 9, W);
+  },
+  pedestal: (c, X, Y, W, H, a, b, p) => { shadow(c, X, Y, W, H); r(c, X + 4, Y + 6, 8, 9, a); r(c, X + 3, Y + 5, 10, 2, b); r(c, X + 3, Y + 13, 10, 2, b); tops(c, p, X, Y + 5, W); },
+  fossil: (c, X, Y, W, H, a, b) => {
+    r(c, X + 2, Y + H - 6, W - 4, 5, b); r(c, X + 2, Y + H - 6, W - 4, 1, GLINT);   // the plinth
+    const bone = (x, y, w, h) => r(c, X + x, Y + y, w, h, a);
+    bone(10, 6, 34, 4); for (let i = 12; i < 42; i += 4) bone(i, 10, 2, 7);   // spine and ribs
+    bone(42, 2, 12, 6); bone(52, 6, 6, 3); r(c, X + 47, Y + 4, 2, 2, '#3f3226');   // the skull
+    bone(2, 8, 10, 2); bone(14, 17, 2, 9); bone(36, 17, 2, 9); bone(12, 25, 6, 2); bone(34, 25, 6, 2);   // tail and legs
+  },
+  seats: (c, X, Y, W, H, a, b) => { for (let i = 0; i < W; i += 8) { r(c, X + i + 1, Y + 6, 6, 9, b); r(c, X + i + 1, Y + 9, 6, 4, a); r(c, X + i + 1, Y + 13, 6, 2, '#3f1a12'); } },
+  nestbox: (c, X, Y, W, H, a, b) => {
+    box(c, X, Y + 1, W, 14, a, '#5c371e');
+    for (let i = 0; i < W; i += 8) { r(c, X + i + 1, Y + 4, 6, 8, '#3f2a1a'); r(c, X + i + 1, Y + 9, 6, 3, b); if ((i / 8) % 3 === 0) r(c, X + i + 3, Y + 8, 2, 2, '#f4ead2'); }
+  },
+  hopper: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); r(c, X + 2, Y - 8, 12, 12, a); r(c, X + 2, Y - 8, 12, 1, GLINT); r(c, X + 4, Y + 4, 8, 6, b); r(c, X + 3, Y + 10, 10, 5, a); r(c, X + 5, Y + 11, 6, 2, '#e3c56a'); },
+  trough: (c, X, Y, W, H, a, b, p) => {
+    shadow(c, X, Y, W, H); r(c, X + 1, Y + 7, W - 2, 7, a); r(c, X + 2, Y + 8, W - 4, 3, p.hay ? '#e3c56a' : b);
+    if (p.hay) for (let i = X + 3; i < X + W - 3; i += 3) r(c, i, Y + 5, 1, 4, '#c9a83a');
+    r(c, X + 2, Y + 14, 2, 1, '#3f2a1a'); r(c, X + W - 4, Y + 14, 2, 1, '#3f2a1a');
+  },
+  stall: (c, X, Y, W, H, a, b) => { r(c, X + 6, Y + 1, 4, H - 2, a); r(c, X + 6, Y + 1, 4, 1, GLINT); r(c, X + 7, Y + 4, 2, H - 8, b); r(c, X + 6, Y + H - 3, 4, 2, b); },
+  stage: (c, X, Y, W, H, a, b) => { r(c, X, Y, W, H, a); r(c, X, Y, W, 2, GLINT); for (let j = 4; j < H; j += 5) r(c, X, Y + j, W, 1, b); r(c, X, Y + H - 2, W, 2, b); },
   // ---- on the floor, walked over ----
   boots: (c, X, Y, W, H, a, b) => { r(c, X + 3, Y + 7, 4, 7, a); r(c, X + 3, Y + 12, 6, 2, b); r(c, X + 9, Y + 6, 4, 7, a); r(c, X + 9, Y + 11, 6, 2, b); },
   shavings: (c, X, Y, W, H, a, b) => { [[2, 4], [9, 3], [5, 9], [11, 10], [7, 13]].forEach(([u, v], i) => { r(c, X + u, Y + v, 3, 1, a); r(c, X + u + (i % 2 ? 0 : 2), Y + v + 1, 2, 1, b); r(c, X + u + 1, Y + v - 1, 1, 1, a); }); },

@@ -54,6 +54,7 @@ src/
     animation.js      SWINGS (tool arcs and timings), COMBO (weapon combo steps), PICKUP, CRAFTED, PLACE, IMPACT colours (v74)
     schedules.js      neighbour daily routines by weekday (go: walk a loop of spots, at: walk there and stay), spouse and festival days
     homes.js          where each neighbour lives: door, cottage, door hours (v76); homeEntry() inside the front door (v97)
+    venues.js         v98: VENUES, the buildings you walk into (shops, tavern, clinic, museum, ranch, town hall, theatre, lodge, Oasis, casino, coop, barn): where each stands, which tiles are its door, the dialog its counter opens, its floor plan; venueMap(), venueFront()
     interiors.js      v97: each cottage's floor plan (24x16 characters: walls, doors, rooms, a key of pieces with colours, things on top and a line to read), PIECES, piecesOf(), interiorGrid(), doorOf(), roomAt()
     scenes.js         heart scenes at 4 and 8 hearts
     sprites.js        v77: layout of each PNG sprite sheet (PERSON: frame size, layers, directions, steps, origin; v78 ANIMALS: one row per kind; v79 PETS (tinted bands per kind, hat spots), HORSE; v80 MONSTERS (tinted bands per kind, shadow, bob, sway, glow); v81 CROPS_SHEET (stage and shape columns); v82 FORAGE_SHEET (order), TREES_SHEET; v83 DEBRIS_SHEET (order), GIANTS_SHEET (shape columns); v84 PLACED_SHEET, FURN_SHEET (order, 16x32 frames); v85 TERRAIN_SHEET (corner tile sets per season); v86 SOIL_SHEET; v87 CAVE_SHEET, DECOR_SHEETS; v88 BUILDING_SHEETS; v89 PROPS_SHEET (order), GREENHOUSE_SHEET; v90 TOOLS_SHEET, PACKET_SHEET; v91 ALDERS_SHEET, FENCES_SHEET (neighbour-mask columns), FIXTURES_SHEET (order); v92 CHILDREN_SHEET; v93 GLOW_SHEET, BUNTING_SHEET; v94 PENS_SHEET (order, anchor); v95 VARIANTS_SHEET (order of variant keys))
@@ -123,7 +124,8 @@ src/
     quests.js         quest board requests, deliver()
     festivals.js      festival day logic, contests, market stall, decorations
     village.js        fountain flavour text
-    homes.js          v76: entering neighbours' cottages (door hours, 2 hearts after dark); v97: their rugs, wall pieces and furniture from the floor plan, a line for each piece
+    homes.js          v76: entering neighbours' cottages (door hours, 2 hearts after dark)
+    venues.js         v98: entering buildings (the same hours and notes their doors gave), the counter that opens each dialog, and drawing and looking at every floor plan's pieces (cottages too); staff who are not villagers stand behind their counters while open
     routes.js         v76: tilePath() (weighted grid search, paths before grass) and nextHop() (doors and map edges) for neighbours
     projects.js       village projects: fundProject(), funded()
     greenhouse.js     greenhouse placement on the farm, ordering, entering
@@ -174,7 +176,7 @@ src/
 tools/
   bundle.py           CODEBASE.md for a Claude Project
   balance.mjs         headless balance simulator (Node 22+); imports src/systems/* directly
-  check_interiors.mjs v97: checks every cottage floor plan (size, rectangles, wall pieces on a wall face, every tile and piece reachable from the door, the owner's spot); run by CI
+  check_interiors.mjs v97: checks every cottage (v98: and building) floor plan (size, rectangles, wall pieces on a wall face, every tile and piece reachable from the door, the owner's spot); run by CI
   sprites/          v82: scripts that build the placeholder sheets in assets/sprites/ (see its README.md)
 ```
 
@@ -230,8 +232,10 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 72 | town.js | Shop doors ( ) ] [ / £ and the museum : in the town (dialog, or the hours and closing day); the phone _ in the farmhouse |
 | 70 | town.js | The farm's old stall S and workbench K (a note pointing to town) |
 | 72 | coop.js / barn.js / greenhouse.js / mine.js / placeables.js / quests.js / festivals.js | Coop C, barn A, greenhouse G, mine entrance M, ladders U/L, the cavern door ^, shafts !, the vent door > and the forge =, placed object Y, quest board Q, festival table J |
+| 73 | venues.js | Any tile of a building with an inside: go in, or why it is shut (v98) |
 | 72 | homes.js | Cottage V front row (enter the owner's cottage, or why it is locked) (v76) |
-| 71 | homes.js | Any piece inside a neighbour's cottage, on the floor or on a wall (its own line, v97) (v76) |
+| 72 | venues.js | The counter or hopper inside a building: its dialog (v98) |
+| 71 | venues.js | Any piece inside a cottage or building, on the floor or on a wall (its own line, v97, v98) (v76) |
 | 71 | village.js | Fountain F, cottage V away from its front (where the door is) |
 | 71 | mail.js | The mailbox on the farmhouse front (farm H tile at 5,3) |
 | 71 | cooking.js | Farmhouse stove o (cook) and counters n (fridge) |

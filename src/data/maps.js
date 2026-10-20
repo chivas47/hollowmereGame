@@ -9,9 +9,9 @@
 //   a helper hut, e d waystones, y the farm cave's mouth (v32); in the cave t the crate
 //   u fish pond, j slime pen (v31), s shed, m mill, k clock tower (placed by the player, written at runtime by systems/sites.js)
 //   G greenhouse (placed at runtime by systems/greenhouse.js)   inside it: w glass wall, p floor, g bed, W water trough
-//   & the Wardens' Lodge in the Wilds and its keeper's spot (v37)
+//   & the Wardens' Lodge in the Wilds (v37)
 //   | fallen log (to the grove), } rubble (to the railway), ; sewer grate, { hot spring, ? the sewer trader (v45)
-//   ( the general store, ) the smithy, ] the carpentry in the town, each with its keeper's spot (v46); [ the tavern, / the clinic (v47)
+//   ( the general store, ) the smithy, ] the carpentry in the town, (v46); [ the tavern, / the clinic (v47)
 //   _ the phone on the farmhouse wall (v47)   - the town hall (v53)   : the museum (v68)
 //   Þ the picture house (town, once the old wing is whole) (v70)
 //   ¢ the travelling cart (forest), § the bookseller, ¤ the prize machine, £ the ranch counter (town) (v69)
@@ -26,6 +26,7 @@ import { W, H } from '../core/constants.js';
 import { MACHINE } from './market.js';
 import { HOMES, homeMap } from './homes.js';
 import { INTERIORS, interiorGrid, doorOf } from './interiors.js';
+import { VENUES, venueMap } from './venues.js';
 
 export const SOLID = new Set(['Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
 
@@ -58,7 +59,7 @@ function wildsGrid() {
   put(m, [[15, 8], [20, 12], [20, 8], [15, 12]], 'g');
   put(m, [[3, 2], [6, 1], [9, 2], [14, 2], [17, 1], [20, 3], [2, 7], [5, 9], [8, 13], [3, 13], [14, 13], [21, 6], [13, 6], [18, 14], [7, 8]], 'T');
   put(m, [[7, 6], [4, 11], [18, 5], [9, 10]], 'R');
-  fill(m, 15, 2, 17, 3, '&'); m[3][14] = '&';   // v37: the Wardens' Lodge, its keeper by the door
+  fill(m, 15, 2, 17, 3, '&');   // v37: the Wardens' Lodge (v98: Hale works inside)
   m[1][8] = '@';                                  // v40: the shrine door
   fill(m, 21, 1, 21, 3, 'P'); m[0][21] = 'E';     // v44: the path north to the mountain
   m[3][22] = '}'; m[3][23] = 'E';                  // v45: rubble on the way east to the railway (clears on Summer 3)
@@ -132,21 +133,21 @@ function railwayGrid() {
   put(m, [[3, 10], [8, 12], [20, 3], [12, 2], [6, 13], [21, 13]], 'T');
   return m;
 }
-// v46: the town north of the village: three shops along a lane, each keeper by the door.
+// v46: the town north of the village: three shops along a lane. v98: each one has an inside (data/venues.js).
 export const SHOP_SPOTS = {
-  store:     { tile: '(', x: 3, y: 5, keeper: [2, 6] },
-  smithy:    { tile: ')', x: 10, y: 5, keeper: [9, 6] },
-  carpenter: { tile: ']', x: 17, y: 5, keeper: [16, 6] },
-  tavern:    { tile: '[', x: 4, y: 10, keeper: [3, 11] },    // v47: the south side, doors onto the lower lane
-  clinic:    { tile: '/', x: 14, y: 10, keeper: [13, 11] },
-  museum:    { tile: ':', x: 18, y: 10, keeper: [18, 11] },   // v68: the museum, east of the clinic
-  ranch:     { tile: '£', x: 7, y: 10, keeper: [8, 11] },     // v69: the ranch counter, between the tavern and the lane
+  store:     { tile: '(', x: 3, y: 5 },
+  smithy:    { tile: ')', x: 10, y: 5 },
+  carpenter: { tile: ']', x: 17, y: 5 },
+  tavern:    { tile: '[', x: 4, y: 10 },    // v47: the south side, doors onto the lower lane
+  clinic:    { tile: '/', x: 14, y: 10 },
+  museum:    { tile: ':', x: 18, y: 10 },   // v68: the museum, east of the clinic
+  ranch:     { tile: '£', x: 7, y: 10 },     // v69: the ranch counter, between the tavern and the lane
 };
-export const CLINIC_BED = { x: 15, y: 12, dir: 'up' };   // v47: where you come to after fainting
+export const CLINIC_BED = { map: 'inside_clinic', x: 14, y: 12, dir: 'up' };   // v47: where you come to after fainting (v98: in the ward)
 function townGrid() {
   const m = emptyGrid();
   fill(m, 0, 0, W - 1, 0, 'T'); fill(m, 0, 0, 0, H - 1, 'T'); fill(m, W - 1, 0, W - 1, H - 1, 'T');
-  for (const s of Object.values(SHOP_SPOTS)) { fill(m, s.x, s.y, s.x + 2, s.y + 1, s.tile); m[s.keeper[1]][s.keeper[0]] = s.tile; }
+  for (const s of Object.values(SHOP_SPOTS)) fill(m, s.x, s.y, s.x + 2, s.y + 1, s.tile);   // v98: keepers work inside now
   fill(m, 2, 8, 21, 8, 'P');
   for (const s of Object.values(SHOP_SPOTS)) if (s.y < 8) m[7][s.x + 1] = 'P';
   fill(m, 10, 9, 10, H - 1, 'P'); m[H - 1][10] = 'E';
@@ -275,9 +276,19 @@ export function houseGrid(tier = 0, renos = []) {
 const homeMaps = () => Object.fromEntries(Object.entries(HOMES).filter(([, h]) => h.cottage).map(([id, h]) => {
   const door = doorOf(id).door, room = INTERIORS[id].rooms[0];
   return [homeMap(id), {
-    name: `${id[0].toUpperCase()}${id.slice(1)}'s cottage`, salt: 17, base: 'house', grid: interiorGrid(id), home: id,
+    name: `${id[0].toUpperCase()}${id.slice(1)}'s cottage`, salt: 17, base: 'house', grid: interiorGrid(id), home: id, plan: id,
     decor: { wall: room[4], floor: room[5] }, objects: [],
     exits: { [door.join()]: { to: h.map, x: h.door[0], y: h.door[1], dir: 'down' } },
+  }];
+}));
+
+// v98: the buildings you walk into (data/venues.js). The door's way out is set when you go in (systems/venues.js):
+// you come out where you went in.
+const venueMaps = () => Object.fromEntries(Object.entries(VENUES).map(([id, V]) => {
+  const room = V.rooms[0];
+  return [venueMap(id), {
+    name: V.name, salt: 17, base: 'house', grid: interiorGrid(id), plan: id, venue: id,
+    decor: { wall: room[4], floor: room[5] }, objects: [], exits: {},
   }];
 }));
 
@@ -414,4 +425,5 @@ export const MAPS = {
     exits: { [`12,${H - 1}`]: { to: 'farm', x: 10, y: 3, dir: 'down' } },
   },
   ...homeMaps(),   // v76: the neighbours' cottages
+  ...venueMaps(),   // v98: shops, halls and farm buildings
 };

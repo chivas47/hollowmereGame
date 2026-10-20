@@ -3,6 +3,8 @@
 // and stand at the last one. Neighbours find their own way between spots and from map to map (systems/routes.js),
 // setting off a little early when the next block is on another map, so a path is just the places that matter.
 // Rest days: (day - 1) % 7, 0 = Monday.
+import { VENUES, venueMap } from './venues.js';
+
 const H = 60;
 const go = (from, to, map, ...path) => ({ from: from * H, to: to * H, map, path });
 const at = (from, to, map, ...path) => ({ from: from * H, to: to * H, map, path, stay: true });
@@ -12,8 +14,11 @@ const SQUARE = [[9, 7], [14, 7], [14, 10], [9, 10]];               // around the
 const BOARD = [11, 6];                                              // in front of the quest board
 const LANE = [[3, 8], [12, 8], [21, 8], [12, 8]];                   // the town's upper lane
 const LOWER = [[3, 12], [12, 12], [20, 12], [12, 12]];              // the town's lower lane
-// Outside the Lantern in the evening, each in their own place.
-const TAVERN = { bram: [6, 12], corvin: [7, 12], maren: [9, 12], hale: [3, 12], lio: [5, 12], juno: [8, 12], rook: [4, 12], wren: [6, 13], pell: [8, 13] };
+// In the Lantern in the evening, each in their own place (v98: inside, at the tables; Lio on the stage).
+const LANTERN = venueMap('tavern');
+const TAVERN = { bram: [4, 9], corvin: [7, 9], maren: [10, 9], hale: [13, 9], lio: [15, 10], juno: [11, 11], rook: [5, 11], wren: [6, 11], pell: [12, 11] };
+// v98: keepers work inside their buildings, behind the counter (data/venues.js spot).
+const KEEP = (id) => [venueMap(id), VENUES[id].spot];
 // Every front door in the village, for Juno's round.
 const DOORS = [[2, 4], [6, 4], [17, 4], [21, 4], [19, 14], [15, 14], [7, 14], [3, 14]];
 
@@ -25,7 +30,7 @@ const DAYS = {
   // Bram runs the carpentry in town, shut on Tuesdays; then he checks on the bin he built you and the square.
   bram: (wd, def) => (wd === 1
     ? [go(9, 12, 'village', ...SQUARE), go(12, 17, 'farm', ...def.path)]
-    : [at(9, 17, 'town', [16, 6]), at(17, 19, 'town', TAVERN.bram)]),
+    : [at(9, 17, ...KEEP('carpenter')), at(17, 19, LANTERN, TAVERN.bram)]),
   // Odile fishes the Wilds pond at dawn, walks the farm, then mends nets on the pier. Fridays she only fishes.
   odile: (wd, def) => (wd === 4
     ? [at(6, 11, 'wilds', [14, 10]), go(11, 17, 'village', ...SQUARE)]
@@ -39,27 +44,27 @@ const DAYS = {
   // Wren keeps the store 9 to 5 (shut Wednesdays), then a stroll through the village.
   wren: (wd) => (wd === 2
     ? [go(10, 16, 'village', ...SQUARE, [8, 14], [18, 14]), go(16, 19, 'beach', [10, 3], [18, 6])]
-    : [at(9, 17, 'town', [2, 6]), go(17, 20, 'village', ...SQUARE)]),
+    : [at(9, 17, ...KEEP('store')), go(17, 20, 'village', ...SQUARE)]),
   // Corvin at his anvil, then the Lantern.
-  corvin: () => [at(9, 16, 'town', [9, 6]), at(16, 20, 'town', TAVERN.corvin)],
+  corvin: () => [at(9, 16, ...KEEP('smithy')), at(16, 20, LANTERN, TAVERN.corvin)],
   // Hob does his errands in the village, then keeps the Lantern from noon to midnight.
-  hob: () => [go(9, 11, 'village', BOARD, [9, 10], [14, 7]), at(12, 24, 'town', [3, 11])],
+  hob: () => [go(9, 11, 'village', BOARD, [9, 10], [14, 7]), at(12, 24, ...KEEP('tavern'))],
   // Doctor Maren: a morning walk, the clinic 9 to 3, house calls on the south lane, the Lantern.
-  maren: () => [go(8, 9, 'town', ...LANE), at(9, 15, 'town', [13, 11]), go(15, 18, 'village', [3, 14], [7, 14], ...SQUARE), at(18, 21, 'town', TAVERN.maren)],
+  maren: () => [go(8, 9, 'town', ...LANE), at(9, 15, ...KEEP('clinic')), go(15, 18, 'village', [3, 14], [7, 14], ...SQUARE), at(18, 21, LANTERN, TAVERN.maren)],
   // Warden Hale keeps the lodge all day and walks into town for the evening.
-  hale: () => [at(8, 18, 'wilds', [14, 3]), at(18, 21, 'town', TAVERN.hale)],
+  hale: () => [at(8, 18, ...KEEP('lodge')), at(18, 21, LANTERN, TAVERN.hale)],
   // Lio fiddles by the fountain, wanders the town, then plays outside the Lantern.
-  lio: () => [at(10, 13, 'village', [12, 10]), go(13, 17, 'town', ...LANE), at(17, 22, 'town', TAVERN.lio)],
+  lio: () => [at(10, 13, 'village', [12, 10]), go(13, 17, 'town', ...LANE), at(17, 22, LANTERN, TAVERN.lio)],
   // Pell teaches at the town hall, shut Saturdays; Saturdays are for the forest.
   pell: (wd) => (wd === 5
     ? [go(9, 16, 'forest', [4, 4], [16, 6], [3, 10]), go(16, 19, 'town', ...LOWER)]
-    : [at(9, 15, 'town', [10, 3]), go(15, 18, 'village', ...SQUARE), at(18, 21, 'town', TAVERN.pell)]),
+    : [at(9, 15, venueMap('hall'), [14, 5]), go(15, 18, 'village', ...SQUARE), at(18, 21, LANTERN, TAVERN.pell)]),
   // Juno carries the mail: every village door, your farm, the town's doors, then the Lantern.
-  juno: () => [go(7, 10, 'village', ...DOORS), go(10, 12, 'farm', [4, 4], [12, 4], [20, 5]), go(12, 17, 'town', [4, 7], [11, 7], [16, 7], [5, 12], [15, 12], [19, 12], [14, 3]), at(17, 21, 'town', TAVERN.juno)],
+  juno: () => [go(7, 10, 'village', ...DOORS), go(10, 12, 'farm', [4, 4], [12, 4], [20, 5]), go(12, 17, 'town', [4, 7], [11, 7], [16, 7], [5, 12], [15, 12], [19, 12], [14, 3]), at(17, 21, LANTERN, TAVERN.juno)],
   // Nell tends the garden between the south cottages, visits the old mine mouth, then sits by the square.
   nell: () => [go(7, 11, 'village', [5, 12], [4, 11], [6, 11]), go(11, 15, 'wilds', [12, 2], [10, 4], [13, 5]), at(15, 19, 'village', [8, 11])],
   // Rook works on the beach all day, then the Lantern.
-  rook: () => [go(8, 17, 'beach', [6, 11], [6, 9], [8, 7], [4, 8]), at(17, 21, 'town', TAVERN.rook)],
+  rook: () => [go(8, 17, 'beach', [6, 11], [6, 9], [8, 7], [4, 8]), at(17, 21, LANTERN, TAVERN.rook)],
   // Esme paints in the forest, then the village, then the shore at dusk.
   esme: () => [go(9, 16, 'forest', [4, 4], [16, 6], [6, 11]), go(16, 19, 'village', ...SQUARE), at(19, 21, 'beach', [12, 4])],
   // Kit hangs about the Anvil in the morning and the square after; Saturdays at the beach.

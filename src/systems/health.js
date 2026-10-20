@@ -30,8 +30,8 @@ function faint() {
   G.hurtT = 0;
   const inMine = S.map === 'mine';
   if (inMine) emit('mine:faint');   // the Hollow lets go of you first
-  placePlayer('town', CLINIC_BED.x, CLINIC_BED.y, CLINIC_BED.dir);
-  emit('map:changed', 'town');
+  placePlayer(CLINIC_BED.map, CLINIC_BED.x, CLINIC_BED.y, CLINIC_BED.dir);
+  emit('map:changed', CLINIC_BED.map);
   emit('ui:message', {
     title: 'You blacked out',
     text: `${inMine ? 'Someone found you in the Hollow and carried you to town.' : 'Someone found you and carried you to town.'} You come to at ${SHOPS.clinic.name}.${bill ? ` ${SHOPS.clinic.keeper} patched you up: the bill is ${bill}g.` : ` ${SHOPS.clinic.keeper} waves away the bill.`}`,

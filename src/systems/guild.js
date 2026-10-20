@@ -2,7 +2,6 @@
 // deeper and keeps the slaying goals: G.S.slain counts monsters by kind, G.S.goalsClaimed lists goals rewarded.
 import { G } from '../core/game.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addInteraction } from '../core/registry.js';
 import { LODGE, LODGE_SHOP, GOALS } from '../data/guild.js';
 import { WEAPONS } from '../data/weapons.js';
 import { CLOTHES } from '../data/clothing.js';
@@ -55,10 +54,4 @@ on('game:loaded', () => {
   if (Array.isArray(G.S.forage)) G.S.forage = G.S.forage.filter(free);
 });
 
-addInteraction(72, ({ tile, mapId }) => {
-  if (mapId !== 'wilds' || tile !== '&') return false;
-  if (!lodgeOpen()) { notify(`The lodge door is barred. A note: "Gone below. Come and see me once you have been down the Hollow. ${LODGE.keeper}"`); return true; }
-  emit('ui:lodge');
-  return true;
-});
-// v49: Hale is a villager now (data/npcs.js) and stands by the lodge door through the day.
+// v49: Hale is a villager now (data/npcs.js). v98: the door takes you inside, where he keeps the counter (systems/venues.js).

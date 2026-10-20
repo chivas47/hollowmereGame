@@ -10,11 +10,8 @@ import { ITEMS } from '../data/items.js';
 import { addItem } from './quality.js';
 import { hearts } from './npcs.js';
 import { CANDIDATES, BOUQUET } from '../data/romance.js';
-import { SHOP_SPOTS } from '../data/maps.js';
 import { today, fmtTime } from '../core/time.js';
 import { festivalToday } from './festivals.js';
-
-const BY_TILE = Object.fromEntries(Object.entries(SHOP_SPOTS).map(([k, s]) => [s.tile, k]));
 
 // Whether a shop opens at all today: not on its closing day or a festival day.
 export const openToday = (k) => !festivalToday() && !SHOPS[k].closed.includes(today().wd);
@@ -27,14 +24,7 @@ export function closedWhy(k) {
   return null;
 }
 
-addInteraction(72, ({ tile, mapId }) => {
-  const k = mapId === 'town' && BY_TILE[tile];
-  if (!k) return false;
-  const why = closedWhy(k);
-  if (why) { notify(why); return true; }
-  emit(SHOPS[k].ui);
-  return true;
-});
+// v98: each shop's door takes you inside and its counter opens the dialog (systems/venues.js).
 
 // The farm's stall and workbench: their trade moved to town.
 addInteraction(70, ({ tile, mapId }) => {

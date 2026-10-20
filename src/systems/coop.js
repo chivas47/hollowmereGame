@@ -86,11 +86,7 @@ addInteraction(95, ({ tx, ty, mapId }) => {
   return true;
 });
 
-addInteraction(72, ({ tile }) => {
-  if (tile !== 'C') return false;
-  emit('ui:coop');
-  return true;
-});
+// v98: the coop's door takes you inside; the feed hopper there opens the coop dialog (systems/venues.js).
 
 // Kept for tools/balance.mjs and older callers: buying a chicken and collecting the coop.
 export const buyChicken = () => !!buyLivestock('chicken');

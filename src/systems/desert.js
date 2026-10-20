@@ -40,8 +40,6 @@ addInteraction(72, ({ tile, mapId }) => {
 });
 addInteraction(72, ({ tile, mapId }) => {
   if (mapId !== 'desert') return false;
-  if (tile === '1') { emit('ui:oasis'); return true; }
-  if (tile === '2') { emit('ui:casino'); return true; }
   if (tile === '3') { emit('ui:dtrader'); return true; }
   return false;
 });

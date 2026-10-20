@@ -5,7 +5,7 @@ import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addEntities } from '../core/registry.js';
 import { NPCS } from '../data/npcs.js';
-import { CHILD, CHILD_NAMES, DIVORCE, HALL } from '../data/family.js';
+import { CHILD, CHILD_NAMES, DIVORCE } from '../data/family.js';
 import { drawChild } from '../render/sprites.js';
 import { hearts } from './npcs.js';
 
@@ -75,10 +75,4 @@ export function divorce() {
   changed();
   return true;
 }
-addInteraction(72, ({ tile, mapId }) => {
-  if (mapId !== 'town' || tile !== '-') return false;
-  const t = G.S.time;
-  if (t < HALL.open || t >= HALL.close) { notify(`The ${HALL.name.toLowerCase()} is open 9:00 am to 5:00 pm.`); return true; }
-  emit('ui:hall');
-  return true;
-});
+// v98: the town hall's door takes you inside; the clerk's counter opens this (systems/venues.js).

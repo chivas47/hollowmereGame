@@ -4,12 +4,11 @@
 // G.S.theatre = { day, seen: { npcId: week } }; G.S.arcade = { best: { game: score }, prized: [game] }.
 import { G } from '../core/game.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addInteraction } from '../core/registry.js';
 import { THEATRE, FILMS, SNACKS, TASTES, ARCADE } from '../data/theatre.js';
 import { MAPS } from '../data/maps.js';
 import { NPCS } from '../data/npcs.js';
 import { SEASONS } from '../data/seasons.js';
-import { today, fmtTime } from '../core/time.js';
+import { today } from '../core/time.js';
 import { restored } from './restoration.js';
 import { addPoints } from './npcs.js';
 import { addItem } from './quality.js';
@@ -74,10 +73,4 @@ export function arcadeScore(game, score) {
   return out;
 }
 
-addInteraction(72, ({ tile, mapId }) => {
-  if (tile !== 'Þ' || mapId !== 'town') return false;
-  if (festivalToday()) notify(`${THEATRE.name} is shut for the festival.`);
-  else if (!theatreOpen()) notify(`${THEATRE.name} is open ${fmtTime(THEATRE.open)} to ${fmtTime(THEATRE.close)}.`);
-  else emit('ui:theatre');
-  return true;
-});
+// v98: the door takes you into the lobby; the snack counter there sells tickets (systems/venues.js).

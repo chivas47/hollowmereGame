@@ -88,11 +88,7 @@ addInteraction(94, ({ tx, ty, mapId }) => {
   return true;
 });
 
-addInteraction(72, ({ tile }) => {
-  if (tile !== 'A') return false;
-  emit('ui:barn');
-  return true;
-});
+// v98: the barn's door takes you inside; the hay hopper there opens the barn dialog (systems/venues.js).
 
 export function orderBarn() {
   const S = G.S;
