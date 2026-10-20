@@ -83,7 +83,8 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 34h | Image sprite sheets: crops | feature | done (chivas47/hollowmereGame#77) | Every crop stage from a tinted sheet, code art as the fallback. Continues 34d. Asked for by Nuno, October 2026. |
 | 34i | Image sprite sheets: forage and fruit trees | feature | done (chivas47/hollowmereGame#78) | Forage and fruit trees from sheets, code art as the fallback; the sheet generators kept in tools/sprites/. Continues 34d. Asked for by Nuno, October 2026. |
 | 34j | Image sprite sheets: debris and giant crops | feature | done (chivas47/hollowmereGame#79) | Debris and giant crops from sheets built from the code art, code art as the fallback. Continues 34d. Asked for by Nuno, October 2026. |
-| 34k | Image sprite sheets: placed objects and furniture | feature | in progress (chivas47/hollowmereGame#80) | Placed objects and furniture (tinted to its two colours) from sheets built from the code art; fixes the v83 debris sheet. Continues 34d. Asked for by Nuno, October 2026. |
+| 34k | Image sprite sheets: placed objects and furniture | feature | done (chivas47/hollowmereGame#80) | Placed objects and furniture (tinted to its two colours) from sheets built from the code art; fixes the v83 debris sheet. Continues 34d. Asked for by Nuno, October 2026. |
+| 34l | Image sprite sheets: terrain tile sets | feature | in progress | Outdoor ground in the standard 16-tile corner layout (Nuno chose a standard tileset layout over the code's own rules), one full-colour sheet per season, with edges. Tilled soil, caves, floors and buildings to follow. Asked for by Nuno, October 2026. |
 | 33 | Local two-player | feature | needs decision | Same-screen co-op is possible without a server but touches every system. Nuno to decide whether it is worth it. |
 
 ## Done
