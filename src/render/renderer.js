@@ -7,7 +7,7 @@ import { today, dayEnd } from '../core/time.js';
 import { MAPS } from '../data/maps.js';
 import { PAL } from '../data/seasons.js';
 import { LIGHT, NIGHT_FROM } from '../data/atmosphere.js';
-import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, drawQuarry, drawSand, drawBowl, drawHouseTile, drawTerrain, drawFlowers, HOUSE_ART, OBJECT_ART, CAVE_ART } from './tiles.js';
+import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, drawQuarry, drawSand, drawBowl, drawHouseTile, drawTerrain, drawFlowers, drawBuilding, HOUSE_ART, CAVE_ART } from './tiles.js';
 import { facing, tileAt } from '../systems/world.js';
 import { WALLPAPERS, FLOORS } from '../data/furniture.js';
 import { TERRAIN_SHEET, CAVE_SHEET } from '../data/sprites.js';
@@ -47,7 +47,7 @@ function renderBackground(mapId, season) {
     const t = map.grid[y][x], art = TILE_ART[t];
     if (art && !(sheetGround && (map.base === 'cave' ? t === 'X' : t === 'O'))) art(g, x, y, p);   // v85: outdoor water (v87: cave walls) are in the tile set
   }
-  map.objects.forEach((o) => OBJECT_ART[o.art](g, p, o));
+  map.objects.forEach((o) => drawBuilding(g, p, o));   // v88: from the building sheets
   return c;
 }
 
