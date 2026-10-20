@@ -101,6 +101,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 38 | Turn, pick up and undo | feature | done (chivas47/hollowmereGame#95) | Turn placed furniture (R), pick up every placed piece (the television had no button), undo the day's places, pick-ups and turns (U, Ctrl+Z). Only what the player placed. Asked for by Nuno, October 2026 (sprint dropped by Nuno). |
 | 39 | Rain on windows, crackling hearths and indoor light | feature | done (chivas47/hollowmereGame#96) | Indoor dark and light pools by the hour and weather, rain on every window (and new farmhouse windows), hearth and stove crackle, an ambience volume slider. Asked for by Nuno, October 2026. |
 | 40 | Hints and batch crafting | feature | in progress (chivas47/hollowmereGame#97) | A Hints tab in the journal, a morning tip and a tool tip after three silent presses of Use (Tips on or off in the menu); ×5 and All in the crafting menu. Asked for by Nuno, October 2026. |
+| 41 | Moving water and reflections | feature | in progress | Ripples that drift, glints on sunny days, rain rings on water, reflections of characters, animals and trees at the bank; the frozen pond stays still. Asked for by Nuno, October 2026 (from the world-detail gap list). |
 | 33 | Local two-player | feature | needs decision | Same-screen co-op is possible without a server but touches every system. Nuno to decide whether it is worth it. |
 
 ## Done

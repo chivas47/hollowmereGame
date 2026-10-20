@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v102: Moving water and reflections
+- Open water moves: light ripples drift and fade across every water tile (beach, island, lake, forest river, grove, Wilds pond, dunes, sewer and farm layouts with water), and on sunny days from 8 am to 6 pm a few tiles glint.
+- Rain and storms drop rings on the water.
+- Reflections: the player, neighbours, animals, the pet, the horse and trees at the bank are mirrored into the water below them, swaying gently.
+- In winter the frozen Wilds pond stays still and reflects more faintly.
+- Drawn only: no save fields, no prices. Under 1 ms a frame on the beach, the largest water.
+
 ## v101: Hints and batch crafting
 - Batch crafting: the crafting menu adds ×5 and All (the number you can afford) next to Craft once you can make more than one. Same cost per item; one message and one crafted pose for the lot.
 - Hints: a Hints tab in the journal (J) lists up to three things worth doing right now, most pressing first: getting to bed, eating, filling the can, watering dry crops, picking ripe ones, shipping produce, planting the first seeds, buying seeds, collecting from a finished machine, placing what is in your kit, petting animals, trying the Hollow, winter's options. When nothing fits, it says the day is yours.

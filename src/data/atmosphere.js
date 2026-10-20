@@ -63,3 +63,14 @@ export const HOUSE_WINDOWS = { main: [[8, 2], [15, 2]], nook: [12, 1], kitchen: 
 
 // v100: a hearth or stove crackles within this many tiles, loudest beside it.
 export const CRACKLE_RANGE = 7;
+
+// v102: moving water. Every open water tile ('O') gets RIPPLES light dashes that drift and fade in turn (period
+// seconds per fade); on sunny days a few tiles glint (GLINTS per 100 water tiles). Rain drops rings on the water.
+// People, animals and trees standing at the bank are mirrored into it at REFLECT alpha, wobbling WOBBLE pixels.
+// The frozen pond (data/fish.js ICE_HOLE) stays still in winter and only mirrors.
+export const WATER = {
+  ripples: 2, period: 3.2, drift: 2,
+  glints: 6, glintFrom: 8 * 60, glintTo: 18 * 60,
+  rings: { perSecond: 14, life: 0.6, max: 40 },
+  reflect: 0.32, reflectIce: 0.22, reach: 3, wobble: 1,
+};
