@@ -182,6 +182,13 @@ The placeholder sheets are built by the scripts in `tools/sprites/`.
 
 Lit bombs use the bomb frames of placed.png.
 
+## pens.png
+
+288 x 32. Pond, slime pen and farm cave pieces, 32 x 16 frames, one column per piece in the order of `PENS_SHEET.order`: fish, roe, slime (resting), slime (mid-hop), slime ball, trough water, bat, mushroom log, crate goods. Each piece's spot (where the code places it) is x 4, y 2 of its frame (`PENS_SHEET.anchor`), so keep that corner where it is when redrawing.
+
+- **Rows (2 bands):** main (the fish only, greyscale, tinted to the fish's colour), ink (every other piece, colours drawn in).
+- Where each piece goes and how it moves is in code.
+
 ## Credits
 
 | File | Author | Licence |
@@ -204,3 +211,4 @@ Lit bombs use the bomb frames of placed.png.
 | alders.png, fences.png, fixtures.png | Hollowmere Farm (original placeholder, v91, from the game's code art) | same as the game |
 | children.png | Hollowmere Farm (original placeholder, v92, from the game's code art) | same as the game |
 | glow.png, bunting.png | Hollowmere Farm (original placeholder, v93, from the game's code art) | same as the game |
+| pens.png | Hollowmere Farm (original placeholder, v94, from the game's code art) | same as the game |

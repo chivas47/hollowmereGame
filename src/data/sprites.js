@@ -142,3 +142,8 @@ export const CHILDREN_SHEET = { sheet: 'children', size: 16, origin: [-8, -14], 
 // water and seed are drawn in code.
 export const GLOW_SHEET = { sheet: 'glow', w: 56, h: 52, origin: [-20, -22] };
 export const BUNTING_SHEET = { sheet: 'bunting', size: 8, origin: [-3, -1], layers: ['main'] };
+
+// v94 pens.png: pond fish, the slime pen (slimes in two hop frames, slime balls, the trough's water) and the farm
+// cave's bats, mushroom logs and crate goods. 32x16 frames, one column per piece in this order; the piece's own spot
+// is at x 4, y 2 of its frame (anchor). Bands: main (the fish, tinted to its colour), ink (every other piece, as is).
+export const PENS_SHEET = { sheet: 'pens', w: 32, h: 16, anchor: [4, 2], layers: ['main', 'ink'], order: ['fish', 'roe', 'slime0', 'slime1', 'ball', 'water', 'bat', 'log', 'crate'] };

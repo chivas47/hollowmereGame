@@ -3,7 +3,7 @@ import { T } from '../core/constants.js';
 import { CROPS } from '../data/crops.js';
 import { r, blink } from './pixel.js';
 import { ready, tinted, frame, sheet } from './sheets.js';
-import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET, DEBRIS_SHEET, GIANTS_SHEET, PLACED_SHEET, FURN_SHEET, SOIL_SHEET, ALDERS_SHEET, FENCES_SHEET, FIXTURES_SHEET, CHILDREN_SHEET, GLOW_SHEET, BUNTING_SHEET } from '../data/sprites.js';
+import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET, DEBRIS_SHEET, GIANTS_SHEET, PLACED_SHEET, FURN_SHEET, SOIL_SHEET, ALDERS_SHEET, FENCES_SHEET, FIXTURES_SHEET, CHILDREN_SHEET, GLOW_SHEET, BUNTING_SHEET, PENS_SHEET } from '../data/sprites.js';
 
 const FERT_DOT = { booster: '#c9b68e', booster2: '#e9b44c', booster3: '#b98ae0', tonic: '#86b86a', tonic2: '#5fd36a', mulch: '#a0805a', mulch2: '#7a5a3a' };
 export function drawSoil(c, X, Y, wet, fert) {
@@ -320,31 +320,56 @@ export function drawAnimal(c, px, py, dir, moving, kind) {
 }
 
 // v31: fish in the pond (n of them, colour of the kind) and slimes and slime balls in the pen. X, Y: the top-left pixel.
+// v94: pond fish, the pen's slimes and the farm cave's life are pieces (PEN_ART) drawn at code-made spots; each piece
+// is from the pens sheet once it has loaded (the fish tinted to its colour), else drawn in code.
+const PEN_ART = {
+  fish: (c, x, y, col) => { r(c, x, y, 5, 2, col); r(c, x - 1, y, 1, 2, col); },
+  roe: (c, x, y) => { r(c, x, y + 1, 4, 3, '#e9933c'); r(c, x + 1, y, 2, 1, '#f3b26a'); },
+  slime0: (c, x, y) => slimeArt(c, x, y, 0),
+  slime1: (c, x, y) => slimeArt(c, x, y, 1),
+  ball: (c, x, y) => { r(c, x, y, 4, 4, '#5fb04a'); r(c, x + 1, y, 2, 1, '#9fe08a'); },
+  water: (c, x, y) => r(c, x, y, 14, 3, '#69aedb'),
+  bat: (c, x, y) => { r(c, x, y, 4, 4, '#3f2f3a'); r(c, x - 3, y + 1, 3, 2, '#5a4050'); r(c, x + 4, y + 1, 3, 2, '#5a4050'); r(c, x + 1, y + 1, 1, 1, '#e9c46a'); },
+  log: (c, x, y) => { r(c, x, y + 6, 24, 8, '#6e4626'); r(c, x, y + 6, 3, 8, '#c9a06a'); r(c, x + 6, y + 2, 5, 4, '#a0522d'); r(c, x + 15, y + 3, 4, 3, '#a0522d'); },
+  crate: (c, x, y) => { r(c, x, y + 1, 8, 4, '#e9933c'); r(c, x + 1, y, 3, 2, '#7f3a8a'); },
+};
+function slimeArt(c, sx, sy, b) {
+  r(c, sx, sy + 2 - b, 6, 4 + b, '#7fcf6a'); r(c, sx + 1, sy + 1 - b, 4, 1, '#a6e88f'); r(c, sx + 1, sy + 3, 1, 1, '#2b211a'); r(c, sx + 4, sy + 3, 1, 1, '#2b211a');
+}
+export const PEN_PIECES = Object.keys(PEN_ART);   // for tools/sprites/dump_code_art.mjs
+export function drawPenPiece(c, kind, x, y, col) {
+  const P = PENS_SHEET, i = P.order.indexOf(kind);
+  if (i < 0 || !ready(P.sheet)) return PEN_ART[kind](c, x, y, col);
+  const X = x - P.anchor[0], Y = y - P.anchor[1];
+  if (kind === 'fish') return c.drawImage(tinted(P.sheet, P.layers, [['main', col]], P.h), i * P.w, 0, P.w, P.h, X, Y, P.w, P.h);
+  c.drawImage(sheet(P.sheet).img, i * P.w, P.h, P.w, P.h, X, Y, P.w, P.h);
+}
+
 export function drawPondLife(c, X, Y, w, h, n, color, roe) {
   const t = performance.now() / 900;
   for (let i = 0; i < n; i++) {
     const fx = X + 10 + ((i * 13 + Math.sin(t + i) * 6) % (w - 22) + (w - 22)) % (w - 22), fy = Y + 10 + ((i * 7) % (h - 22));
-    r(c, Math.round(fx), Math.round(fy), 5, 2, color); r(c, Math.round(fx) - 1, Math.round(fy), 1, 2, color);
+    drawPenPiece(c, 'fish', Math.round(fx), Math.round(fy), color);
   }
-  if (roe) { r(c, X + w - 10, Y + 6, 4, 3, '#e9933c'); r(c, X + w - 9, Y + 5, 2, 1, '#f3b26a'); }
+  if (roe) drawPenPiece(c, 'roe', X + w - 10, Y + 5);
 }
 export function drawSlimes(c, X, Y, w, h, n, balls, full) {
   const t = performance.now() / 300;
-  if (full) r(c, X + 7, Y + h - 13, 14, 3, '#69aedb');
+  if (full) drawPenPiece(c, 'water', X + 7, Y + h - 13);
   for (let i = 0; i < Math.min(n, 12); i++) {
     const sx = X + 8 + (i * 11) % (w - 16), sy = Y + 10 + Math.floor(i * 11 / (w - 16)) * 8 % (h - 22), b = Math.floor(t + i) % 2;
-    r(c, sx, sy + 2 - b, 6, 4 + b, '#7fcf6a'); r(c, sx + 1, sy + 1 - b, 4, 1, '#a6e88f'); r(c, sx + 1, sy + 3, 1, 1, '#2b211a'); r(c, sx + 4, sy + 3, 1, 1, '#2b211a');
+    drawPenPiece(c, b ? 'slime1' : 'slime0', sx, sy);
   }
-  for (let i = 0; i < Math.min(balls, 6); i++) { const bx = X + w - 12 - (i % 3) * 5, by = Y + h - 12 - Math.floor(i / 3) * 5; r(c, bx, by, 4, 4, '#5fb04a'); r(c, bx + 1, by, 2, 1, '#9fe08a'); }
+  for (let i = 0; i < Math.min(balls, 6); i++) drawPenPiece(c, 'ball', X + w - 12 - (i % 3) * 5, Y + h - 12 - Math.floor(i / 3) * 5);
 }
 
 // v32: the farm cave's life. choice 'bats' (bats hanging from the ceiling) or 'logs' (six mushroom logs);
 // items: what waits in the crate at (cx, cy) in tiles.
 export function drawCaveLife(c, choice, n, cx, cy) {
   const t = performance.now() / 500;
-  if (choice === 'bats') for (let i = 0; i < 5; i++) { const x = 104 + i * 40, y = 70 + (i % 2) * 6 + Math.round(Math.sin(t + i)); r(c, x, y, 4, 4, '#3f2f3a'); r(c, x - 3, y + 1, 3, 2, '#5a4050'); r(c, x + 4, y + 1, 3, 2, '#5a4050'); r(c, x + 1, y + 1, 1, 1, '#e9c46a'); }
-  if (choice === 'logs') for (let i = 0; i < 6; i++) { const x = 104 + (i % 3) * 48, y = 120 + Math.floor(i / 3) * 40; r(c, x, y + 6, 24, 8, '#6e4626'); r(c, x, y + 6, 3, 8, '#c9a06a'); r(c, x + 6, y + 2, 5, 4, '#a0522d'); r(c, x + 15, y + 3, 4, 3, '#a0522d'); }
-  if (n) { r(c, cx * 16 + 4, cy * 16 + 1, 8, 4, '#e9933c'); r(c, cx * 16 + 5, cy * 16, 3, 2, '#7f3a8a'); }
+  if (choice === 'bats') for (let i = 0; i < 5; i++) drawPenPiece(c, 'bat', 104 + i * 40, 70 + (i % 2) * 6 + Math.round(Math.sin(t + i)));
+  if (choice === 'logs') for (let i = 0; i < 6; i++) drawPenPiece(c, 'log', 104 + (i % 3) * 48, 120 + Math.floor(i / 3) * 40);
+  if (n) drawPenPiece(c, 'crate', cx * 16 + 4, cy * 16);
 }
 
 // Crafted objects placed on the farm. state: { item, nights } for machines, null otherwise.
