@@ -11,6 +11,9 @@ import { QUALITY } from '../data/quality.js';
 import { drawFruitTree } from '../render/sprites.js';
 import { soilOf, placeKey, parsePlaceKey } from './world.js';
 import { addItem } from './quality.js';
+import { lean } from './wind.js';
+import { drawSwaying } from '../render/sway.js';
+import { WIND } from '../data/atmosphere.js';
 
 const trees = () => Object.entries(G.S.placed).filter(([, p]) => TREES[p.kind]);
 const indoors = (k) => parsePlaceKey(k).map === 'greenhouse';
@@ -60,5 +63,6 @@ addInteraction(73, ({ tx, ty, tile, mapId }) => {
 
 addEntities(() => trees().map(([k, p]) => ({ k, p, ...parsePlaceKey(k) })).filter((e) => e.map === G.S.map).map(({ p, x, y, map }) => ({
   y: (y + 1) * T - 1,
-  draw: (c) => drawFruitTree(c, x * T, y * T, FRUIT[TREES[p.kind].fruit], stage(p), p.fruit || 0, map !== 'greenhouse' && today().season === 'Winter'),
+  draw: (c) => drawSwaying(c, x * T - 4, y * T - 16, 24, 32, lean(x * T), WIND.sprite,   // v103: crowns lean in the wind
+    (g) => drawFruitTree(g, x * T, y * T, FRUIT[TREES[p.kind].fruit], stage(p), p.fruit || 0, map !== 'greenhouse' && today().season === 'Winter')),
 })));

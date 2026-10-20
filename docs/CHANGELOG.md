@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v103: Wind in grass, trees and washing
+- Wind: outdoors, tree crowns lean downwind in a wave that rolls across the map, stronger in rain and storms (faster too), barely there in mist, and breezier on some days than others. Indoors nothing moves.
+- Trees: every map's trees, wild alders and fruit trees bend at the crown while the trunk stays put.
+- Grass: the farm's grass patches sway, and open grass on other maps grows small tufts that bend (none in winter).
+- Washing: clotheslines in the village (two) and the town flap in the wind, and one beside the farmhouse shows your own shirt and trousers (only while its posts stand on open grass).
+- Drawn only: no save fields, no prices. Under 1 ms a frame on any map.
+
 ## v102: Moving water and reflections
 - Open water moves: light ripples drift and fade across every water tile (beach, island, lake, forest river, grove, Wilds pond, dunes, sewer and farm layouts with water), and on sunny days from 8 am to 6 pm a few tiles glint.
 - Rain and storms drop rings on the water.

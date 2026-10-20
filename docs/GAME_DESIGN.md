@@ -736,6 +736,10 @@ Nothing here is saved or touches the economy.
 | Glints (v102) | about 6 in 100 water tiles | sunny, 8 am to 6 pm, open-air maps |
 | Rain rings (v102) | open water | rain (14 a second) and storms (28), up to 40 at once |
 | Reflections (v102) | water within 3 tiles below anything drawn by its feet (player, neighbours, animals, pet, horse, trees) | always; 32% strength, 22% on the frozen pond, sway 1 px |
+| Wind (v103) | every map without a roof, the Dunes too | strength by weather (sun 0.55, rain 0.75, storms 1, snow 0.5, mist 0.15) times a daily breeziness of 0.6 to 1.3; storms move faster |
+| Swaying trees (v103) | the map's trees, alders, fruit trees | crowns lean up to 2 px at the top, 1 px lower down; trunks stay |
+| Swaying grass (v103) | the farm's grass patches; tufts on about 8 in 100 open grass tiles elsewhere | tufts not in winter |
+| Clotheslines (v103) | village (2), town (1), beside the farmhouse (your shirt and trousers) | hems flap up to 2 px |
 | Ambience volume (v100) | the menu's Ambience slider, 0 to 100% | Sound off still mutes it |
 
 ## Management tools (v71)
@@ -982,6 +986,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v103: Clotheslines are drawn only: you walk through their posts, and so do neighbours. The farm's line hides when anything is placed, planted or growing on a post tile, and on layouts where those tiles are not grass. Wind does not move the player's clothes, hair or buildings, and fruit and leaves do not fall. Reflections in water do not lean.
 - v102: Reflections mirror characters, animals and planted trees only: the cached map art (tree tiles, buildings, the pier) is not mirrored. The sheet's own still ripples stay under the moving ones. There is no reduced-motion setting yet.
 
 - v101: Hints read the farm as it is, not what you have done before, so a hint can repeat until its condition changes (the morning tip shows at most one, and Tips in the menu turns it and the tool tips off). The tool tip only fires on presses that give no feedback at all; tools that already answer (the can on grass, the pan off its spot) keep their own messages. The balance bot crafts one at a time; batch crafting changes no prices.

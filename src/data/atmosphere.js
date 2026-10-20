@@ -74,3 +74,24 @@ export const WATER = {
   rings: { perSecond: 14, life: 0.6, max: 40 },
   reflect: 0.32, reflectIce: 0.22, reach: 3, wobble: 1,
 };
+
+// v103: wind. Outdoors (every map without a roof, the Dunes too) things lean downwind in a wave that rolls across
+// the map: [strength, speed] by weather, times a breeziness rolled each day (DAILY, low to high). LENGTH is the
+// wave's length in pixels, GUST how much a slow gust adds. Sprites are cut into bands top to bottom
+// ([from, to] as fractions of their height, then how many pixels each band moves at full lean).
+export const WIND = {
+  weather: { sun: [0.55, 1], rain: [0.75, 1.3], storm: [1, 2], snow: [0.5, 0.8], mist: [0.15, 0.6] },
+  daily: [0.6, 1.3], length: 60, gust: 0.25,
+  tree: [[0, 0.5, 2], [0.5, 1, 1]],                   // a map's tree crowns (rows 0 to 11 of the tile)
+  sprite: [[0, 0.35, 2], [0.35, 0.65, 1], [0.65, 1, 0]],   // fruit trees and alders: the trunk stays put
+  grass: [[0, 0.5, 1], [0.5, 1, 0]],                  // the farm's grass patches
+  tufts: 8,                                           // tufts per 100 open grass tiles (not on the farm or in winter)
+};
+
+// v103: clotheslines, drawn only: two posts at x and x + w on row y, the washing between. On the farm the line
+// shows the player's own shirt and trousers, and only while both posts stand on open grass.
+export const CLOTHESLINES = {
+  farm: [{ x: 6, y: 2, w: 2, wash: 'player' }],
+  village: [{ x: 2, y: 6, w: 3, wash: ['#d8d0b8', '#8a5a9a', '#f2f2ee', '#5f8fb5'] }, { x: 17, y: 10, w: 3, wash: ['#c0504a', '#f2f2ee', '#e9b44c'] }],
+  town: [{ x: 13, y: 13, w: 3, wash: ['#f2f2ee', '#4a7a5a', '#d8d0b8', '#a5432f'] }],
+};
