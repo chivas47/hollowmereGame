@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v92: Children sheet
+- The farm's children (the baby in the crib, the crawler, the toddler) draw from a new sheet, `assets/sprites/children.png`, outlined. Each child keeps its own colours, drawn into the sheet: one row per child.
+- Made from the game's own code art, so they look the same apart from the outline. If the sheet fails to load, they are drawn in code exactly as in v91.
+- Saves: no new fields.
+
 ## v91: Alder, fence, gate and path sheets
 - Wild alders (every stage, and bare in winter) and the tree tap draw from a new sheet, `assets/sprites/alders.png`, outlined like the debris. The tap's syrup drop still blinks in code.
 - Fences draw from `assets/sprites/fences.png`: one frame per way a fence joins its neighbours, tinted to the wood, stone or hardwood colour, so rails meet the next post without a seam.

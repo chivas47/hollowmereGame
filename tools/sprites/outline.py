@@ -175,3 +175,10 @@ for n, (k, data) in enumerate(art['fixtures']):
     for (i, j), (L, c) in out.items(): img.putpixel((n * 16 + i, j), c)
 img.save(f'{OUT}/fixtures.png', optimize=True)
 print('FIXTURES order:', [k for k, _ in art['fixtures']])
+
+# v92 children.png: 16x16 frames, a column per stage (baby, crawler, toddler), a row per child's colours, outlined.
+img = Image.new('RGBA', (16 * 3, 16 * len(art['children'])), (0, 0, 0, 0))
+for row, frames in enumerate(art['children']):
+    for n, (st, data) in enumerate(frames):
+        for (i, j), (L, c) in tidy(grid(data, 16, 16), 16, 16).items(): img.putpixel((n * 16 + i, row * 16 + j), c)
+img.save(f'{OUT}/children.png', optimize=True)

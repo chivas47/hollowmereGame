@@ -6,7 +6,7 @@ const p = await b.newPage();
 await p.route('**/assets/sprites/**', (r) => r.abort());   // always the code art, never a sheet already built
 await p.goto('http://localhost:8123/index.html'); await p.waitForTimeout(1200);
 const out = await p.evaluate(async () => {
-  const { drawForageArt, drawFruitTree, drawDebris, drawGiant, drawPlaced, drawFurniture, drawAlder, drawTap, drawFence, drawGate, drawFloor, PLACED_KINDS, FURN_SHAPES } = await import('/src/render/sprites.js');
+  const { drawForageArt, drawFruitTree, drawDebris, drawGiant, drawPlaced, drawFurniture, drawAlder, drawTap, drawFence, drawGate, drawFloor, drawChild, PLACED_KINDS, FURN_SHAPES } = await import('/src/render/sprites.js');
   const { CROPS } = await import('/src/data/crops.js');
   const { drawHouseTile, OBJECT_ART, FRONT, buildingKey, PROP_ART, drawGreenhouseFloor } = await import('/src/render/tiles.js');
   const { PROPS_SHEET, TOOLS_SHEET } = await import('/src/data/sprites.js');
@@ -75,7 +75,9 @@ const out = await p.evaluate(async () => {
   const fixtures = [['gate-across', (g) => drawGate(g, 0, 0, false, true)], ['gate-across-open', (g) => drawGate(g, 0, 0, true, true)],
     ['gate-along', (g) => drawGate(g, 0, 0, false, false)], ['gate-along-open', (g) => drawGate(g, 0, 0, true, false)],
     ['woodpath', (g) => drawFloor(g, 0, 0, 'woodpath', '#b08a5a')], ['stonepath', (g) => drawFloor(g, 0, 0, 'stonepath', '#a9a49a')]].map(([k, fn]) => [k, grab(16, 16, fn)]);
-  return { forage, trees, debris, giants, placed, furniture, walls, floors, buildings, props, gh, tools, packet: [packet('#ffffff', '#ff0000'), packet('#000000', '#000000')], alders, fences, fixtures };
+  // v92: children, a row per child's colours (the two KIDS), a column per stage, feet at x 8, y 14.
+  const children = [0, 1].map((k) => ['baby', 'crawler', 'toddler'].map((st) => [st, grab(16, 16, (g) => drawChild(g, 8, 14, st, k))]));
+  return { forage, trees, debris, giants, placed, furniture, walls, floors, buildings, props, gh, tools, packet: [packet('#ffffff', '#ff0000'), packet('#000000', '#000000')], alders, fences, fixtures, children };
 });
 writeFileSync(process.argv[2], JSON.stringify(out));
 console.log(out.forage.length, 'forage,', out.trees.length, 'tree frames');
