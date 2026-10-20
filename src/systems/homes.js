@@ -6,11 +6,11 @@ import { emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer, addEntities } from '../core/registry.js';
 import { fmtTime, today } from '../core/time.js';
 import { MAPS } from '../data/maps.js';
-import { FURNITURE } from '../data/furniture.js';
-import { HOMES, homeMap, HOME_ENTRY, HOME_OPEN } from '../data/homes.js';
+import { HOMES, homeMap, homeEntry, HOME_OPEN } from '../data/homes.js';
 import { NPCS } from '../data/npcs.js';
 import { festivalOn, hoursOf } from '../data/festivals.js';
-import { drawFurniture } from '../render/sprites.js';
+import { INTERIORS, PIECES, piecesOf } from '../data/interiors.js';
+import { drawPiece, drawRug } from '../render/interiors.js';
 import { placePlayer } from './world.js';
 
 const nameOf = (id) => NPCS.find((d) => d.id === id)?.name || id;
@@ -38,7 +38,8 @@ addInteraction(72, ({ tx, ty, tile, mapId }) => {
   const why = shutWhy(id);
   if (why) { notify(why); return true; }
   const map = homeMap(id);
-  placePlayer(map, HOME_ENTRY[0], HOME_ENTRY[1], 'up');
+  const [ex, ey] = homeEntry(id);
+  placePlayer(map, ex, ey, 'up');
   G.keys = {}; G.swing = null;
   emit('map:changed', map);
   notify(MAPS[map].name);
@@ -46,14 +47,23 @@ addInteraction(72, ({ tx, ty, tile, mapId }) => {
   return true;
 });
 
-// Looking at their things.
-addInteraction(71, ({ tile, mapId }) => {
+// Looking at their things. v97: each piece in the floor plan has its own line, or says what it is; windows and
+// pictures on the walls too.
+addInteraction(71, ({ tx, ty, mapId }) => {
   const id = MAPS[mapId]?.home;
-  if (!id || !['Y', 'Z'].includes(tile)) return false;
-  notify(tile === 'Z' ? `${nameOf(id)}'s bed. Best leave it made.` : HOMES[id].note);
+  if (!id) return false;
+  const p = piecesOf(id).find((q) => !q.walk && tx >= q.x && tx < q.x + q.w && ty >= q.y && ty < q.y + q.h);
+  if (!p) return false;
+  notify(p.note || (p.k === 'bed' ? `${nameOf(id)}'s bed. Best leave it made.` : `${nameOf(id)}'s ${PIECES[p.k].name}.`));
   return true;
 });
 
-const furnitureHere = () => { const id = MAPS[G.S.map]?.home; return id ? HOMES[id].furniture : []; };
-addLayer(9, (c) => { for (const [k, x, y] of furnitureHere()) if (FURNITURE[k].walk) drawFurniture(c, x * T, y * T, FURNITURE[k]); });
-addEntities(() => furnitureHere().filter(([k]) => !FURNITURE[k].walk).map(([k, x, y]) => ({ y: (y + 1) * T - 3, draw: (c) => drawFurniture(c, x * T, y * T, FURNITURE[k]) })));
+// Rugs, things on the floor and things on the walls under everyone; furniture sorted with the people in the room.
+const piecesHere = () => { const id = MAPS[G.S.map]?.home; return id ? piecesOf(id) : []; };
+addLayer(9, (c) => {
+  const id = MAPS[G.S.map]?.home;
+  if (!id) return;
+  for (const rug of INTERIORS[id].rugs) drawRug(c, rug);
+  for (const p of piecesHere()) if (p.walk || p.wall) drawPiece(c, p);
+});
+addEntities(() => piecesHere().filter((p) => !p.walk && !p.wall).map((p) => ({ y: (p.y + p.h) * T - 3, draw: (c) => drawPiece(c, p) })));
