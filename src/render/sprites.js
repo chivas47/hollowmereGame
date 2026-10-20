@@ -3,7 +3,7 @@ import { T } from '../core/constants.js';
 import { CROPS } from '../data/crops.js';
 import { r, blink } from './pixel.js';
 import { ready, tinted, frame, sheet } from './sheets.js';
-import { PERSON, ANIMALS } from '../data/sprites.js';
+import { PERSON, ANIMALS, PETS, HORSE } from '../data/sprites.js';
 
 const FERT_DOT = { booster: '#c9b68e', booster2: '#e9b44c', booster3: '#b98ae0', tonic: '#86b86a', tonic2: '#5fd36a', mulch: '#a0805a', mulch2: '#7a5a3a' };
 export function drawSoil(c, X, Y, wet, fert) {
@@ -603,7 +603,25 @@ export function drawFloor(c, X, Y, kind, col) {
 
 // ---- Pets and the horse (v23) ----
 // look: [body, accent]. hat: a PET_HATS color or null.
+// v79: from the pet sheet tinted to look once it has loaded (false until then: drawPet draws in code).
+function sheetPet(c, px, py, kind, look, dir, moving, hat) {
+  const P = PETS, spot = P.hat[kind];
+  if (!spot || !ready(P.sheet)) return false;
+  const [body, acc] = look, left = dir === 'left', bob = moving && Math.floor(performance.now() / 180) % 2 ? 1 : 0;
+  const layers = [[`${kind}.body`, body], [`${kind}.acc`, acc]];
+  if (kind === 'dog') layers.push(['dog.ear', acc === '#f4ead2' ? '#6e4626' : acc]);
+  layers.push([`${kind}.ink`, null]);
+  const x = Math.round(px) + P.origin[0], y = Math.round(py) + P.origin[1];
+  frame(c, tinted(P.sheet, P.layers, layers, P.size), (left ? 2 : 0) + bob, P.size, x, y);
+  if (hat) {
+    const hx = x + (left ? P.size - 5 - spot[0] : spot[0]), hy = y + spot[1] - bob;
+    r(c, hx, hy - 1, 5, 1, hat); r(c, hx + 1, hy - 3, 3, 2, hat);
+  }
+  return true;
+}
+
 export function drawPet(c, px, py, kind, look, dir, moving, hat) {
+  if (sheetPet(c, px, py, kind, look, dir, moving, hat)) return;
   const left = dir === 'left', x = Math.round(px) - 6, base = Math.round(py), [body, acc] = look;
   const y = base - 9 - (moving && Math.floor(performance.now() / 180) % 2 ? 1 : 0);
   r(c, x + 1, base - 1, 11, 1, 'rgba(0,0,0,.25)');
@@ -628,6 +646,10 @@ export function drawPet(c, px, py, kind, look, dir, moving, hat) {
 }
 
 export function drawHorse(c, px, py, dir, moving) {
+  if (ready(HORSE.sheet)) {
+    const f = (dir === 'left' ? 2 : 0) + (moving && Math.floor(performance.now() / 120) % 2 ? 1 : 0);
+    return frame(c, sheet(HORSE.sheet).img, f, HORSE.size, Math.round(px) + HORSE.origin[0], Math.round(py) + HORSE.origin[1]);
+  }
   const left = dir === 'left', x = Math.round(px) - 9, base = Math.round(py), step = moving ? Math.floor(performance.now() / 120) % 2 : 0;
   const y = base - 14, body = '#8a5a32', dark = '#5c371e';
   r(c, x + 1, base - 1, 17, 1, 'rgba(0,0,0,.25)');

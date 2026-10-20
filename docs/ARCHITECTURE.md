@@ -55,7 +55,7 @@ src/
     schedules.js      neighbour daily routines by weekday (go: walk a loop of spots, at: walk there and stay), spouse and festival days
     homes.js          where each neighbour lives: door, cottage, its inside (bed, furniture, the owner's spot), door hours (v76)
     scenes.js         heart scenes at 4 and 8 hearts
-    sprites.js        v77: layout of each PNG sprite sheet (PERSON: frame size, layers, directions, steps, origin; v78 ANIMALS: one row per kind)
+    sprites.js        v77: layout of each PNG sprite sheet (PERSON: frame size, layers, directions, steps, origin; v78 ANIMALS: one row per kind; v79 PETS (tinted bands per kind, hat spots), HORSE)
   systems/            one feature per file
     layouts.js        rebuilds the farm grid for G.S.layout on game:loaded (imported first), startLayout()
     farmPerks.js      layout perks: quarry rocks, crates, regrowing stumps, farm forage, farm slimes

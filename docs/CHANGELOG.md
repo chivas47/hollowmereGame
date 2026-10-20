@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v79: Pet and horse sprite sheets
+- The farm pet now draws from a new layered sheet, `assets/sprites/pets.png` (original placeholder art): outlined and shaded, tinted to each of the nine looks, with hats where they were. The new-game preview uses it too.
+- The horse draws from `assets/sprites/horse.png`, with a proper neck and head and a saddle.
+- If either sheet fails to load, they are drawn in code exactly as in v78. Pond fish, slimes and monsters are still drawn in code.
+- Saves: no new fields.
+
 ## v78: Animal sprite sheet
 - Coop and barn animals (chicken, duck, rabbit, mossback, cow, goat, sheep, pig, strider) now draw from a new sheet, `assets/sprites/animals.png` (original placeholder art): outlined and shaded, facing left and right, with a stand and a step frame.
 - If the sheet fails to load, they are drawn in code exactly as in v77. Pets, the horse, pond fish and slimes are still drawn in code.
