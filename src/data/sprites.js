@@ -55,6 +55,22 @@ export const DEBRIS_SHEET = { sheet: 'debris', size: 16, order: ['grass', 'weeds
 // crop's colour), line (its line colour), ink (stems, leaves, shadow).
 export const GIANTS_SHEET = { sheet: 'giants', size: 48, layers: ['fruit', 'line', 'ink'], cols: { pod: 0, round: 1, leafy: 2 } };
 
+// v84 placed.png: crafted objects; furniture.png: furniture by shape. 16x32 frames, the tile at the bottom
+// (origin: the frame's top-left from the tile's), one row in this order (kinds not listed are drawn in code).
+// placed.png colours are drawn in; furniture.png bands: main (tinted to its first colour), second (its second), ink.
+export const PLACED_SHEET = {
+  sheet: 'placed', w: 16, h: 32, origin: [0, -16],
+  order: ['emberbomb', 'blastbomb', 'greatbomb', 'slimepress', 'chest', 'bigchest', 'sign', 'farmcomputer', 'minibin', 'sprinkler',
+    'sprinkler2', 'sprinkler3', 'crock', 'churn', 'vat', 'brewbarrel', 'eggpress', 'loom', 'oilpress', 'beebox', 'gemcopier', 'dryer',
+    'mushroomlog', 'incubator', 'silo', 'smoker', 'furnace', 'kiln', 'lightningrod', 'lantern'],
+};
+export const FURN_SHEET = {
+  sheet: 'furniture', w: 16, h: 32, origin: [0, -16], layers: ['main', 'second', 'ink'],
+  order: ['tv', 'chair', 'armchair', 'sofa', 'stool', 'table', 'roundtable', 'desk', 'endtable', 'tablelamp', 'floorlamp', 'plant',
+    'cactus', 'flowers', 'tallplant', 'rug', 'roundrug', 'bookcase', 'dresser', 'clock', 'hearth', 'globe', 'barrel', 'easel', 'sewing',
+    'dyepots', 'mannequin', 'chest'],
+};
+
 export const MONSTERS = {
   sheet: 'monsters', size: 24, origin: [-12, -24],
   layers: ['mite.body', 'mite.ink', 'bat.body', 'bat.ink', 'skeleton.body', 'skeleton.ink', 'wraith.body', 'wraith.ink',

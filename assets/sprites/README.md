@@ -77,6 +77,16 @@ To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, a
 - **Columns (3):** pod, round, leafy (the crop's shape).
 - **Rows (3 bands):** fruit (tinted to the crop's colour), line (its line colour; for leafy crops without one, leaf green), ink (stems, leaves, shadow, and the see-through white shine; drawn as is).
 
+## placed.png
+
+480 x 32. Crafted objects. Frames are 16 x 32 with the object's tile in the bottom 16 rows, one row, in the order of `PLACED_SHEET.order`. Colours are drawn in. Blinks, the incubator's egg and the working and ready marks are drawn in code.
+
+## furniture.png
+
+448 x 96. Furniture by shape. Frames are 16 x 32 with the tile in the bottom 16 rows, in the order of `FURN_SHEET.order`.
+
+- **Rows (3 bands):** main (tinted to the piece's first colour), second (its second colour), ink (fixed colours and see-through white shine; drawn as is).
+
 The placeholder sheets are built by the scripts in `tools/sprites/`.
 
 ## Credits
@@ -90,3 +100,4 @@ The placeholder sheets are built by the scripts in `tools/sprites/`.
 | crops.png | Hollowmere Farm (original placeholder, v81) | same as the game |
 | forage.png, trees.png | Hollowmere Farm (original placeholder, v82, from the game's code art) | same as the game |
 | debris.png, giants.png | Hollowmere Farm (original placeholder, v83, from the game's code art) | same as the game |
+| placed.png, furniture.png | Hollowmere Farm (original placeholder, v84, from the game's code art) | same as the game |

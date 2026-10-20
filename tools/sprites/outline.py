@@ -1,6 +1,7 @@
 # Turns code art frames (from dump.mjs) into sheets: shades bottom edges and outlines each silhouette.
 # forage.png: 16x16 frames, 8 a row, in the order printed. trees.png: 24x32 frames (stages 0-4, bare), bands leaf, ink.
 # debris.png: 16x16 frames in one row. giants.png: 48x48 frames (pod, round, leafy), bands fruit, line, ink (with shine).
+# placed.png and furniture.png: see below.
 import sys, json
 from PIL import Image
 art = json.load(open(sys.argv[1])); OUT = sys.argv[2]
@@ -59,3 +60,32 @@ for n, (shape, data, dark_probe) in enumerate(art['giants']):
         if (i, j) in px and giant_layer((i, j), px[(i, j)]) in ('fruit', 'line') and c[0] == c[1] == c[2] and 0 < c[0] < 200:
             img.putpixel((n * 48 + i, GL['ink'] * 48 + j), (255, 255, 255, c[0]))
 img.save(f'{OUT}/giants.png', optimize=True)
+
+# placed.png: 16x32 frames (the tile at the bottom), one row, in the order printed. Colours drawn in.
+img = Image.new('RGBA', (16 * len(art['placed']), 32), (0, 0, 0, 0))
+for n, (k, data) in enumerate(art['placed']):
+    for (i, j), (L, c) in tidy(grid(data, 16, 32), 16, 32).items(): img.putpixel((n * 16 + i, j), c)
+img.save(f'{OUT}/placed.png', optimize=True)
+print('PLACED order:', [k for k, _ in art['placed']])
+
+# furniture.png: 16x32 frames, one row per band (main, second, ink), in the order printed. Comparing the white/red
+# probe with the black one: pixels that match are fixed colours (ink); red ones are the second colour, the rest the
+# main; their grey is the shade drawn over them, and light on the black probe is a see-through shine (white in ink).
+FL = {'main': 0, 'second': 1, 'ink': 2}
+img = Image.new('RGBA', (16 * len(art['furniture']), 32 * 3), (0, 0, 0, 0))
+for n, (shape, lit, blk) in enumerate(art['furniture']):
+    A, B = grid(lit, 16, 32), grid(blk, 16, 32)
+    px, band, shine = {}, {}, {}
+    for k, c in A.items():
+        d = B.get(k)
+        if c[3] < 255 or d == c: px[k] = c; band[k] = 'ink'; continue
+        if c[0] > c[1] and c[1] == c[2]:   # red: the second colour (light on it from a shine)
+            band[k], v, s = 'second', c[0], c[1]
+        else:
+            band[k], v, s = 'main', c[0], (d[0] if d and d[0] == d[1] == d[2] else 0)
+        px[k] = (v, v, v, 255) if not s else (255, 255, 255, 255)
+        if s: shine[k] = s
+    for (i, j), (L, c) in tidy(px, 16, 32, lambda k, c: band.get(k, 'ink')).items(): img.putpixel((n * 16 + i, FL[L] * 32 + j), c)
+    for (i, j), s in shine.items(): img.putpixel((n * 16 + i, FL['ink'] * 32 + j), (255, 255, 255, s))
+img.save(f'{OUT}/furniture.png', optimize=True)
+print('FURNITURE order:', [k for k, _, _ in art['furniture']])

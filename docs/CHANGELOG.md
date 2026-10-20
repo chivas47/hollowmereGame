@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v84: Placed object and furniture sprite sheets
+- Every crafted object you place (machines, chests, sprinklers, bombs, signs, lanterns, the silo and the rest) now draws from a new sheet, `assets/sprites/placed.png`, outlined and shaded. Blinks, the incubator's egg and the working and ready marks are drawn over it as before.
+- Furniture draws from `assets/sprites/furniture.png`, one picture per shape tinted to each piece's two colours, so every piece in the catalogue keeps its colours.
+- Both are built from the game's own code art. If either sheet fails to load, they are drawn in code exactly as in v83.
+- Fix: the v83 debris sheet had a doubled outline (the build captured the sheet itself instead of the code art). Rebuilt.
+- Saves: no new fields.
+
 ## v83: Debris and giant crop sprite sheets
 - Debris (grass tufts, weeds, stones, twigs, stumps, copper and iron rocks, crates, alder stumps) now draws from a new sheet, `assets/sprites/debris.png`, outlined and shaded.
 - Giant crops draw from `assets/sprites/giants.png`, outlined and shaded, tinted to each crop's colours, shine kept.

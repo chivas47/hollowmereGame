@@ -8,8 +8,8 @@ Scripts that build the placeholder sheets in `assets/sprites/` (needs Python 3 w
 | pets.png, horse.png | `python3 tools/sprites/pets.py assets/sprites` |
 | monsters.png | `python3 tools/sprites/monsters.py assets/sprites/monsters.png` |
 | crops.png | `python3 tools/sprites/crops.py assets/sprites/crops.png` |
-| forage.png, trees.png, debris.png, giants.png | serve the repo (`python3 -m http.server 8123`), then `node tools/sprites/dump_code_art.mjs art.json` (Playwright) and `python3 tools/sprites/outline.py art.json assets/sprites` |
+| forage.png, trees.png, debris.png, giants.png, placed.png, furniture.png | serve the repo (`python3 -m http.server 8123`), then `node tools/sprites/dump_code_art.mjs art.json` (Playwright) and `python3 tools/sprites/outline.py art.json assets/sprites` |
 
-forage.png, trees.png, debris.png and giants.png come from the game's own code art (rendered in a browser, then outlined), so they follow any change to `FORAGE_ART`, `drawFruitTree`, `DEBRIS_ART` or `drawGiant`. A new forage kind also needs its name added to `FORAGE_SHEET.order` in `src/data/sprites.js`.
+These six come from the game's own code art (rendered in a browser, then outlined), so they follow any change to `FORAGE_ART`, `drawFruitTree`, `DEBRIS_ART`, `drawGiant`, `PLACED_ART` or `FURN_ART`. The dump blocks the sheets themselves, so it always captures the code art. A new forage, debris, placed or furniture kind also needs its name added to its sheet's `order` in `src/data/sprites.js`.
 
 person.png (v77) was made before these scripts were kept; edit it by hand.
