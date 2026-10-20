@@ -3,7 +3,7 @@ import { T } from '../core/constants.js';
 import { CROPS } from '../data/crops.js';
 import { r, blink } from './pixel.js';
 import { ready, tinted, frame, sheet } from './sheets.js';
-import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET, DEBRIS_SHEET, GIANTS_SHEET } from '../data/sprites.js';
+import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET, DEBRIS_SHEET, GIANTS_SHEET, PLACED_SHEET, FURN_SHEET } from '../data/sprites.js';
 
 const FERT_DOT = { booster: '#c9b68e', booster2: '#e9b44c', booster3: '#b98ae0', tonic: '#86b86a', tonic2: '#5fd36a', mulch: '#a0805a', mulch2: '#7a5a3a' };
 export function drawSoil(c, X, Y, wet, fert) {
@@ -433,8 +433,24 @@ const PLACED_ART = {
   },
 };
 
+export const PLACED_KINDS = Object.keys(PLACED_ART);   // for tools/sprites/dump_code_art.mjs
+
+// v84: what changes on a placed object (blinks, the incubator's egg), drawn in code over its sheet frame.
+const PLACED_LIVE = {
+  beebox: (c, X, Y) => { if (blink(300)) r(c, X + 13, Y + 2, 1, 1, '#2b211a'); },
+  smoker: (c, X, Y) => { if (blink(500)) r(c, X + 6, Y - 2, 2, 2, 'rgba(220,220,220,.6)'); },
+  incubator: (c, X, Y, st) => {
+    if (st?.item) r(c, X + 6, Y + 5, 4, 3, st.item === 'mossegg' ? '#7fae5c' : st.item === 'duckegg' ? '#e6e8d8' : st.item === 'bigegg' ? '#e3d6c4' : '#f1e3c8');
+    if (blink(600)) r(c, X + 11, Y + 9, 2, 2, '#e8862a');
+  },
+};
+
 export function drawPlaced(c, X, Y, kind, state) {
-  (PLACED_ART[kind] || PLACED_ART.crock)(c, X, Y, state);
+  const P = PLACED_SHEET, i = P.order.indexOf(kind);
+  if (i >= 0 && ready(P.sheet)) {   // v84: from the placed sheet once it has loaded
+    c.drawImage(sheet(P.sheet).img, i * P.w, 0, P.w, P.h, X + P.origin[0], Y + P.origin[1], P.w, P.h);
+    PLACED_LIVE[kind]?.(c, X, Y, state);
+  } else (PLACED_ART[kind] || PLACED_ART.crock)(c, X, Y, state);
   if (state?.item && state.nights > 0) r(c, X + 12, Y + 1, 3, 3, '#e9b44c');            // working
   if (state?.item && state.nights <= 0 && blink(400, 2)) { r(c, X + 11, Y, 4, 4, '#fffbe8'); r(c, X + 12, Y + 1, 2, 2, '#86b86a'); }   // ready
 }
@@ -739,7 +755,14 @@ const FURN_ART = {
   mannequin: (c, X, Y, a, b) => { r(c, X + 7, Y + 9, 2, 6, b); r(c, X + 4, Y + 14, 8, 1, b); r(c, X + 5, Y + 1, 6, 8, a); r(c, X + 6, Y - 3, 4, 4, a); },
   chest: (c, X, Y, a, b) => { r(c, X + 2, Y + 5, 12, 10, a); r(c, X + 2, Y + 5, 12, 3, b); r(c, X + 7, Y + 7, 2, 3, '#3f3226'); },
 };
-export function drawFurniture(c, X, Y, def) { (FURN_ART[def.shape] || FURN_ART.chest)(c, X, Y, ...def.colors); }
+export const FURN_SHAPES = Object.keys(FURN_ART);   // for tools/sprites/dump_code_art.mjs
+
+// v84: from the furniture sheet tinted to its two colours once it has loaded, else drawn in code.
+export function drawFurniture(c, X, Y, def) {
+  const F = FURN_SHEET, i = F.order.indexOf(def.shape), [a, b] = def.colors;
+  if (i < 0 || !ready(F.sheet)) return (FURN_ART[def.shape] || FURN_ART.chest)(c, X, Y, ...def.colors);
+  c.drawImage(tinted(F.sheet, F.layers, [['main', a], ['second', b || a], ['ink', null]], F.h), i * F.w, 0, F.w, F.h, X + F.origin[0], Y + F.origin[1], F.w, F.h);
+}
 
 // A tree tap on an alder; ready: a drop of syrup shows.
 export function drawTap(c, X, Y, ready) {
