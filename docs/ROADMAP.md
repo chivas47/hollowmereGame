@@ -76,7 +76,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 34 | Animation | feature | done (chivas47/hollowmereGame#70) | Tools swung in hand, weapon combos with finishers, pickups that fly into your hands, placing and crafting poses, particles, damage numbers, hit-stop and screen shake. Added by Nuno, October 2026. |
 | 34b | Animation: no tool spamming | fix | in progress (chivas47/hollowmereGame#71) | Spamming Use chopped, mined and tilled faster than the swing. One action per swing now. Reported by Nuno after v74. |
 | 34c | Neighbours live at home | fix | in progress (chivas47/hollowmereGame#72) | Neighbours start and end the day at home and walk between places (no more appearing at map edges), a routine per neighbour, pathfinding, and every cottage can be entered. Asked for by Nuno after v75. |
-| 34d | Image sprite sheets | feature | in progress | Pixel art can come from PNG sprite sheets in assets/sprites/ (rule 3 changed). People first: a layered person sheet tinted to each palette, code art as the fallback. Asked for by Nuno, October 2026. |
+| 34d | Image sprite sheets | feature | in progress (chivas47/hollowmereGame#73) | Pixel art can come from PNG sprite sheets in assets/sprites/ (rule 3 changed). People first: a layered person sheet tinted to each palette, code art as the fallback. Asked for by Nuno, October 2026. |
 | 33 | Local two-player | feature | needs decision | Same-screen co-op is possible without a server but touches every system. Nuno to decide whether it is worth it. |
 
 ## Done
