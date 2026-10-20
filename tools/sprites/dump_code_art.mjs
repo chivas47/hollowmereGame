@@ -8,7 +8,8 @@ await p.goto('http://localhost:8123/index.html'); await p.waitForTimeout(1200);
 const out = await p.evaluate(async () => {
   const { drawForageArt, drawFruitTree, drawDebris, drawGiant, drawPlaced, drawFurniture, PLACED_KINDS, FURN_SHAPES } = await import('/src/render/sprites.js');
   const { CROPS } = await import('/src/data/crops.js');
-  const { drawHouseTile, OBJECT_ART, FRONT, buildingKey } = await import('/src/render/tiles.js');
+  const { drawHouseTile, OBJECT_ART, FRONT, buildingKey, PROP_ART, drawGreenhouseFloor } = await import('/src/render/tiles.js');
+  const { PROPS_SHEET } = await import('/src/data/sprites.js');
   const { MAPS } = await import('/src/data/maps.js');
   const { PAL } = await import('/src/data/seasons.js');
   const { SITES } = await import('/src/systems/sites.js');
@@ -56,7 +57,10 @@ const out = await p.evaluate(async () => {
     const w = x1 - x0 + 1, h = y1 - y0 + 1, crop = (d) => { const out = []; for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) for (let c = 0; c < 4; c++) out.push(d[(y * CW + x) * 4 + c]); return out; };
     return { key, w, h, dx: x0 - O * 16, dy: y0 - O * 16, summer: crop(both[0]), winter: crop(both[1]) };
   });
-  return { forage, trees, debris, giants, placed, furniture, walls, floors, buildings };
+  // Props without their ground, and the greenhouse floor (its soil bed, then boards on an even and an odd column).
+  const props = PROPS_SHEET.order.map((k) => [k, grab(16, 16, (g) => PROP_ART[k](g, 0, 0, PAL.Summer))]);
+  const gh = [grab(16, 16, (g) => drawGreenhouseFloor(g, 0, 0, 'g')), grab(16, 16, (g) => drawGreenhouseFloor(g, 0, 0, '.')), grab(32, 16, (g) => drawGreenhouseFloor(g, 1, 0, '.'))];
+  return { forage, trees, debris, giants, placed, furniture, walls, floors, buildings, props, gh };
 });
 writeFileSync(process.argv[2], JSON.stringify(out));
 console.log(out.forage.length, 'forage,', out.trees.length, 'tree frames');

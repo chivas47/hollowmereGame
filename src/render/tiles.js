@@ -3,7 +3,7 @@ import { T } from '../core/constants.js';
 import { r, rng } from './pixel.js';
 import { SHRINE } from '../data/books.js';
 import { CHIMES } from '../data/nuts.js';
-import { DECOR_SHEETS, BUILDING_SHEETS } from '../data/sprites.js';
+import { DECOR_SHEETS, BUILDING_SHEETS, PROPS_SHEET, GREENHOUSE_SHEET } from '../data/sprites.js';
 import { BUILDINGS } from '../data/buildings.js';
 import { ready, sheet } from './sheets.js';
 
@@ -394,6 +394,7 @@ export const OBJECT_ART = { boat, storefront, lodge, helperhut, waystone, pond, 
 // ---- Greenhouse interior (ignores seasons) ----
 export function drawGreenhouseFloor(g, x, y, t) {
   const X = x * T, Y = y * T, R = rng(x * 37 + y * 113);
+  if (ready(GREENHOUSE_SHEET.sheet)) return g.drawImage(sheet(GREENHOUSE_SHEET.sheet).img, (t === 'g' ? 0 : 1 + (x % 2)) * T, 0, T, T, X, Y, T, T);   // v89
   if (t === 'g') {
     r(g, X, Y, T, T, '#5a3b24');
     for (let i = 0; i < 4; i++) r(g, X + (R() * 14 | 0), Y + (R() * 14 | 0), 2, 1, '#6b4a2b');
@@ -436,12 +437,11 @@ function lava(g, x, y) {
 }
 function ventDoor(g, x, y, p) {
   const X = x * T, Y = y * T;
-  caveWall(g, x, y, p); r(g, X + 2, Y + 1, 12, 15, '#3f3226'); r(g, X + 4, Y + 3, 8, 13, '#1a0f0e');
+  r(g, X + 2, Y + 1, 12, 15, '#3f3226'); r(g, X + 4, Y + 3, 8, 13, '#1a0f0e');
   r(g, X + 4, Y + 12, 8, 4, '#c8352f'); r(g, X + 6, Y + 13, 4, 2, '#ffd98a'); r(g, X + 2, Y + 1, 12, 1, '#5a3a30');
 }
 function forgeAnvil(g, x, y, p) {
   const X = x * T, Y = y * T;
-  drawCaveFloor(g, x, y, p);
   r(g, X + 1, Y + 14, 14, 1, 'rgba(0,0,0,.4)'); r(g, X + 5, Y + 9, 6, 5, '#3f4850'); r(g, X + 2, Y + 5, 12, 4, '#5f6870'); r(g, X + 1, Y + 5, 3, 2, '#5f6870');
   r(g, X + 2, Y + 5, 12, 1, '#8d939a'); r(g, X + 11, Y + 1, 3, 4, '#e9862a'); r(g, X + 12, Y, 1, 2, '#ffd98a');
 }
@@ -454,19 +454,19 @@ function mineRock(ore) {
 }
 function ladderUp(g, x, y, p) {
   const X = x * T, Y = y * T;
-  caveWall(g, x, y, p); r(g, X + 4, Y, 8, 16, '#2a2421'); r(g, X + 5, Y, 6, 2, '#e9c46a');
+  r(g, X + 4, Y, 8, 16, '#2a2421'); r(g, X + 5, Y, 6, 2, '#e9c46a');
   r(g, X + 4, Y, 1, 16, '#94673d'); r(g, X + 11, Y, 1, 16, '#94673d');
   for (let i = 0; i < 4; i++) r(g, X + 4, Y + 2 + i * 4, 8, 1, '#b8864f');
 }
 // v38: the sealed door to the Sunken Cavern, and a shaft (a hole with no ladder).
 function cavernDoor(g, x, y, p) {
   const X = x * T, Y = y * T;
-  caveWall(g, x, y, p); r(g, X + 2, Y + 1, 12, 15, '#6f6862'); r(g, X + 4, Y + 3, 8, 13, '#2b211a');
+  r(g, X + 2, Y + 1, 12, 15, '#6f6862'); r(g, X + 4, Y + 3, 8, 13, '#2b211a');
   r(g, X + 4, Y + 3, 8, 2, '#e9c46a'); r(g, X + 7, Y + 8, 2, 3, '#e9862a'); r(g, X + 2, Y + 1, 12, 1, '#8d857d');
 }
 function shaft(g, x, y, p) {
   const X = x * T, Y = y * T;
-  drawCaveFloor(g, x, y, p); r(g, X + 2, Y + 3, 12, 11, '#050403'); r(g, X + 3, Y + 2, 10, 1, '#0e0b0a'); r(g, X + 3, Y + 14, 10, 1, '#0e0b0a');
+  r(g, X + 2, Y + 3, 12, 11, '#050403'); r(g, X + 3, Y + 2, 10, 1, '#0e0b0a'); r(g, X + 3, Y + 14, 10, 1, '#0e0b0a');
 }
 function ladderDown(g, x, y) {
   const X = x * T, Y = y * T;
@@ -481,13 +481,12 @@ function caveMouth(g, x, y, p) {
 }
 function caveCrate(g, x, y) {
   const X = x * T, Y = y * T;
-  drawCaveFloor(g, x, y); r(g, X + 2, Y + 5, 12, 10, '#8a5a32'); r(g, X + 2, Y + 5, 12, 1, '#a5753f'); r(g, X + 2, Y + 10, 12, 1, '#6e4626');
+  r(g, X + 2, Y + 5, 12, 10, '#8a5a32'); r(g, X + 2, Y + 5, 12, 1, '#a5753f'); r(g, X + 2, Y + 10, 12, 1, '#6e4626');
 }
 
 // v37: a treasure chest on a Hollow floor.
 function chest(g, x, y, p) {
   const X = x * T, Y = y * T;
-  drawCaveFloor(g, x, y, p);
   r(g, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.35)');
   r(g, X + 2, Y + 6, 12, 8, '#8a5a32'); r(g, X + 2, Y + 4, 12, 3, '#a5753f'); r(g, X + 2, Y + 7, 12, 1, '#5c371e');
   r(g, X + 2, Y + 4, 1, 10, '#e9b44c'); r(g, X + 13, Y + 4, 1, 10, '#e9b44c'); r(g, X + 7, Y + 7, 2, 3, '#e9b44c');
@@ -502,7 +501,6 @@ function shrineDoor(g, x, y, p) {
 }
 function pedestal(g, x, y, p) {
   const X = x * T, Y = y * T, skill = Object.keys(SHRINE.pedestals).find((k) => SHRINE.pedestals[k] === x);
-  drawCaveFloor(g, x, y, p);
   r(g, X + 3, Y + 13, 10, 2, '#4f4945'); r(g, X + 5, Y + 6, 6, 8, '#8d857d'); r(g, X + 4, Y + 5, 8, 2, '#a8a199');
   r(g, X + 6, Y + 1, 4, 4, SHRINE.colors[skill] || '#e9c46a'); r(g, X + 7, Y + 2, 1, 1, '#ffffff');
 }
@@ -510,21 +508,21 @@ function pedestal(g, x, y, p) {
 // v45: the fallen log, the rubble, the sewer grate, the hot spring and the trader's corner.
 function fallenLog(g, x, y, p) {
   const X = x * T, Y = y * T;
-  drawGrass(g, x, y, p, 29); r(g, X, Y + 6, T, 8, '#6e4626'); r(g, X, Y + 6, T, 2, '#8a5a32'); r(g, X + 12, Y + 6, 4, 8, '#c9a06a'); r(g, X + 13, Y + 8, 2, 4, '#a07a4a');
+  r(g, X, Y + 6, T, 8, '#6e4626'); r(g, X, Y + 6, T, 2, '#8a5a32'); r(g, X + 12, Y + 6, 4, 8, '#c9a06a'); r(g, X + 13, Y + 8, 2, 4, '#a07a4a');
 }
 function rubble(g, x, y, p) {
   const X = x * T, Y = y * T;
-  drawGrass(g, x, y, p, 23); [[1, 6, 7], [7, 3, 8], [4, 9, 9], [10, 8, 6]].forEach(([a, b, s]) => { r(g, X + a, Y + b, s, s - 2, '#8d857d'); r(g, X + a, Y + b, s, 1, '#a8a199'); });
+  [[1, 6, 7], [7, 3, 8], [4, 9, 9], [10, 8, 6]].forEach(([a, b, s]) => { r(g, X + a, Y + b, s, s - 2, '#8d857d'); r(g, X + a, Y + b, s, 1, '#a8a199'); });
 }
 function grate(g, x, y, p) {
   const X = x * T, Y = y * T;
-  drawGrass(g, x, y, p, 37); r(g, X + 2, Y + 2, 12, 12, '#3f4850'); for (let i = 0; i < 4; i++) r(g, X + 3 + i * 3, Y + 3, 1, 10, '#1a1f22'); r(g, X + 2, Y + 2, 12, 1, '#6f7880');
+  r(g, X + 2, Y + 2, 12, 12, '#3f4850'); for (let i = 0; i < 4; i++) r(g, X + 3 + i * 3, Y + 3, 1, 10, '#1a1f22'); r(g, X + 2, Y + 2, 12, 1, '#6f7880');
 }
 function hotSpring(g, x, y) {
   const X = x * T, Y = y * T;
   r(g, X, Y, T, T, '#4f9aa8'); r(g, X + 2, Y + 3, 4, 1, '#bfe6ec'); r(g, X + 9, Y + 9, 5, 1, '#bfe6ec'); r(g, X + 6, Y + 1, 1, 3, 'rgba(255,255,255,.4)');
 }
-function traderSpot(g, x, y, p) { drawCaveFloor(g, x, y, p); r(g, x * T + 2, y * T + 12, 12, 3, '#2b2a2e'); }
+function traderSpot(g, x, y) { r(g, x * T + 2, y * T + 12, 12, 3, '#2b2a2e'); }
 
 // v67: the Smoke Peak's mouth, the shell chimes, the dry basins, the altar (the summit's nut cache in the peak) and the lantern.
 function peakMouth(g, x, y, p) {
@@ -532,49 +530,51 @@ function peakMouth(g, x, y, p) {
 }
 function shell(g, x, y, p) {
   const X = x * T, Y = y * T, i = CHIMES.findIndex(([a, b]) => a === x && b === y), s = 4 + 2 * Math.max(0, i);
-  drawSand(g, x, y, p); r(g, X + 8 - s / 2, Y + 13 - s, s, s, '#f0c8b8'); r(g, X + 8 - s / 2, Y + 13 - s, s, 1, '#fbe6dc');
+  r(g, X + 8 - s / 2, Y + 13 - s, s, s, '#f0c8b8'); r(g, X + 8 - s / 2, Y + 13 - s, s, 1, '#fbe6dc');
   for (let k = 1; k < s; k += 2) r(g, X + 8 - s / 2 + k, Y + 13 - s, 1, s, '#d89c88');
 }
 function basin(g, x, y, p) {
   const X = x * T, Y = y * T;
-  drawGrass(g, x, y, p, 41); r(g, X + 2, Y + 7, 12, 7, '#8d857d'); r(g, X + 2, Y + 7, 12, 1, '#a8a199'); r(g, X + 4, Y + 8, 8, 3, '#5f5a52');
+  r(g, X + 2, Y + 7, 12, 7, '#8d857d'); r(g, X + 2, Y + 7, 12, 1, '#a8a199'); r(g, X + 4, Y + 8, 8, 3, '#5f5a52');
 }
 function altar(g, x, y, p) {
   const X = x * T, Y = y * T;
   if (p.theme === 'peak') { chest(g, x, y, p); r(g, X + 6, Y + 2, 4, 2, '#c9a06a'); return; }
-  drawGrass(g, x, y, p, 43); r(g, X + 1, Y + 9, 14, 6, '#6f6862'); r(g, X + 1, Y + 8, 14, 2, '#a8a199'); r(g, X + 4, Y + 11, 8, 1, '#4f8f3a');
+  r(g, X + 1, Y + 9, 14, 6, '#6f6862'); r(g, X + 1, Y + 8, 14, 2, '#a8a199'); r(g, X + 4, Y + 11, 8, 1, '#4f8f3a');
 }
 function lantern(g, x, y, p) {
   const X = x * T, Y = y * T;
-  drawGrass(g, x, y, p, 47); r(g, X + 6, Y + 7, 4, 8, '#8d857d'); r(g, X + 4, Y + 2, 8, 6, '#6f6862'); r(g, X + 6, Y + 4, 4, 2, '#2b2a2e'); r(g, X + 3, Y + 1, 10, 1, '#a8a199');
+  r(g, X + 6, Y + 7, 4, 8, '#8d857d'); r(g, X + 4, Y + 2, 8, 6, '#6f6862'); r(g, X + 6, Y + 4, 4, 2, '#2b2a2e'); r(g, X + 3, Y + 1, 10, 1, '#a8a199');
 }
 
 // v69: the travelling cart, the bookseller's stall and the prize machine.
 function cartTile(g, x, y, p) {
   const X = x * T, Y = y * T;
-  drawGrass(g, x, y, p, 53); r(g, X + 1, Y + 15, 14, 1, 'rgba(0,0,0,.3)');
+  r(g, X + 1, Y + 15, 14, 1, 'rgba(0,0,0,.3)');
   r(g, X + 1, Y + 5, 14, 7, '#7a4a8a'); r(g, X + 1, Y + 5, 14, 1, '#9a6aaa'); r(g, X, Y + 2, 16, 3, '#e9c46a');
   r(g, X + 4, Y + 7, 3, 3, '#7fbf5a'); r(g, X + 9, Y + 7, 3, 3, '#d8484a');
   [X + 2, X + 10].forEach((wx) => { r(g, wx, Y + 11, 4, 4, '#3f2f22'); r(g, wx + 1, Y + 12, 2, 2, '#c9a06a'); });
 }
 function bookStall(g, x, y, p) {
   const X = x * T, Y = y * T;
-  drawGrass(g, x, y, p, 59); r(g, X + 1, Y + 15, 14, 1, 'rgba(0,0,0,.3)');
+  r(g, X + 1, Y + 15, 14, 1, 'rgba(0,0,0,.3)');
   r(g, X + 1, Y + 1, 14, 3, '#3f5a6a'); r(g, X + 2, Y + 4, 1, 11, '#6e4626'); r(g, X + 13, Y + 4, 1, 11, '#6e4626');
   r(g, X + 1, Y + 9, 14, 5, '#8a5a32'); r(g, X + 1, Y + 9, 14, 1, '#a07a4a');
   ['#c0443a', '#5fa8d3', '#e9c46a', '#7fbf5a', '#a070c8'].forEach((c, i) => r(g, X + 3 + i * 2, Y + 6, 2, 3, c));
 }
 function prizeMachine(g, x, y, p) {
   const X = x * T, Y = y * T;
-  drawGrass(g, x, y, p, 61); r(g, X + 3, Y + 15, 10, 1, 'rgba(0,0,0,.3)');
+  r(g, X + 3, Y + 15, 10, 1, 'rgba(0,0,0,.3)');
   r(g, X + 3, Y + 2, 10, 13, '#c9a43a'); r(g, X + 3, Y + 2, 10, 1, '#e9c46a'); r(g, X + 5, Y + 4, 6, 4, '#7fc4e8');
   r(g, X + 6, Y + 5, 2, 2, '#d8484a'); r(g, X + 13, Y + 7, 2, 1, '#6b5a48'); r(g, X + 14, Y + 5, 1, 3, '#6b5a48'); r(g, X + 6, Y + 11, 4, 2, '#3f2f22');
 }
 
-export const CAVE_ART = {
+// v89: the things on cave and special tiles, without their ground (PROP_GROUND says what lies under each), so a
+// tile set can draw the ground (render/renderer.js). CAVE_ART draws both, as before.
+export const PROP_ART = {
   '¢': cartTile, '§': bookStall, '¤': prizeMachine,
   y: caveMouth, t: caveCrate, $: chest,
-  X: caveWall, U: ladderUp, L: ladderDown,
+  U: ladderUp, L: ladderDown,
   r: mineRock(null), c: mineRock('#d0874a'), i: mineRock('#c9ccd6'),
   '%': mineRock('#e9c46a'), '*': mineRock('#9a7ae0'), '^': cavernDoor, '!': shaft,
   '#': mineRock('#e9862a'), '~': lava, '>': ventDoor, '=': forgeAnvil,
@@ -582,6 +582,28 @@ export const CAVE_ART = {
   '|': fallenLog, '}': rubble, ';': grate, '{': hotSpring, '?': traderSpot,
   '7': peakMouth, '8': shell, '9': basin, '<': altar, '`': lantern,
 };
+// The ground under each prop: a cave's floor or wall, grass (with the salt its blades and flowers use) or sand.
+// Props not listed draw their whole tile, or sit on whatever the map has there (the ladder down, mine rocks).
+export const PROP_GROUND = {
+  U: 'wall', '^': 'wall', '>': 'wall', t: 'floor', $: 'floor', '!': 'floor', '=': 'floor', '+': 'floor', '?': 'floor',
+  '|': 'grass:29', '}': 'grass:23', ';': 'grass:37', '9': 'grass:41', '<': 'grass:43', '`': 'grass:47',
+  '¢': 'grass:53', '§': 'grass:59', '¤': 'grass:61', '8': 'sand',
+};
+function propGround(t, g, x, y, p) {
+  const k = PROP_GROUND[t];
+  if (t === '<' && p.theme === 'peak') return drawCaveFloor(g, x, y, p);   // the summit's altar is a chest
+  if (k === 'wall') caveWall(g, x, y, p);
+  else if (k === 'floor') drawCaveFloor(g, x, y, t === 't' ? undefined : p);   // the farm cave's crate: always rock
+  else if (k === 'sand') drawSand(g, x, y, p);
+  else if (k) drawGrass(g, x, y, p, +k.split(':')[1]);
+}
+// v89: a prop from the props sheet once it has loaded, else drawn in code; over a ground drawn by a tile set.
+export function drawProp(g, t, x, y, p) {
+  const P = PROPS_SHEET, i = P.order.indexOf(t);
+  if (i >= 0 && ready(P.sheet)) return g.drawImage(sheet(P.sheet).img, i * P.size, 0, P.size, P.size, x * T, y * T, P.size, P.size);
+  PROP_ART[t](g, x, y, p);
+}
+export const CAVE_ART = Object.fromEntries([['X', caveWall], ...Object.entries(PROP_ART).map(([t, f]) => [t, (g, x, y, p) => { propGround(t, g, x, y, p); f(g, x, y, p); }])]);
 
 // v22 farm layouts: quarry floor and sand.
 export function drawQuarry(g, x, y, p) {

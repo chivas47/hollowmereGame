@@ -130,6 +130,14 @@ To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, a
 - To redraw a building, paint over its region in both sheets. To make it bigger or move it, change its entry in `src/data/buildings.js` (and keep both sheets in step). Once buildings are hand-drawn, stop running the generator for them: it overwrites both sheets and that file.
 - A building the game has that is missing from the file is drawn in code.
 
+## props.png
+
+400 x 16. Things on cave and special tiles, 16 x 16 over the tile, one row in the order of `PROPS_SHEET.order` (the map characters). No ground: the tile sets draw what lies under each (`PROP_GROUND` in `src/render/tiles.js`: cave floor, cave wall, grass or sand), so keep everything around the prop transparent. Lava and the hot spring fill their whole tile.
+
+## greenhouse.png
+
+48 x 16. The greenhouse floor: the soil bed, then the boards on even columns, then on odd columns.
+
 The placeholder sheets are built by the scripts in `tools/sprites/`.
 
 ## Credits
@@ -149,3 +157,4 @@ The placeholder sheets are built by the scripts in `tools/sprites/`.
 | cave-*.png | Hollowmere Farm (original placeholder, v87, colours from the cave themes) | same as the game |
 | wallpapers.png, floors.png | Hollowmere Farm (original placeholder, v87, from the game's patterns) | same as the game |
 | buildings.png, buildings-winter.png | Hollowmere Farm (original placeholder, v88, from the game's code art) | same as the game |
+| props.png, greenhouse.png | Hollowmere Farm (original placeholder, v89, from the game's code art) | same as the game |
