@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v100: Rain on windows, crackling hearths and indoor light
+- Indoor light: houses, cottages and buildings dim with the hour, at least half dark after 8 pm, and grey on wet days. Hearths, stoves, ranges, lamps, lanterns, candles and the television light the room around them in warm pools; open flames flicker. The farmhouse and shed light the furniture you placed (a placed hearth, lamp or television).
+- Rain on windows: while it rains outside, every window shows a grey sky with drops running down the glass, and rain taps on it. Buildings in the dunes stay dry.
+- The farmhouse gets windows on its north wall: two, a third over the reading nook, one in the kitchen.
+- Crackling hearths: within 7 tiles of a hearth, stove or range you hear a low murmur of fire and crackles, louder as you get close.
+- Ambience volume: an Ambience slider in the menu (0 to 100%) sets birdsong, surf, wind, rain and fire on their own, apart from sound effects and music. Sound off still mutes it. Saved per browser like the Sound and Music buttons.
+- Saves: no new fields.
+
 ## v99: Turn, pick up and undo
 - Turn your furniture: face a piece you placed and press R, or use Turn in its dialog. Chairs, armchairs and sofas face four ways (front, either side, back; the side and back views are new art in code). The long rug turns a quarter. Lopsided pieces (the television, writing desk, plants, bookcase, globe, easel, sewing machine, dye pots) face the other way. Symmetrical pieces say they look the same from every side.
 - Pick up: the television's dialog gets Pick up (it had none), and the sewing machine, dye pots and mannequin get Turn next to their Pick up.

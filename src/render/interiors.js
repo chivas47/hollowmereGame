@@ -217,10 +217,11 @@ const ART = {
   // ---- on the walls ----
   window: (c, X, Y, W, H, a, b) => {
     const t = G.S?.time ?? 720, night = t < 360 || t >= 1170, dusk = t >= 1080 && t < 1170;
-    const sky = night ? '#1e2a44' : dusk ? '#e89a6a' : '#a3cfe6';
+    const wet = G.indoorRain, sky = night ? '#1e2a44' : wet ? (dusk ? '#8a7a7e' : '#7f93a3') : dusk ? '#e89a6a' : '#a3cfe6';
     r(c, X + 2, Y + 2, W - 4, H - 5, b); r(c, X + 3, Y + 3, W - 6, H - 7, sky);
-    if (!night) { r(c, X + 4, Y + 4, 3, 2, 'rgba(255,255,255,.55)'); r(c, X + 3, Y + H - 9, W - 6, 3, dusk ? '#c97a4a' : '#86b86a'); }
-    else if (blink(900, 4)) r(c, X + W - 7, Y + 5, 1, 1, '#fffbe8');
+    if (!night) { if (!wet) r(c, X + 4, Y + 4, 3, 2, 'rgba(255,255,255,.55)'); r(c, X + 3, Y + H - 9, W - 6, 3, wet ? '#5f7a5a' : dusk ? '#c97a4a' : '#86b86a'); }
+    else if (!wet && blink(900, 4)) r(c, X + W - 7, Y + 5, 1, 1, '#fffbe8');
+    if (wet) rainOnGlass(c, X + 3, Y + 3, W - 6, H - 7, night);   // v100
     r(c, X + W / 2 - 1, Y + 3, 2, H - 7, b); r(c, X + 3, Y + Math.floor(H / 2) - 2, W - 6, 2, b);
     r(c, X + 1, Y + H - 4, W - 2, 3, b); r(c, X + 1, Y + H - 4, W - 2, 1, GLINT);   // sill
     r(c, X, Y + 1, 3, H - 6, a); r(c, X + W - 3, Y + 1, 3, H - 6, a); r(c, X, Y, W, 2, '#6e4626');   // curtains on a rail
@@ -360,6 +361,16 @@ const ART = {
   shavings: (c, X, Y, W, H, a, b) => { [[2, 4], [9, 3], [5, 9], [11, 10], [7, 13]].forEach(([u, v], i) => { r(c, X + u, Y + v, 3, 1, a); r(c, X + u + (i % 2 ? 0 : 2), Y + v + 1, 2, 1, b); r(c, X + u + 1, Y + v - 1, 1, 1, a); }); },
   papers: (c, X, Y, W, H, a, b) => { r(c, X + 2, Y + 4, 9, 7, a); r(c, X + 6, Y + 7, 8, 6, '#e8dcc0'); [6, 8].forEach((o) => r(c, X + 3, Y + o, 6, 1, b)); [9, 11].forEach((o) => r(c, X + 7, Y + o, 6, 1, b)); },
 };
+
+// v100: rain on a window pane: drops that run down the glass and beads that cling to it, from the pane's own seed.
+function rainOnGlass(c, X, Y, W, H, night) {
+  const t = performance.now() / 1000, run = night ? 'rgba(170,190,220,.55)' : 'rgba(225,238,248,.8)', bead = night ? 'rgba(170,190,220,.4)' : 'rgba(235,245,252,.7)';
+  for (let i = 0; i < W; i += 3) {
+    const seed = (X * 7 + i * 13) % 17, speed = 9 + (seed % 5) * 3, y = Math.max(0, (((t * speed + seed * 5) % (H + 6)) - 3) | 0);
+    if (y < H) r(c, X + i + (seed % 2), Y + y, 1, Math.min(3, H - y), run);
+    if (seed % 3 === 0) r(c, X + i + 1, Y + ((seed * 3) % Math.max(1, H - 1)), 1, 1, bead);
+  }
+}
 
 // Rugs: lie under everything, walked over.
 export function drawRug(c, [x, y, w, h, [a, b], pat]) {

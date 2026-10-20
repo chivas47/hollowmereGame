@@ -85,13 +85,17 @@ export function draw(c) {
 }
 
 // v72: the light of the hour (data/atmosphere.js LIGHT); after dark it opens around the player.
-function tint(c) {
-  const time = Math.min(G.S.time, dayEnd()), k = LIGHT.findIndex((f) => f[0] > time);
+// v100: the blended keyframe of the hour, also for the indoor light (systems/indoors.js).
+export function lightAt(minute) {
+  const time = Math.min(minute, dayEnd()), k = LIGHT.findIndex((f) => f[0] > time);
   const [a, b] = k <= 0 ? [LIGHT[LIGHT.length - 1], LIGHT[LIGHT.length - 1]] : [LIGHT[k - 1], LIGHT[k]];
   const f = b[0] === a[0] ? 0 : (time - a[0]) / (b[0] - a[0]), mix = (i) => Math.round(a[i] + (b[i] - a[i]) * f);
-  const alpha = a[4] + (b[4] - a[4]) * f;
+  return { time, rgb: `${mix(1)},${mix(2)},${mix(3)}`, alpha: a[4] + (b[4] - a[4]) * f };
+}
+function tint(c) {
+  const { time, rgb, alpha } = lightAt(G.S.time);
   if (alpha <= 0.01) return;
-  const rgb = `${mix(1)},${mix(2)},${mix(3)}`, w = W * T, h = H * T;
+  const w = W * T, h = H * T;
   if (time < NIGHT_FROM) { c.fillStyle = `rgba(${rgb},${alpha})`; c.fillRect(0, 0, w, h); return; }
   const g = c.createRadialGradient(G.S.x, G.S.y, T * 1.5, G.S.x, G.S.y, T * 7);
   g.addColorStop(0, `rgba(${rgb},${alpha * 0.55})`); g.addColorStop(1, `rgba(${rgb},${alpha})`);
