@@ -7,25 +7,30 @@ import { today, dayEnd } from '../core/time.js';
 import { MAPS } from '../data/maps.js';
 import { PAL } from '../data/seasons.js';
 import { LIGHT, NIGHT_FROM } from '../data/atmosphere.js';
-import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, drawQuarry, drawSand, drawBowl, drawHouseTile, drawTerrain, HOUSE_ART, OBJECT_ART, CAVE_ART } from './tiles.js';
+import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, drawQuarry, drawSand, drawBowl, drawHouseTile, drawTerrain, drawFlowers, HOUSE_ART, OBJECT_ART, CAVE_ART } from './tiles.js';
 import { facing, tileAt } from '../systems/world.js';
 import { WALLPAPERS, FLOORS } from '../data/furniture.js';
-import { TERRAIN_SHEET } from '../data/sprites.js';
+import { TERRAIN_SHEET, CAVE_SHEET } from '../data/sprites.js';
 import { ready, sheet, onSheet } from './sheets.js';
 
 let cache = {};
 on('season:changed', () => { cache = {}; });
 on('game:reset', () => { cache = {}; });
 on('world:changed', () => { cache = {}; });
-onSheet((name) => { if (name.startsWith('terrain')) cache = {}; });   // v85: redraw with the ground sheet once it arrives
+onSheet(() => { cache = {}; });   // v85: redraw the background once a sheet arrives (ground, cave, wallpaper, floors)
 
 const TILE_ART = { b: drawBowl, O: drawWater, T: drawTree, R: drawRock, w: drawGlassWall, ...CAVE_ART };
 
 function renderBackground(mapId, season) {
   const c = document.createElement('canvas'); c.width = W * T; c.height = H * T;
   const g = c.getContext('2d'), map = MAPS[mapId], p = map.theme ? { ...PAL[season], theme: map.theme } : PAL[season];   // v38: theme (the cavern's sand)
-  const ground = TERRAIN_SHEET.sheet(season), sheetGround = !map.base && ready(ground);   // v85: outdoor ground from the terrain sheet
-  if (sheetGround) drawTerrain(g, sheet(ground).img, (x, y) => groundOf(map, map.grid[y][x]), { q: 'quarry', z: 'sand' }[map.ground] || 'grass', W, H, p, map.salt);
+  const ground = map.base === 'cave' ? CAVE_SHEET.sheet(map.theme) : TERRAIN_SHEET.sheet(season);
+  const sheetGround = (!map.base || map.base === 'cave') && ready(ground);   // v85: outdoor ground (v87: and caves) from a tile set
+  if (sheetGround && map.base === 'cave') drawTerrain(g, sheet(ground).img, CAVE_SHEET, (x, y) => (map.grid[y][x] === 'X' ? 'wall' : 'floor'), 'floor', W, H);
+  else if (sheetGround) {
+    drawTerrain(g, sheet(ground).img, TERRAIN_SHEET, (x, y) => groundOf(map, map.grid[y][x]), { q: 'quarry', z: 'sand' }[map.ground] || 'grass', W, H,
+      (x, y) => { if (groundOf(map, map.grid[y][x]) === 'grass') drawFlowers(g, x, y, p, map.salt); });
+  }
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
     const t = map.grid[y][x];
     if (map.base === 'house') { drawHouseTile(g, x, y, t, map.grid[y + 1]?.[x], WALLPAPERS, FLOORS, map.decor); continue; }
@@ -40,7 +45,7 @@ function renderBackground(mapId, season) {
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
     if (map.base === 'house') { const ha = HOUSE_ART[map.grid[y][x]]; if (ha) ha(g, x, y, map.grid); continue; }
     const t = map.grid[y][x], art = TILE_ART[t];
-    if (art && !(sheetGround && t === 'O')) art(g, x, y, p);   // v85: water is part of the terrain sheet
+    if (art && !(sheetGround && (map.base === 'cave' ? t === 'X' : t === 'O'))) art(g, x, y, p);   // v85: outdoor water (v87: cave walls) are in the tile set
   }
   map.objects.forEach((o) => OBJECT_ART[o.art](g, p, o));
   return c;

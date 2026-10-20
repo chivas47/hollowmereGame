@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v87: Cave tile sets, wallpaper and floor sheets
+- Caves (the farm cave, the mines and caverns, the sewer, the shrine, the Smoke Peak) draw their floor and walls from one tile set per cave theme, `assets/sprites/cave-rock.png` and so on, in the same 16-tile corner layout as the outdoor ground: walls get rounded edges and a rock face where they meet the floor below, instead of a stripe on every wall tile.
+- Wallpapers and floors in the farmhouse, cottages and shed draw from `assets/sprites/wallpapers.png` and `floors.png`: one repeating 16 x 16 swatch per wallpaper and floor, in catalogue order, made from the game's own patterns.
+- Ladders, rocks, lava and the rest of the cave's furnishings, and the greenhouse floor, are still drawn in code. If a sheet fails to load, that ground is drawn in code exactly as in v86.
+- Saves: no new fields.
+
 ## v86: Tilled soil tile set
 - Tilled soil now draws from `assets/sprites/soil.png` in the same 16-tile corner layout as the terrain: a field reads as one bed with rounded edges instead of separate squares, and watered soil blends into dry soil around it. On the farm, in the greenhouse and on the island.
 - All soil is drawn before any crop, so the bed's edges never cover a crop. Fertiliser dots are as before.

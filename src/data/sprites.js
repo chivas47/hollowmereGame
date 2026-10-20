@@ -80,6 +80,12 @@ export const TERRAIN_SHEET = {
   order: ['grass', 'path', 'sand', 'quarry', 'water'], over: ['grass', 'sand', 'quarry', 'path', 'water'],
 };
 
+// v87 cave-<theme>.png: cave ground per theme (CAVE_COLS in render/tiles.js; rock when none) in the terrain layout:
+// the floor (base, full tiles only) and walls ('X' tiles) laid over it.
+export const CAVE_SHEET = { sheet: (theme) => `cave-${theme || 'rock'}`, size: 16, order: ['floor', 'wall'], over: ['wall'] };
+// v87 wallpapers.png, floors.png: one 16x16 swatch per WALLPAPERS and FLOORS entry (data/furniture.js), in order.
+export const DECOR_SHEETS = { walls: 'wallpapers', floors: 'floors', size: 16 };
+
 // v86 soil.png: tilled soil in the terrain layout (one 4x5 block each): dry, then watered. Drawn every frame: dry
 // on the corners of every tilled tile, watered over it on the corners of watered ones.
 export const SOIL_SHEET = { sheet: 'soil', size: 16 };
