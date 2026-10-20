@@ -52,7 +52,7 @@
 <div class="modal menu" id="menu" hidden><div class="card wide" role="dialog" aria-modal="true" aria-labelledby="menuTitle">
   <div class="cardhead"><h2 id="menuTitle">Menu</h2><button class="close" id="menuClose" aria-label="Close menu">✕</button></div>
   <h3>Settings</h3>
-  <div class="footbtns"><button class="ghost" id="sfxToggle" aria-pressed="true">Sound: on</button><button class="ghost" id="musicToggle" aria-pressed="true">Music: on</button><button class="ghost" id="exportSave">Export save</button><button class="ghost" id="importSave">Import save</button><button class="ghost" id="reset">New farm</button><button class="ghost" id="debugToggle" aria-expanded="false" aria-controls="debug">Debug tools</button><input type="file" id="importFile" accept=".json,application/json" hidden></div>
+  <div class="footbtns"><button class="ghost" id="undoBtn" aria-keyshortcuts="U">Undo <kbd>U</kbd></button><button class="ghost" id="sfxToggle" aria-pressed="true">Sound: on</button><button class="ghost" id="musicToggle" aria-pressed="true">Music: on</button><button class="ghost" id="exportSave">Export save</button><button class="ghost" id="importSave">Import save</button><button class="ghost" id="reset">New farm</button><button class="ghost" id="debugToggle" aria-expanded="false" aria-controls="debug">Debug tools</button><input type="file" id="importFile" accept=".json,application/json" hidden></div>
   <section class="debug" id="debug" hidden aria-label="Debug tools">
     <button data-debug="day">Skip to tomorrow</button>
     <button data-debug="season">Skip to next season</button>
@@ -74,6 +74,8 @@
     <dt><kbd>Q</kbd></dt><dd>Pick seeds, again to switch seed type.</dd>
     <dt><kbd>I</kbd> <kbd>C</kbd> <kbd>J</kbd> <kbd>F</kbd></dt><dd>Bag, crafting, journal, neighbours (birthdays and liked gifts).</dd>
     <dt><kbd>H</kbd></dt><dd>Whistle for your horse once Bram has built a stable.</dd>
+    <dt><kbd>R</kbd></dt><dd>Turn the piece of your furniture you face. Chairs, armchairs and sofas face four ways; rugs and lopsided pieces two.</dd>
+    <dt><kbd>U</kbd> or <kbd>Ctrl</kbd><kbd>Z</kbd></dt><dd>Undo your last place, pick-up or turn today. The Undo button below does the same.</dd>
     <dt><kbd>M</kbd></dt><dd>Mute or unmute sound and music.</dd>
     <dt><kbd>Esc</kbd></dt><dd>Open this menu, close a dialog, or stop placing a building.</dd>
     <dt><kbd>`</kbd></dt><dd>Show or hide the debug tools.</dd>

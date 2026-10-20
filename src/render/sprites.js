@@ -1,6 +1,7 @@
 // Things drawn every frame: soil, crops, forage, people, effects.
 import { T } from '../core/constants.js';
 import { CROPS } from '../data/crops.js';
+import { TURNS, TURN_STEPS } from '../data/furniture.js';
 import { r, blink } from './pixel.js';
 import { ready, tinted, frame, sheet } from './sheets.js';
 import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET, DEBRIS_SHEET, GIANTS_SHEET, PLACED_SHEET, FURN_SHEET, SOIL_SHEET, ALDERS_SHEET, FENCES_SHEET, FIXTURES_SHEET, CHILDREN_SHEET, GLOW_SHEET, BUNTING_SHEET, PENS_SHEET } from '../data/sprites.js';
@@ -846,11 +847,38 @@ const FURN_ART = {
 export const FURN_SHAPES = Object.keys(FURN_ART);   // for tools/sprites/dump_code_art.mjs
 
 // v84: from the furniture sheet tinted to its two colours once it has loaded, else drawn in code.
-export function drawFurniture(c, X, Y, def) {
+// v99: rot turns a player's piece (data/furniture.js TURNS): seats show their side (1, 3 mirrored) and back (2) in code,
+// rugs take a quarter turn about the tile, lopsided pieces are mirrored.
+export function drawFurniture(c, X, Y, def, rot = 0) {
+  const turn = TURNS[def.shape], k = rot % (TURN_STEPS[turn] || 1);
+  if (!k) return furnitureFront(c, X, Y, def);
+  c.save();
+  if (k === 3 || turn === 'mirror') { c.translate(2 * X + T, 0); c.scale(-1, 1); }
+  else if (turn === 'flat') { c.translate(X + T / 2, Y + T / 2); c.rotate(Math.PI / 2); c.translate(-X - T / 2, -Y - T / 2); }
+  if (turn === 'seat') SEAT_ART[def.shape][k === 2 ? 1 : 0](c, X, Y, ...def.colors);
+  else furnitureFront(c, X, Y, def);
+  c.restore();
+}
+function furnitureFront(c, X, Y, def) {
   const F = FURN_SHEET, i = F.order.indexOf(def.shape), [a, b] = def.colors;
   if (i < 0 || !ready(F.sheet)) return (FURN_ART[def.shape] || FURN_ART.chest)(c, X, Y, ...def.colors);
   c.drawImage(tinted(F.sheet, F.layers, [['main', a], ['second', b || a], ['ink', null]], F.h), i * F.w, 0, F.w, F.h, X + F.origin[0], Y + F.origin[1], F.w, F.h);
 }
+// [side facing right, back]. Code only: the furniture sheet holds the front views.
+const SEAT_ART = {
+  chair: [
+    (c, X, Y, a, b) => { r(c, X + 4, Y + 1, 2, 10, b); r(c, X + 4, Y + 8, 9, 3, a); r(c, X + 4, Y + 11, 1, 4, b); r(c, X + 12, Y + 11, 1, 4, b); },
+    (c, X, Y, a, b) => { r(c, X + 3, Y + 8, 10, 3, a); r(c, X + 4, Y + 2, 8, 9, b); r(c, X + 5, Y + 3, 6, 1, a); r(c, X + 4, Y + 11, 1, 4, b); r(c, X + 11, Y + 11, 1, 4, b); },
+  ],
+  armchair: [
+    (c, X, Y, a, b) => { r(c, X + 2, Y + 2, 4, 12, b); r(c, X + 5, Y + 8, 9, 6, a); r(c, X + 5, Y + 6, 8, 3, b); r(c, X + 5, Y + 6, 8, 1, a); },
+    (c, X, Y, a, b) => { r(c, X + 1, Y + 6, 3, 8, a); r(c, X + 12, Y + 6, 3, 8, a); r(c, X + 2, Y + 2, 12, 12, b); r(c, X + 3, Y + 3, 10, 1, a); },
+  ],
+  sofa: [
+    (c, X, Y, a, b) => { r(c, X + 2, Y + 1, 4, 14, b); r(c, X + 5, Y + 8, 9, 7, a); r(c, X + 6, Y + 7, 1, 1, b); r(c, X + 12, Y + 6, 3, 9, b); },
+    (c, X, Y, a, b) => { r(c, X, Y + 3, 16, 11, b); r(c, X, Y + 3, 16, 1, a); r(c, X + 7, Y + 4, 1, 9, a); },
+  ],
+};
 
 // A tree tap on an alder; ready: a drop of syrup shows.
 // v91: from the alders sheet once it has loaded (the drop in code), else drawn in code.

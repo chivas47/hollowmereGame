@@ -8,9 +8,9 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer, addEntities } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
 import { PLACEABLES } from '../data/crafting.js';
-import { FURNITURE, WALLPAPERS, FLOORS, DECOR_COST, CATALOGUE_COST, RENOVATIONS } from '../data/furniture.js';
+import { FURNITURE, WALLPAPERS, FLOORS, DECOR_COST, CATALOGUE_COST, RENOVATIONS, turnsOf } from '../data/furniture.js';
 import { drawFurniture } from '../render/sprites.js';
-import { placePlayer, parsePlaceKey } from './world.js';
+import { placePlayer, parsePlaceKey, placeKey, facing } from './world.js';
 import { rebuildHouse } from './layouts.js';
 
 const free = () => G.S.house.catalogue;
@@ -82,7 +82,28 @@ addInteraction(70, ({ tile, mapId }) => {
 });
 
 const inHouse = () => Object.entries(G.S.placed).map(([k, p]) => ({ p, ...parsePlaceKey(k) })).filter((e) => e.map === G.S.map && (e.map === 'house' || e.map === 'shed') && FURNITURE[e.p.kind]);   // v30: the shed takes furniture too
-addLayer(9, (c) => { for (const e of inHouse()) if (FURNITURE[e.p.kind].walk) drawFurniture(c, e.x * T, e.y * T, FURNITURE[e.p.kind]); });
-addEntities(() => inHouse().filter((e) => !FURNITURE[e.p.kind].walk).map((e) => ({ y: (e.y + 1) * T - 3, draw: (c) => drawFurniture(c, e.x * T, e.y * T, FURNITURE[e.p.kind]) })));
+addLayer(9, (c) => { for (const e of inHouse()) if (FURNITURE[e.p.kind].walk) drawFurniture(c, e.x * T, e.y * T, FURNITURE[e.p.kind], e.p.rot); });
+addEntities(() => inHouse().filter((e) => !FURNITURE[e.p.kind].walk).map((e) => ({ y: (e.y + 1) * T - 3, draw: (c) => drawFurniture(c, e.x * T, e.y * T, FURNITURE[e.p.kind], e.p.rot) })));
 
 export const isFurniture = (k) => PLACEABLES[k]?.kind === 'furniture';
+
+// v99: turns a piece of furniture the player placed (p.rot, 0 when missing). Only G.S.placed: a neighbour's rooms never turn.
+export function turnFurniture(tx, ty, mapId = G.S.map, to = null) {
+  const p = G.S.placed[placeKey(mapId, tx, ty)], n = p && FURNITURE[p.kind] ? turnsOf(p.kind) : 0;
+  if (!n) return false;
+  if (n === 1) { notify(`The ${FURNITURE[p.kind].name.toLowerCase()} looks the same from every side.`); return false; }
+  const from = p.rot || 0;
+  p.rot = to ?? (from + 1) % n;
+  if (!p.rot) delete p.rot;
+  if (to === null) emit('turned', { map: mapId, x: tx, y: ty, from });
+  emit('sfx', 'place');
+  changed();
+  return true;
+}
+export const canTurn = (tx, ty) => turnsOf(G.S.placed[placeKey(G.S.map, tx, ty)]?.kind) > 1;
+// The R key: the furniture you face.
+export function turnFacing() {
+  const f = facing(), p = G.S.placed[placeKey(G.S.map, f.tx, f.ty)];
+  if (G.lock || !FURNITURE[p?.kind]) { notify('Face a piece of your furniture to turn it.'); return false; }
+  return turnFurniture(f.tx, f.ty);
+}

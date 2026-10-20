@@ -8,6 +8,7 @@ import { craft, seedsOk, learnt } from '../systems/crafting.js';
 import { SKILLS } from '../data/skills.js';
 import { CROPS } from '../data/crops.js';
 import { placedAt, pickUp } from '../systems/placeables.js';
+import { turnFurniture, canTurn } from '../systems/house.js';
 import { accepted, loadMachine, collectMachine } from '../systems/artisan.js';
 import { animalDef, homeOf } from '../systems/livestock.js';
 import { openModal, closeModal } from './modal.js';
@@ -34,7 +35,7 @@ function placedDialog() {
   if (def.kind === 'sprinkler') {
     html += `<p>Waters the ${sprinklerTiles(def, 0, 0).length} tiles around it every morning. Tilled soil only.</p>`;
   } else if (def.kind === 'furniture') {
-    html += '<p>Part of the house now.</p>';
+    html += `<p>Part of the house now.${canTurn(at.x, at.y) ? ' Turn it to face another way (R).' : ''}</p>`;
   } else if (p.kind === 'silo') {
     html += `<p>Cutting grass gives hay half the time while a silo stands on the farm. Hay in the loft: <b>${G.S.hay}</b>.</p>`;
   } else if (def.kind === 'decor') {
@@ -57,6 +58,7 @@ function placedDialog() {
   }
   if (!p.item) html += '<p class="role" style="margin-top:12px">Picking it up puts it back in your kit.</p>';
   const actions = [];
+  if (canTurn(at.x, at.y)) actions.push(['Turn', () => { turnFurniture(at.x, at.y); }]);
   if (!p.item) actions.push(['Pick up', () => { if (pickUp(at.x, at.y)) closeModal(); }]);
   actions.push(['Close', closeModal, true]);
   openModal(html, actions);

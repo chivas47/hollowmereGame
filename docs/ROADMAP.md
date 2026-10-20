@@ -98,6 +98,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 35 | Modern screen layout and accessibility | feature | done (chivas47/hollowmereGame#92) | The game fills the window, a clock panel and side column after the genre's look, meters with values, keys on buttons and slots, an Esc pause menu with settings and controls, touch controls only on touch screens. Asked for by Nuno, October 2026. |
 | 36 | Lived-in cottages | feature | done (chivas47/hollowmereGame#93) | Every neighbour's cottage rebuilt as a real house from a floor plan: rooms, furniture at full size placed believably, their personality and tastes in every room, a line for each piece. Asked for by Nuno, October 2026. |
 | 37 | Building interiors | feature | in progress (chivas47/hollowmereGame#94) | Every building whose door opened a menu gets an inside laid out like the cottages; its counter opens the menu; keepers work inside; the evening crowd drinks inside the Lantern. Asked for by Nuno, October 2026. |
+| 38 | Turn, pick up and undo | feature | in progress | Turn placed furniture (R), pick up every placed piece (the television had no button), undo the day's places, pick-ups and turns (U, Ctrl+Z). Only what the player placed. Asked for by Nuno, October 2026 (sprint dropped by Nuno). |
 | 33 | Local two-player | feature | needs decision | Same-screen co-op is possible without a server but touches every system. Nuno to decide whether it is worth it. |
 
 ## Done

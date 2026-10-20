@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v99: Turn, pick up and undo
+- Turn your furniture: face a piece you placed and press R, or use Turn in its dialog. Chairs, armchairs and sofas face four ways (front, either side, back; the side and back views are new art in code). The long rug turns a quarter. Lopsided pieces (the television, writing desk, plants, bookcase, globe, easel, sewing machine, dye pots) face the other way. Symmetrical pieces say they look the same from every side.
+- Pick up: the television's dialog gets Pick up (it had none), and the sewing machine, dye pots and mannequin get Turn next to their Pick up.
+- Undo: U, Ctrl+Z or the Undo button in the menu takes back your last place, pick-up or turn of something you placed from the kit, up to 20 steps, today only. It puts a picked-up object back where it stood (with its facing, sign text or mannequin outfit), takes a placed one back into the kit, or turns a piece back. It refuses, with a reason, when the tile is taken, you stand on it, the object is busy or still holds items, or the change was on another map.
+- Only things the player placed (`G.S.placed`): neighbours' rooms, building interiors and the world never turn or undo.
+- Saves: placed furniture may carry `rot` (missing means front-on). No new top-level fields; the undo list is not saved.
+
 ## v98: Building interiors
 - Every building whose door used to open a menu now has an inside, laid out the same way as the cottages (one floor plan each, in `src/data/venues.js`): Fenn's Provisions, the Anvil, Bram's Carpentry, the Lantern, the clinic, the museum, Tamsin's Ranch Supply, the town hall, the picture house, the Wardens' Lodge, the Oasis, the casino, the coop and the barn.
 - Each is planned around its trade: a shop floor of seed bins and crates with shelves behind the counter and a storeroom; the forge, anvil and quench barrel behind the smith's counter; a showroom of Bram's furniture and his workshop; the Lantern's bar, tables, fire and stage; a waiting room, examining room and ward; a gallery of glass cases round a fossil; feed and hay with a tack room; the clerk's office and Pell's schoolroom; a lobby and a screen with rows of seats; the lodge's trophies, map of the Hollow and Hale's bunk room; the Oasis's baskets and cushions; card and dice tables; nest boxes, hay racks and stalls.
