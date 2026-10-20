@@ -71,6 +71,15 @@ export const FURN_SHEET = {
     'dyepots', 'mannequin', 'chest'],
 };
 
+// v85 terrain-<season>.png: outdoor ground as Wang 2-corner ("dual grid") tile sets, full colour, one sheet per season.
+// One 4x5 block of 16px tiles per terrain in order. Rows 0-3: tile i has the terrain in its corners NW*1 + NE*2 + SW*4
+// + SE*8, at column i % 4, row i / 4; drawn centred on the corners between four world tiles. Row 4: four more full
+// tiles. A map's base terrain (grass, or its ground) fills every tile; the others are laid over it in the order of over.
+export const TERRAIN_SHEET = {
+  sheet: (season) => `terrain-${season.toLowerCase()}`, size: 16,
+  order: ['grass', 'path', 'sand', 'quarry', 'water'], over: ['grass', 'sand', 'quarry', 'path', 'water'],
+};
+
 export const MONSTERS = {
   sheet: 'monsters', size: 24, origin: [-12, -24],
   layers: ['mite.body', 'mite.ink', 'bat.body', 'bat.ink', 'skeleton.body', 'skeleton.ink', 'wraith.body', 'wraith.ink',
