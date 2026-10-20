@@ -3,6 +3,7 @@ import { T } from '../core/constants.js';
 import { r, rng } from './pixel.js';
 import { SHRINE } from '../data/books.js';
 import { CHIMES } from '../data/nuts.js';
+import { TERRAIN_SHEET } from '../data/sprites.js';
 
 const SNOW = '#f2f6f8';
 
@@ -14,6 +15,36 @@ export function drawGrass(g, x, y, p, salt) {
     const fx = X + 3 + (R() * 9 | 0), fy = Y + 3 + (R() * 9 | 0), c = p.fl[R() < 0.5 ? 0 : 1];
     r(g, fx, fy - 1, 1, 1, c); r(g, fx - 1, fy, 3, 1, c); r(g, fx, fy + 1, 1, 1, c); r(g, fx, fy, 1, 1, '#d9644a');
   }
+}
+
+// v85: the flowers drawGrass would draw on this tile (the same random draws), for grass from the terrain sheet.
+function drawFlowers(g, x, y, p, salt) {
+  const X = x * T, Y = y * T, R = rng(x * 92837 + y * 1237 + salt);
+  for (let i = 0; i < 21; i++) R();
+  if (p.fl && R() < 0.07) {
+    const fx = X + 3 + (R() * 9 | 0), fy = Y + 3 + (R() * 9 | 0), c = p.fl[R() < 0.5 ? 0 : 1];
+    r(g, fx, fy - 1, 1, 1, c); r(g, fx - 1, fy, 3, 1, c); r(g, fx, fy + 1, 1, 1, c); r(g, fx, fy, 1, 1, '#d9644a');
+  }
+}
+
+// v85: outdoor ground from a terrain sheet (data/sprites.js TERRAIN_SHEET). kind(x, y) names each tile's terrain.
+// base fills every tile; each other terrain is laid on the corners between tiles, the tile for each corner chosen
+// by which of its four neighbours have that terrain. Full tiles pick a variant by position.
+export function drawTerrain(g, img, kind, base, w, h, p, salt) {
+  const S = TERRAIN_SHEET, s = S.size, at = (x, y) => kind(Math.min(w - 1, Math.max(0, x)), Math.min(h - 1, Math.max(0, y)));
+  const tile = (b, i, X, Y) => g.drawImage(img, b * 4 * s + (i % 4) * s, Math.floor(i / 4) * s, s, s, X, Y, s, s);
+  const full = (b, x, y, X, Y) => { const v = (x * 7 + y * 13) % 5; tile(b, v === 4 ? 15 : 16 + v, X, Y); };
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) full(S.order.indexOf(base), x, y, x * s, y * s);
+  for (const t of S.over) {
+    if (t === base) continue;
+    const b = S.order.indexOf(t);
+    for (let y = 0; y <= h; y++) for (let x = 0; x <= w; x++) {
+      const i = (at(x - 1, y - 1) === t) + (at(x, y - 1) === t) * 2 + (at(x - 1, y) === t) * 4 + (at(x, y) === t) * 8;
+      if (i === 15) full(b, x, y, x * s - s / 2, y * s - s / 2);
+      else if (i) tile(b, i, x * s - s / 2, y * s - s / 2);
+    }
+  }
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (kind(x, y) === 'grass') drawFlowers(g, x, y, p, salt);
 }
 
 export function drawPath(g, x, y, p) {

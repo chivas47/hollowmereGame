@@ -87,6 +87,23 @@ To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, a
 
 - **Rows (3 bands):** main (tinted to the piece's first colour), second (its second colour), ink (fixed colours and see-through white shine; drawn as is).
 
+## terrain-spring.png, terrain-summer.png, terrain-autumn.png, terrain-winter.png
+
+320 x 80 each, full colour, one per season. Outdoor ground as **Wang 2-corner tile sets** (the "dual grid" or 16-tile corner layout; in Tiled, a corner Wang set). Tiles are 16 x 16.
+
+- **Blocks (5), left to right, 64 x 80 each:** grass, path, sand, quarry, water (`TERRAIN_SHEET.order`).
+- **Rows 0 to 3 of a block: the 16 corner tiles.** Each tile is drawn centred on the point where four world tiles meet. Its index says which of those four are this terrain: NW = 1, NE = 2, SW = 4, SE = 8, added up. Tile *i* is at column *i* % 4, row *i* / 4 of the block. Index 0 is empty (none of the four) and 15 is full; everything outside the terrain must be transparent.
+
+  ```
+   0 ....   1 #...   2 .#..   3 ##..      (corner order in each picture: NW NE / SW SE)
+   4 ..#.   5 #.#.   6 .##.   7 ###.
+   8 ...#   9 #..#  10 .#.#  11 ##.#
+  12 ..##  13 #.##  14 .###  15 ####
+  ```
+- **Row 4: four more full tiles**, used with tile 15 at random so large areas do not repeat.
+- **Base terrain:** each map fills every tile with its base (grass, or sand on the beach, dig site and dunes, or stone in the quarry) from that block's full tiles; the others are laid over it in the order grass, sand, quarry, path, water. The grass block's corner tiles are used only on sand and stone maps (grass under trees there).
+- The edge tiles keep each terrain inside its own tiles' quadrants, so what you see matches where you can walk.
+
 The placeholder sheets are built by the scripts in `tools/sprites/`.
 
 ## Credits
@@ -101,3 +118,4 @@ The placeholder sheets are built by the scripts in `tools/sprites/`.
 | forage.png, trees.png | Hollowmere Farm (original placeholder, v82, from the game's code art) | same as the game |
 | debris.png, giants.png | Hollowmere Farm (original placeholder, v83, from the game's code art) | same as the game |
 | placed.png, furniture.png | Hollowmere Farm (original placeholder, v84, from the game's code art) | same as the game |
+| terrain-*.png | Hollowmere Farm (original placeholder, v85, colours from the season palettes) | same as the game |

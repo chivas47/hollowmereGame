@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v85: Terrain tile sets
+- Outdoor ground (grass, paths, sand, quarry stone and water) now draws from one tile set per season, `assets/sprites/terrain-spring.png` and so on, in the standard 16-tile corner layout (Wang 2-corner, "dual grid") that Tiled and Godot use, so hand-drawn tiles can replace them directly.
+- Ground now has edges: paths, sand, stone and ponds get rounded corners and an edge line, water gets a shoreline and bank shadow. Before, every tile was drawn on its own with square edges.
+- Grass and every other ground pick from several full tiles so large areas do not repeat. Flowers on grass are as before.
+- Where tiles are walkable is unchanged: each tile's ground still covers that tile.
+- If the season's sheet fails to load, the ground is drawn in code exactly as in v84. Caves, house floors, the greenhouse, tilled soil and buildings are still drawn in code.
+- Saves: no new fields.
+
 ## v84: Placed object and furniture sprite sheets
 - Every crafted object you place (machines, chests, sprinklers, bombs, signs, lanterns, the silo and the rest) now draws from a new sheet, `assets/sprites/placed.png`, outlined and shaded. Blinks, the incubator's egg and the working and ready marks are drawn over it as before.
 - Furniture draws from `assets/sprites/furniture.png`, one picture per shape tinted to each piece's two colours, so every piece in the catalogue keeps its colours.
