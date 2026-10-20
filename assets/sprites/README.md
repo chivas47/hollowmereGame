@@ -66,6 +66,17 @@ To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, a
 - **Rows (2 bands):** leaf (tinted to the fruit's leaf colour), ink (trunk, snow, shadow; drawn as is).
 - Fruit is drawn in code over stage 4.
 
+## debris.png
+
+144 x 16. Frames are 16 x 16 over the tile, one row, in the order of `DEBRIS_SHEET.order`. Colours are drawn in.
+
+## giants.png
+
+144 x 144. Giant crops. Frames are 48 x 48 over their 3 x 3 tiles.
+
+- **Columns (3):** pod, round, leafy (the crop's shape).
+- **Rows (3 bands):** fruit (tinted to the crop's colour), line (its line colour; for leafy crops without one, leaf green), ink (stems, leaves, shadow, and the see-through white shine; drawn as is).
+
 The placeholder sheets are built by the scripts in `tools/sprites/`.
 
 ## Credits
@@ -78,3 +89,4 @@ The placeholder sheets are built by the scripts in `tools/sprites/`.
 | monsters.png | Hollowmere Farm (original placeholder, v80) | same as the game |
 | crops.png | Hollowmere Farm (original placeholder, v81) | same as the game |
 | forage.png, trees.png | Hollowmere Farm (original placeholder, v82, from the game's code art) | same as the game |
+| debris.png, giants.png | Hollowmere Farm (original placeholder, v83, from the game's code art) | same as the game |

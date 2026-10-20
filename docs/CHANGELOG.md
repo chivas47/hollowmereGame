@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v83: Debris and giant crop sprite sheets
+- Debris (grass tufts, weeds, stones, twigs, stumps, copper and iron rocks, crates, alder stumps) now draws from a new sheet, `assets/sprites/debris.png`, outlined and shaded.
+- Giant crops draw from `assets/sprites/giants.png`, outlined and shaded, tinted to each crop's colours, shine kept.
+- Both are built from the game's own code art. If either sheet fails to load, they are drawn in code exactly as in v82.
+- Saves: no new fields.
+
 ## v82: Forage and fruit tree sprite sheets
 - All 34 forage pictures now draw from a new sheet, `assets/sprites/forage.png`, outlined and shaded, on the ground and when picked up.
 - Fruit trees draw from `assets/sprites/trees.png`: every stage and the bare winter tree, outlined and shaded, tinted to each tree's leaf colour. Fruit is drawn on top as before.
