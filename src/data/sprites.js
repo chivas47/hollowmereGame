@@ -121,3 +121,12 @@ export const MONSTERS = {
     serpent: { shadow: [-4, 8, 0.25], bob: 3 }, slime: { shadow: [-4, 9, 0.35] },
   },
 };
+
+// v91 alders.png: wild alders, 32x48 frames, the tree's tile at the bottom centre (origin: the frame's top-left from
+// the tile's), one row: stages 0 to 4, bare stages 1 to 4, then the tree tap. Colours drawn in; the tap's drop in code.
+export const ALDERS_SHEET = { sheet: 'alders', w: 32, h: 48, origin: [-8, -32], bare: 4, tap: 9 };
+// v91 fences.png: 16x18 frames (the tile's top 2 px above), a column per neighbour mask (up 1, right 2, down 4,
+// left 8). Bands: main (tinted to the fence's colour), ink (see-through light). fixtures.png: 16x16 over the tile,
+// colours drawn in, one row in this order (gate: across or along, closed or open; paths by kind).
+export const FENCES_SHEET = { sheet: 'fences', w: 16, h: 18, origin: [0, -2], layers: ['main', 'ink'] };
+export const FIXTURES_SHEET = { sheet: 'fixtures', size: 16, order: ['gate-across', 'gate-across-open', 'gate-along', 'gate-along-open', 'woodpath', 'stonepath'] };

@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v91: Alder, fence, gate and path sheets
+- Wild alders (every stage, and bare in winter) and the tree tap draw from a new sheet, `assets/sprites/alders.png`, outlined like the debris. The tap's syrup drop still blinks in code.
+- Fences draw from `assets/sprites/fences.png`: one frame per way a fence joins its neighbours, tinted to the wood, stone or hardwood colour, so rails meet the next post without a seam.
+- Gates (across and along, open and closed) and the wood and stone paths draw from `assets/sprites/fixtures.png`. The hotbar's kit slot uses the same art.
+- Made from the game's own code art, so they look the same apart from the outline. If a sheet fails to load, they are drawn in code exactly as in v90.
+- Saves: no new fields.
+
 ## v90: Tool icon and seed packet sheets
 - The hotbar's tools (hoe, rod, pickaxe, sword, axe, pan, watering can) and the dagger and club now draw from `assets/sprites/tools.png`, outlined. The same pictures are the tools and weapons in the player's hand when swinging.
 - The seed packet draws from `assets/sprites/packet.png`, tinted to each crop's colours.

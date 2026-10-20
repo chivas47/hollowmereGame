@@ -146,6 +146,25 @@ To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, a
 
 The placeholder sheets are built by the scripts in `tools/sprites/`.
 
+## alders.png
+
+320 x 48. Wild alders, 32 x 48 frames in one row; the tree's tile is the bottom 16 px at x 8 to 24 (`ALDERS_SHEET.origin`).
+
+- **Columns (10):** stages 0 (the cone) to 4 (grown), the bare winter tree at stages 1 to 4, then the tree tap (where it sits on a grown alder).
+- Colours are drawn in. The tap's syrup drop is drawn in code.
+
+## fences.png
+
+256 x 36. Fences, 16 x 18 frames (the tile, plus 2 px above it for the post that joins up).
+
+- **Columns (16):** one per neighbour mask: up 1, right 2, down 4, left 8 (a fence with neighbours right and left is column 10).
+- **Rows (2 bands):** main (greyscale, tinted to the fence's colour: wood, stone, hardwood), ink (see-through white light, drawn as is).
+- Rails and posts reach the frame's edges without an outline there, so they join the next fence.
+
+## fixtures.png
+
+96 x 16. 16 x 16 over the tile, colours drawn in, one row in the order of `FIXTURES_SHEET.order`: the gate across (closed, open), the gate along (closed, open), the wood path, the stone path. The paths repeat edge to edge.
+
 ## Credits
 
 | File | Author | Licence |
@@ -165,3 +184,4 @@ The placeholder sheets are built by the scripts in `tools/sprites/`.
 | buildings.png, buildings-winter.png | Hollowmere Farm (original placeholder, v88, from the game's code art) | same as the game |
 | props.png, greenhouse.png | Hollowmere Farm (original placeholder, v89, from the game's code art) | same as the game |
 | tools.png, packet.png | Hollowmere Farm (original placeholder, v90, from the game's code art) | same as the game |
+| alders.png, fences.png, fixtures.png | Hollowmere Farm (original placeholder, v91, from the game's code art) | same as the game |
