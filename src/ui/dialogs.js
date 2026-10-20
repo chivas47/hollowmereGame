@@ -33,6 +33,7 @@ import { askingTonight, answerChild } from '../systems/family.js';
 import { NPCS } from '../data/npcs.js';
 import { BOUQUET } from '../data/romance.js';
 import { bouquetOnSale, buyBouquet } from '../systems/town.js';
+import { hintsNow, hintsOn } from '../systems/hints.js';
 
 const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
@@ -160,6 +161,7 @@ on('day:report', (r) => {
   if (r.sprinkled) html += `<p>Sprinklers watered ${plural(r.sprinkled, 'tile')}.</p>`;
   if (r.questsPosted) html += '<p class="role">A new request is up on the village quest board.</p>';
   if (r.forecast) html += `<p class="role">Forecast for tomorrow: ${WEATHER[r.forecast].name.toLowerCase()}.</p>`;
+  if (hintsOn()) { const [tip] = hintsNow(1); if (tip && tip.id !== 'idle') html += `<p class="role">Tip: ${tip.text}</p>`; }   // v101
   html += `<p>${r.passedOut ? 'You woke up at home with only part of your energy back. ' : ''}`;
   html += `${r.payout ? `The shipping bin paid out ${r.payout}g.` : 'Nothing was shipped yesterday.'} ${plural(r.grown, 'crop')} grew overnight.</p>`;
   openModal(html, [['Start the day', closeModal, true]]);

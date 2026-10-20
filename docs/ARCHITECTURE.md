@@ -51,6 +51,7 @@ src/
     guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item, underSky()
     atmosphere.js     LIGHT keyframes, WATERFALLS, WILDLIFE, AMBIENCE by area (v72); indoor LIGHTS, HOUSE_WINDOWS, CRACKLE_RANGE (v100)
+    hints.js          HINTS (id, when(S, facts), text) most pressing first, TOOL_TIPS, STUCK_PRESSES (v101)
     animation.js      SWINGS (tool arcs and timings), COMBO (weapon combo steps), PICKUP, CRAFTED, PLACE, IMPACT colours (v74)
     schedules.js      neighbour daily routines by weekday (go: walk a loop of spots, at: walk there and stay), spouse and festival days
     homes.js          where each neighbour lives: door, cottage, door hours (v76); homeEntry() inside the front door (v97)
@@ -65,6 +66,7 @@ src/
     clothing.js       wardrobe, outfit, tailoring, dyeing, mannequins, shoe defense
     house.js          the farmhouse: door, bed, catalogue sales, decor, renovations, furniture drawing, turning placed furniture (turnFurniture, R key, v99)
     undo.js           undo of the player's own places, pick-ups and turns today (G.S.placed only; U, Ctrl+Z, the menu's Undo) (v99)
+    hints.js          facts() and hintsNow() for the journal and the morning tip; the tool tip after three silent presses of Use (G.S.hints) (v101)
     pets.js           the farm pet: wandering, pats, the water bowl, gifts, hats
     stable.js         stable building, horse riding, following between maps, whistle
     world.js          tile queries, collision, facing(), placePlayer(), useEnergy(), soilOf(map), placeKey()/parsePlaceKey()
@@ -157,6 +159,7 @@ src/
     sound.js          footer toggles, M key, unlock on first input
     saveFile.js       Export save / Import save buttons, file download and upload
     house.js          the catalogue dialog
+    hints.js          the journal's Hints tab and the menu's Tips button (v101)
     clothing.js       sewing machine, dye pots and mannequin dialogs; the wardrobe in the bag
     creation.js       the new game screen (opens when G.S.profile is null)
     trader.js         the sewer trader's dialog (v45)
@@ -313,6 +316,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `placed` | {map, x, y, kind} | placeables.js | sprinklers.js (water now), audio/sfx.js, undo.js (v99) |
 | `unplaced` | {map, x, y, p} | placeables.js (the player picked it up, not undo or load) | undo.js (v99) |
 | `turned` | {map, x, y, from} | house.js (the player turned furniture) | undo.js (v99) |
+| `use`, `used` | {tx, ty, tile, mapId, item} | interact.js (before and after each press of Use) | hints.js (v101: presses with no message, sound or swing) |
 | `sfx` | name | effects, monsters, fishing, health, economy, skills, coop, barn, ui/modal | audio/sfx.js |
 | `ui:scene` | {npc, at, scene, extra} | npcs.js | ui/dialogs.js heart scene with choices |
 | `ui:*` | varies | systems | ui modules open dialogs |

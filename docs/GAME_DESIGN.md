@@ -460,6 +460,8 @@ Animals and products follow Stardew by role. Every animal eats 1 feed (coop) or 
 
 ### Crafting (C key; costs gold plus materials)
 
+v101: once you can make more than one, the menu adds ×5 and All (as many as your gold and materials allow). Each costs the same per item as crafting one at a time.
+
 | Object | Gold | Materials | Effect |
 |---|---|---|---|
 | Copper sprinkler | 75 | 1 copper bar, 5 stone | Waters the 4 tiles next to it every morning |
@@ -700,6 +702,18 @@ Nothing here is saved or touches the economy (cosmetic randomness has its own ge
 - v75: one action per swing. Use is ignored until the tool's swing ends (one press in its last 0.2 s is kept), so the swing time is also the fastest a tool can be used: about 3 axe, pickaxe or hoe strokes a second, 2.4 waterings.
 - Pickups fly in over 0.32 s, at most 6 kinds at once; labels stack. The crafted pose lasts 1 s; placing 0.25 s.
 - Hit-stop 0.06 s on contact; screen shake on stone, criticals, the spin and slam finishers, and when you are hurt.
+
+## Hints (v101)
+
+For when you are stuck. Nothing here touches the economy.
+
+| Part | Where | When |
+|---|---|---|
+| Hints tab | the journal (J) | always: up to three hints that fit the farm right now, most pressing first (data/hints.js) |
+| Morning tip | the morning report | the most pressing hint, if any fits; off with Tips in the menu |
+| Tool tip | a message | after three presses of Use on one tile with no message, sound or swing; once until something answers; off with Tips |
+
+Hints in order: past midnight, out of energy, hurt underground, empty can, dry crops, ripe crops, produce not shipped by 5 pm, nothing planted yet, no seeds, a machine finished, something waiting in the kit, animals not petted, the Hollow not yet visited, winter with nothing growing, and a last one when nothing else fits.
 
 ## Atmosphere (v72)
 
@@ -963,6 +977,8 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 | Ranching | animal products one quality higher |
 
 ## Known issues and open questions
+
+- v101: Hints read the farm as it is, not what you have done before, so a hint can repeat until its condition changes (the morning tip shows at most one, and Tips in the menu turns it and the tool tips off). The tool tip only fires on presses that give no feedback at all; tools that already answer (the can on grass, the pan off its spot) keep their own messages. The balance bot crafts one at a time; batch crafting changes no prices.
 
 - v99: Undo covers only kit objects (`G.S.placed`): not fertilizer, crab pots, tilling, planting or buildings. It is forgotten overnight and on load. Fruit trees still cannot be picked up (Stardew's cannot either). The new side and back views of seats are drawn in code; the furniture sheet holds the front views only. Turning is looks only: neighbours and the player do not sit.
 

@@ -3,8 +3,7 @@ import { G } from '../core/game.js';
 import { on } from '../core/events.js';
 import { ITEMS } from '../data/items.js';
 import { RECIPES, PLACEABLES, MACHINES, sprinklerTiles } from '../data/crafting.js';
-import { affordable } from '../systems/upgrades.js';
-import { craft, seedsOk, learnt } from '../systems/crafting.js';
+import { craft, craftable, learnt } from '../systems/crafting.js';
 import { SKILLS } from '../data/skills.js';
 import { CROPS } from '../data/crops.js';
 import { placedAt, pickUp } from '../systems/placeables.js';
@@ -16,11 +15,21 @@ import { $ } from './dom.js';
 
 const needsText = (needs) => Object.entries(needs).map(([k, n]) => `${n} ${ITEMS[k].name} (you have ${G.S.bag[k]})`).join(', ');
 
+// v101: Craft makes one batch; x5 and All (how many you can afford) appear once you can make more than one.
+function craftButtons(k, rc) {
+  if (!learnt(rc)) return `<button disabled title="Learnt at ${SKILLS[rc.skill[0]].name.toLowerCase()} level ${rc.skill[1]}">${SKILLS[rc.skill[0]].name} ${rc.skill[1]}</button>`;
+  const n = craftable(k);
+  let html = `<button data-craft="${k}" ${n ? '' : 'disabled'}>Craft</button>`;
+  if (n >= 5) html += `<button data-craft="${k}" data-times="5">×5</button>`;
+  if (n >= 2) html += `<button data-craft="${k}" data-times="${n}">All (${n * (rc.makes || 1)})</button>`;
+  return html;
+}
+
 function craftMenu() {
   const S = G.S;
   const rows = Object.entries(RECIPES).map(([k, rc]) => `
     <div class="shoprow"><div><b>${rc.seed ? CROPS[k].name : rc.item ? ITEMS[k].name : PLACEABLES[k].name}</b><span>${rc.desc}${rc.cost ? ` ${rc.cost}g` : ''}<br>Needs ${needsText(rc.needs)}${Object.entries(rc.seeds || {}).map(([s, n]) => `, ${n} ${CROPS[s].name.toLowerCase()} (you have ${S.seeds[s]})`).join('')}${rc.seed ? (S.seeds[k] ? `<br>Packets: ${S.seeds[k]}` : '') : rc.item ? (S.bag[k] ? `<br>In your bag: ${S.bag[k]}` : '') : S.kit[k] ? `<br>In your kit: ${S.kit[k]}` : ''}</span></div>
-    <div class="btns"><button data-craft="${k}" ${learnt(rc) && affordable(rc.cost, rc.needs) && seedsOk(rc) ? '' : 'disabled'} ${learnt(rc) ? '' : `title="Learnt at ${SKILLS[rc.skill[0]].name.toLowerCase()} level ${rc.skill[1]}"`}>${learnt(rc) ? 'Craft' : `${SKILLS[rc.skill[0]].name} ${rc.skill[1]}`}</button></div></div>`).join('');
+    <div class="btns">${craftButtons(k, rc)}</div></div>`).join('');
   openModal(`<h2>Crafting</h2><p class="role">Stone and ore from the Hollow, wood from the farm, plus Bram's fittings. You have <b>${S.gold}g</b>. Crafted things go to slot 7; face untilled farm grass or a greenhouse bed and press Use to place one.</p>${rows}`,
     [['Close', closeModal, true]]);
 }
@@ -69,7 +78,7 @@ on('ui:placed', ({ x, y }) => { at = { x, y }; placedDialog(); });
 
 $('#mbody').addEventListener('click', (e) => {
   const c = e.target.closest('[data-craft]');
-  if (c && !c.disabled) { if (craft(c.dataset.craft)) craftMenu(); return; }
+  if (c && !c.disabled) { if (craft(c.dataset.craft, +c.dataset.times || 1)) craftMenu(); return; }
   const l = e.target.closest('[data-load]');
   if (l && at) { if (loadMachine(at.x, at.y, l.dataset.load)) placedDialog(); return; }
   if (e.target.closest('[data-collect]') && at) { if (collectMachine(at.x, at.y)) placedDialog(); }

@@ -53,6 +53,7 @@ import './systems/farmPerks.js';
 import './systems/pets.js';
 import './systems/stable.js';
 import './systems/house.js';
+import './systems/hints.js';   // v101: hints for when you are stuck
 import './systems/undo.js';
 import './systems/clothing.js';
 import './systems/treasure.js';
@@ -97,6 +98,7 @@ import './ui/cooking.js';
 import './ui/village.js';
 import './ui/creation.js';
 import './ui/house.js';
+import './ui/hints.js';
 import './ui/clothing.js';
 import './ui/guild.js';
 import './ui/forge.js';
