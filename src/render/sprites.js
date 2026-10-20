@@ -3,7 +3,7 @@ import { T } from '../core/constants.js';
 import { CROPS } from '../data/crops.js';
 import { r, blink } from './pixel.js';
 import { ready, tinted, frame, sheet } from './sheets.js';
-import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET } from '../data/sprites.js';
+import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET, DEBRIS_SHEET, GIANTS_SHEET } from '../data/sprites.js';
 
 const FERT_DOT = { booster: '#c9b68e', booster2: '#e9b44c', booster3: '#b98ae0', tonic: '#86b86a', tonic2: '#5fd36a', mulch: '#a0805a', mulch2: '#7a5a3a' };
 export function drawSoil(c, X, Y, wet, fert) {
@@ -558,7 +558,11 @@ export function drawFruitTree(c, X, Y, fruit, stage, count, bare) {
 
 // A giant crop over a 3x3 block; X, Y is its top-left tile.
 export function drawGiant(c, X, Y, type) {
-  const d = CROPS[type], cx = X + 24;
+  const d = CROPS[type], cx = X + 24, G = GIANTS_SHEET;
+  if (ready(G.sheet) && G.cols[d.shape] !== undefined) {   // v83: from the giant sheet tinted to the crop's colours
+    const line = d.line || (d.shape === 'leafy' ? '#4f9440' : d.color);
+    return frame(c, tinted(G.sheet, G.layers, [['fruit', d.color], ['line', line], ['ink', null]], G.size), G.cols[d.shape], G.size, X, Y);
+  }
   r(c, X + 3, Y + 42, 42, 4, 'rgba(0,0,0,.25)');
   if (d.shape === 'pod') {
     r(c, cx - 1, Y + 6, 3, 38, '#4f9440');
@@ -593,7 +597,12 @@ const DEBRIS_ART = {
   crate: (c, X, Y) => { r(c, X + 2, Y + 5, 12, 10, '#a5753f'); r(c, X + 2, Y + 5, 12, 1, '#c9955a'); r(c, X + 2, Y + 9, 12, 1, '#6e4626'); r(c, X + 7, Y + 5, 2, 10, '#6e4626'); r(c, X + 3, Y + 13, 3, 1, '#5fa8d3'); },
   alderstump: (c, X, Y) => { r(c, X + 4, Y + 9, 8, 6, '#7a5a3a'); r(c, X + 4, Y + 8, 8, 2, '#c9a06a'); r(c, X + 6, Y + 8, 4, 1, '#a07a4a'); r(c, X + 3, Y + 14, 10, 1, 'rgba(0,0,0,.2)'); },
 };
-export function drawDebris(c, X, Y, kind) { (DEBRIS_ART[kind] || DEBRIS_ART.stone)(c, X, Y); }
+// v83: from the debris sheet once it has loaded, else drawn in code.
+export function drawDebris(c, X, Y, kind) {
+  const i = DEBRIS_SHEET.order.indexOf(kind);
+  if (i >= 0 && ready(DEBRIS_SHEET.sheet)) return frame(c, sheet(DEBRIS_SHEET.sheet).img, i, DEBRIS_SHEET.size, X, Y);
+  (DEBRIS_ART[kind] || DEBRIS_ART.stone)(c, X, Y);
+}
 
 // A wild alder: stage 0 a cone, 1 to 3 young, 4 grown (a tall canopy reaching two tiles up).
 export function drawAlder(c, X, Y, stage, bare) {

@@ -49,6 +49,12 @@ export const FORAGE_SHEET = {
 // from the tile's. Bands: leaf (tinted to the fruit's leaf colour), ink (trunk, snow, shadow). Fruit is drawn in code.
 export const TREES_SHEET = { sheet: 'trees', w: 24, h: 32, origin: [-4, -16], layers: ['leaf', 'ink'], bare: 5 };
 
+// v83 debris.png: 16x16 frames over the tile, one row, in this order (colours drawn in).
+export const DEBRIS_SHEET = { sheet: 'debris', size: 16, order: ['grass', 'weeds', 'stone', 'twig', 'stump', 'copperrock', 'ironrock', 'crate', 'alderstump'] };
+// v83 giants.png: giant crops, 48x48 frames over their 3x3 tiles, a column per shape. Bands: fruit (tinted to the
+// crop's colour), line (its line colour), ink (stems, leaves, shadow).
+export const GIANTS_SHEET = { sheet: 'giants', size: 48, layers: ['fruit', 'line', 'ink'], cols: { pod: 0, round: 1, leafy: 2 } };
+
 export const MONSTERS = {
   sheet: 'monsters', size: 24, origin: [-12, -24],
   layers: ['mite.body', 'mite.ink', 'bat.body', 'bat.ink', 'skeleton.body', 'skeleton.ink', 'wraith.body', 'wraith.ink',
