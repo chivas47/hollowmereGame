@@ -16,6 +16,7 @@ import { ready, sheet, onSheet } from './sheets.js';
 import { addLayer } from '../core/registry.js';
 import { WIND } from '../data/atmosphere.js';
 import { lean, shiftOf } from '../systems/wind.js';
+import { outdoorLights } from '../systems/nightlights.js';
 
 let cache = {};
 on('season:changed', () => { cache = {}; });
@@ -119,12 +120,38 @@ export function lightAt(minute) {
   const f = b[0] === a[0] ? 0 : (time - a[0]) / (b[0] - a[0]), mix = (i) => Math.round(a[i] + (b[i] - a[i]) * f);
   return { time, rgb: `${mix(1)},${mix(2)},${mix(3)}`, alpha: a[4] + (b[4] - a[4]) * f };
 }
+// v105: outdoor lights (systems/nightlights.js) cut pools out of it and glow warm over them. The pools and glows
+// are drawn once into two canvases, redrawn only when a light comes on or goes out.
+let shade = null, lit = { key: null, mask: null, glow: null };
+const canvas = () => Object.assign(document.createElement('canvas'), { width: W * T, height: H * T });
+function pool(g, l, r, a0, a1) {
+  const gr = g.createRadialGradient(l.x, l.y, 0, l.x, l.y, r);
+  gr.addColorStop(0, a0); gr.addColorStop(1, a1);
+  g.fillStyle = gr; g.fillRect(l.x - r, l.y - r, r * 2, r * 2);
+}
+function lightCanvases(lights) {
+  const key = G.S.map + lights.map((l) => `${l.x},${l.y}`).join(';');
+  if (lit.key === key) return lit;
+  const mask = lit.mask || canvas(), glow = lit.glow || canvas(), m = mask.getContext('2d'), g = glow.getContext('2d');
+  m.clearRect(0, 0, mask.width, mask.height); g.clearRect(0, 0, glow.width, glow.height);
+  g.globalCompositeOperation = 'lighter';
+  for (const l of lights) { pool(m, l, l.r, 'rgba(0,0,0,.85)', 'rgba(0,0,0,0)'); pool(g, l, l.r * 0.8, `rgba(${l.rgb},.35)`, `rgba(${l.rgb},0)`); }
+  return (lit = { key, mask, glow });
+}
 function tint(c) {
   const { time, rgb, alpha } = lightAt(G.S.time);
   if (alpha <= 0.01) return;
-  const w = W * T, h = H * T;
-  if (time < NIGHT_FROM) { c.fillStyle = `rgba(${rgb},${alpha})`; c.fillRect(0, 0, w, h); return; }
-  const g = c.createRadialGradient(G.S.x, G.S.y, T * 1.5, G.S.x, G.S.y, T * 7);
-  g.addColorStop(0, `rgba(${rgb},${alpha * 0.55})`); g.addColorStop(1, `rgba(${rgb},${alpha})`);
-  c.fillStyle = g; c.fillRect(0, 0, w, h);
+  const w = W * T, h = H * T, lights = outdoorLights(), k = lights.length ? (shade ||= canvas()).getContext('2d') : c;
+  if (lights.length) { k.globalCompositeOperation = 'source-over'; k.clearRect(0, 0, w, h); }
+  if (time < NIGHT_FROM) { k.fillStyle = `rgba(${rgb},${alpha})`; k.fillRect(0, 0, w, h); }
+  else {
+    const g = k.createRadialGradient(G.S.x, G.S.y, T * 1.5, G.S.x, G.S.y, T * 7);
+    g.addColorStop(0, `rgba(${rgb},${alpha * 0.55})`); g.addColorStop(1, `rgba(${rgb},${alpha})`);
+    k.fillStyle = g; k.fillRect(0, 0, w, h);
+  }
+  if (!lights.length) return;
+  const { mask, glow } = lightCanvases(lights);
+  k.globalCompositeOperation = 'destination-out'; k.drawImage(mask, 0, 0);
+  c.drawImage(shade, 0, 0);
+  c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = alpha; c.drawImage(glow, 0, 0); c.restore();
 }
