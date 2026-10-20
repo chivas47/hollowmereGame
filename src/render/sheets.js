@@ -43,7 +43,7 @@ export function tinted(name, layerNames, layers, size) {
     }
     g.drawImage(tmp, 0, 0);
   }
-  if (tints.size > 64) tints.delete(tints.keys().next().value);
+  if (tints.size > 256) tints.delete(tints.keys().next().value);   // v81: room for every crop, person and monster
   tints.set(key, cv);
   return cv;
 }

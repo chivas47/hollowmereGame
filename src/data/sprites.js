@@ -29,6 +29,14 @@ export const HORSE = { sheet: 'horse', size: 24, origin: [-12, -24] };
 // per kind and layer, tinted like the person sheet: body to the monster's colour (white while hurt), glow to the
 // kind's glow colour, ink as is. Flyers are drawn at rest height. Per kind: shadow [dx, width, alpha] drawn in code
 // on the ground, bob: the speed of the 2 px rise and fall (0: none), sway: the speed of a 1 px side to side.
+// v81 crops.png: 16x16 frames over the tile (origin: its top-left); columns are the stages below, the ripe ones by
+// crop shape. Bands as the person sheet: plant and shine as is, fruit tinted to the crop's colour, top to its top
+// colour (only drawn when it has one), line to its line colour (or its colour).
+export const CROPS_SHEET = {
+  sheet: 'crops', size: 16, layers: ['plant', 'fruit', 'top', 'line', 'shine'],
+  cols: { dead: 0, seed: 1, sprout: 2, young: 3, root: 4, round: 5, leafy: 6, pod: 7 },
+};
+
 export const MONSTERS = {
   sheet: 'monsters', size: 24, origin: [-12, -24],
   layers: ['mite.body', 'mite.ink', 'bat.body', 'bat.ink', 'skeleton.body', 'skeleton.ink', 'wraith.body', 'wraith.ink',

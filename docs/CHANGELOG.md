@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v81: Crop sprite sheet
+- Every crop now draws from a new layered sheet, `assets/sprites/crops.png` (original placeholder art): outlined and shaded at every stage (seed, sprout, young, ripe, dead), the ripe crop by its shape and tinted to its own colours.
+- If the sheet fails to load, crops are drawn in code exactly as in v80. Giant crops, fruit trees and forage are still drawn in code.
+- Room for more tinted pictures at once (256, up from 64), so a busy farm with many neighbours never re-tints every frame.
+- Saves: no new fields.
+
 ## v80: Monster sprite sheet
 - Slimes and every mine monster (mite, bat, bone walker, sand wraith, scorch rex, magma sprite, ember golem, serpent) now draw from a new layered sheet, `assets/sprites/monsters.png` (original placeholder art): outlined and shaded, tinted to each monster's colour, flashing white when hit, glows kept. Slimes stretch when they hop.
 - Shadows stay on the ground while flyers bob, as before.
