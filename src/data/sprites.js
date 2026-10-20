@@ -24,3 +24,20 @@ export const PETS = {
   hat: { cat: [10, 7], dog: [10, 7], turtle: [13, 10] },
 };
 export const HORSE = { sheet: 'horse', size: 24, origin: [-12, -24] };
+
+// v80 monsters.png: 24x24 frames, 2 columns (the code art's two frames; the slime's are resting and mid-hop); one band
+// per kind and layer, tinted like the person sheet: body to the monster's colour (white while hurt), glow to the
+// kind's glow colour, ink as is. Flyers are drawn at rest height. Per kind: shadow [dx, width, alpha] drawn in code
+// on the ground, bob: the speed of the 2 px rise and fall (0: none), sway: the speed of a 1 px side to side.
+export const MONSTERS = {
+  sheet: 'monsters', size: 24, origin: [-12, -24],
+  layers: ['mite.body', 'mite.ink', 'bat.body', 'bat.ink', 'skeleton.body', 'skeleton.ink', 'wraith.body', 'wraith.ink',
+    'rex.body', 'rex.ink', 'sprite.body', 'sprite.glow', 'sprite.ink', 'golem.body', 'golem.glow', 'golem.ink',
+    'serpent.body', 'serpent.ink', 'slime.body', 'slime.ink'],
+  kinds: {
+    mite: { shadow: [-5, 10, 0.35] }, bat: { shadow: [-3, 6, 0.25], bob: 6 }, skeleton: { shadow: [-4, 8, 0.35] },
+    wraith: { shadow: [-4, 8, 0.35], sway: 3 }, rex: { shadow: [-4, 8, 0.25], bob: 5 },
+    sprite: { shadow: [-3, 6, 0.25], bob: 7, glow: '#ffd98a' }, golem: { shadow: [-6, 12, 0.35], glow: '#e9862a' },
+    serpent: { shadow: [-4, 8, 0.25], bob: 3 }, slime: { shadow: [-4, 9, 0.35] },
+  },
+};
