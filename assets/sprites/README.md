@@ -24,9 +24,22 @@ To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, a
 - **Rows (9):** chicken, duck, rabbit, mossback, cow, goat, sheep, pig, strider. The order is `ANIMALS.rows` in `src/data/sprites.js`.
 - Each frame includes its ground shadow on the bottom row.
 
+## pets.png
+
+64 x 160. Frames are 16 x 16, the pet's feet at the bottom centre (x 8, y 16). Columns as animals.png.
+
+- **Rows (10 bands), one per kind and layer:** cat body, cat acc, cat ink, dog body, dog acc, dog ear, dog ink, turtle body, turtle acc, turtle ink.
+- Tinted like person.png: body and acc become the pet's two look colours, the dog's ear its ear colour; ink is drawn as is (eyes, the turtle's skin, the shadow).
+- Hats are drawn in code at `PETS.hat` (the right-facing spot; left frames mirror it).
+
+## horse.png
+
+96 x 24. Frames are 24 x 24, the horse's feet at the bottom centre (x 12, y 24). Columns as animals.png, colours drawn in.
+
 ## Credits
 
 | File | Author | Licence |
 | --- | --- | --- |
 | person.png | Hollowmere Farm (original placeholder, v77) | same as the game |
 | animals.png | Hollowmere Farm (original placeholder, v78) | same as the game |
+| pets.png, horse.png | Hollowmere Farm (original placeholder, v79) | same as the game |

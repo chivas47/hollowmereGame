@@ -24,7 +24,7 @@ function preview() {
   const pn = $('#cPetName'); if (pn) pn.placeholder = PET_NAMES[draft.pet];
 }
 
-onSheet(() => { if (draft) preview(); });   // v77: redraw once the person sheet arrives
+onSheet(() => { if (draft) preview(); });   // v77: redraw once the person (v79: or pet) sheet arrives
 
 function pressed() {
   $$('[data-look]').forEach((b) => b.setAttribute('aria-pressed', String(draft.look[b.dataset.look] === b.dataset.v)));
