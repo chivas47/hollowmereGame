@@ -147,3 +147,12 @@ export const BUNTING_SHEET = { sheet: 'bunting', size: 8, origin: [-3, -1], laye
 // cave's bats, mushroom logs and crate goods. 32x16 frames, one column per piece in this order; the piece's own spot
 // is at x 4, y 2 of its frame (anchor). Bands: main (the fish, tinted to its colour), ink (every other piece, as is).
 export const PENS_SHEET = { sheet: 'pens', w: 32, h: 16, anchor: [4, 2], layers: ['main', 'ink'], order: ['fish', 'roe', 'slime0', 'slime1', 'ball', 'water', 'bat', 'log', 'crate'] };
+
+// v95 variants.png: props that change with the place or the season (render/tiles.js PROP_VARIANT), one 16x16 frame
+// per variant over the tile, one row in this order. Key: the map character, then ':' and the variant if it has one
+// (snow; the pedestal's skill; the shell's size, small 0 to large 2; the Smoke Peak summit's altar).
+export const VARIANTS_SHEET = {
+  sheet: 'variants', size: 16,
+  order: ['@', '@:snow', '+:farming', '+:foraging', '+:fishing', '+:mining', '+:combat', '+:ranching', 'y', 'y:snow', '7', '7:snow',
+    '8:0', '8:1', '8:2', '<', '<:peak'],
+};
