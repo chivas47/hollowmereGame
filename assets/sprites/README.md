@@ -45,6 +45,15 @@ To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, a
 - Tinted like person.png: body becomes the monster's colour (white while hurt), glow the kind's glow colour; ink is drawn as is.
 - No shadows in the sheet: they are drawn in code (`MONSTERS.kinds[kind].shadow`) so they stay on the ground.
 
+## crops.png
+
+128 x 80. Frames are 16 x 16, drawn over the tile (the frame's top-left is the tile's top-left).
+
+- **Columns (8):** dead, seed, sprout, young, then the ripe crop by shape: root, round, leafy, pod (`CROPS_SHEET.cols`).
+- **Rows (5 bands):** plant (drawn as is: stems, leaves, seeds), fruit (tinted to the crop's colour), top (its top colour; drawn only when it has one), line (its line colour, or its colour), shine (drawn as is, see-through white).
+- The fruit band under a root's top is painted in full, so crops without a top colour still have whole roots.
+- The ripe sparkle is drawn in code.
+
 ## Credits
 
 | File | Author | Licence |
@@ -53,3 +62,4 @@ To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, a
 | animals.png | Hollowmere Farm (original placeholder, v78) | same as the game |
 | pets.png, horse.png | Hollowmere Farm (original placeholder, v79) | same as the game |
 | monsters.png | Hollowmere Farm (original placeholder, v80) | same as the game |
+| crops.png | Hollowmere Farm (original placeholder, v81) | same as the game |

@@ -79,7 +79,8 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 34d | Image sprite sheets | feature | done (chivas47/hollowmereGame#73) | Pixel art can come from PNG sprite sheets in assets/sprites/ (rule 3 changed). People first: a layered person sheet tinted to each palette, code art as the fallback. Asked for by Nuno, October 2026. |
 | 34e | Image sprite sheets: farm animals | feature | done (chivas47/hollowmereGame#74) | Coop and barn animals from an animals sheet, code art as the fallback. Continues 34d. Asked for by Nuno, October 2026. |
 | 34f | Image sprite sheets: pet and horse | feature | done (chivas47/hollowmereGame#75) | The pet (tinted to its look, hats kept) and the horse from sheets, code art as the fallback. Continues 34d. Asked for by Nuno, October 2026. |
-| 34g | Image sprite sheets: monsters | feature | in progress (chivas47/hollowmereGame#76) | Slimes and mine monsters from a tinted sheet, code art as the fallback. Continues 34d. Asked for by Nuno, October 2026. |
+| 34g | Image sprite sheets: monsters | feature | done (chivas47/hollowmereGame#76) | Slimes and mine monsters from a tinted sheet, code art as the fallback. Continues 34d. Asked for by Nuno, October 2026. |
+| 34h | Image sprite sheets: crops | feature | in progress | Every crop stage from a tinted sheet, code art as the fallback. Continues 34d. Asked for by Nuno, October 2026. |
 | 33 | Local two-player | feature | needs decision | Same-screen co-op is possible without a server but touches every system. Nuno to decide whether it is worth it. |
 
 ## Done

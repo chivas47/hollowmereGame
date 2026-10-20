@@ -3,7 +3,7 @@ import { T } from '../core/constants.js';
 import { CROPS } from '../data/crops.js';
 import { r, blink } from './pixel.js';
 import { ready, tinted, frame, sheet } from './sheets.js';
-import { PERSON, ANIMALS, PETS, HORSE, MONSTERS } from '../data/sprites.js';
+import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET } from '../data/sprites.js';
 
 const FERT_DOT = { booster: '#c9b68e', booster2: '#e9b44c', booster3: '#b98ae0', tonic: '#86b86a', tonic2: '#5fd36a', mulch: '#a0805a', mulch2: '#7a5a3a' };
 export function drawSoil(c, X, Y, wet, fert) {
@@ -38,8 +38,22 @@ const RIPE_ART = {
   },
 };
 
+// v81: from the crop sheet tinted to the crop's colours once it has loaded, else drawn in code below.
+function sheetCrop(c, X, Y, d, stage) {
+  const C = CROPS_SHEET, layers = [['plant', null], ['fruit', d.color]];
+  if (d.top) layers.push(['top', d.top]);
+  layers.push(['line', d.line || d.color], ['shine', null]);
+  frame(c, tinted(C.sheet, C.layers, layers, C.size), C.cols[stage] ?? C.cols.root, C.size, X, Y);
+}
+
 export function drawCrop(c, X, Y, crop) {
   const d = CROPS[crop.type], p = crop.age / (crop.need || d.days), cx = X + 8;
+  if (ready(CROPS_SHEET.sheet)) {
+    const ripe = !crop.dead && crop.age > 0 && p >= 1;
+    sheetCrop(c, X, Y, d, crop.dead ? 'dead' : crop.age === 0 ? 'seed' : p < 0.5 ? 'sprout' : p < 1 ? 'young' : d.shape);
+    if (ripe && blink(450)) r(c, X + 13, Y + 2, 1, 1, '#fffbe8');
+    return;
+  }
   if (crop.dead) { r(c, cx, Y + 6, 1, 7, '#7a5a3a'); r(c, cx - 3, Y + 8, 3, 1, '#7a5a3a'); r(c, cx + 1, Y + 5, 3, 1, '#7a5a3a'); r(c, cx - 4, Y + 7, 1, 1, '#7a5a3a'); return; }
   if (crop.age === 0) { r(c, cx - 3, Y + 9, 1, 1, '#e3cf8a'); r(c, cx + 1, Y + 6, 1, 1, '#e3cf8a'); r(c, cx + 3, Y + 10, 1, 1, '#e3cf8a'); return; }
   if (p < 0.5) { r(c, cx, Y + 8, 1, 4, '#5da34a'); r(c, cx - 2, Y + 7, 2, 2, '#7fc35f'); r(c, cx + 1, Y + 6, 2, 2, '#7fc35f'); return; }
