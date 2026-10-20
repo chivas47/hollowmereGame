@@ -1,0 +1,23 @@
+# Sprite sheets
+
+PNG pixel art loaded by `src/render/sheets.js`, laid out as described in `src/data/sprites.js`. Every sheet has a code-drawn fallback, so the game still draws if a sheet is missing.
+
+Rules (PROJECT_INSTRUCTIONS rule 3): original art or a permissive licence (CC0, CC-BY), credited below. Never Stardew Valley sprites or edits of them, not even as placeholders.
+
+## person.png
+
+192 x 128. Frames are 16 x 16, the person's feet at the bottom centre (x 8, y 16).
+
+- **Columns (12):** down, up, left, right, each as stand, step a, step b.
+- **Rows (8 bands of 16 px), in draw order:** skin, shoes, pants, shirt, hair, long (extra hair for long styles), beard, ink.
+- **Tinted bands** are greyscale: white becomes the palette colour, greys become its shades (multiply), so draw base colour white, shade about 190, outline about 105.
+- **ink** is drawn as is: eyes, the shadow, anything that keeps its own colour.
+- Hats are still drawn in code over the frame.
+
+To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, and reload the page.
+
+## Credits
+
+| File | Author | Licence |
+| --- | --- | --- |
+| person.png | Hollowmere Farm (original placeholder, v77) | same as the game |

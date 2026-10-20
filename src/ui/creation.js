@@ -7,6 +7,7 @@ import { LOOKS, PETS, NAME_MAX, DEFAULT_PROFILE, playerPal } from '../data/profi
 import { LAYOUTS } from '../data/layouts.js';
 import { PET_LOOKS, PET_NAMES } from '../data/pets.js';
 import { drawPerson, drawPet } from '../render/sprites.js';
+import { onSheet } from '../render/sheets.js';
 import { startLayout } from '../systems/layouts.js';
 import { openModal, closeModal } from './modal.js';
 import { $, $$, esc } from './dom.js';
@@ -22,6 +23,8 @@ function preview() {
   drawPet(pg, 8, 14, draft.pet, PET_LOOKS[draft.pet][draft.petLook], 'right', false, null);
   const pn = $('#cPetName'); if (pn) pn.placeholder = PET_NAMES[draft.pet];
 }
+
+onSheet(() => { if (draft) preview(); });   // v77: redraw once the person sheet arrives
 
 function pressed() {
   $$('[data-look]').forEach((b) => b.setAttribute('aria-pressed', String(draft.look[b.dataset.look] === b.dataset.v)));
