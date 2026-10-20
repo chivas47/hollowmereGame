@@ -86,6 +86,10 @@ export const CAVE_SHEET = { sheet: (theme) => `cave-${theme || 'rock'}`, size: 1
 // v87 wallpapers.png, floors.png: one 16x16 swatch per WALLPAPERS and FLOORS entry (data/furniture.js), in order.
 export const DECOR_SHEETS = { walls: 'wallpapers', floors: 'floors', size: 16 };
 
+// v88 buildings.png, buildings-winter.png: every building at full size, the same layout in both (winter's has the
+// snow). Where each one is: data/buildings.js, generated with the sheets by tools/sprites/.
+export const BUILDING_SHEETS = { summer: 'buildings', winter: 'buildings-winter' };
+
 // v86 soil.png: tilled soil in the terrain layout (one 4x5 block each): dry, then watered. Drawn every frame: dry
 // on the corners of every tilled tile, watered over it on the corners of watered ones.
 export const SOIL_SHEET = { sheet: 'soil', size: 16 };

@@ -122,6 +122,14 @@ To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, a
 
 192 x 16 each. One 16 x 16 swatch per wallpaper and per floor, in the order of `WALLPAPERS` and `FLOORS` in `src/data/furniture.js`. Each repeats edge to edge. A wallpaper swatch is a whole wall face, its bottom trim included. Adding a wallpaper or floor to the catalogue means adding its swatch at the end.
 
+## buildings.png, buildings-winter.png
+
+512 x 179 each, the same layout in both. Every building drawn at its full size, packed in rows; the winter sheet is the same building in snow. `src/data/buildings.js` says where each one is: its name, `[x, y, w, h]` on the sheets, and `[dx, dy]`, where its top-left sits from the building's tile in pixels.
+
+- Names come from what changes a building's look: its art, then any shop kind, roof colour, farm site and footprint (for example `storefront.smithy`, `cottage.#3f6b8a`, `coop.coop.4x2`, `scaffold.barn.4x2`).
+- To redraw a building, paint over its region in both sheets. To make it bigger or move it, change its entry in `src/data/buildings.js` (and keep both sheets in step). Once buildings are hand-drawn, stop running the generator for them: it overwrites both sheets and that file.
+- A building the game has that is missing from the file is drawn in code.
+
 The placeholder sheets are built by the scripts in `tools/sprites/`.
 
 ## Credits
@@ -140,3 +148,4 @@ The placeholder sheets are built by the scripts in `tools/sprites/`.
 | soil.png | Hollowmere Farm (original placeholder, v86) | same as the game |
 | cave-*.png | Hollowmere Farm (original placeholder, v87, colours from the cave themes) | same as the game |
 | wallpapers.png, floors.png | Hollowmere Farm (original placeholder, v87, from the game's patterns) | same as the game |
+| buildings.png, buildings-winter.png | Hollowmere Farm (original placeholder, v88, from the game's code art) | same as the game |

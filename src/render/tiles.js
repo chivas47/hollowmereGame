@@ -3,7 +3,8 @@ import { T } from '../core/constants.js';
 import { r, rng } from './pixel.js';
 import { SHRINE } from '../data/books.js';
 import { CHIMES } from '../data/nuts.js';
-import { DECOR_SHEETS } from '../data/sprites.js';
+import { DECOR_SHEETS, BUILDING_SHEETS } from '../data/sprites.js';
+import { BUILDINGS } from '../data/buildings.js';
 import { ready, sheet } from './sheets.js';
 
 const SNOW = '#f2f6f8';
@@ -330,7 +331,7 @@ function lodge(g, p, o) {
 }
 
 // v46: a town shop, 3 by 2 tiles: walls, roof and a sign by kind (store, smithy, carpenter).
-const FRONT = {
+export const FRONT = {
   store:     { wall: '#e2cda0', line: '#c9b083', roof: '#c0443a', door: '#7a4b2a' },
   smithy:    { wall: '#8a8f96', line: '#6f747a', roof: '#3f3a36', door: '#3f2f22' },
   carpenter: { wall: '#b08d55', line: '#987745', roof: '#5d7a4a', door: '#6e4626' },
@@ -377,6 +378,17 @@ function boat(g, p, o) {
   for (let j = 0; j < 5; j++) r(g, X + 2 + j, Y + 6 + j, 28 - 2 * j, 1, j === 0 ? '#c9a06a' : '#8a5a32');
   r(g, X + 15, Y - 8, 2, 14, '#6e4626'); r(g, X + 17, Y - 7, 9, 9, '#f4ead2'); r(g, X + 17, Y - 7, 9, 1, '#e8d9b5');
 }
+// v88: the name of a building's picture on the building sheets: its art and whatever changes how it looks.
+export const buildingKey = (o) => [o.art, o.kind, o.roof, o.site, o.w && o.h ? `${o.w}x${o.h}` : null].filter(Boolean).join('.');
+
+// v88: a building from the building sheets (winter's in winter) once they have loaded, else drawn in code.
+export function drawBuilding(g, p, o) {
+  const name = p.snow ? BUILDING_SHEETS.winter : BUILDING_SHEETS.summer, b = BUILDINGS[buildingKey(o)];
+  if (!b || !ready(name)) return OBJECT_ART[o.art](g, p, o);
+  const [sx, sy, w, h, dx, dy] = b;
+  g.drawImage(sheet(name).img, sx, sy, w, h, o.x * T + dx, o.y * T + dy, w, h);
+}
+
 export const OBJECT_ART = { boat, storefront, lodge, helperhut, waystone, pond, slimepen, shed, mill, clocktower, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
 
 // ---- Greenhouse interior (ignores seasons) ----

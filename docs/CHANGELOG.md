@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v88: Building sheets
+- Every building (the farmhouse, shops and storefronts, cottages, the coop, barn, greenhouse and the other farm buildings, their construction scaffolds, the fountain, wells, boards and the rest, 57 in all) now draws from `assets/sprites/buildings.png`, one picture per building at its full size, and from `buildings-winter.png` in winter (snowy roofs, frozen water). Where each picture is: `src/data/buildings.js`.
+- Made from the game's own code art, so buildings look the same; the fish pond and fountain water use summer's colour in spring and autumn.
+- If the sheets fail to load, buildings are drawn in code exactly as in v87.
+- Saves: no new fields.
+
 ## v87: Cave tile sets, wallpaper and floor sheets
 - Caves (the farm cave, the mines and caverns, the sewer, the shrine, the Smoke Peak) draw their floor and walls from one tile set per cave theme, `assets/sprites/cave-rock.png` and so on, in the same 16-tile corner layout as the outdoor ground: walls get rounded edges and a rock face where they meet the floor below, instead of a stripe on every wall tile.
 - Wallpapers and floors in the farmhouse, cottages and shed draw from `assets/sprites/wallpapers.png` and `floors.png`: one repeating 16 x 16 swatch per wallpaper and floor, in catalogue order, made from the game's own patterns.
