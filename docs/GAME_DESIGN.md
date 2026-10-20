@@ -715,6 +715,14 @@ For when you are stuck. Nothing here touches the economy.
 
 Hints in order: past midnight, out of energy, hurt underground, empty can, dry crops, ripe crops, produce not shipped by 5 pm, nothing planted yet, no seeds, a machine finished, something waiting in the kit, animals not petted, the Hollow not yet visited, winter with nothing growing, and a last one when nothing else fits.
 
+## Shortcuts (v106)
+
+Stardew counterpart: the large log in front of the hidden woods (a tougher axe, 8 hardwood). Ours needs the copper axe, our top axe.
+
+| Shortcut | Between | Blocked by | To open | Gives |
+|---|---|---|---|---|
+| The ridge path | the town's east edge (row 4) and the mountain's west edge (row 10) | a fallen trunk on each side | copper axe, 20 hits (10 swings, 20 energy), from either side | 8 hardwood, 25 foraging XP; the path for good |
+
 ## Atmosphere (v72)
 
 Nothing here is saved or touches the economy.
@@ -990,6 +998,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v106: Neighbours do not use the ridge path (the mountain is not on their routes). Chopping progress on the trunk is forgotten overnight, like a half-chopped stump's. In the balance simulator the trunk takes one open grass tile from the mountain's forage spots, which shifts its random draws (about +3% gold at the end with no change in play); the bot never cuts it.
 - v105: Lamp posts are drawn only: you and the neighbours walk through them. Windows follow the clock, not who is home: a cottage stays lit while its neighbour is at the tavern. The light is looks only (night is no safer or easier near a lamp).
 - v104: Leaves and petals fall only from the map's own tree tiles, not from alders or fruit trees, so a map with few trees (the beach) sees few. They rest on whatever is below, water and roofs included, and do not pile up or need sweeping.
 - v103: Clotheslines are drawn only: you walk through their posts, and so do neighbours. The farm's line hides when anything is placed, planted or growing on a post tile, and on layouts where those tiles are not grass. Wind does not move the player's clothes, hair or buildings, and fruit and leaves do not fall. Reflections in water do not lean.
