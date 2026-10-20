@@ -2,6 +2,8 @@
 import { T } from '../core/constants.js';
 import { CROPS } from '../data/crops.js';
 import { r, blink } from './pixel.js';
+import { ready, tinted, frame } from './sheets.js';
+import { PERSON } from '../data/sprites.js';
 
 const FERT_DOT = { booster: '#c9b68e', booster2: '#e9b44c', booster3: '#b98ae0', tonic: '#86b86a', tonic2: '#5fd36a', mulch: '#a0805a', mulch2: '#7a5a3a' };
 export function drawSoil(c, X, Y, wet, fert) {
@@ -129,8 +131,24 @@ export function drawChild(c, px, py, stage, i) {
   r(c, x - 1, y - 9, 1, 1, '#2b211a'); r(c, x + 1, y - 9, 1, 1, '#2b211a');
 }
 
+// v77: from the person sheet (assets/sprites/person.png) tinted to p once it has loaded, else drawn in code below.
+function sheetPerson(c, px, py, dir, moving, walkT, p) {
+  const P = PERSON, eye = '#2b211a', hair = p.hair;
+  const layers = [['skin', p.skin], ['shoes', p.shoes || eye], ['pants', p.pants], ['shirt', p.shirt], ['hair', hair]];
+  if (p.long) layers.push(['long', hair]);
+  if (p.beard) layers.push(['beard', hair]);
+  layers.push(['ink', null]);
+  const f = (P.dirs[dir] ?? 0) * P.steps + (moving ? 1 + Math.floor(walkT * 8) % 2 : 0);
+  frame(c, tinted(P.sheet, P.layers, layers, P.size), f, P.size, Math.round(px) + P.origin[0], Math.round(py) + P.origin[1]);
+}
+
 export function drawPerson(c, px, py, dir, moving, walkT, p) {
   const x = Math.round(px) - 5, y = Math.round(py) - 15, st = moving ? Math.floor(walkT * 8) % 2 : 0, eye = '#2b211a';
+  if (ready(PERSON.sheet)) {
+    sheetPerson(c, px, py, dir, moving, walkT, p);
+    if (p.hat) (HATS[p.hatStyle] || HATS.straw)(c, x, y, p.hat, p.band || p.hat, p.hair);
+    return;
+  }
   r(c, x + 1, y + 14, 8, 2, 'rgba(0,0,0,.25)');
   r(c, x + 2, y + 11, 2, st ? 2 : 3, p.pants); r(c, x + 6, y + 11, 2, st ? 3 : 2, p.pants);
   r(c, x + 2, y + 13 - (st ? 1 : 0), 2, 1, p.shoes || eye); r(c, x + 6, y + 13 - (st ? 0 : 1), 2, 1, p.shoes || eye);

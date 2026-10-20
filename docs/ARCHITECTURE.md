@@ -55,6 +55,7 @@ src/
     schedules.js      neighbour daily routines by weekday (go: walk a loop of spots, at: walk there and stay), spouse and festival days
     homes.js          where each neighbour lives: door, cottage, its inside (bed, furniture, the owner's spot), door hours (v76)
     scenes.js         heart scenes at 4 and 8 hearts
+    sprites.js        v77: layout of each PNG sprite sheet (PERSON: frame size, layers, directions, steps, origin)
   systems/            one feature per file
     layouts.js        rebuilds the farm grid for G.S.layout on game:loaded (imported first), startLayout()
     farmPerks.js      layout perks: quarry rocks, crates, regrowing stumps, farm forage, farm slimes
@@ -139,6 +140,7 @@ src/
     arcade.js         the arcade cabinets' screens (v70)
     animation.js      v74: the tool or weapon in hand (drawHeld, rotated hotbar icons), the rod (drawRod), the crafted pose, item pictures, particles and labels (drawFx)
     renderer.js       composes a frame, caches backgrounds per map + season
+    sheets.js         v77: PNG sprite sheets from assets/sprites/: sheet(), ready(), tinted() (grey layers tinted to a palette, cached), frame(), onSheet()
   audio/              Web Audio output (like render/, but for sound); imported only by main.js and ui/
     engine.js         context, buses, settings (localStorage), tone() and noise()
     sfx.js            listens for 'sfx' and other events, plays effects
@@ -362,6 +364,7 @@ Soil is per map: `soilOf(mapId)` returns `G.S.soil` (farm) or `G.S.greenSoil` (g
 - **Neighbour:** entry in `data/npcs.js` (farm path), a home in `data/homes.js` (a cottage gets a `home_<id>` inside automatically), a routine in `data/schedules.js` and scenes in `data/scenes.js`. Routine spots are only the places that matter: neighbours find their own way around anything solid and from map to map (systems/routes.js); a spot may be a solid counter they stand behind.
 - **Upgrade tier:** append to a line in `data/upgrades.js`; read effects with `tier(G.S, 'line')`.
 - **Building:** follow systems/coop.js: order at the carpentry (ui/workshop.js), build on `day:start`, write tiles at runtime, emit `world:changed`.
+- **Image art (v77):** a PNG in `assets/sprites/` (format and credits in its README.md), its layout in `data/sprites.js`, and a draw function in `render/` that uses `ready(name)` and falls back to the code art until the sheet loads. Layered sheets are drawn in grey and tinted with `tinted()`.
 - **Tool:** key in `data/hotbar.js` (+ `TOOL_NAMES`), icon in `render/icons.js`, an interaction in its system.
 - **Map:** grid and entry in `data/maps.js`, with an `E` tile and `exits` entry on both sides.
 - **Craftable object:** entry in `PLACEABLES` and `RECIPES` (data/crafting.js) plus art in `PLACED_ART` (render/sprites.js). A machine also needs a `MACHINES` entry; its products go in data/artisan.js. A machine that uses up more than one item a load (the furnace) gives `takes(k)`, and one with `nights: 0` is ready at once. `nights` can be a function of the item (the brew barrel). `repeat: true` restarts the same load after collecting (the gem copier); `auto: {item, every, winter}` produces on its own with a `timer` field (bee box, mushroom log). Tree taps live on alder debris as `d.tap` in clearing.js, not in G.S.placed. `hatch: {egg: animal}` (the incubator) moves an animal in through systems/livestock.js `adopt()` instead of giving an item.

@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v77: Image sprite sheets
+- Art can now come from PNG sprite sheets in `assets/sprites/` as well as from code. Project rule 3 changed to allow it: sheets must be original or permissively licensed and credited, and each keeps its code-drawn art as a fallback.
+- The farmer, every neighbour, the boatman and mannequins now draw from a new layered person sheet (`assets/sprites/person.png`, original placeholder art): outlined and shaded, with three walk frames per direction instead of two. Each layer is grey and tinted at runtime, so chosen colours, clothes, long hair, beards and hats work as before.
+- If the sheet fails to load, people are drawn in code exactly as in v76.
+- Saves: no new fields.
+
 ## v76: Neighbours live at home
 - Fix: neighbours no longer pop into view at the edge of a map when their day starts. Every neighbour starts the day at home and walks out, and walks home again at the end of the day.
 - Every neighbour has a routine that fits who they are: Odile fishes the Wilds pond at dawn and mends nets on the pier; Bram keeps his carpentry counter (Tuesdays he visits your farm); Juno carries the mail to every door; Pell teaches at the town hall; Nell gardens and visits the old mine; Lio fiddles by the fountain and outside the Lantern; and so on. Rest days vary by person. Full table in GAME_DESIGN.
