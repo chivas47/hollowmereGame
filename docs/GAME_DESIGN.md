@@ -732,6 +732,10 @@ Nothing here is saved or touches the economy.
 | Indoor light (v100) | farmhouse, shed, cottages, buildings | rooms dim with the hour (at least half dark after 8 pm) and on wet days; hearths, stoves, lamps, lanterns, candles and the television light the room around them, fires flicker |
 | Rain on windows (v100) | every window indoors, and two to four new ones on the farmhouse's north wall | while it rains outside that building's door (never in the Oasis or the casino); taps on the glass |
 | Hearth crackle (v100) | within 7 tiles of a hearth, stove or range, a neighbour's or one you placed | always |
+| Moving water (v102) | every open water tile ('O') | two ripples a tile drift and fade (3.2 s each); the frozen Wilds pond is still in winter |
+| Glints (v102) | about 6 in 100 water tiles | sunny, 8 am to 6 pm, open-air maps |
+| Rain rings (v102) | open water | rain (14 a second) and storms (28), up to 40 at once |
+| Reflections (v102) | water within 3 tiles below anything drawn by its feet (player, neighbours, animals, pet, horse, trees) | always; 32% strength, 22% on the frozen pond, sway 1 px |
 | Ambience volume (v100) | the menu's Ambience slider, 0 to 100% | Sound off still mutes it |
 
 ## Management tools (v71)
@@ -977,6 +981,8 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 | Ranching | animal products one quality higher |
 
 ## Known issues and open questions
+
+- v102: Reflections mirror characters, animals and planted trees only: the cached map art (tree tiles, buildings, the pier) is not mirrored. The sheet's own still ripples stay under the moving ones. There is no reduced-motion setting yet.
 
 - v101: Hints read the farm as it is, not what you have done before, so a hint can repeat until its condition changes (the morning tip shows at most one, and Tips in the menu turns it and the tool tips off). The tool tip only fires on presses that give no feedback at all; tools that already answer (the can on grass, the pan off its spot) keep their own messages. The balance bot crafts one at a time; batch crafting changes no prices.
 

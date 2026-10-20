@@ -50,7 +50,7 @@ src/
     cavern.js         CAVERN (the Sunken Cavern's door, strength, ores, shafts, chests), HOLLOW_GOLD (v38)
     guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item, underSky()
-    atmosphere.js     LIGHT keyframes, WATERFALLS, WILDLIFE, AMBIENCE by area (v72); indoor LIGHTS, HOUSE_WINDOWS, CRACKLE_RANGE (v100)
+    atmosphere.js     LIGHT keyframes, WATERFALLS, WILDLIFE, AMBIENCE by area (v72); indoor LIGHTS, HOUSE_WINDOWS, CRACKLE_RANGE (v100); WATER (v102)
     hints.js          HINTS (id, when(S, facts), text) most pressing first, TOOL_TIPS, STUCK_PRESSES (v101)
     animation.js      SWINGS (tool arcs and timings), COMBO (weapon combo steps), PICKUP, CRAFTED, PLACE, IMPACT colours (v74)
     schedules.js      neighbour daily routines by weekday (go: walk a loop of spots, at: walk there and stay), spouse and festival days
@@ -135,6 +135,7 @@ src/
     trees.js          fruit trees (placed objects of kind 'tree'): growth, fruit, picking, drawing
     giants.js         giant crops: merging ripe 3x3 blocks, chopping, solid 'Y' tiles
     weather.js        today's weather and the forecast, rain watering, lightning, the rain/snow/mist overlay
+    water.js          moving water: ripples, sunny glints, rain rings, reflections of entities at the bank (v102, drawn only)
     atmosphere.js     waterfalls, rain splashes, storm bolts and thunder, birds, butterflies, fireflies (v72, drawn only)
     indoors.js        indoor dark and light pools, the farmhouse windows, G.indoorRain and G.fires for the window art and ambience (v100, drawn only)
     clearing.js       debris and wild alders (G.S.debris), axe use, creeping debris, alder cones, gates, fences and paths
@@ -262,6 +263,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 
 | z | Owner | Draws |
 |---|---|---|
+| 6 | water.js | Reflections, ripples, glints, rain rings on open water |
 | 8 | atmosphere.js | Waterfalls |
 | 9 | clearing.js, house.js | Paths, rugs |
 | 10 | farming.js, forage.js | Soil, crops, forage (soil of the current map) |
