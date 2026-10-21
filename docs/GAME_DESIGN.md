@@ -1158,7 +1158,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
-- v126: Controller buttons cannot be rebound, and there is no rumble. The arcade cabinets, the fishing bar's cast and dragging items in the bag still need the keyboard, mouse or touch (A works for fishing once cast). Button names are Xbox-style. Only the first controller is read.
+- v126: Controller buttons cannot be rebound, and there is no rumble. The arcade cabinets and dragging items in the bag still need the keyboard, mouse or touch (fishing works: A casts and, held, lifts the bar). Button names are Xbox-style. Only the first controller is read.
 - v125: Motion speed does not reach water ripples, seasonal petals and leaves, or blinking. Changing it shifts the wind's wave once.
 - v124: Only neighbours react, not the pet or farm animals. The rain sigh does not happen indoors or in mist.
 - v123: Only the watering can perks crops up (sprinklers and rain water them without it). Hats and the horse do not stir in the wind. Water and foliage already moved (v102, v103).
