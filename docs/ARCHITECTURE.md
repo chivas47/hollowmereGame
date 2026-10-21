@@ -51,6 +51,7 @@ src/
     guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item, underSky()
     atmosphere.js     LIGHT keyframes, WATERFALLS, WILDLIFE, AMBIENCE by area (v72); indoor LIGHTS, HOUSE_WINDOWS, CRACKLE_RANGE (v100); WATER (v102); WIND, CLOTHESLINES (v103); SEASONAL, SEASONAL_MAX (v104); STEPS, STEP_EVERY, HOOF_EVERY (v109); NIGHT_LIGHTS (v105)
+    vignettes.js      v111: VIGNETTES, the small stories outdoors per map (tile, art key, text, words by season), VIGNETTE (the tile)
     traditions.js     v110: the wishing stone (STONE, STONE_TILE, BLESSINGS) and the Lantern Float (FLOAT: day, hours, the neighbours' spots on the beach, lines), floatOn()
     hints.js          HINTS (id, when(S, facts), text) most pressing first, TOOL_TIPS, STUCK_PRESSES (v101)
     animation.js      SWINGS (tool arcs and timings), COMBO (weapon combo steps), PICKUP, CRAFTED, PLACE, IMPACT colours (v74)
@@ -138,6 +139,7 @@ src/
     weather.js        today's weather and the forecast, rain watering, lightning, the rain/snow/mist overlay
     wind.js           lean(x): how far things lean in the wind now, by weather and the day (v103; no drawing, safe for the balance bot)
     wing.js           the town reacts to the old wing (boards, planter, flowers, fountain, smoke, bunting, plaque; the Ashgrove look) and the cart line; solid Ž and Ç tiles placed as rooms are done (v108)
+    vignettes.js      small stories outdoors: solid Ѫ tiles set on open ground at load, drawn per art key with the season, Use reads them (v111)
     traditions.js     the wishing stone (solid Ӂ in the village at load, bless() sets G.S.blessing, read by buffs.js) and the Lantern Float on the beach (setLantern(), floatLights() for nightlights.js; npcs.js walks neighbours there) (v110, G.S.traditions)
     signs.js          signposts and notices outdoors: solid Ş tiles set on open ground at load, Use reads them (v107)
     shortcuts.js      fallen trunks across shortcuts, cut with the copper axe; then trunk tiles turn to path and the maps get exits (v106, G.S.shortcuts)
@@ -224,6 +226,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 73 | trees.js | Facing a fruit tree (pick fruit) |
 | 72 | wing.js | Facing a cart stop Ç (opens the cart line, ui:carts), the plaque, rubble or planter Ž (v108) |
 | 73 | signs.js | Facing an outdoor signpost or notice Ş (reads it) (v107) |
+| 73 | vignettes.js | Facing a small story outdoors Ѫ (reads it) (v111) |
 | 73 | traditions.js | Facing the wishing stone Ӂ in the village (today's blessing) (v110) |
 | 67 | traditions.js | Facing the sea on the beach during the Lantern Float, before your lantern is out (sets it; above casting at 65) (v110) |
 | 73 | storage.js | Facing a chest, sign or farm computer (its own dialog, ahead of placed objects at 72) (v71) |
@@ -395,6 +398,7 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | f, X | cave floor, cave wall | no, yes |
 | r, c, i | stone, copper, iron rock | yes |
 | U, L | ladder up, ladder down | yes |
+| Ѫ | a small story outdoors (v111; written at load on open grass or sand) | yes |
 | Ӂ | the wishing stone in the village (v110; written at load on open grass) | yes |
 | \|, }, ;, {, ? | fallen log, rubble, sewer grate, hot spring, sewer trader (v45; the gates become P once open) | yes |
 

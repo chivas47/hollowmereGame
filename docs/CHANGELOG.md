@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v111: Small stories outdoors
+- The cottages had a line for every piece; now the outdoor areas have little scenes too, sixteen across the village, the town, the beach, the Wilds, Brackenwood, Cragmoor, the railway and the hidden grove. Each one says something about someone: Kit's go-cart with a wheelbarrow wheel, Nell's marrow, the fountain's missing bucket full of geraniums, saucers left out for the lost cat, Corvin's cracked horseshoe, Pell's slates, a sandcastle, Rook's half-painted rowboat, a cold campfire and a pot marked H, Ines's beehive, Esme's unfinished painting, Tavi's survey stake, a stool and warm flask by the lake, Nell's old ore cart, a suitcase nobody has collected, a cairn with offerings.
+- Face one and press Use to read it. They are solid, set only on open grass or sand. Some change with the season (the marrow under sacking, the sandcastle washed down in autumn and frozen in winter, the hive wrapped for winter, mittens by the ice hole) and all take snow.
+- Drawn only: no save fields, no prices.
+
 ## v110: Local traditions
 - The wishing stone, east of the village square: touch it once a day for one blessing until bed, picked at random: the hare (luck +2), the swift (speed +1), the boar (attack +2), the tortoise (defense +2), the hearth (talks count double) or the spring (+60 energy now). Its mark glows once it has been touched today.
 - The Lantern Float, the last night of summer (Summer 28, 10 pm to midnight): after their usual day the whole village walks down to Saltreach Beach and sets paper lanterns on the sea. Face the water and press Use to set yours, once a year (fishing works again once it is out). Talks there count double, as at a festival, and neighbours have a line for the night. The lanterns light the dark as they drift out.

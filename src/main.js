@@ -86,6 +86,7 @@ import './systems/nightlights.js';   // v105: lit windows, lamp posts and lanter
 import './systems/shortcuts.js';   // v106: the ridge path between the town and the mountain, behind a fallen trunk
 import './systems/signs.js';   // v107: signposts and handmade notices outdoors
 import './systems/wing.js';   // v108: the town reacts to the old wing; the cart line
+import './systems/vignettes.js';   // v111: small stories outdoors
 import './systems/traditions.js';   // v110: the wishing stone and the Lantern Float
 import './systems/indoors.js';   // v100: indoor light, windows, rain on the glass
 

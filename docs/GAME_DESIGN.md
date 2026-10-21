@@ -742,6 +742,18 @@ Stardew counterpart: the large log in front of the hidden woods (a tougher axe, 
 | Railway, hidden grove | back the way you came | |
 | Cragmoor | south to the Wilds, east to the quarry, west to the ridge path (changes once cut) | thin ice |
 
+## Small stories outdoors (v111)
+
+| Map | Scenes (whose) |
+|---|---|
+| Village | a go-cart (Kit), a wheelbarrow and marrow (Nell; under sacking in winter), the fountain bucket planted with geraniums |
+| Town | saucers for the lost cat by the tavern, the smith's quenching barrel (Corvin), school slates on a bench (Pell) |
+| Saltreach Beach | a sandcastle (washed down in autumn, frozen in winter), a half-painted rowboat (Rook) |
+| The Wilds | a cold campfire and a pot marked H (Hale), a straw beehive (Ines; wrapped in winter) |
+| Brackenwood | an unfinished painting on an easel (Esme), a survey stake (Tavi) |
+| Cragmoor | a stool and flask by the lake (mittens by the ice hole in winter), an old ore cart (Nell) |
+| Railway, hidden grove | an uncollected suitcase, a cairn with offerings |
+
 ## The town and the old wing (v108)
 
 | Room | Restored | Bought from Ashgrove |
@@ -1032,6 +1044,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v111: The outdoor scenes are set when a game loads and only on open grass or sand, like signs; the balance bot does not load them, so its maps are unchanged. Neighbours do not visit or move them.
 - v110: The stone's blessing is random, not chosen, and does not stack with itself (one a day). A buff blessing ends at bed like food. The balance bot touches the stone every morning (6 game minutes); the daily roll shifts its random draws, so its run differs (about +9% gold at the end) with no change in prices. The Lantern Float has no prize and is not in the bot. Neighbours walk to the beach from wherever their day leaves them; the Lamplighter stays below.
 - v109: Footsteps are the player's only; neighbours and animals walk silently. Indoor floors all sound like wood, rugs included.
 - v108: The cart line has three stops; the farm has none (its ground is the player's). The balance bot does not ride carts; it rarely restores the boiler room. Ashgrove's grey paint shows from joining, before any room is bought.
