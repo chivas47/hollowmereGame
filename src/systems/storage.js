@@ -3,7 +3,7 @@
 // town hall (G.S.lostFound, same shape as a chest) keeps what a chest still held when it was taken up.
 import { G } from '../core/game.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addInteraction } from '../core/registry.js';
+import { addInteraction, addPrompt } from '../core/registry.js';
 import { CROPS } from '../data/crops.js';
 import { PLACEABLES, MACHINES } from '../data/crafting.js';
 import { CHEST_ROOM, SIGN_LENGTH } from '../data/storage.js';
@@ -112,4 +112,9 @@ addInteraction(73, ({ tx, ty, tile, mapId }) => {
   if (!ev) return false;
   emit(ev, { x: tx, y: ty, map: mapId });
   return true;
+});
+
+addPrompt(73, ({ tx, ty, tile }) => {   // v112: the HUD's prompt
+  const p = tile === 'Y' && placedAt(tx, ty), k = p && PLACEABLES[p.kind].kind;
+  return k && OPENS[k] ? (k === 'sign' ? 'Read the sign' : `Open the ${PLACEABLES[p.kind].name.toLowerCase()}`) : null;
 });

@@ -3,7 +3,7 @@
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, emit, notify } from '../core/events.js';
-import { addInteraction, addEntities } from '../core/registry.js';
+import { addInteraction, addEntities, addPrompt } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { MAPS } from '../data/maps.js';
 import { SIGNS, SIGN } from '../data/signs.js';
@@ -59,3 +59,5 @@ addEntities(() => {
     draw: (c) => (s.kind === 'notice' ? drawNotice(c, s.x * T, s.y * T, snow) : drawPost(c, s.x * T, s.y * T, s, snow)),
   }));
 });
+
+addPrompt(73, ({ tx, ty, tile, mapId }) => (tile === SIGN && signAt(mapId, tx, ty) ? 'Read the sign' : null));   // v112

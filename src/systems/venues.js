@@ -5,7 +5,7 @@
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addInteraction, addLayer, addEntities } from '../core/registry.js';
+import { addInteraction, addLayer, addEntities, addPrompt } from '../core/registry.js';
 import { fmtTime } from '../core/time.js';
 import { MAPS } from '../data/maps.js';
 import { NPCS } from '../data/npcs.js';
@@ -104,3 +104,10 @@ addEntities(() => piecesHere().filter((p) => !p.walk && !p.wall).map((p) => ({
   y: (p.y + p.h) * T - 3,
   draw: (c) => (p.k === 'attendant' ? drawPerson(c, p.x * T + 8, p.y * T + 12, p.dir || 'down', false, 0, p.pal) : drawPiece(c, p)),
 })));
+
+// v112: the HUD's prompts for doors and counters.
+addPrompt(73, ({ tile, mapId }) => { const id = venueAt(mapId, tile); return id ? `Enter ${VENUES[id].name}` : null; });
+addPrompt(72, ({ tx, ty, mapId }) => {
+  const id = MAPS[mapId]?.venue;
+  return id && piecesOf(id).some((q) => q.opens && tx >= q.x && tx < q.x + q.w && ty >= q.y && ty < q.y + q.h) ? 'Ask at the counter' : null;
+});

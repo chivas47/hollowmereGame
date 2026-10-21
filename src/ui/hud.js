@@ -6,7 +6,14 @@ import { NPCS } from '../data/npcs.js';
 import { MAPS } from '../data/maps.js';
 import { isBirthday } from '../systems/npcs.js';
 import { weatherNow } from '../systems/weather.js';
+import { monstersOn } from '../systems/monsters.js';
+import { HOTBAR } from '../data/hotbar.js';
 import { $ } from './dom.js';
+
+const EXTRA = [
+  { maps: ['island', 'digsite'], name: 'Tide nuts', get: (S) => S.nuts.have },
+  { maps: ['inside_casino'], name: 'Coins', get: (S) => S.casino.coins },
+];
 
 function render() {
   const S = G.S, d = today();
@@ -22,6 +29,12 @@ function render() {
   meter('#water', S.water, S.maxw);
   meter('#health', S.hp, S.maxHp);
   $('#health').classList.toggle('low', S.hp < S.maxHp * 0.25);
+  // v112: no bar that says nothing. Health shows when hurt or where monsters live, water while the can is in hand.
+  $('#health').parentElement.hidden = S.hp >= S.maxHp && monstersOn() !== S.map;
+  $('#water').parentElement.hidden = HOTBAR[S.slot] !== 'can';
+  const extra = EXTRA.find((e) => e.maps.includes(S.map));   // a second currency, only where it is spent
+  $('#extra').hidden = !extra;
+  if (extra) $('#extra').innerHTML = `<span>${extra.name}</span><b>${extra.get(S)}</b>`;
   const items = Object.keys(S.bag).filter((k) => S.bag[k]).map((k) => `${ITEMS[k].name} ${S.bag[k]}`);
   $('#basket').textContent = items.length ? items.join(', ') : 'empty';
   $('#basket').parentElement.title = $('#basket').textContent;

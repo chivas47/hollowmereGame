@@ -1,7 +1,7 @@
 // Things you interact with by facing a tile: stall, bin, well and pond. The door and bed are in systems/house.js.
 import { G } from '../core/game.js';
 import { emit, changed, notify } from '../core/events.js';
-import { addInteraction } from '../core/registry.js';
+import { addInteraction, addPrompt } from '../core/registry.js';
 import { ship } from './economy.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { placeKey } from './world.js';
@@ -27,3 +27,8 @@ addInteraction(60, ({ tile, item }) => {
   G.S.water = G.S.maxw; notify('Watering can refilled.'); changed();
   return true;
 });
+
+// v112: the HUD's prompts for the bin, mini bins and water.
+addPrompt(73, ({ tx, ty, mapId }) => (PLACEABLES[G.S.placed[placeKey(mapId, tx, ty)]?.kind]?.kind === 'bin' ? 'Ship your basket' : null));
+addPrompt(70, ({ tile }) => (tile === 'B' ? 'Ship your basket' : null));
+addPrompt(60, ({ tile, item }) => ((tile === 'W' || tile === 'O') && item === 'can' && G.S.water < G.S.maxw ? 'Refill the can' : null));

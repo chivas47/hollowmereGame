@@ -31,3 +31,15 @@ export function collectEntities() { return entityProviders.flatMap((fn) => fn())
 const updaters = [];
 export function addUpdater(fn) { updaters.push(fn); }
 export function runUpdaters(dt) { updaters.forEach((fn) => fn(dt)); }
+
+// v112: prompts, what Use would do on the faced tile, for the HUD. Mirrors addInteraction's priorities:
+// fn(ctx) returns a short verb phrase ("Talk to Mara") or null. Nothing runs; it only describes.
+const prompts = [];
+export function addPrompt(priority, fn) {
+  prompts.push({ priority, fn });
+  prompts.sort((a, b) => b.priority - a.priority);
+}
+export function promptFor(ctx) {
+  for (const p of prompts) { const s = p.fn(ctx); if (s) return s; }
+  return null;
+}

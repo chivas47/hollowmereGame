@@ -2,7 +2,7 @@
 // for someone who lives there); inside, their furniture is drawn and looking around shows a line about the place.
 import { G } from '../core/game.js';
 import { emit, changed, notify } from '../core/events.js';
-import { addInteraction } from '../core/registry.js';
+import { addInteraction, addPrompt } from '../core/registry.js';
 import { fmtTime, today } from '../core/time.js';
 import { MAPS } from '../data/maps.js';
 import { HOMES, homeMap, homeEntry, HOME_OPEN } from '../data/homes.js';
@@ -45,3 +45,5 @@ addInteraction(72, ({ tx, ty, tile, mapId }) => {
 });
 
 // v98: their rooms are drawn, and looked at, by systems/venues.js with every other floor plan.
+
+addPrompt(72, ({ tx, ty, tile, mapId }) => { const id = tile === 'V' && cottageAt(mapId, tx, ty); return id ? `Knock at ${nameOf(id)}'s` : null; });   // v112

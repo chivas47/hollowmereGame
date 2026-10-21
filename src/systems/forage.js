@@ -1,7 +1,7 @@
 // Daily forage in the wilds. Each spot picks at random among the season's items.
 import { G } from '../core/game.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addInteraction, addLayer } from '../core/registry.js';
+import { addInteraction, addLayer, addPrompt } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { FORAGE, FORAGE_PER_DAY, WILD_WEEDS } from '../data/forage.js';
 import { MIST } from '../data/weather.js';
@@ -73,3 +73,8 @@ addInteraction(61, ({ tx, ty, mapId, item }) => {
 });
 
 addLayer(10, (c) => { if (G.S.map === AREA) { (G.S.wildWeeds || []).forEach((w) => drawDebris(c, w.x * 16, w.y * 16, 'weeds')); G.S.forage.forEach((f) => drawForage(c, f)); } });
+
+addPrompt(45, ({ tx, ty, mapId }) => {   // v112: the HUD's prompt
+  const f = mapId === AREA && G.S.forage.find((q) => q.x === tx && q.y === ty);
+  return f ? `Pick up ${FORAGE[f.type].name}` : null;
+});

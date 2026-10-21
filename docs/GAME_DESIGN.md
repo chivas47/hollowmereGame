@@ -128,6 +128,7 @@ Stardew counterparts by role: keg (wine 3 x fruit, juice 2.25 x vegetable), mayo
 - The seed slot plants the selected seed type. Press 6 or Q again (or tap the slot again) to switch to the next type you own, in-season types first.
 - The kit slot places the selected crafted object on untilled farm grass. Press 7 again to switch. Face a placed object and press Use to open it (load, collect, pick up).
 - I opens the bag, C opens crafting.
+- V switches the HUD between full, minimal and hidden (v112).
 
 ## Values: the Stardew scale
 
@@ -709,6 +710,23 @@ Nothing here is saved or touches the economy (cosmetic randomness has its own ge
 - v75: one action per swing. Use is ignored until the tool's swing ends (one press in its last 0.2 s is kept), so the swing time is also the fastest a tool can be used: about 3 axe, pickaxe or hoe strokes a second, 2.4 waterings.
 - Pickups fly in over 0.32 s, at most 6 kinds at once; labels stack. The crafted pose lasts 1 s; placing 0.25 s.
 - Hit-stop 0.06 s on contact; screen shake on stone, criticals, the spin and slam finishers, and when you are hurt.
+
+## The HUD (v112)
+
+Small, and only what matters right now. Nothing here touches the economy.
+
+| Part | Shows | When |
+|---|---|---|
+| Clock panel | date, weather, time, place, gold, bin | always; minimal drops the farm name and bin |
+| Second currency | tide nuts, casino coins | on the island and dig site; inside the casino |
+| Energy | bar and value | always |
+| Health | bar and value | hurt, or on the map where monsters live |
+| Water | bar and value | the can in hand |
+| Use prompt | what Use does on the faced tile, with its key (the verb on the touch Use button) | something registered a prompt there; off with Prompts |
+| Objective | the order or challenge in hand, else the board request due soonest | any open; off with Objective, gone in minimal |
+| Messages | up to three, fading out after 2.6 to 7 s by length | on any message |
+
+HUD size: 100% to 140%, never smaller (HUD text stays 16 px or larger). Full, minimal or hidden: V or the menu. Settings live in the browser, not the save.
 
 ## Hints (v101)
 

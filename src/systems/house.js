@@ -5,7 +5,7 @@
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addInteraction, addLayer, addEntities } from '../core/registry.js';
+import { addInteraction, addLayer, addEntities, addPrompt } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { FURNITURE, WALLPAPERS, FLOORS, DECOR_COST, CATALOGUE_COST, RENOVATIONS, turnsOf } from '../data/furniture.js';
@@ -107,3 +107,9 @@ export function turnFacing() {
   if (G.lock || !FURNITURE[p?.kind]) { notify('Face a piece of your furniture to turn it.'); return false; }
   return turnFurniture(f.tx, f.ty);
 }
+
+addPrompt(70, ({ tile, mapId }) => {   // v112: the HUD's prompt
+  if (tile === 'D' && mapId === 'farm') return 'Go inside';
+  if (mapId !== 'house') return null;
+  return { Z: 'Sleep', l: 'Browse the catalogue' }[tile] || (LINES[tile] ? 'Look' : null);
+});

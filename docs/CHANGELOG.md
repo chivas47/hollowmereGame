@@ -2,6 +2,15 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v112: Gameplay HUD
+- What Use will do shows above the tile you face: "Space Talk to Ines", "Enter Fenn's Provisions", "Ship your basket", "Sleep", "Harvest Turnip", "Pick up Wood narcissus", "Read the sign", "Open the chest". On touch screens the Use button takes the verb ("Talk", "Enter") instead. Covered: neighbours, building doors and counters, cottages, the farmhouse door and bed, the bin, wells and ponds (with the can), ripe and withered crops, forage, signs, outdoor stories, chests and the wishing stone; anything else shows nothing.
+- An objective reminder in the field's top-left corner: the special order or challenge in hand, else the board request due soonest, with how many you have and the days left, and how many more wait in the journal.
+- Notifications stack (up to three), stay longer the longer they are, and fade out on their own; the same message again keeps it up instead of stacking a copy.
+- No bar that says nothing: Health shows only when you are hurt or where monsters live, Water only while the can is in hand. Energy always shows. Tide nuts show on the island and the dig site, casino coins inside the casino.
+- HUD settings in the menu, kept per browser like Sound: HUD size 100% to 140% (not below 100%, so HUD text stays 16 px or larger), HUD: full, minimal (date, time, gold, energy, hotbar and Menu) or hidden (the field, messages and Menu), switched with V; Objective on or off; Prompts on or off.
+- The hotbar keeps to one row and its slots shrink a little instead of wrapping.
+- Saves: nothing new. No keys moved; V is new.
+
 ## v111: Small stories outdoors
 - The cottages had a line for every piece; now the outdoor areas have little scenes too, sixteen across the village, the town, the beach, the Wilds, Brackenwood, Cragmoor, the railway and the hidden grove. Each one says something about someone: Kit's go-cart with a wheelbarrow wheel, Nell's marrow, the fountain's missing bucket full of geraniums, saucers left out for the lost cat, Corvin's cracked horseshoe, Pell's slates, a sandcastle, Rook's half-painted rowboat, a cold campfire and a pot marked H, Ines's beehive, Esme's unfinished painting, Tavi's survey stake, a stool and warm flask by the lake, Nell's old ore cart, a suitcase nobody has collected, a cairn with offerings.
 - Face one and press Use to read it. They are solid, set only on open grass or sand. Some change with the season (the marrow under sacking, the sandcastle washed down in autumn and frozen in winter, the hive wrapped for winter, mittens by the ice hole) and all take snow.

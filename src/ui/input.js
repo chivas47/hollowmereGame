@@ -12,6 +12,7 @@ import { confirmReset } from './dialogs.js';
 import { toggleDebug } from './debugPanel.js';
 import { openMenu, closeMenu, menuOpen } from './menu.js';
 import { toggleAll } from './sound.js';
+import { cycleHud } from './hudPrefs.js';
 import { whistle } from '../systems/stable.js';
 import { cancelSiting } from '../systems/sites.js';
 import { turnFacing } from '../systems/house.js';
@@ -32,6 +33,7 @@ export function initInput(canvas) {
     if (e.code === 'KeyF') { emit('ui:social'); return; }
     if (e.code === 'KeyJ') { emit('ui:journal'); return; }   // v68: collections, notes, achievements, completion   // v48: the social menu
     if (e.code === 'KeyM') { toggleAll(); return; }
+    if (e.code === 'KeyV') { if (!e.repeat) cycleHud(); return; }   // v112: full, minimal or hidden HUD
     if (e.code === 'KeyH') { whistle(); return; }
     if (e.code === 'KeyR' && !e.ctrlKey && !e.metaKey) { if (!e.repeat) turnFacing(); return; }   // v99: turn the furniture you face
     if (e.code === 'KeyU' || (e.code === 'KeyZ' && (e.ctrlKey || e.metaKey))) { e.preventDefault(); if (!e.repeat) undo(); return; }   // v99
