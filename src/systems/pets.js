@@ -112,5 +112,3 @@ addEntities(() => {
   if (!p || G.S.map !== 'farm') return [];
   return [{ y: pos.y, draw: (c) => drawPet(c, pos.x, pos.y, p.kind, PET_LOOKS[p.kind][p.look] || PET_LOOKS[p.kind][0], pos.dir, pos.moving, PET_HATS[p.hat]?.color || null) }];
 });
-
-export const petPos = pos;   // for tests and the balance bot

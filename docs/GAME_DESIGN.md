@@ -731,7 +731,7 @@ HUD size: 100% to 140%, never smaller (HUD text stays 16 px or larger). Full, mi
 
 ## The Bag (v113)
 
-The Bag (I) is the inventory screen. No prices or numbers change; there is still no limit on what you carry (Stardew's backpack slots are item 52b).
+The Bag (I) is the inventory screen. No prices or numbers change; there is no limit on what you carry (Nuno's choice, October 2026: no backpack slots).
 
 | Tab | Holds |
 |---|---|
@@ -1102,7 +1102,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 ## Known issues and open questions
 
 - v114: Markers and pins are per place, not per tile: the map is a grid of places, not a drawn map, and has no paths between them. Quest markers point at where you hand in (the village board, the Lantern), not where the item is found. A save from before v114 counts every place it could reach as found (the dunes once the old wing is whole, the island once the boat is mended, the dig site once its bridge is fixed), and the story steps it had already passed as done "before this journal"; the finished-quest log starts empty, with totals. The balance bot does not open the journal (nothing in it earns or spends).
-- v113: The bag has no limit, so splitting and merging stacks, full-bag warnings and what happens to extra pickups wait for slots (item 52b). No controller support (item 52c). Search matches names only. Icons are drawn per kind, not per item: two forage items of a similar colour look alike. The chest holds kinds, not slots, as before. The balance bot does not open the Bag (nothing in it earns or spends).
+- v113: The bag has no limit by design (Nuno dropped backpack slots, October 2026), so there is no splitting, merging or full-bag warning. No controller support (item 52c). Search matches names only. Icons are drawn per kind, not per item: two forage items of a similar colour look alike. The chest holds kinds, not slots, as before. The balance bot does not open the Bag (nothing in it earns or spends).
 - v111: The outdoor scenes are set when a game loads and only on open grass or sand, like signs; the balance bot does not load them, so its maps are unchanged. Neighbours do not visit or move them.
 - v110: The stone's blessing is random, not chosen, and does not stack with itself (one a day). A buff blessing ends at bed like food. The balance bot touches the stone every morning (6 game minutes); the daily roll shifts its random draws, so its run differs (about +9% gold at the end) with no change in prices. The Lantern Float has no prize and is not in the bot. Neighbours walk to the beach from wherever their day leaves them; the Lamplighter stays below.
 - v109: Footsteps are the player's only; neighbours and animals walk silently. Indoor floors all sound like wood, rugs included.

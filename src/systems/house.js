@@ -7,7 +7,6 @@ import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer, addEntities, addPrompt } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
-import { PLACEABLES } from '../data/crafting.js';
 import { FURNITURE, WALLPAPERS, FLOORS, DECOR_COST, CATALOGUE_COST, RENOVATIONS, turnsOf } from '../data/furniture.js';
 import { drawFurniture } from '../render/sprites.js';
 import { placePlayer, parsePlaceKey, placeKey, facing } from './world.js';
@@ -84,8 +83,6 @@ addInteraction(70, ({ tile, mapId }) => {
 const inHouse = () => Object.entries(G.S.placed).map(([k, p]) => ({ p, ...parsePlaceKey(k) })).filter((e) => e.map === G.S.map && (e.map === 'house' || e.map === 'shed') && FURNITURE[e.p.kind]);   // v30: the shed takes furniture too
 addLayer(9, (c) => { for (const e of inHouse()) if (FURNITURE[e.p.kind].walk) drawFurniture(c, e.x * T, e.y * T, FURNITURE[e.p.kind], e.p.rot); });
 addEntities(() => inHouse().filter((e) => !FURNITURE[e.p.kind].walk).map((e) => ({ y: (e.y + 1) * T - 3, draw: (c) => drawFurniture(c, e.x * T, e.y * T, FURNITURE[e.p.kind], e.p.rot) })));
-
-export const isFurniture = (k) => PLACEABLES[k]?.kind === 'furniture';
 
 // v99: turns a piece of furniture the player placed (p.rot, 0 when missing). Only G.S.placed: a neighbour's rooms never turn.
 export function turnFurniture(tx, ty, mapId = G.S.map, to = null) {

@@ -5,6 +5,5 @@
 export const CHILD = { hearts: 10, houseTier: 2, askChance: 0.05, days: 14, max: 2, crawl: 13, toddler: 27, hug: 10 };
 export const CHILD_NAMES = ['Ash', 'Bee', 'Clem', 'Dory', 'Elm', 'Fen', 'Gil', 'Hazel', 'Iver', 'June', 'Kip', 'Linnet'];
 export const DIVORCE = { cost: 50000 };
-export const ROOMMATE = { id: 'lamp', item: 'shadowlantern', cost: 200000, hearts: 10 };
 export const FAMILY_ITEMS = { shadowlantern: { name: 'Shadow lantern', sell: 0 } };
 export const HALL = { name: 'Town hall', keeper: 'the clerk', open: 9 * 60, close: 17 * 60 };

@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v116: Unused code removed
+- Twelve exports nothing used are gone: `petPos`, `isFurniture`, `lostCount`, `ringName`, `toolEnchant`, `canUndo`, `KEEPER`, `claimable`, `PIECE_SHAPES`, `ROOMMATE` (a stale copy of the shadow lantern's numbers in `data/hidden.js`), `SWORD_DAMAGE` and `ARTISAN_PREFIX`.
+- The bag stays without a limit: backpack slots (item 52b) are off the roadmap.
+- Nothing saved, no prices or energy changed, no keys moved.
+
 ## v115: Character motion
 - Walking eases in: full speed after 0.08 s instead of the first frame, so a tap nudges you a pixel or two and a held key feels the same as before.
 - Reversing turns you through the side for a moment (left to right through facing down, up to down through facing left), with a short slow-down.

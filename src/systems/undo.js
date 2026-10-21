@@ -18,8 +18,6 @@ on('turned', ({ map, x, y, from }) => remember({ act: 'turned', map, x, y, from,
 on('day:start', () => { done = []; });
 on('game:loaded', () => { done = []; });
 
-export const canUndo = () => done.length > 0;
-
 export function undo() {
   const s = done.at(-1);
   if (!s) { notify('Nothing to undo today.'); return false; }
