@@ -34,13 +34,21 @@ const PRESS = {
   undo: () => undo(),   // v99
 };
 HOTBAR.forEach((k, i) => { PRESS[`slot${i + 1}`] = () => selectSlot(i); });
+// v126: an action by name, for the controller too (ui/gamepad.js).
+export const runAction = (a) => PRESS[a]?.();
+
+// What Esc does: close a dialog, then the menu, stop placing a building, else open the menu (also the pad's B).
+export function escape() {
+  if (modalOpen()) closeModal();
+  else if (menuOpen()) closeMenu();
+  else if (G.siting) cancelSiting();
+  else openMenu();
+}
 
 export function initInput(canvas) {
   addEventListener('keydown', (e) => {
-    if (modalOpen()) { if (e.code === 'Escape') closeModal(); return; }
-    if (menuOpen()) { if (e.code === 'Escape') closeMenu(); return; }
-    if (e.code === 'Escape' && G.siting) { cancelSiting(); return; }   // stop placing a building
-    if (e.code === 'Escape') { openMenu(); return; }
+    if (e.code === 'Escape') { escape(); return; }
+    if (modalOpen() || menuOpen()) return;
     if (e.code === 'Backquote') { toggleDebug(); return; }
     if (e.ctrlKey || e.metaKey) {   // browser shortcuts stay the browser's, except Ctrl Z (undo)
       if (e.code === 'KeyZ') { e.preventDefault(); if (!e.repeat) undo(); }
@@ -54,7 +62,7 @@ export function initInput(canvas) {
       e.preventDefault(); G.useHeld = true; if (!e.repeat) act(); return;   // v41: held Use lifts the catch bar
     }
     if (a === 'undo') e.preventDefault();
-    if (!e.repeat) PRESS[a]();
+    if (!e.repeat) runAction(a);
   });
   addEventListener('keyup', (e) => {
     const a = actionOf(e.code);

@@ -122,6 +122,7 @@ Stardew counterparts by role: keg (wine 3 x fruit, juice 2.25 x vegetable), mayo
 
 ## Controls
 
+- v126: controllers (the browser's standard layout; fixed, not rebindable): stick or d-pad walks; A uses (held, it lifts the fishing bar); B closes a dialog or the menu or stops placing a building; X bag, Y crafting, View journal, L3 neighbours; LB and RB the previous and next hotbar slot; LT seeds, RT turn furniture, R3 whistle; Menu opens and closes the menu. In a dialog or the menu the stick or d-pad moves between buttons (left and right move a slider) and A presses. Once the pad is used, the Use prompt shows A. The menu's Controls section lists it.
 - v119: every key below except Esc and ` can be changed in the menu (Controls: click a key, press the new one; Esc cancels, Backspace removes a second key, Reset keys goes back). Each action takes up to two keys. A key another action used moves to this one, and that action takes the old key; a change that would leave an action with no key is refused. Keys are kept per browser, like the sound settings, not in the save. Messages, the hotbar corners, the Use prompt and the menu buttons show the key as bound. The defaults are as listed here.
 - v119: with Ctrl or Cmd held, keys stay the browser's (only Ctrl Z, undo, reaches the game), and holding a key opens a menu once rather than over and over.
 - H whistles for the horse.
@@ -1157,6 +1158,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v126: Controller buttons cannot be rebound, and there is no rumble. The arcade cabinets, the fishing bar's cast and dragging items in the bag still need the keyboard, mouse or touch (A works for fishing once cast). Button names are Xbox-style. Only the first controller is read.
 - v125: Motion speed does not reach water ripples, seasonal petals and leaves, or blinking. Changing it shifts the wind's wave once.
 - v124: Only neighbours react, not the pet or farm animals. The rain sigh does not happen indoors or in mist.
 - v123: Only the watering can perks crops up (sprinklers and rain water them without it). Hats and the horse do not stir in the wind. Water and foliage already moved (v102, v103).

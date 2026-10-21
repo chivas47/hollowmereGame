@@ -19,6 +19,7 @@ src/
     events.js         on(event, fn), emit(event, data), changed(), notify(msg)
     controls.js       v119: key bindings per browser: actionOf(code), keyName(action) for messages, bind(), resetControls()
     motion.js         v125: motion settings per browser: particles, shake, hit-stop, cosmetic speed; setMotion()
+    pad.js            v126: the controller's pure parts: stickDirs(), nextInDirection() (menu focus); tested
     registry.js       addInteraction, addLayer, addEntities, addUpdater (+ run/draw/collect)
     time.js           dateParts(day), today(), fmtTime(minutes), dayEnd() (END, later with street lamps)
   data/               content only, no logic
@@ -48,6 +49,7 @@ src/
     journal.js        v114: STORY (the main line: each step's name, hint and map), LANDMARKS per world map place, PIN_MAX, PIN_LENGTH, LOG_MAX
     firstweek.js      v122: ARRIVAL (the opening scene's pages), FIRST_WEEK (a goal a day: name, hint, map, done(S))
     emotes.js         v124: EMOTES (each reaction's length and gesture), GIFT_EMOTE by taste tier, SIGH (rain)
+    gamepad.js        v126: PAD_BUTTONS (standard layout to actions), PAD_LABELS, PAD (dead zone, menu repeat)
     bag.js            v113: BAG_KINDS (the Bag's category tabs and icon tints), ITEM_KIND (every item's kind), ICON_COLOURS, MADE_FROM and madeFrom() (wine_plum -> plum), BAG_SORTS, BAG_VIEWS
     theatre.js        THEATRE, FILMS, SNACKS, TASTES (guests' film and snack kinds), ARCADE (v70)
     island.js         BOAT: repair materials, fare and hours (v65)
@@ -208,9 +210,10 @@ src/
     social.js         the social menu (F, or the Friends button) and letters (v48)
     menu.js           the pause menu (Esc or the Menu button): settings, save files, debug tools, controls (v96)
     dom.js toast.js modal.js (openModal(html, actions, {wide})) hud.js hudPrefs.js goal.js prompt.js hotbar.js dialogs.js
-    workshop.js mine.js input.js (keys go through core/controls.js actionOf) debugPanel.js
+    workshop.js mine.js input.js (keys go through core/controls.js actionOf; v126: runAction(), escape() for the pad too) debugPanel.js
     offline.js        v121: registers sw.js and hands it the files the first visit loaded
     motion.js         v125: the menu's Particles, Shake, Hit-stop and Motion speed buttons
+    gamepad.js        v126: polls the pad: walking, actions, held A; in dialogs and the menu, focus moves and A presses
     controls.js       v119: the menu's Controls list (click a key, press the new one) and every <kbd data-control> label
     crafting.js (craft menu, placed-object dialog) barn.js village.js (board, festival)
 tools/

@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v126: Controller support
+- Play with a gamepad: walk with the stick or d-pad, A to use (hold it for the fishing bar), X bag, Y crafting, View journal, LB and RB through the hotbar, LT seeds, RT turn furniture, R3 whistle, Menu for the menu.
+- Dialogs and the menu: the stick or d-pad moves between buttons, left and right move a slider, A presses, B goes back.
+- The Use prompt shows A once you use the pad; the menu lists every button. The keyboard keeps working alongside.
+- Nothing saved, no prices, energy or keys changed.
+
 ## v125: Motion settings
 - New in the menu: Particles (full, fewer or off, with a cap on how many show at once), Shake on or off, Hit-stop on or off, and Motion speed (100%, 75%, 50%) for particles, labels, pickups, reactions and wind. Tool swings keep their timing.
 - A system set to reduce motion starts with fewer particles and no shake.
