@@ -16,6 +16,8 @@ Then open http://localhost:8000.
 
 Push this folder to a repo, then Settings → Pages → Deploy from branch → `main` / root.
 
+Once the page has loaded online, it installs from the browser (the install button in the address bar, or Add to Home Screen on a phone) and plays offline: `sw.js` keeps every file it serves and answers from that copy when there is no connection. Online it always checks the server first, so a new version shows on the next load.
+
 ## Working on it with a Claude Project
 
 1. Create a project and paste the part of `docs/PROJECT_INSTRUCTIONS.md` below the line into its instructions.
