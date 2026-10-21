@@ -132,6 +132,7 @@ import { initSound } from './ui/sound.js';
 import { initSaveFile } from './ui/saveFile.js';
 import './audio/sfx.js';
 import './audio/ambience.js';   // v72
+import './audio/footsteps.js';   // v109: footsteps by surface
 import { $ } from './ui/dom.js';
 
 const canvas = $('#game'), ctx = canvas.getContext('2d');

@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v109: Footsteps by surface
+- Soft footsteps as you walk, sounding like what is underfoot: grass, dirt paths, sand, the quarry and caves (stone), floors indoors and the beach pier (wood), placed wood and stone paths. Winter turns grass and paths to snow, rain makes them wet. Hooves on horseback.
+- They play at the Ambience volume (Sound off mutes them too). Steps: on or off in the menu turns them off alone; the choice is kept per browser like Sound and Music.
+- Saves: nothing new.
+
 ## v108: The town reacts to the old wing, and the cart line
 - Before the workroom is restored, the hall's windows are boarded up and rubble lies beside it.
 - Each restored room shows: the larder, a vegetable planter by the hall; the workroom, the boards and rubble gone and flower boxes under the windows; the fish tank, the village fountain running; the boiler room, smoke from the hall chimney; the vault, bunting along the eave. All five: a brass plaque in front of the hall with your name and your farm's.
