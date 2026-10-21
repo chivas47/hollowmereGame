@@ -166,7 +166,7 @@ on('day:report', (r) => {
   if (hintsOn()) { const [tip] = hintsNow(1); if (tip && tip.id !== 'idle') html += `<p class="role">Tip: ${tip.text}</p>`; }   // v101
   html += `<p>${r.passedOut ? 'You woke up at home with only part of your energy back. ' : ''}`;
   html += `${r.payout ? `The shipping bin paid out ${r.payout}g.` : 'Nothing was shipped yesterday.'} ${plural(r.grown, 'crop')} grew overnight.</p>`;
-  openModal(html, [['Start the day', closeModal, true]]);
+  openModal(html, [['Start the day', () => { closeModal(); emit('report:closed'); }, true]]);   // v128: ui/reckoning.js waits for it
 });
 
 on('ui:message', ({ title, text }) => openModal(`<h2>${title}</h2><p>${text}</p>`, [['OK', closeModal, true]]));
