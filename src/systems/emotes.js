@@ -3,6 +3,7 @@
 import { on } from '../core/events.js';
 import { addUpdater } from '../core/registry.js';
 import { EMOTES } from '../data/emotes.js';
+import { motion } from '../core/motion.js';
 
 const shown = new Map();   // npc id -> { kind, t }
 
@@ -23,6 +24,6 @@ export function gestureOffset(e) {
 }
 
 addUpdater((dt) => {
-  for (const [id, e] of shown) if ((e.t += dt) >= EMOTES[e.kind].dur) shown.delete(id);
+  for (const [id, e] of shown) if ((e.t += dt * motion.speed) >= EMOTES[e.kind].dur) shown.delete(id);   // v125: at the motion speed
 });
 on('map:changed', () => shown.clear());

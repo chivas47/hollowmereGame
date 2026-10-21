@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v125: Motion settings
+- New in the menu: Particles (full, fewer or off, with a cap on how many show at once), Shake on or off, Hit-stop on or off, and Motion speed (100%, 75%, 50%) for particles, labels, pickups, reactions and wind. Tool swings keep their timing.
+- A system set to reduce motion starts with fewer particles and no shake.
+- Kept in this browser, not the save. No prices, energy or keys changed; with Hit-stop off, a swing that hits ends 0.06 s sooner.
+
 ## v124: Neighbour reactions
 - Neighbours react: a heart and a hop for a loved gift, a note for a liked one, a frown or worse and a shake of the head for one they dislike, a wave on the day's first hello, a "!" the first time you meet, and a sigh now and then when they stand out in the rain.
 - Looks only: nothing saved, no friendship, prices or keys changed.
