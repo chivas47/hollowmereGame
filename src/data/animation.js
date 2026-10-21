@@ -61,3 +61,9 @@ export const IMPACT = {
   slain: ['#f4ead2', '#d8d0c0', '#ffffff'],
   craft: ['#fff1b8', '#ffd36a', '#ffffff', '#9fd3f2'],
 };
+
+// v115: how the player moves and rests. accel: seconds from standing to full walking speed. turn: seconds spent
+// facing the side on the way round when walking reverses. settle: the small dip on stopping. lower: seconds the tool
+// takes to fade from the hand after a swing. Idle: a blink every blink[0] to blink[1] seconds (NPCs blink too),
+// and after lookAfter seconds standing still a glance aside every look[0] to look[1] seconds, held for glance.
+export const MOTION = { accel: 0.08, turn: 0.07, settle: 0.14, lower: 0.1, blink: [2.5, 5.5], blinkFor: 0.12, lookAfter: 7, look: [2, 4], glance: 0.9 };

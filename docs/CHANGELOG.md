@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v115: Character motion
+- Walking eases in: full speed after 0.08 s instead of the first frame, so a tap nudges you a pixel or two and a held key feels the same as before.
+- Reversing turns you through the side for a moment (left to right through facing down, up to down through facing left), with a short slow-down.
+- Stopping settles: the knees give a pixel for an instant. Every walk starts on the same foot.
+- Standing still you blink every few seconds, and after 7 s you glance aside now and then. Where you face for tools does not change; only the drawing does. Neighbours standing still blink too, each on their own beat.
+- A tool fades from your hand over 0.1 s at the end of its swing instead of vanishing.
+- Nothing saved, no prices or energy changed, no keys moved. Swing timings (and so how fast tools can be used) are as before.
+
 ## v114: Journal, quests and map
 - The journal (J) opens on four new tabs: Quests, Story, Map and People. The old Quests and Map tabs are folded into them; Museum, Fish, Notes, Achievements, Completion, Hints, Calendar and Animals follow as before. The journal card is wider.
 - Quests: Main (the next step of the valley's story) and Optional (board requests, the special order, Sable's challenge) apart, each in one plain line with where to go and what it pays. Completed: the last 40 quests you finished with their dates, and totals.

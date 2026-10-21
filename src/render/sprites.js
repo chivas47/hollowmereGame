@@ -216,6 +216,14 @@ export function drawPerson(c, px, py, dir, moving, walkT, p) {
   else r(c, x + 2, y + 1, 6, 1, p.hair);
 }
 
+// v115: closed eyes, drawn in skin over a standing person's eyes (the sheet and the code art put them on the same row).
+export function drawBlink(c, px, py, dir, p) {
+  const x = Math.round(px), y = Math.round(py) - 11, sheet = ready(PERSON.sheet);
+  if (dir === 'down') { if (sheet) r(c, x - 2, y, 4, 1, p.skin); else { r(c, x - 2, y, 1, 1, p.skin); r(c, x + 1, y, 1, 1, p.skin); } }
+  else if (dir === 'left') r(c, sheet ? x - 3 : x - 2, y, 1, 1, p.skin);
+  else if (dir === 'right') r(c, sheet ? x + 2 : x + 1, y, 1, 1, p.skin);
+}
+
 export function drawBubble(c, px, py) {
   const x = Math.round(px) - 2, y = Math.round(py) - 25 - (Math.floor(performance.now() / 350) % 2);
   r(c, x, y, 5, 6, '#fffbe8'); r(c, x + 1, y + 6, 2, 1, '#fffbe8'); r(c, x + 2, y + 1, 1, 3, '#2b211a'); r(c, x + 2, y + 5, 1, 1, '#2b211a');
