@@ -51,7 +51,6 @@ export function removeRing(slot) {
   S.bag[k] = (S.bag[k] || 0) + 1; S.rings[slot] = null;
   changed(); return true;
 }
-export const ringName = (k) => ITEMS[k]?.name;
 // v37: floor finds now wait in a treasure chest on their floor (systems/treasure.js).
 
 // ---- v39: the forge's gems and enchantments, and trinkets ----
@@ -60,7 +59,6 @@ export const gemsOn = (key = G.S.weapon) => G.S.forged[key] || {};
 export const gemCount = (key = G.S.weapon) => Object.values(gemsOn(key)).reduce((a, n) => a + n, 0);
 const g = (gem) => gemsOn()[gem] || 0;
 export const weaponEnchant = () => G.S.weaponEnch[G.S.weapon] || null;
-export const toolEnchant = (tool) => G.S.toolEnch[tool] || null;
 // Multipliers and additions the forge puts on the weapon in use.
 export const forgeBonus = () => ({
   damage: 1 + 0.1 * g('heartstone'),

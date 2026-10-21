@@ -54,4 +54,3 @@ export const SLIME = {
   colors: ['#7fbf5a', '#5fa8d3', '#a070c8'],
   drop: 'gel', dropChance: 0.6,
 };
-export const SWORD_DAMAGE = 3;

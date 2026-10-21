@@ -13,7 +13,6 @@ const jars = Object.fromEntries(Object.entries({ ...PRODUCE, ...FRUIT, ...FORAGE
 
 // v27, Stardew's multipliers: wine 3x the fruit, juice 2.25x the vegetable, dried fruit 7.5x + 25 for five,
 // smoked fish 2x. Prefixes are the item key's start: wine_plum, juice_carrot, dried_fig, smoked_carp.
-export const ARTISAN_PREFIX = { wine: 'wine_', juice: 'juice_', dried: 'dried_', smoked: 'smoked_' };
 const each = (src, prefix, name, sell) => Object.fromEntries(Object.entries(src).map(([k, it]) => [prefix + k, { name: name(it.name), sell: sell(it.sell), artisan: true }]));
 const lower = (s) => s.toLowerCase();
 

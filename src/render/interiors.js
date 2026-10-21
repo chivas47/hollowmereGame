@@ -390,4 +390,3 @@ export function drawPiece(c, p) {
   }
   ART[P.shape](c, X, Y, p.w * T, p.h * T, a, b, p, P);
 }
-export const PIECE_SHAPES = Object.keys(ART);

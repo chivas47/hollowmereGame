@@ -68,7 +68,6 @@ on('picked', (p) => {
   p.store = {};
   notify('What the chest held went to the lost and found at the town hall.');
 });
-export const lostCount = () => Object.values(G.S.lostFound).reduce((a, q) => a + total(q), 0);
 export function claimLost(k) {
   if (!moveOut(G.S.lostFound, k)) return false;
   changed();

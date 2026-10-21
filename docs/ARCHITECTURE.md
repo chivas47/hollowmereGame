@@ -31,7 +31,7 @@ src/
     angling.js        CATCH (the catch bar), BAIT, TACKLE, BOBBERS, TRASH, RECYCLE, FISH_TREASURE (v41)
     books.js          BOOKS (skill, primer, power), BOOK_FIND, MASTERY_XP, PERKS, SHRINE (v40)
     forge.js          VENT, FORGE_GEMS, enchantments, TRINKETS (v39)
-    family.js         CHILD, CHILD_NAMES, DIVORCE, ROOMMATE, HALL, the shadow lantern (v53)
+    family.js         CHILD, CHILD_NAMES, DIVORCE, HALL, the shadow lantern (v53)
     restoration.js    ROOMS and their bundles, ROOM_GOLD, RIVAL (v60)
     orders.js         ORDERS, ORDER_POINTS, ORDERS_FROM, ORDERS_OFFERED (v61)
     challenges.js     CHALLENGES, CHALLENGE_FROM, MOON_SHOP (v62)
@@ -88,7 +88,7 @@ src/
     mill.js           the mill (wheat and beets overnight) and the shed door
     cooking.js        recipes, cooking at the stove, the fridge, eating, buffs on G.S.buff and G.S.drink, daily luck, the TV show, wishfruit sources
     buffs.js          buff() and luck() for the systems that read them (kept import-free of cooking.js)
-    gear.js           weapons owned and in use, rings worn, giveFind(), forge bonuses (forgeBonus, toolEnchant), trinkets worn
+    gear.js           weapons owned and in use, rings worn, giveFind(), forge bonuses (forgeBonus), trinkets worn
     areas.js          the beach, the forest and the mountain: their daily forage (G.S.areaForage)
     quarry.js         the quarry's daily rocks (G.S.quarryRocks) and breaking them
     hidden.js         the grove, railway and sewer gates (G.S.gates), grove stumps (G.S.groveStumps), the hot spring, the sewer trader (G.S.trader)

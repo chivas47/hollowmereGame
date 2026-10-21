@@ -8,7 +8,6 @@ import { CLOTHES } from '../data/clothing.js';
 import { MAPS } from '../data/maps.js';
 import { giveFind } from './gear.js';
 
-export const KEEPER = { x: 14, y: 3 };   // Hale's spot by the door (a solid '&' tile)
 export const lodgeOpen = () => G.S.mineDeepest >= LODGE.opensAt;
 export const owns = (key) => (WEAPONS[key] ? G.S.weapons.includes(key) : !!G.S.wardrobe[key]);
 export const itemName = (key) => WEAPONS[key]?.name || CLOTHES[key]?.name || key;
@@ -29,7 +28,6 @@ export function buyGear(key) {
 
 export const slain = (kind) => G.S.slain[kind] || 0;
 export const goalDone = (kind) => slain(kind) >= GOALS[kind].n;
-export const claimable = () => Object.keys(GOALS).filter((k) => goalDone(k) && !G.S.goalsClaimed.includes(k));
 
 export function claimGoal(kind) {
   const S = G.S;
