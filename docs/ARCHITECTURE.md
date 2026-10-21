@@ -136,6 +136,7 @@ src/
     giants.js         giant crops: merging ripe 3x3 blocks, chopping, solid 'Y' tiles
     weather.js        today's weather and the forecast, rain watering, lightning, the rain/snow/mist overlay
     wind.js           lean(x): how far things lean in the wind now, by weather and the day (v103; no drawing, safe for the balance bot)
+    shortcuts.js      fallen trunks across shortcuts, cut with the copper axe; then trunk tiles turn to path and the maps get exits (v106, G.S.shortcuts)
     nightlights.js    outdoorLights(): lit windows, lamp posts and lanterns after dusk (renderer.js cuts them out of the dark); lit glass and lamp posts (v105, drawn only)
     falling.js        seasonal motion: petals, fluff, leaves, snow clumps from tree crowns, drifting with wind.js (v104, drawn only)
     sway.js           grass tufts off the farm and clotheslines, bending with wind.js (v103, drawn only)
@@ -254,6 +255,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 65 | fishing.js | Rod on water O (cast) |
 | 60 | buildings.js | Well W or pond O (refill can) |
 | 62 | clearing.js | Any tool aimed at farm debris or an alder |
+| 62 | shortcuts.js | Any tool aimed at the fallen trunk on a shortcut (the axe chops, others read the hint) (v106) |
 | 61 | forage.js | Any tool aimed at a weed in the Wilds (fiber) |
 | 59 | giants.js | Any tool aimed at a giant crop (chop with hoe, pickaxe or sword) |
 | 58 | monsters.js | The weapon in slot 5 (claims every press while held) |

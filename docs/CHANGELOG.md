@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v106: The ridge path, a shortcut
+- A fallen trunk lies across an old path at the town's east edge, and its other end across the mountain's west edge. Facing it says where the path leads and what cuts it.
+- The copper axe cuts it in 10 swings (2 energy each), for 8 hardwood and 25 foraging XP. A basic axe is turned away with a pointer to the smithy.
+- Once cut, the ridge path stays open from both sides: the town to the mountain lake in one step instead of four (town, village, farm, Wilds, mountain).
+- Saves: new field `shortcuts` (empty by default; old saves get it on load).
+
 ## v105: Night lights outdoors
 - Lit windows: from 6:30 pm the windows of the farmhouse, the cottages, the shops and the guild lodge glow warm and light the ground below. Homes go dark one by one between 10:30 pm and midnight; shops between 8 and 9:30 pm, the town hall earlier, the picture house at 11, the tavern not until about 1 am.
 - Lamp posts: four along the village paths and three in the town, lit all night.
