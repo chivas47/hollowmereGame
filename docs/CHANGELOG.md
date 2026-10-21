@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v107: Outdoor signs
+- Signposts by the paths out of the village, the town, the Wilds, Brackenwood, the beach, the railway, the hidden grove and Cragmoor, pointing the way. Signs toward the farm carry your farm's name. The one by the forest's hidden path has worn away.
+- The ridge path's signs (town and mountain) change their words once the trunk is cut.
+- Handmade notices: a borrowed bucket in the village, a lost cat in the town, a warning at the Hollow, mushrooms in the forest, the tide at the beach, thin ice at the lake.
+- Face a sign and press Use to read it. Signs are solid. None on the farm: that ground is yours.
+- Drawn only: no save fields, no prices.
+
 ## v106: The ridge path, a shortcut
 - A fallen trunk lies across an old path at the town's east edge, and its other end across the mountain's west edge. Facing it says where the path leads and what cuts it.
 - The copper axe cuts it in 10 swings (2 energy each), for 8 hardwood and 25 foraging XP. A basic axe is turned away with a pointer to the smithy.

@@ -723,6 +723,18 @@ Stardew counterpart: the large log in front of the hidden woods (a tougher axe, 
 |---|---|---|---|---|
 | The ridge path | the town's east edge (row 4) and the mountain's west edge (row 10) | a fallen trunk on each side | copper axe, 20 hits (10 swings, 20 energy), from either side | 8 hardwood, 25 foraging XP; the path for good |
 
+## Outdoor signs (v107)
+
+| Map | Signposts | Notices |
+|---|---|---|
+| Village | east to the farm (its name), south to the beach, north to the town | a borrowed bucket |
+| Town | south to the village, east to the ridge path (changes once cut) | a lost cat |
+| The Wilds | west to the farm, north to Cragmoor, east to the railway | the Hollow |
+| Brackenwood | north to the farm, west (worn away: the hidden grove) | mushrooms |
+| Saltreach Beach | north to the village | the tide |
+| Railway, hidden grove | back the way you came | |
+| Cragmoor | south to the Wilds, east to the quarry, west to the ridge path (changes once cut) | thin ice |
+
 ## Atmosphere (v72)
 
 Nothing here is saved or touches the economy.
@@ -998,6 +1010,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v107: Signs are set when a game loads and only on open grass or sand; a sign whose tile is not open is skipped. The balance bot does not load them, so its maps are unchanged.
 - v106: Neighbours do not use the ridge path (the mountain is not on their routes). Chopping progress on the trunk is forgotten overnight, like a half-chopped stump's. In the balance simulator the trunk takes one open grass tile from the mountain's forage spots, which shifts its random draws (about +3% gold at the end with no change in play); the bot never cuts it.
 - v105: Lamp posts are drawn only: you and the neighbours walk through them. Windows follow the clock, not who is home: a cottage stays lit while its neighbour is at the tavern. The light is looks only (night is no safer or easier near a lamp).
 - v104: Leaves and petals fall only from the map's own tree tiles, not from alders or fruit trees, so a map with few trees (the beach) sees few. They rest on whatever is below, water and roofs included, and do not pile up or need sweeping.
