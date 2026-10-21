@@ -13,6 +13,7 @@ import { MUSEUM_ITEMS } from '../data/museum.js';
 import { RECKONING, RECKON_POINTS } from '../data/reckoning.js';
 import { stats } from './museum.js';
 import { addItem } from './quality.js';
+import { addGiftHook } from './npcs.js';
 import { r as px } from '../render/pixel.js';
 
 const R = () => G.S.reckoning;
@@ -44,8 +45,9 @@ export function askAgain(npcId, item) {
   const r = R();
   if (npcId !== 'bram' || item !== RECKONING.askItem || !r.done || r.lamps === 4) return null;
   G.S.bag[item]--; r.again = G.S.day + 1;
-  return 'A starstone? For me? ...All right. I will come by in the morning and have another look at the place.';
+  return { text: 'A starstone? For me? ...All right. I will come by in the morning and have another look at the place.', extra: 'Bram will judge the farm again tomorrow morning.' };
 }
+addGiftHook(askAgain);
 
 // The porch lamps, left of the farmhouse door, once Bram has judged the farm: lit ones glow, the rest stay dark.
 addLayer(20, (c) => {

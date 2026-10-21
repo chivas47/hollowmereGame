@@ -920,7 +920,7 @@ Stardew's evaluation by role, Nuno's choices: Bram judges, on Stardew's categori
 | 3 | The old wing restored (1), and by hand rather than by Ashgrove (2) (the community centre and its ceremony) |
 | 2 | The Sunken Cavern opened, Rook's boat mended (Stardew's two keys; the boat stands in for the rusty key) |
 
-Lamps: under 4 points 1, 4 to 7 two, 8 to 11 three, 12 or more four. Four lamps carve the bin lid: a gleamfruit (750g) in the bag every morning from then on. Below four, give Bram a starstone (the 750g gem, Stardew's diamond) and he looks again the next morning. The balance bot's farm scores 8 points, three lamps, by day 225.
+Lamps: under 4 points 1, 4 to 7 two, 8 to 11 three, 12 or more four. Four lamps carve the bin lid: a gleamfruit (750g) in the bag every morning from then on. Below four, give Bram a starstone (the 750g gem, Stardew's diamond) and he looks again the next morning. The balance bot does not load the reckoning: it needs the museum system, which the bot leaves out (v68), so loading it would change the bot's rolls without telling us anything. Played by hand with the museum loaded, the bot's farm scores 8 points, three lamps, on day 225, which earns no lid.
 
 ## Journal, quests and map (v114)
 The journal (J) opens on Quests. Data in `data/journal.js`; logic in `systems/journal.js`; tabs in `ui/journal.js`. Mechanics after Stardew's journal and map; the main line, landmarks and wording are ours. No prices, energy or keys change.

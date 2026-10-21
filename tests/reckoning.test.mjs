@@ -49,7 +49,7 @@ test('a starstone for Bram asks him to look again the next morning', () => {
   assert.equal(askAgain('bram', 'starstone'), null);   // not judged yet: an ordinary gift
   G.S.day = RECKONING.day; emit('day:start', {});
   assert.equal(askAgain('ines', 'starstone'), null);
-  assert.match(askAgain('bram', 'starstone'), /another look/);
+  assert.match(askAgain('bram', 'starstone').text, /another look/);
   assert.equal(G.S.bag.starstone, 0);
   G.S.earned = 50000; G.S.day++; emit('day:start', {});
   assert.equal(G.S.reckoning.points, 1);
