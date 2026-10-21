@@ -60,6 +60,7 @@ export function newState() {
     hp: 100, maxHp: 100,                                // health, only lost in the mine
     mineDeepest: 0,                                     // deepest mine floor reached
     kit: Object.fromEntries(Object.keys(PLACEABLES).map((k) => [k, 0])),   // crafted objects not yet placed
+    bagFav: [], bagView: { view: 'grid', sort: 'kind' },   // v113: pinned bag items (ids, see systems/bag.js) and how the Bag shows them
     kitSel: 'sprinkler',                                // object the kit slot places (see systems/placeables.js)
     placed: {},                                         // "x,y" on the farm -> { kind, item, nights }; fruit trees add { age, fruit }
     giants: {},
@@ -137,6 +138,8 @@ export function merge(saved) {
   for (const k of ['found', 'crops', 'digs', 'bought', 'peakNuts', 'puzzles', 'stones']) s.nuts[k] = [...(s.nuts[k] || [])];
   if (!s.qbag || typeof s.qbag !== 'object') s.qbag = {};
   s.kit = Object.assign(newState().kit, saved.kit || {});
+  if (!Array.isArray(s.bagFav)) s.bagFav = [];   // v113
+  s.bagView = { ...newState().bagView, ...(saved.bagView || {}) };
   s.skills = Object.assign(newState().skills, saved.skills || {});
   if (!s.professions || typeof s.professions !== 'object') s.professions = {};
   if (!Array.isArray(s.recipes)) s.recipes = ['friedegg'];
