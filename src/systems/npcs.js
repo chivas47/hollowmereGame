@@ -15,7 +15,8 @@ import { HOMES, homeMap, SPOUSE_HOME } from '../data/homes.js';
 import { SCENES, SCENE_HEARTS } from '../data/scenes.js';
 import { GIFT_POINTS, BIRTHDAY_MULT, UNIVERSAL } from '../data/gifts.js';
 import { CANDIDATES, HEART_CAP, BOUQUET, JEALOUSY, DATE_LINES, PENDANT, WEDDING_DAYS, SPOUSE_CAP, SPOUSE_LINES } from '../data/romance.js';
-import { drawPerson, drawBubble } from '../render/sprites.js';
+import { drawPerson, drawBubble, drawBlink } from '../render/sprites.js';
+import { MOTION } from '../data/animation.js';
 import { tileOf } from './world.js';
 import { tilePath, nextHop } from './routes.js';
 import { recalcStats } from './upgrades.js';
@@ -284,10 +285,15 @@ export function giveGift(n, item) {
 // v50: today's outfit, the season's over the base look.
 export const lookOf = (def) => ({ ...def.pal, ...(OUTFITS[def.id]?.[today().season] || {}) });
 
+// v114: neighbours standing still blink, each on their own beat (from their place in the list, so nothing is saved).
+const blinks = (n, i) => !n.moving && (performance.now() / 1000 + i * 1.37) % (MOTION.blink[0] + (i % 5) * 0.6) < MOTION.blinkFor;
+
 addEntities(() => NPCRT.filter((n) => n.visible && n.map === G.S.map).map((n) => ({
   y: n.y,
   draw: (c) => {
-    drawPerson(c, n.x, n.y, n.dir, n.moving, n.walkT, lookOf(n.def));
+    const look = lookOf(n.def);
+    drawPerson(c, n.x, n.y, n.dir, n.moving, n.walkT, look);
+    if (blinks(n, NPCRT.indexOf(n))) drawBlink(c, n.x, n.y, n.dir, look);
     if (G.S.npcs[n.id].talked !== G.S.day && G.talking !== n.id) drawBubble(c, n.x, n.y);
   },
 })));

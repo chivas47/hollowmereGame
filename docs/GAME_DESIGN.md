@@ -710,6 +710,7 @@ Nothing here is saved or touches the economy (cosmetic randomness has its own ge
 - v75: one action per swing. Use is ignored until the tool's swing ends (one press in its last 0.2 s is kept), so the swing time is also the fastest a tool can be used: about 3 axe, pickaxe or hoe strokes a second, 2.4 waterings.
 - Pickups fly in over 0.32 s, at most 6 kinds at once; labels stack. The crafted pose lasts 1 s; placing 0.25 s.
 - Hit-stop 0.06 s on contact; screen shake on stone, criticals, the spin and slam finishers, and when you are hurt.
+- v114 motion (data/animation.js MOTION): walking reaches full speed over 0.08 s (a reversal drops it to 40%); a reversal shows the side for 0.07 s; a 0.14 s settle on stopping; the tool fades out over 0.1 s after its swing. Idle: a blink every 2.5 to 5.5 s, a glance aside every 2 to 4 s after 7 s still (drawn only; the facing used by tools is unchanged). NPCs standing still blink.
 
 ## The HUD (v112)
 

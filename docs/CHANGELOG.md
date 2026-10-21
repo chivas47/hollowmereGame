@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v114: Character motion
+- Walking eases in: full speed after 0.08 s instead of the first frame, so a tap nudges you a pixel or two and a held key feels the same as before.
+- Reversing turns you through the side for a moment (left to right through facing down, up to down through facing left), with a short slow-down.
+- Stopping settles: the knees give a pixel for an instant. Every walk starts on the same foot.
+- Standing still you blink every few seconds, and after 7 s you glance aside now and then. Where you face for tools does not change; only the drawing does. Neighbours standing still blink too, each on their own beat.
+- A tool fades from your hand over 0.1 s at the end of its swing instead of vanishing.
+- Nothing saved, no prices or energy changed, no keys moved. Swing timings (and so how fast tools can be used) are as before.
+
 ## v113: The Bag screen
 - The Bag (I) has tabs: Items, Gear (weapons, rings, trinket, books, rod, kit), Skills, Wardrobe, Tools and seeds, Fish log. Everything that was on the long Bag page is still there, under its tab.
 - Items: everything you carry, seeds and crafted kit included, as a grid of icons with counts or as a list. Each item has its own icon, coloured after what it is (wine after its fruit, ore after its metal); a dot in the corner shows the best quality you hold.
