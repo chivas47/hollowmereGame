@@ -11,6 +11,7 @@ import { DIRS } from '../core/constants.js';
 import { tier } from '../data/upgrades.js';
 import { useEnergy, tileAt, soilOf } from './world.js';
 import { swingAt } from './effects.js';
+import { perkLift } from './animation.js';
 import { addItem, rollCropQuality } from './quality.js';
 import { has } from './professions.js';
 import { skillLevel } from './skills.js';
@@ -76,6 +77,7 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
     if (S.toolEnch.can !== 'bottomless') S.water--;   // v39
     s.w = true;
     swingAt(tx, ty, 'can');
+    if (s.crop) emit('watered', { map: mapId, x: tx, y: ty });   // v123: the crop perks up and drips (systems/animation.js)
   } else if (CROPS[seed]) {
     const c = CROPS[seed], season = today().season;
     if (!s) { notify('Till the ground first.'); return true; }
@@ -114,7 +116,7 @@ addLayer(10, (c) => {
   for (const [key, s] of Object.entries(soil)) {
     const [x, y] = key.split(',').map(Number);
     if (bed) drawFert(c, x * T, y * T, s.fert); else drawSoil(c, x * T, y * T, s.w, s.fert);
-    if (s.crop) drawCrop(c, x * T, y * T, s.crop);
+    if (s.crop) drawCrop(c, x * T, y * T - perkLift(G.S.map, x, y), s.crop);
   }
 });
 

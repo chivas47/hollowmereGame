@@ -11,6 +11,7 @@ import { MINERALS } from '../data/minerals.js';
 import { ITEMS } from '../data/items.js';
 import { onSheet, ready } from './sheets.js';
 import { TOOLS_SHEET } from '../data/sprites.js';
+import { PICKUP } from '../data/animation.js';
 
 const RAD = Math.PI / 180;
 const FACE = { right: 0, down: 90, left: 0, up: -90 };   // left is drawn mirrored
@@ -117,8 +118,15 @@ export function drawFx(c, fx, S) {
   }
   c.globalAlpha = 1;
   for (const u of fx.pickups) {
-    if (u.t >= u.fly) continue;
-    const k = u.t / u.fly, e = k * k, x = u.x + (S.x - u.x) * e, y = u.y + (S.y - 14 - u.y) * e - Math.sin(k * Math.PI) * u.hop;
+    if (u.t < 0 || u.t >= u.pop + u.fly) continue;
+    let x, y;
+    if (u.t < u.pop) {   // v123: pops up and bounces once where it came from, skipping a little sideways
+      const k = u.t / u.pop, hop = k < 0.65 ? Math.sin(k / 0.65 * Math.PI) : Math.sin((k - 0.65) / 0.35 * Math.PI) * 0.3;
+      x = u.x + u.sx * k; y = u.y - hop * PICKUP.popUp;
+    } else {
+      const k = (u.t - u.pop) / u.fly, e = k * k, x0 = u.x + u.sx;
+      x = x0 + (S.x - x0) * e; y = u.y + (S.y - 14 - u.y) * e - Math.sin(k * Math.PI) * u.hop;
+    }
     if (u.kit) c.drawImage(sprite('kit', u.key), Math.round(x) - 8, Math.round(y) - 8); else drawItem(c, u.key, x, y);
   }
   const FONT = 'bold 8px Verdana, sans-serif', BIG = 'bold 10px Verdana, sans-serif';

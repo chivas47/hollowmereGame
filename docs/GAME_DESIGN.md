@@ -714,6 +714,13 @@ Nothing here is saved or touches the economy (cosmetic randomness has its own ge
 - Hit-stop 0.06 s on contact; screen shake on stone, criticals, the spin and slam finishers, and when you are hurt.
 - v115 motion (data/animation.js MOTION): walking reaches full speed over 0.08 s (a reversal drops it to 40%); a reversal shows the side for 0.07 s; a 0.14 s settle on stopping; the tool fades out over 0.1 s after its swing. Idle: a blink every 2.5 to 5.5 s, a glance aside every 2 to 4 s after 7 s still (drawn only; the facing used by tools is unchanged). NPCs standing still blink.
 
+
+v123, the world answers back (data/animation.js PERK, PICKUP, FLUTTER; looks only, nothing saved):
+
+- A watered crop perks up, lifting 1 to 2 pixels for 0.35 s, and drips for 0.7 s.
+- Anything new in the bag pops out where it came from, bounces once with a small skip sideways (0.3 s), then flies to you as before. The "+n Name" label comes 0.3 s later than it did; the item is in the bag at once, as before.
+- Outdoors in wind past 0.35 lean (breezy days, rain and storms), the player's and neighbours' hair and shirts stir: a loose strand beside the head, two for long hair, and the hem flapping downwind, faster in stronger wind.
+
 ## The HUD (v112)
 
 Small, and only what matters right now. Nothing here touches the economy.
@@ -1123,6 +1130,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v123: Only the watering can perks crops up (sprinklers and rain water them without it). Hats and the horse do not stir in the wind. Water and foliage already moved (v102, v103).
 - v122: The arrival is pages of text, not a walked scene: Bram does not stand by the bin while it shows. First-week goals pay nothing (Stardew's first quests pay about 100g); a goal left undone stays until it is done. The balance bot plays without them.
 - v121: Offline needs one visit online first. On a slow connection that never fails, loading waits for the network before the cached copy is used. The font comes from Google Fonts, so offline before it was ever loaded the game uses a fallback font. Files removed from the game stay in the cache (they are small and never asked for).
 - v120: Contrast changes the HUD and messages, not the field's own art (soil, crops and paths keep their colours). On a phone the page could already scroll sideways by a few pixels before v120; Text size does not change that.
