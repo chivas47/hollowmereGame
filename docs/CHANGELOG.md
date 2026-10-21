@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v118: Save safety
+- Going to bed now also keeps this morning's farm. Back to this morning in the menu loads it after a confirmation; the game falls back to it by itself if the live save is missing or damaged.
+- A save that fails (browser storage full or blocked) now says so and suggests exporting a save file, instead of failing silently.
+- Saves carry a version (`v`). Old-save upgrades that were spread through `merge()` (v8 seed slot, v10 feed, v28 eggs and the milk pail, v32 earnings, v48 welcome letter) are now one ordered list in `core/migrations.js`; a save without a version runs them as before.
+- `tests/saves/` holds real saves from v15, v50, v90 and v117, made by each version's own simulator; 14 new tests load them and check the storage rules.
+- Nothing about play changed: no prices, energy or keys. Old saves load as before.
+
 ## v117: Unit tests
 - `tests/` holds unit tests run with Node's built-in `node --test`: no install, no build step. 20 tests cover saves (a new farm round-trips, old saves gain new fields, the v8, v28, v32 and v48 upgrades, save files export and import, bad files are refused), the calendar, item quality (price multipliers, tiers in the bag, harvest odds) and buying and shipping.
 - A new CI workflow runs them on every pull request; a failing test fails the check.

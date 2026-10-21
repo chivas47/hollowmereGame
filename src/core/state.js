@@ -1,21 +1,24 @@
 // The saved game. Add new fields to newState(); merge() fills them in for old saves.
 import { G } from './game.js';
-import { T, START, MAXW, SAVE_KEY } from './constants.js';
+import { T, START, MAXW, SAVE_KEY, MORNING_KEY } from './constants.js';
+import { notify } from './events.js';
 import { CROPS } from '../data/crops.js';
 import { ITEMS } from '../data/items.js';
 import { NPCS } from '../data/npcs.js';
 import { MAPS } from '../data/maps.js';
-import { HOTBAR, SEED_SLOT, OLD_SEED_SLOTS, OLD_FIRST_SEED_SLOT } from '../data/hotbar.js';
+import { HOTBAR } from '../data/hotbar.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { SKILLS } from '../data/skills.js';
 import { DEFAULT_PROFILE } from '../data/profile.js';
 import { LAYOUTS } from '../data/layouts.js';
+import { SAVE_VERSION, migrate } from './migrations.js';
 
 const STARTING_SEEDS = { turnip: 6, radish: 3 };
 
 export function newState() {
   const sp = MAPS.farm.spawn;
   return {
+    v: SAVE_VERSION,   // v118: which upgrades in core/migrations.js this save has had
     day: 1, time: START, gold: 500, energy: 270,
     water: MAXW, maxw: MAXW,
     map: 'farm', x: sp.x * T + 8, y: sp.y * T + 12, dir: sp.dir, slot: 0,
@@ -124,8 +127,6 @@ export function merge(saved) {
   if (!Array.isArray(s.forage)) s.forage = [];
   if (!Array.isArray(s.wildWeeds)) s.wildWeeds = [];
   if (!Array.isArray(s.chickens)) s.chickens = [];
-  // v10: chickens need feed. Existing flocks get a week's worth so they keep laying.
-  if (saved.feed === undefined) s.feed = s.chickens.length * 7;
   if (!s.projects || typeof s.projects !== 'object') s.projects = {};
   if (!s.greenSoil || typeof s.greenSoil !== 'object') s.greenSoil = {};
   if (!s.islandSoil || typeof s.islandSoil !== 'object') s.islandSoil = {};   // v65
@@ -161,7 +162,6 @@ export function merge(saved) {
   s.traditions = { blessed: saved.traditions?.blessed || 0, floated: [...(saved.traditions?.floated || [])] };   // v110
   s.gates = Object.assign(newState().gates, saved.gates || {});   // v45
   for (const k of ['mail', 'mailRead', 'children']) if (!Array.isArray(s[k])) s[k] = [];   // v48, v53
-  if (saved.day > 3 && !saved.mailRead) s.mailRead.push('welcome');   // v48: no welcome letter for a farm already under way
   s.casino = { coins: saved.casino?.coins || 0, bought: [...(saved.casino?.bought || [])] };   // v64
   const sc = saved.challenge || {};   // v62
   s.challenge = { gems: sc.gems || 0, week: sc.week ?? -1, offer: [...(sc.offer || [])], active: sc.active ? { ...sc.active } : null, done: sc.done || 0, bought: [...(sc.bought || [])] };
@@ -179,14 +179,11 @@ export function merge(saved) {
   s.slimes = Object.assign(newState().slimes, saved.slimes || {});
   if (!s.hut || typeof s.hut !== 'object') s.hut = {};
   s.cave = { ...newState().cave, ...(saved.cave || {}), items: { ...(saved.cave?.items || {}) } };
-  if (saved.earned === undefined) s.earned = Math.max(0, s.gold);   // before v32 nothing counted earnings: the gold on hand stands in
-  // v28: eggs moved into coopGoods; barns built before the milk pail keep milking.
   s.coopGoods = Object.assign({}, saved.coopGoods || {});
-  if (saved.eggs > 0) { s.coopGoods.egg = (s.coopGoods.egg || 0) + saved.eggs; s.eggs = 0; }
   if (!s.goodsTier || typeof s.goodsTier !== 'object') s.goodsTier = {};
   s.levels = Object.assign(newState().levels, saved.levels || {});
   s.levelUp = Object.assign(newState().levelUp, saved.levelUp || {});
-  s.ranch = Object.assign(newState().ranch, saved.ranch || (saved.built?.barn ? { pail: true } : {}));
+  s.ranch = Object.assign(newState().ranch, saved.ranch || {});
   if (!s.giants || typeof s.giants !== 'object') s.giants = {};
   if (!LAYOUTS[s.layout]) s.layout = 'open';
   s.house = Object.assign(newState().house, saved.house || {});   // pre-v22 saves keep the original farm
@@ -201,26 +198,27 @@ export function merge(saved) {
   if (!Array.isArray(s.animals)) s.animals = [];
   if (!Array.isArray(s.quests)) s.quests = [];
   if (!PLACEABLES[s.kitSel]) s.kitSel = 'sprinkler';
-  // v8: one seed slot replaced the four crop slots (old keys 6 to 9).
-  if (!saved.seedSel && saved.slot >= OLD_FIRST_SEED_SLOT) {
-    s.seedSel = OLD_SEED_SLOTS[saved.slot - OLD_FIRST_SEED_SLOT] || 'turnip';
-    s.slot = SEED_SLOT;
-  }
+  migrate(s, saved);   // old saves' upgrades (core/migrations.js), then the checks below
   if (!CROPS[s.seedSel]) s.seedSel = 'turnip';
   if (!(s.slot >= 0 && s.slot < HOTBAR.length)) s.slot = 0;
   return s;
 }
 
+// v118: the live save, or this morning's copy if the live one is missing or cannot be read.
 export function load() {
-  try {
-    const raw = localStorage.getItem(SAVE_KEY);
-    if (raw) {
-      const d = JSON.parse(raw);
-      if (d && d.day) return merge(d);
-    }
-  } catch (e) { /* storage unavailable */ }
-  return newState();
+  return readSave(SAVE_KEY) || readSave(MORNING_KEY) || newState();
 }
+
+function readSave(key) {
+  try {
+    const d = JSON.parse(localStorage.getItem(key));
+    if (d && d.day) return merge(d);
+  } catch (e) { /* storage unavailable or a damaged save */ }
+  return null;
+}
+
+// v118: the farm as it was when you woke, saved each night beside the live save.
+export const restoreMorning = () => readSave(MORNING_KEY);
 
 // Save files: a small envelope around the state, so a file says what it is.
 export const SAVE_FILE_TAG = 'hollowmere-farm';
@@ -239,6 +237,15 @@ export function importSave(text) {
   return merge(S);
 }
 
-export function save() {
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify(G.S)); } catch (e) { /* storage unavailable */ }
+// Saves the farm; night: true (from bed) also keeps it as this morning's copy. v118: a save that fails
+// (storage full or blocked) says so, since the farm would be lost on closing.
+export function save({ night = false } = {}) {
+  try {
+    if (!globalThis.localStorage) return;   // Node (tools/balance.mjs, tests) has no storage
+    const text = JSON.stringify(G.S);
+    localStorage.setItem(SAVE_KEY, text);
+    if (night) localStorage.setItem(MORNING_KEY, text);
+  } catch (e) {
+    notify('Your farm could not be saved: this browser\'s storage is full or blocked. Export a save file from the menu to keep it.');
+  }
 }

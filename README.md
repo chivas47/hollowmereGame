@@ -33,6 +33,7 @@ src/
     constants.js     tile size, map size, day length, save key
     game.js          G: the shared runtime object (G.S is the save)
     state.js         newState, load, save, and merge for old saves
+    migrations.js    ordered upgrades for old saves
     events.js        on / emit event bus
     registry.js      plug-in points: interactions, layers, entities, updaters
     time.js          dates, seasons, clock formatting
@@ -91,7 +92,7 @@ A new tool also needs its key in `data/hotbar.js`, a label in `ui/hotbar.js` and
 
 **Interaction priorities in use** (higher runs first): 200 fishing in progress, 100 neighbours, 95 chickens, 94 barn animals, 72 workbench, coop, barn, placed objects, quest board, festival table, mine entrance and ladders, 71 village flavour, 70 door, stall and bin, 66 pickaxe, 65 fishing cast, 60 water refill, 58 sword, 55 placing from the kit, 50 farming, 45 forage. A tool that swings at anything (like the sword) must sit below everything you open or talk to.
 
-**New saved field:** add it to `newState()` in `core/state.js`. `merge()` keeps old saves working.
+**New saved field:** add it to `newState()` in `core/state.js`. `merge()` keeps old saves working. If old data must change shape, add a step at the end of `MIGRATIONS` in `core/migrations.js` and a test in `tests/saves.test.mjs`.
 
 ## Unit tests
 
