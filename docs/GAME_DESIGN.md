@@ -1078,6 +1078,7 @@ Stardew counterparts: basic, quality and deluxe fertilizer; speed-gro and deluxe
 
 ## Save files
 
+- v127: three farms per browser. Farms in the menu lists them (farm and farmer name, date, gold); picking another saves this farm and loads that one, or opens the new game screen if its slot is empty. Each farm has its own save, morning copy and export. The game reopens on the farm last played. Saves from before v127 are farm 1.
 - v121: the game installs from the browser and plays offline once it has loaded online. The installed game uses the same browser storage, so it is the same farm and the same morning copy.
 - The game autosaves to this browser on sleep and when the tab is hidden. v118: if a save fails (storage full or blocked), a message says so and suggests exporting.
 - v118: going to bed also keeps the farm as it is that morning. Back to this morning (menu) loads it after a confirmation, and the game loads it by itself if the live save is missing or damaged. Starting a new farm, finishing the new game screen or loading a save makes that the morning's copy. A late-game save is about 35 KB, so the copy costs little.
@@ -1158,6 +1159,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v127: A farm cannot be deleted from its slot (New farm starts over in the slot in play). Key, sound and display settings are shared by all three farms.
 - v126: Controller buttons cannot be rebound, and there is no rumble. The arcade cabinets and dragging items in the bag still need the keyboard, mouse or touch (fishing works: A casts and, held, lifts the bar). Button names are Xbox-style. Only the first controller is read.
 - v125: Motion speed does not reach water ripples, seasonal petals and leaves, or blinking. Changing it shifts the wind's wave once.
 - v124: Only neighbours react, not the pet or farm animals. The rain sigh does not happen indoors or in mist.

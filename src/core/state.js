@@ -1,6 +1,6 @@
 // The saved game. Add new fields to newState(); merge() fills them in for old saves.
 import { G } from './game.js';
-import { T, START, MAXW, SAVE_KEY, MORNING_KEY } from './constants.js';
+import { T, START, MAXW, SAVE_KEY, SLOTS, SLOT_KEY } from './constants.js';
 import { notify } from './events.js';
 import { CROPS } from '../data/crops.js';
 import { ITEMS } from '../data/items.js';
@@ -207,9 +207,32 @@ export function merge(saved) {
   return s;
 }
 
+// v127: the save slots. Each has a live save and a morning copy; one slot is in play.
+const saveKey = (n) => (n === 1 ? SAVE_KEY : `${SAVE_KEY}-${n}`);
+const morningKey = (n) => `${saveKey(n)}-morning`;
+let slot = 1;
+try { slot = Math.min(SLOTS, Math.max(1, +localStorage.getItem(SLOT_KEY) || 1)); } catch (e) { /* storage unavailable */ }
+export const currentSlot = () => slot;
+
 // v118: the live save, or this morning's copy if the live one is missing or cannot be read.
 export function load() {
-  return readSave(SAVE_KEY) || readSave(MORNING_KEY) || newState();
+  return readSave(saveKey(slot)) || readSave(morningKey(slot)) || newState();
+}
+
+// v127: what a slot holds, for the slot list: { farm, name, day, gold } or null when empty. Read without merging.
+export function slotInfo(n) {
+  try {
+    const d = JSON.parse(localStorage.getItem(saveKey(n)) || localStorage.getItem(morningKey(n)));
+    if (d && d.day) return { farm: d.profile?.farm || null, name: d.profile?.name || null, day: d.day, gold: d.gold };
+  } catch (e) { /* storage unavailable or a damaged save */ }
+  return null;
+}
+
+// v127: makes slot n the one in play and returns its farm (a new one if the slot is empty).
+export function useSlot(n) {
+  slot = n;
+  try { localStorage.setItem(SLOT_KEY, String(n)); } catch (e) { /* storage unavailable */ }
+  return load();
 }
 
 function readSave(key) {
@@ -221,7 +244,7 @@ function readSave(key) {
 }
 
 // v118: the farm as it was when you woke, saved each night beside the live save.
-export const restoreMorning = () => readSave(MORNING_KEY);
+export const restoreMorning = () => readSave(morningKey(slot));
 
 // Save files: a small envelope around the state, so a file says what it is.
 export const SAVE_FILE_TAG = 'hollowmere-farm';
@@ -246,8 +269,8 @@ export function save({ night = false } = {}) {
   try {
     if (!globalThis.localStorage) return;   // Node (tools/balance.mjs, tests) has no storage
     const text = JSON.stringify(G.S);
-    localStorage.setItem(SAVE_KEY, text);
-    if (night) localStorage.setItem(MORNING_KEY, text);
+    localStorage.setItem(saveKey(slot), text);
+    if (night) localStorage.setItem(morningKey(slot), text);
   } catch (e) {
     notify('Your farm could not be saved: this browser\'s storage is full or blocked. Export a save file from the menu to keep it.');
   }

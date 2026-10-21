@@ -293,3 +293,6 @@ button.wm{font:inherit;text-align:left;cursor:pointer;min-height:44px}
 .contrast .slot:not([aria-pressed="true"])::before,.contrast .slot span{color:#fff}
 .contrast kbd{background:#000;color:#fff;border-color:var(--cream)}
 .contrast .pill,.contrast .clock,.contrast .meters{border-color:var(--cream)}
+/* v127: the Farms dialog */
+.slotrow{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:2px solid var(--seam);padding:6px 0}
+.slotrow p{margin:0}

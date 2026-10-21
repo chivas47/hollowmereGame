@@ -126,6 +126,7 @@ import './ui/offline.js';   // v121: install and play offline
 import './ui/arrival.js';   // v122: the arrival scene
 import './ui/motion.js';   // v125: motion settings
 import './ui/gamepad.js';   // v126: controller support
+import './ui/slots.js';   // v127: save slots
 import './ui/family.js';
 import './ui/restoration.js';
 import './ui/desert.js';
