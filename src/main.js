@@ -85,6 +85,7 @@ import './systems/falling.js';   // v104: petals, fluff, leaves and snow driftin
 import './systems/nightlights.js';   // v105: lit windows, lamp posts and lantern light outdoors
 import './systems/shortcuts.js';   // v106: the ridge path between the town and the mountain, behind a fallen trunk
 import './systems/signs.js';   // v107: signposts and handmade notices outdoors
+import './systems/wing.js';   // v108: the town reacts to the old wing; the cart line
 import './systems/indoors.js';   // v100: indoor light, windows, rain on the glass
 
 // UI
@@ -123,6 +124,7 @@ import './ui/market.js';
 import './ui/theatre.js';
 import './ui/storage.js';   // v71
 import './ui/arcade.js';
+import './ui/carts.js';   // v108: the cart line
 import { buildHotbar } from './ui/hotbar.js';
 import { initInput } from './ui/input.js';
 import { initDebug } from './ui/debugPanel.js';

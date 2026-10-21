@@ -735,6 +735,20 @@ Stardew counterpart: the large log in front of the hidden woods (a tougher axe, 
 | Railway, hidden grove | back the way you came | |
 | Cragmoor | south to the Wilds, east to the quarry, west to the ridge path (changes once cut) | thin ice |
 
+## The town and the old wing (v108)
+
+| Room | Restored | Bought from Ashgrove |
+|---|---|---|
+| (none yet) | boarded windows, rubble by the hall | |
+| Larder | a vegetable planter by the hall | stamped crates there |
+| Workroom | boards and rubble gone, flower boxes | boards and rubble gone |
+| Fish tank | the village fountain runs | the same |
+| Boiler room | chimney smoke; the cart line opens | the same |
+| Vault | bunting along the eave | none |
+| All five | a plaque with your name and farm | grey paint and the company board (from joining) |
+
+The cart line (Stardew's minecarts, free): carts by the town hall, at the Hollow in the Wilds and in the quarry. Face one to choose a stop.
+
 ## Atmosphere (v72)
 
 Nothing here is saved or touches the economy.
@@ -1010,6 +1024,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v108: The cart line has three stops; the farm has none (its ground is the player's). The balance bot does not ride carts; it rarely restores the boiler room. Ashgrove's grey paint shows from joining, before any room is bought.
 - v107: Signs are set when a game loads and only on open grass or sand; a sign whose tile is not open is skipped. The balance bot does not load them, so its maps are unchanged.
 - v106: Neighbours do not use the ridge path (the mountain is not on their routes). Chopping progress on the trunk is forgotten overnight, like a half-chopped stump's. In the balance simulator the trunk takes one open grass tile from the mountain's forage spots, which shifts its random draws (about +3% gold at the end with no change in play); the bot never cuts it.
 - v105: Lamp posts are drawn only: you and the neighbours walk through them. Windows follow the clock, not who is home: a cottage stays lit while its neighbour is at the tavern. The light is looks only (night is no safer or easier near a lamp).
