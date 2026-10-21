@@ -78,6 +78,7 @@ import './systems/museum.js';
 import './systems/market.js';   // v69
 import './systems/theatre.js';   // v70
 import './systems/storage.js';   // v71: chests, signs, the farm computer, the lost and found
+import './systems/journal.js';   // v114: story, quest log, places found, map pins
 import './systems/atmosphere.js';   // v72: waterfalls, splashes, lightning, wildlife
 import './systems/water.js';   // v102: moving water and reflections
 import './systems/sway.js';   // v103: wind in grass, trees and washing
@@ -127,6 +128,7 @@ import './ui/nuts.js';
 import './ui/museum.js';
 import './ui/market.js';
 import './ui/theatre.js';
+import './ui/journal.js';   // v114: the journal's Quests, Story, Map and People tabs
 import './ui/storage.js';   // v71
 import './ui/arcade.js';
 import './ui/carts.js';   // v108: the cart line
