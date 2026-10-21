@@ -109,7 +109,8 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 46 | Outdoor signs | feature | done (chivas47/hollowmereGame#103) | Signposts and handmade notices outdoors. Asked for by Nuno, October 2026. |
 | 47 | The town reacts to the old wing | feature | done (chivas47/hollowmereGame#104) | Each restored room changes the town you can see, Ashgrove's look on the rival route, and the boiler room opens a cart line (Nuno chose looks plus the cart line as the one perk). Asked for by Nuno, October 2026 (from the world-detail gap list). |
 | 48 | Footsteps by surface | feature | done (chivas47/hollowmereGame#105) | Footsteps that sound like grass, path, sand, stone, wood, snow or wet ground, hooves on horseback, at the Ambience volume with a Steps switch. Asked for by Nuno, October 2026 (from the world-detail gap list). |
-| 49 | Local traditions | feature | in progress (chivas47/hollowmereGame#106) | Customs outside the festival calendar: a wishing stone in the village with one blessing a day (Stardew's Statue of Blessings) and the Lantern Float on the beach on Summer 28 (Stardew's Moonlight Jellies). Asked for by Nuno, October 2026. |
+| 49 | Local traditions | feature | done (chivas47/hollowmereGame#106) | Customs outside the festival calendar: a wishing stone in the village with one blessing a day (Stardew's Statue of Blessings) and the Lantern Float on the beach on Summer 28 (Stardew's Moonlight Jellies). Asked for by Nuno, October 2026. |
+| 50 | Small stories outdoors | feature | in progress | Little scenes in every outdoor area (not the farm) that say something about a neighbour, each with a line to read, some changing with the season; the outdoor version of the cottages' lines. Asked for by Nuno, October 2026. |
 | 33 | Local two-player | feature | needs decision | Same-screen co-op is possible without a server but touches every system. Nuno to decide whether it is worth it. |
 
 ## Done
