@@ -2,6 +2,17 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v113: The Bag screen
+- The Bag (I) has tabs: Items, Gear (weapons, rings, trinket, books, rod, kit), Skills, Wardrobe, Tools and seeds, Fish log. Everything that was on the long Bag page is still there, under its tab.
+- Items: everything you carry, seeds and crafted kit included, as a grid of icons with counts or as a list. Each item has its own icon, coloured after what it is (wine after its fruit, ore after its metal); a dot in the corner shows the best quality you hold.
+- Search by name, a tab per kind (crops and fruit, forage, fish, animal goods, artisan goods, food, minerals and artifacts, materials, rings and books and tackle, seeds, kit, other), and sort by kind, name, value or count. Grid or list and the sort are kept in the save.
+- Pick an item to read about it: a line on what it is and where it comes from, how many of each quality you hold, what each quality sells for, what it is worth if shipped, what it takes to make (dishes and kit, with how many you have) and what it is used in (crafting, cooking and tool upgrades). Eat, Read, Wear, Put on the rod, Open: the item's own buttons are there.
+- Pin items to keep them at the top. Compare two items side by side: kind, count, plain and heirloom prices, worth, energy, uses.
+- Quick transfer: facing a chest, Put in the chest sends every one of an item in. Drag items onto Pinned or onto the chest with the mouse, or hold and drag on a touch screen.
+- Chests show two icon grids, inside and your bag, with a search. Click an item to move it across, or drag it from one side to the other.
+- The bag still has no size limit. Slots, splitting and merging stacks and full-bag warnings wait for item 52b; controllers for 52c.
+- Saves: `bagFav` (pinned items) and `bagView` (grid or list, sort). Old saves start with none pinned, grid, sorted by kind. No keys moved, no prices changed.
+
 ## v112: Gameplay HUD
 - What Use will do shows above the tile you face: "Space Talk to Ines", "Enter Fenn's Provisions", "Ship your basket", "Sleep", "Harvest Turnip", "Pick up Wood narcissus", "Read the sign", "Open the chest". On touch screens the Use button takes the verb ("Talk", "Enter") instead. Covered: neighbours, building doors and counters, cottages, the farmhouse door and bed, the bin, wells and ponds (with the can), ripe and withered crops, forage, signs, outdoor stories, chests and the wishing stone; anything else shows nothing.
 - An objective reminder in the field's top-left corner: the special order or challenge in hand, else the board request due soonest, with how many you have and the days left, and how many more wait in the journal.

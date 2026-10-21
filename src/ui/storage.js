@@ -19,6 +19,11 @@ import { NPCRT } from '../systems/npcs.js';
 import { animalDef, kindOf, hearts } from '../systems/livestock.js';
 import { hearts as petHearts } from '../systems/pets.js';
 import { addJournalTab } from './museum.js';
+import { QUALITY } from '../data/quality.js';
+import { ITEM_KIND } from '../data/bag.js';
+import { counts } from '../systems/quality.js';
+import { iconURL } from '../render/itemIcons.js';
+import { onDrop } from './drag.js';
 import { openModal, closeModal } from './modal.js';
 import { $, esc } from './dom.js';
 
@@ -32,13 +37,24 @@ function chest() {
   const p = chestAt(at.x, at.y);
   if (!p) { closeModal(); return; }
   const inside = Object.entries(p.store || {}), bag = Object.keys(G.S.bag).filter((k) => G.S.bag[k] > 0);
-  const inRows = inside.map(([k, q]) => row(`${ITEMS[k].name} × ${sum(q)}`, qualText(q) || 'Plain', `<button data-ctake="${k}">Take</button>`)).join('');
-  const bagRows = bag.map((k) => row(`${ITEMS[k].name} × ${G.S.bag[k]}`, p.store?.[k] ? 'Some already inside.' : '', `<button data-cput="${k}">Put in</button>`)).join('');
-  openModal(`<h2>${PLACEABLES[p.kind].name}</h2><p class="role">Holds ${inside.length} of ${roomOf(p)} kinds. What is inside stays out of gifts, orders, machines and the bin.</p>
-    <h3>Inside</h3>${inRows || '<p class="role">Empty.</p>'}<h3>Your bag</h3>${bagRows || '<p class="role">Your bag is empty.</p>'}`,
+  // v113: icons; click an item to move it across, or drag it from one side to the other (ui/drag.js)
+  const cell = (k, n, q, attr) => { const t = [3, 2, 1].find((i) => q[i]) || 0;
+    return `<button class="bagcell" ${attr}="${k}" data-drag="${k}" title="${esc(`${ITEMS[k].name} × ${n}${qualText(q) ? `, ${qualText(q)}` : ''}`)}" aria-label="${esc(`${ITEMS[k].name} × ${n}`)}"><img src="${iconURL(k, ITEM_KIND[k])}" alt="" width="32" height="32" draggable="false"><b>${n}</b>${t ? `<i class="star" style="background:${QUALITY[t].color}"></i>` : ''}</button>`; };
+  const inCells = inside.map(([k, q]) => cell(k, sum(q), q, 'data-ctake')).join('');
+  const bagCells = bag.filter((k) => !needle || ITEMS[k].name.toLowerCase().includes(needle)).map((k) => cell(k, G.S.bag[k], counts(k), 'data-cput')).join('');
+  const sc = $('#modal .card').scrollTop, same = !$('#modal').hidden && $('#mbody [data-drop="chest"]');
+  openModal(`<h2>${PLACEABLES[p.kind].name}</h2><p class="role">Holds ${inside.length} of ${roomOf(p)} kinds. What is inside stays out of gifts, orders, machines and the bin. Click an item to move it across, or drag it.</p>
+    <h3>Inside</h3><div class="baggrid bagzone" data-drop="chest">${inCells || '<p class="role">Empty.</p>'}</div>
+    <h3>Your bag</h3><p><input id="chestSearch" type="search" placeholder="Search the bag" aria-label="Search the bag" value="${esc(needle)}"></p>
+    <div class="baggrid bagzone" data-drop="bag">${bagCells || `<p class="role">${bag.length ? 'Nothing matches.' : 'Your bag is empty.'}</p>`}</div>`,
   [['Add to matching', () => { storeMatching(at.x, at.y); chest(); }], ['Take all', () => { takeAll(at.x, at.y); chest(); }],
-    ['Pick up', () => { if (pickUp(at.x, at.y)) closeModal(); }], ['Close', closeModal, true]]);
+    ['Pick up', () => { if (pickUp(at.x, at.y)) closeModal(); }], ['Close', closeModal, true]], { wide: true });
+  if (same) $('#modal .card').scrollTop = sc;
+  if (needle) { const box = $('#chestSearch'); box.focus(); box.setSelectionRange(needle.length, needle.length); }
+  onDrop((k, from, to) => { if (to === 'chest') store(at.x, at.y, k); else if (to === 'bag') take(at.x, at.y, k); chest(); });
 }
+let needle = '';   // the chest dialog's bag search
+$('#mbody').addEventListener('input', (e) => { if (e.target.id === 'chestSearch' && at) { needle = e.target.value.trim().toLowerCase(); chest(); } });
 
 function sign() {
   const p = placedAt(at.x, at.y);
@@ -66,7 +82,7 @@ function lostFound() {
   [['Leave', closeModal, true]]);
 }
 
-on('ui:chest', (a) => { at = a; chest(); });
+on('ui:chest', (a) => { at = a; needle = ''; chest(); });
 on('ui:sign', (a) => { at = a; sign(); });
 on('ui:computer', (a) => { at = a; computer(); });
 on('ui:lostfound', lostFound);

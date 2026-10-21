@@ -39,6 +39,7 @@ src/
     museum.js         ARTIFACTS, MUSEUM_ITEMS, SPOTS, GEODE_ARTIFACT, REWARDS, NOTES, ACHIEVEMENTS, COMPLETION (v68)
     market.js         CART, BOOKSELLER, MACHINE, PRIZES, MYSTERY, the ticket and box items (v69)
     storage.js        CHEST_ROOM, SIGN_LENGTH, WORLD (the journal's map grid), WORLD_PARENT (v71)
+    bag.js            v113: BAG_KINDS (the Bag's category tabs and icon tints), ITEM_KIND (every item's kind), ICON_COLOURS, MADE_FROM and madeFrom() (wine_plum -> plum), BAG_SORTS, BAG_VIEWS
     theatre.js        THEATRE, FILMS, SNACKS, TASTES (guests' film and snack kinds), ARCADE (v70)
     island.js         BOAT: repair materials, fare and hours (v65)
     nuts.js           NUT, BEACH_DIGS, NUT_CROPS, NUT_FISH, BRIDGE, DIG_SITE, ISLAND_SHOP (v66); PEAK, PUZZLE_NUTS, CHIMES, STONES, ALTAR, LANTERN (v67)
@@ -105,6 +106,7 @@ src/
     nuts.js           tide nuts (G.S.nuts): beach digs, first island harvests and catches, the dig site bridge (tile 6) and its daily dig spots, the island trader (tile 5) (v66); the Smoke Peak gate (tile 7), its nut floors and summit cache (tile < in the mine), the puzzles: shells 8, basins 9, altar <, lantern ` (v67)
     museum.js         artifact spots (G.S.museum.spots) dug with the hoe, secret notes and their treasures, donate(), achievements, completion() (v68)
     storage.js        chests (p.store in G.S.placed: store, take, storeMatching, takeAll), the lost and found (G.S.lostFound, claimLost), signs (writeSign), the farm computer (farmReport) (v71)
+    bag.js            v113: the Bag screen's logic: bagEntries() (items, seeds as seed:<crop>, kit as kit:<piece>), bagList() (search, kind, sort, pins first), pins (G.S.bagFav), describe(), usedIn(), needsOf(), prices(), facedChest() and stash() into the chest you face
     theatre.js        the picture house Þ once the old wing is whole: today's film, watch() with a guest and snack; arcade best scores and prize tickets (v70)
     arcade.js         the two cabinet games' rules, pure state steps (newCrows/stepCrows, newRunner/stepRunner) (v70)
     island.js         Rook's boat (beach and island tile 4): repairBoat(), sail(), sailHome() (G.S.boatFixed); the island farm soil is G.S.islandSoil (v65)
@@ -157,6 +159,7 @@ src/
     tiles.js          static art: grass, path, trees, water, rocks, buildings, cave tiles
     sprites.js        per-frame art: soil, crops, forage, people, chickens, slimes, fruit trees, giant crops, effects
     icons.js          16x16 hotbar icons
+    itemIcons.js      v113: 16x16 item icons for the Bag and chests, one shape per kind coloured per item, cached as data URLs (iconURL)
     arcade.js         the arcade cabinets' screens (v70)
     animation.js      v74: the tool or weapon in hand (drawHeld, rotated hotbar icons), the rod (drawRod), the crafted pose, item pictures, particles and labels (drawFx)
     renderer.js       composes a frame, caches backgrounds per map + season
@@ -181,14 +184,16 @@ src/
     restoration.js    the old wing's bundles and the rival's offer (ui:restore, v60)
     desert.js         the coach, the Oasis, the desert trader and the casino (ui:coach, ui:oasis, ui:dtrader, ui:casino, v64)
     museum.js         the museum's donations (ui:museum) and the journal (J, ui:journal): collections, notes, achievements, completion (v68)
-    storage.js        chest, sign, farm computer and lost and found dialogs (ui:chest, ui:sign, ui:computer, ui:lostfound); journal tabs calendar, quests, map, animals via addJournalTab() in ui/museum.js (v71)
+    storage.js        chest, sign, farm computer and lost and found dialogs (ui:chest, ui:sign, ui:computer, ui:lostfound); journal tabs calendar, quests, map, animals via addJournalTab() in ui/museum.js (v71); the chest as two icon grids, click or drag to move (v113)
+    inventory.js      the Bag (I, ui:inventory): tabs Items, Gear, Skills, Wardrobe, Tools and seeds, Fish log; the Items grid or list, search, kinds, sort, pins, detail, compare (v113)
+    drag.js           v113: drag and drop inside the dialog: data-drag items onto data-drop zones, onDrop(fn) set by the open dialog; touch drags after a short hold
     theatre.js        the picture house dialog: guest, snack, the showing (ui:theatre) (v70)
     arcade.js         the cabinets (ui:arcade, from the tavern): a canvas, its own keys and touch while a game runs (v70)
     island.js         Rook's boat dialog (ui:boat, v65)
     nuts.js           the bridge and the island trader (ui:bridge, ui:islandshop, v66; ui:peak, v67)
     social.js         the social menu (F, or the Friends button) and letters (v48)
     menu.js           the pause menu (Esc or the Menu button): settings, save files, debug tools, controls (v96)
-    dom.js toast.js modal.js hud.js hudPrefs.js goal.js prompt.js hotbar.js dialogs.js inventory.js
+    dom.js toast.js modal.js (openModal(html, actions, {wide})) hud.js hudPrefs.js goal.js prompt.js hotbar.js dialogs.js
     workshop.js mine.js input.js debugPanel.js
     crafting.js (craft menu, placed-object dialog) barn.js village.js (board, festival)
 tools/

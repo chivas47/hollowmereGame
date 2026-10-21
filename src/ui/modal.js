@@ -3,8 +3,9 @@ import { G } from '../core/game.js';
 import { emit } from '../core/events.js';
 import { $ } from './dom.js';
 
-// actions: [[label, onClick, isPrimary], ...]
-export function openModal(html, actions) {
+// actions: [[label, onClick, isPrimary], ...]; wide: the wider card (v113: the Bag and chests)
+export function openModal(html, actions, { wide = false } = {}) {
+  $('#modal .card').classList.toggle('wide', wide);
   $('#mbody').innerHTML = html;
   const box = $('#mact'); box.innerHTML = '';
   actions.forEach(([label, fn, primary]) => {

@@ -184,6 +184,39 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
 .card button.primary{background:var(--harvest);color:var(--soil);border-color:#b8862b;font-weight:600;box-shadow:0 3px 0 #8a6420}
 .card button:disabled{opacity:.45;cursor:not-allowed}
 .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap;position:sticky;bottom:-16px;padding:10px 0 4px;background:var(--bark)}
+/* v113: the Bag screen and chests */
+.bagtabs{margin:4px 0 8px}
+.bagbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.bagbar input,.card input[type=search]{flex:1 1 180px;min-height:40px;font:inherit;font-size:18px;background:var(--soil);color:var(--cream);border:2px solid var(--seam);border-radius:6px;padding:4px 10px}
+.bagbar label{display:flex;gap:6px;align-items:center;font-size:16px;color:var(--straw)}
+.bagbar select{min-height:40px;font:inherit;font-size:18px;background:var(--plank);color:var(--cream);border:2px solid var(--seam);border-radius:6px}
+.bagcats{margin-bottom:8px}
+.bagcats button{font-size:16px;min-height:36px;padding:4px 10px}
+.baggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:6px;margin:4px 0 8px;min-height:56px}
+.card .bagcell{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1;padding:0;min-height:0;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.bagcell img,.bagline img,.baghead img,.bagcmp img,.dragghost{image-rendering:pixelated}
+.bagcell b{position:absolute;right:3px;bottom:1px;font-size:16px;text-shadow:0 1px 0 #000,1px 0 0 #000}
+.bagcell .star{position:absolute;left:4px;top:4px;width:8px;height:8px;border-radius:50%;box-shadow:0 0 0 1px #000}
+.card .bagcell.sel,.card .bagline.sel{border-color:var(--harvest);box-shadow:inset 0 0 0 2px var(--harvest)}
+.card .bagcell.pin{border-color:var(--leaf)}
+.bagcell.dragging,.bagline.dragging{opacity:.4}
+.baglist{display:flex;flex-direction:column;gap:4px;margin:4px 0 8px}
+.card .bagline{display:grid;grid-template-columns:32px 1fr auto auto;gap:10px;align-items:center;text-align:left;user-select:none;-webkit-user-select:none}
+.bagdrops{display:flex;gap:8px;flex-wrap:wrap}
+.bagzone{border:2px dashed var(--seam);border-radius:8px}
+.bagdrops .bagzone{flex:1 1 140px;padding:8px 12px;font-size:16px;color:var(--straw);text-align:center}
+.bagzone.dropover{border-color:var(--harvest);background:rgba(233,180,76,.12)}
+.baggrid.bagzone{padding:6px}
+.bagdetail{border-top:2px solid var(--seam);margin-top:8px;padding-top:10px}
+.baghead{display:flex;gap:12px;align-items:center;margin-bottom:8px}
+.baghead img{width:48px;height:48px}
+.baghead div{display:flex;flex-direction:column}
+.baghead b{font-size:20px}
+.qual{font-size:16px}
+.bagcmp{width:100%;border-collapse:collapse;font-size:16px;margin-bottom:8px}
+.bagcmp th,.bagcmp td{border-top:1px solid var(--seam);padding:4px 6px;text-align:left;vertical-align:middle}
+.bagcmp img{width:24px;height:24px;vertical-align:middle}
+.dragghost{position:fixed;left:0;top:0;width:40px;height:40px;pointer-events:none;z-index:20;filter:drop-shadow(0 3px 2px rgba(0,0,0,.6))}
 .footbtns{display:flex;gap:8px;flex-wrap:wrap}
 .ghost{background:none;border:2px solid var(--seam);border-radius:6px;color:var(--straw);font-size:16px;padding:6px 12px;min-height:44px;cursor:pointer}
 .ghost.slider{display:inline-flex;align-items:center;gap:8px;cursor:default}
