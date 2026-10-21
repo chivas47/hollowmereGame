@@ -361,6 +361,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `mine:ladder` | {floor, zone} | mine.js | nuts.js (peak nut floors, v67) |
 | `monster:hit` | {x, y, dmg, crit, kx, ky} | monsters.js hitMonster() (v74) | animation (damage number, sparks) |
 | `crafted` | {key, n, kit} | crafting.js (v74) | animation (the crafted pose) |
+| `watered` | {map, x, y} | farming.js, the can on a planted tile (v123) | animation (the crop perks up and drips) |
 | `monster:slain` | {kind, x, y, map} | monsters.js | guild (goal counts), treasure (blast ring) |
 | `mine:faint` | none | health.js | mine.js (carry out) |
 | `gather` | {skill, xp, item?, n?} | farming, giants, clearing, forage, fishing, mine, monsters, coop, barn, books | skills.js (XP, bonus item), books.js (mastery XP, book finds) |

@@ -5,7 +5,7 @@ import { G } from '../core/game.js';
 import { T, DIRS } from '../core/constants.js';
 import { on } from '../core/events.js';
 import { addUpdater, addLayer } from '../core/registry.js';
-import { SWINGS, PICKUP, CRAFTED, PLACE, IMPACT } from '../data/animation.js';
+import { SWINGS, PICKUP, CRAFTED, PLACE, IMPACT, PERK } from '../data/animation.js';
 import { ITEMS } from '../data/items.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { drawFx } from '../render/animation.js';
@@ -75,12 +75,23 @@ on('state:changed', () => {
   }
   snapshot();
 });
+// v123: each pops out, bounces where it came from (sx: how far it skips sideways), then flies in.
 function pickup(key, n, x, y, i, kit) {
   const name = kit ? PLACEABLES[key]?.name : ITEMS[key]?.name;
-  G.fx.pickups.push({ key, n, kit, name, x: x + i * 3, y, t: -i * 0.06, fly: PICKUP.fly, hop: PICKUP.hop + i * 2 });
+  G.fx.pickups.push({ key, n, kit, name, x: x + i * 3, y, sx: (rand() - 0.5) * 2 * PICKUP.scatter, t: -i * 0.06, pop: PICKUP.pop, fly: PICKUP.fly, hop: PICKUP.hop + i * 2 });
 }
 // v71's 'picked': a placed object taken back up flies to the player too.
 on('picked', (p) => { if (ready && p?.kind) { const f = facing(); pickup(p.kind, 1, f.tx * T + 8, f.ty * T + 8, 0, true); } });
+
+// ---- v123: watered crops perk up and drip ----
+const perks = new Map();   // "map:x,y" -> seconds since the crop was watered
+on('watered', ({ map, x, y }) => perks.set(`${map}:${x},${y}`, 0));
+on('map:changed', () => perks.clear());
+// How many pixels the crop on a tile is lifted right now (0 when it was not just watered).
+export function perkLift(map, x, y) {
+  const t = perks.get(`${map}:${x},${y}`);
+  return t === undefined || t > PERK.dur ? 0 : Math.round(Math.sin(t / PERK.dur * Math.PI) * PERK.lift);
+}
 
 // ---- combat: damage numbers, sparks, the player's hurt flash ----
 on('monster:hit', ({ x, y, dmg, crit, kx, ky }) => {
@@ -143,14 +154,20 @@ addUpdater((dt) => {
   for (const f of G.fx.floats) f.life -= dt;
   G.fx.floats = G.fx.floats.filter((f) => f.life > 0);
   for (const u of G.fx.pickups) {
-    const was = u.t; u.t += dt;
-    if (was < u.fly && u.t >= u.fly) {   // landed in the bag
+    const was = u.t, end = u.pop + u.fly; u.t += dt;
+    if (was < end && u.t >= end) {   // landed in the bag
       floatText(G.S.x, G.S.y - 22, `+${u.n} ${u.name || ''}`, '#fffbe8', { life: PICKUP.label, rise: 14, pop: true, stack: true });
       burst(G.S.x, G.S.y - 14, IMPACT.hit, 4, { speed: 20, up: 10, size: 1, life: 0.3, gravity: 0 });
       G.bounce = 0.15;
     }
   }
-  G.fx.pickups = G.fx.pickups.filter((u) => u.t < u.fly);
+  G.fx.pickups = G.fx.pickups.filter((u) => u.t < u.pop + u.fly);
+  for (const [k, t] of perks) {   // v123: drips off a watered crop
+    perks.set(k, t + dt);
+    if (t > PERK.dripFor) { perks.delete(k); continue; }
+    const [map, at] = k.split(':'), [x, y] = at.split(',').map(Number);
+    if (map === G.S.map && rand() < dt * PERK.drips / PERK.dripFor) burst(x * T + 3 + rand() * 10, y * T + 5 + rand() * 4, IMPACT.water, 1, { speed: 2, up: 0, size: 1, life: 0.35, gravity: 90, z: 4 });
+  }
   if (G.bounce > 0) G.bounce -= dt;
 });
 

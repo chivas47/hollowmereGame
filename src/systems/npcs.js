@@ -17,6 +17,7 @@ import { GIFT_POINTS, BIRTHDAY_MULT, UNIVERSAL } from '../data/gifts.js';
 import { CANDIDATES, HEART_CAP, BOUQUET, JEALOUSY, DATE_LINES, PENDANT, WEDDING_DAYS, SPOUSE_CAP, SPOUSE_LINES } from '../data/romance.js';
 import { drawPerson, drawBubble, drawBlink } from '../render/sprites.js';
 import { MOTION } from '../data/animation.js';
+import { lean } from './wind.js';
 import { tileOf } from './world.js';
 import { tilePath, nextHop } from './routes.js';
 import { recalcStats } from './upgrades.js';
@@ -292,7 +293,7 @@ addEntities(() => NPCRT.filter((n) => n.visible && n.map === G.S.map).map((n) =>
   y: n.y,
   draw: (c) => {
     const look = lookOf(n.def);
-    drawPerson(c, n.x, n.y, n.dir, n.moving, n.walkT, look);
+    drawPerson(c, n.x, n.y, n.dir, n.moving, n.walkT, look, lean(n.x));
     if (blinks(n, NPCRT.indexOf(n))) drawBlink(c, n.x, n.y, n.dir, look);
     if (G.S.npcs[n.id].talked !== G.S.day && G.talking !== n.id) drawBubble(c, n.x, n.y);
   },

@@ -43,8 +43,12 @@ export const COMBO = {
 export const SLAM_RADIUS = 26;   // the club slam's shockwave reaches this far from the impact point
 export const HIT_STOP = 0.06;    // seconds a struck monster and the swing hold still on contact
 
-// Pickups: an item flies from where it was gathered to the player, then a "+n Name" label floats up.
-export const PICKUP = { fly: 0.32, label: 1.1, hop: 14, max: 6 };
+// Pickups: an item pops out where it was gathered, bounces, flies to the player, then a "+n Name" label floats up.
+export const PICKUP = { fly: 0.32, label: 1.1, hop: 14, max: 6, pop: 0.3, popUp: 9, scatter: 5 };   // v123: pop: seconds an item bounces where it came from before flying
+// v123: a watered crop perks up (lifts `lift` px over `dur` s) and drips for `dripFor` s, about `drips` drops.
+export const PERK = { dur: 0.35, lift: 1.5, drips: 4, dripFor: 0.7 };
+// v123: wind in hair and clothes: from this much lean (systems/wind.js) a strand and the shirt hem flick, `rate` times a second.
+export const FLUTTER = { from: 0.35, rate: 5 };
 // Crafting: the "made it" pose with the item held overhead.
 export const CRAFTED = { dur: 1.0 };
 // Placing: a short crouch, a pop and a dust ring.

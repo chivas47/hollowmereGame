@@ -9,6 +9,7 @@ import { STABLE } from '../data/upgrades.js';
 import { moveBox, playerTile, currentMap, placePlayer } from './world.js';
 import { outfitPal } from './clothing.js';
 import { rooted } from './animation.js';
+import { lean } from './wind.js';
 import { drawHeld, drawRod, drawCrafted, swingAngle, handPoint } from '../render/animation.js';
 import { DIRS, OPPOSITE } from '../core/constants.js';
 import { MOTION } from '../data/animation.js';
@@ -87,7 +88,7 @@ function drawBody(c, x, y, moving) {
   if (G.fishing && a?.kind !== 'rod' && G.S.dir === 'up') G.rodTip = drawRod(c, x, y, G.S.dir, rodBend());
   const tail = !a && M.tail, dir = a ? a.dir : tail ? tail.a.dir : shown();
   if (tail && dir === 'up') lowered(c, tail, x, y);
-  drawPerson(c, x + ox, y + oy, dir, moving, G.walkT, pal);
+  drawPerson(c, x + ox, y + oy, dir, moving, G.walkT, pal, lean(x));   // v123: wind in the hair and clothes
   if (!a && !moving && M.blink > 0) drawBlink(c, x + ox, y + oy, dir, pal);
   if (tail && dir !== 'up') lowered(c, tail, x, y);
   if (held && !behind) drawHeld(c, a, x + ox, y + oy);

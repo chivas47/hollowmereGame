@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v123: The world answers back
+- Watering a crop makes it perk up for a moment and drip.
+- Picked-up items pop out, bounce once where they came from, then fly to you; the "+n Name" label follows a moment later.
+- Hair and shirts stir in the wind outdoors, the player's and the neighbours': a loose strand and a flapping hem, faster in a storm.
+- Looks only: nothing saved, no prices, energy or keys changed.
+
 ## v122: The arrival and the first week
 - A new farm opens with a short scene after the new game screen: the cart at the end of the east road, and Bram meeting you by the shipping bin with where to go first.
 - One goal a day for the first week: break ground, water the rows, say hello, live off the land, first sale, into town, the Hollow. The open goal leads the objective reminder and the journal; the story waits while one is open. A goal done early counts quietly.

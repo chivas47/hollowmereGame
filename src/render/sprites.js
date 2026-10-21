@@ -2,6 +2,7 @@
 import { T } from '../core/constants.js';
 import { CROPS } from '../data/crops.js';
 import { TURNS, TURN_STEPS } from '../data/furniture.js';
+import { FLUTTER } from '../data/animation.js';
 import { r, blink } from './pixel.js';
 import { ready, tinted, frame, sheet } from './sheets.js';
 import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET, DEBRIS_SHEET, GIANTS_SHEET, PLACED_SHEET, FURN_SHEET, SOIL_SHEET, ALDERS_SHEET, FENCES_SHEET, FIXTURES_SHEET, CHILDREN_SHEET, GLOW_SHEET, BUNTING_SHEET, PENS_SHEET } from '../data/sprites.js';
@@ -190,10 +191,23 @@ function sheetPerson(c, px, py, dir, moving, walkT, p) {
   frame(c, tinted(P.sheet, P.layers, layers, P.size), f, P.size, Math.round(px) + P.origin[0], Math.round(py) + P.origin[1]);
 }
 
-export function drawPerson(c, px, py, dir, moving, walkT, p) {
+// v123: wind in the hair and clothes. wind is the lean where they stand (systems/wind.js, about 0 to 1, + is
+// to the right): past FLUTTER.from a loose strand flicks beside the head (two for long hair) and the shirt's hem
+// flaps, faster in stronger wind.
+function flutter(c, px, py, p, wind) {
+  if (Math.abs(wind) < FLUTTER.from) return;
+  const s = wind > 0 ? 1 : -1, x = Math.round(px), y = Math.round(py);
+  const on = Math.floor(performance.now() / 1000 * FLUTTER.rate * (0.6 + Math.abs(wind))) % 2, side = s > 0 ? x + 4 : x - 5;
+  r(c, side, y - 12 + on, 1, 1, p.hair);
+  if (p.long) r(c, side, y - 9 + on, 1, 2, p.hair);
+  if (on) r(c, side + s, y - 6, 1, 1, p.shirt);
+}
+
+export function drawPerson(c, px, py, dir, moving, walkT, p, wind = 0) {
   const x = Math.round(px) - 5, y = Math.round(py) - 15, st = moving ? Math.floor(walkT * 8) % 2 : 0, eye = '#2b211a';
   if (ready(PERSON.sheet)) {
     sheetPerson(c, px, py, dir, moving, walkT, p);
+    flutter(c, px, py, p, wind);
     if (p.hat) (HATS[p.hatStyle] || HATS.straw)(c, x, y, p.hat, p.band || p.hat, p.hair);
     return;
   }
@@ -215,6 +229,7 @@ export function drawPerson(c, px, py, dir, moving, walkT, p) {
     r(c, x + 2, y + 2, 3, 4, p.hair); r(c, x + 6, y + 4, 1, 1, eye);
     if (p.long) r(c, x + 1, y + 6, 3, 3, p.hair); if (p.beard) r(c, x + 4, y + 5, 4, 2, p.hair);
   }
+  flutter(c, px, py, p, wind);
   if (p.hat) (HATS[p.hatStyle] || HATS.straw)(c, x, y, p.hat, p.band || p.hat, p.hair);
   else r(c, x + 2, y + 1, 6, 1, p.hair);
 }
