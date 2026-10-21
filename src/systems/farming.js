@@ -2,7 +2,7 @@
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addInteraction, addLayer } from '../core/registry.js';
+import { addInteraction, addLayer, addPrompt } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { CROPS } from '../data/crops.js';
 import { ITEMS } from '../data/items.js';
@@ -121,3 +121,10 @@ addLayer(10, (c) => {
 export function ripenAll() {
   for (const s of [...Object.values(G.S.soil), ...Object.values(G.S.greenSoil), ...Object.values(G.S.islandSoil)]) if (s.crop && !s.crop.dead) s.crop.age = s.crop.need || CROPS[s.crop.type].days;
 }
+
+addPrompt(50, ({ tx, ty, tile, mapId }) => {   // v112: the HUD's prompt
+  const s = soilOf(mapId)?.[`${tx},${ty}`];
+  if (tile !== 'g' || !s?.crop) return null;
+  if (s.crop.dead) return 'Clear the withered crop';
+  return isRipe(s.crop) ? `Harvest ${CROPS[s.crop.type].name}` : null;
+});

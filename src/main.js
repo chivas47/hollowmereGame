@@ -92,7 +92,10 @@ import './systems/indoors.js';   // v100: indoor light, windows, rain on the gla
 
 // UI
 import './ui/toast.js';
+import './ui/hudPrefs.js';   // v112: HUD size and visibility
 import './ui/hud.js';
+import './ui/goal.js';   // v112: the objective reminder
+import './ui/prompt.js';   // v112: what Use will do
 import './ui/dialogs.js';
 import './ui/inventory.js';
 import './ui/workshop.js';

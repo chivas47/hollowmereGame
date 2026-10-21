@@ -188,7 +188,7 @@ src/
     nuts.js           the bridge and the island trader (ui:bridge, ui:islandshop, v66; ui:peak, v67)
     social.js         the social menu (F, or the Friends button) and letters (v48)
     menu.js           the pause menu (Esc or the Menu button): settings, save files, debug tools, controls (v96)
-    dom.js toast.js modal.js hud.js hotbar.js dialogs.js inventory.js
+    dom.js toast.js modal.js hud.js hudPrefs.js goal.js prompt.js hotbar.js dialogs.js inventory.js
     workshop.js mine.js input.js debugPanel.js
     crafting.js (craft menu, placed-object dialog) barn.js village.js (board, festival)
 tools/
@@ -200,7 +200,7 @@ tools/
 
 Systems must stay importable without a DOM (and without audio: systems only emit `sfx`, never import `src/audio/`): keep `document` and `window` inside functions or in `ui/`, never at module top level in `core/`, `data/`, `systems/` or `render/`. tools/balance.mjs depends on it.
 
-## The four registries (`core/registry.js`)
+## The registries (`core/registry.js`)
 
 | Function | Purpose | Notes |
 |---|---|---|
@@ -208,6 +208,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | `addLayer(z, fn)` | Draw something every frame. `fn(ctx)`. | z < 50 under characters, z >= 50 over. |
 | `addEntities(fn)` | Return `[{ y, draw(ctx) }]` for y-sorted things. | Player, NPCs, chickens, slimes. |
 | `addUpdater(fn)` | Per-frame logic, `fn(dt)` in seconds. | Skipped while `G.paused`. |
+| `addPrompt(priority, fn)` | The HUD's Use prompt (v112). `fn({tx, ty, tile, mapId, item})` returns a short phrase ("Talk to Ines") or null; it must not change anything. | Use the same priority as the matching `addInteraction`, so the prompt names what Use would actually do. |
 
 ### Interaction priorities in use
 
@@ -320,6 +321,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 |---|---|---|---|
 | `state:changed` | none | everywhere via `changed()` | HUD, hotbar |
 | `toast` | message | `notify()` | ui/toast.js |
+| `hud:prefs` | none | ui/hudPrefs.js | ui/goal.js, ui/prompt.js (v112) |
 | `game:loaded` | none | main.js, reset | forage, upgrades (recalc), coop (place), mine (eject) |
 | `game:reset` | none | ui/dialogs.js | renderer cache, npcs, coop, fishing |
 | `map:changed` | map id | player.js, days.js, mine.js | fishing, monsters |

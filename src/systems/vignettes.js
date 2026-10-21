@@ -4,7 +4,7 @@
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, emit, notify } from '../core/events.js';
-import { addInteraction, addEntities } from '../core/registry.js';
+import { addInteraction, addEntities, addPrompt } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { MAPS } from '../data/maps.js';
 import { VIGNETTES, VIGNETTE } from '../data/vignettes.js';
@@ -178,3 +178,5 @@ addEntities(() => {
     draw: (c) => ART[v.art](c, v.x * T, v.y * T, s),
   }));
 });
+
+addPrompt(73, ({ tx, ty, tile, mapId }) => (tile === VIGNETTE && here(mapId, tx, ty) ? 'Look' : null));   // v112

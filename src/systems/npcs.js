@@ -3,7 +3,7 @@
 import { G } from '../core/game.js';
 import { T, OPPOSITE, START } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
+import { addUpdater, addInteraction, addEntities, addPrompt } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { ITEMS } from '../data/items.js';
 import { NPCS, OUTFITS } from '../data/npcs.js';
@@ -291,3 +291,5 @@ addEntities(() => NPCRT.filter((n) => n.visible && n.map === G.S.map).map((n) =>
     if (G.S.npcs[n.id].talked !== G.S.day && G.talking !== n.id) drawBubble(c, n.x, n.y);
   },
 })));
+
+addPrompt(100, ({ tx, ty }) => { const n = npcAt(tx, ty); return n ? `Talk to ${n.def.name}` : null; });   // v112: the HUD's prompt

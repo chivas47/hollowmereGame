@@ -6,7 +6,7 @@
 import { G } from '../core/game.js';
 import { T, END } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addInteraction, addEntities, addLayer } from '../core/registry.js';
+import { addInteraction, addEntities, addLayer, addPrompt } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { MAPS } from '../data/maps.js';
 import { STONE, STONE_TILE, BLESSINGS, STONE_LINES, FLOAT, floatOn } from '../data/traditions.js';
@@ -115,3 +115,5 @@ const drawLantern = (c, x, y) => {
 };
 addLayer(12, (c) => { for (const l of lanterns()) drawLantern(c, l.x, l.y); });
 addLayer(1001, (c) => { for (const l of lanterns()) r(c, l.x - 1, l.y - 2, 2, 2, '#fff6d0'); });   // over the dark
+
+addPrompt(73, ({ tile, mapId }) => (tile === STONE_TILE && mapId === STONE.map ? 'Touch the wishing stone' : null));   // v112

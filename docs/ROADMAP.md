@@ -111,6 +111,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 48 | Footsteps by surface | feature | done (chivas47/hollowmereGame#105) | Footsteps that sound like grass, path, sand, stone, wood, snow or wet ground, hooves on horseback, at the Ambience volume with a Steps switch. Asked for by Nuno, October 2026 (from the world-detail gap list). |
 | 49 | Local traditions | feature | done (chivas47/hollowmereGame#106) | Customs outside the festival calendar: a wishing stone in the village with one blessing a day (Stardew's Statue of Blessings) and the Lantern Float on the beach on Summer 28 (Stardew's Moonlight Jellies). Asked for by Nuno, October 2026. |
 | 50 | Small stories outdoors | feature | in progress (chivas47/hollowmereGame#107) | Little scenes in every outdoor area (not the farm) that say something about a neighbour, each with a line to read, some changing with the season; the outdoor version of the cottages' lines. Asked for by Nuno, October 2026. |
+| 51 | Gameplay HUD | feature | in progress (chivas47/hollowmereGame#108) | Prompts for what Use does by the faced tile, an objective reminder that can be hidden, notifications that stack and fade, health and water bars only when they matter, a second currency only where it is spent, HUD size and full, minimal or hidden (V). Asked for by Nuno, October 2026. |
 | 33 | Local two-player | feature | needs decision | Same-screen co-op is possible without a server but touches every system. Nuno to decide whether it is worth it. |
 
 ## Done
