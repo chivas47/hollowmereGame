@@ -1,7 +1,7 @@
 # Roadmap
 
 The work queue for the feature loop in `CLAUDE.md`. Nuno owns this list: order, scope and what goes on it.
-Status: `next` (do it now, top first), `queued`, `in progress (PR link)`, `done (PR link)`, `needs decision`.
+Status: `next` (do it now, top first), `queued`, `in progress (PR link)`, `done (PR link)`, `needs decision`, `not now` (Nuno decided against it for now).
 
 ## The full-genre plan (from Nuno's feature guide, October 2026)
 
@@ -119,7 +119,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 55 | The world answers back | feature | done (chivas47/hollowmereGame#119) | Crops perk up and drip when watered, dropped items pop and bounce before flying to you, hair and clothes stir in the wind. Water and foliage already move (41, 42). Asked for by Nuno, October 2026 (from the animation polish list). |
 | 56 | Neighbour reactions | feature | done (chivas47/hollowmereGame#120) | Emote bubbles and small gestures: delight at a loved gift, a frown at a disliked one, a wave on greeting, surprise, a sigh in the rain. Stardew's emotes are the counterpart. Asked for by Nuno, October 2026 (from the animation polish list). |
 | 57 | Motion settings | feature | done (chivas47/hollowmereGame#121) | Particles full, fewer or off, a cap on how many show at once, screen shake and hit-stop on or off, an animation speed for cosmetic motion only (tool swings keep their timing, since they set how fast tools work). Asked for by Nuno, October 2026 (from the animation polish list). |
-| 33 | Local two-player | feature | needs decision | Same-screen co-op is possible without a server but touches every system. Nuno to decide whether it is worth it. |
+| 33 | Local two-player | feature | queued | Same-screen co-op with a second controller (Nuno: yes, October 2026). Touches every system, so it is split into several PRs, planned when it comes up: a second farmer and their input, the shared camera, then which systems count both players. |
 
 ## The modern-standards plan (October 2026)
 
@@ -130,13 +130,13 @@ Every system in the Stardew feature guide is built (items 1 to 54). What the gam
 | 58 | Dead exports | fix | done (chivas47/hollowmereGame#112) | Removed the 12 exports nothing used (`petPos`, `isFurniture`, `lostCount`, `ringName`, `toolEnchant`, `canUndo`, `KEEPER`, `claimable`, `PIECE_SHAPES`, `ROOMMATE`, `SWORD_DAMAGE`, `ARTISAN_PREFIX`; keep `fishing.__start`, a test hook), and the import only one of them needed. `fishing.__start` stays as a test hook. |
 | 59 | Unit tests | tooling | done (chivas47/hollowmereGame#113) | `node --test` (built in, no build step, no dependency) over pure logic: `merge()` and the save migrations, time and seasons, quality prices, the economy. CI runs it beside the simulator. The feature loop gains a step: new pure logic gets a test. |
 | 60 | Save safety | feature | done (chivas47/hollowmereGame#114) | A schema version on the state and one ordered list of migrations instead of checks spread through `merge()`; a failed save (storage full) tells the player instead of failing silently; the last night's save kept as a backup to restore from the menu; saved files from old versions committed as fixtures that item 59's tests load. |
-| 61 | Save slots | feature | needs decision | Several farms in one browser, each with its own export (Stardew keeps any number of saves). Nuno: how many slots, and whether the backup from 60 is per slot. |
+| 61 | Save slots | feature | done (chivas47/hollowmereGame#123) | Three farms per browser (Nuno's choice, October 2026), each with its own save, morning copy and export; a Farms dialog in the menu; older saves become farm 1. |
 | 62 | Key rebinding | feature | done (chivas47/hollowmereGame#115) | Rebind movement, Use, hotbar and menu keys in the settings, stored per browser like the sound settings; the controls list and the keys shown on buttons follow it. Before 52c so the controller maps onto the same actions. |
 | 63 | Readability and colour | feature | done (chivas47/hollowmereGame#116) | Text size beyond the HUD (the HUD size slide exists; dialogs, menus and the bag do not scale), colour-blind safe signals (quality, ready crops, meters marked by shape as well as colour), a high-contrast HUD. Goes with 57 (motion settings) as the accessibility set. |
 | 64 | Install and play offline | feature | done (chivas47/hollowmereGame#117) | A web app manifest and a service worker that caches the game files, so it installs from the browser and runs without a connection. Static files only, so rule 2 holds; the worker must update cleanly on a new version. |
 | 65 | Arrival and the first week | feature | done (chivas47/hollowmereGame#118) | An opening scene arriving at the farm and a guided first week (a goal a day: clear, plant, meet, ship) on top of the existing hints. Stardew's intro and first-week quests are the counterpart; our own story and text. |
-| 66 | The year-three reckoning | feature | needs decision | A judgement of the farm at the start of year three with a reward and a way to ask again (Stardew's evaluation by role). Nuno: who judges and what it is called; everything about it must be original. |
-| 67 | Translations | feature | needs decision | Move UI and data text behind a lookup so the game can be translated. Touches every data file; worth it only if Nuno wants other languages. |
+| 66 | The year-three reckoning | feature | next | A judgement of the farm at the start of year three with a reward and a way to ask again (Stardew's evaluation by role). Nuno: Bram judges it, as the one who built the bin and met you on arrival; the name and everything about it original. |
+| 67 | Translations | feature | not now | Move UI and data text behind a lookup so the game can be translated. Touches every data file; worth it only if Nuno wants other languages. |
 
 ## Done
 

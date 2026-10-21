@@ -12,9 +12,9 @@ sw.js                 v121: service worker: network first (no-cache for the game
 src/
   main.js             boot: imports every system and UI module, runs the frame loop
   core/
-    constants.js      T=16 tile px, W=24 x H=16 tiles, START 6:00, END 2:00, TICK, SAVE_KEY, MORNING_KEY, DIRS
+    constants.js      T=16 tile px, W=24 x H=16 tiles, START 6:00, END 2:00, TICK, SAVE_KEY, SLOTS, SLOT_KEY, DIRS
     game.js           G: shared runtime object (G.S is the save; keys, useHeld, paused, lock, swing, fishing, hurtT)
-    state.js          newState(), merge(saved), load(), save({ night }) (localStorage), restoreMorning(), exportSave(), importSave(text)
+    state.js          newState(), merge(saved), load(), save({ night }) (localStorage), restoreMorning(), exportSave(), importSave(text); v127: currentSlot(), slotInfo(n), useSlot(n)
     migrations.js     v118: MIGRATIONS (ordered save upgrades), SAVE_VERSION, migrate(s, saved); merge() runs it
     events.js         on(event, fn), emit(event, data), changed(), notify(msg)
     controls.js       v119: key bindings per browser: actionOf(code), keyName(action) for messages, bind(), resetControls()
@@ -212,6 +212,7 @@ src/
     dom.js toast.js modal.js (openModal(html, actions, {wide})) hud.js hudPrefs.js goal.js prompt.js hotbar.js dialogs.js
     workshop.js mine.js input.js (keys go through core/controls.js actionOf; v126: runAction(), escape() for the pad too) debugPanel.js
     offline.js        v121: registers sw.js and hands it the files the first visit loaded
+    slots.js          v127: the menu's Farms dialog (three save slots)
     motion.js         v125: the menu's Particles, Shake, Hit-stop and Motion speed buttons
     gamepad.js        v126: polls the pad: walking, actions, held A; in dialogs and the menu, focus moves and A presses
     controls.js       v119: the menu's Controls list (click a key, press the new one) and every <kbd data-control> label
@@ -389,7 +390,7 @@ The `report` object collects overnight results: `passedOut, grown, payout, withe
 
 ## State
 
-- `G.S` is the whole save (see `newState()` in core/state.js). It is written to localStorage on sleep and when the tab is hidden; sleep also writes this morning's copy (MORNING_KEY), which load() falls back to if the live save cannot be read. `G.S.v` says which steps in core/migrations.js a save has had: a new field with a plain default goes in `newState()`; old data that changes shape or a value worked out from other fields is a new step at the end of MIGRATIONS, with a test.
+- `G.S` is the whole save (see `newState()` in core/state.js). It is written to localStorage on sleep and when the tab is hidden; sleep also writes this morning's copy (the slot's key plus -morning; v127: three slots, slot 1 on SAVE_KEY so older saves are farm 1), which load() falls back to if the live save cannot be read. `G.S.v` says which steps in core/migrations.js a save has had: a new field with a plain default goes in `newState()`; old data that changes shape or a value worked out from other fields is a new step at the end of MIGRATIONS, with a test.
 - Positions are pixels: `x = tile * 16 + 8`, `y = tile * 16 + 12` (feet).
 - `G.lock` freezes the player for minigames. `G.paused` is set by any open dialog.
 - Derived stats (`maxw`, `maxEnergy`) come from upgrade tiers. Call `recalcStats()` from systems/upgrades.js after changing tiers or bonuses.

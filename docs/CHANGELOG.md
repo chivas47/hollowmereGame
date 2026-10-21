@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v127: Save slots
+- Up to three farms in one browser. Farms in the menu shows each one (name, date, gold) and switches between them; an empty slot starts a new farm. Each farm keeps its own save and morning copy, and the game reopens on the last one played.
+- Your existing farm is farm 1; nothing about it changes.
+- Nothing about play, prices or keys changed.
+
 ## v126: Controller support
 - Play with a gamepad: walk with the stick or d-pad, A to use (hold it for the fishing bar), X bag, Y crafting, View journal, LB and RB through the hotbar, LT seeds, RT turn furniture, R3 whistle, Menu for the menu.
 - Dialogs and the menu: the stick or d-pad moves between buttons, left and right move a slider, A presses, B goes back.

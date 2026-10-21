@@ -5,8 +5,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { G } from '../src/core/game.js';
 import { on } from '../src/core/events.js';
-import { SAVE_KEY, MORNING_KEY } from '../src/core/constants.js';
-import { newState, merge, save, load, restoreMorning } from '../src/core/state.js';
+import { SAVE_KEY } from '../src/core/constants.js';
+import { newState, merge, save, load, restoreMorning, slotInfo, useSlot, currentSlot } from '../src/core/state.js';
 import { SAVE_VERSION } from '../src/core/migrations.js';
 
 const OLD = ['v15', 'v50', 'v90', 'v117'];
@@ -84,6 +84,29 @@ test('a save that fails tells the player', () => {
   save();
   assert.equal(toasts.length, 1);
   assert.match(toasts[0], /could not be saved/);
-  assert.equal(localStorage.getItem(MORNING_KEY), null);
+  assert.equal(localStorage.getItem(`${SAVE_KEY}-morning`), null);
+  delete globalThis.localStorage;
+});
+
+test('slot 1 is where every older save already lives', () => {
+  globalThis.localStorage = fakeStorage();
+  localStorage.setItem(SAVE_KEY, JSON.stringify({ ...newState(), gold: 777 }));
+  assert.equal(currentSlot(), 1);
+  assert.equal(load().gold, 777);
+  delete globalThis.localStorage;
+});
+
+test('each slot keeps its own farm and morning copy, and an empty one starts a new farm', () => {
+  globalThis.localStorage = fakeStorage();
+  G.S.gold = 100; save({ night: true });                                   // slot 1
+  assert.equal(useSlot(2).profile, null);                                  // empty: a new farm
+  assert.equal(slotInfo(2), null);
+  G.S = newState(); G.S.gold = 5; G.S.profile = { name: 'B', farm: 'Ash' }; save({ night: true });
+  assert.deepEqual(slotInfo(2), { farm: 'Ash', name: 'B', day: 1, gold: 5 });
+  assert.equal(useSlot(1).gold, 100);
+  assert.equal(restoreMorning().gold, 100);
+  assert.equal(useSlot(2).gold, 5);
+  assert.equal(localStorage.getItem('hollowmere-slot'), '2');              // remembered for the next visit
+  useSlot(1);
   delete globalThis.localStorage;
 });
