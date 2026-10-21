@@ -46,6 +46,7 @@ src/
     storage.js        CHEST_ROOM, SIGN_LENGTH, WORLD (the journal's map grid), WORLD_PARENT (v71)
     journal.js        v114: STORY (the main line: each step's name, hint and map), LANDMARKS per world map place, PIN_MAX, PIN_LENGTH, LOG_MAX
     firstweek.js      v122: ARRIVAL (the opening scene's pages), FIRST_WEEK (a goal a day: name, hint, map, done(S))
+    emotes.js         v124: EMOTES (each reaction's length and gesture), GIFT_EMOTE by taste tier, SIGH (rain)
     bag.js            v113: BAG_KINDS (the Bag's category tabs and icon tints), ITEM_KIND (every item's kind), ICON_COLOURS, MADE_FROM and madeFrom() (wine_plum -> plum), BAG_SORTS, BAG_VIEWS
     theatre.js        THEATRE, FILMS, SNACKS, TASTES (guests' film and snack kinds), ARCADE (v70)
     island.js         BOAT: repair materials, fare and hours (v65)
@@ -79,6 +80,7 @@ src/
     hints.js          facts() and hintsNow() for the journal and the morning tip; the tool tip after three silent presses of Use (G.S.hints) (v101)
     journal.js        v114: story steps checked against the save, objectives() (main and optional, for the journal and the HUD), tracked(), the finished-quest log, places found, map pins, quest markers, recap() (G.S.journal)
     firstweek.js      v122: weekGoal() (the open goal), checkWeek(); goals read from the save; journal.js shows the goal first
+    emotes.js         v124: emote(id, kind), emoteOf(id), gestureOffset(); npcs.js starts them and draws them
     pets.js           the farm pet: wandering, pats, the water bowl, gifts, hats
     stable.js         stable building, horse riding, following between maps, whistle
     world.js          tile queries, collision, facing(), placePlayer(), useEnergy(), soilOf(map), placeKey()/parsePlaceKey()

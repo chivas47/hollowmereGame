@@ -6,6 +6,7 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities, addPrompt } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { ITEMS } from '../data/items.js';
+import { MAPS } from '../data/maps.js';
 import { NPCS, OUTFITS } from '../data/npcs.js';
 import { festivalOn, hoursOf, FESTIVAL_SPOTS } from '../data/festivals.js';
 import { scheduleFor, spouseDay, festivalDay } from '../data/schedules.js';
@@ -15,7 +16,10 @@ import { HOMES, homeMap, SPOUSE_HOME } from '../data/homes.js';
 import { SCENES, SCENE_HEARTS } from '../data/scenes.js';
 import { GIFT_POINTS, BIRTHDAY_MULT, UNIVERSAL } from '../data/gifts.js';
 import { CANDIDATES, HEART_CAP, BOUQUET, JEALOUSY, DATE_LINES, PENDANT, WEDDING_DAYS, SPOUSE_CAP, SPOUSE_LINES } from '../data/romance.js';
-import { drawPerson, drawBubble, drawBlink } from '../render/sprites.js';
+import { drawPerson, drawBubble, drawBlink, drawEmote } from '../render/sprites.js';
+import { rng } from '../render/pixel.js';
+import { emote, emoteOf, gestureOffset } from './emotes.js';
+import { GIFT_EMOTE, SIGH } from '../data/emotes.js';
 import { MOTION } from '../data/animation.js';
 import { lean } from './wind.js';
 import { tileOf } from './world.js';
@@ -184,6 +188,7 @@ export function startTalk(n) {
   n.dir = OPPOSITE[G.S.dir];
   let extra = '';
   if (st.talked !== G.S.day) {
+    emote(n.id, !st.talked && !st.pts ? 'surprise' : 'wave');   // v124: the day's first hello; surprise on first meeting
     st.talked = G.S.day; gain(n.id, TALK_POINTS * (fest || buff('talk') ? 2 : 1));   // festival talks count double (v110: and with the hearth's blessing)
     extra = applyReward(n); changed();
   }
@@ -222,7 +227,7 @@ function giveBouquet(n) {
   else if (st.dating) text = 'Another one? You already have my answer.';
   else if (hearts(st) < BOUQUET.hearts) text = 'Flowers? I... I do not know you well enough for that yet. Keep them.';
   else {
-    G.S.bag.bouquet--; st.dating = true;
+    G.S.bag.bouquet--; st.dating = true; emote(n.id, 'love');
     text = 'Flowers? For me? Oh. Yes. Yes, I would like that very much.';
     changed();
   }
@@ -239,7 +244,7 @@ function givePendant(n) {
   else if (hearts(st) < PENDANT.hearts) text = 'Oh. It is beautiful. But it is too soon. Ask me again, one day.';
   else if ((S.upgrades.house || 0) < PENDANT.houseTier) text = 'Yes. Yes! But where would we live? That little farmhouse has no room for two. Bram could fix that.';
   else {
-    S.bag.pendant--; S.wedding = { id: n.id, day: S.day + WEDDING_DAYS };
+    S.bag.pendant--; S.wedding = { id: n.id, day: S.day + WEDDING_DAYS }; emote(n.id, 'love');
     text = 'Is this... yes. Yes! I will marry you.';
     extra = `The wedding is in ${WEDDING_DAYS} days.`;
     changed();
@@ -274,6 +279,7 @@ export function giveGift(n, item) {
   // v51: giving a gift to one partner while dating others upsets the others
   if (st.dating) for (const id of CANDIDATES) if (id !== n.id && dating(id)) gain(id, -JEALOUSY);
   const kind = giftTier(d, item), bday = isBirthday(d);
+  if (GIFT_EMOTE[kind]) emote(n.id, GIFT_EMOTE[kind]);   // v124: delight, a frown or worse
   gain(n.id, GIFT_POINTS[kind] * (bday ? BIRTHDAY_MULT : 1));
   st.known = { ...(st.known || {}), [item]: kind };   // v48: shown in the social menu
   const extra = applyReward(n);
@@ -292,11 +298,22 @@ const blinks = (n, i) => !n.moving && (performance.now() / 1000 + i * 1.37) % (M
 addEntities(() => NPCRT.filter((n) => n.visible && n.map === G.S.map).map((n) => ({
   y: n.y,
   draw: (c) => {
-    const look = lookOf(n.def);
-    drawPerson(c, n.x, n.y, n.dir, n.moving, n.walkT, look, lean(n.x));
-    if (blinks(n, NPCRT.indexOf(n))) drawBlink(c, n.x, n.y, n.dir, look);
-    if (G.S.npcs[n.id].talked !== G.S.day && G.talking !== n.id) drawBubble(c, n.x, n.y);
+    const look = lookOf(n.def), e = emoteOf(n.id), g = gestureOffset(e), x = n.x + g.x, y = n.y + g.y;
+    drawPerson(c, x, y, n.dir, n.moving, n.walkT, look, lean(n.x));
+    if (blinks(n, NPCRT.indexOf(n))) drawBlink(c, x, y, n.dir, look);
+    if (e) drawEmote(c, x, y, e.kind, e.k, look);   // v124
+    else if (G.S.npcs[n.id].talked !== G.S.day && G.talking !== n.id) drawBubble(c, n.x, n.y);
   },
 })));
+
+// v124: a neighbour standing out in the rain sighs now and then (its own rolls, so the game's are untouched).
+const sighRoll = rng(0x51a4);
+addUpdater((dt) => {
+  if (!SIGH.weathers.includes(G.S.weather)) return;
+  for (const n of NPCRT) {
+    const m = MAPS[n.map];
+    if (n.visible && !n.moving && n.map === G.S.map && m && !m.base && G.talking !== n.id && !emoteOf(n.id) && sighRoll() < dt / SIGH.every) emote(n.id, 'sigh');
+  }
+});
 
 addPrompt(100, ({ tx, ty }) => { const n = npcAt(tx, ty); return n ? `Talk to ${n.def.name}` : null; });   // v112: the HUD's prompt

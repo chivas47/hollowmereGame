@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v124: Neighbour reactions
+- Neighbours react: a heart and a hop for a loved gift, a note for a liked one, a frown or worse and a shake of the head for one they dislike, a wave on the day's first hello, a "!" the first time you meet, and a sigh now and then when they stand out in the rain.
+- Looks only: nothing saved, no friendship, prices or keys changed.
+
 ## v123: The world answers back
 - Watering a crop makes it perk up for a moment and drip.
 - Picked-up items pop out, bounce once where they came from, then fly to you; the "+n Name" label follows a moment later.
