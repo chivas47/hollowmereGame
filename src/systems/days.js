@@ -21,7 +21,7 @@ export function sleep(passedOut) {
 
   const sp = MAPS.house.spawn;   // you wake by your bed
   placePlayer('house', sp.x, sp.y, sp.dir);
-  save();
+  save({ night: true });
   emit('map:changed', 'house');
   changed();
   emit('day:report', report);

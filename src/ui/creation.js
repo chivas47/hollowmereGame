@@ -54,7 +54,7 @@ function finish() {
   startLayout(G.S);
   G.S.debris = null;
   emit('game:reset'); emit('game:loaded');
-  save();
+  save({ night: true });   // v118: a new farm's first morning
   changed();
 }
 

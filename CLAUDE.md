@@ -18,7 +18,7 @@ Work comes from `docs/ROADMAP.md`, top to bottom. Nuno decides what goes on it a
 For each item:
 
 1. **Branch** from the latest `main`. One item per branch and per pull request.
-2. **Build** it following the architecture: data in `src/data/`, logic in `src/systems/`, art in `src/render/`, DOM in `src/ui/`, one import in `main.js`, new save fields in `newState()` and `merge()`. Set its numbers by the Stardew scale above.
+2. **Build** it following the architecture: data in `src/data/`, logic in `src/systems/`, art in `src/render/`, DOM in `src/ui/`, one import in `main.js`, new save fields in `newState()` and `merge()`, a step in `core/migrations.js` when old data changes shape. Set its numbers by the Stardew scale above.
 3. **Teach the bot.** If the feature earns or spends gold, uses energy, or changes what the player can buy, update `tools/balance.mjs` so its bot uses it. The simulator is also the end-to-end smoke test: CI fails if it crashes.
 4. **Test the logic.** New or changed rules in `src/core/`, `src/data/` or `src/systems/` (a price, a formula, a save field and its `merge()` step) get a test in `tests/*.test.mjs`. Run `node --test 'tests/*.test.mjs'`; CI fails on any failing test. Test what a player would notice breaking, not drawing or DOM.
 5. **Balance report (advisory).** `node tools/balance.mjs --compare base.json` against a run from `main`. Warnings are information, not blockers: do not tune numbers away from the Stardew scale to clear them. Mention notable shifts in the PR.

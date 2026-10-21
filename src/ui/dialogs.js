@@ -176,7 +176,7 @@ export function confirmReset() {
     ['Start over', () => {
       G.S = newState(); G.S.time = START;
       emit('game:reset'); emit('game:loaded');
-      save(); closeModal(); changed();
+      save({ night: true }); closeModal(); changed();   // v118: this morning is the new farm's
       notify('A fresh field. Till the grass below the path.');
     }],
   ]);

@@ -10,9 +10,10 @@ styles.css            single dark "farmhouse at dusk" theme, tokens on :root
 src/
   main.js             boot: imports every system and UI module, runs the frame loop
   core/
-    constants.js      T=16 tile px, W=24 x H=16 tiles, START 6:00, END 2:00, TICK, SAVE_KEY, DIRS
+    constants.js      T=16 tile px, W=24 x H=16 tiles, START 6:00, END 2:00, TICK, SAVE_KEY, MORNING_KEY, DIRS
     game.js           G: shared runtime object (G.S is the save; keys, useHeld, paused, lock, swing, fishing, hurtT)
-    state.js          newState(), merge(saved), load(), save() (localStorage), exportSave(), importSave(text)
+    state.js          newState(), merge(saved), load(), save({ night }) (localStorage), restoreMorning(), exportSave(), importSave(text)
+    migrations.js     v118: MIGRATIONS (ordered save upgrades), SAVE_VERSION, migrate(s, saved); merge() runs it
     events.js         on(event, fn), emit(event, data), changed(), notify(msg)
     registry.js       addInteraction, addLayer, addEntities, addUpdater (+ run/draw/collect)
     time.js           dateParts(day), today(), fmtTime(minutes), dayEnd() (END, later with street lamps)
@@ -206,7 +207,8 @@ tools/
   sprites/          v82: scripts that build the placeholder sheets in assets/sprites/ (see its README.md)
 tests/                v117: unit tests, node --test 'tests/*.test.mjs' (run by CI)
   setup.mjs           freshFarm() (a new G.S) and withRolls() (fixed Math.random rolls)
-  *.test.mjs          one file per area: state (saves and migrations), time, quality, economy
+  *.test.mjs          one file per area: state, saves (old saves and storage), time, quality, economy
+  saves/              v118: real saves from v15, v50, v90 and v117, made by each version's own simulator
 ```
 
 Systems must stay importable without a DOM (and without audio: systems only emit `sfx`, never import `src/audio/`): keep `document` and `window` inside functions or in `ui/`, never at module top level in `core/`, `data/`, `systems/` or `render/`. tools/balance.mjs and tests/ depend on it.
@@ -368,7 +370,7 @@ The `report` object collects overnight results: `passedOut, grown, payout, withe
 
 ## State
 
-- `G.S` is the whole save (see `newState()` in core/state.js). It is written to localStorage on sleep and when the tab is hidden.
+- `G.S` is the whole save (see `newState()` in core/state.js). It is written to localStorage on sleep and when the tab is hidden; sleep also writes this morning's copy (MORNING_KEY), which load() falls back to if the live save cannot be read. `G.S.v` says which steps in core/migrations.js a save has had: a new field with a plain default goes in `newState()`; old data that changes shape or a value worked out from other fields is a new step at the end of MIGRATIONS, with a test.
 - Positions are pixels: `x = tile * 16 + 8`, `y = tile * 16 + 12` (feet).
 - `G.lock` freezes the player for minigames. `G.paused` is set by any open dialog.
 - Derived stats (`maxw`, `maxEnergy`) come from upgrade tiers. Call `recalcStats()` from systems/upgrades.js after changing tiers or bonuses.

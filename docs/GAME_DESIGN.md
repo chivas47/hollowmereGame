@@ -1023,7 +1023,8 @@ Stardew counterparts: basic, quality and deluxe fertilizer; speed-gro and deluxe
 
 ## Save files
 
-- The game autosaves to this browser on sleep and when the tab is hidden.
+- The game autosaves to this browser on sleep and when the tab is hidden. v118: if a save fails (storage full or blocked), a message says so and suggests exporting.
+- v118: going to bed also keeps the farm as it is that morning. Back to this morning (menu) loads it after a confirmation, and the game loads it by itself if the live save is missing or damaged. Starting a new farm, finishing the new game screen or loading a save makes that the morning's copy. A late-game save is about 35 KB, so the copy costs little.
 - Export save downloads `hollowmere-<season>-<day>-year-<n>.json` ({ game, version, saved, S }). Import save reads one back, shows its date and gold, and replaces the current farm only after confirmation. Files from older versions load like old saves.
 
 ### The Sunken Cavern (v38)
@@ -1101,6 +1102,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v118: One morning copy, not a history: a save that went wrong overnight is also the morning's copy. One farm per browser (save slots are item 61). Reloading the page saves first (the tab hides), so a farm put into storage by hand is overwritten unless the page is closed.
 - v114: Markers and pins are per place, not per tile: the map is a grid of places, not a drawn map, and has no paths between them. Quest markers point at where you hand in (the village board, the Lantern), not where the item is found. A save from before v114 counts every place it could reach as found (the dunes once the old wing is whole, the island once the boat is mended, the dig site once its bridge is fixed), and the story steps it had already passed as done "before this journal"; the finished-quest log starts empty, with totals. The balance bot does not open the journal (nothing in it earns or spends).
 - v113: The bag has no limit by design (Nuno dropped backpack slots, October 2026), so there is no splitting, merging or full-bag warning. No controller support (item 52c). Search matches names only. Icons are drawn per kind, not per item: two forage items of a similar colour look alike. The chest holds kinds, not slots, as before. The balance bot does not open the Bag (nothing in it earns or spends).
 - v111: The outdoor scenes are set when a game loads and only on open grass or sand, like signs; the balance bot does not load them, so its maps are unchanged. Neighbours do not visit or move them.
