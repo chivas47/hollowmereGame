@@ -34,6 +34,7 @@ import { NPCS } from '../data/npcs.js';
 import { BOUQUET } from '../data/romance.js';
 import { bouquetOnSale, buyBouquet } from '../systems/town.js';
 import { hintsNow, hintsOn } from '../systems/hints.js';
+import { keyName } from '../core/controls.js';
 
 const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
@@ -148,7 +149,7 @@ on('day:report', (r) => {
   if (r.pondAsk) html += '<p class="role">The fish pond is full. It wants something before it holds more: see the pond.</p>';
   if (r.helpers) html += `<p class="gift">The helpers harvested ${plural(r.helpers, 'crop')}. Collect them at the helper hut.</p>`;
   if (r.cave) html += '<p class="gift">Bram found a cave in the hill north of the farm, just above the bin. Go and have a look.</p>';
-  if (r.profession) html += '<p class="gift">A profession is waiting to be chosen: open the bag (I).</p>';
+  if (r.profession) html += `<p class="gift">A profession is waiting to be chosen: open the bag (${keyName('bag')}).</p>`;
   if (r.luck !== undefined) html += `<p class="role">${fortune(r.luck)}</p>`;
   if (r.recipes) html += `<p class="gift">Recipes arrived in the post: ${r.recipes.join(', ')}.</p>`;
   if (r.wishfruit) html += '<p class="gift">Something special turned up for you: a wishfruit. Eat it from the bag.</p>';

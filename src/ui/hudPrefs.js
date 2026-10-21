@@ -1,6 +1,7 @@
 // v112: HUD settings, kept per browser like Sound and Music (not part of the save): size, how much shows
 // (full, minimal or hidden, V to switch), the objective reminder and the Use prompts.
 import { emit } from '../core/events.js';
+import { keyName } from '../core/controls.js';
 import { $ } from './dom.js';
 
 const KEY = 'hollowmere-hud';
@@ -16,7 +17,7 @@ function apply() {
   MODES.forEach((m) => g.classList.toggle(`hud-${m}`, hud.mode === m));
   const pct = Math.round(hud.scale * 100);
   $('#hudScale').value = pct; $('#hudScaleVal').textContent = `${pct}%`;
-  $('#hudMode').innerHTML = `HUD: ${hud.mode} <kbd>V</kbd>`;
+  $('#hudMode').innerHTML = `HUD: ${hud.mode} <kbd data-control="hud">${keyName('hud')}</kbd>`;
   $('#goalToggle').textContent = `Objective: ${hud.goal ? 'on' : 'off'}`; $('#goalToggle').setAttribute('aria-pressed', String(hud.goal));
   $('#promptToggle').textContent = `Prompts: ${hud.prompts ? 'on' : 'off'}`; $('#promptToggle').setAttribute('aria-pressed', String(hud.prompts));
 }

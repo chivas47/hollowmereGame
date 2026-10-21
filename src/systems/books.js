@@ -10,6 +10,7 @@ import { SKILLS, levelFor } from '../data/skills.js';
 import { DISHES } from '../data/cooking.js';
 import { ITEMS } from '../data/items.js';
 import { placePlayer } from './world.js';
+import { keyName } from '../core/controls.js';
 
 export const hasRead = (k) => G.S.read.includes(k);
 export const mastered = (skill) => G.S.mastery.claimed.includes(skill);
@@ -50,7 +51,7 @@ on('gather', ({ skill, xp = 0 }) => {
   }
   if (!reading && xp > 0 && Math.random() < BOOK_FIND) {
     const k = `bk_${skill}`;
-    if (BOOKS[k]) { S.bag[k] = (S.bag[k] || 0) + 1; notify(`You found a book: ${ITEMS[k].name}! Read it from the bag (I).`); }
+    if (BOOKS[k]) { S.bag[k] = (S.bag[k] || 0) + 1; notify(`You found a book: ${ITEMS[k].name}! Read it from the bag (${keyName('bag')}).`); }
   }
 });
 

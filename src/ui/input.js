@@ -17,9 +17,23 @@ import { whistle } from '../systems/stable.js';
 import { cancelSiting } from '../systems/sites.js';
 import { turnFacing } from '../systems/house.js';
 import { undo } from '../systems/undo.js';
+import { actionOf } from '../core/controls.js';
 import { $, $$ } from './dom.js';
 
-const KEYMAP = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right' };
+const MOVES = ['up', 'down', 'left', 'right'];
+
+// v119: what each bound action does on a key press (core/controls.js maps keys to actions). Once per
+// press: holding the key does not repeat it. Walking and Use are handled apart, since they are held.
+const PRESS = {
+  seeds: () => selectSlot(SEED_SLOT),   // pick seeds, again to switch type
+  bag: () => emit('ui:inventory'), craft: () => emit('ui:craft'), friends: () => emit('ui:social'),
+  journal: () => emit('ui:journal'),   // v68: collections, notes, achievements, completion
+  mute: () => toggleAll(), whistle: () => whistle(),
+  hud: () => cycleHud(),   // v112: full, minimal or hidden HUD
+  turn: () => turnFacing(),   // v99: turn the furniture you face
+  undo: () => undo(),   // v99
+};
+HOTBAR.forEach((k, i) => { PRESS[`slot${i + 1}`] = () => selectSlot(i); });
 
 export function initInput(canvas) {
   addEventListener('keydown', (e) => {
@@ -28,25 +42,25 @@ export function initInput(canvas) {
     if (e.code === 'Escape' && G.siting) { cancelSiting(); return; }   // stop placing a building
     if (e.code === 'Escape') { openMenu(); return; }
     if (e.code === 'Backquote') { toggleDebug(); return; }
-    if (e.code === 'KeyI') { emit('ui:inventory'); return; }
-    if (e.code === 'KeyC') { emit('ui:craft'); return; }
-    if (e.code === 'KeyF') { emit('ui:social'); return; }
-    if (e.code === 'KeyJ') { emit('ui:journal'); return; }   // v68: collections, notes, achievements, completion   // v48: the social menu
-    if (e.code === 'KeyM') { toggleAll(); return; }
-    if (e.code === 'KeyV') { if (!e.repeat) cycleHud(); return; }   // v112: full, minimal or hidden HUD
-    if (e.code === 'KeyH') { whistle(); return; }
-    if (e.code === 'KeyR' && !e.ctrlKey && !e.metaKey) { if (!e.repeat) turnFacing(); return; }   // v99: turn the furniture you face
-    if (e.code === 'KeyU' || (e.code === 'KeyZ' && (e.ctrlKey || e.metaKey))) { e.preventDefault(); if (!e.repeat) undo(); return; }   // v99
-    if (e.code === 'KeyQ') { if (!e.repeat) selectSlot(SEED_SLOT); return; }   // pick seeds, again to switch type
-    if (KEYMAP[e.code]) { G.keys[KEYMAP[e.code]] = true; e.preventDefault(); return; }
-    if (e.code === 'Space' || e.code === 'KeyE') {
-      if (e.target.tagName === 'BUTTON' && e.code === 'Space') return;
+    if (e.ctrlKey || e.metaKey) {   // browser shortcuts stay the browser's, except Ctrl Z (undo)
+      if (e.code === 'KeyZ') { e.preventDefault(); if (!e.repeat) undo(); }
+      return;
+    }
+    const a = actionOf(e.code);
+    if (!a) return;
+    if (MOVES.includes(a)) { G.keys[a] = true; e.preventDefault(); return; }
+    if (a === 'use') {
+      if (e.target.tagName === 'BUTTON' && (e.code === 'Space' || e.code === 'Enter')) return;
       e.preventDefault(); G.useHeld = true; if (!e.repeat) act(); return;   // v41: held Use lifts the catch bar
     }
-    const m = /^Digit(\d)$/.exec(e.code);
-    if (m && !e.repeat && +m[1] >= 1 && +m[1] <= HOTBAR.length) selectSlot(+m[1] - 1);
+    if (a === 'undo') e.preventDefault();
+    if (!e.repeat) PRESS[a]();
   });
-  addEventListener('keyup', (e) => { if (KEYMAP[e.code]) G.keys[KEYMAP[e.code]] = false; if (e.code === 'Space' || e.code === 'KeyE') G.useHeld = false; });
+  addEventListener('keyup', (e) => {
+    const a = actionOf(e.code);
+    if (MOVES.includes(a)) G.keys[a] = false;
+    if (a === 'use') G.useHeld = false;
+  });
   addEventListener('blur', () => { G.keys = {}; G.useHeld = false; });
 
   $$('[data-dir]').forEach((b) => {

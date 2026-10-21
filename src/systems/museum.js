@@ -18,6 +18,7 @@ import { DISHES } from '../data/cooking.js';
 import { SKILLS, levelFor } from '../data/skills.js';
 import { NPCS } from '../data/npcs.js';
 import { r } from '../render/pixel.js';
+import { keyName } from '../core/controls.js';
 
 const M = () => G.S.museum;
 const baseLevel = (k) => levelFor(G.S.skills[k] || 0);   // food buffs do not count
@@ -34,7 +35,7 @@ function findNote() {
   if (!left.length) return false;
   const n = left[0];
   M().notes.push(n.id);
-  notify(`You find secret note #${n.id}. Read it in your journal (J).`);
+  notify(`You find secret note #${n.id}. Read it in your journal (${keyName('journal')}).`);
   emit('sfx', 'pickup');
   return true;
 }

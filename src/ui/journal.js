@@ -12,6 +12,7 @@ import { objectives, storyDone, track, setMarkers, markers, addPin, removePin, r
 import { NPCRT, hearts, heartStr, isCandidate } from '../systems/npcs.js';
 import { addJournalTab, redrawJournal } from './museum.js';
 import { $, esc } from './dom.js';
+import { keyName } from '../core/controls.js';
 
 const row = (title, text, btn = '') => `<div class="shoprow"><div><b>${title}</b><span>${text}</span></div>${btn ? `<div class="btns">${btn}</div>` : ''}</div>`;
 const when = (day) => { if (!day) return 'before this journal'; const p = dateParts(day); return `${p.season} ${p.d}, year ${p.year}`; };
@@ -75,7 +76,7 @@ addJournalTab('map', 'Map', () => {
 
 addJournalTab('people', 'People', () => {
   const S = G.S, at = Object.fromEntries(NPCRT.map((n) => [n.id, n]));
-  return `<p class="role">Press F for gifts and tastes.</p>${NPCS.map((d) => {
+  return `<p class="role">Press ${keyName('friends')} for gifts and tastes.</p>${NPCS.map((d) => {
     const st = S.npcs[d.id], met = st.talked || st.pts > 0, n = at[d.id];
     if (!met) return row(esc(d.name), 'Not met yet.');
     const status = d.id === S.spouse ? (S.roommate ? 'Roommate' : 'Married') : S.wedding?.id === d.id ? 'Engaged' : st.dating ? 'Dating' : isCandidate(d.id) ? 'Single' : 'Friend';

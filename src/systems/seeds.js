@@ -4,6 +4,7 @@ import { G } from '../core/game.js';
 import { changed, notify } from '../core/events.js';
 import { today } from '../core/time.js';
 import { CROPS } from '../data/crops.js';
+import { keyName } from '../core/controls.js';
 
 const inSeasonNow = (k) => CROPS[k].seasons.includes(today().season);
 
@@ -27,5 +28,5 @@ export function ensureUsefulSeed() {
 export function announce() {
   const S = G.S, c = CROPS[S.seedSel];
   const when = inSeasonNow(S.seedSel) ? '' : ` Grows in ${c.seasons.join(' or ')}.`;
-  notify(`Seeds: ${c.name}, ${S.seeds[S.seedSel]} left. Press Q to switch.${when}`);
+  notify(`Seeds: ${c.name}, ${S.seeds[S.seedSel]} left. Press ${keyName('seeds')} to switch.${when}`);
 }

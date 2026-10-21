@@ -2,10 +2,12 @@
 // now, the morning report shows the first, and pressing Use three times on the same tile with nothing happening
 // shows that tool's tip. Each hint: id, when(S, f) with f the facts systems/hints.js works out, and its text.
 // Ordered by how much they matter now: urgent first, then the next step of the core loop, then things to try.
+import { keyName } from '../core/controls.js';
+
 export const HINTS = [
   { id: 'late', when: (S) => S.time >= 24 * 60, text: 'It is past midnight. Get to a bed before 2 am, or you pass out and wake with only part of your energy.' },
-  { id: 'tired', when: (S, f) => S.energy < S.maxEnergy * 0.15 && !f.underground, text: 'You are nearly out of energy. Eat something from the bag (I), or go to bed: sleep fills it again.' },
-  { id: 'hurt', when: (S, f) => f.underground && S.hp < S.maxHp * 0.3, text: 'Your health is low. Eat something from the bag (I) or take the ladder back up.' },
+  { id: 'tired', when: (S, f) => S.energy < S.maxEnergy * 0.15 && !f.underground, get text() { return `You are nearly out of energy. Eat something from the bag (${keyName('bag')}), or go to bed: sleep fills it again.`; } },
+  { id: 'hurt', when: (S, f) => f.underground && S.hp < S.maxHp * 0.3, get text() { return `Your health is low. Eat something from the bag (${keyName('bag')}) or take the ladder back up.`; } },
   { id: 'can', when: (S, f) => S.water === 0 && f.dry > 0, text: 'Your watering can is empty. Face the pond, a river or any water with the can (2) and press Use to fill it.' },
   { id: 'dry', when: (S, f) => f.dry > 0 && !f.wet, text: 'Some crops are dry. Water them with the can (2) today, or they will not grow tonight.' },
   { id: 'ripe', when: (S, f) => f.ripe > 0, text: 'Some crops are ready. Face one and press Use to pick it, then drop it in the shipping bin by the house. The bin pays out overnight.' },

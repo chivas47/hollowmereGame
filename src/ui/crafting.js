@@ -12,6 +12,7 @@ import { accepted, loadMachine, collectMachine } from '../systems/artisan.js';
 import { animalDef, homeOf } from '../systems/livestock.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
+import { keyName } from '../core/controls.js';
 
 const needsText = (needs) => Object.entries(needs).map(([k, n]) => `${n} ${ITEMS[k].name} (you have ${G.S.bag[k]})`).join(', ');
 
@@ -44,7 +45,7 @@ function placedDialog() {
   if (def.kind === 'sprinkler') {
     html += `<p>Waters the ${sprinklerTiles(def, 0, 0).length} tiles around it every morning. Tilled soil only.</p>`;
   } else if (def.kind === 'furniture') {
-    html += `<p>Part of the house now.${canTurn(at.x, at.y) ? ' Turn it to face another way (R).' : ''}</p>`;
+    html += `<p>Part of the house now.${canTurn(at.x, at.y) ? ` Turn it to face another way (${keyName('turn')}).` : ''}</p>`;
   } else if (p.kind === 'silo') {
     html += `<p>Cutting grass gives hay half the time while a silo stands on the farm. Hay in the loft: <b>${G.S.hay}</b>.</p>`;
   } else if (def.kind === 'decor') {

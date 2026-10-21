@@ -7,6 +7,7 @@ import { WEAPONS } from '../data/weapons.js';
 import { CLOTHES } from '../data/clothing.js';
 import { MAPS } from '../data/maps.js';
 import { giveFind } from './gear.js';
+import { keyName } from '../core/controls.js';
 
 export const lodgeOpen = () => G.S.mineDeepest >= LODGE.opensAt;
 export const owns = (key) => (WEAPONS[key] ? G.S.weapons.includes(key) : !!G.S.wardrobe[key]);
@@ -21,7 +22,7 @@ export function buyGear(key) {
   S.gold -= o.cost;
   if (WEAPONS[key]) S.weapons.push(key); else S.wardrobe[key] = true;
   emit('sfx', 'coin');
-  notify(`You bought the ${itemName(key).toLowerCase()}. ${WEAPONS[key] ? 'Choose your weapon in the bag (I).' : 'Wear them from the bag (I).'}`);
+  notify(`You bought the ${itemName(key).toLowerCase()}. ${WEAPONS[key] ? 'Choose your weapon in' : 'Wear them from'} the bag (${keyName('bag')}).`);
   changed();
   return true;
 }

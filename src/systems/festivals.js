@@ -27,6 +27,7 @@ import { drawBunting, drawGlow } from '../render/sprites.js';
 import { takeBest, unitValue, counts } from './quality.js';
 import { QUALITY } from '../data/quality.js';
 import { r } from '../render/pixel.js';
+import { keyName } from '../core/controls.js';
 
 const ACCEPTS = {
   produce: (k) => k in PRODUCE || k in FORAGE,
@@ -146,7 +147,7 @@ export function endHunt() {
   else if (won) { S.gold += f.hunt.gold; prize = `${f.hunt.gold}g`; }
   S.festivals[entryKey(f)] = { found: hunt.found, won };
   hunt.eggs = [];
-  emit('ui:message', { title: won ? 'You won the egg hunt!' : 'Time!', text: won ? `You found ${hunt.found} eggs. The prize: ${prize}.${prize === CLOTHES[f.hunt.prize].name ? ' Wear it from the bag (I).' : ''}` : `You found ${hunt.found} of the ${f.hunt.need} eggs needed. Maybe next year.` });
+  emit('ui:message', { title: won ? 'You won the egg hunt!' : 'Time!', text: won ? `You found ${hunt.found} eggs. The prize: ${prize}.${prize === CLOTHES[f.hunt.prize].name ? ` Wear it from the bag (${keyName('bag')}).` : ''}` : `You found ${hunt.found} of the ${f.hunt.need} eggs needed. Maybe next year.` });
   changed();
   return { found: hunt.found, won, prize };
 }

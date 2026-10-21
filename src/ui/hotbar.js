@@ -8,6 +8,7 @@ import { drawIcon } from '../render/icons.js';
 import { onSheet } from '../render/sheets.js';
 import { cycleSeed, ensureUsefulSeed, announce } from '../systems/seeds.js';
 import { cycleKit, ensureUsefulKit, announceKit } from '../systems/placeables.js';
+import { keyName } from '../core/controls.js';
 import { $ } from './dom.js';
 
 let drawnSeed = null, drawnKit = null;   // what the seed and kit slot icons show
@@ -40,7 +41,7 @@ export function buildHotbar() {
   const bar = $('#bar'); bar.innerHTML = '';
   HOTBAR.forEach((kind, i) => {
     const b = document.createElement('button');
-    b.className = 'slot'; b.id = `slot${i}`; b.dataset.key = i + 1;   // v96: the key number shows in the corner
+    b.className = 'slot'; b.id = `slot${i}`; b.dataset.key = keyName(`slot${i + 1}`);   // v96: the key shows in the corner (v119: the bound one)
     const c = document.createElement('canvas'); c.width = 16; c.height = 16; drawIcon(c.getContext('2d'), kind, selFor(kind));
     b.append(c, document.createElement('span'));
     b.addEventListener('click', () => { selectSlot(i); b.blur(); });
@@ -56,6 +57,12 @@ function label(kind) {
   return TOOL_NAMES[kind][0];
 }
 
+// v119: a rebound key shows in its slot's corner and label.
+on('controls:changed', () => {
+  HOTBAR.forEach((kind, i) => { const b = $(`#slot${i}`); if (b) b.dataset.key = keyName(`slot${i + 1}`); });
+  changed();
+});
+
 on('state:changed', () => {
   const season = today().season;
   $('#held').textContent = label(HOTBAR[G.S.slot]);   // v96: phones hide slot names, so the held tool shows by the basket
@@ -66,8 +73,8 @@ on('state:changed', () => {
     const text = label(kind);
     b.querySelector('span').textContent = text;
     b.setAttribute('aria-pressed', String(G.S.slot === i));
-    const aria = kind === 'seeds' ? `${text} seeds. Select again or press Q to switch` : kind === 'kit' ? `${text}. Crafted objects to place. Select again to switch` : text;
-    b.setAttribute('aria-label', `${i + 1}: ${aria}`);
+    const aria = kind === 'seeds' ? `${text} seeds. Select again or press ${keyName('seeds')} to switch` : kind === 'kit' ? `${text}. Crafted objects to place. Select again to switch` : text;
+    b.setAttribute('aria-label', `${keyName(`slot${i + 1}`)}: ${aria}`);
     b.classList.toggle('off', (kind === 'seeds' && !CROPS[G.S.seedSel].seasons.includes(season)) || (kind === 'kit' && !selFor('kit')));
   });
 });

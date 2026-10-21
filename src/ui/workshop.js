@@ -17,6 +17,7 @@ import { CRACK_COST } from '../data/guild.js';
 import { SHOPS } from '../data/town.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
+import { keyName } from '../core/controls.js';
 
 const needsText = (needs) => Object.entries(needs || {})
   .map(([k, n]) => `${n} ${ITEMS[k].name} (you have ${G.S.bag[k]})`).join(', ');
@@ -75,7 +76,7 @@ function workbench(kind = shop) {
   const coal = `<h3>Coal</h3><div class="shoprow"><div><b>Coal</b><span>${COAL_COST}g each. You have ${S.bag.coal || 0}. The furnace needs 1 per bar.</span></div><div class="btns"><button data-coal="1" ${S.gold < COAL_COST ? 'disabled' : ''}>Buy 1</button><button data-coal="5" ${S.gold < COAL_COST * 5 ? 'disabled' : ''}>Buy 5</button></div></div>`;
   const s = SHOPS[kind];
   const body = kind === 'smithy'
-    ? `<p class="role">${s.keeper} wipes soot from his hands. "Bring the bars and I'll make your tools better." You have <b>${S.gold}g</b>. Press C anywhere to craft; a furnace smelts ore into the bars upgrades need.</p>${rows}${geodes}${coal}`
+    ? `<p class="role">${s.keeper} wipes soot from his hands. "Bring the bars and I'll make your tools better." You have <b>${S.gold}g</b>. Press ${keyName('craft')} anywhere to craft; a furnace smelts ore into the bars upgrades need.</p>${rows}${geodes}${coal}`
     : `<p class="role">Bram takes orders here and builds overnight. You have <b>${S.gold}g</b>.</p>${rows}${coop}${barn}${ups}${gh}${st}${placedRows}${moveRow}<h3>Farmhouse renovations</h3>${renos}<h3>Materials</h3>${mats}`;
   openModal(`<h2>${s.name}</h2>${body}`, [['Leave', closeModal, true]]);
 }

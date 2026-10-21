@@ -34,6 +34,7 @@ import { bagList, bagEntries, pinned, togglePin, describe, usedIn, needsOf, ship
 import { iconURL } from '../render/itemIcons.js';
 import { onDrop } from './drag.js';
 import { $ } from './dom.js';
+import { keyName } from '../core/controls.js';
 
 const row = (left, right, cls = '') => `<div class="inv-row ${cls}"><span>${left}</span><span>${right}</span></div>`;
 
@@ -76,7 +77,7 @@ function otherTab(tab) {
   // v40: books to read
   const books = Object.entries(BOOKS).filter(([k]) => S.bag[k] > 0).map(([k, b]) => row(`${b.name} × ${S.bag[k]} <span class="role">${b.skill ? `${SKILLS[b.skill].name} XP` : b.all ? 'XP in every skill' : hasRead(k) ? 'already read' : b.power}</span>`, b.power && hasRead(k) ? '' : `<button data-read="${k}">Read</button>`)).join('');
   const kitKeys = Object.keys(PLACEABLES).filter((k) => S.kit[k] > 0);
-  const kit = kitKeys.length ? kitKeys.map((k) => row(PLACEABLES[k].name, `× ${S.kit[k]}`)).join('') : '<p class="role">Nothing crafted. Press C to craft.</p>';
+  const kit = kitKeys.length ? kitKeys.map((k) => row(PLACEABLES[k].name, `× ${S.kit[k]}`)).join('') : `<p class="role">Nothing crafted. Press ${keyName('craft')} to craft.</p>`;
 
   const known = Object.keys(FISH).filter((k) => S.fishLog[k]).length;
   const fish = Object.entries(FISH).map(([k, f]) => S.fishLog[k]

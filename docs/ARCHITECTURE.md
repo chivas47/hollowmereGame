@@ -15,11 +15,13 @@ src/
     state.js          newState(), merge(saved), load(), save({ night }) (localStorage), restoreMorning(), exportSave(), importSave(text)
     migrations.js     v118: MIGRATIONS (ordered save upgrades), SAVE_VERSION, migrate(s, saved); merge() runs it
     events.js         on(event, fn), emit(event, data), changed(), notify(msg)
+    controls.js       v119: key bindings per browser: actionOf(code), keyName(action) for messages, bind(), resetControls()
     registry.js       addInteraction, addLayer, addEntities, addUpdater (+ run/draw/collect)
     time.js           dateParts(day), today(), fmtTime(minutes), dayEnd() (END, later with street lamps)
   data/               content only, no logic
     crops.js forage.js fish.js minerals.js products.js artisan.js items.js
     npcs.js maps.js seasons.js hotbar.js upgrades.js (incl. COOP, BARN)
+    controls.js       v119: CONTROLS (each action, its label and default keys), FIXED_KEYS, KEY_NAMES
     crafting.js       PLACEABLES, RECIPES, MACHINES, sprinklerTiles()
     skills.js quests.js festivals.js projects.js quality.js
     trees.js          TREES (saplings, kit keys), FRUIT (items), tree timings
@@ -198,7 +200,8 @@ src/
     social.js         the social menu (F, or the Friends button) and letters (v48)
     menu.js           the pause menu (Esc or the Menu button): settings, save files, debug tools, controls (v96)
     dom.js toast.js modal.js (openModal(html, actions, {wide})) hud.js hudPrefs.js goal.js prompt.js hotbar.js dialogs.js
-    workshop.js mine.js input.js debugPanel.js
+    workshop.js mine.js input.js (keys go through core/controls.js actionOf) debugPanel.js
+    controls.js       v119: the menu's Controls list (click a key, press the new one) and every <kbd data-control> label
     crafting.js (craft menu, placed-object dialog) barn.js village.js (board, festival)
 tools/
   bundle.py           CODEBASE.md for a Claude Project
@@ -335,6 +338,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `state:changed` | none | everywhere via `changed()` | HUD, hotbar |
 | `toast` | message | `notify()` | ui/toast.js |
 | `hud:prefs` | none | ui/hudPrefs.js | ui/goal.js, ui/prompt.js (v112) |
+| `controls:changed` | none | core/controls.js (v119) | ui/controls.js (labels, the list), ui/hotbar.js (slot keys) |
 | `game:loaded` | none | main.js, reset | forage, upgrades (recalc), coop (place), mine (eject) |
 | `game:reset` | none | ui/dialogs.js | renderer cache, npcs, coop, fishing |
 | `map:changed` | map id | player.js, days.js, mine.js | fishing, monsters |

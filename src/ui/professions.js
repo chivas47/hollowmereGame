@@ -5,13 +5,14 @@ import { SKILLS } from '../data/skills.js';
 import { pending, choose } from '../systems/professions.js';
 import { openModal, closeModal, modalOpen } from './modal.js';
 import { $ } from './dom.js';
+import { keyName } from '../core/controls.js';
 
 function professionDialog() {
   const p = pending();
   if (!p) return;
   const rows = p.options.map((id) => `<div class="shoprow"><div><b>${PROFESSIONS[id].name}</b><span>${PROFESSIONS[id].desc}</span></div><div class="btns"><button data-prof="${p.skill}:${id}">Choose</button></div></div>`).join('');
   openModal(`<h2>${SKILLS[p.skill].name} level ${p.level}</h2><p class="role">Pick a profession. The choice is for good${p.level === 5 ? ', and it decides the two offered at level 10' : ''}.</p>${rows}`,
-    [['Later', () => { closeModal(); notify('Choose your profession from the bag (I) when you are ready.'); }, true]]);
+    [['Later', () => { closeModal(); notify(`Choose your profession from the bag (${keyName('bag')}) when you are ready.`); }, true]]);
 }
 
 // Wait for any open dialog (the morning report, a level-up during a harvest dialog) to close first.

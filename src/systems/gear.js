@@ -6,6 +6,7 @@ import { changed, notify } from '../core/events.js';
 import { WEAPONS, WEAPON_KINDS, RINGS } from '../data/weapons.js';
 import { CLOTHES } from '../data/clothing.js';
 import { ITEMS } from '../data/items.js';
+import { keyName } from '../core/controls.js';
 
 export const weapon = () => WEAPONS[G.S.weapon] || WEAPONS.oldblade;
 export const weaponKind = () => WEAPON_KINDS[weapon().kind];
@@ -17,14 +18,14 @@ export function giveFind(key, how = 'You found') {
   if (WEAPONS[key]) {
     if (S.weapons.includes(key)) return false;
     S.weapons.push(key);
-    notify(`${how} a ${WEAPONS[key].name.toLowerCase()}! Choose your weapon in the bag (I).`);
+    notify(`${how} a ${WEAPONS[key].name.toLowerCase()}! Choose your weapon in the bag (${keyName('bag')}).`);
   } else if (RINGS[key]) {
     S.bag[key] = (S.bag[key] || 0) + 1;
-    notify(`${how} a ${RINGS[key].name.toLowerCase()}! Wear it from the bag (I).`);
+    notify(`${how} a ${RINGS[key].name.toLowerCase()}! Wear it from the bag (${keyName('bag')}).`);
   } else if (CLOTHES[key]) {
     if (S.wardrobe[key]) return false;
     S.wardrobe[key] = true;
-    notify(`${how} ${CLOTHES[key].name.toLowerCase()}! Wear them from the bag (I).`);
+    notify(`${how} ${CLOTHES[key].name.toLowerCase()}! Wear them from the bag (${keyName('bag')}).`);
   } else return false;
   changed();
   return true;
