@@ -12,10 +12,11 @@ import { runAction, escape } from './input.js';
 import { selectSlot } from './hotbar.js';
 import { modalOpen } from './modal.js';
 import { menuOpen, openMenu } from './menu.js';
+import { join, leave, partnerKeys } from '../systems/partner.js';
 import { $ } from './dom.js';
 
 const DIRS = ['up', 'down', 'left', 'right'];
-let was = {}, held = {}, since = {}, running = false, padUsed = false;
+let was = {}, held = {}, since = {}, running = false, padUsed = false, was2 = {};
 
 // True while the controller was the last thing used, so prompts can name its buttons (ui/prompt.js).
 export const usingPad = () => padUsed;
@@ -51,14 +52,31 @@ function press(name, box) {
   runAction(name);
 }
 
-function frame(now) {
-  const pad = [...navigator.getGamepads()].find(Boolean);
-  if (!pad) { running = false; return; }
-  requestAnimationFrame(frame);
-  const box = panel(), down = {};
+// What a pad holds now, by action name (its stick counted as the d-pad).
+function read(pad) {
+  const down = {};
   pad.buttons.forEach((b, i) => { if (PAD_BUTTONS[i] && (b.pressed || b.value > 0.5)) down[PAD_BUTTONS[i]] = true; });
   const stick = stickDirs(pad.axes[0] || 0, pad.axes[1] || 0, PAD.dead);
   for (const d of DIRS) if (stick[d]) down[d] = true;
+  return down;
+}
+
+// v129: the second controller is the second farmer (systems/partner.js): A joins, B leaves, the stick walks.
+// They wait while a dialog or the menu is open, which stay the first player's.
+function partner(pad, box) {
+  const down = pad && !box ? read(pad) : {};
+  if (down.use && !was2.use) join();
+  if (down.back && !was2.back) leave();
+  partnerKeys({ up: !!down.up, down: !!down.down, left: !!down.left, right: !!down.right });
+  was2 = down;
+}
+
+function frame(now) {
+  const pads = [...navigator.getGamepads()].filter(Boolean), pad = pads[0];
+  if (!pad) { running = false; return; }
+  requestAnimationFrame(frame);
+  const box = panel(), down = read(pad);
+  partner(pads[1], box);
   if (Object.keys(down).length) padUsed = true;
 
   for (const d of DIRS) {
@@ -74,8 +92,14 @@ function frame(now) {
 }
 
 addEventListener('gamepadconnected', (e) => {
-  notify(`Controller connected: ${e.gamepad.id.split('(')[0].trim() || 'gamepad'}. The menu lists its buttons.`);
+  const second = [...navigator.getGamepads()].filter(Boolean).length > 1;
+  notify(second ? 'A second controller is connected: press A on it to play as a second farmer.'
+    : `Controller connected: ${e.gamepad.id.split('(')[0].trim() || 'gamepad'}. The menu lists its buttons.`);
   changed();
   if (!running) { running = true; requestAnimationFrame(frame); }
 });
-addEventListener('gamepaddisconnected', () => { notify('Controller disconnected.'); G.keys = {}; G.useHeld = false; held = {}; was = {}; });
+addEventListener('gamepaddisconnected', () => {
+  // With fewer than two pads left the second farmer leaves (whichever pad went, the one left is the first player's).
+  if (G.P2 && [...navigator.getGamepads()].filter(Boolean).length < 2) leave(); else notify('Controller disconnected.');
+  G.keys = {}; G.useHeld = false; held = {}; was = {}; was2 = {};
+});

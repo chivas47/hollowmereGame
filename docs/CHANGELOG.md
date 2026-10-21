@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v129: Local two-player, part one
+- Connect a second controller and press A on it: a second farmer joins on the same screen. They walk with their stick, are set down beside you whenever you change map, and leave with B or when their controller disconnects.
+- Working together (tools, talking, their own energy) and their HUD come next (roadmap 33b and 33c).
+- Nothing saved yet. No prices, energy or keys changed.
+
 ## v128: Bram's reckoning
 - On Spring 1 of year three Bram judges what you made of the old plot: Stardew's categories by role (earnings, skills, collections, friends and family, the old wing, the Cavern and the boat), 21 points in all, lit as 1 to 4 lamps on your porch.
 - Four lamps: Bram carves the shipping bin's lid, and a gleamfruit waits on it every morning.
