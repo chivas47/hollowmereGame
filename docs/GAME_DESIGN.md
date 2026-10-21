@@ -736,6 +736,18 @@ v124, neighbour reactions (Stardew's emotes by role; data/emotes.js, looks only)
 
 A neutral gift shows nothing. Reactions play once the dialog closes; the talk bubble waits until they end.
 
+
+v125, motion settings (menu; kept in this browser, not the save; core/motion.js):
+
+| Setting | Choices | What it changes |
+|---|---|---|
+| Particles | full, fewer, off | Each burst at 100%, 35% (at least one) or none; at most 160, 48 or 0 on screen. Labels and damage numbers always show. |
+| Shake | on, off | The screen shake on stone, criticals, finishers and getting hurt. |
+| Hit-stop | on, off | The 0.06 s a swing and the monster it strikes hold still on contact. Off makes a hit swing end 0.06 s sooner. |
+| Motion speed | 100%, 75%, 50% | Particles, labels, pickups, the crop perk, neighbour reactions and the wind. Tool swings keep their timing. |
+
+A system set to reduce motion starts with fewer particles and no shake.
+
 ## The HUD (v112)
 
 Small, and only what matters right now. Nothing here touches the economy.
@@ -1145,6 +1157,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v125: Motion speed does not reach water ripples, seasonal petals and leaves, or blinking. Changing it shifts the wind's wave once.
 - v124: Only neighbours react, not the pet or farm animals. The rain sigh does not happen indoors or in mist.
 - v123: Only the watering can perks crops up (sprinklers and rain water them without it). Hats and the horse do not stir in the wind. Water and foliage already moved (v102, v103).
 - v122: The arrival is pages of text, not a walked scene: Bram does not stand by the bin while it shows. First-week goals pay nothing (Stardew's first quests pay about 100g); a goal left undone stays until it is done. The balance bot plays without them.

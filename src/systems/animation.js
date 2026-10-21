@@ -5,7 +5,8 @@ import { G } from '../core/game.js';
 import { T, DIRS } from '../core/constants.js';
 import { on } from '../core/events.js';
 import { addUpdater, addLayer } from '../core/registry.js';
-import { SWINGS, PICKUP, CRAFTED, PLACE, IMPACT, PERK } from '../data/animation.js';
+import { SWINGS, PICKUP, CRAFTED, PLACE, IMPACT, PERK, MOTION_LEVELS } from '../data/animation.js';
+import { motion } from '../core/motion.js';
 import { ITEMS } from '../data/items.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { drawFx } from '../render/animation.js';
@@ -26,20 +27,21 @@ export const busy = () => !!G.anim?.gate && G.anim.t < G.anim.dur;
 export const busyLeft = () => (busy() ? G.anim.dur - G.anim.t : 0);
 // The player cannot walk during the first part of a tool action (the wind-up and the strike).
 export const rooted = () => !!G.anim && G.anim.t < (G.anim.root || 0);
-export const shake = (mag, t = 0.18) => { if (!G.shake || G.shake.mag <= mag) G.shake = { mag, t, max: t }; };
+export const shake = (mag, t = 0.18) => { if (motion.shake && (!G.shake || G.shake.mag <= mag)) G.shake = { mag, t, max: t }; };
 // Holds the current swing still for a moment on contact (hit-stop).
-export const holdSwing = (t) => { if (G.anim) G.anim.hold = Math.max(G.anim.hold, t); };
+export const holdSwing = (t) => { if (G.anim && motion.hitstop) G.anim.hold = Math.max(G.anim.hold, t); };
 
 // n particles from x, y. opts: speed, up (initial lift), size, life, gravity, shrink, spread (angle range around `angle`).
 export function burst(x, y, cols, n, o = {}) {
-  for (let i = 0; i < n && G.fx.parts.length < 160; i++) {
+  const lv = MOTION_LEVELS[motion.particles], want = lv.share ? Math.max(1, Math.round(n * lv.share)) : 0;   // v125
+  for (let i = 0; i < want && G.fx.parts.length < lv.cap; i++) {
     const a = (o.angle ?? -Math.PI / 2) + (rand() - 0.5) * (o.spread ?? Math.PI * 2), sp = (o.speed ?? 40) * (0.5 + rand() * 0.7);
     const life = (o.life ?? 0.4) * (0.7 + rand() * 0.6);
     G.fx.parts.push({ x, y, z: o.z ?? 0, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp * 0.6, vz: (o.up ?? 30) * (0.6 + rand() * 0.8), g: o.gravity ?? 160,
       size: o.size ?? 2, col: cols[Math.floor(rand() * cols.length)], life, max: life, shrink: o.shrink, drag: o.drag ?? 0 });
   }
 }
-export const ring = (x, y, col, rad = 12, life = 0.3) => G.fx.parts.push({ ring: true, x, y, col, rad, life, max: life });
+export const ring = (x, y, col, rad = 12, life = 0.3) => { if (G.fx.parts.length < MOTION_LEVELS[motion.particles].cap) G.fx.parts.push({ ring: true, x, y, col, rad, life, max: life }); };
 export function floatText(x, y, text, col = '#fffbe8', o = {}) {
   if (G.fx.floats.length > 24) G.fx.floats.shift();
   if (o.stack) y -= 9 * G.fx.floats.filter((f) => f.stack && f.max - f.life < 0.5).length;   // labels in a burst stack up
@@ -142,19 +144,20 @@ addUpdater((dt) => {
   // walking dust
   if (G.moving && !G.riding && rand() < dt * 5) burst(G.S.x + (rand() - 0.5) * 4, G.S.y, ['rgba(232,224,208,.45)'], 1, { speed: 6, up: 3, size: 2, life: 0.35, gravity: 0, shrink: true });
   if (G.moving && G.riding && rand() < dt * 9) burst(G.S.x, G.S.y + 1, ['rgba(214,200,170,.55)'], 1, { speed: 12, up: 6, size: 3, life: 0.4, gravity: 0, shrink: true });
+  const fdt = dt * motion.speed;   // v125: particles, labels, pickups and the crop perk run at the motion speed
   for (const q of G.fx.parts) {
-    q.life -= dt;
+    q.life -= fdt;
     if (q.ring) continue;
-    q.x += q.vx * dt; q.y += q.vy * dt;
-    if (q.drag) { q.vx *= 1 - Math.min(1, q.drag * dt); q.vy *= 1 - Math.min(1, q.drag * dt); }
-    q.vz -= q.g * dt; q.z += q.vz * dt;
+    q.x += q.vx * fdt; q.y += q.vy * fdt;
+    if (q.drag) { q.vx *= 1 - Math.min(1, q.drag * fdt); q.vy *= 1 - Math.min(1, q.drag * fdt); }
+    q.vz -= q.g * fdt; q.z += q.vz * fdt;
     if (q.z < 0 && q.g > 0) { q.z = 0; q.vz *= -0.35; q.vx *= 0.6; q.vy *= 0.6; }   // a small bounce on the ground
   }
   G.fx.parts = G.fx.parts.filter((q) => q.life > 0);
-  for (const f of G.fx.floats) f.life -= dt;
+  for (const f of G.fx.floats) f.life -= fdt;
   G.fx.floats = G.fx.floats.filter((f) => f.life > 0);
   for (const u of G.fx.pickups) {
-    const was = u.t, end = u.pop + u.fly; u.t += dt;
+    const was = u.t, end = u.pop + u.fly; u.t += fdt;
     if (was < end && u.t >= end) {   // landed in the bag
       floatText(G.S.x, G.S.y - 22, `+${u.n} ${u.name || ''}`, '#fffbe8', { life: PICKUP.label, rise: 14, pop: true, stack: true });
       burst(G.S.x, G.S.y - 14, IMPACT.hit, 4, { speed: 20, up: 10, size: 1, life: 0.3, gravity: 0 });
@@ -163,12 +166,12 @@ addUpdater((dt) => {
   }
   G.fx.pickups = G.fx.pickups.filter((u) => u.t < u.pop + u.fly);
   for (const [k, t] of perks) {   // v123: drips off a watered crop
-    perks.set(k, t + dt);
+    perks.set(k, t + fdt);
     if (t > PERK.dripFor) { perks.delete(k); continue; }
     const [map, at] = k.split(':'), [x, y] = at.split(',').map(Number);
-    if (map === G.S.map && rand() < dt * PERK.drips / PERK.dripFor) burst(x * T + 3 + rand() * 10, y * T + 5 + rand() * 4, IMPACT.water, 1, { speed: 2, up: 0, size: 1, life: 0.35, gravity: 90, z: 4 });
+    if (map === G.S.map && rand() < fdt * PERK.drips / PERK.dripFor) burst(x * T + 3 + rand() * 10, y * T + 5 + rand() * 4, IMPACT.water, 1, { speed: 2, up: 0, size: 1, life: 0.35, gravity: 90, z: 4 });
   }
-  if (G.bounce > 0) G.bounce -= dt;
+  if (G.bounce > 0) G.bounce -= fdt;
 });
 
 addLayer(61, (c) => drawFx(c, G.fx, G.S));

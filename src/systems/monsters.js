@@ -21,6 +21,7 @@ import { weapon, weaponKind, wearing, giveFind, forgeBonus, weaponEnchant } from
 import { COMBO, SLAM_RADIUS, HIT_STOP, IMPACT } from '../data/animation.js';
 import { HOTBAR } from '../data/hotbar.js';
 import { playAnim, shake, holdSwing, ring, burst } from './animation.js';
+import { motion } from '../core/motion.js';
 
 const AGGRO = 110, HOP = 1.2, HOP_ACTIVE = 0.5, TOUCH = 11;
 export const slimes = [];   // every monster on the map (named before v36, when there were only slimes); exported for tests
@@ -161,7 +162,7 @@ function strike() {
     const critChance = (has('scout') ? 0.1 : 0) + (wearing('tidering') ? 0.1 : 0) + fb.crit;
     const crit = Math.random() < critChance ? (has('desperado') ? 3 : 2) * (wearing('mossring') ? 1.5 : 1) * fb.critPower : 1;   // v34 scout, desperado; v36 rings; v39 forge
     const kn = wk.knock * fb.knock * (st.knock || 1), [ux, uy] = st.spin || st.slam ? [ox / (d || 1), oy / (d || 1)] : [dx, dy];   // spins and slams push outward
-    m.frozen = Math.max(m.frozen || 0, HIT_STOP);
+    if (motion.hitstop) m.frozen = Math.max(m.frozen || 0, HIT_STOP);   // v125: hit-stop can be turned off
     hitMonster(m, damageOf() * crit * versus(m.kind) * st.mult, ux * kn, uy * kn, crit > 1);
     hits++;
   }

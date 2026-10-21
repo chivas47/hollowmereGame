@@ -6,6 +6,7 @@ import { G } from '../core/game.js';
 import { MAPS } from '../data/maps.js';
 import { WIND } from '../data/atmosphere.js';
 import { rng } from '../render/pixel.js';
+import { motion } from '../core/motion.js';
 
 const outdoors = () => !!MAPS[G.S.map] && !MAPS[G.S.map].base;
 
@@ -23,7 +24,7 @@ function wind() {
 // How far things at pixel column x lean right now: about 0 (still) to 1 (full), 0 indoors.
 export function lean(x) {
   if (!outdoors()) return 0;
-  const { strength, speed } = wind(), t = performance.now() / 1000;
+  const { strength, speed } = wind(), t = performance.now() / 1000 * motion.speed;   // v125: at the motion speed
   const wave = 0.5 + 0.5 * Math.sin(t * speed * 1.7 - x / WIND.length), gust = 1 - WIND.gust + WIND.gust * Math.sin(t * 0.31 + 1.7);
   return strength * wave * gust;
 }

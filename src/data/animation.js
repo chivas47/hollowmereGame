@@ -41,7 +41,10 @@ export const COMBO = {
   ],
 };
 export const SLAM_RADIUS = 26;   // the club slam's shockwave reaches this far from the impact point
-export const HIT_STOP = 0.06;    // seconds a struck monster and the swing hold still on contact
+export const HIT_STOP = 0.06;    // seconds a struck monster and the swing hold still on contact (v125: can be turned off)
+// v125: the Particles setting (core/motion.js): share of each burst drawn and the most on screen at once.
+export const MOTION_LEVELS = { full: { share: 1, cap: 160 }, fewer: { share: 0.35, cap: 48 }, off: { share: 0, cap: 0 } };
+export const MOTION_SPEEDS = [1, 0.75, 0.5];   // the cosmetic motion speeds offered, in the menu's order
 
 // Pickups: an item pops out where it was gathered, bounces, flies to the player, then a "+n Name" label floats up.
 export const PICKUP = { fly: 0.32, label: 1.1, hop: 14, max: 6, pop: 0.3, popUp: 9, scatter: 5 };   // v123: pop: seconds an item bounces where it came from before flying
