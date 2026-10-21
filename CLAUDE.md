@@ -25,7 +25,7 @@ For each item:
 6. **Test in the browser** (Playwright, see PROJECT_INSTRUCTIONS.md): the new feature end to end, an old save loading, no console errors.
 7. **Docs:** CHANGELOG entry, GAME_DESIGN tables and known issues, ARCHITECTURE tables if priorities, layers, events or tiles changed. Mark the item `done` in ROADMAP.md with the PR link.
 8. **Pull request** with: what it adds, the Stardew counterparts used for its numbers, the balance report summary, the test checklist, and anything that shifts what players rely on (hotbar, prices).
-9. **Watch it to green.** CI simulates base and head and comments the comparison on the PR. Fix and push until green. Do not merge; Nuno merges.
+9. **Watch it to green.** CI runs the tests, simulates base and head and comments the comparison on the PR. Fix and push until green. Do not merge; Nuno merges.
 
 When a PR merges, start the next `next` item on a fresh branch from `main`.
 
