@@ -4,7 +4,7 @@
 // Settings are a per-browser convenience in localStorage, not part of the save.
 const KEY = 'hollowmere-audio';
 let ctx = null, buses = null;
-export const settings = { sfx: true, music: true, ambient: 1 };
+export const settings = { sfx: true, music: true, ambient: 1, steps: true };   // v109: steps (footsteps)
 try { Object.assign(settings, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { /* storage unavailable */ }
 
 export const stats = { sfx: 0, notes: 0 };   // counters for tests

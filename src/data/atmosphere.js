@@ -127,3 +127,20 @@ export const NIGHT_LIGHTS = {
   // Lamp posts, drawn only (you walk past them): [x, y] tiles, lit the whole night.
   lamps: { village: [[8, 5], [15, 5], [7, 10], [16, 10]], town: [[11, 9], [9, 13], [11, 13]] },
 };
+
+// v109: footsteps by surface, on the ambient bus (the Ambience slider and Sound off cover them; Steps in the menu turns
+// them off alone). A step sounds every STEP_EVERY pixels walked (the horse every HOOF_EVERY). Each surface is one or two
+// noise bursts: [filter, freq, dur, vol, sweep?], varied a little per step. Outdoors, winter turns grass and paths to
+// snow and rain makes them wet; the beach pier and placed wood paths are wood, stone paths stone.
+export const STEP_EVERY = 15;
+export const HOOF_EVERY = 20;
+export const STEPS = {
+  grass: [['bandpass', 2600, 0.05, 0.03]],
+  path:  [['lowpass', 650, 0.06, 0.05]],
+  sand:  [['highpass', 3200, 0.08, 0.022]],
+  stone: [['bandpass', 1900, 0.03, 0.05], ['lowpass', 400, 0.03, 0.03]],
+  wood:  [['bandpass', 420, 0.06, 0.07], ['lowpass', 200, 0.04, 0.04]],
+  snow:  [['lowpass', 1300, 0.09, 0.05, 500]],
+  wet:   [['bandpass', 1100, 0.07, 0.04, 2200]],
+  hoof:  [['bandpass', 700, 0.05, 0.08], ['lowpass', 180, 0.06, 0.06]],
+};

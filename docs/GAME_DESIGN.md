@@ -778,6 +778,7 @@ Nothing here is saved or touches the economy.
 | Lit windows (v105) | farmhouse, cottages, shops, guild lodge (glass on the building art) | from 6:30 pm; homes dark at midnight less up to 90 min (per building and day), shops 9:30 pm, hall 8 pm, picture house 11 pm, tavern 2 am, all less up to 90 min |
 | Lamp posts (v105) | village (4), town (3) | 6:30 pm to dawn, light 3.5 tiles |
 | Lantern light (v105) | placed lanterns on any open-air map | after 6:30 pm, light 3 tiles |
+| Footsteps (v109) | under the player: grass, path, sand, stone (quarry, caves, stone paths), wood (indoors, the pier, wood paths), snow (winter outdoors), wet (rain outdoors); hooves on horseback | a step every 15 px walked (about 4 a second), the horse every 20 px; at the Ambience volume; Steps in the menu |
 | Ambience volume (v100) | the menu's Ambience slider, 0 to 100% | Sound off still mutes it |
 
 ## Management tools (v71)
@@ -1024,6 +1025,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v109: Footsteps are the player's only; neighbours and animals walk silently. Indoor floors all sound like wood, rugs included.
 - v108: The cart line has three stops; the farm has none (its ground is the player's). The balance bot does not ride carts; it rarely restores the boiler room. Ashgrove's grey paint shows from joining, before any room is bought.
 - v107: Signs are set when a game loads and only on open grass or sand; a sign whose tile is not open is skipped. The balance bot does not load them, so its maps are unchanged.
 - v106: Neighbours do not use the ridge path (the mountain is not on their routes). Chopping progress on the trunk is forgotten overnight, like a half-chopped stump's. In the balance simulator the trunk takes one open grass tile from the mountain's forage spots, which shifts its random draws (about +3% gold at the end with no change in play); the bot never cuts it.
