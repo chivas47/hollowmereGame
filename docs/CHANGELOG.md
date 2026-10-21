@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v108: The town reacts to the old wing, and the cart line
+- Before the workroom is restored, the hall's windows are boarded up and rubble lies beside it.
+- Each restored room shows: the larder, a vegetable planter by the hall; the workroom, the boards and rubble gone and flower boxes under the windows; the fish tank, the village fountain running; the boiler room, smoke from the hall chimney; the vault, bunting along the eave. All five: a brass plaque in front of the hall with your name and your farm's.
+- On Ashgrove's route the wing is done in the company's style: grey paint, its board over the hall's sign, stamped crates where the planter would be. No flowers, bunting or plaque.
+- The cart line (Stardew's minecarts), opened by the boiler room on either route: free rides between carts by the town hall, at the Hollow in the Wilds and in the quarry.
+- Saves: nothing new; it all follows the restoration you have done.
+
 ## v107: Outdoor signs
 - Signposts by the paths out of the village, the town, the Wilds, Brackenwood, the beach, the railway, the hidden grove and Cragmoor, pointing the way. Signs toward the farm carry your farm's name. The one by the forest's hidden path has worn away.
 - The ridge path's signs (town and mountain) change their words once the trunk is cut.

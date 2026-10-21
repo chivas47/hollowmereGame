@@ -136,6 +136,7 @@ src/
     giants.js         giant crops: merging ripe 3x3 blocks, chopping, solid 'Y' tiles
     weather.js        today's weather and the forecast, rain watering, lightning, the rain/snow/mist overlay
     wind.js           lean(x): how far things lean in the wind now, by weather and the day (v103; no drawing, safe for the balance bot)
+    wing.js           the town reacts to the old wing (boards, planter, flowers, fountain, smoke, bunting, plaque; the Ashgrove look) and the cart line; solid Ž and Ç tiles placed as rooms are done (v108)
     signs.js          signposts and notices outdoors: solid Ş tiles set on open ground at load, Use reads them (v107)
     shortcuts.js      fallen trunks across shortcuts, cut with the copper axe; then trunk tiles turn to path and the maps get exits (v106, G.S.shortcuts)
     nightlights.js    outdoorLights(): lit windows, lamp posts and lanterns after dusk (renderer.js cuts them out of the dark); lit glass and lamp posts (v105, drawn only)
@@ -218,6 +219,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 73 | clothing.js | Facing a sewing machine, dye pots or mannequin in the farmhouse |
 | 74 | clearing.js | Facing a fence, gate or path (gate opens; axe or pickaxe takes it up) |
 | 73 | trees.js | Facing a fruit tree (pick fruit) |
+| 72 | wing.js | Facing a cart stop Ç (opens the cart line, ui:carts), the plaque, rubble or planter Ž (v108) |
 | 73 | signs.js | Facing an outdoor signpost or notice Ş (reads it) (v107) |
 | 73 | storage.js | Facing a chest, sign or farm computer (its own dialog, ahead of placed objects at 72) (v71) |
 | 73 | buildings.js | Facing a mini shipping bin (ships; axe or pickaxe takes it up) |
@@ -282,10 +284,13 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 14 | falling.js | Petals, leaves and snow resting on the ground (v104) |
 | 20 | placeables.js | Sprinklers, machines, lanterns |
 | 30 | festivals.js | Bunting on festival days |
+| 30 | wing.js | The hall: boards, flower boxes, the Ashgrove paint and board, bunting (v108) |
+| 31 | wing.js | The village fountain jets once the fish tank is restored (v108) |
 | 40 | atmosphere.js | Birds |
 | (entities) | player (with the tool in hand, v74), npcs, coop, barn, monsters, treasure (lit bombs), guild (Warden Hale), trees, giants, clearing, house (furniture) | y-sorted characters, fruit trees, giant crops, debris, alders, fences, gates |
 | 55 | fishing.js | Line and bobber |
 | 60 | effects.js | Tool swing (water and seed overlay) |
+| 62 | wing.js | Smoke from the hall chimney once the boiler room is restored (v108) |
 | 61 | animation.js | Particles, flying pickups, damage numbers and labels (v74) |
 | 65 | falling.js | Petals, fluff, leaves and snow clumps falling (v104) |
 | 70 | atmosphere.js | Butterflies |
