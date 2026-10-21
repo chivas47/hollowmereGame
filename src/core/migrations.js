@@ -23,6 +23,12 @@ export const MIGRATIONS = [
     // v48: no welcome letter for a farm already under way.
     if (saved.day > 3 && !saved.mailRead) s.mailRead.push('welcome');
   } },
+  // v2 (v122): the arrival scene and the first week. A farm made before them has arrived already; one past
+  // its first week skips the goals (one still in it gets credit for what it has done, systems/firstweek.js).
+  { v: 2, run(s, saved) {
+    if (saved.profile || saved.day > 1) s.firstWeek.arrived = true;
+    if (saved.day > 7) s.firstWeek.over = true;
+  } },
 ];
 
 export const SAVE_VERSION = MIGRATIONS[MIGRATIONS.length - 1].v;

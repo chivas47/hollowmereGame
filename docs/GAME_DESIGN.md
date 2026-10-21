@@ -856,6 +856,22 @@ Data in `data/storage.js` and `data/crafting.js`; logic in `systems/storage.js`;
 | Lost and found | Town hall; keeps what a chest held when taken up | The mayor's lost and found box |
 | Journal | Calendar, quests, live map, animals tabs | Calendar, quest log, map, animals tab |
 
+## The arrival and the first week (v122)
+
+Stardew's opening and first-week quests by role, in our own story. After the new game screen, three short pages: the cart drops you at the end of the east road, Bram meets you by the shipping bin he built, and tells you where the village and the Wilds are. Then one goal a day for seven days; goal n opens on day n and stays until done. The open goal leads the objective reminder and the journal; the story waits while one is open. Goals read the save, so one done early (say hello on day one) counts quietly and is skipped on its day. They guide only and pay nothing, like the story.
+
+| Day | Goal | Done when |
+|---|---|---|
+| 1 | Break ground | a crop is planted on the farm |
+| 2 | Water the rows | a planted tile is watered (rain counts) |
+| 3 | Say hello | you have talked to any neighbour |
+| 4 | Live off the land | any foraging or fishing XP |
+| 5 | First sale | something is in the bin, or has been paid for |
+| 6 | Into town | Hollowmere Town is on your map |
+| 7 | The Hollow | floor 1 of the Hollow reached |
+
+Saves from before v122: a farm already made has arrived (no scene); one past day 7 skips the week (save upgrade v2 in core/migrations.js).
+
 ## Journal, quests and map (v114)
 The journal (J) opens on Quests. Data in `data/journal.js`; logic in `systems/journal.js`; tabs in `ui/journal.js`. Mechanics after Stardew's journal and map; the main line, landmarks and wording are ours. No prices, energy or keys change.
 | Part | Ours | Stardew counterpart |
@@ -1107,6 +1123,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v122: The arrival is pages of text, not a walked scene: Bram does not stand by the bin while it shows. First-week goals pay nothing (Stardew's first quests pay about 100g); a goal left undone stays until it is done. The balance bot plays without them.
 - v121: Offline needs one visit online first. On a slow connection that never fails, loading waits for the network before the cached copy is used. The font comes from Google Fonts, so offline before it was ever loaded the game uses a fallback font. Files removed from the game stay in the cache (they are small and never asked for).
 - v120: Contrast changes the HUD and messages, not the field's own art (soil, crops and paths keep their colours). On a phone the page could already scroll sideways by a few pixels before v120; Text size does not change that.
 - v119: Keys are named by their place on a US keyboard (the browser's key codes), so on another layout a key can be named differently from what is printed on it, though it works as bound. The arcade cabinets keep their own keys. A long key name (R Shift) is cut short in a hotbar corner.

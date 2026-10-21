@@ -79,6 +79,7 @@ import './systems/market.js';   // v69
 import './systems/theatre.js';   // v70
 import './systems/storage.js';   // v71: chests, signs, the farm computer, the lost and found
 import './systems/journal.js';   // v114: story, quest log, places found, map pins
+import './systems/firstweek.js';   // v122: the first week's goals
 import './systems/atmosphere.js';   // v72: waterfalls, splashes, lightning, wildlife
 import './systems/water.js';   // v102: moving water and reflections
 import './systems/sway.js';   // v103: wind in grass, trees and washing
@@ -122,6 +123,7 @@ import './ui/social.js';
 import './ui/menu.js';   // v96: the pause menu
 import './ui/controls.js';   // v119: changing keys
 import './ui/offline.js';   // v121: install and play offline
+import './ui/arrival.js';   // v122: the arrival scene
 import './ui/family.js';
 import './ui/restoration.js';
 import './ui/desert.js';

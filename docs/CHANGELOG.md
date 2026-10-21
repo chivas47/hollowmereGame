@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v122: The arrival and the first week
+- A new farm opens with a short scene after the new game screen: the cart at the end of the east road, and Bram meeting you by the shipping bin with where to go first.
+- One goal a day for the first week: break ground, water the rows, say hello, live off the land, first sale, into town, the Hollow. The open goal leads the objective reminder and the journal; the story waits while one is open. A goal done early counts quietly.
+- Saves get upgrade v2: a farm made before v122 sees no scene, and one past day 7 skips the week.
+- Nothing about prices, energy or keys changed; the goals pay nothing.
+
 ## v121: Install and play offline
 - The game can be installed from the browser (the install button in the address bar, or Add to Home Screen) and plays offline after one visit online. It has an icon now: the ripe turnip from the game's own crop art.
 - Online, every file is checked with the server first, so a new version shows on the next load; offline, the copy from the last visit answers.

@@ -27,6 +27,7 @@ export function newState() {
     bag: Object.fromEntries(Object.keys(ITEMS).map((k) => [k, 0])),
     bin: 0,
     journal: { story: {}, log: [], seen: [], pins: [], track: null, markers: true },   // v114: story steps done, finished quests, places found, map pins, tracked objective (systems/journal.js)
+    firstWeek: { arrived: false, done: {}, over: false },   // v122: the arrival scene and the first week's goals (systems/firstweek.js)
     hints: true,        // v101: the stuck-tool tip and the morning report's tip (systems/hints.js)
     traditions: { blessed: 0, floated: [] },   // v110: the day the wishing stone was last touched, the years a lantern was floated
     blessing: null,     // v110: today's blessing { id, until, ...effects } (systems/traditions.js, read by buffs.js)
@@ -142,6 +143,8 @@ export function merge(saved) {
   s.kit = Object.assign(newState().kit, saved.kit || {});
   const sj = saved.journal || {};   // v114
   s.journal = { story: { ...(sj.story || {}) }, log: [...(sj.log || [])], seen: [...(sj.seen || [])], pins: [...(sj.pins || [])], track: sj.track || null, markers: sj.markers !== false };
+  const fw = saved.firstWeek || {};   // v122
+  s.firstWeek = { arrived: !!fw.arrived, done: { ...(fw.done || {}) }, over: !!fw.over };
   if (!Array.isArray(s.bagFav)) s.bagFav = [];   // v113
   s.bagView = { ...newState().bagView, ...(saved.bagView || {}) };
   s.skills = Object.assign(newState().skills, saved.skills || {});
