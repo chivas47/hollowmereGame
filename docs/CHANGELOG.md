@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v121: Install and play offline
+- The game can be installed from the browser (the install button in the address bar, or Add to Home Screen) and plays offline after one visit online. It has an icon now: the ripe turnip from the game's own crop art.
+- Online, every file is checked with the server first, so a new version shows on the next load; offline, the copy from the last visit answers.
+- The installed game shares this browser's storage: same farm, same settings.
+- Fixed: the page had no icon (a missing favicon was asked for on every load).
+- Nothing saved, no prices or energy changed, no keys moved.
+
 ## v120: Readability and colour
 - Text size in the menu (100% to 150%) scales dialogs, the menu and the bag; cards still fit the window. The HUD keeps its own size slide.
 - Contrast in the menu: solid black behind the objective, the Use prompt, messages and the basket line, cream edges on meters, buttons and hotbar slots.

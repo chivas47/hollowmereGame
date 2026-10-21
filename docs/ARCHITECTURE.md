@@ -7,6 +7,8 @@ Plain ES modules, no build step. `index.html` loads `styles.css` and `src/main.j
 ```
 index.html            layout: HUD, canvas, basket, hotbar, touch pad, debug panel, modal
 styles.css            single dark "farmhouse at dusk" theme, tokens on :root
+manifest.webmanifest  v121: name, colours and icons (assets/icons/) for installing the game
+sw.js                 v121: service worker: network first (no-cache for the game's files), every answer kept, the copy used offline; registered by ui/offline.js
 src/
   main.js             boot: imports every system and UI module, runs the frame loop
   core/
@@ -201,6 +203,7 @@ src/
     menu.js           the pause menu (Esc or the Menu button): settings, save files, debug tools, controls (v96)
     dom.js toast.js modal.js (openModal(html, actions, {wide})) hud.js hudPrefs.js goal.js prompt.js hotbar.js dialogs.js
     workshop.js mine.js input.js (keys go through core/controls.js actionOf) debugPanel.js
+    offline.js        v121: registers sw.js and hands it the files the first visit loaded
     controls.js       v119: the menu's Controls list (click a key, press the new one) and every <kbd data-control> label
     crafting.js (craft menu, placed-object dialog) barn.js village.js (board, festival)
 tools/

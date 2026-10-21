@@ -1027,6 +1027,7 @@ Stardew counterparts: basic, quality and deluxe fertilizer; speed-gro and deluxe
 
 ## Save files
 
+- v121: the game installs from the browser and plays offline once it has loaded online. The installed game uses the same browser storage, so it is the same farm and the same morning copy.
 - The game autosaves to this browser on sleep and when the tab is hidden. v118: if a save fails (storage full or blocked), a message says so and suggests exporting.
 - v118: going to bed also keeps the farm as it is that morning. Back to this morning (menu) loads it after a confirmation, and the game loads it by itself if the live save is missing or damaged. Starting a new farm, finishing the new game screen or loading a save makes that the morning's copy. A late-game save is about 35 KB, so the copy costs little.
 - Export save downloads `hollowmere-<season>-<day>-year-<n>.json` ({ game, version, saved, S }). Import save reads one back, shows its date and gold, and replaces the current farm only after confirmation. Files from older versions load like old saves.
@@ -1106,6 +1107,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v121: Offline needs one visit online first. On a slow connection that never fails, loading waits for the network before the cached copy is used. The font comes from Google Fonts, so offline before it was ever loaded the game uses a fallback font. Files removed from the game stay in the cache (they are small and never asked for).
 - v120: Contrast changes the HUD and messages, not the field's own art (soil, crops and paths keep their colours). On a phone the page could already scroll sideways by a few pixels before v120; Text size does not change that.
 - v119: Keys are named by their place on a US keyboard (the browser's key codes), so on another layout a key can be named differently from what is printed on it, though it works as bound. The arcade cabinets keep their own keys. A long key name (R Shift) is cut short in a hotbar corner.
 - v118: One morning copy, not a history: a save that went wrong overnight is also the morning's copy. One farm per browser (save slots are item 61). Reloading the page saves first (the tab hides), so a farm put into storage by hand is overwritten unless the page is closed.

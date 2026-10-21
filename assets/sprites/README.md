@@ -217,3 +217,4 @@ Lit bombs use the bomb frames of placed.png.
 | glow.png, bunting.png | Hollowmere Farm (original placeholder, v93, from the game's code art) | same as the game |
 | pens.png | Hollowmere Farm (original placeholder, v94, from the game's code art) | same as the game |
 | variants.png | Hollowmere Farm (original placeholder, v95, from the game's code art) | same as the game |
+| ../icons/icon-192.png, icon-512.png | Hollowmere Farm (original, v121: the ripe turnip from the game's crop art on tilled soil, scaled up pixel for pixel) | same as the game |
