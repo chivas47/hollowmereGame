@@ -62,7 +62,7 @@ export const IMPACT = {
   craft: ['#fff1b8', '#ffd36a', '#ffffff', '#9fd3f2'],
 };
 
-// v114: how the player moves and rests. accel: seconds from standing to full walking speed. turn: seconds spent
+// v115: how the player moves and rests. accel: seconds from standing to full walking speed. turn: seconds spent
 // facing the side on the way round when walking reverses. settle: the small dip on stopping. lower: seconds the tool
 // takes to fade from the hand after a swing. Idle: a blink every blink[0] to blink[1] seconds (NPCs blink too),
 // and after lookAfter seconds standing still a glance aside every look[0] to look[1] seconds, held for glance.

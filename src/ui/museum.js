@@ -22,8 +22,13 @@ function museum() {
 
 const TABS = [['museum', 'Museum'], ['fish', 'Fish'], ['notes', 'Notes'], ['ach', 'Achievements'], ['done', 'Completion']];
 const EXTRA = {};   // v71: tabs added by other ui modules (ui/storage.js: calendar, quests, map, animals)
-export function addJournalTab(key, label, render) { TABS.push([key, label]); EXTRA[key] = render; }
-function journal(tab = 'museum') {
+// v114: `front` tabs go before the museum's (ui/journal.js: Quests, Story, Map, People); the journal opens on the first.
+let fronts = 0;
+export function addJournalTab(key, label, render, front = false) { TABS.splice(front ? fronts++ : TABS.length, 0, [key, label]); EXTRA[key] = render; }
+let last = null;   // the tab shown, so a click inside it can redraw it
+export const redrawJournal = () => { if (!last || $('#modal').hidden) return; const sc = $('#modal .card').scrollTop; journal(last); $('#modal .card').scrollTop = sc; };
+function journal(tab = TABS[0][0]) {
+  last = tab;
   const S = G.S, M = S.museum, st = stats();
   let body = '';
   if (EXTRA[tab]) body = EXTRA[tab]();
@@ -43,7 +48,7 @@ function journal(tab = 'museum') {
     body = `<p>Your farm is <b>${c.total}% complete</b>.</p>${c.rows.map((x) => row(x.label, `${Math.floor(x.done * 100)}% done, worth ${x.weight}% of the total.`)).join('')}`;
   }
   const tabs = TABS.map(([k, l]) => `<button data-jtab="${k}" ${k === tab ? 'disabled' : ''}>${l}</button>`).join('');
-  openModal(`<h2>Journal</h2><div class="btns">${tabs}</div>${body}`, [['Close', closeModal, true]]);
+  openModal(`<h2>Journal</h2><div class="btns">${tabs}</div>${body}`, [['Close', closeModal, true]], { wide: true });   // v114: wide, for the map
 }
 
 on('ui:museum', museum);

@@ -216,7 +216,7 @@ export function drawPerson(c, px, py, dir, moving, walkT, p) {
   else r(c, x + 2, y + 1, 6, 1, p.hair);
 }
 
-// v114: closed eyes, drawn in skin over a standing person's eyes (the sheet and the code art put them on the same row).
+// v115: closed eyes, drawn in skin over a standing person's eyes (the sheet and the code art put them on the same row).
 export function drawBlink(c, px, py, dir, p) {
   const x = Math.round(px), y = Math.round(py) - 11, sheet = ready(PERSON.sheet);
   if (dir === 'down') { if (sheet) r(c, x - 2, y, 4, 1, p.skin); else { r(c, x - 2, y, 1, 1, p.skin); r(c, x + 1, y, 1, 1, p.skin); } }

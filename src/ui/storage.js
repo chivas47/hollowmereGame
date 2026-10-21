@@ -1,21 +1,17 @@
 // v71: management tools. Chest, sign and farm computer dialogs, the lost and found (from the town hall),
-// and four journal tabs: calendar, quests, a live world map and the animals (systems/storage.js).
+// and two journal tabs: calendar and the animals (systems/storage.js). v114: quests and the map moved to ui/journal.js.
 import { G } from '../core/game.js';
 import { on } from '../core/events.js';
 import { today } from '../core/time.js';
 import { ITEMS } from '../data/items.js';
-import { MAPS } from '../data/maps.js';
 import { NPCS } from '../data/npcs.js';
 import { FESTIVALS } from '../data/festivals.js';
 import { floatOn } from '../data/traditions.js';
 import { SEASON_LENGTH, WEEKDAYS } from '../data/seasons.js';
 import { PLACEABLES } from '../data/crafting.js';
-import { ORDERS } from '../data/orders.js';
-import { CHALLENGES } from '../data/challenges.js';
-import { SIGN_LENGTH, WORLD, WORLD_PARENT } from '../data/storage.js';
+import { SIGN_LENGTH } from '../data/storage.js';
 import { chestAt, roomOf, store, take, storeMatching, takeAll, claimLost, writeSign, farmReport } from '../systems/storage.js';
 import { placedAt, pickUp } from '../systems/placeables.js';
-import { NPCRT } from '../systems/npcs.js';
 import { animalDef, kindOf, hearts } from '../systems/livestock.js';
 import { hearts as petHearts } from '../systems/pets.js';
 import { addJournalTab } from './museum.js';
@@ -101,25 +97,6 @@ addJournalTab('cal', 'Calendar', () => {
     return `<div class="cal${d === t.d ? ' now' : ''}${d < t.d ? ' past' : ''}"><span>${d}</span>${marks}</div>`;
   }).join('');
   return `<h3>${t.season}, year ${t.year}</h3><p>Today is ${t.wd} the ${t.d}.</p><div class="calgrid">${WEEKDAYS.map((w) => `<div class="calhead">${w}</div>`).join('')}${cells}</div>`;
-});
-
-addJournalTab('quests', 'Quests', () => {
-  const S = G.S, left = (due) => { const n = due - S.day + 1; return `${n} day${n === 1 ? '' : 's'} left`; };
-  const name = (id) => NPCS.find((n) => n.id === id)?.name || 'Someone';
-  const board = S.quests.map((q) => row(`${name(q.npc)}: ${q.n} ${ITEMS[q.item].name}`, `${q.reward}g. ${left(q.due)}. You have ${S.bag[q.item]}.`)).join('');
-  const o = S.orders.active, c = S.challenge.active;
-  return `<h3>Quest board</h3>${board || '<p class="role">No requests on the board.</p>'}
-    <h3>Special order</h3>${o ? row(ORDERS[o.key].name, `${o.given} of ${ORDERS[o.key].n} handed in. ${ORDERS[o.key].gold}g. ${left(o.due)}.`) : '<p class="role">None taken.</p>'}
-    ${c ? `<h3>Sable's challenge</h3>${row(CHALLENGES[c.key].name, `${c.given} of ${CHALLENGES[c.key].n} handed in. ${CHALLENGES[c.key].gems} moonstones. ${left(c.due)}.`)}` : ''}`;
-});
-
-addJournalTab('map', 'Map', () => {
-  const S = G.S, here = WORLD_PARENT[S.map] || S.map, who = {};
-  for (const n of NPCRT) if (n.visible) { const m = WORLD_PARENT[n.map] || n.map; (who[m] ||= []).push(n.def.name); }
-  const cells = Object.entries(WORLD).map(([k, [x, y]]) => `<div class="wm${k === here ? ' here' : ''}" style="grid-column:${x + 1};grid-row:${y + 1}">${esc(MAPS[k].name.replace(/^(The|Hollowmere) /, '').replace(/^./, (ch) => ch.toUpperCase()))}${who[k] ? `<span>${who[k].length} here</span>` : ''}</div>`).join('');
-  const list = Object.entries(who).map(([m, names]) => `<li><b>${esc(MAPS[m]?.name || m)}:</b> ${names.map(esc).join(', ')}</li>`).join('');
-  return `<p>You are in <b>${esc(MAPS[S.map]?.name || 'the Hollow')}</b>.</p><div class="worldmap" role="img" aria-label="World map">${cells}</div><p class="role">The coach runs from the town to the dunes; the boat from the beach to the island.</p>
-    <h3>Neighbours out and about</h3>${list ? `<ul>${list}</ul>` : '<p class="role">No one is out right now.</p>'}`;
 });
 
 addJournalTab('animals', 'Animals', () => {

@@ -710,7 +710,7 @@ Nothing here is saved or touches the economy (cosmetic randomness has its own ge
 - v75: one action per swing. Use is ignored until the tool's swing ends (one press in its last 0.2 s is kept), so the swing time is also the fastest a tool can be used: about 3 axe, pickaxe or hoe strokes a second, 2.4 waterings.
 - Pickups fly in over 0.32 s, at most 6 kinds at once; labels stack. The crafted pose lasts 1 s; placing 0.25 s.
 - Hit-stop 0.06 s on contact; screen shake on stone, criticals, the spin and slam finishers, and when you are hurt.
-- v114 motion (data/animation.js MOTION): walking reaches full speed over 0.08 s (a reversal drops it to 40%); a reversal shows the side for 0.07 s; a 0.14 s settle on stopping; the tool fades out over 0.1 s after its swing. Idle: a blink every 2.5 to 5.5 s, a glance aside every 2 to 4 s after 7 s still (drawn only; the facing used by tools is unchanged). NPCs standing still blink.
+- v115 motion (data/animation.js MOTION): walking reaches full speed over 0.08 s (a reversal drops it to 40%); a reversal shows the side for 0.07 s; a 0.14 s settle on stopping; the tool fades out over 0.1 s after its swing. Idle: a blink every 2.5 to 5.5 s, a glance aside every 2 to 4 s after 7 s still (drawn only; the facing used by tools is unchanged). NPCs standing still blink.
 
 ## The HUD (v112)
 
@@ -851,6 +851,22 @@ Data in `data/storage.js` and `data/crafting.js`; logic in `systems/storage.js`;
 | Farm computer | 2 iron bars, a storm cell, 10 Hollow quartz; reports on the farm or greenhouse it stands in | 10 dwarf gadgets, a battery pack, 10 refined quartz |
 | Lost and found | Town hall; keeps what a chest held when taken up | The mayor's lost and found box |
 | Journal | Calendar, quests, live map, animals tabs | Calendar, quest log, map, animals tab |
+
+## Journal, quests and map (v114)
+The journal (J) opens on Quests. Data in `data/journal.js`; logic in `systems/journal.js`; tabs in `ui/journal.js`. Mechanics after Stardew's journal and map; the main line, landmarks and wording are ours. No prices, energy or keys change.
+| Part | Ours | Stardew counterpart |
+|---|---|---|
+| Main and optional | Main: the next step of the valley's story. Optional: board requests, the special order, Sable's challenge, each with where to go and what it pays | Story quests and help-wanted quests in one log |
+| The story | Ten steps, checked against the save: first harvest, meet Ines, Bram, Odile and Tavi, find the town, Hollow floor 20, a room of the old wing, the sealed door (floor 80), the whole old wing, the dunes, Rook's boat, the island | The Community Center, the desert bus, Willy's boat as the long arc |
+| Completed | The last 40 finished quests with their dates, and totals of board requests, orders and challenges | Completed quests drop off the log |
+| Track | Track one objective: the HUD's Goal line shows it first, as Tracking; stops when it is done | None in Stardew (the 1.6 HUD has no tracker) |
+| Story so far | Read from the save: your farm, pet and horse, spouse or engagement, who you are seeing, children, close friends (6 hearts), old wing rooms and route, the Hollow and the cavern, the boat and the bridge, shortcuts, the museum, notes, the last four festival results | None |
+| Discoveries | Places found, recipes (named), fish kinds, secret notes | Collections tab |
+| People | Every neighbour: met or not, hearts, single, dating, engaged, married, roommate or friend, where they are now | Social tab |
+| Map | Found places by name with quests (!), your pins and how many are about; unfound ones show ?. Pick a place for its landmarks, who is there, its quests and pins | The world map, which shows every place from the start |
+| Places found | On first entering an outdoor place (rooms count as the place outside), with a message | None |
+| Quest markers | On or off in the Map tab (kept in the save); the tracked objective's place underlined | None |
+| Pins | Up to 12, each a note of up to 24 letters, on found places; removed one at a time | None |
 
 ## Minigames and theatre (v70)
 Stardew 1.6 by role, original names, films and games. Data in `data/theatre.js`.
@@ -1085,6 +1101,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v114: Markers and pins are per place, not per tile: the map is a grid of places, not a drawn map, and has no paths between them. Quest markers point at where you hand in (the village board, the Lantern), not where the item is found. A save from before v114 counts every place it could reach as found (the dunes once the old wing is whole, the island once the boat is mended, the dig site once its bridge is fixed), and the story steps it had already passed as done "before this journal"; the finished-quest log starts empty, with totals. The balance bot does not open the journal (nothing in it earns or spends).
 - v113: The bag has no limit, so splitting and merging stacks, full-bag warnings and what happens to extra pickups wait for slots (item 52b). No controller support (item 52c). Search matches names only. Icons are drawn per kind, not per item: two forage items of a similar colour look alike. The chest holds kinds, not slots, as before. The balance bot does not open the Bag (nothing in it earns or spends).
 - v111: The outdoor scenes are set when a game loads and only on open grass or sand, like signs; the balance bot does not load them, so its maps are unchanged. Neighbours do not visit or move them.
 - v110: The stone's blessing is random, not chosen, and does not stack with itself (one a day). A buff blessing ends at bed like food. The balance bot touches the stone every morning (6 game minutes); the daily roll shifts its random draws, so its run differs (about +9% gold at the end) with no change in prices. The Lantern Float has no prize and is not in the bot. Neighbours walk to the beach from wherever their day leaves them; the Lamplighter stays below.

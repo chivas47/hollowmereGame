@@ -16,7 +16,7 @@ import { rng } from '../render/pixel.js';
 
 const SPEED = 62; // pixels per second
 
-// v114: how the body moves and rests, drawn only (nothing saved). ease: share of walking speed, building up over
+// v115: how the body moves and rests, drawn only (nothing saved). ease: share of walking speed, building up over
 // MOTION.accel. The turn, the settle on stopping, idle blinks and glances, and the tool lowered after a swing.
 const rand = rng(0x1d1e);   // its own generator, so the look never shifts the game's rolls
 const between = ([lo, hi]) => lo + rand() * (hi - lo);
@@ -52,7 +52,7 @@ addUpdater((dt) => {
   }
 });
 
-// v114: the timers behind the turn, the settle, idling and the lowered tool.
+// v115: the timers behind the turn, the settle, idling and the lowered tool.
 function rest(dt) {
   M.turn = Math.max(0, M.turn - dt); M.settle = Math.max(0, M.settle - dt); M.blink -= dt;
   const a = G.anim;
@@ -76,7 +76,7 @@ const shown = () => (M.turn > 0 && G.moving ? M.via : M.glance || G.S.dir);
 function drawBody(c, x, y, moving) {
   const a = G.anim, pal = outfitPal(G.S.profile, G.S.outfit);
   let ox = 0, oy = G.bounce > 0 ? -Math.round(Math.sin((G.bounce / 0.15) * Math.PI) * 1.5) : 0;
-  if (M.settle > MOTION.settle / 2 && !a) oy += 1;   // v114: knees give a little on stopping
+  if (M.settle > MOTION.settle / 2 && !a) oy += 1;   // v115: knees give a little on stopping
   if (a?.kind === 'place') oy += Math.round(Math.sin(Math.min(1, a.t / a.dur) * Math.PI) * 2);
   else if (a && a.kind !== 'crafted' && a.kind !== 'rod') {   // lean back on the wind-up, forward on the strike
     const p = a.t / a.dur, [dx, dy] = DIRS[a.dir], lean = p < a.strike ? -1 : p < a.strike + 0.35 ? 1 : 0;
@@ -95,7 +95,7 @@ function drawBody(c, x, y, moving) {
   if (a?.kind === 'rod') G.rodTip = handPoint(x + ox, y + oy, a.dir, swingAngle(a, Math.min(1, a.t / a.dur)), 13);
   if (a?.kind === 'crafted') drawCrafted(c, x, y, a.item, a.t / a.dur);
 }
-// v114: the tool fading from the hand at the end of its swing, instead of vanishing.
+// v115: the tool fading from the hand at the end of its swing, instead of vanishing.
 function lowered(c, tail, x, y) {
   c.save(); c.globalAlpha = tail.t / MOTION.lower; drawHeld(c, tail.a, x, y); c.restore();
 }

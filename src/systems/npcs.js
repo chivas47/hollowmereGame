@@ -285,7 +285,7 @@ export function giveGift(n, item) {
 // v50: today's outfit, the season's over the base look.
 export const lookOf = (def) => ({ ...def.pal, ...(OUTFITS[def.id]?.[today().season] || {}) });
 
-// v114: neighbours standing still blink, each on their own beat (from their place in the list, so nothing is saved).
+// v115: neighbours standing still blink, each on their own beat (from their place in the list, so nothing is saved).
 const blinks = (n, i) => !n.moving && (performance.now() / 1000 + i * 1.37) % (MOTION.blink[0] + (i % 5) * 0.6) < MOTION.blinkFor;
 
 addEntities(() => NPCRT.filter((n) => n.visible && n.map === G.S.map).map((n) => ({
