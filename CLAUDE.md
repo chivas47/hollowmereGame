@@ -20,11 +20,12 @@ For each item:
 1. **Branch** from the latest `main`. One item per branch and per pull request.
 2. **Build** it following the architecture: data in `src/data/`, logic in `src/systems/`, art in `src/render/`, DOM in `src/ui/`, one import in `main.js`, new save fields in `newState()` and `merge()`. Set its numbers by the Stardew scale above.
 3. **Teach the bot.** If the feature earns or spends gold, uses energy, or changes what the player can buy, update `tools/balance.mjs` so its bot uses it. The simulator is also the end-to-end smoke test: CI fails if it crashes.
-4. **Balance report (advisory).** `node tools/balance.mjs --compare base.json` against a run from `main`. Warnings are information, not blockers: do not tune numbers away from the Stardew scale to clear them. Mention notable shifts in the PR.
-5. **Test in the browser** (Playwright, see PROJECT_INSTRUCTIONS.md): the new feature end to end, an old save loading, no console errors.
-6. **Docs:** CHANGELOG entry, GAME_DESIGN tables and known issues, ARCHITECTURE tables if priorities, layers, events or tiles changed. Mark the item `done` in ROADMAP.md with the PR link.
-7. **Pull request** with: what it adds, the Stardew counterparts used for its numbers, the balance report summary, the test checklist, and anything that shifts what players rely on (hotbar, prices).
-8. **Watch it to green.** CI simulates base and head and comments the comparison on the PR. Fix and push until green. Do not merge; Nuno merges.
+4. **Test the logic.** New or changed rules in `src/core/`, `src/data/` or `src/systems/` (a price, a formula, a save field and its `merge()` step) get a test in `tests/*.test.mjs`. Run `node --test 'tests/*.test.mjs'`; CI fails on any failing test. Test what a player would notice breaking, not drawing or DOM.
+5. **Balance report (advisory).** `node tools/balance.mjs --compare base.json` against a run from `main`. Warnings are information, not blockers: do not tune numbers away from the Stardew scale to clear them. Mention notable shifts in the PR.
+6. **Test in the browser** (Playwright, see PROJECT_INSTRUCTIONS.md): the new feature end to end, an old save loading, no console errors.
+7. **Docs:** CHANGELOG entry, GAME_DESIGN tables and known issues, ARCHITECTURE tables if priorities, layers, events or tiles changed. Mark the item `done` in ROADMAP.md with the PR link.
+8. **Pull request** with: what it adds, the Stardew counterparts used for its numbers, the balance report summary, the test checklist, and anything that shifts what players rely on (hotbar, prices).
+9. **Watch it to green.** CI runs the tests, simulates base and head and comments the comparison on the PR. Fix and push until green. Do not merge; Nuno merges.
 
 When a PR merges, start the next `next` item on a fresh branch from `main`.
 

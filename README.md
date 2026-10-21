@@ -93,6 +93,10 @@ A new tool also needs its key in `data/hotbar.js`, a label in `ui/hotbar.js` and
 
 **New saved field:** add it to `newState()` in `core/state.js`. `merge()` keeps old saves working.
 
+## Unit tests
+
+`node --test 'tests/*.test.mjs'` (Node 22+, no install) runs the real game modules without a browser: saves and old-save upgrades, the calendar, item quality, buying and shipping. GitHub Actions runs them on every pull request that touches `src/` or `tests/`.
+
 ## Balance simulator
 
 `node tools/balance.mjs` (Node 22+) plays the real game systems headlessly with a bot for a year and prints a report: gold per day by season, income by source, spending by sink, when each purchase becomes affordable, and warnings when the economy drifts from the design (one source dominating, gold piling up, a dead winter). Runs are seeded, so the same data gives the same report: change a number in `src/data/`, rerun, compare.
