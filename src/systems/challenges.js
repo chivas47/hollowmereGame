@@ -1,7 +1,7 @@
 // v62: Sable's challenges in the Lantern and his moonstone shop (data/challenges.js).
 // G.S.challenge = { gems, week, offer: [keys], active: { key, due, given } | null, done: n, bought: [keys] }.
 import { G } from '../core/game.js';
-import { on, changed, notify } from '../core/events.js';
+import { on, emit, changed, notify } from '../core/events.js';
 import { CHALLENGES, CHALLENGE_FROM, MOON_SHOP } from '../data/challenges.js';
 import { grangeKind } from './festivals.js';
 
@@ -39,6 +39,7 @@ export function handInChallenge(item) {
   if (challengeLeft() <= 0) {
     const c = CHALLENGES[a.key];
     C().gems += c.gems; C().active = null; C().done += 1;
+    emit('challenge:done', a.key);   // v114: the journal's log (systems/journal.js)
     notify(`Sable counts it all twice, then slides ${c.gems} moonstones across the table.`);
   } else notify(`Sable makes a note. ${challengeLeft()} more.`);
   changed();

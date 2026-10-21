@@ -2,6 +2,15 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v114: Journal, quests and map
+- The journal (J) opens on four new tabs: Quests, Story, Map and People. The old Quests and Map tabs are folded into them; Museum, Fish, Notes, Achievements, Completion, Hints, Calendar and Animals follow as before. The journal card is wider.
+- Quests: Main (the next step of the valley's story) and Optional (board requests, the special order, Sable's challenge) apart, each in one plain line with where to go and what it pays. Completed: the last 40 quests you finished with their dates, and totals.
+- Track one objective: the HUD's Goal line shows it first as Tracking, until it is done or you stop tracking it. With none tracked, the Goal line works as before, and the story's next step shows after the optional ones.
+- The story: ten steps from your first harvest to the island, checked against your farm, each with a hint; a message when one is done names the next. The story so far: your farm, pet, spouse or engagement, children, close friends, the old wing, the Hollow, the boat, shortcuts, the museum and your festival results, for when you have been away. Discoveries: places found, recipes, fish and secret notes.
+- People: every neighbour, met or not, with hearts, single, dating, engaged, married or roommate, and where they are now.
+- Map: places you have not been yet show as ?; entering one for the first time puts it on the map with a message. Pick a place for its landmarks, who is there, its quests and your pins. Quest markers (!) can be turned off. Pin up to 12 notes of your own on places you have found.
+- Saves: `journal` (story steps done, the completed log, places found, pins, the tracked objective, markers on or off). An old save counts every place it could already reach as found and the story steps it had passed as done; its completed log starts empty. No keys moved, no prices changed.
+
 ## v113: The Bag screen
 - The Bag (I) has tabs: Items, Gear (weapons, rings, trinket, books, rod, kit), Skills, Wardrobe, Tools and seeds, Fish log. Everything that was on the long Bag page is still there, under its tab.
 - Items: everything you carry, seeds and crafted kit included, as a grid of icons with counts or as a list. Each item has its own icon, coloured after what it is (wine after its fruit, ore after its metal); a dot in the corner shows the best quality you hold.
