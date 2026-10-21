@@ -5,6 +5,8 @@ import { W, H } from '../core/constants.js';
 import { addUpdater, promptFor } from '../core/registry.js';
 import { on } from '../core/events.js';
 import { keyName } from '../core/controls.js';
+import { PAD_LABELS } from '../data/gamepad.js';
+import { usingPad } from './gamepad.js';
 import { HOTBAR } from '../data/hotbar.js';
 import { facing, tileAt } from '../systems/world.js';
 import { hud } from './hudPrefs.js';
@@ -18,14 +20,15 @@ function update() {
   const inside = tx >= 0 && ty >= 0 && tx < W && ty < H;
   const text = inside && hud.prompts && hud.mode !== 'hidden' && !G.siting
     ? promptFor({ tx, ty, tile: tileAt(tx, ty), mapId: G.S.map, item: HOTBAR[G.S.slot] }) : null;
-  const key = text && `${text}|${tx},${ty}|${touch.matches}|${keyName('use')}`;
+  const useKey = usingPad() ? PAD_LABELS.use : keyName('use');   // v126: the pad's A once a controller is in use
+  const key = text && `${text}|${tx},${ty}|${touch.matches}|${useKey}`;
   if (key === shown) return;
   shown = key;
   const el = $('#prompt'), use = $('#use');
   use.textContent = text && touch.matches ? text.split(' ')[0] : 'Use';
   el.hidden = !text;
   if (!text) return;
-  el.innerHTML = touch.matches ? text : `<kbd>${keyName('use')}</kbd> ${text}`;
+  el.innerHTML = touch.matches ? text : `<kbd>${useKey}</kbd> ${text}`;
   el.style.left = `${((tx + 0.5) / W) * 100}%`;
   const below = ty < 2;   // no room above the top rows
   el.style.top = `${((below ? ty + 1 : ty) / H) * 100}%`;
