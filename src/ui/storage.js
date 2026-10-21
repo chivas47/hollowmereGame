@@ -15,13 +15,13 @@ import { placedAt, pickUp } from '../systems/placeables.js';
 import { animalDef, kindOf, hearts } from '../systems/livestock.js';
 import { hearts as petHearts } from '../systems/pets.js';
 import { addJournalTab } from './museum.js';
-import { QUALITY } from '../data/quality.js';
 import { ITEM_KIND } from '../data/bag.js';
 import { counts } from '../systems/quality.js';
 import { iconURL } from '../render/itemIcons.js';
 import { onDrop } from './drag.js';
 import { openModal, closeModal } from './modal.js';
 import { $, esc } from './dom.js';
+import { qualityMark } from './inventory.js';
 
 const row = (title, text, btn = '') => `<div class="shoprow"><div><b>${title}</b><span>${text}</span></div>${btn ? `<div class="btns">${btn}</div>` : ''}</div>`;
 const sum = (q) => q.reduce((a, b) => a + b, 0);
@@ -35,7 +35,7 @@ function chest() {
   const inside = Object.entries(p.store || {}), bag = Object.keys(G.S.bag).filter((k) => G.S.bag[k] > 0);
   // v113: icons; click an item to move it across, or drag it from one side to the other (ui/drag.js)
   const cell = (k, n, q, attr) => { const t = [3, 2, 1].find((i) => q[i]) || 0;
-    return `<button class="bagcell" ${attr}="${k}" data-drag="${k}" title="${esc(`${ITEMS[k].name} × ${n}${qualText(q) ? `, ${qualText(q)}` : ''}`)}" aria-label="${esc(`${ITEMS[k].name} × ${n}`)}"><img src="${iconURL(k, ITEM_KIND[k])}" alt="" width="32" height="32" draggable="false"><b>${n}</b>${t ? `<i class="star" style="background:${QUALITY[t].color}"></i>` : ''}</button>`; };
+    return `<button class="bagcell" ${attr}="${k}" data-drag="${k}" title="${esc(`${ITEMS[k].name} × ${n}${qualText(q) ? `, ${qualText(q)}` : ''}`)}" aria-label="${esc(`${ITEMS[k].name} × ${n}`)}"><img src="${iconURL(k, ITEM_KIND[k])}" alt="" width="32" height="32" draggable="false"><b>${n}</b>${qualityMark(t)}</button>`; };
   const inCells = inside.map(([k, q]) => cell(k, sum(q), q, 'data-ctake')).join('');
   const bagCells = bag.filter((k) => !needle || ITEMS[k].name.toLowerCase().includes(needle)).map((k) => cell(k, G.S.bag[k], counts(k), 'data-cput')).join('');
   const sc = $('#modal .card').scrollTop, same = !$('#modal').hidden && $('#mbody [data-drop="chest"]');

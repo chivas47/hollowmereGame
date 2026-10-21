@@ -731,6 +731,8 @@ Small, and only what matters right now. Nothing here touches the economy.
 
 HUD size: 100% to 140%, never smaller (HUD text stays 16 px or larger). Full, minimal or hidden: V or the menu. Settings live in the browser, not the save.
 
+v120: Text size, 100% to 150%, scales dialogs, the menu and the bag (the HUD has its own size); a card still fits the window and scrolls. Contrast puts solid black behind the objective, the Use prompt, messages and the basket line, with cream edges on the meters, buttons and hotbar slots. Signals no longer rest on colour alone: quality in the bag and chests shows as 1 to 3 pips (fine, prime, heirloom) in the tier's colour, a low meter is striped as well as red, and ripe crops and forage glint with a small cross instead of a single dot. The objective and the Use prompt now sit under open dialogs instead of over them.
+
 ## The Bag (v113)
 
 The Bag (I) is the inventory screen. No prices or numbers change; there is no limit on what you carry (Nuno's choice, October 2026: no backpack slots).
@@ -1104,6 +1106,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v120: Contrast changes the HUD and messages, not the field's own art (soil, crops and paths keep their colours). On a phone the page could already scroll sideways by a few pixels before v120; Text size does not change that.
 - v119: Keys are named by their place on a US keyboard (the browser's key codes), so on another layout a key can be named differently from what is printed on it, though it works as bound. The arcade cabinets keep their own keys. A long key name (R Shift) is cut short in a hotbar corner.
 - v118: One morning copy, not a history: a save that went wrong overnight is also the morning's copy. One farm per browser (save slots are item 61). Reloading the page saves first (the tab hides), so a farm put into storage by hand is overwritten unless the page is closed.
 - v114: Markers and pins are per place, not per tile: the map is a grid of places, not a drawn map, and has no paths between them. Quest markers point at where you hand in (the village board, the Lantern), not where the item is found. A save from before v114 counts every place it could reach as found (the dunes once the old wing is whole, the island once the boat is mended, the dig site once its bridge is fixed), and the story steps it had already passed as done "before this journal"; the finished-quest log starts empty, with totals. The balance bot does not open the journal (nothing in it earns or spends).
