@@ -24,6 +24,8 @@ export function newState() {
     bag: Object.fromEntries(Object.keys(ITEMS).map((k) => [k, 0])),
     bin: 0,
     hints: true,        // v101: the stuck-tool tip and the morning report's tip (systems/hints.js)
+    traditions: { blessed: 0, floated: [] },   // v110: the day the wishing stone was last touched, the years a lantern was floated
+    blessing: null,     // v110: today's blessing { id, until, ...effects } (systems/traditions.js, read by buffs.js)
     shortcuts: {},      // v106: shortcuts cut open, by id (systems/shortcuts.js)
     qbag: {},           // item -> [fine, prime, heirloom] counts within bag (see systems/quality.js)
     soil: {},           // farm: "x,y" -> { w: watered, crop: { type, age, dead } | null }
@@ -150,6 +152,7 @@ export function merge(saved) {
   for (const k of ['forged', 'weaponEnch', 'toolEnch']) if (!s[k] || typeof s[k] !== 'object') s[k] = {};
   if (!Array.isArray(s.goalsClaimed)) s.goalsClaimed = [];
   if (!s.fridge || typeof s.fridge !== 'object') s.fridge = {};
+  s.traditions = { blessed: saved.traditions?.blessed || 0, floated: [...(saved.traditions?.floated || [])] };   // v110
   s.gates = Object.assign(newState().gates, saved.gates || {});   // v45
   for (const k of ['mail', 'mailRead', 'children']) if (!Array.isArray(s[k])) s[k] = [];   // v48, v53
   if (saved.day > 3 && !saved.mailRead) s.mailRead.push('welcome');   // v48: no welcome letter for a farm already under way

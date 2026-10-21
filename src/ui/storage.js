@@ -7,6 +7,7 @@ import { ITEMS } from '../data/items.js';
 import { MAPS } from '../data/maps.js';
 import { NPCS } from '../data/npcs.js';
 import { FESTIVALS } from '../data/festivals.js';
+import { floatOn } from '../data/traditions.js';
 import { SEASON_LENGTH, WEEKDAYS } from '../data/seasons.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { ORDERS } from '../data/orders.js';
@@ -80,7 +81,7 @@ addJournalTab('cal', 'Calendar', () => {
   const t = today();
   const cells = Array.from({ length: SEASON_LENGTH }, (_, i) => {
     const d = i + 1, f = FESTIVALS.find((x) => x.season === t.season && x.day === d), b = NPCS.filter((n) => n.birthday?.season === t.season && n.birthday.d === d);
-    const marks = [f ? `<b>${f.name}</b>` : '', ...b.map((n) => `${esc(n.name)}'s birthday`)].filter(Boolean).join('<br>');
+    const fl = floatOn({ season: t.season, d }), marks = [f ? `<b>${f.name}</b>` : '', fl ? `<b>${fl.name}</b>` : '', ...b.map((n) => `${esc(n.name)}'s birthday`)].filter(Boolean).join('<br>');
     return `<div class="cal${d === t.d ? ' now' : ''}${d < t.d ? ' past' : ''}"><span>${d}</span>${marks}</div>`;
   }).join('');
   return `<h3>${t.season}, year ${t.year}</h3><p>Today is ${t.wd} the ${t.d}.</p><div class="calgrid">${WEEKDAYS.map((w) => `<div class="calhead">${w}</div>`).join('')}${cells}</div>`;

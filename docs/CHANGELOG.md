@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v110: Local traditions
+- The wishing stone, east of the village square: touch it once a day for one blessing until bed, picked at random: the hare (luck +2), the swift (speed +1), the boar (attack +2), the tortoise (defense +2), the hearth (talks count double) or the spring (+60 energy now). Its mark glows once it has been touched today.
+- The Lantern Float, the last night of summer (Summer 28, 10 pm to midnight): after their usual day the whole village walks down to Saltreach Beach and sets paper lanterns on the sea. Face the water and press Use to set yours, once a year (fishing works again once it is out). Talks there count double, as at a festival, and neighbours have a line for the night. The lanterns light the dark as they drift out.
+- The morning report names the Lantern Float on its day, and the journal's calendar marks it.
+- Saves: `traditions` (the day the stone was last touched, the years a lantern was set) and `blessing` (today's blessing). Old saves start with neither.
+
 ## v109: Footsteps by surface
 - Soft footsteps as you walk, sounding like what is underfoot: grass, dirt paths, sand, the quarry and caves (stone), floors indoors and the beach pier (wood), placed wood and stone paths. Winter turns grass and paths to snow, rain makes them wet. Hooves on horseback.
 - They play at the Ambience volume (Sound off mutes them too). Steps: on or off in the menu turns them off alone; the choice is kept per browser like Sound and Music.

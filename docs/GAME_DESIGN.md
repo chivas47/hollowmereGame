@@ -687,6 +687,13 @@ Original where Stardew's mechanic does not exist here: Bountiful, Quickgrow, See
 
 - One contest entry per festival per year. On festival days neighbours skip the farm and stand in the square; talking there gives double points (40) and a festival line.
 
+### Local traditions (v110)
+
+| Tradition | When and where | What happens | Stardew counterpart |
+|---|---|---|---|
+| The wishing stone | Every day, east of the village square | Touch it for one blessing until bed, at random: luck +2, speed +1, attack +2, defense +2, talks count double, or +60 energy now | The Statue of Blessings (one random blessing a day, free), refitted to our buffs at a good dish's strength; the energy one matches warm cider |
+| The Lantern Float | Summer 28, 22:00 to 24:00, Saltreach Beach | The village gathers on the sand after its usual day; face the sea and press Use to set your lantern, once a year. Talks count double (40), with a line for the night | The Dance of the Moonlight Jellies (a gathering to watch, no prize) |
+
 ### Gold sinks
 
 One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up to 4,400g of animals, crafting (machines 400 to 600g each, sprinklers 75 to 200g each; a full field of iron sprinklers is about 1,600g and 24 iron), lanterns 350g each with no cap. Hillside manor 12,000g, village projects 32,000g. Recurring: seeds, hay (10g per animal per night) and chicken feed (5g per chicken per night).
@@ -1025,6 +1032,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v110: The stone's blessing is random, not chosen, and does not stack with itself (one a day). A buff blessing ends at bed like food. The balance bot touches the stone every morning (6 game minutes); the daily roll shifts its random draws, so its run differs (about +9% gold at the end) with no change in prices. The Lantern Float has no prize and is not in the bot. Neighbours walk to the beach from wherever their day leaves them; the Lamplighter stays below.
 - v109: Footsteps are the player's only; neighbours and animals walk silently. Indoor floors all sound like wood, rugs included.
 - v108: The cart line has three stops; the farm has none (its ground is the player's). The balance bot does not ride carts; it rarely restores the boiler room. Ashgrove's grey paint shows from joining, before any room is bought.
 - v107: Signs are set when a game loads and only on open grass or sand; a sign whose tile is not open is skipped. The balance bot does not load them, so its maps are unchanged.

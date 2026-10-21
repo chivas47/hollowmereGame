@@ -133,6 +133,7 @@ on('day:report', (r) => {
     html += '</p>';
   }
   if (r.festival) html += `<p class="gift">Today is the ${r.festival.name}! Head to the village square, ${fmtTime(hoursOf(r.festival).from)} to ${fmtTime(hoursOf(r.festival).to)}. Your neighbours will be there instead of the farm.</p>`;
+  if (r.tradition) html += `<p class="gift">Tonight is the ${r.tradition.name}. ${r.tradition.intro}</p>`;   // v110
   if (r.festivalSoon) html += `<p class="role">The ${r.festivalSoon.f.name} is in ${plural(r.festivalSoon.inDays, 'day')} (${r.festivalSoon.f.season} ${r.festivalSoon.f.day}).</p>`;
   if (r.built) html += `<p class="gift">Bram finished your ${r.built}.</p>`;
   const made = (m) => Object.entries(m || {}).map(([k, n]) => `${n} ${ITEMS[k].name.toLowerCase()}`).join(', ');

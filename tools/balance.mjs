@@ -72,7 +72,7 @@ globalThis.performance ??= { now: () => Date.now() };
 const SRC = resolve(dirname(new URL(import.meta.url).pathname), '../src');
 const load = (p) => import(pathToFileURL(`${SRC}/${p}`).href);
 const SYSTEMS = ['layouts', 'sites', 'professions', 'cooking', 'player', 'clock', 'effects', 'farming', 'seeds', 'forage', 'buildings', 'economy', 'npcs', 'fishing', 'upgrades', 'coop',
-  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots', 'areas', 'quarry', 'hidden', 'town', 'mail', 'restoration', 'orders', 'challenges'];
+  'mine', 'health', 'gear', 'monsters', 'placeables', 'crafting', 'sprinklers', 'artisan', 'livestock', 'barn', 'skills', 'quests', 'festivals', 'village', 'greenhouse', 'mill', 'ponds', 'helpers', 'trees', 'giants', 'clearing', 'weather', 'farmPerks', 'pets', 'stable', 'house', 'clothing', 'treasure', 'guild', 'forge', 'books', 'pots', 'areas', 'quarry', 'hidden', 'town', 'mail', 'restoration', 'orders', 'challenges', 'traditions'];
 for (const s of SYSTEMS) await load(`systems/${s}.js`);
 
 const { G } = await load('core/game.js');
@@ -138,6 +138,7 @@ const { MINE, enterMine, leaveMine, checkpoints } = await load('systems/mine.js'
 const { skillLevel } = await load('systems/skills.js');
 const { bombs, throwBomb, openChest, crackGeode, GEODES } = await load('systems/treasure.js');
 const { buyGear, owns } = await load('systems/guild.js');
+const { bless } = await load('systems/traditions.js');   // v110: the wishing stone
 const { LODGE_SHOP } = await load('data/guild.js');
 const { readBook } = await load('systems/books.js');
 const { finishReel, stepReel, buyBait } = await load('systems/fishing.js');
@@ -783,6 +784,7 @@ function simulate(runSeed) {
     const s = S();
     const spent0 = Object.values(log.spend).reduce((a, x) => a + x, 0);
     for (let p = pending(); p; p = pending()) choose(p.skill, PICKS[p.skill][p.level === 5 ? 0 : 1]);
+    spend(TIME.travel); bless();   // v110: the wishing stone's blessing on the way out, every morning
     animals();
     pet();
     orchard();

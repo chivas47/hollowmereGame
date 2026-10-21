@@ -9,6 +9,7 @@ import { MAPS } from '../data/maps.js';
 import { NIGHT_LIGHTS as N } from '../data/atmosphere.js';
 import { r } from '../render/pixel.js';
 import { parsePlaceKey } from './world.js';
+import { floatLights } from './traditions.js';
 
 const outdoors = () => !!MAPS[G.S.map] && !MAPS[G.S.map].base;
 const night = () => G.S.time >= N.from;
@@ -39,6 +40,7 @@ export function outdoorLights() {
     const at = parsePlaceKey(k);
     if (at.map === G.S.map) out.push({ x: at.x * T + 8, y: at.y * T + 6, r: N.lantern.r * T, rgb: N.lantern.rgb });
   }
+  out.push(...floatLights());   // v110: the Lantern Float on the beach
   return out;
 }
 

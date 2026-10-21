@@ -23,6 +23,8 @@ const SFX = {
   thunder: () => { noise({ dur: 2.2, vol: 0.3, freq: 180, sweep: 40, at: 0.5 }); noise({ dur: 0.5, vol: 0.18, freq: 900, sweep: 200, at: 0.45 }); },   // v72
   flap:    () => [0, 0.06, 0.12].forEach((at) => noise({ dur: 0.05, vol: 0.06, filter: 'bandpass', freq: 1400, at })),   // v72: a bird takes off
   ui:      () => tone({ freq: 700, dur: 0.04, type: 'triangle', vol: 0.05 }),
+  chime:   () => [1175, 1568].forEach((f, i) => tone({ freq: f, dur: 0.5, type: 'sine', vol: 0.05, at: i * 0.18 })),   // v110: the wishing stone
+  splash:  () => noise({ dur: 0.3, vol: 0.08, filter: 'lowpass', freq: 700, sweep: 200 }),   // v110: a lantern on the water
   morning: () => [784, 988, 1175].forEach((f, i) => tone({ freq: f, dur: 0.25, type: 'sine', vol: 0.06, at: i * 0.12 })),
 };
 

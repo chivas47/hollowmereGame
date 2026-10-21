@@ -9,6 +9,8 @@ import { ITEMS } from '../data/items.js';
 import { NPCS, OUTFITS } from '../data/npcs.js';
 import { festivalOn, hoursOf, FESTIVAL_SPOTS } from '../data/festivals.js';
 import { scheduleFor, spouseDay, festivalDay } from '../data/schedules.js';
+import { floatOn } from '../data/traditions.js';
+import { buff } from './buffs.js';
 import { HOMES, homeMap, SPOUSE_HOME } from '../data/homes.js';
 import { SCENES, SCENE_HEARTS } from '../data/scenes.js';
 import { GIFT_POINTS, BIRTHDAY_MULT, UNIVERSAL } from '../data/gifts.js';
@@ -47,6 +49,9 @@ on('day:start', () => { const n = NPCS.find((d) => isBirthday(d)); if (n) notify
 
 // On a festival day neighbours skip their rounds and walk to their place in the village square for its hours.
 const festival = () => festivalOn(today());
+// v110: the Lantern Float (data/traditions.js) is a gathering, not a festival: the day runs as usual, then everyone
+// walks to the beach for its hours. Talks there count double, as at a festival.
+const gathering = () => { const f = floatOn(today()); return f && G.S.map === f.map && G.S.time >= f.hours.from && G.S.time < f.hours.to ? f : null; };
 
 // v76: each neighbour lives somewhere (data/homes.js) and starts and ends the day there, walking (systems/routes.js)
 // between home and the places on their schedule.
@@ -62,7 +67,8 @@ on('game:loaded', snapAll);
 function blocksOf(n) {
   const f = festival();
   if (f) return n.def.noFestival ? [] : festivalDay(FESTIVAL_SPOTS[n.id] || [12, 7], hoursOf(f));   // v53: the Lamplighter stays below
-  return spouse() === n.id ? spouseDay() : scheduleFor(n.def, G.S.day);
+  const day = spouse() === n.id ? spouseDay() : scheduleFor(n.def, G.S.day), fl = floatOn(today());
+  return fl && fl.spots[n.id] ? [...festivalDay(fl.spots[n.id], fl.hours, fl.map), ...day] : day;
 }
 const active = (blocks, t) => blocks.find((b) => t >= b.from && t < b.to) || null;
 const keyOf = (b) => (b ? `${b.map}@${b.from}` : 'home');   // blocks are built fresh, so compare by key
@@ -171,12 +177,12 @@ export function addPoints(id, pts) {
 }
 
 export function startTalk(n) {
-  const st = G.S.npcs[n.id], d = n.def, fest = festival();
+  const st = G.S.npcs[n.id], d = n.def, fest = festival() || gathering();
   G.talking = n.id;
   n.dir = OPPOSITE[G.S.dir];
   let extra = '';
   if (st.talked !== G.S.day) {
-    st.talked = G.S.day; gain(n.id, TALK_POINTS * (fest ? 2 : 1));   // festival talks count double
+    st.talked = G.S.day; gain(n.id, TALK_POINTS * (fest || buff('talk') ? 2 : 1));   // festival talks count double (v110: and with the hearth's blessing)
     extra = applyReward(n); changed();
   }
   const h = hearts(st), scene = pendingScene(n);

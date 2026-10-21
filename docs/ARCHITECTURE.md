@@ -51,6 +51,7 @@ src/
     guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item, underSky()
     atmosphere.js     LIGHT keyframes, WATERFALLS, WILDLIFE, AMBIENCE by area (v72); indoor LIGHTS, HOUSE_WINDOWS, CRACKLE_RANGE (v100); WATER (v102); WIND, CLOTHESLINES (v103); SEASONAL, SEASONAL_MAX (v104); STEPS, STEP_EVERY, HOOF_EVERY (v109); NIGHT_LIGHTS (v105)
+    traditions.js     v110: the wishing stone (STONE, STONE_TILE, BLESSINGS) and the Lantern Float (FLOAT: day, hours, the neighbours' spots on the beach, lines), floatOn()
     hints.js          HINTS (id, when(S, facts), text) most pressing first, TOOL_TIPS, STUCK_PRESSES (v101)
     animation.js      SWINGS (tool arcs and timings), COMBO (weapon combo steps), PICKUP, CRAFTED, PLACE, IMPACT colours (v74)
     schedules.js      neighbour daily routines by weekday (go: walk a loop of spots, at: walk there and stay), spouse and festival days
@@ -137,6 +138,7 @@ src/
     weather.js        today's weather and the forecast, rain watering, lightning, the rain/snow/mist overlay
     wind.js           lean(x): how far things lean in the wind now, by weather and the day (v103; no drawing, safe for the balance bot)
     wing.js           the town reacts to the old wing (boards, planter, flowers, fountain, smoke, bunting, plaque; the Ashgrove look) and the cart line; solid Ž and Ç tiles placed as rooms are done (v108)
+    traditions.js     the wishing stone (solid Ӂ in the village at load, bless() sets G.S.blessing, read by buffs.js) and the Lantern Float on the beach (setLantern(), floatLights() for nightlights.js; npcs.js walks neighbours there) (v110, G.S.traditions)
     signs.js          signposts and notices outdoors: solid Ş tiles set on open ground at load, Use reads them (v107)
     shortcuts.js      fallen trunks across shortcuts, cut with the copper axe; then trunk tiles turn to path and the maps get exits (v106, G.S.shortcuts)
     nightlights.js    outdoorLights(): lit windows, lamp posts and lanterns after dusk (renderer.js cuts them out of the dark); lit glass and lamp posts (v105, drawn only)
@@ -222,6 +224,8 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 73 | trees.js | Facing a fruit tree (pick fruit) |
 | 72 | wing.js | Facing a cart stop Ç (opens the cart line, ui:carts), the plaque, rubble or planter Ž (v108) |
 | 73 | signs.js | Facing an outdoor signpost or notice Ş (reads it) (v107) |
+| 73 | traditions.js | Facing the wishing stone Ӂ in the village (today's blessing) (v110) |
+| 67 | traditions.js | Facing the sea on the beach during the Lantern Float, before your lantern is out (sets it; above casting at 65) (v110) |
 | 73 | storage.js | Facing a chest, sign or farm computer (its own dialog, ahead of placed objects at 72) (v71) |
 | 73 | buildings.js | Facing a mini shipping bin (ships; axe or pickaxe takes it up) |
 | 72 | pets.js | The water bowl b (the can fills it) |
@@ -282,6 +286,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 10 | farming.js, forage.js | Soil, crops, forage (soil of the current map) |
 | 11 | atmosphere.js | Rain splashes |
 | 12 | fishing.js | Ice hole in winter |
+| 12 | traditions.js | Lanterns drifting on the sea during the Lantern Float (v110; their lit tops at 1001) |
 | 14 | falling.js | Petals, leaves and snow resting on the ground (v104) |
 | 20 | placeables.js | Sprinklers, machines, lanterns |
 | 30 | festivals.js | Bunting on festival days |
@@ -342,7 +347,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `ui:scene` | {npc, at, scene, extra} | npcs.js | ui/dialogs.js heart scene with choices |
 | `ui:*` | varies | systems | ui modules open dialogs |
 
-The `report` object collects overnight results: `passedOut, grown, payout, withered, newSeason, eggs, built, milk, hungry, artisan, sprinkled, questsPosted, questsExpired, festival, festivalSoon`. Add a field, set it in a `day:end` or `day:start` listener, and show it in the `day:report` handler in ui/dialogs.js.
+The `report` object collects overnight results: `passedOut, grown, payout, withered, newSeason, eggs, built, milk, hungry, artisan, sprinkled, questsPosted, questsExpired, festival, festivalSoon, tradition` (v110). Add a field, set it in a `day:end` or `day:start` listener, and show it in the `day:report` handler in ui/dialogs.js.
 
 ## State
 
@@ -390,6 +395,7 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | f, X | cave floor, cave wall | no, yes |
 | r, c, i | stone, copper, iron rock | yes |
 | U, L | ladder up, ladder down | yes |
+| Ӂ | the wishing stone in the village (v110; written at load on open grass) | yes |
 | \|, }, ;, {, ? | fallen log, rubble, sewer grate, hot spring, sewer trader (v45; the gates become P once open) | yes |
 
 `objects` on a map draw building art from `OBJECT_ART` in render/tiles.js. Maps with `base: 'cave'` use cave floor art and skip the night tint; `home_<id>` maps (v76) are the neighbours' cottages, `base: 'house'` with a `home` owner id; `base: 'greenhouse'` uses plank floor and soil-bed art.
