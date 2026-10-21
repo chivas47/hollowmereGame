@@ -242,6 +242,24 @@ export function drawBlink(c, px, py, dir, p) {
   else if (dir === 'right') r(c, sheet ? x + 2 : x + 1, y, 1, 1, p.skin);
 }
 
+// v124: a neighbour's emote (data/emotes.js) over their head, k from 0 to 1 through it. Most are a bubble with a
+// sign in it; a wave is a raised hand and a sigh a puff of breath. p: their palette (the hand is skin).
+const EMOTE_ART = {
+  love: (c, x, y) => { const h = '#d94a5a'; r(c, x + 2, y + 1, 2, 1, h); r(c, x + 5, y + 1, 2, 1, h); r(c, x + 1, y + 2, 7, 2, h); r(c, x + 2, y + 4, 5, 1, h); r(c, x + 3, y + 5, 3, 1, h); r(c, x + 4, y + 6, 1, 1, h); },
+  happy: (c, x, y) => { const n = '#3f6fb0'; r(c, x + 5, y + 1, 1, 5, n); r(c, x + 6, y + 1, 2, 1, n); r(c, x + 7, y + 2, 1, 1, n); r(c, x + 3, y + 5, 3, 2, n); },
+  frown: (c, x, y) => { const d = '#2b211a'; r(c, x + 3, y + 2, 1, 1, d); r(c, x + 5, y + 2, 1, 1, d); r(c, x + 3, y + 4, 3, 1, d); r(c, x + 2, y + 5, 1, 1, d); r(c, x + 6, y + 5, 1, 1, d); },
+  angry: (c, x, y) => { const a = '#c0392b'; r(c, x + 3, y + 1, 1, 6, a); r(c, x + 5, y + 1, 1, 6, a); r(c, x + 2, y + 2, 5, 1, a); r(c, x + 2, y + 5, 5, 1, a); },
+  surprise: (c, x, y) => { const a = '#d94a5a'; r(c, x + 4, y + 1, 1, 4, a); r(c, x + 4, y + 6, 1, 1, a); },
+};
+export function drawEmote(c, px, py, kind, k, p) {
+  const x = Math.round(px), y = Math.round(py);
+  if (kind === 'wave') { r(c, x + 5 + (Math.floor(k * 8) % 2), y - 14, 1, 3, p.skin); return; }
+  if (kind === 'sigh') { const up = Math.round(k * 6), a = `rgba(226,230,236,${(1 - k).toFixed(2)})`; r(c, x + 3, y - 11 - up, 2, 1, a); r(c, x + 4, y - 12 - up, 2, 1, a); return; }
+  const bx = x - 4, by = y - 27 + (k < 0.15 ? Math.round((0.15 - k) * 20) : 0);   // pops up into place
+  r(c, bx, by, 9, 8, '#fffbe8'); r(c, bx + 3, by + 8, 2, 1, '#fffbe8');
+  EMOTE_ART[kind]?.(c, bx, by);
+}
+
 export function drawBubble(c, px, py) {
   const x = Math.round(px) - 2, y = Math.round(py) - 25 - (Math.floor(performance.now() / 350) % 2);
   r(c, x, y, 5, 6, '#fffbe8'); r(c, x + 1, y + 6, 2, 1, '#fffbe8'); r(c, x + 2, y + 1, 1, 3, '#2b211a'); r(c, x + 2, y + 5, 1, 1, '#2b211a');

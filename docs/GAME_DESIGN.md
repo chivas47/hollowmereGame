@@ -721,6 +721,21 @@ v123, the world answers back (data/animation.js PERK, PICKUP, FLUTTER; looks onl
 - Anything new in the bag pops out where it came from, bounces once with a small skip sideways (0.3 s), then flies to you as before. The "+n Name" label comes 0.3 s later than it did; the item is in the bag at once, as before.
 - Outdoors in wind past 0.35 lean (breezy days, rain and storms), the player's and neighbours' hair and shirts stir: a loose strand beside the head, two for long hair, and the hem flapping downwind, faster in stronger wind.
 
+
+v124, neighbour reactions (Stardew's emotes by role; data/emotes.js, looks only):
+
+| Moment | Bubble | Gesture |
+|---|---|---|
+| A loved gift (also a bouquet or pendant accepted) | heart | a hop |
+| A liked gift | note | a hop |
+| A disliked gift | frown | a shake of the head |
+| A hated gift | red cross-hatch | a shake |
+| The day's first hello | none | a raised hand |
+| Meeting you for the first time | ! | a hop |
+| Standing still outdoors in rain or a storm, about once in 40 s | none | a puff of breath |
+
+A neutral gift shows nothing. Reactions play once the dialog closes; the talk bubble waits until they end.
+
 ## The HUD (v112)
 
 Small, and only what matters right now. Nothing here touches the economy.
@@ -1130,6 +1145,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v124: Only neighbours react, not the pet or farm animals. The rain sigh does not happen indoors or in mist.
 - v123: Only the watering can perks crops up (sprinklers and rain water them without it). Hats and the horse do not stir in the wind. Water and foliage already moved (v102, v103).
 - v122: The arrival is pages of text, not a walked scene: Bram does not stand by the bin while it shows. First-week goals pay nothing (Stardew's first quests pay about 100g); a goal left undone stays until it is done. The balance bot plays without them.
 - v121: Offline needs one visit online first. On a slow connection that never fails, loading waits for the network before the cached copy is used. The font comes from Google Fonts, so offline before it was ever loaded the game uses a fallback font. Files removed from the game stay in the cache (they are small and never asked for).
