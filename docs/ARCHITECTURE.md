@@ -337,7 +337,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 |---|---|---|---|
 | `state:changed` | none | everywhere via `changed()` | HUD, hotbar |
 | `toast` | message | `notify()` | ui/toast.js |
-| `hud:prefs` | none | ui/hudPrefs.js | ui/goal.js, ui/prompt.js (v112) |
+| `hud:prefs` | none | ui/hudPrefs.js (v120: also text size and contrast) | ui/goal.js, ui/prompt.js (v112) |
 | `controls:changed` | none | core/controls.js (v119) | ui/controls.js (labels, the list), ui/hotbar.js (slot keys) |
 | `game:loaded` | none | main.js, reset | forage, upgrades (recalc), coop (place), mine (eject) |
 | `game:reset` | none | ui/dialogs.js | renderer cache, npcs, coop, fishing |

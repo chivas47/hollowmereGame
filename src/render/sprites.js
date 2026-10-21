@@ -71,12 +71,15 @@ function sheetCrop(c, X, Y, d, stage) {
   frame(c, tinted(C.sheet, C.layers, layers, C.size), C.cols[stage] ?? C.cols.root, C.size, X, Y);
 }
 
+// v120: the ready glint on ripe crops and forage, a small cross so it reads by shape, not only as a dot.
+function sparkle(c, x, y) { r(c, x - 1, y, 3, 1, '#fffbe8'); r(c, x, y - 1, 1, 3, '#fffbe8'); }
+
 export function drawCrop(c, X, Y, crop) {
   const d = CROPS[crop.type], p = crop.age / (crop.need || d.days), cx = X + 8;
   if (ready(CROPS_SHEET.sheet)) {
     const ripe = !crop.dead && crop.age > 0 && p >= 1;
     sheetCrop(c, X, Y, d, crop.dead ? 'dead' : crop.age === 0 ? 'seed' : p < 0.5 ? 'sprout' : p < 1 ? 'young' : d.shape);
-    if (ripe && blink(450)) r(c, X + 13, Y + 2, 1, 1, '#fffbe8');
+    if (ripe && blink(450)) sparkle(c, X + 13, Y + 2);
     return;
   }
   if (crop.dead) { r(c, cx, Y + 6, 1, 7, '#7a5a3a'); r(c, cx - 3, Y + 8, 3, 1, '#7a5a3a'); r(c, cx + 1, Y + 5, 3, 1, '#7a5a3a'); r(c, cx - 4, Y + 7, 1, 1, '#7a5a3a'); return; }
@@ -84,7 +87,7 @@ export function drawCrop(c, X, Y, crop) {
   if (p < 0.5) { r(c, cx, Y + 8, 1, 4, '#5da34a'); r(c, cx - 2, Y + 7, 2, 2, '#7fc35f'); r(c, cx + 1, Y + 6, 2, 2, '#7fc35f'); return; }
   if (p < 1) { r(c, cx, Y + 5, 1, 7, '#4f9440'); r(c, cx - 4, Y + 5, 4, 3, '#6fb552'); r(c, cx + 1, Y + 3, 4, 3, '#6fb552'); r(c, cx - 2, Y + 9, 2, 2, '#5da34a'); return; }
   (RIPE_ART[d.shape] || RIPE_ART.root)(c, X, Y, cx, d);
-  if (blink(450)) r(c, X + 13, Y + 2, 1, 1, '#fffbe8');
+  if (blink(450)) sparkle(c, X + 13, Y + 2);
 }
 
 const FORAGE_ART = {
@@ -145,7 +148,7 @@ const FORAGE_ART = {
 export function drawForage(c, f) {
   const X = f.x * T, Y = f.y * T;
   drawForageArt(c, X, Y, f.type);
-  if (blink(500, 4)) r(c, X + 13, Y + 3, 1, 1, '#fffbe8');
+  if (blink(500, 4)) sparkle(c, X + 13, Y + 3);
 }
 
 // Hat shapes (data/clothing.js style). x, y: the person's top-left.

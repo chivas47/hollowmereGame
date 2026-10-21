@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v120: Readability and colour
+- Text size in the menu (100% to 150%) scales dialogs, the menu and the bag; cards still fit the window. The HUD keeps its own size slide.
+- Contrast in the menu: solid black behind the objective, the Use prompt, messages and the basket line, cream edges on meters, buttons and hotbar slots.
+- Signals that were colour only now have a shape too: quality pips (1 fine, 2 prime, 3 heirloom) in the bag and chests, stripes on a low meter, and a small cross glint on ripe crops and forage instead of one dot.
+- Fixed: the objective and the Use prompt drew on top of open dialogs and the menu.
+- Fixed: at a large text size on a phone, the sound and size slides ran past the edge of the menu.
+- Settings are kept in this browser, not the save. No prices, energy or keys changed.
+
 ## v119: Key rebinding
 - Every key except Esc (the menu) and ` (debug tools) can be changed in the menu's Controls list: click a key, press the new one. Esc cancels, Backspace removes a second key, Reset keys goes back to the defaults. Each action takes up to two keys; a key another action used swaps over, and the menu says what moved.
 - Keys are kept in this browser, like the sound settings, not in the save.

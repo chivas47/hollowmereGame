@@ -101,6 +101,8 @@ const TABS = { items: 'Items', gear: 'Gear', skills: 'Skills', wardrobe: 'Wardro
 const V = { tab: 'items', sel: null, cmp: null, q: '', cat: 'all' };   // what the Bag shows; the view and sort are saved (G.S.bagView)
 const pct = (t) => `<span class="qual q${t}" style="color:${QUALITY[t].color}">${QUALITY[t].name}</span>`;
 const icon = (e) => `<img src="${iconURL(e.id, e.kind)}" alt="" width="32" height="32" draggable="false">`;
+// v120: the best quality in a cell, as 1 to 3 pips in the tier's colour, so it reads by count as well as colour.
+export const qualityMark = (t) => (t ? `<i class="star" style="--q:${QUALITY[t].color}">${'<span></span>'.repeat(t)}</i>` : '');
 const best = (e) => (e.q ? [3, 2, 1].find((t) => e.q[t]) : 0) || 0;
 
 function cell(e) {
@@ -109,7 +111,7 @@ function cell(e) {
   if (G.S.bagView.view === 'list') {
     return `<button class="bagline${cls}" data-bagitem="${e.id}" data-drag="${e.id}" aria-label="${esc(tip)}">${icon(e)}<span>${esc(e.name)}${t ? ` ${pct(t)}` : ''}</span><span>× ${e.n}</span><span class="role">${e.worth ? `${e.worth}g` : BAG_KINDS[e.kind].name}</span></button>`;
   }
-  return `<button class="bagcell${cls}" data-bagitem="${e.id}" data-drag="${e.id}" title="${esc(tip)}" aria-label="${esc(tip)}">${icon(e)}<b>${e.n}</b>${t ? `<i class="star" style="background:${QUALITY[t].color}"></i>` : ''}</button>`;
+  return `<button class="bagcell${cls}" data-bagitem="${e.id}" data-drag="${e.id}" title="${esc(tip)}" aria-label="${esc(tip)}">${icon(e)}<b>${e.n}</b>${qualityMark(t)}</button>`;
 }
 
 function itemsGrid() {

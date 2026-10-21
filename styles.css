@@ -41,7 +41,7 @@ kbd{font:inherit;font-size:16px;line-height:1;padding:2px 5px;border-radius:4px;
 .meter::after{content:attr(data-v);position:absolute;inset:0;text-align:center;font-size:16px;line-height:18px;color:var(--cream);text-shadow:0 1px 0 #000,0 0 3px #000}
 #water i{background:linear-gradient(180deg,#9fd0f0,var(--water))}
 #health i{background:linear-gradient(180deg,#f2a0a8,var(--heart))}
-.meter.low i{background:var(--tired)}
+.meter.low i{background:repeating-linear-gradient(135deg,var(--tired) 0 6px,#a8432f 6px 12px)}   /* v120: stripes, not only red */
 .meter.low{animation:pulse 1s ease-in-out infinite alternate}
 @keyframes pulse{to{border-color:var(--tired)}}
 .clock{background:var(--panel);border:3px solid var(--frame);border-radius:10px;box-shadow:var(--frame-shadow);padding:6px 12px;min-width:220px;text-align:right;font-variant-numeric:tabular-nums}
@@ -63,10 +63,10 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
 .toast.out{opacity:0;transform:translateY(-6px)}
 @keyframes rise{from{opacity:0;transform:translateY(6px)}}
 /* v112: what Use does, above the faced tile, and the objective reminder in the corner */
-.prompt{position:absolute;z-index:15;transform:translate(-50%,calc(-100% - 4px));background:rgba(28,23,18,.88);border:2px solid var(--frame);border-radius:6px;padding:3px 8px;font-size:calc(16px * var(--hud,1));line-height:1.3;white-space:nowrap;pointer-events:none}
+.prompt{position:absolute;z-index:8;transform:translate(-50%,calc(-100% - 4px));background:rgba(28,23,18,.88);border:2px solid var(--frame);border-radius:6px;padding:3px 8px;font-size:calc(16px * var(--hud,1));line-height:1.3;white-space:nowrap;pointer-events:none}
 .prompt.below{transform:translate(-50%,4px)}
 .prompt kbd{font-size:inherit;padding:0 4px;margin-right:2px}
-.goal{position:absolute;z-index:15;left:8px;top:8px;max-width:min(60%,420px);background:rgba(28,23,18,.8);border:2px solid var(--seam);border-radius:6px;padding:3px 8px;font-size:calc(16px * var(--hud,1));line-height:1.3;color:var(--cream);pointer-events:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.goal{position:absolute;z-index:8;left:8px;top:8px;max-width:min(60%,420px);background:rgba(28,23,18,.8);border:2px solid var(--seam);border-radius:6px;padding:3px 8px;font-size:calc(16px * var(--hud,1));line-height:1.3;color:var(--cream);pointer-events:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .goal b{color:var(--harvest);font-weight:600;margin-right:4px}
 .goal span{color:var(--straw)}
 .extra span{color:var(--straw)}
@@ -196,7 +196,8 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
 .card .bagcell{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1;padding:0;min-height:0;touch-action:manipulation;user-select:none;-webkit-user-select:none}
 .bagcell img,.bagline img,.baghead img,.bagcmp img,.dragghost{image-rendering:pixelated}
 .bagcell b{position:absolute;right:3px;bottom:1px;font-size:16px;text-shadow:0 1px 0 #000,1px 0 0 #000}
-.bagcell .star{position:absolute;left:4px;top:4px;width:8px;height:8px;border-radius:50%;box-shadow:0 0 0 1px #000}
+.bagcell .star{position:absolute;left:4px;top:4px;display:flex;gap:2px}
+.bagcell .star span{width:6px;height:6px;background:var(--q);box-shadow:0 0 0 1px #000}   /* v120: 1 to 3 pips by tier */
 .card .bagcell.sel,.card .bagline.sel{border-color:var(--harvest);box-shadow:inset 0 0 0 2px var(--harvest)}
 .card .bagcell.pin{border-color:var(--leaf)}
 .bagcell.dragging,.bagline.dragging{opacity:.4}
@@ -220,7 +221,8 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
 .footbtns{display:flex;gap:8px;flex-wrap:wrap}
 .ghost{background:none;border:2px solid var(--seam);border-radius:6px;color:var(--straw);font-size:16px;padding:6px 12px;min-height:44px;cursor:pointer}
 .ghost.slider{display:inline-flex;align-items:center;gap:8px;cursor:default}
-.ghost.slider input{width:120px;accent-color:var(--water);cursor:pointer}
+.ghost.slider input{width:120px;min-width:60px;flex:0 1 120px;accent-color:var(--water);cursor:pointer}
+.ghost.slider{max-width:100%;flex-wrap:wrap}   /* v120: at a large text size on a phone the slide wraps instead of running out of the card */
 .ghost.slider output{min-width:4ch;text-align:right}
 .debug{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:2px dashed var(--seam);border-radius:8px;padding:10px 12px;margin-top:10px}
 .debug button{font-size:16px}
@@ -279,3 +281,15 @@ button.wm{font:inherit;text-align:left;cursor:pointer;min-height:44px}
 .wm em.mk{color:var(--harvest)}
 .wm em.mk.hot{text-decoration:underline}
 .wm.here em{color:var(--soil)}
+
+/* v120: the goal and prompt sit under dialogs (z-index 8, dialogs 9 and 10); messages stay on top (20).
+   Text size for dialogs, the menu and the bag (the menu's Text size sets --text); the card keeps
+   fitting the window. High contrast: solid dark panels and cream edges on everything over the field. */
+.card{zoom:var(--text,1);max-height:calc(90vh / var(--text,1));max-height:calc(90dvh / var(--text,1))}
+.contrast .goal,.contrast .prompt,.contrast .toast,.contrast .basket{background:#000;border-color:var(--cream);color:#fff}
+.contrast .meter{border-color:var(--cream)}
+.contrast .meter::after{color:#fff;text-shadow:0 0 2px #000,0 0 2px #000,0 1px 0 #000}
+.contrast .slot:not([aria-pressed="true"]){border-color:var(--cream)}
+.contrast .slot:not([aria-pressed="true"])::before,.contrast .slot span{color:#fff}
+.contrast kbd{background:#000;color:#fff;border-color:var(--cream)}
+.contrast .pill,.contrast .clock,.contrast .meters{border-color:var(--cream)}
