@@ -136,6 +136,7 @@ src/
     giants.js         giant crops: merging ripe 3x3 blocks, chopping, solid 'Y' tiles
     weather.js        today's weather and the forecast, rain watering, lightning, the rain/snow/mist overlay
     wind.js           lean(x): how far things lean in the wind now, by weather and the day (v103; no drawing, safe for the balance bot)
+    signs.js          signposts and notices outdoors: solid Ş tiles set on open ground at load, Use reads them (v107)
     shortcuts.js      fallen trunks across shortcuts, cut with the copper axe; then trunk tiles turn to path and the maps get exits (v106, G.S.shortcuts)
     nightlights.js    outdoorLights(): lit windows, lamp posts and lanterns after dusk (renderer.js cuts them out of the dark); lit glass and lamp posts (v105, drawn only)
     falling.js        seasonal motion: petals, fluff, leaves, snow clumps from tree crowns, drifting with wind.js (v104, drawn only)
@@ -217,6 +218,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 73 | clothing.js | Facing a sewing machine, dye pots or mannequin in the farmhouse |
 | 74 | clearing.js | Facing a fence, gate or path (gate opens; axe or pickaxe takes it up) |
 | 73 | trees.js | Facing a fruit tree (pick fruit) |
+| 73 | signs.js | Facing an outdoor signpost or notice Ş (reads it) (v107) |
 | 73 | storage.js | Facing a chest, sign or farm computer (its own dialog, ahead of placed objects at 72) (v71) |
 | 73 | buildings.js | Facing a mini shipping bin (ships; axe or pickaxe takes it up) |
 | 72 | pets.js | The water bowl b (the can fills it) |
