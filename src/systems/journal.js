@@ -20,6 +20,7 @@ import { STORY, PIN_MAX, PIN_LENGTH, LOG_MAX } from '../data/journal.js';
 import { orderLeft } from './orders.js';
 import { challengeLeft } from './challenges.js';
 import { hearts } from './npcs.js';
+import { weekGoal } from './firstweek.js';
 
 const J = () => G.S.journal;
 const nameOf = (id) => NPCS.find((d) => d.id === id)?.name || 'Someone';
@@ -79,7 +80,9 @@ export function objectives() {
     out.push({ id: `quest:${q.id}`, name: `${nameOf(q.npc)}: ${what}`, map: 'village', optional: true,
       text: `${nameOf(q.npc)} wants ${what} (${have}/${q.n}), ${due(q.due)}`, how: `Bring them to the quest board in the village. You have ${have}. Pays ${q.reward}g.` });
   });
-  const s = storyNext();
+  // v122: during the first week an open goal leads, and the story waits while one is open.
+  const w = weekGoal(), s = w ? null : storyNext();
+  if (w) out.unshift({ id: `week:${w.id}`, name: w.name, map: w.map, optional: false, text: `First week: ${w.name}`, how: w.how });
   if (s) out.push({ id: `story:${s.id}`, name: s.name, map: s.map, optional: false, text: `Story: ${s.name}`, how: s.how });
   return out;
 }
