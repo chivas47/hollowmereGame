@@ -106,7 +106,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 43 | Seasonal motion | feature | done (chivas47/hollowmereGame#100) | Blossom petals in spring, seed fluff in summer, falling leaves in autumn, snow slipping off branches in winter, drifting with the wind. Asked for by Nuno, October 2026 (from the world-detail gap list). |
 | 44 | Night lights outdoors | feature | done (chivas47/hollowmereGame#101) | Windows lit after dusk that go dark at bedtime, lamp posts in the village and town, lantern light; the dark opens around every light. Asked for by Nuno, October 2026 (from the world-detail gap list). |
 | 45 | Shortcuts: the ridge path | feature | done (chivas47/hollowmereGame#102) | A fallen trunk between the town and the mountain, cut with the copper axe (Nuno chose tool-gated, town to mountain only). Asked for by Nuno, October 2026 (from the world-detail gap list). |
-| 46 | Outdoor signs | feature | in progress | Signposts and handmade notices outdoors. Asked for by Nuno, October 2026. |
+| 46 | Outdoor signs | feature | in progress (chivas47/hollowmereGame#103) | Signposts and handmade notices outdoors. Asked for by Nuno, October 2026. |
 | 33 | Local two-player | feature | needs decision | Same-screen co-op is possible without a server but touches every system. Nuno to decide whether it is worth it. |
 
 ## Done
