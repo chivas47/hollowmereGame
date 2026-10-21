@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v119: Key rebinding
+- Every key except Esc (the menu) and ` (debug tools) can be changed in the menu's Controls list: click a key, press the new one. Esc cancels, Backspace removes a second key, Reset keys goes back to the defaults. Each action takes up to two keys; a key another action used swaps over, and the menu says what moved.
+- Keys are kept in this browser, like the sound settings, not in the save.
+- Every key shown follows the change: the menu buttons, the hotbar corners, the Use prompt, the HUD button, and the messages and hints that name a key (the bag, crafting, seeds, the journal, turning furniture, the horse whistle).
+- With Ctrl or Cmd held, keys stay the browser's except Ctrl Z (undo). Holding a menu key opens it once instead of over and over.
+- The defaults are unchanged, so no key moved. Nothing saved, no prices or energy changed.
+
 ## v118: Save safety
 - Going to bed now also keeps this morning's farm. Back to this morning in the menu loads it after a confirmation; the game falls back to it by itself if the live save is missing or damaged.
 - A save that fails (browser storage full or blocked) now says so and suggests exporting a save file, instead of failing silently.

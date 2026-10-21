@@ -1,5 +1,7 @@
 // Tool and house upgrades sold at Bram's workbench. Tier 0 is what you start with.
 // needs: materials consumed on purchase (keys from items.js).
+import { keyName } from '../core/controls.js';
+
 export const UPGRADES = {
   can:   { name: 'Watering can', tiers: [
     { label: 'Basic can', cap: 40 },
@@ -96,7 +98,7 @@ export const GREENHOUSE = {
 export const STABLE = {
   cost: 10000,
   needs: { wood: 100, ironbar: 5 },
-  desc: 'Bram builds it overnight by the well, with a horse in it. Ride at 1.6 times walking speed; press H to whistle for it.',
+  get desc() { return `Bram builds it overnight by the well, with a horse in it. Ride at 1.6 times walking speed; press ${keyName('whistle')} to whistle for it.`; },
   footprint: { x: 13, y: 1, w: 2, h: 2 },
   home: { x: 13, y: 3 },
   speed: 1.6,

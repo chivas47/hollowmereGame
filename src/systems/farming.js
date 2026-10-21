@@ -17,6 +17,7 @@ import { skillLevel } from './skills.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { QUALITY } from '../data/quality.js';
 import { rainWaters } from './weather.js';
+import { keyName } from '../core/controls.js';
 
 const ENERGY = { hoe: 2, wideHoe: 3, water: 2, clear: 1 };
 export const isRipe = (crop) => crop.age >= (crop.need || CROPS[crop.type].days);   // need: days after growth tonics
@@ -79,8 +80,8 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
     const c = CROPS[seed], season = today().season;
     if (!s) { notify('Till the ground first.'); return true; }
     if (s.crop) { notify('Something is already growing here.'); return true; }
-    if (!indoors && !c.seasons.includes(season)) { notify(`${c.name} won't grow in ${season}. Plant it in ${c.seasons.join(' or ')}. Press Q to switch seeds.`); return true; }
-    if (S.seeds[seed] <= 0) { notify(`No ${c.name} seeds left. The general store in town sells them, or press Q to switch.`); return true; }
+    if (!indoors && !c.seasons.includes(season)) { notify(`${c.name} won't grow in ${season}. Plant it in ${c.seasons.join(' or ')}. Press ${keyName('seeds')} to switch seeds.`); return true; }
+    if (S.seeds[seed] <= 0) { notify(`No ${c.name} seeds left. The general store in town sells them, or press ${keyName('seeds')} to switch.`); return true; }
     // Mixed seeds become a random crop that grows here and now.
     const pool = c.packet === 'mixed' ? Object.keys(CROPS).filter((k) => !CROPS[k].packet && (indoors || CROPS[k].seasons.includes(season))) : null;
     const type = pool ? pool[Math.floor(Math.random() * pool.length)] : seed, grow = CROPS[type].days;

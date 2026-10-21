@@ -6,6 +6,7 @@ import { affordable } from './upgrades.js';
 import { CROPS } from '../data/crops.js';
 import { skillLevel } from './skills.js';
 import { ITEMS } from '../data/items.js';
+import { keyName } from '../core/controls.js';
 
 // Recipes that also use seed packets (fiber seeds take a packet of mixed seeds).
 export const seedsOk = (rc) => Object.entries(rc.seeds || {}).every(([k, n]) => (G.S.seeds[k] || 0) >= n);
@@ -34,7 +35,7 @@ export function craft(key, times = 1) {
   if (rc.item) {   // v41: bait and tackle go to the bag
     S.bag[key] = (S.bag[key] || 0) + n;
     emit('crafted', { key, n, kit: false });   // v74: the crafted pose (systems/animation.js)
-    notify(`Crafted ${n > 1 ? `${n} ` : 'a '}${ITEMS[key].name.toLowerCase()}. Fix it to the rod from the bag (I).`);
+    notify(`Crafted ${n > 1 ? `${n} ` : 'a '}${ITEMS[key].name.toLowerCase()}. Fix it to the rod from the bag (${keyName('bag')}).`);
     changed();
     return t;
   }

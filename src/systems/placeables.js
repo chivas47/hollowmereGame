@@ -13,6 +13,7 @@ import { PLACEABLES } from '../data/crafting.js';
 import { COOP, BARN, GREENHOUSE, STABLE } from '../data/upgrades.js';
 import { drawPlaced, drawGlow } from '../render/sprites.js';
 import { soilOf, placeKey, parsePlaceKey, playerTile } from './world.js';
+import { keyName } from '../core/controls.js';
 
 const TILE = 'Y';
 const SELF_DRAWN = new Set(['tree', 'fence', 'gate', 'floor', 'furniture']);
@@ -55,7 +56,7 @@ export function ensureUsefulKit() {
 
 export function announceKit() {
   const S = G.S, n = S.kit[S.kitSel];
-  if (!Object.keys(PLACEABLES).some(owned)) { notify('Nothing to place. Press C to craft sprinklers and machines.'); return; }
+  if (!Object.keys(PLACEABLES).some(owned)) { notify(`Nothing to place. Press ${keyName('craft')} to craft sprinklers and machines.`); return; }
   notify(`Place: ${PLACEABLES[S.kitSel].name}, ${n} in your kit. Press 7 again to switch.`);
 }
 

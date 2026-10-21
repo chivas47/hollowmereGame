@@ -122,6 +122,8 @@ Stardew counterparts by role: keg (wine 3 x fruit, juice 2.25 x vegetable), mayo
 
 ## Controls
 
+- v119: every key below except Esc and ` can be changed in the menu (Controls: click a key, press the new one; Esc cancels, Backspace removes a second key, Reset keys goes back). Each action takes up to two keys. A key another action used moves to this one, and that action takes the old key; a change that would leave an action with no key is refused. Keys are kept per browser, like the sound settings, not in the save. Messages, the hotbar corners, the Use prompt and the menu buttons show the key as bound. The defaults are as listed here.
+- v119: with Ctrl or Cmd held, keys stay the browser's (only Ctrl Z, undo, reaches the game), and holding a key opens a menu once rather than over and over.
 - H whistles for the horse.
 - R turns the furniture you face; U or Ctrl+Z (or Undo in the menu) undoes your last place, pick-up or turn today (v99). Neither touches neighbours' rooms or the world.
 - Hotbar: 1 Hoe, 2 Can, 3 Rod, 4 Pick, 5 Sword, 6 Seeds, 7 Kit, 8 Axe (v19, added at the end so no key moved).
@@ -1102,6 +1104,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v119: Keys are named by their place on a US keyboard (the browser's key codes), so on another layout a key can be named differently from what is printed on it, though it works as bound. The arcade cabinets keep their own keys. A long key name (R Shift) is cut short in a hotbar corner.
 - v118: One morning copy, not a history: a save that went wrong overnight is also the morning's copy. One farm per browser (save slots are item 61). Reloading the page saves first (the tab hides), so a farm put into storage by hand is overwritten unless the page is closed.
 - v114: Markers and pins are per place, not per tile: the map is a grid of places, not a drawn map, and has no paths between them. Quest markers point at where you hand in (the village board, the Lantern), not where the item is found. A save from before v114 counts every place it could reach as found (the dunes once the old wing is whole, the island once the boat is mended, the dig site once its bridge is fixed), and the story steps it had already passed as done "before this journal"; the finished-quest log starts empty, with totals. The balance bot does not open the journal (nothing in it earns or spends).
 - v113: The bag has no limit by design (Nuno dropped backpack slots, October 2026), so there is no splitting, merging or full-bag warning. No controller support (item 52c). Search matches names only. Icons are drawn per kind, not per item: two forage items of a similar colour look alike. The chest holds kinds, not slots, as before. The balance bot does not open the Bag (nothing in it earns or spends).
