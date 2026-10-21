@@ -90,4 +90,5 @@ export function spouseDay() {
 }
 
 // v76: a festival day: everyone walks to their place in the square for the festival's hours, then home.
-export const festivalDay = (spot, hours) => [{ from: hours.from, to: hours.to, map: 'village', path: [spot], stay: true }];
+// v110: map for a gathering somewhere else (the Lantern Float on the beach).
+export const festivalDay = (spot, hours, map = 'village') => [{ from: hours.from, to: hours.to, map, path: [spot], stay: true }];
