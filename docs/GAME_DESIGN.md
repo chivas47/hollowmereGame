@@ -907,6 +907,21 @@ Stardew's opening and first-week quests by role, in our own story. After the new
 
 Saves from before v122: a farm already made has arrived (no scene); one past day 7 skips the week (save upgrade v2 in core/migrations.js).
 
+## Bram's reckoning (v128)
+
+Stardew's evaluation by role, Nuno's choices: Bram judges, on Stardew's categories, with a carved bin lid as the reward and a gem to ask again. On Spring 1 of year three (and the next morning for a farm already past it), after the morning report, Bram scores the farm and lights lamps on the porch, left of the farmhouse door.
+
+| Points | Counted (Stardew counterpart) |
+|---|---|
+| 7 | Earned 50k, 100k, 200k, 300k, 500k (1 each) and 1,000,000g (2) |
+| 2 | 36 skill levels in all, every skill at 10 (Stardew's 30 and 50 of 50, refitted to our six skills) |
+| 3 | The museum complete, every fish caught, every recipe learned (stands in for the full shipment, which we do not track) |
+| 4 | Married in a house built up twice, five and ten friends at 8 hearts, a devoted pet |
+| 3 | The old wing restored (1), and by hand rather than by Ashgrove (2) (the community centre and its ceremony) |
+| 2 | The Sunken Cavern opened, Rook's boat mended (Stardew's two keys; the boat stands in for the rusty key) |
+
+Lamps: under 4 points 1, 4 to 7 two, 8 to 11 three, 12 or more four. Four lamps carve the bin lid: a gleamfruit (750g) in the bag every morning from then on. Below four, give Bram a starstone (the 750g gem, Stardew's diamond) and he looks again the next morning. The balance bot does not load the reckoning: it needs the museum system, which the bot leaves out (v68), so loading it would change the bot's rolls without telling us anything. Played by hand with the museum loaded, the bot's farm scores 8 points, three lamps, on day 225, which earns no lid.
+
 ## Journal, quests and map (v114)
 The journal (J) opens on Quests. Data in `data/journal.js`; logic in `systems/journal.js`; tabs in `ui/journal.js`. Mechanics after Stardew's journal and map; the main line, landmarks and wording are ours. No prices, energy or keys change.
 | Part | Ours | Stardew counterpart |
@@ -1159,6 +1174,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v128: The reckoning is a dialog, not a walked scene; Bram is not by the bin while it shows. The two-year balance run in CI ends the day before it, so its gleamfruit never shows in the report.
 - v127: A farm cannot be deleted from its slot (New farm starts over in the slot in play). Key, sound and display settings are shared by all three farms.
 - v126: Controller buttons cannot be rebound, and there is no rumble. The arcade cabinets and dragging items in the bag still need the keyboard, mouse or touch (fishing works: A casts and, held, lifts the bar). Button names are Xbox-style. Only the first controller is read.
 - v125: Motion speed does not reach water ripples, seasonal petals and leaves, or blinking. Changing it shifts the wind's wave once.

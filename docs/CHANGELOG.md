@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v128: Bram's reckoning
+- On Spring 1 of year three Bram judges what you made of the old plot: Stardew's categories by role (earnings, skills, collections, friends and family, the old wing, the Cavern and the boat), 21 points in all, lit as 1 to 4 lamps on your porch.
+- Four lamps: Bram carves the shipping bin's lid, and a gleamfruit waits on it every morning.
+- Fewer: give Bram a starstone and he looks again the next morning.
+- Farms already past the date are judged on their next morning. No prices, energy or keys changed.
+
 ## v127: Save slots
 - Up to three farms in one browser. Farms in the menu shows each one (name, date, gold) and switches between them; an empty slot starts a new farm. Each farm keeps its own save and morning copy, and the game reopens on the last one played.
 - Your existing farm is farm 1; nothing about it changes.

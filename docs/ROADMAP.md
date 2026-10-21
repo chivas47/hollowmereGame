@@ -119,7 +119,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 55 | The world answers back | feature | done (chivas47/hollowmereGame#119) | Crops perk up and drip when watered, dropped items pop and bounce before flying to you, hair and clothes stir in the wind. Water and foliage already move (41, 42). Asked for by Nuno, October 2026 (from the animation polish list). |
 | 56 | Neighbour reactions | feature | done (chivas47/hollowmereGame#120) | Emote bubbles and small gestures: delight at a loved gift, a frown at a disliked one, a wave on greeting, surprise, a sigh in the rain. Stardew's emotes are the counterpart. Asked for by Nuno, October 2026 (from the animation polish list). |
 | 57 | Motion settings | feature | done (chivas47/hollowmereGame#121) | Particles full, fewer or off, a cap on how many show at once, screen shake and hit-stop on or off, an animation speed for cosmetic motion only (tool swings keep their timing, since they set how fast tools work). Asked for by Nuno, October 2026 (from the animation polish list). |
-| 33 | Local two-player | feature | queued | Same-screen co-op with a second controller (Nuno: yes, October 2026). Touches every system, so it is split into several PRs, planned when it comes up: a second farmer and their input, the shared camera, then which systems count both players. |
+| 33 | Local two-player | feature | next | Same-screen co-op with a second controller (Nuno: yes, October 2026). Touches every system, so it is split into several PRs, planned when it comes up: a second farmer and their input, the shared camera, then which systems count both players. |
 
 ## The modern-standards plan (October 2026)
 
@@ -135,7 +135,7 @@ Every system in the Stardew feature guide is built (items 1 to 54). What the gam
 | 63 | Readability and colour | feature | done (chivas47/hollowmereGame#116) | Text size beyond the HUD (the HUD size slide exists; dialogs, menus and the bag do not scale), colour-blind safe signals (quality, ready crops, meters marked by shape as well as colour), a high-contrast HUD. Goes with 57 (motion settings) as the accessibility set. |
 | 64 | Install and play offline | feature | done (chivas47/hollowmereGame#117) | A web app manifest and a service worker that caches the game files, so it installs from the browser and runs without a connection. Static files only, so rule 2 holds; the worker must update cleanly on a new version. |
 | 65 | Arrival and the first week | feature | done (chivas47/hollowmereGame#118) | An opening scene arriving at the farm and a guided first week (a goal a day: clear, plant, meet, ship) on top of the existing hints. Stardew's intro and first-week quests are the counterpart; our own story and text. |
-| 66 | The year-three reckoning | feature | next | A judgement of the farm at the start of year three with a reward and a way to ask again (Stardew's evaluation by role). Nuno: Bram judges it, as the one who built the bin and met you on arrival; the name and everything about it original. |
+| 66 | The year-three reckoning | feature | done (chivas47/hollowmereGame#124) | A judgement of the farm at the start of year three with a reward and a way to ask again (Stardew's evaluation by role). Nuno: Bram judges it, as the one who built the bin and met you on arrival; the name and everything about it original. |
 | 67 | Translations | feature | not now | Move UI and data text behind a lookup so the game can be translated. Touches every data file; worth it only if Nuno wants other languages. |
 
 ## Done

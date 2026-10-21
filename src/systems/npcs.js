@@ -268,11 +268,20 @@ function giveLantern(n) {
   emit('ui:talk', { npc: n, text, extra });
 }
 
+// v128: a system can answer a gift before the usual taste reaction: fn(npcId, item) returns { text, extra } or null.
+// A hook rather than an import, so systems/npcs.js does not load the systems that answer.
+const giftHooks = [];
+export const addGiftHook = (fn) => giftHooks.push(fn);
+
 export function giveGift(n, item) {
   const st = G.S.npcs[n.id], d = n.def;
   if (item === 'bouquet') { giveBouquet(n); return; }
   if (item === 'pendant') { givePendant(n); return; }
   if (item === 'shadowlantern') { giveLantern(n); return; }
+  for (const hook of giftHooks) {   // v128: gifts another system answers first (Bram's starstone, systems/reckoning.js)
+    const said = hook(n.id, item);
+    if (said) { changed(); emit('ui:talk', { npc: n, text: said.text, extra: said.extra || '' }); return; }
+  }
   // v52: a gift to another candidate makes your spouse jealous
   if (spouse() && spouse() !== n.id && isCandidate(n.id)) gain(spouse(), -JEALOUSY);
   G.S.bag[item]--; st.gifted = G.S.day;

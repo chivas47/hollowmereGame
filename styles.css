@@ -296,3 +296,5 @@ button.wm{font:inherit;text-align:left;cursor:pointer;min-height:44px}
 /* v127: the Farms dialog */
 .slotrow{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:2px solid var(--seam);padding:6px 0}
 .slotrow p{margin:0}
+/* v128: the reckoning's lamps */
+.lamps{margin:6px 0;font-size:26px;letter-spacing:6px;color:var(--harvest)}
