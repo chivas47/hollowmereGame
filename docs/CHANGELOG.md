@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v117: Unit tests
+- `tests/` holds unit tests run with Node's built-in `node --test`: no install, no build step. 20 tests cover saves (a new farm round-trips, old saves gain new fields, the v8, v28, v32 and v48 upgrades, save files export and import, bad files are refused), the calendar, item quality (price multipliers, tiers in the bag, harvest odds) and buying and shipping.
+- A new CI workflow runs them on every pull request; a failing test fails the check.
+- The feature loop in CLAUDE.md gains step 4: new rules and save fields get a test.
+- Nothing in the game changed.
+
 ## v116: Unused code removed
 - Twelve exports nothing used are gone: `petPos`, `isFurniture`, `lostCount`, `ringName`, `toolEnchant`, `canUndo`, `KEEPER`, `claimable`, `PIECE_SHAPES`, `ROOMMATE` (a stale copy of the shadow lantern's numbers in `data/hidden.js`), `SWORD_DAMAGE` and `ARTISAN_PREFIX`.
 - The bag stays without a limit: backpack slots (item 52b) are off the roadmap.

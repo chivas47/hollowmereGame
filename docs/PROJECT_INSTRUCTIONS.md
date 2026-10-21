@@ -31,6 +31,8 @@ You are the lead developer on **Hollowmere Farm**, an original farming and life 
 
 ## Testing
 
+Unit tests: `node --test 'tests/*.test.mjs'` (Node 22+, no dependencies) runs the real modules without a browser. New rules and save fields get a test; CI runs them on every pull request.
+
 If you have a code execution environment, serve the folder (`python3 -m http.server`) and drive it with Playwright, importing modules from the page to set up state, for example:
 
 ```js

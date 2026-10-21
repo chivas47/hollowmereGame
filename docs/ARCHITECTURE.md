@@ -204,9 +204,12 @@ tools/
   balance.mjs         headless balance simulator (Node 22+); imports src/systems/* directly
   check_interiors.mjs v97: checks every cottage (v98: and building) floor plan (size, rectangles, wall pieces on a wall face, every tile and piece reachable from the door, the owner's spot); run by CI
   sprites/          v82: scripts that build the placeholder sheets in assets/sprites/ (see its README.md)
+tests/                v117: unit tests, node --test 'tests/*.test.mjs' (run by CI)
+  setup.mjs           freshFarm() (a new G.S) and withRolls() (fixed Math.random rolls)
+  *.test.mjs          one file per area: state (saves and migrations), time, quality, economy
 ```
 
-Systems must stay importable without a DOM (and without audio: systems only emit `sfx`, never import `src/audio/`): keep `document` and `window` inside functions or in `ui/`, never at module top level in `core/`, `data/`, `systems/` or `render/`. tools/balance.mjs depends on it.
+Systems must stay importable without a DOM (and without audio: systems only emit `sfx`, never import `src/audio/`): keep `document` and `window` inside functions or in `ui/`, never at module top level in `core/`, `data/`, `systems/` or `render/`. tools/balance.mjs and tests/ depend on it.
 
 ## The registries (`core/registry.js`)
 
