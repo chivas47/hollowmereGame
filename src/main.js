@@ -81,6 +81,7 @@ import './systems/storage.js';   // v71: chests, signs, the farm computer, the l
 import './systems/journal.js';   // v114: story, quest log, places found, map pins
 import './systems/firstweek.js';   // v122: the first week's goals
 import './systems/reckoning.js';   // v128: Bram's reckoning
+import './systems/partner.js';   // v129: the second farmer
 import './systems/atmosphere.js';   // v72: waterfalls, splashes, lightning, wildlife
 import './systems/water.js';   // v102: moving water and reflections
 import './systems/sway.js';   // v103: wind in grass, trees and washing

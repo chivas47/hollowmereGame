@@ -49,6 +49,7 @@ src/
     journal.js        v114: STORY (the main line: each step's name, hint and map), LANDMARKS per world map place, PIN_MAX, PIN_LENGTH, LOG_MAX
     firstweek.js      v122: ARRIVAL (the opening scene's pages), FIRST_WEEK (a goal a day: name, hint, map, done(S))
     reckoning.js      v128: RECKONING (day, the gem to ask again, the reward, lamp thresholds, porch spots), RECKON_POINTS (Stardew's 21), RECKON_LINES
+    partner.js        v129: PARTNER (the second farmer's name, speed, look, where they stand beside you)
     emotes.js         v124: EMOTES (each reaction's length and gesture), GIFT_EMOTE by taste tier, SIGH (rain)
     gamepad.js        v126: PAD_BUTTONS (standard layout to actions), PAD_LABELS, PAD (dead zone, menu repeat)
     bag.js            v113: BAG_KINDS (the Bag's category tabs and icon tints), ITEM_KIND (every item's kind), ICON_COLOURS, MADE_FROM and madeFrom() (wine_plum -> plum), BAG_SORTS, BAG_VIEWS
@@ -85,6 +86,7 @@ src/
     journal.js        v114: story steps checked against the save, objectives() (main and optional, for the journal and the HUD), tracked(), the finished-quest log, places found, map pins, quest markers, recap() (G.S.journal)
     firstweek.js      v122: weekGoal() (the open goal), checkWeek(); goals read from the save; journal.js shows the goal first
     reckoning.js      v128: score(), the morning judgement, the carved lid's daily gleamfruit, askAgain() (through npcs.js addGiftHook), the porch lamps layer
+    partner.js        v129: G.P2 (not saved): join(), leave(), partnerKeys(), besideYou(); walks, follows map:changed, drawn
     emotes.js         v124: emote(id, kind), emoteOf(id), gestureOffset(); npcs.js starts them and draws them
     pets.js           the farm pet: wandering, pats, the water bowl, gifts, hats
     stable.js         stable building, horse riding, following between maps, whistle
@@ -217,7 +219,7 @@ src/
     slots.js          v127: the menu's Farms dialog (three save slots)
     reckoning.js      v128: the reckoning dialog after the morning report (waits for report:closed)
     motion.js         v125: the menu's Particles, Shake, Hit-stop and Motion speed buttons
-    gamepad.js        v126: polls the pad: walking, actions, held A; in dialogs and the menu, focus moves and A presses
+    gamepad.js        v126: polls the pad: walking, actions, held A; in dialogs and the menu, focus moves and A presses; v129: a second pad steers the second farmer
     controls.js       v119: the menu's Controls list (click a key, press the new one) and every <kbd data-control> label
     crafting.js (craft menu, placed-object dialog) barn.js village.js (board, festival)
 tools/
