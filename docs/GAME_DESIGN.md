@@ -124,6 +124,7 @@ Stardew counterparts by role: keg (wine 3 x fruit, juice 2.25 x vegetable), mayo
 
 - v129: with a second controller, press A on it to bring in a second farmer (their own look) on the same screen. They walk with the stick, go where you go when you change map, and leave with B or when their controller disconnects. Dialogs and the menu stay the first player's.
 - v130: once in, the second farmer's A uses what they hold, through the same rules as yours (tools, talking, gifts, doors, map exits, which take you both), and LB and RB step through their hotbar. They have their own energy (270, refilled each morning, saved); the bag and gold are shared.
+- v144: both farmers can have a dialog open at once (a shop each, the bag and a chest): each in its own half, each worked by its own player.
 - v143: farmer two has their own health (the same top as yours, full each morning), shown as "Their HP" when hurt or where monsters live. Monsters hurt whichever of you they reach; at zero farmer two faints to the clinic with the same bill as yours (from the shared gold) while you play on. Your shoes, rings and professions protect them too (gear is shared).
 - v142: farmer two is kept with the farm: the first time they join they pick a shirt and hair, and they get their own bed in the farmhouse (on free floor in the bed corner, never over furniture). When they rejoin they come back where they were, holding what they held. The day ends when both of you are in bed: whoever lies down first waits, walking gets you up, and if they leave while you wait the night comes. Passing out at 2 am still takes you both home.
 - v141: a dialog belongs to whoever opened it and covers their half; the game does not pause, so the other farmer plays on. Farmer two works theirs with their controller. Only one dialog at a time; the menu still pauses both.
@@ -1188,7 +1189,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 ## Known issues and open questions
 
 - v130: The second farmer's pickups fly to you and their tool level, enchantments and skills are yours; and only your bed ends the day.
-- v141: Only one dialog at a time in two-player: while one farmer has a dialog open the other cannot open another (a talk or shop is refused with a note; anything the Use did before opening it, such as a greeting, still counts).
+- v144: With both dialogs open, the keyboard's focus follows whichever box was used last: a controller takes it back on its first press, and the keyboard player can click or Tab back into theirs.
 - v140: Effects (particles, pickups) show only on your map, so farmer two's swings elsewhere have no sparks.
 - v142: Farmer two's name is always "Farmer two" (it is saved, but there is no way to type one with a controller yet); the look picker offers shirt and hair only.
 - v129: The second farmer is not saved (their energy is, v130). They walk through neighbours and animals as you do, and stay in the house while you are in bed.

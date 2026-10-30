@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v144: Two dialogs at once
+- In two-player both farmers can be in a dialog at the same time: your shop on the left, farmer two's bag on the right, each worked by its own player. The "Wait for ... to finish" note is gone.
+- Each dialog's buttons, tabs and fields act for its owner; your Escape closes yours, their B closes theirs.
+- Alone, nothing changes. No prices, keys or saves changed.
+
 ## v143: Farmer two can be hurt
 - Farmer two has their own health: monsters that reach them hurt them (no longer just a shove), with a moment of safety after each hit, and their bar shows under yours as "Their HP".
 - At zero they faint and come to at the clinic, with the same bill as yours from the shared gold; the message opens in their half and you play on.

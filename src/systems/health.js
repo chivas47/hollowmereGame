@@ -14,7 +14,7 @@ import { asThem } from './partner.js';
 const INVULNERABLE = 1, KNOCKBACK = 10;
 
 export function hurtPlayer(dmg, fromX, fromY) {
-  if (G.hurtT > 0 || G.paused || G.dialogBy === 'you') return;   // v141: no harm while your dialog is open
+  if (G.hurtT > 0 || G.paused || G.dialog.you) return;   // v141: no harm while your dialog is open
   const S = G.S;
   S.hp = Math.max(0, S.hp - taken(dmg));
   G.hurtT = INVULNERABLE;
@@ -31,7 +31,7 @@ const taken = (dmg) => Math.max(1, Math.round(dmg * (has('acrobat') ? 0.75 : 1))
 // v143: a monster reaches farmer two.
 export function hurtPartner(dmg, fromX, fromY) {
   const p = G.P2, P = G.S.partner;
-  if (!p || p.hurtT > 0 || G.paused || G.dialogBy === 'p2') return;
+  if (!p || p.hurtT > 0 || G.paused || G.dialog.p2) return;
   P.hp = Math.max(0, P.hp - taken(dmg));
   p.hurtT = INVULNERABLE;
   emit('sfx', 'hurt');

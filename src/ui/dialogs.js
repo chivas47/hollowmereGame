@@ -28,7 +28,7 @@ const WEATHER_LINES = {
 };
 import { hearts, heartStr, giftOptions, giveGift, chooseScene } from '../systems/npcs.js';
 import { openModal, closeModal } from './modal.js';
-import { $, esc } from './dom.js';
+import { $, $$, esc } from './dom.js';
 import { SHOPS } from '../data/town.js';
 import { askingTonight, answerChild } from '../systems/family.js';
 import { NPCS } from '../data/npcs.js';
@@ -59,16 +59,16 @@ on('ui:partnerLook', () => {
     `<button class="swatch" aria-pressed="${P.look[part] === v}" data-plook="${part}" data-v="${v}" style="background:${v}" aria-label="${label} ${v}"></button>`).join('')}</div>`;
   openModal(`<h2>${esc(P.name)}</h2><p>Pick a shirt and hair for the second farmer. It is kept with this farm.</p>${row('shirt', 'Shirt')}${row('hair', 'Hair')}`,
     [['Done', closeModal, true]]);
-  document.querySelectorAll('[data-plook]').forEach((b) => b.addEventListener('click', () => {
+  $$('[data-plook]').forEach((b) => b.addEventListener('click', () => {
     P.look[b.dataset.plook] = b.dataset.v;
-    document.querySelectorAll(`[data-plook="${b.dataset.plook}"]`).forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+    $$(`[data-plook="${b.dataset.plook}"]`).forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
   }));
 });
 
 function refreshShop() {
   const g = $('#shopGold'); if (g) g.textContent = `${G.S.gold}g`;
-  document.querySelectorAll('[data-buy]').forEach((b) => { b.disabled = !canBuy(b.dataset.buy, +b.dataset.n); });
-  document.querySelectorAll('[data-supply]').forEach((b) => { b.disabled = !canBuySupply(b.dataset.supply, +b.dataset.n); });
+  $$('[data-buy]').forEach((b) => { b.disabled = !canBuy(b.dataset.buy, +b.dataset.n); });
+  $$('[data-supply]').forEach((b) => { b.disabled = !canBuySupply(b.dataset.supply, +b.dataset.n); });
 }
 
 const seedNote = (c) => (c.packet === 'wild' ? `grows a wild ${c.produce.map((k) => ITEMS[k].name.toLowerCase()).join(' or ')} in ${c.days} days`

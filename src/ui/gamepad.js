@@ -23,7 +23,7 @@ export const usingPad = () => padUsed;
 addEventListener('keydown', () => { padUsed = false; }, true);
 
 // v141: the dialog belongs to whoever opened it; the menu is yours.
-const panel = (who = 'you') => (dialogOf(who) ? $('#modal') : who === 'you' && menuOpen() ? $('#menu') : null);
+const panel = (who = 'you') => (dialogOf(who) ? document.getElementById(who === 'p2' ? 'modal2' : 'modal') : who === 'you' && menuOpen() ? $('#menu') : null);
 const centre = (el) => { const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; };
 const focusables = (box) => [...box.querySelectorAll('button, input, select, [tabindex]')].filter((el) => !el.disabled && el.offsetParent);
 

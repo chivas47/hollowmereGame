@@ -47,7 +47,7 @@ export function escape() {
 }
 
 // v141: a key whose focus sits in farmer two's dialog: yours to play with, not a press of their button.
-const theirs = (e) => G.dialogBy === 'p2' && $('#modal').contains(e.target);
+const theirs = (e) => !!document.getElementById('modal2')?.contains(e.target);
 
 export function initInput(canvas) {
   for (const ev of ['keydown', 'keyup']) addEventListener(ev, (e) => { if (theirs(e) && ['Space', 'Enter'].includes(e.code)) e.preventDefault(); }, true);
