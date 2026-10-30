@@ -1,10 +1,10 @@
 // Composes a frame: cached background, ground layers, facing outline, y-sorted entities, overlays, the light of the hour, layers above it.
 import { G } from '../core/game.js';
-import { T, W, H, DIRS } from '../core/constants.js';
+import { T, H, DIRS } from '../core/constants.js';
 import { on } from '../core/events.js';
 import { drawLayers, collectEntities } from '../core/registry.js';
 import { today, dayEnd } from '../core/time.js';
-import { MAPS } from '../data/maps.js';
+import { MAPS, sizeOf } from '../data/maps.js';
 import { PAL } from '../data/seasons.js';
 import { LIGHT, NIGHT_FROM } from '../data/atmosphere.js';
 import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, drawQuarry, drawSand, drawBowl, drawHouseTile, drawTerrain, drawFlowers, drawBuilding, drawProp, HOUSE_ART, CAVE_ART, PROP_ART, PROP_GROUND } from './tiles.js';
@@ -17,7 +17,7 @@ import { addLayer } from '../core/registry.js';
 import { WIND } from '../data/atmosphere.js';
 import { lean, shiftOf } from '../systems/wind.js';
 import { outdoorLights } from '../systems/nightlights.js';
-import { views } from './views.js';
+import { views, visible } from './views.js';
 
 let cache = {};
 on('season:changed', () => { cache = {}; });
@@ -31,18 +31,19 @@ const TILE_ART = { b: drawBowl, O: drawWater, T: drawTree, R: drawRock, w: drawG
 // drawn every frame below, leaning in the wind (systems/wind.js).
 const CROWN = 12;   // rows of a tree tile that sway (drawTree's crown and its shadow)
 function renderBackground(mapId, season) {
-  const c = document.createElement('canvas'); c.width = W * T; c.height = H * T;
-  const crowns = document.createElement('canvas'); crowns.width = W * T; crowns.height = H * T;
+  const { w: MW, h: MH } = sizeOf(mapId);   // v156: the map's own size (larger than the screen behind a camera)
+  const c = document.createElement('canvas'); c.width = MW * T; c.height = MH * T;
+  const crowns = document.createElement('canvas'); crowns.width = MW * T; crowns.height = MH * T;
   const k = crowns.getContext('2d'), trees = [];
   const g = c.getContext('2d'), map = MAPS[mapId], p = map.theme ? { ...PAL[season], theme: map.theme } : PAL[season];   // v38: theme (the cavern's sand)
   const ground = map.base === 'cave' ? CAVE_SHEET.sheet(map.theme) : TERRAIN_SHEET.sheet(season);
   const sheetGround = (!map.base || map.base === 'cave') && ready(ground);   // v85: outdoor ground (v87: and caves) from a tile set
-  if (sheetGround && map.base === 'cave') drawTerrain(g, sheet(ground).img, CAVE_SHEET, (x, y) => (map.grid[y][x] === 'X' || PROP_GROUND[map.grid[y][x]] === 'wall' ? 'wall' : 'floor'), 'floor', W, H);
+  if (sheetGround && map.base === 'cave') drawTerrain(g, sheet(ground).img, CAVE_SHEET, (x, y) => (map.grid[y][x] === 'X' || PROP_GROUND[map.grid[y][x]] === 'wall' ? 'wall' : 'floor'), 'floor', MW, MH);
   else if (sheetGround) {
-    drawTerrain(g, sheet(ground).img, TERRAIN_SHEET, (x, y) => groundOf(map, map.grid[y][x]), { q: 'quarry', z: 'sand' }[map.ground] || 'grass', W, H,
+    drawTerrain(g, sheet(ground).img, TERRAIN_SHEET, (x, y) => groundOf(map, map.grid[y][x]), { q: 'quarry', z: 'sand' }[map.ground] || 'grass', MW, MH,
       (x, y) => { if (groundOf(map, map.grid[y][x]) === 'grass') drawFlowers(g, x, y, p, map.salt); });
   }
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+  for (let y = 0; y < MH; y++) for (let x = 0; x < MW; x++) {
     const t = map.grid[y][x];
     if (map.plan) { drawHomeTile(g, x, y, map); continue; }   // v97: a cottage's own rooms (v98: or a building's)
     if (map.base === 'house') { drawHouseTile(g, x, y, t, map.grid[y + 1]?.[x], WALLPAPERS, FLOORS, map.decor); continue; }
@@ -54,7 +55,7 @@ function renderBackground(mapId, season) {
     else if (t === 'z' || (map.ground === 'z' && t !== 'T')) drawSand(g, x, y, p);   // v43: the beach's rocks sit on sand
     else drawGrass(g, x, y, p, map.salt);
   }
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+  for (let y = 0; y < MH; y++) for (let x = 0; x < MW; x++) {
     if (map.base === 'house') { const ha = HOUSE_ART[map.grid[y][x]]; if (ha) ha(g, x, y, map.grid); continue; }
     const t = map.grid[y][x], art = TILE_ART[t];
     if (sheetGround && PROP_ART[t]) drawProp(g, t, x, y, p);   // v89: the prop alone, its ground is in the tile set
@@ -65,7 +66,7 @@ function renderBackground(mapId, season) {
   // One canvas per wind band (data/atmosphere.js WIND.tree) holding that band of every crown, so a column of
   // trees leans with one copy per band.
   const bands = WIND.tree.map(([a, b]) => {
-    const y0 = Math.round(a * CROWN), y1 = Math.round(b * CROWN), bc = document.createElement('canvas'); bc.width = W * T; bc.height = H * T;
+    const y0 = Math.round(a * CROWN), y1 = Math.round(b * CROWN), bc = document.createElement('canvas'); bc.width = MW * T; bc.height = MH * T;
     const bg = bc.getContext('2d');
     for (const [x, y] of trees) bg.drawImage(crowns, x * T, y * T + y0, T, y1 - y0, x * T, y * T + y0, T, y1 - y0);
     return bc;
@@ -90,7 +91,7 @@ const background = () => cached().bg;
 
 // v103: the tree crowns, under everything else, each band of each column leaning with the wind there.
 addLayer(4, (c) => {
-  const { bands, cols } = cached(), h = H * T;
+  const { bands, cols } = cached(), h = sizeOf(G.S.map).h * T;
   for (const x of cols) {
     const X = x * T, l = lean(X);
     bands.forEach((bc, i) => c.drawImage(bc, X, 0, T, h, X + shiftOf(l, WIND.tree[i][2]), 0, T, h));
@@ -104,13 +105,14 @@ export function draw(c) {
   const list = views();
   for (const v of list) {
     c.save();
-    if (list.length > 1) { c.beginPath(); c.rect(v.x0, 0, v.w, v.h); c.clip(); c.translate(v.x0 - v.cam, 0); }
+    if (list.length > 1) { c.beginPath(); c.rect(v.x0, 0, v.w, v.h); c.clip(); }
+    c.translate(v.x0 - v.cam, -v.camY);   // v156: the camera moves both ways over a map larger than the screen
     // v140: their half draws their map: G.S.map is theirs while it draws, G.youMap keeps yours (so you are not
     // drawn on a map you are not on).
     const yours = G.S.map, apart = v.farmer !== G.S && v.farmer.map !== yours;
-    G.view = v.farmer;
+    G.view = v.farmer; G.drawing = v;
     if (apart) { G.youMap = yours; G.S.map = v.farmer.map; }
-    try { drawWorld(c); } finally { G.view = null; if (apart) { G.S.map = yours; G.youMap = null; } c.restore(); }
+    try { drawWorld(c); } finally { G.view = null; G.drawing = null; if (apart) { G.S.map = yours; G.youMap = null; } c.restore(); }
   }
   if (list.length > 1) { c.fillStyle = '#1c1612'; c.fillRect(list[1].x0 - 1, 0, 2, H * T); }   // the line between the halves
 }
@@ -125,7 +127,7 @@ function facingOf(p) {
 function drawWorld(c) {
   const sk = G.shake;   // v74: screen shake (systems/animation.js)
   c.save();
-  if (sk) { const m = sk.mag * Math.min(1, sk.t / sk.max * 1.5); c.fillStyle = '#000'; c.fillRect(0, 0, W * T, H * T); c.translate(Math.round((Math.random() - 0.5) * 2 * m), Math.round((Math.random() - 0.5) * 2 * m)); }
+  if (sk) { const m = sk.mag * Math.min(1, sk.t / sk.max * 1.5); const s = visible(); c.fillStyle = '#000'; c.fillRect(s.x, s.y, s.w, s.h); c.translate(Math.round((Math.random() - 0.5) * 2 * m), Math.round((Math.random() - 0.5) * 2 * m)); }
   c.drawImage(background(), 0, 0);
   drawLayers(c, 0, 49);
   const f = facingOf(G.view || G.S), t = tileAt(f.tx, f.ty);
@@ -148,7 +150,10 @@ export function lightAt(minute) {
 // v105: outdoor lights (systems/nightlights.js) cut pools out of it and glow warm over them. The pools and glows
 // are drawn once into two canvases, redrawn only when a light comes on or goes out.
 let shade = null, lit = { key: null, mask: null, glow: null };
-const canvas = () => Object.assign(document.createElement('canvas'), { width: W * T, height: H * T });
+// v156: as large as the map, so pools and glows sit where their lights are on a map larger than the screen.
+const mapPx = () => { const s = sizeOf(G.S.map); return { width: s.w * T, height: s.h * T }; };
+const canvas = () => Object.assign(document.createElement('canvas'), mapPx());
+const fit = (cv) => { const p = mapPx(); if (cv.width !== p.width || cv.height !== p.height) Object.assign(cv, p); return cv; };
 function pool(g, l, r, a0, a1) {
   const gr = g.createRadialGradient(l.x, l.y, 0, l.x, l.y, r);
   gr.addColorStop(0, a0); gr.addColorStop(1, a1);
@@ -157,7 +162,7 @@ function pool(g, l, r, a0, a1) {
 function lightCanvases(lights) {
   const key = G.S.map + lights.map((l) => `${l.x},${l.y}`).join(';');
   if (lit.key === key) return lit;
-  const mask = lit.mask || canvas(), glow = lit.glow || canvas(), m = mask.getContext('2d'), g = glow.getContext('2d');
+  const mask = fit(lit.mask || canvas()), glow = fit(lit.glow || canvas()), m = mask.getContext('2d'), g = glow.getContext('2d');
   m.clearRect(0, 0, mask.width, mask.height); g.clearRect(0, 0, glow.width, glow.height);
   g.globalCompositeOperation = 'lighter';
   for (const l of lights) { pool(m, l, l.r, 'rgba(0,0,0,.85)', 'rgba(0,0,0,0)'); pool(g, l, l.r * 0.8, `rgba(${l.rgb},.35)`, `rgba(${l.rgb},0)`); }
@@ -166,13 +171,13 @@ function lightCanvases(lights) {
 function tint(c) {
   const { time, rgb, alpha } = lightAt(G.S.time);
   if (alpha <= 0.01) return;
-  const w = W * T, h = H * T, lights = outdoorLights(), k = lights.length ? (shade ||= canvas()).getContext('2d') : c;
-  if (lights.length) { k.globalCompositeOperation = 'source-over'; k.clearRect(0, 0, w, h); }
-  if (time < NIGHT_FROM) { k.fillStyle = `rgba(${rgb},${alpha})`; k.fillRect(0, 0, w, h); }
+  const v = visible(), lights = outdoorLights(), k = lights.length ? fit(shade ||= canvas()).getContext('2d') : c;
+  if (lights.length) { k.globalCompositeOperation = 'source-over'; k.clearRect(0, 0, shade.width, shade.height); }
+  if (time < NIGHT_FROM) { k.fillStyle = `rgba(${rgb},${alpha})`; k.fillRect(v.x, v.y, v.w, v.h); }
   else {
     const p = G.view || G.S, g = k.createRadialGradient(p.x, p.y, T * 1.5, p.x, p.y, T * 7);
     g.addColorStop(0, `rgba(${rgb},${alpha * 0.55})`); g.addColorStop(1, `rgba(${rgb},${alpha})`);
-    k.fillStyle = g; k.fillRect(0, 0, w, h);
+    k.fillStyle = g; k.fillRect(v.x, v.y, v.w, v.h);
   }
   if (!lights.length) return;
   const { mask, glow } = lightCanvases(lights);

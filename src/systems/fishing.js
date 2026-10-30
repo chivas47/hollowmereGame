@@ -6,8 +6,9 @@
 // v134: either farmer can fish, one line in the water at a time. A line the second farmer cast (G.fishing.p2) is
 // theirs: their A works it, their held A lifts the bar, and it holds them in place instead of you.
 import { G } from '../core/game.js';
+import { visible } from '../render/views.js';
 import { has } from './professions.js';
-import { T, W } from '../core/constants.js';
+import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addUpdater, addLayer, addPrompt } from '../core/registry.js';
 import { today } from '../core/time.js';
@@ -235,7 +236,7 @@ addLayer(55, (c) => {
 addLayer(90, (c) => {
   const f = G.fishing;
   if (!f || f.phase !== 'reel') return;
-  const H = CATCH.track, x = W * T - 52, top = 40, bottom = top + H;
+  const v = visible(), H = CATCH.track, x = v.x + v.w - 52, top = v.y + 40, bottom = top + H;   // v156: at the right of the screen, wherever the camera is
   r(c, x - 8, top - 8, 44, H + 16, 'rgba(28,23,18,.92)');
   r(c, x - 8, top - 8, 44, 1, '#54463a'); r(c, x - 8, top + H + 7, 44, 1, '#54463a');
   r(c, x, top, 16, H, '#1f4f70'); r(c, x + 2, top, 1, H, '#2a6188');

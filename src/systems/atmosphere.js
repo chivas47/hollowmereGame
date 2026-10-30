@@ -1,16 +1,16 @@
 // Atmosphere (v72): falling water, rain splashes, storm lightning with thunder, and wildlife.
 // Drawn only, never saved. The light of the hour is in render/renderer.js, ambient sound in audio/ambience.js.
 import { G } from '../core/game.js';
+import { visible } from '../render/views.js';
 import { T, W, H } from '../core/constants.js';
 import { emit } from '../core/events.js';
 import { addLayer, addUpdater } from '../core/registry.js';
 import { today } from '../core/time.js';
-import { MAPS } from '../data/maps.js';
+import { MAPS, sizeOf } from '../data/maps.js';
 import { underSky } from '../data/weather.js';
 import { WATERFALLS, WILDLIFE, BIRD_COLORS } from '../data/atmosphere.js';
 import { r, rng } from '../render/pixel.js';
 
-const w = W * T, h = H * T;
 const wet = () => G.S.weather === 'rain' || G.S.weather === 'storm';
 const open = (k) => WILDLIFE[k].maps.includes(G.S.map) && (!WILDLIFE[k].seasons || WILDLIFE[k].seasons.includes(today().season));
 
@@ -38,8 +38,8 @@ const splashes = [];
 addUpdater((dt) => {
   for (let i = splashes.length - 1; i >= 0; i--) if ((splashes[i].t -= dt) <= 0) splashes.splice(i, 1);
   if (!underSky(G.S.map) || !wet()) return;
-  const n = G.S.weather === 'storm' ? 3 : 2;
-  for (let i = 0; i < n && splashes.length < 50; i++) splashes.push({ x: Math.random() * w | 0, y: Math.random() * h | 0, t: 0.25 });
+  const n = G.S.weather === 'storm' ? 3 : 2, v = visible();   // v156: on the ground you can see
+  for (let i = 0; i < n && splashes.length < 50; i++) splashes.push({ x: v.x + Math.random() * v.w | 0, y: v.y + Math.random() * v.h | 0, t: 0.25 });
 });
 addLayer(11, (c) => {
   for (const s of splashes) {
@@ -55,14 +55,14 @@ addUpdater((dt) => {
   if (G.S.weather !== 'storm' || !underSky(G.S.map)) return;
   if ((storm.next -= dt) > 0) return;
   storm.next = 6 + Math.random() * 8; storm.flash = 0.18;
-  const pts = []; let x = 30 + Math.random() * (w - 60);
-  for (let y = 0; y < h * 0.6; y += 10) { pts.push([x | 0, y]); x += (Math.random() - 0.5) * 18; }
+  const v = visible(), pts = []; let x = v.x + 30 + Math.random() * (v.w - 60);
+  for (let y = v.y; y < v.y + v.h * 0.6; y += 10) { pts.push([x | 0, y]); x += (Math.random() - 0.5) * 18; }
   storm.bolt = pts;
   emit('sfx', 'thunder');
 });
 addLayer(96, (c) => {
   if (!storm.flash || !underSky(G.S.map)) return;
-  c.fillStyle = `rgba(255,255,240,${storm.flash * 2})`; c.fillRect(0, 0, w, h);
+  const v = visible(); c.fillStyle = `rgba(255,255,240,${storm.flash * 2})`; c.fillRect(v.x, v.y, v.w, v.h);
   const p = storm.bolt;
   for (let i = 1; i < p.length; i++) {
     const [x0, y0] = p[i - 1], [x1] = p[i], steps = 10;
@@ -95,7 +95,7 @@ addUpdater((dt) => {
     }
     if (b.flee) { b.x += b.vx * dt; b.y += b.vy * dt; } else b.peck += dt;
   }
-  fauna.birds = fauna.birds.filter((b) => b.y > -10 && b.x > -10 && b.x < w + 10);
+  fauna.birds = fauna.birds.filter((b) => b.y > -10 && b.x > -10 && b.x < sizeOf(S.map).w * T + 10);
   for (const f of [...fauna.bugs, ...fauna.flies]) f.p += dt;
 });
 

@@ -3,13 +3,14 @@
 // v139: in split screen each prompt sits in its farmer's half, where that half's camera shows the tile.
 // v131: the second farmer's own, over the tile they face (systems/partner.js partnerPrompt).
 import { G } from '../core/game.js';
-import { T, W, H } from '../core/constants.js';
+import { T, H } from '../core/constants.js';
 import { addUpdater, promptFor } from '../core/registry.js';
 import { on } from '../core/events.js';
 import { keyName } from '../core/controls.js';
 import { PAD_LABELS } from '../data/gamepad.js';
 import { usingPad } from './gamepad.js';
 import { HOTBAR } from '../data/hotbar.js';
+import { sizeOf } from '../data/maps.js';
 import { facing, tileAt } from '../systems/world.js';
 import { partnerPrompt } from '../systems/partner.js';
 import { hud } from './hudPrefs.js';
@@ -21,25 +22,25 @@ let shown = null, shown2 = null, wait = 0;
 
 // Puts a prompt above (or below, on the top rows) tile tx, ty as view v shows it; hidden if that half cannot.
 function place(el, v, tx, ty, html) {
-  const at = html && onScreen(v, (tx + 0.5) * T, 0);
+  const at = html && onScreen(v, (tx + 0.5) * T, ty * T);   // v156: through the camera, both ways
   el.hidden = !at;
   if (!at) return;
   el.innerHTML = html;
   el.style.left = `${at.x * 100}%`;
-  const below = ty < 2;   // no room above the top rows
-  el.style.top = `${((below ? ty + 1 : ty) / H) * 100}%`;
+  const below = at.y * H < 2;   // no room above the top rows of the screen
+  el.style.top = `${(at.y + (below ? 1 / H : 0)) * 100}%`;
   el.classList.toggle('below', below);
 }
 
 function update() {
   const { tx, ty } = facing();
-  const inside = tx >= 0 && ty >= 0 && tx < W && ty < H, on = hud.prompts && hud.mode !== 'hidden' && !G.siting;
+  const size = sizeOf(G.S.map), inside = tx >= 0 && ty >= 0 && tx < size.w && ty < size.h, on = hud.prompts && hud.mode !== 'hidden' && !G.siting;
   const text = inside && on
     ? promptFor({ tx, ty, tile: tileAt(tx, ty), mapId: G.S.map, item: HOTBAR[G.S.slot] }) : null;
   const useKey = usingPad() ? PAD_LABELS.use : keyName('use');   // v126: the pad's A once a controller is in use
-  const key = text && `${text}|${tx},${ty}|${touch.matches}|${useKey}|${views()[0].cam}`;
+  const key = text && `${text}|${tx},${ty}|${touch.matches}|${useKey}|${views()[0].cam},${views()[0].camY}`;
   const [mine, theirs] = views();
-  const p2 = on ? partnerPrompt() : null, key2 = p2?.text && `${p2.text}|${p2.tx},${p2.ty}|${theirs?.cam}`;   // v131: the second farmer's, always A
+  const p2 = on ? partnerPrompt() : null, key2 = p2?.text && `${p2.text}|${p2.tx},${p2.ty}|${theirs?.cam},${theirs?.camY}`;   // v131: the second farmer's, always A
   if (key2 !== shown2) { shown2 = key2; place($('#prompt2'), theirs, p2?.tx, p2?.ty, key2 && `<kbd>${PAD_LABELS.use}</kbd> ${p2.text}`); }
   if (key === shown) return;
   shown = key;
