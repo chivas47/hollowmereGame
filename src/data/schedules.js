@@ -113,7 +113,52 @@ export function rainDay(id, blocks) {
 // Farm paths are each neighbour's route through the field (data/npcs.js path).
 export function scheduleFor(def, day) {
   const wd = (day - 1) % 7;
-  return DAYS[def.id] ? dailyLife(def.id, wd, DAYS[def.id](wd, def)) : [];
+  return DAYS[def.id] ? dailyLife(def.id, wd, vary(def.id, day, DAYS[def.id](wd, def))) : [];
+}
+
+// v150: a week that is not the same twice. Seeded by the date (so a reload shows the same day), only outdoors
+// (work hours, the Lantern and visits never move): some mornings they head out up to 40 minutes later, they come
+// home up to half an hour earlier or later, they walk their rounds from another corner or the other way round,
+// and about two days a week they take a 45-minute detour to a favourite place.
+const FAVOURITE = {
+  ines: ['beach', [16, 5], 'down'],      // to look at the sea
+  odile: ['village', [13, 9], 'left'],   // the fountain, for the ducks
+  tavi: ['wilds', [12, 2], 'up'],        // the old mine mouth, still not on any map
+  nell: ['forest', [16, 6], 'down'],
+  rook: ['forest', [4, 4], 'down'],      // to choose the next plank's wood
+  esme: ['wilds', [8, 11], 'down'],
+  kit: ['beach', [18, 6], 'down'],
+  juno: ['beach', [10, 3], 'down'],      // a minute off the round
+  pell: ['beach', [21, 4], 'down'],
+  lio: ['forest', [20, 5], 'down'],      // to write a tune where nobody can hear
+  bram: ['wilds', [5, 6], 'down'],
+  wren: ['forest', [3, 3], 'down'],
+};
+const DETOUR = { chance: 2 / 7, length: 45 };
+const hash = (str) => [...str].reduce((h, ch) => Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0, 2166136261);
+function roll(day, id, k) {
+  let h = (hash(id) ^ Math.imul(day, 2654435761) ^ Math.imul(k + 1, 40503)) >>> 0;
+  h = Math.imul(h ^ (h >>> 15), 2246822507) >>> 0; h = Math.imul(h ^ (h >>> 13), 3266489909) >>> 0;
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+}
+const tens = (m) => 10 * Math.round(m / 10);
+
+export function vary(id, day, blocks) {
+  const r = (k) => roll(day, id, k), out = blocks.map((b) => ({ ...b })), loose = (b) => b && OUTDOORS.has(b.map) && !b.with;
+  const first = out[0], last = out[out.length - 1];
+  if (loose(first)) first.from = Math.min(first.to - MIN_BLOCK, first.from + tens(r(1) * 40));   // a slow morning
+  if (loose(last)) last.to = Math.max(last.from + MIN_BLOCK, last.to + tens((r(2) - 0.5) * 60));   // home early or late
+  out.forEach((b, i) => {   // the round from another corner, or the other way round
+    if (!loose(b) || b.stay || b.path.length < 3) return;
+    const k = Math.floor(r(10 + i) * b.path.length);
+    b.path = [...b.path.slice(k), ...b.path.slice(0, k)];
+    if (r(30 + i) < 0.5) b.path = [b.path[0], ...b.path.slice(1).reverse()];
+  });
+  const fav = FAVOURITE[id], room = DETOUR.length + 60;
+  const host = out.filter((b) => loose(b) && b.to - b.from >= room).sort((a, b) => b.to - b.from - (a.to - a.from))[0];
+  if (!fav || !host || r(3) >= DETOUR.chance) return out;
+  const from = host.from + 30 + tens(r(4) * (host.to - host.from - room));
+  return visit(out, { from, to: from + DETOUR.length, map: fav[0], path: [fav[1]], stay: true, face: fav[2], detour: true });
 }
 
 // v148: meals and errands, the reasons in a day. Whoever is out and about at noon stops for lunch: home, or a

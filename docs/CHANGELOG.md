@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v150: No two weeks the same
+- Neighbours' days vary with the date: some mornings they head out up to 40 minutes later, they come home up to half an hour earlier or later, and they walk their rounds from another corner or the other way round.
+- About twice a week each takes a 45-minute detour to a favourite place: Ines to look at the sea, Odile to the fountain for the ducks, Tavi to the old mine mouth, Lio to the forest to write a tune, and so on (twelve neighbours, 68 detours in four weeks).
+- Work hours, the Lantern, lunch, the shopping and visits never move, so you can still find a shopkeeper at the counter. The same date always plays the same way, after a reload too.
+- Nothing saved; no prices, keys or saves changed.
+
 ## v149: Friends
 - Five friendships among the neighbours: Ines and Nell, Odile and Esme, Tavi and Kit, Wren and Rook, Pell and Juno.
 - Ines calls on Nell on Tuesday and Friday evenings, 7 to 9 pm; find them talking in Nell's kitchen.
