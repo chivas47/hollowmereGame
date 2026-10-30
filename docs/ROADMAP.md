@@ -173,6 +173,24 @@ loop.
 | 74i | Talking about what you did | feature | done (chivas47/hollowmereGame#150) | Split from 74h (needs a save field, so its own PR): neighbours mention what you did yesterday (shipped a gold-star crop, gave something to the museum, a wedding, a festival win). A small saved record of yesterday's notable acts, newState, merge and a migration test. |
 | 74j | A week watched | test | in progress (chivas47/hollowmereGame#151) | Recommended after 74i: every neighbour walked through eleven days (sun, rain, storm, snow, two festivals, a Sunday) with the real updaters, as a test. It found two bugs, fixed here: walkers pausing on top of each other at the square's corners for up to 11 game minutes, and Lantern lunches out of reach from the farm and the Wilds (Odile, Nell, Juno never sat down). |
 
+## A real world (October 2026)
+
+Nuno asked for the world organised into a real game world: the village houses arranged, more maps, more
+people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top of the feature loop, and
+`docs/NPC_LIFE.md` too when it touches how a neighbour lives. Order: 75b, the camera (75g to 75i), then 75c, 75d, 75e, 75f.
+
+| # | Item | Type | Status | Notes |
+|---|---|---|---|---|
+| 75a | Screens or a camera | decision | done | Nuno's pick (October 2026): a camera, so maps can be larger than the screen. Built as 75g to 75i before the village is laid out. |
+| 75b | The world joined up | test | next | One test over every map: reachable from the farm, every exit lands on a walkable tile with a way back, every door leads somewhere, every neighbour has a home that exists. Buildable before 75a; it guards every item after it. |
+| 75g | Camera: following you | feature | queued | A map can be larger than 24 x 16; the view follows the player and stops at the map's edges. Screen maps draw exactly as today. One half each in split screen. |
+| 75h | Camera: the rules at any size | feature | queued | Everything that assumes 24 x 16 (placement, pathing, neighbours' walks, exits on the edges, the minimap and mouse clicks) reads the map's own size. Tests over a large test map. |
+| 75i | Camera: saves | feature | queued | A save field and a migration step only if a map's size changes under saved things; otherwise none. Proved by growing one quiet map first. |
+| 75c | The village laid out | feature | queued | Rearrange Hollowmere Village and Town by the WORLD_BUILDING test: homes facing their lanes with yards, fences and gardens, shops where people pass, the smithy at the edge, a centre round the square. Moves doors and homes, so a migration step and every routine rechecked. Needs the camera (75g to 75i). |
+| 75d | The mere | feature | queued | Nuno's pick for the first new place (October 2026): the lake the valley is named for. Reeds, a boathouse, its own fish, a few lakeside homes. Built at the larger size once the camera is in. Other candidates for later: a river hamlet with a mill, a hill farmstead on the way to Cragmoor. |
+| 75e | New neighbours | feature | queued | We have 17; Stardew's valley has about 30. A few at a time, each with a home on a real map, a job, friends in `data/friends.js` and a full week by NPC_LIFE. The first ones live at the mere (75d). |
+| 75f | The world that changes | feature | queued | Audit then fill gaps: wildlife in the world (birds that scatter, a cat on a wall, fish jumping in the mere), seasonal changes to maps (snow on roofs, autumn leaves, a frozen pond), and town projects that change a map for good. |
+
 ## Done
 
 | Item | PR |

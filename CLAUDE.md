@@ -1,6 +1,6 @@
 # Hollowmere Farm: how Claude works on this repo
 
-Read `docs/PROJECT_INSTRUCTIONS.md` (hard rules) and `docs/ARCHITECTURE.md` (where things go) before changing code. This file adds the delivery process.
+Read `docs/PROJECT_INSTRUCTIONS.md` (hard rules) and `docs/ARCHITECTURE.md` (where things go) before changing code, plus `docs/WORLD_BUILDING.md` for maps, buildings and homes and `docs/NPC_LIFE.md` for how neighbours live. This file adds the delivery process.
 
 ## Values: the Stardew scale
 
