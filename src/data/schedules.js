@@ -104,7 +104,47 @@ export function rainDay(id, blocks) {
 
 // Farm paths are each neighbour's route through the field (data/npcs.js path).
 export function scheduleFor(def, day) {
-  return DAYS[def.id] ? DAYS[def.id]((day - 1) % 7, def) : [];
+  const wd = (day - 1) % 7;
+  return DAYS[def.id] ? dailyLife(def.id, wd, DAYS[def.id](wd, def)) : [];
+}
+
+// v148: meals and errands, the reasons in a day. Whoever is out and about at noon stops for lunch: home, or a
+// table at the Lantern (Hob opens at noon). Esme takes a picnic to her easel; keepers eat at work. Twice a week
+// each of the shoppers stops at Fenn's for half an hour in the afternoon (never on Wednesdays, when Wren shuts),
+// each at their own time and aisle, so two never meet on one tile. does: what they hold there (data/doings.js).
+const LUNCH = {
+  ines: 'home', tavi: 'home', kit: 'home',
+  odile: [LANTERN, [3, 8]], nell: [LANTERN, [9, 8]], lio: [LANTERN, TAVERN.lio], juno: [LANTERN, TAVERN.juno], rook: [LANTERN, TAVERN.rook],
+};
+const STORE = venueMap('store'), STORE_SHUT = 2;
+const AISLES = [{ at: [4, 5], face: 'up' }, { at: [8, 8], face: 'left' }, { at: [11, 8], face: 'up' }];   // the shelves, the produce table, the counter's end
+export const SHOPPERS = ['ines', 'odile', 'tavi', 'nell', 'rook', 'juno', 'pell', 'lio', 'esme', 'kit', 'bram'];
+const SHOP_DAYS = { bram: [1] };   // Bram shops on his rest day; everyone else twice a week, staggered
+const MIN_BLOCK = 30;   // a piece of a block cut shorter than this is dropped: not worth the walk
+
+const covering = (blocks, t) => blocks.find((b) => t >= b.from && t < b.to) || null;
+const outOrHome = (blocks, t) => { const b = covering(blocks, t); return !b || OUTDOORS.has(b.map); };
+// The blocks with [from, to) taken out of them.
+const cut = (blocks, from, to) => blocks.flatMap((b) => (b.to <= from || b.from >= to ? [b] : [
+  ...(b.from < from ? [{ ...b, to: from }] : []), ...(b.to > to ? [{ ...b, from: to }] : []),
+])).filter((b) => b.to - b.from >= MIN_BLOCK);
+const visit = (blocks, v) => [...cut(blocks, v.from, v.to), v].sort((a, b) => a.from - b.from);
+
+// The store visit on this weekday, or null.
+export function errandOf(id, wd) {
+  const i = SHOPPERS.indexOf(id);
+  if (i < 0 || wd === STORE_SHUT || !(SHOP_DAYS[id] || [(i * 2) % 7, (i * 2 + 3) % 7]).includes(wd)) return null;
+  const from = 15 * H + 30 * (i % 4), a = AISLES[Math.floor(i / 4) % AISLES.length];
+  return { from, to: from + 30, map: STORE, path: [a.at], stay: true, face: a.face, does: 'basket' };
+}
+
+export function dailyLife(id, wd, blocks) {
+  let day = blocks;
+  const lunch = LUNCH[id];
+  if (lunch && covering(day, 12.5 * H) && outOrHome(day, 12.5 * H)) day = lunch === 'home' ? cut(day, 12 * H, 13 * H) : visit(day, { ...at(12, 13, ...lunch), does: 'meal' });
+  const e = errandOf(id, wd);
+  if (e && outOrHome(day, e.from) && outOrHome(day, e.to - 1)) day = visit(day, e);
+  return day;
 }
 
 // v52: a spouse lives at the farm: the farmhouse in the morning, about the yard by the house through the day,

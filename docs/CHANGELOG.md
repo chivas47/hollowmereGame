@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v148: Meals and errands
+- Lunch: whoever is out at noon stops for it. Ines, Tavi and Kit go home (visit their cottages); Odile, Nell, Lio, Juno and Rook take a table at the Lantern with a steaming bowl. Shopkeepers eat at their counters and Esme takes a picnic to her easel.
+- The shopping: twice a week most neighbours stop at Fenn's Provisions for half an hour between 3 and 5 pm with a basket on the arm, at the shelves, the produce table or the end of the counter; Bram goes on his Tuesday rest day. Never on Wednesdays, when Wren shuts.
+- Nothing saved; no prices, keys or saves changed.
+
 ## v147: Doing, not standing
 - Where neighbours stop, they are busy: Odile fishes the Wilds pond (facing the water) and mends nets on the pier and at the Lantern, Esme paints at an easel in the forest and sketches at the Lantern and on the shore, Corvin hammers at the anvil, Bram saws a plank, Wren keeps the ledger, Hob polishes a mug, Pell and Warden Hale read, Lio fiddles, Nell gardens with a trug of greens, Rook paints the rowboat, Tavi checks the map, Ines's bees follow her round the meadow, Doctor Maren's bag stands by the counter, Kit carries a wrench and the Lamplighter a lantern.
 - Juno carries the mail satchel all day, walking too.
