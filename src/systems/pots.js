@@ -3,11 +3,11 @@
 // bait it (one bait from the bag), or pick it up with the pickaxe or axe when empty. Each morning a baited pot
 // fills (data/angling.js POT_CATCH). Gold pan (hotbar slot 9): pan the day's shimmering spot (G.S.shimmer).
 import { G } from '../core/game.js';
-import { T, W, H } from '../core/constants.js';
+import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer } from '../core/registry.js';
 import { today } from '../core/time.js';
-import { MAPS } from '../data/maps.js';
+import { MAPS, sizeOf } from '../data/maps.js';
 import { ITEMS } from '../data/items.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { FISH, ICE_HOLE } from '../data/fish.js';
@@ -78,8 +78,8 @@ on('day:start', () => {
   newSpot();
 });
 function newSpot() {
-  const S = G.S, spots = [];
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (water(x, y) && !S.pots[key(x, y)]) spots.push([x, y]);
+  const S = G.S, spots = [], { w: MW, h: MH } = sizeOf(MAP);   // v157: the pond map's own size
+  for (let y = 0; y < MH; y++) for (let x = 0; x < MW; x++) if (water(x, y) && !S.pots[key(x, y)]) spots.push([x, y]);
   if (!spots.length) return;
   const [x, y] = spots[Math.floor(Math.random() * spots.length)];
   S.shimmer = { x, y };

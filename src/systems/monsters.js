@@ -2,10 +2,10 @@
 // v36: monster kinds by floor (data/weapons.js MONSTERS): slimes hop, mites crawl, bats and serpents fly over walls,
 // bone walkers walk. The weapon is the one chosen in the bag (systems/gear.js); rings change hits, drops and healing.
 import { G } from '../core/game.js';
-import { T, W, H, DIRS } from '../core/constants.js';
+import { T, DIRS } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
-import { MAPS } from '../data/maps.js';
+import { MAPS, sizeOf } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
 import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL } from '../data/weapons.js';
 import { CAVERN } from '../data/cavern.js';
@@ -42,7 +42,7 @@ on('mine:floor', ({ floor: n, rng: R, zone, eff: floor }) => {
   const kinds = Object.keys(D).filter((k) => (vent ? D[k].vent || D[k].ventOnly : cav ? D[k].cavern || D[k].cavernOnly : !D[k].cavernOnly && !D[k].ventOnly && floor >= D[k].from));
   const count = peak ? (n >= PEAK.floors ? 0 : PEAK.monsters(n)) : vent ? (n >= VENT.floors ? 0 : VENT.monsters(n)) : cav ? CAVERN.monsters(n) : MONSTER_COUNT(floor);   // v39: the forge room is safe
   for (let guard = 0; slimes.length < count && guard < 500; guard++) {
-    const x = 1 + Math.floor(R() * (W - 2)), y = 1 + Math.floor(R() * (H - 2));
+    const x = 1 + Math.floor(R() * (g[0].length - 2)), y = 1 + Math.floor(R() * (g.length - 2));   // v157: the floor's own size
     if (g[y][x] !== 'f' || (x < 7 && y < 6)) continue;
     slimes.push({ ...make(kinds[Math.floor(R() * kinds.length)], floor, x * T + 8, y * T + 12, R), zone });
   }
@@ -52,9 +52,9 @@ on('map:changed', (id) => { if (id !== slimeMap && !occupied(slimeMap)) slimes.l
 // n first-floor slimes on open grass of a map, away from the player.
 export function spawnSlimes(map, n) {
   slimes.length = 0; slimeMap = map;
-  const g = MAPS[map].grid, color = SLIME.colors[0];
+  const g = MAPS[map].grid, color = SLIME.colors[0], { w: MW, h: MH } = sizeOf(map);   // v157: the map's own size
   for (let guard = 0; slimes.length < n && guard < 500; guard++) {
-    const x = 1 + Math.floor(Math.random() * (W - 2)), y = 5 + Math.floor(Math.random() * (H - 6));
+    const x = 1 + Math.floor(Math.random() * (MW - 2)), y = 5 + Math.floor(Math.random() * (MH - 6));
     if (g[y][x] !== 'g' || Math.hypot(x * T - G.S.x, y * T - G.S.y) < 5 * T) continue;
     const px = x * T + 8, py = y * T + 12;
     slimes.push({ ...make('slime', 1, px, py, Math.random), color });
@@ -63,7 +63,7 @@ export function spawnSlimes(map, n) {
 on('day:start', () => { slimes.length = 0; });
 
 function step(m, vx, vy, dist) {
-  const fly = MONSTERS[m.kind || 'slime'].move === 'fly', inside = (x, y) => x > 8 && y > 8 && x < W * T - 8 && y < H * T - 4;
+  const fly = MONSTERS[m.kind || 'slime'].move === 'fly', s = sizeOf(slimeMap), inside = (x, y) => x > 8 && y > 8 && x < s.w * T - 8 && y < s.h * T - 4;   // v157: the map's own edges
   if (!fly) { const hit = moveBox(m, vx * dist, vy * dist, BOX); if (hit.x) m.tx = m.x; if (hit.y) m.ty = m.y; return; }
   const nx = m.x + vx * dist; if (inside(nx, m.y)) m.x = nx; else m.tx = m.x;
   const ny = m.y + vy * dist; if (inside(m.x, ny)) m.y = ny; else m.ty = m.y;

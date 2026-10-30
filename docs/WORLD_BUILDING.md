@@ -8,9 +8,10 @@ through `docs/NPC_LIFE.md`. The items are the "A real world" track in `ROADMAP.m
 
 ## Where the world stands today
 
-- Every map is one screen, `W` x `H` = 24 x 16 tiles (`core/constants.js`), with no camera. Nuno chose a camera
-  (roadmap 75a): once 75g to 75i land, a map can be larger than the screen, so a village gets real streets instead
-  of being split across screens. Until then a place that needs more room becomes another screen.
+- The screen is `W` x `H` = 24 x 16 tiles (`core/constants.js`). Since v156 and v157 (roadmap 75g, 75h) a map can
+  be larger: the camera follows the farmer and the rules read the map's size from its grid (`sizeOf()` in
+  `data/maps.js`). Never use `W` and `H` for a map's size; they are the screen's. Mine floors stay one screen by
+  design. Every map today is still screen-sized; the first to grow is roadmap 75i.
 - Maps live in `data/maps.js` (a `*Grid()` function each, `MAPS[id]` with `exits`); cottages and venues are
   built from `data/homes.js` and `data/venues.js`; neighbours and their days in `data/npcs.js` and
   `data/schedules.js`.

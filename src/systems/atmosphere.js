@@ -2,7 +2,7 @@
 // Drawn only, never saved. The light of the hour is in render/renderer.js, ambient sound in audio/ambience.js.
 import { G } from '../core/game.js';
 import { visible } from '../render/views.js';
-import { T, W, H } from '../core/constants.js';
+import { T } from '../core/constants.js';
 import { emit } from '../core/events.js';
 import { addLayer, addUpdater } from '../core/registry.js';
 import { today } from '../core/time.js';
@@ -75,7 +75,7 @@ let fauna = { key: null, birds: [], flies: [], bugs: [] };
 function spawn() {
   const S = G.S, map = MAPS[S.map], R = rng(S.day * 31 + map.salt), tiles = [];
   map.grid.forEach((row, y) => [...row].forEach((t, x) => { if ((t === 'g' || t === 'z') && !S.soil?.[`${x},${y}`] && !S.placed?.[`${x},${y}`]) tiles.push([x, y]); }));
-  const pick = () => tiles[(R() * tiles.length) | 0] || [W / 2, H / 2];
+  const pick = () => tiles[(R() * tiles.length) | 0] || [sizeOf(G.S.map).w / 2, sizeOf(G.S.map).h / 2];   // v157: the middle of the map
   fauna = { key: `${S.map}-${S.day}`, birds: [], flies: [], bugs: [] };
   if (WILDLIFE.birds.maps.includes(S.map)) for (let i = 0; i < WILDLIFE.birds.n; i++) {
     const [x, y] = pick(); fauna.birds.push({ x: x * T + 8, y: y * T + 10, vx: 0, vy: 0, flee: false, peck: R() * 3 });
