@@ -33,6 +33,10 @@ function render() {
   $('#health').classList.toggle('low', S.hp < S.maxHp * 0.25);
   // v112: no bar that says nothing. Health shows when hurt or where monsters live, water while the can is in hand.
   $('#health').parentElement.hidden = S.hp >= S.maxHp && monstersOn() !== S.map;
+  // v143: farmer two's health, by the same rule on their own map
+  const P = S.partner;
+  $('#health2').parentElement.hidden = !G.P2 || (P.hp >= S.maxHp && monstersOn() !== G.P2.map);
+  if (G.P2) { meter('#health2', P.hp, S.maxHp); $('#health2').classList.toggle('low', P.hp < S.maxHp * 0.25); }
   $('#water').parentElement.hidden = HOTBAR[S.slot] !== 'can';
   const extra = EXTRA.find((e) => e.maps.includes(S.map));   // a second currency, only where it is spent
   $('#extra').hidden = !extra;

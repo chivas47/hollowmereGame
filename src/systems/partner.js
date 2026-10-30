@@ -205,6 +205,7 @@ on('day:start', (report) => { G.S.partner.energy = report.passedOut ? Math.round
 
 const SWUNG = new Set(['hoe', 'pick', 'axe', 'can', 'sword', 'rod', 'pan']);
 function drawPartner(c) {
+  if (G.P2.hurtT > 0 && Math.floor(performance.now() / 80) % 2) return;   // v143: blink while hurt, as you do
   const p = G.P2, a = p.anim, held = a && SWUNG.has(a.kind), dir = a ? a.dir : p.dir;
   if (p.riding) { drawHorse(c, p.x, p.y, p.dir, p.moving); drawPerson(c, p.x, p.y - 7, p.dir, false, 0, G.S.partner.look, lean(p.x)); return; }   // as you ride (systems/player.js)
   const rod = G.fishing?.p2 && a?.kind !== 'rod';   // their line is out: the rod held out over the water

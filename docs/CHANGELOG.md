@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v143: Farmer two can be hurt
+- Farmer two has their own health: monsters that reach them hurt them (no longer just a shove), with a moment of safety after each hit, and their bar shows under yours as "Their HP".
+- At zero they faint and come to at the clinic, with the same bill as yours from the shared gold; the message opens in their half and you play on.
+- Their health is full each morning and saved; older saves start them at the top. No prices or keys changed.
+
 ## v142: Farmer two stays
 - Farmer two is kept with your farm: the first time they join they pick a shirt and hair in their half, and when they rejoin they come back where they left off, holding what they held (never into a mine floor or the maze, which are rebuilt every visit).
 - Their own bed appears in the farmhouse the first time they play: on free floor in the bed corner, so nothing you placed is moved.
