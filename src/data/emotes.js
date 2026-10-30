@@ -8,6 +8,7 @@ export const EMOTES = {
   wave:     { dur: 1.1, gesture: 'wave' },    // the day's first hello
   surprise: { dur: 1.0, gesture: 'hop' },     // meeting you for the first time
   sigh:     { dur: 1.6, gesture: 'none' },    // standing out in the rain
+  chat:     { dur: 1.3, gesture: 'none' },    // v145: talking to the neighbour beside them (systems/chatter.js)
 };
 // Which emote a gift brings, by taste tier (data/gifts.js); a neutral gift gets none.
 export const GIFT_EMOTE = { loved: 'love', liked: 'happy', disliked: 'frown', hated: 'angry' };

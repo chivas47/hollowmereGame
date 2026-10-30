@@ -250,6 +250,7 @@ const EMOTE_ART = {
   frown: (c, x, y) => { const d = '#2b211a'; r(c, x + 3, y + 2, 1, 1, d); r(c, x + 5, y + 2, 1, 1, d); r(c, x + 3, y + 4, 3, 1, d); r(c, x + 2, y + 5, 1, 1, d); r(c, x + 6, y + 5, 1, 1, d); },
   angry: (c, x, y) => { const a = '#c0392b'; r(c, x + 3, y + 1, 1, 6, a); r(c, x + 5, y + 1, 1, 6, a); r(c, x + 2, y + 2, 5, 1, a); r(c, x + 2, y + 5, 5, 1, a); },
   surprise: (c, x, y) => { const a = '#d94a5a'; r(c, x + 4, y + 1, 1, 4, a); r(c, x + 4, y + 6, 1, 1, a); },
+  chat: (c, x, y, k) => { const d = '#2b211a', n = 1 + (Math.floor(k * 6) % 3); for (let i = 0; i < n; i++) r(c, x + 2 + i * 2, y + 4, 1, 1, d); },   // v145: dots, typed out
 };
 export function drawEmote(c, px, py, kind, k, p) {
   const x = Math.round(px), y = Math.round(py);
@@ -257,7 +258,7 @@ export function drawEmote(c, px, py, kind, k, p) {
   if (kind === 'sigh') { const up = Math.round(k * 6), a = `rgba(226,230,236,${(1 - k).toFixed(2)})`; r(c, x + 3, y - 11 - up, 2, 1, a); r(c, x + 4, y - 12 - up, 2, 1, a); return; }
   const bx = x - 4, by = y - 27 + (k < 0.15 ? Math.round((0.15 - k) * 20) : 0);   // pops up into place
   r(c, bx, by, 9, 8, '#fffbe8'); r(c, bx + 3, by + 8, 2, 1, '#fffbe8');
-  EMOTE_ART[kind]?.(c, bx, by);
+  EMOTE_ART[kind]?.(c, bx, by, k);
 }
 
 export function drawBubble(c, px, py) {
