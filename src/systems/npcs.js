@@ -139,6 +139,12 @@ function travel(n, map, tile, step, dt) {
   return false;
 }
 
+// v154: another neighbour standing still on this one's tile (so a walker does not stop on top of them).
+function standingOn(n) {
+  const t = tileOf(n.x, n.y);
+  return NPCRT.some((m) => m !== n && m.visible && !m.moving && m.map === n.map && (({ tx, ty }) => tx === t.tx && ty === t.ty)(tileOf(m.x, m.y)));
+}
+
 // v151: someone you walked home is in (indoors, or out of sight at their door).
 const leftFor = (id) => { const m = NPCRT.find((x) => x.id === id); return !m?.visible || m.map.startsWith('home_'); };
 // v151: is a neighbour in their own cottage now (systems/nightlights.js lights its windows only then)?
@@ -180,7 +186,7 @@ addUpdater((dt) => {
     if (b.stay && n.wi > last) { n.moving = false; continue; }   // standing at their place
     if (travel(n, b.map, b.path[Math.min(n.wi, last)], step, dt)) {
       if (b.stay) { n.wi++; if (n.wi > last) n.dir = b.face || 'down'; }
-      else { n.wi = (n.wi + 1) % b.path.length; n.wait = 2 + Math.random() * 3; }
+      else { n.wi = (n.wi + 1) % b.path.length; n.wait = standingOn(n) ? 0 : 2 + Math.random() * 3; }   // v154: someone already stands here: walk on
     }
   }
 });

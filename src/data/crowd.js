@@ -51,6 +51,6 @@ export const CHAT = { every: 5 };
 export const EARLY = { lio: 60, hob: 90 };
 export const SETUP = {
   minutes: 90,
-  crew: { bram: { at: [8, 6], face: 'up', does: 'saw' }, corvin: { at: [16, 11], face: 'left', does: 'hammer' } },
+  crew: { bram: { at: [7, 6], face: 'up', does: 'saw' }, corvin: { at: [16, 11], face: 'left', does: 'hammer' } },   // v154: Bram off the mingling places
 };
 export const CLOSE = { linger: 40, walkHome: 15 };

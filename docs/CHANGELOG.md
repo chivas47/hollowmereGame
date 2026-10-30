@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v154: A week watched
+- Neighbours walking a round no longer stop on top of someone already standing at a corner of the square; they walk on.
+- Lunch at the Lantern only for those already in the village or the town just before noon. From the farm or the Wilds the walk took longer than lunch, so Odile, Nell and Juno never sat down; now they eat a packed lunch where they are (a bowl in hand).
+- Bram's setup spot on festival mornings moved off a mingling place.
+- A new test walks every neighbour through eleven days of the real game and fails if anyone stands on something solid, on top of someone else for more than a minute, or never reaches a place they mean to spend an hour.
+- Nothing saved; no prices, keys or saves changed.
+
 ## v153: Talking about what you did
 - The day after, neighbours talk about what you did: the wedding and a first prize at a festival (everyone), a quest you did for them (thanks from that neighbour), and some of them about gifts to the museum, a quest for their friend, a shipping bin of 1,500g or more, or a skill level gained.
 - Birthdays still come first; partners and spouses keep their own words.
