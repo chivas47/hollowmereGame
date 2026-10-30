@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v139: Split screen
+- With a second farmer in, the screen splits down the middle: you on the left, farmer two on the right. Each half follows its farmer across the farm, with its own facing outline, its own light after dark and its own circle of light in the mine.
+- Each Use prompt sits in its farmer's half. Tapping the screen acts only in your half.
+- Alone, the whole map shows as before. Phones never split (v137). You still travel together for now; going separate ways comes next.
+- No prices, keys or saves changed.
+
 ## v138: A map for each farmer
 - Groundwork for split screen (roadmap 73c): the second farmer now carries their own map. They walk and use tools against it, and the game counts every map either farmer stands on as in use (monsters stay on a floor while either of you is there).
 - Nothing changes on screen yet: they still follow you onto every map and a door either of you opens takes you both. That stops when split screen arrives (73e).

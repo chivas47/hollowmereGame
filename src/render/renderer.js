@@ -1,6 +1,6 @@
 // Composes a frame: cached background, ground layers, facing outline, y-sorted entities, overlays, the light of the hour, layers above it.
 import { G } from '../core/game.js';
-import { T, W, H } from '../core/constants.js';
+import { T, W, H, DIRS } from '../core/constants.js';
 import { on } from '../core/events.js';
 import { drawLayers, collectEntities } from '../core/registry.js';
 import { today, dayEnd } from '../core/time.js';
@@ -17,6 +17,7 @@ import { addLayer } from '../core/registry.js';
 import { WIND } from '../data/atmosphere.js';
 import { lean, shiftOf } from '../systems/wind.js';
 import { outdoorLights } from '../systems/nightlights.js';
+import { views } from './views.js';
 
 let cache = {};
 on('season:changed', () => { cache = {}; });
@@ -96,14 +97,34 @@ addLayer(4, (c) => {
   }
 });
 
+// v139: one view per farmer (render/views.js); G.view is the farmer a view follows while it draws, so the light
+// after dark, the dark of the mine and the facing outline open around them.
 export function draw(c) {
   c.imageSmoothingEnabled = false;
+  const list = views();
+  for (const v of list) {
+    c.save();
+    if (list.length > 1) { c.beginPath(); c.rect(v.x0, 0, v.w, v.h); c.clip(); c.translate(v.x0 - v.cam, 0); }
+    G.view = v.farmer;
+    try { drawWorld(c); } finally { G.view = null; c.restore(); }
+  }
+  if (list.length > 1) { c.fillStyle = '#1c1612'; c.fillRect(list[1].x0 - 1, 0, 2, H * T); }   // the line between the halves
+}
+
+// The tile the farmer a view follows is facing.
+function facingOf(p) {
+  if (p === G.S) return facing();
+  const [dx, dy] = DIRS[p.dir];
+  return { tx: Math.floor(p.x / T) + dx, ty: Math.floor((p.y - 2) / T) + dy };
+}
+
+function drawWorld(c) {
   const sk = G.shake;   // v74: screen shake (systems/animation.js)
   c.save();
   if (sk) { const m = sk.mag * Math.min(1, sk.t / sk.max * 1.5); c.fillStyle = '#000'; c.fillRect(0, 0, W * T, H * T); c.translate(Math.round((Math.random() - 0.5) * 2 * m), Math.round((Math.random() - 0.5) * 2 * m)); }
   c.drawImage(background(), 0, 0);
   drawLayers(c, 0, 49);
-  const f = facing(), t = tileAt(f.tx, f.ty);
+  const f = facingOf(G.view || G.S), t = tileAt(f.tx, f.ty);
   if (t && !['T', 'X', 'w', 'I', '.'].includes(t)) { c.strokeStyle = 'rgba(255,246,214,.6)'; c.lineWidth = 1; c.strokeRect(f.tx * T + 0.5, f.ty * T + 0.5, T - 1, T - 1); }
   collectEntities().sort((a, b) => a.y - b.y).forEach((e) => e.draw(c));
   drawLayers(c, 50, 999);
@@ -145,7 +166,7 @@ function tint(c) {
   if (lights.length) { k.globalCompositeOperation = 'source-over'; k.clearRect(0, 0, w, h); }
   if (time < NIGHT_FROM) { k.fillStyle = `rgba(${rgb},${alpha})`; k.fillRect(0, 0, w, h); }
   else {
-    const g = k.createRadialGradient(G.S.x, G.S.y, T * 1.5, G.S.x, G.S.y, T * 7);
+    const p = G.view || G.S, g = k.createRadialGradient(p.x, p.y, T * 1.5, p.x, p.y, T * 7);
     g.addColorStop(0, `rgba(${rgb},${alpha * 0.55})`); g.addColorStop(1, `rgba(${rgb},${alpha})`);
     k.fillStyle = g; k.fillRect(0, 0, w, h);
   }
