@@ -162,7 +162,7 @@ loop.
 
 | # | Item | Type | Status | Notes |
 |---|---|---|---|---|
-| 74a | Festival crowds and neighbours who talk | feature | in progress | Neighbours drift between places in the square during a festival (chat pairs, the fountain, the table, the notices, the ribbon pole), with jobs for Lio, Hob and Kit, instead of one tile from 9:00 to 22:00. Anywhere, two standing side by side turn and talk. Plus the workflow, `docs/NPC_LIFE.md`. |
+| 74a | Festival crowds and neighbours who talk | feature | in progress (chivas47/hollowmereGame#142) | Neighbours drift between places in the square during a festival (chat pairs, the fountain, the table, the notices, the ribbon pole), with jobs for Lio, Hob and Kit, instead of one tile from 9:00 to 22:00. Anywhere, two standing side by side turn and talk. Plus the workflow, `docs/NPC_LIFE.md`. |
 | 74b | Rain days | feature | next | Stardew's villagers keep a rain schedule. Outdoor blocks (Odile's pier, Rook's beach, Esme's easel, Tavi's survey) move indoors on rain and storm: the Lantern, the store, their cottages. A line or two about the weather. |
 | 74c | Doing, not standing | feature | queued | A pose or a prop for what they do where they stop: Odile's rod at the pond, Esme at her easel, Juno's satchel, Nell kneeling in the garden, Corvin's hammer at the anvil. Drawn in code (rule 3). |
 | 74d | Meals and errands | feature | queued | Lunch at the Lantern or at home, a stop at Fenn's on the way back, Maren's house calls to whoever is unwell. Gives each day a reason for its blocks. |
