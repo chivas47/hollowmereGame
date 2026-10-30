@@ -6,10 +6,10 @@
 // Siting: G.siting = { key, mode: 'new' | 'move' } while the player picks a spot; Use places the building
 // with its top-left corner on the facing tile. Imported right after systems/layouts.js in main.js.
 import { G } from '../core/game.js';
-import { T, W, H } from '../core/constants.js';
+import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer } from '../core/registry.js';
-import { MAPS } from '../data/maps.js';
+import { MAPS, sizeOf } from '../data/maps.js';
 import { DEBRIS } from '../data/clearing.js';
 import { COOP, BARN, GREENHOUSE, STABLE, SHED, MILL, CLOCK } from '../data/upgrades.js';
 import { POND, SLIME_PEN } from '../data/ponds.js';
@@ -110,7 +110,7 @@ export function noFit(key, x, y) {
   for (let ty = y; ty < y + sh.fp.h; ty++) for (let tx = x; tx < x + sh.fp.w; tx++) tiles.push([tx, ty]);
   const yard = [];
   if (sh.yard) for (let ty = sh.yard.y0; ty <= sh.yard.y1; ty++) for (let tx = sh.yard.x0; tx <= sh.yard.x1; tx++) yard.push([tx, ty]);
-  const inside = ([tx, ty]) => tx >= 1 && ty >= 5 && tx < W - 1 && ty < H - 1;
+  const { w: MW, h: MH } = sizeOf('farm'), inside = ([tx, ty]) => tx >= 1 && ty >= 5 && tx < MW - 1 && ty < MH - 1;   // v157: the farm's own size
   if (![...tiles, ...yard].every(inside)) return 'It does not fit there: keep it on the farm, below the path.';
   for (const [tx, ty] of tiles) {
     const k = `${tx},${ty}`, d = S.debris?.[k];
@@ -173,7 +173,8 @@ export function siteAt(key, mode, x, y) {
 
 // The first open spot, scanning from the bottom right (for tools/balance.mjs).
 export function findSite(key) {
-  for (let y = H - 2; y >= 5; y--) for (let x = W - 2; x >= 1; x--) if (!noFit(key, x, y)) return { x, y };
+  const { w: MW, h: MH } = sizeOf('farm');   // v157
+  for (let y = MH - 2; y >= 5; y--) for (let x = MW - 2; x >= 1; x--) if (!noFit(key, x, y)) return { x, y };
   return null;
 }
 

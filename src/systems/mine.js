@@ -26,6 +26,7 @@ const CHECKPOINT_EVERY = 5, PICK_ENERGY = 2;
 // zone: 'hollow', 'cavern' (v38: the Sunken Cavern reuses the mine map), 'vent' (v39) or 'peak' (v67); eff: the Hollow-floor strength of this floor.
 export const MINE = { floor: 0, rocks: {}, ladder: null, zone: 'hollow', eff: 0 };
 
+// Mine floors are one screen (W x H) by design (v157): a floor is a single room you clear, not a place to travel.
 const solidGrid = () => Array.from({ length: H }, () => Array(W).fill('X'));
 MAPS.mine = { name: 'The Hollow', salt: 0, base: 'cave', grid: solidGrid(), objects: [], exits: {} };
 

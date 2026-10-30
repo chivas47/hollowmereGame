@@ -141,8 +141,8 @@ test('every neighbour has a home that exists, with a door on open ground', () =>
   assert.deepEqual(bad, []);
 });
 
-// Until the camera (roadmap 75g to 75i) every map is one screen; that work replaces this test with its own.
-test('every map fits the screen it is drawn on', () => {
-  const bad = Object.entries(MAPS).filter(([id]) => id !== 'mine').filter(([, m]) => m.grid.length !== H || m.grid.some((r) => r.length !== W)).map(([id]) => id);
+// v157 (roadmap 75h): a map may be larger than the screen (the camera follows you), never smaller, and square-edged.
+test('every map is at least the size of the screen, with rows of one length', () => {
+  const bad = Object.entries(MAPS).filter(([, m]) => m.grid.length < H || m.grid[0].length < W || m.grid.some((r) => r.length !== m.grid[0].length)).map(([id]) => id);
   assert.deepEqual(bad, []);
 });

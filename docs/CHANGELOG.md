@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v157: Camera: the rules at any size
+- The rules that still assumed a one-screen map now read the map's own size: where slimes appear and how far flying monsters roam, where a farm building may stand, where the gold pan's shimmer can show, how far falling leaves and fleeing birds go, and where wildlife settles on a map with no grass.
+- Neighbours on their way down to the sewer now stand beside the grate instead of on Nell's wall (the same old spot the player's exit had, fixed in v155).
+- Mine floors stay one screen by design: each floor is a room you clear, not a place to travel.
+- The world test now allows maps larger than the screen, never smaller. No map is larger yet: the first grows in roadmap 75i.
+- Nothing saved; no prices, keys or saves changed.
+
 ## v156: Camera: following you
 - A map can now be larger than the screen. The view follows you both ways and stops at the map's edges; in split screen each half follows its own farmer over their own map. No map is larger yet: the world's maps grow once the rules that still assume one screen are updated (roadmap 75h).
 - The light of the hour, lights after dark, rain, snow, mist, lightning, splashes, water reflections, the mine's dark, indoor light, the fishing bar, the action prompts and taps all follow the camera.
