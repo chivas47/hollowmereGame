@@ -188,7 +188,7 @@ addInteraction(66, ({ tx, ty, tile, item, mapId }) => {
 // Darkness with a pool of light around the player.
 addLayer(95, (c) => {
   if (G.S.map !== 'mine') return;
-  const px = G.S.x, py = G.S.y - 6;
+  const px = (G.view || G.S).x, py = (G.view || G.S).y - 6;   // v139: around the farmer this view follows
   const glow = G.S.rings?.includes('glowring') ? 1.4 : 1;   // v36: the glow ring
   const grad = c.createRadialGradient(px, py, 18 * glow, px, py, 120 * glow);
   grad.addColorStop(0, 'rgba(6,5,10,0)');

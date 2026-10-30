@@ -124,6 +124,7 @@ Stardew counterparts by role: keg (wine 3 x fruit, juice 2.25 x vegetable), mayo
 
 - v129: with a second controller, press A on it to bring in a second farmer (their own look) on the same screen. They walk with the stick, go where you go when you change map, and leave with B or when their controller disconnects. Dialogs and the menu stay the first player's.
 - v130: once in, the second farmer's A uses what they hold, through the same rules as yours (tools, talking, gifts, doors, map exits, which take you both), and LB and RB step through their hotbar. They have their own energy (270, refilled each morning, saved); the bag and gold are shared.
+- v139: while they play the screen splits: you on the left half, them on the right, each half following its farmer (12 of the map's 24 columns at a time). Alone, the whole map shows.
 - v137: not on a phone: on a touch-only screen with a short side under 600 px, the second controller's A shows a note instead of joining. Tablets, and touch screens with a mouse or trackpad, still play two.
 - v136: they ride the horse too, one rider at a time (whoever gets on first), at its speed; going indoors sets them down and the horse waits outside.
 - v134: they fish too, with their own A for the bite and the catch bar, one line in the water at a time (the other farmer's cast is refused while it is out). Their line holds them, not you.
