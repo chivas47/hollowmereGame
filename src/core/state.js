@@ -148,7 +148,7 @@ export function merge(saved) {
   const fw = saved.firstWeek || {};   // v122
   s.firstWeek = { arrived: !!fw.arrived, done: { ...(fw.done || {}) }, over: !!fw.over };
   s.reckoning = { ...newState().reckoning, ...(saved.reckoning || {}) };   // v128
-  s.partner = { ...newState().partner, ...(saved.partner || {}) };   // v130
+  s.partner = { energy: s.maxEnergy, ...(saved.partner || {}) };   // v130; v131: a farm with a bigger energy bar starts them at its top
   if (!Array.isArray(s.bagFav)) s.bagFav = [];   // v113
   s.bagView = { ...newState().bagView, ...(saved.bagView || {}) };
   s.skills = Object.assign(newState().skills, saved.skills || {});

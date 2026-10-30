@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v131: Local two-player, part three
+- The second farmer has their own energy bar under yours and their own Use prompt over the tile they face, with the controller's A.
+- The first farmer's bed ends the day for both; the second farmer wakes beside you, and passing out at 2 am takes both home at 60% energy.
+- A farm whose energy bar was raised starts the second farmer at its top, not at 270.
+- Local two-player is complete (roadmap 33a to 33c). No prices or keys changed.
+
 ## v130: Local two-player, part two
 - The second farmer works: A uses whatever they hold (tilling, watering, chopping, mining, talking, gifts, doors and map exits) through the same rules as you, LB and RB step through their own hotbar choice.
 - They have their own energy (270, refilled each morning, saved with the farm); the bag and gold stay shared.
