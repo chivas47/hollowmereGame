@@ -227,3 +227,50 @@ test('on a phone their A gives a note instead of a second farmer', () => {
   try { join(); assert.equal(G.P2, null); }
   finally { globalThis.matchMedia = was.m; Object.defineProperty(globalThis, 'screen', { value: was.s, configurable: true }); }
 });
+
+// v138 (item 73c): a map per farmer. Still tethered, so nothing on screen changes yet.
+const { farmerMaps, occupied, moveBox: move, blocked: isBlocked } = await import('../src/systems/world.js');
+const { PARTNER: P } = await import('../src/data/partner.js');
+
+test('they carry their own map: joining and following you set it', () => {
+  join(); assert.equal(G.P2.map, G.S.map);
+  placePlayer('village', 10, 8, 'down'); emit('map:changed', 'village');
+  assert.equal(G.P2.map, 'village');
+  assert.deepEqual([...farmerMaps()], ['village']);
+});
+
+test('both maps count as occupied when they stand apart', () => {
+  join(); G.P2.map = 'village';
+  assert.ok(occupied('farm') && occupied('village'));
+  assert.ok(!occupied('beach'));
+  leave(); assert.deepEqual([...farmerMaps()], ['farm']);
+});
+
+test('they collide against their own map, not yours', () => {
+  join(); G.P2.map = 'village';
+  // a tile solid on the village but open on the farm, or the other way round
+  let spot = null;
+  for (let ty = 1; ty < 15 && !spot; ty++) for (let tx = 1; tx < 25 && !spot; tx++) {
+    const x = tx * T + 8, y = ty * T + 12;
+    if (isBlocked(x, y, undefined, 'village') !== isBlocked(x, y, undefined, 'farm')) spot = { x, y };
+  }
+  assert.ok(spot, 'the two maps differ somewhere');
+  const walled = isBlocked(spot.x, spot.y, undefined, 'village');
+  assert.equal(isBlocked(spot.x, spot.y), !walled);   // yours (the farm) says the opposite
+});
+
+test('their Use runs on their map and gives you yours back', () => {
+  join(); G.P2.map = 'village'; put(G.P2, 10, 8, 'down');
+  G.P2.slot = HOTBAR.indexOf('hoe');
+  partnerUse();
+  assert.equal(G.S.map, 'farm');
+  assert.equal(G.P2.map, 'village');
+  assert.ok(!G.S.soil['10,9'], 'the hoe did not till your farm from the village');
+});
+
+test('untethered, your map change leaves them where they are', () => {
+  join(); P.tethered = false;
+  try { const at = { map: G.P2.map, x: G.P2.x, y: G.P2.y }; placePlayer('village', 10, 8, 'down'); emit('map:changed', 'village');
+    assert.deepEqual({ map: G.P2.map, x: G.P2.x, y: G.P2.y }, at); }
+  finally { P.tethered = true; }
+});

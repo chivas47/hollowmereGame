@@ -13,7 +13,7 @@ import { VENT } from '../data/forge.js';
 import { PEAK } from '../data/nuts.js';
 import { ITEMS } from '../data/items.js';
 import { drawSlime, drawMonster } from '../render/sprites.js';
-import { moveBox } from './world.js';
+import { moveBox, occupied } from './world.js';
 import { hurtPlayer } from './health.js';
 import { has } from './professions.js';
 import { attackMult } from './buffs.js';
@@ -47,7 +47,7 @@ on('mine:floor', ({ floor: n, rng: R, zone, eff: floor }) => {
     slimes.push({ ...make(kinds[Math.floor(R() * kinds.length)], floor, x * T + 8, y * T + 12, R), zone });
   }
 });
-on('map:changed', (id) => { if (id !== slimeMap) slimes.length = 0; });
+on('map:changed', (id) => { if (id !== slimeMap && !occupied(slimeMap)) slimes.length = 0; });   // v138: kept while either farmer is there
 
 // n first-floor slimes on open grass of a map, away from the player.
 export function spawnSlimes(map, n) {
