@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v146: Rain days
+- In rain or a storm the neighbours get out of it: Ines, Bram, Tavi, Rook and Hob stay home (visit their cottages), Odile mends nets and Esme sketches by the Lantern's window, Nell sits by the fire, Wren, Pell and Lio spend the day at the Lantern (Lio playing), and Doctor Maren keeps the clinic open till 6 pm for the colds. Nobody walks your farm in the rain.
+- Juno still carries the mail, and Kit is out testing the go-cart in the wet.
+- Each neighbour has a line about the weather on a wet day (a festival line still comes first; partners and spouses keep their own words). A spouse stays in the farmhouse.
+- Nothing saved; no prices, keys or saves changed.
+
 ## v145: Festival crowds
 - Festivals are busy: instead of standing on one spot from 9:00 to 22:00, neighbours move about the square, stopping to chat in pairs, at the fountain, beside the festival table and at the notices, 40 to 110 minutes at each.
 - Some have a job: Lio fiddles by the fountain all day, Hob stirs the soup at the Potluck and keeps the stall at Frostlight, and Kit runs round the village during the Egg Hunt. On dance day a ring forms round the ribbon pole.

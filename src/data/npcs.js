@@ -243,3 +243,25 @@ export const OUTFITS = {
   esme:   { Winter: { shirt: '#5a3a5a', hat: '#c98a3a', band: '#8a5a8a' }, Summer: { shirt: '#c9b0d9' } },
   kit:    { Winter: { shirt: '#8a5a2a', hat: '#3f4a5a', band: '#c98a3a' } },
 };
+
+// v146: what each neighbour says on a rain or storm day (instead of their usual line; a festival line still wins,
+// and partners and spouses keep their own words).
+export const RAIN_LINES = {
+  ines: 'The bees stay in when it rains, so I do too. The whole kitchen smells of honey.',
+  bram: 'Rain on a rest day. Best kind. I have a chair, a stove and nowhere to be.',
+  odile: 'Fish bite in the rain, but my knees do not like it. Nets today, pond tomorrow.',
+  tavi: 'You cannot map in this. The ink runs. I am inking last week instead.',
+  wren: 'Wet days, everyone remembers they need candles. Then they stay for a drink.',
+  corvin: 'Forge does not care about the weather. Keep the door shut, the heat stays in.',
+  hob: 'Rain fills the Lantern. Good for business, bad for my floor.',
+  maren: 'Three colds and a sprained ankle before noon. Keep your feet dry.',
+  hale: 'The Hollow does not get wet. The path up to it does. Watch your footing.',
+  lio: 'Rain is the best audience. Nobody leaves halfway through.',
+  pell: 'The children are wild on rainy days. I let them read about storms. It helps.',
+  juno: 'The mail goes out, rain or shine. My boots, unfortunately, also go out.',
+  nell: 'Rain makes my bones ache and my garden sing. I will sit by the fire and let it.',
+  rook: 'You do not paint a boat in the rain. You sit and look at it through the window.',
+  esme: 'I am drawing the regulars while they are trapped in here. Do not tell them.',
+  kit: 'Rain is free testing. My go-cart leaks in four places. Now I know which four.',
+  lamp: 'Rain runs down through the grates. It is the only time the sewer sings.',
+};
