@@ -75,6 +75,33 @@ const DAYS = {
   lamp: () => [at(18, 26, 'sewer', [20, 3])],
 };
 
+// v146: rain days (Stardew's villagers keep a rain schedule). In rain or a storm every block outdoors goes to the
+// neighbour's shelter instead: 'home' (their cottage, or out of sight over their shop), a place indoors, or 'out'
+// for the two who go out anyway (Juno's mail does not wait; Kit tests the go-cart). Blocks already indoors stay.
+export const RAIN_WEATHERS = ['rain', 'storm'];
+const OUTDOORS = new Set(['farm', 'village', 'town', 'beach', 'forest', 'wilds', 'mountain', 'railway', 'grove', 'desert']);
+const RAIN = {
+  ines: 'home',                      // jars honey in the kitchen
+  bram: 'home',                      // his rest day by the stove
+  odile: [LANTERN, [3, 8]],          // mends nets by the Lantern's window
+  tavi: 'home',                      // inks the week's maps
+  wren: [LANTERN, TAVERN.wren],
+  hob: 'home',                       // errands can wait
+  maren: KEEP('clinic'),             // wet days bring colds: the clinic stays open till evening
+  lio: [LANTERN, TAVERN.lio],        // plays to a damp, grateful room
+  pell: [LANTERN, TAVERN.pell],      // marks slates at a table
+  juno: 'out',
+  nell: [LANTERN, [9, 8]],           // by the fire
+  rook: 'home',
+  esme: [LANTERN, [3, 7]],           // sketches the regulars, beside Odile
+  kit: 'out',                        // tests the go-cart in the wet
+};
+export function rainDay(id, blocks) {
+  const shelter = RAIN[id] || 'home';
+  if (shelter === 'out') return blocks;
+  return blocks.flatMap((b) => (!OUTDOORS.has(b.map) ? [b] : shelter === 'home' ? [] : [at(b.from / H, b.to / H, ...shelter)]));
+}
+
 // Farm paths are each neighbour's route through the field (data/npcs.js path).
 export function scheduleFor(def, day) {
   return DAYS[def.id] ? DAYS[def.id]((day - 1) % 7, def) : [];
@@ -88,6 +115,8 @@ export function spouseDay() {
     go(10, 17, 'farm', [3, 5], [7, 5], [7, 6], [3, 6]),
   ];
 }
+// v146: a spouse stays in on a wet day.
+export const spouseRainDay = () => [at(6, 17, 'house', [11, 7], [13, 7])];
 
 // v76: a festival day: everyone walks to their place in the square for the festival's hours, then home.
 // v110: map for a gathering somewhere else (the Lantern Float on the beach).

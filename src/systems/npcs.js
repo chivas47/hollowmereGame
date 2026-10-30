@@ -9,7 +9,8 @@ import { ITEMS } from '../data/items.js';
 import { MAPS } from '../data/maps.js';
 import { NPCS, OUTFITS } from '../data/npcs.js';
 import { festivalOn, hoursOf } from '../data/festivals.js';
-import { scheduleFor, spouseDay, festivalDay } from '../data/schedules.js';
+import { scheduleFor, spouseDay, festivalDay, rainDay, spouseRainDay, RAIN_WEATHERS } from '../data/schedules.js';
+import { RAIN_LINES } from '../data/npcs.js';
 import { crowdPlan } from './crowd.js';
 import { floatOn } from '../data/traditions.js';
 import { buff } from './buffs.js';
@@ -77,10 +78,11 @@ function crowdOf(f) {
   if (crowd.day !== G.S.day) crowd = { day: G.S.day, plan: crowdPlan(f.kind, NPCS.filter((d) => !d.noFestival).map((d) => d.id), G.S.day, hoursOf(f)) };
   return crowd.plan;
 }
+const rainy = () => RAIN_WEATHERS.includes(G.S.weather);   // v146: rain days (data/schedules.js rainDay)
 function blocksOf(n) {
   const f = festival();
   if (f) return n.def.noFestival ? [] : crowdOf(f)[n.id] || [];   // v53: the Lamplighter stays below
-  const day = spouse() === n.id ? spouseDay() : scheduleFor(n.def, G.S.day), fl = floatOn(today());
+  const wet = rainy(), day = spouse() === n.id ? (wet ? spouseRainDay() : spouseDay()) : wet ? rainDay(n.id, scheduleFor(n.def, G.S.day)) : scheduleFor(n.def, G.S.day), fl = floatOn(today());
   return fl && fl.spots[n.id] ? [...festivalDay(fl.spots[n.id], fl.hours, fl.map), ...day] : day;
 }
 const active = (blocks, t) => blocks.find((b) => t >= b.from && t < b.to) || null;
@@ -203,7 +205,8 @@ export function startTalk(n) {
   const h = hearts(st), scene = pendingScene(n);
   if (scene) { emit('ui:scene', { npc: n, ...scene, extra }); return; }
   const lines = st.married ? SPOUSE_LINES[d.id] : st.dating && DATE_LINES[d.id] ? DATE_LINES[d.id] : d.lines[h >= 5 ? 2 : h >= 2 ? 1 : 0];   // v51: partners talk like partners; v52: and spouses like spouses
-  emit('ui:talk', { npc: n, text: fest?.lines?.[d.id] || lines[(G.S.day + d.seed) % lines.length], extra });
+  const wet = !st.married && !st.dating && rainy() && RAIN_LINES[d.id];   // v146: a word about the weather
+  emit('ui:talk', { npc: n, text: fest?.lines?.[d.id] || wet || lines[(G.S.day + d.seed) % lines.length], extra });
 }
 
 // The first heart scene reached and not yet seen, if any.
