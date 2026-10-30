@@ -9,7 +9,7 @@ import { G } from '../core/game.js';
 import { has } from './professions.js';
 import { T, W } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addInteraction, addUpdater, addLayer } from '../core/registry.js';
+import { addInteraction, addUpdater, addLayer, addPrompt } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { FISH, ICE_HOLE } from '../data/fish.js';
 import { ITEMS } from '../data/items.js';
@@ -156,6 +156,13 @@ addInteraction(65, ({ tx, ty, tile, item, mapId }) => {
   G.lock = !G.partnerActing;   // the second farmer's line holds them instead (systems/partner.js)
   changed();
   return true;
+});
+
+// v135: the HUD's prompt, as the two interactions above: hook a bite on your own line, or cast where a cast would go.
+addPrompt(200, () => { const f = G.fishing; return f?.phase === 'bite' && !!f.p2 === !!G.partnerActing ? 'Hook it' : null; });
+addPrompt(65, ({ tx, ty, tile, item, mapId }) => {
+  if (item !== 'rod' || !WATER.has(tile) || G.fishing) return null;
+  return mapId === ICE_HOLE.map && frozen() && !atHole(tx, ty, mapId) ? null : 'Cast your line';
 });
 
 function reel(f, dt) {
