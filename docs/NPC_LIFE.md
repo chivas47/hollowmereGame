@@ -60,3 +60,9 @@ A neighbour feels real when:
   because not everyone hides from the weather.
 - Doing (74c): where they stop, a prop for what they do there (`data/doings.js`, art in `render/doings.js`).
   A new place in a routine should get its doing too, or a reason not to.
+
+## Meals and errands (v148)
+
+- Lunch and the shopping are cut into the weekday routine by `dailyLife()` in `data/schedules.js`, so rain,
+  festivals and the tests see them too. A new neighbour who is out at noon needs a LUNCH entry; a new shopper
+  needs a place in SHOPPERS that does not share a time and aisle with anyone else's (the tests check).

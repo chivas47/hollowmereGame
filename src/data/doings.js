@@ -1,7 +1,7 @@
 // v147: what a neighbour is doing where they stop, so they are never just standing there. Each neighbour has a list
 // of { map, does } (map '*': anywhere; stay true or false: only on a block where they stand, or one they walk
 // round and pause in). The first that fits their current block wins. carry: something they have on them all day,
-// walking too. The art for each `does` is render/doings.js.
+// walking too. A block can name its own (v148: lunch and shopping). The art for each `does` is render/doings.js.
 import { venueMap } from './venues.js';
 
 const LANTERN = venueMap('tavern');
@@ -28,6 +28,7 @@ export const DOINGS = {
 
 // What a neighbour is doing on this block (null: home, or nothing here), and whether it shows while they walk.
 export function doingFor(id, block) {
+  if (block?.does) return { does: block.does };   // v148: a block that says (lunch, shopping, data/schedules.js)
   for (const d of DOINGS[id] || []) {
     if (d.carry) return d;
     if (!block || (d.map !== '*' && d.map !== block.map)) continue;

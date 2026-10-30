@@ -78,6 +78,15 @@ const ART = {
     R(5, -10, 3, 1, '#3a3a40'); R(5, -9, 3, 4, '#e9b44c'); R(6, -8, 1, 2, '#fff2c0');
     if (Math.floor(t * 5) % 3) R(4, -10, 5, 6, 'rgba(255,220,140,.18)');
   } },
+  // v148: lunch, a bowl with steam; shopping, a basket on the arm
+  meal: { hand: true, f: (R, t) => {
+    R(-3, -7, 6, 2, '#e8e2d4'); R(-2, -5, 4, 1, '#b8b0a0'); R(-2, -8, 4, 1, '#c8843a');
+    if (Math.floor(t * 2) % 3) R(-1 + (Math.floor(t * 2) % 2), -11, 1, 2, 'rgba(255,255,255,.5)');
+  } },
+  basket: { hand: false, f: (R) => {
+    R(4, -7, 5, 4, '#b8904a'); R(4, -7, 5, 1, '#d8b06a'); R(5, -9, 1, 2, '#8a6a3a'); R(8, -9, 1, 2, '#8a6a3a'); R(5, -10, 4, 1, '#8a6a3a');
+    R(5, -8, 2, 1, '#e2504a'); R(7, -8, 1, 1, '#5d8a3a');   // an apple and greens peeking out
+  } },
 };
 export const DOING_KINDS = Object.keys(ART);
 
