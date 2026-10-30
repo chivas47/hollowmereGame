@@ -68,7 +68,7 @@ on('map:changed', () => { if (mover() === 'you') { G.fx.pickups.length = 0; G.fx
 on('monster:slain', ({ x, y }) => { dropAt = { x, y: y - 6, at: performance.now() }; burst(x, y - 4, IMPACT.slain, 10, { speed: 30, up: 20, size: 3, life: 0.45, gravity: 20, shrink: true }); ring(x, y, 'rgba(255,255,255,.7)', 10); });
 on('state:changed', () => {
   if (!G.S?.bag) return;
-  if (G.paused || !ready) { snapshot(); return; }   // shops, dialogs and loading change the bag without a gather
+  if (G.paused || G.dialogBy || !ready) { snapshot(); return; }   // v141: dialogs no longer pause in two-player   // shops, dialogs and loading change the bag without a gather
   const f = facing(), src = dropAt && performance.now() - dropAt.at < 300 ? dropAt : { x: f.tx * T + 8, y: f.ty * T + 6 };
   let shown = 0;
   for (const k of Object.keys(G.S.bag)) {

@@ -10,9 +10,9 @@ import { HOTBAR } from '../data/hotbar.js';
 import { act } from '../systems/interact.js';
 import { runAction, escape } from './input.js';
 import { selectSlot } from './hotbar.js';
-import { modalOpen } from './modal.js';
+import { closeModal, dialogOf } from './modal.js';
 import { menuOpen, openMenu } from './menu.js';
-import { join, leave, partnerKeys, partnerUse, partnerSlot } from '../systems/partner.js';
+import { join, leave, partnerKeys, partnerUse, partnerSlot, asThem } from '../systems/partner.js';
 import { $ } from './dom.js';
 
 const DIRS = ['up', 'down', 'left', 'right'];
@@ -22,7 +22,8 @@ let was = {}, held = {}, since = {}, running = false, padUsed = false, was2 = {}
 export const usingPad = () => padUsed;
 addEventListener('keydown', () => { padUsed = false; }, true);
 
-const panel = () => (modalOpen() ? $('#modal') : menuOpen() ? $('#menu') : null);
+// v141: the dialog belongs to whoever opened it; the menu is yours.
+const panel = (who = 'you') => (dialogOf(who) ? $('#modal') : who === 'you' && menuOpen() ? $('#menu') : null);
 const centre = (el) => { const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; };
 const focusables = (box) => [...box.querySelectorAll('button, input, select, [tabindex]')].filter((el) => !el.disabled && el.offsetParent);
 
@@ -62,10 +63,16 @@ function read(pad) {
 }
 
 // v129: the second controller is the second farmer (systems/partner.js): A joins, B leaves, the stick walks.
-// They wait while a dialog or the menu is open, which stay the first player's. v130: once in, A uses and
-// LB and RB step through their hotbar.
+// v130: once in, A uses and LB and RB step through their hotbar. v141: a dialog they open is theirs to work
+// (the stick, A and B); yours and the menu stay yours, and each of you keeps playing while the other is in one.
 function partner(pad, box) {
-  const down = pad && !box ? read(pad) : {}, press = (k) => down[k] && !was2[k];
+  const down = pad ? read(pad) : {}, press = (k) => down[k] && !was2[k];
+  if (box) {   // v141: their own dialog: their stick moves between its buttons, A presses (as them), B closes it
+    for (const d of DIRS) if (press(d)) navigate(box, d);
+    if (press('use')) { const at = document.activeElement; if (box.contains(at) && at.click) at.click(); else focusables(box)[0]?.focus(); }
+    if (press('back')) asThem(closeModal);
+    partnerKeys({}); was2 = down; return;
+  }
   if (press('use')) { if (G.P2) partnerUse(); else join(); }
   if (press('back')) leave();
   if (press('prev')) partnerSlot(-1);
@@ -80,7 +87,7 @@ function frame(now) {
   if (!pad) { running = false; return; }
   requestAnimationFrame(frame);
   const box = panel(), down = read(pad);
-  partner(pads[1], box);
+  partner(pads[1], panel('p2'));
   if (Object.keys(down).length) padUsed = true;
 
   for (const d of DIRS) {

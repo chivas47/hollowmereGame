@@ -313,3 +313,16 @@ test('monsters chase the nearer farmer and only shove farmer two', () => {
   assert.ok(Math.hypot(G.P2.x - m.x, G.P2.y - m.y) < d0 + 30, 'it went for them');
   assert.equal(G.S.health, hp);
 });
+
+// v141 (item 73f): their dialog's buttons run as them.
+const { asThem } = await import('../src/systems/partner.js');
+
+test('asThem runs a dialog button as the second farmer and gives you back your place', () => {
+  join(); put(G.S, 2, 8, 'down'); put(G.P2, 10, 8, 'left');
+  const you = { x: G.S.x, y: G.S.y }; let seen = null;
+  asThem(() => { seen = { x: G.S.x, acting: !!G.partnerActing }; });
+  assert.deepEqual(seen, { x: G.P2.x, acting: true });
+  assert.deepEqual({ x: G.S.x, y: G.S.y }, you);
+  leave(); asThem(() => { seen = { x: G.S.x, acting: !!G.partnerActing }; });
+  assert.deepEqual(seen, { x: you.x, acting: false });   // alone: just you
+});

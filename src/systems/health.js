@@ -11,7 +11,7 @@ import { defense } from './clothing.js';
 const INVULNERABLE = 1, KNOCKBACK = 10;
 
 export function hurtPlayer(dmg, fromX, fromY) {
-  if (G.hurtT > 0 || G.paused) return;
+  if (G.hurtT > 0 || G.paused || G.dialogBy === 'you') return;   // v141: no harm while your dialog is open
   const S = G.S;
   S.hp = Math.max(0, S.hp - Math.max(1, Math.round(dmg * (has('acrobat') ? 0.75 : 1)) - defense() - (G.S.rings?.includes('stonering') ? 1 : 0) - (G.S.forged?.[G.S.weapon]?.ambergem || 0)));   // v39: amber forged into the weapon   // shoes take some of the hit; v34: acrobat
   G.hurtT = INVULNERABLE;

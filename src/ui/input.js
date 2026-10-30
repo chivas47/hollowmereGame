@@ -7,7 +7,7 @@ import { save } from '../core/state.js';
 import { HOTBAR, SEED_SLOT } from '../data/hotbar.js';
 import { act } from '../systems/interact.js';
 import { playerTile } from '../systems/world.js';
-import { closeModal, modalOpen } from './modal.js';
+import { closeModal, dialogOf } from './modal.js';
 import { selectSlot } from './hotbar.js';
 import { confirmReset } from './dialogs.js';
 import { toggleDebug } from './debugPanel.js';
@@ -40,16 +40,20 @@ export const runAction = (a) => PRESS[a]?.();
 
 // What Esc does: close a dialog, then the menu, stop placing a building, else open the menu (also the pad's B).
 export function escape() {
-  if (modalOpen()) closeModal();
+  if (dialogOf('you')) closeModal();   // v141: farmer two's dialog is theirs to close (B)
   else if (menuOpen()) closeMenu();
   else if (G.siting) cancelSiting();
   else openMenu();
 }
 
+// v141: a key whose focus sits in farmer two's dialog: yours to play with, not a press of their button.
+const theirs = (e) => G.dialogBy === 'p2' && $('#modal').contains(e.target);
+
 export function initInput(canvas) {
+  for (const ev of ['keydown', 'keyup']) addEventListener(ev, (e) => { if (theirs(e) && ['Space', 'Enter'].includes(e.code)) e.preventDefault(); }, true);
   addEventListener('keydown', (e) => {
     if (e.code === 'Escape') { escape(); return; }
-    if (modalOpen() || menuOpen()) return;
+    if (dialogOf('you') || menuOpen()) return;   // v141: farmer two's dialog leaves your keys to you
     if (e.code === 'Backquote') { toggleDebug(); return; }
     if (e.ctrlKey || e.metaKey) {   // browser shortcuts stay the browser's, except Ctrl Z (undo)
       if (e.code === 'KeyZ') { e.preventDefault(); if (!e.repeat) undo(); }
@@ -59,7 +63,7 @@ export function initInput(canvas) {
     if (!a) return;
     if (MOVES.includes(a)) { G.keys[a] = true; e.preventDefault(); return; }
     if (a === 'use') {
-      if (e.target.tagName === 'BUTTON' && (e.code === 'Space' || e.code === 'Enter')) return;
+      if (e.target.tagName === 'BUTTON' && (e.code === 'Space' || e.code === 'Enter') && !theirs(e)) return;
       e.preventDefault(); G.useHeld = true; if (!e.repeat) act(); return;   // v41: held Use lifts the catch bar
     }
     if (a === 'undo') e.preventDefault();
