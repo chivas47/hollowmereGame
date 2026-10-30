@@ -7,6 +7,8 @@
 // v131: their Use prompt (partnerPrompt, ui/prompt.js) and energy bar (ui/hud.js); your bed ends the day for both
 // (they wake beside you, rested as you are: map:changed and day:start below).
 // v137: not on a phone (onPhone below): their A shows a note instead of joining.
+// v138 (item 73c): they carry their own map (G.P2.map), walk and use against it, and only follow you while
+// PARTNER.tethered (until split screen, item 73e).
 // v134: they fish too (systems/fishing.js), one line at a time; their line holds them still and draws from their rod.
 // v136: they ride the horse too (systems/stable.js), when you are not on it.
 import { G } from '../core/game.js';
@@ -18,14 +20,14 @@ import { HOTBAR } from '../data/hotbar.js';
 import { drawPerson, drawHorse } from '../render/sprites.js';
 import { STABLE } from '../data/upgrades.js';
 import { drawHeld, drawRod, handPoint, swingAngle } from '../render/animation.js';
-import { moveBox, blocked, playerTile, facing, tileAt } from './world.js';
+import { moveBox, blocked, playerTile, facing, tileAt, mover } from './world.js';
 import { promptFor } from '../core/registry.js';
 import { lean } from './wind.js';
 import { act } from './interact.js';
 import { stepAnim, playAnim } from './animation.js';
 import { rodBend } from './player.js';
 
-G.P2 = null;   // { x, y, dir, moving, walkT, keys, slot, anim } (energy lives in G.S.partner, saved)
+G.P2 = null;   // { map, x, y, dir, moving, walkT, keys, slot, anim } (energy lives in G.S.partner, saved)
 let lastSlot = 0;   // their hotbar choice, kept for when they rejoin this session
 
 // The first free tile beside the first farmer (their own tile if every one is taken).
@@ -48,7 +50,7 @@ export function onPhone(m = (q) => !!globalThis.matchMedia?.(q).matches, screen 
 export function join() {
   if (G.P2) return;
   if (onPhone()) { notify(PARTNER.phone.note); return; }
-  G.P2 = { ...besideYou(), dir: G.S.dir, moving: false, walkT: 0, keys: {}, slot: lastSlot, anim: null };
+  G.P2 = { map: G.S.map, ...besideYou(), dir: G.S.dir, moving: false, walkT: 0, keys: {}, slot: lastSlot, anim: null };
   notify(`${PARTNER.name} joins you. Press B on their controller to leave.`);
   changed();   // their energy bar
 }
@@ -69,16 +71,17 @@ export function partnerSlot(step) {
   notify(`Farmer two holds the ${HOTBAR[G.P2.slot]}.`);
 }
 
-// Swaps the second farmer's place, facing, slot, energy and swing into play for fn, then back. G.S keeps the map:
-// if fn takes them through a door, you are set down beside them on the other side.
+// Swaps the second farmer's map, place, facing, slot, energy and swing into play for fn, then back. While
+// tethered, if fn takes them through a door, you are set down beside them on the other side.
 function asPartner(fn) {
-  const p = G.P2, S = G.S, map = S.map, me = { x: S.x, y: S.y, dir: S.dir, slot: S.slot, energy: S.energy, anim: G.anim };
-  Object.assign(S, { x: p.x, y: p.y, dir: p.dir, slot: p.slot, energy: S.partner.energy }); G.anim = p.anim; G.partnerActing = true;
+  const p = G.P2, S = G.S, me = { map: S.map, x: S.x, y: S.y, dir: S.dir, slot: S.slot, energy: S.energy, anim: G.anim }, from = p.map;
+  Object.assign(S, { map: p.map, x: p.x, y: p.y, dir: p.dir, slot: p.slot, energy: S.partner.energy }); G.anim = p.anim; G.partnerActing = true;
   try { fn(); } finally {
     G.partnerActing = false;
-    const spot = S.map !== map ? besideYou() : me;   // through a door: you come too, beside them (G.S is them here)
-    Object.assign(p, { x: S.x, y: S.y, dir: S.dir, slot: S.slot, anim: G.anim }); S.partner.energy = S.energy;
-    Object.assign(S, { x: spot.x, y: spot.y, dir: me.dir, slot: me.slot, energy: me.energy }); G.anim = me.anim;
+    const moved = S.map !== from, follow = moved && PARTNER.tethered;
+    const spot = follow ? { map: S.map, ...besideYou() } : me;   // through a door: you come too, beside them (G.S is them here)
+    Object.assign(p, { map: S.map, x: S.x, y: S.y, dir: S.dir, slot: S.slot, anim: G.anim }); S.partner.energy = S.energy;
+    Object.assign(S, { map: spot.map, x: spot.x, y: spot.y, dir: me.dir, slot: me.slot, energy: me.energy }); G.anim = me.anim;
   }
 }
 
@@ -87,7 +90,7 @@ const atBed = () => { const { tx, ty } = facing(); return G.S.map === 'house' &&
 // What their A would do where they stand, and the tile it is over: { tx, ty, text } (text null for nothing).
 export function partnerPrompt() {
   let out = null;
-  if (G.P2) asPartner(() => {
+  if (G.P2?.map === G.S.map) asPartner(() => {
     const { tx, ty } = facing(), item = HOTBAR[G.S.slot];
     const text = atBed() ? null : promptFor({ tx, ty, tile: tileAt(tx, ty), mapId: G.S.map, item });
     out = { tx, ty, text };
@@ -123,7 +126,8 @@ addUpdater((dt) => {
   p.walkT += dt;
 });
 
-on('map:changed', () => { if (G.P2) Object.assign(G.P2, besideYou(), { dir: G.S.dir, moving: false }); });
+// Your map change brings them along while tethered (theirs is handled in asPartner).
+on('map:changed', () => { if (G.P2 && mover() === 'you' && PARTNER.tethered) Object.assign(G.P2, { map: G.S.map }, besideYou(), { dir: G.S.dir, moving: false }); });
 on('game:reset', () => { G.P2 = null; });
 on('day:start', (report) => { G.S.partner.energy = report.passedOut ? Math.round(G.S.maxEnergy * 0.6) : G.S.maxEnergy; });   // they sleep when you do
 
@@ -139,4 +143,4 @@ function drawPartner(c) {
   if (rod && dir !== 'up') p.rodTip = drawRod(c, p.x, p.y, dir, rodBend());
   if (a?.kind === 'rod') p.rodTip = handPoint(p.x, p.y, a.dir, swingAngle(a, Math.min(1, a.t / a.dur)), 13);
 }
-addEntities(() => (G.P2 ? [{ y: G.P2.y, draw: drawPartner }] : []));
+addEntities(() => (G.P2?.map === G.S.map ? [{ y: G.P2.y, draw: drawPartner }] : []));   // v138: only on the map on screen

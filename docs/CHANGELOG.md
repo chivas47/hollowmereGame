@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v138: A map for each farmer
+- Groundwork for split screen (roadmap 73c): the second farmer now carries their own map. They walk and use tools against it, and the game counts every map either farmer stands on as in use (monsters stay on a floor while either of you is there).
+- Nothing changes on screen yet: they still follow you onto every map and a door either of you opens takes you both. That stops when split screen arrives (73e).
+- No prices, keys or saves changed.
+
 ## v137: No two-player on phones
 - On a phone (a touch-only screen with a short side under 600 px), a second controller's A shows "Two-player needs a bigger screen than a phone" instead of bringing in the second farmer. This is the first step to split screen, which phones will not get.
 - Tablets, computers and touch laptops with a mouse or trackpad still play two. No prices, keys or saves changed.
