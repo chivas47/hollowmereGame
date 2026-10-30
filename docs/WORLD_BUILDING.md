@@ -11,7 +11,10 @@ through `docs/NPC_LIFE.md`. The items are the "A real world" track in `ROADMAP.m
 - The screen is `W` x `H` = 24 x 16 tiles (`core/constants.js`). Since v156 and v157 (roadmap 75g, 75h) a map can
   be larger: the camera follows the farmer and the rules read the map's size from its grid (`sizeOf()` in
   `data/maps.js`). Never use `W` and `H` for a map's size; they are the screen's. Mine floors stay one screen by
-  design. Every map today is still screen-sized; the first to grow is roadmap 75i.
+  design. The hidden grove (40 x 24, v158) is the first larger map.
+- **Grow east and south when you can.** Tiles keep their coordinates, so saved things (stumps, forage, placed
+  objects, a farmer standing there) stay put and no migration is needed. Growing west or north shifts every
+  coordinate on the map and needs a migration step (step 5).
 - Maps live in `data/maps.js` (a `*Grid()` function each, `MAPS[id]` with `exits`); cottages and venues are
   built from `data/homes.js` and `data/venues.js`; neighbours and their days in `data/npcs.js` and
   `data/schedules.js`.

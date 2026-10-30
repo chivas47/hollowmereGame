@@ -36,9 +36,10 @@ export const sizeOf = (id) => { const g = MAPS[id]?.grid; return g?.length ? { w
 
 export const SOLID = new Set(['Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
 
-function emptyGrid() {
-  return Array.from({ length: H }, (_, y) =>
-    Array.from({ length: W }, (_, x) => (x === 0 || y === 0 || x === W - 1 || y === H - 1 ? 'T' : 'g')));
+// v158: w and h for a map larger than the screen (roadmap 75i); the camera follows you across it.
+function emptyGrid(w = W, h = H) {
+  return Array.from({ length: h }, (_, y) =>
+    Array.from({ length: w }, (_, x) => (x === 0 || y === 0 || x === w - 1 || y === h - 1 ? 'T' : 'g')));
 }
 const put = (m, list, t) => list.forEach(([x, y]) => { m[y][x] = t; });
 const fill = (m, x0, y0, x1, y1, t) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) m[y][x] = t; };
@@ -122,12 +123,21 @@ function forestGrid() {
 }
 
 // v45: the hidden grove west of the forest: old trees, big stumps that grow back and a still pond.
+// v158 (roadmap 75i): the first map larger than the screen, 40 x 24. It grew east and south, so everything that was
+// here keeps its tile (the stumps, the forage, the cairn): east, a ring of old trees round a mossy clearing; south,
+// a still pool among more old trees.
+export const GROVE_SIZE = { w: 40, h: 24 };
 function groveGrid() {
-  const m = emptyGrid();
-  m[12][W - 1] = 'E'; fill(m, 14, 12, W - 2, 12, 'P');
+  const { w, h } = GROVE_SIZE, m = emptyGrid(w, h);
+  m[12][w - 1] = 'E'; fill(m, 14, 12, w - 2, 12, 'P');
   fill(m, 4, 4, 9, 8, 'O'); put(m, [[4, 4], [9, 4], [4, 8], [9, 8]], 'g');
   fill(m, 6, 1, 7, 3, 'O');   // v72: the falls into the pool (data/atmosphere.js)
   put(m, [[2, 2], [12, 2], [17, 3], [20, 6], [2, 11], [7, 13], [12, 10], [16, 9], [21, 2], [14, 14]], 'T');
+  for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) {   // the ring, open to the south
+    if (Math.round(Math.hypot(dx, dy)) === 3 && !(dx === 0 && dy === 3)) m[5 + dy][32 + dx] = 'T';
+  }
+  fill(m, 27, 16, 32, 19, 'O'); put(m, [[27, 16], [32, 16], [27, 19], [32, 19]], 'g');   // the still pool
+  put(m, [[3, 18], [8, 20], [13, 17], [17, 21], [22, 19], [25, 22], [11, 22], [36, 20], [35, 15], [26, 9], [38, 2], [24, 4], [20, 17], [5, 22]], 'T');
   return m;
 }
 // v45: the railway east of the Wilds: tracks across it and a hot spring beside them.
@@ -384,11 +394,11 @@ export const MAPS = {
   },
   forest: {
     name: 'Brackenwood', salt: 29, grid: forestGrid(), objects: [],
-    exits: { '10,0': { to: 'farm', x: 10, y: 14, dir: 'up' }, '0,12': { to: 'grove', x: W - 2, y: 12, dir: 'left' } },   // v45: the grove
+    exits: { '10,0': { to: 'farm', x: 10, y: 14, dir: 'up' }, '0,12': { to: 'grove', x: GROVE_SIZE.w - 2, y: 12, dir: 'left' } },   // v45: the grove
   },
   grove: {
     name: 'The hidden grove', salt: 61, grid: groveGrid(), objects: [],
-    exits: { [`${W - 1},12`]: { to: 'forest', x: 1, y: 12, dir: 'right' } },
+    exits: { [`${GROVE_SIZE.w - 1},12`]: { to: 'forest', x: 1, y: 12, dir: 'right' } },
   },
   railway: {
     name: 'The railway', salt: 67, grid: railwayGrid(), objects: [],
