@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v145: Festival crowds
+- Festivals are busy: instead of standing on one spot from 9:00 to 22:00, neighbours move about the square, stopping to chat in pairs, at the fountain, beside the festival table and at the notices, 40 to 110 minutes at each.
+- Some have a job: Lio fiddles by the fountain all day, Hob stirs the soup at the Potluck and keeps the stall at Frostlight, and Kit runs round the village during the Egg Hunt. On dance day a ring forms round the ribbon pole.
+- Two neighbours standing side by side, anywhere (the square, the Lantern), turn to each other and talk, with a "..." bubble.
+- The front of the festival table stays clear for you. Nothing saved; no prices, keys or saves changed.
+- New: docs/NPC_LIFE.md, the workflow for making neighbours feel like real people, and a "Living neighbours" track in the roadmap.
+
 ## v144: Two dialogs at once
 - In two-player both farmers can be in a dialog at the same time: your shop on the left, farmer two's bag on the right, each worked by its own player. The "Wait for ... to finish" note is gone.
 - Each dialog's buttons, tabs and fields act for its owner; your Escape closes yours, their B closes theirs.

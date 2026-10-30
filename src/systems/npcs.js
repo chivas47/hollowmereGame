@@ -8,8 +8,9 @@ import { today } from '../core/time.js';
 import { ITEMS } from '../data/items.js';
 import { MAPS } from '../data/maps.js';
 import { NPCS, OUTFITS } from '../data/npcs.js';
-import { festivalOn, hoursOf, FESTIVAL_SPOTS } from '../data/festivals.js';
+import { festivalOn, hoursOf } from '../data/festivals.js';
 import { scheduleFor, spouseDay, festivalDay } from '../data/schedules.js';
+import { crowdPlan } from './crowd.js';
 import { floatOn } from '../data/traditions.js';
 import { buff } from './buffs.js';
 import { HOMES, homeMap, SPOUSE_HOME } from '../data/homes.js';
@@ -70,9 +71,15 @@ on('day:start', snapAll);
 on('game:reset', snapAll);
 on('game:loaded', snapAll);
 
+// v145: a festival day's crowd (systems/crowd.js), planned once a day for everyone who comes.
+let crowd = { day: 0, plan: null };
+function crowdOf(f) {
+  if (crowd.day !== G.S.day) crowd = { day: G.S.day, plan: crowdPlan(f.kind, NPCS.filter((d) => !d.noFestival).map((d) => d.id), G.S.day, hoursOf(f)) };
+  return crowd.plan;
+}
 function blocksOf(n) {
   const f = festival();
-  if (f) return n.def.noFestival ? [] : festivalDay(FESTIVAL_SPOTS[n.id] || [12, 7], hoursOf(f));   // v53: the Lamplighter stays below
+  if (f) return n.def.noFestival ? [] : crowdOf(f)[n.id] || [];   // v53: the Lamplighter stays below
   const day = spouse() === n.id ? spouseDay() : scheduleFor(n.def, G.S.day), fl = floatOn(today());
   return fl && fl.spots[n.id] ? [...festivalDay(fl.spots[n.id], fl.hours, fl.map), ...day] : day;
 }
@@ -88,7 +95,7 @@ const place = (n, map, [x, y]) => Object.assign(n, { map, x: x * T + 8, y: y * T
 
 function settle(n, b) {
   const h = homeOf(n), house = houseOf(n);
-  n.snap = false; n.goal = keyOf(b); n.wait = 0; n.inside = false; n.visible = true; n.dir = 'down';
+  n.snap = false; n.goal = keyOf(b); n.wait = 0; n.inside = false; n.visible = true; n.dir = b?.face || 'down';
   if (b) { place(n, b.map, b.stay ? b.path[b.path.length - 1] : b.path[0]); n.wi = b.stay ? b.path.length : 1; return; }
   n.wi = 1;   // home and settled
   if (house) place(n, house, h.spot); else { place(n, h.map, h.door); n.inside = true; n.visible = false; }
@@ -132,6 +139,7 @@ addUpdater((dt) => {
   for (const n of NPCRT) {
     if (G.talking === n.id) { n.moving = false; continue; }
     const blocks = blocksOf(n), b = goalOf(blocks, t);
+    n.block = b;   // v145: for systems/chatter.js (a festival place's mood)
     if (n.snap) settle(n, t <= START ? null : b);
     if (n.goal !== keyOf(b)) Object.assign(n, { goal: keyOf(b), wi: 0, wait: 0 });
     if (n.wait > 0) { n.wait -= dt; n.moving = false; continue; }
@@ -148,7 +156,7 @@ addUpdater((dt) => {
     const last = b.path.length - 1;
     if (b.stay && n.wi > last) { n.moving = false; continue; }   // standing at their place
     if (travel(n, b.map, b.path[Math.min(n.wi, last)], step, dt)) {
-      if (b.stay) { n.wi++; if (n.wi > last) n.dir = 'down'; }
+      if (b.stay) { n.wi++; if (n.wi > last) n.dir = b.face || 'down'; }
       else { n.wi = (n.wi + 1) % b.path.length; n.wait = 2 + Math.random() * 3; }
     }
   }

@@ -4,7 +4,7 @@
 // kind 'exchange' (v57): a gift for your secret friend, and one back. kind 'dance' (v58): ask someone to dance.
 // kind 'grange' (v59): a display of nine items, scored for variety, quality and price.
 // Neighbours spend the
-// festival in the square.
+// festival moving about the square (v145, data/crowd.js).
 export const FESTIVALS = [
   {
     key: 'blossom', name: 'Blossom Show', season: 'Spring', day: 9, kind: 'contest', accepts: 'produce',
@@ -166,7 +166,6 @@ export const FESTIVAL_ITEMS = { gildedgourd: { name: 'Gilded gourd', sell: 2500 
 export const FESTIVAL_HOURS = { from: 9 * 60, to: 22 * 60 };
 export const hoursOf = (f) => f?.hours || FESTIVAL_HOURS;   // v56: a festival may keep its own hours (maze night)
 
-// Where neighbours stand in the village during a festival (tile coordinates).
-export const FESTIVAL_SPOTS = { ines: [9, 7], bram: [15, 7], odile: [9, 10], tavi: [15, 10], wren: [8, 9], corvin: [16, 9], hob: [13, 12], maren: [10, 12], hale: [17, 8], lio: [12, 7], pell: [8, 7], juno: [16, 7], nell: [8, 11], rook: [16, 11], esme: [11, 11], kit: [14, 7] };   // v49, v50: the town villagers
+// v145: where neighbours go during a festival is data/crowd.js.
 
 export const festivalOn = ({ season, d }) => FESTIVALS.find((f) => f.season === season && f.day === d) || null;

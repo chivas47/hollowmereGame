@@ -154,6 +154,23 @@ Every system in the Stardew feature guide is built (items 1 to 54). What the gam
 | 73i | Split screen: two dialogs at once | feature | in progress (chivas47/hollowmereGame#141) | Nuno's pick after 73h (October 2026): both farmers can have a dialog open at the same time (a shop each), ending the one-at-a-time limit from 73f. Farmer two's dialog is a second box; the dialog files are unchanged, because ui/dom.js points them at the acting farmer's box. |
 | 67 | Translations | feature | not now | Move UI and data text behind a lookup so the game can be translated. Touches every data file; worth it only if Nuno wants other languages. |
 
+## Living neighbours (October 2026)
+
+Nuno asked for neighbours that feel like real people: real routines, never idle at a festival. Each item goes
+through `docs/NPC_LIFE.md` (the workflow for anything that touches how a neighbour lives) on top of the feature
+loop.
+
+| # | Item | Type | Status | Notes |
+|---|---|---|---|---|
+| 74a | Festival crowds and neighbours who talk | feature | in progress | Neighbours drift between places in the square during a festival (chat pairs, the fountain, the table, the notices, the ribbon pole), with jobs for Lio, Hob and Kit, instead of one tile from 9:00 to 22:00. Anywhere, two standing side by side turn and talk. Plus the workflow, `docs/NPC_LIFE.md`. |
+| 74b | Rain days | feature | next | Stardew's villagers keep a rain schedule. Outdoor blocks (Odile's pier, Rook's beach, Esme's easel, Tavi's survey) move indoors on rain and storm: the Lantern, the store, their cottages. A line or two about the weather. |
+| 74c | Doing, not standing | feature | queued | A pose or a prop for what they do where they stop: Odile's rod at the pond, Esme at her easel, Juno's satchel, Nell kneeling in the garden, Corvin's hammer at the anvil. Drawn in code (rule 3). |
+| 74d | Meals and errands | feature | queued | Lunch at the Lantern or at home, a stop at Fenn's on the way back, Maren's house calls to whoever is unwell. Gives each day a reason for its blocks. |
+| 74e | Friends and family | feature | queued | Who likes whom (a small table in `data/npcs.js`): friends meet for a walk on rest days, visit each other's cottages in the evening, sit together at the Lantern and the festivals. |
+| 74f | A week that is not the same twice | feature | queued | Seeded by the day: small changes to each routine (a later start, a different walk, a detour), so no two Mondays match. |
+| 74g | Mornings and evenings | feature | queued | Before a festival opens they get ready (Hob carries the pot, Lio tunes up) and after it they walk home in twos; on a normal day they leave home and come back at their own times, and the lights go on in their windows. |
+| 74h | Talking about the day | feature | queued | Lines that come from what is going on: the weather, a festival tomorrow, someone's birthday, what you did yesterday (shipped a gold crop, the museum, a wedding). Our own words for each neighbour. |
+
 ## Done
 
 | Item | PR |

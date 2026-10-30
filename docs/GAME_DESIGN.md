@@ -381,7 +381,7 @@ Homes and routines (v76, data/homes.js and data/schedules.js). Every neighbour s
 | Kit | Village, south row, fourth | By the Anvil 8:00 to 12:00, the square to 17:00, outside home to 21:00 (Saturday: the beach) |
 | The Lamplighter | A corner of the sewer | The sewer 18:00 to 2:00 |
 
-Rest days are counted from Monday: (day - 1) % 7, 0 = Monday. Festival days: everyone walks to their place in the square for the festival's hours (the Lamplighter stays below), then home. A spouse lives in the farmhouse (indoors in the morning and evening, the yard 10:00 to 17:00).
+Rest days are counted from Monday: (day - 1) % 7, 0 = Monday. Festival days (v145): everyone walks to the square for the festival's hours (the Lamplighter stays below), then home. Lio fiddles by the fountain all day, Hob stirs the soup at the Potluck and keeps the stall at Frostlight, Kit runs round the village during the Egg Hunt; everyone else moves between places in the square (chat pairs, the fountain rim, the table sides, the notices, the ring round the ribbon pole on dance day), 40 to 110 minutes at each, never two on a tile. Anywhere, two neighbours standing side by side turn to each other and talk (a "..." bubble). How neighbour changes are made: docs/NPC_LIFE.md. A spouse lives in the farmhouse (indoors in the morning and evening, the yard 10:00 to 17:00).
 
 Buildings (v98): every building whose door used to open a menu has an inside, laid out like the cottages: Fenn's Provisions, the Anvil, Bram's Carpentry, the Lantern, the clinic, the museum, Tamsin's Ranch Supply, the town hall (the clerk's office and Pell's schoolroom), the picture house, the Wardens' Lodge, the Oasis, the casino, the coop and the barn. The door goes in during the same hours as before (or gives the same note when shut); inside, the counter (the coop's and barn's hoppers) opens the old dialog. Wren, Corvin, Bram, Hob, Maren and Hale work behind their counters and Pell teaches in the schoolroom; staff who are not villagers (the curator, Tamsin, Salma, the clerk, the usher, the casino's cashier and dealers) stand behind theirs while open. The regulars spend the evening inside the Lantern, Lio on its stage. Fainting wakes you in the clinic's ward.
 
@@ -701,7 +701,7 @@ Original where Stardew's mechanic does not exist here: Bountiful, Quickgrow, See
 | Winter 12 | Frostlight Market | Stall: frost lantern 350g, warm cider 60g (+60 energy) | none |
 | Winter 25 (v57) | Longnight Feast | A secret friend is named on Winter 18 (a note under the door); give them one gift at the table | The gift's friendship counts 5 times; you get a present back (a gem, a dish, a wine or the Starlit Primer). Stardew's Feast of the Winter Star |
 
-- One contest entry per festival per year. On festival days neighbours skip the farm and stand in the square; talking there gives double points (40) and a festival line.
+- One contest entry per festival per year. On festival days neighbours skip the farm and move about the square (v145); talking there gives double points (40) and a festival line.
 
 ### Local traditions (v110)
 
