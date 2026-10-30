@@ -138,6 +138,7 @@ Every system in the Stardew feature guide is built (items 1 to 54). What the gam
 | 64 | Install and play offline | feature | done (chivas47/hollowmereGame#117) | A web app manifest and a service worker that caches the game files, so it installs from the browser and runs without a connection. Static files only, so rule 2 holds; the worker must update cleanly on a new version. |
 | 65 | Arrival and the first week | feature | done (chivas47/hollowmereGame#118) | An opening scene arriving at the farm and a guided first week (a goal a day: clear, plant, meet, ship) on top of the existing hints. Stardew's intro and first-week quests are the counterpart; our own story and text. |
 | 66 | The year-three reckoning | feature | done (chivas47/hollowmereGame#124) | A judgement of the farm at the start of year three with a reward and a way to ask again (Stardew's evaluation by role). Nuno: Bram judges it, as the one who built the bin and met you on arrival; the name and everything about it original. |
+| 68 | Phones held upright | fix | done (chivas47/hollowmereGame#128) | Nuno's pick after two-player: the field sized to its own height in portrait with the pad and Use at the bottom, the time on one line, a long place name cut short, and no key hints on the menu buttons under 600 px (Menu fell off a narrow window). |
 | 67 | Translations | feature | not now | Move UI and data text behind a lookup so the game can be translated. Touches every data file; worth it only if Nuno wants other languages. |
 
 ## Done
