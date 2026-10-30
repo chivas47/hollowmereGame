@@ -214,7 +214,7 @@ src/
     nuts.js           the bridge and the island trader (ui:bridge, ui:islandshop, v66; ui:peak, v67)
     social.js         the social menu (F, or the Friends button) and letters (v48)
     menu.js           the pause menu (Esc or the Menu button): settings, save files, debug tools, controls (v96)
-    dom.js toast.js modal.js (openModal(html, actions, {wide}); v141: G.dialogBy owns it in two-player, over the owner's half, no pause; dialogOf(who); farmer two's clicks run through asThem) hud.js hudPrefs.js goal.js prompt.js hotbar.js dialogs.js
+    dom.js toast.js modal.js (openModal(html, actions, {wide}); v141: over the owner's half in two-player, no pause; v144: one dialog each, #modal yours and #modal2 farmer two's, G.dialog.{you,p2}; dom.js $ and $$ search only the acting farmer's box (G.partnerActing); listeners on #mbody/#mact serve both; clicks, input and change in #modal2 run through asThem) hud.js hudPrefs.js goal.js prompt.js hotbar.js dialogs.js
     workshop.js mine.js input.js (keys go through core/controls.js actionOf; v126: runAction(), escape() for the pad too) debugPanel.js
     offline.js        v121: registers sw.js and hands it the files the first visit loaded
     slots.js          v127: the menu's Farms dialog (three save slots)
