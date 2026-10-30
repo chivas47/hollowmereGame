@@ -1,5 +1,8 @@
 // Notifications over the field. v112: up to three stack and each fades out on its own, staying longer the
 // longer it is; the same message again while it shows keeps it up instead of stacking a copy.
+// v133: on a new farm, messages wait until the new game screen and the arrival scene are done, instead of
+// covering them (toasts sit above dialogs so a shop can say what you bought).
+import { G } from '../core/game.js';
 import { on } from '../core/events.js';
 import { $ } from './dom.js';
 
@@ -13,7 +16,10 @@ function retire(t) {
   setTimeout(() => t.remove(), FADE);
 }
 
-on('toast', (msg) => {
+const held = new Set();
+const settling = () => !G.S?.profile || !G.S.firstWeek?.arrived;
+
+function show(msg) {
   const box = $('#toast');
   let t = [...box.children].find((c) => c.textContent === msg && !c.classList.contains('out'));
   if (!t) {
@@ -25,4 +31,7 @@ on('toast', (msg) => {
   }
   clearTimeout(t.timer);
   t.timer = setTimeout(() => retire(t), stayFor(msg));
-});
+}
+
+on('toast', (msg) => { if (settling()) held.add(msg); else show(msg); });
+on('state:changed', () => { if (held.size && !settling()) { held.forEach(show); held.clear(); } });

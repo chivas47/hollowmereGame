@@ -765,7 +765,7 @@ Small, and only what matters right now. Nothing here touches the economy.
 | Water | bar and value | the can in hand |
 | Use prompt | what Use does on the faced tile, with its key (the verb on the touch Use button) | something registered a prompt there; off with Prompts |
 | Objective | the order or challenge in hand, else the board request due soonest | any open; off with Objective, gone in minimal |
-| Messages | up to three, fading out after 2.6 to 7 s by length | on any message |
+| Messages | up to three, fading out after 2.6 to 7 s by length | on any message; on a new farm, held until the new game screen and arrival scene are done (v133) |
 
 HUD size: 100% to 140%, never smaller (HUD text stays 16 px or larger). Full, minimal or hidden: V or the menu. Settings live in the browser, not the save.
 
