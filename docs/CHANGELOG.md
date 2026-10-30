@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v152: Talking about the day
+- Neighbours talk about what is going on: their own birthday, someone else's (a friend of the birthday neighbour tells you what they love), the festival tomorrow (with what to bring), the first day of a season, rain and snow.
+- About one day in three each of the ten friends says something about the other: Ines on Nell's seedlings, Kit on Tavi's map, Juno on Pell's marking, and so on.
+- Festival lines still come first; partners and spouses keep their own words; on a quiet day it is their usual line.
+- Nothing saved; no prices, keys or saves changed.
+
 ## v151: Mornings and evenings
 - Festival mornings: Bram and Corvin put the square up from 7:30 (a saw and a hammer), Hob comes at 7:30 to set out the pot or the stall, and Lio tunes up from 8:00. Everyone else walks in at opening.
 - Festival nights: nobody leaves on the stroke of closing. Each lingers up to 40 minutes, and friends leave together, one walking the other home.
