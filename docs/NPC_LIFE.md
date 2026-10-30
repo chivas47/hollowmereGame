@@ -73,3 +73,9 @@ A neighbour feels real when:
   blocks: an `along()` block follows the friend (Sunday walks), a VISITS entry puts the visitor beside the host at
   home, and Lantern tables seat them side by side. The festival crowd weights a place beside a friend highest.
 - A new friendship needs at least one place in the week where you can see it, or it is only a line in a table.
+
+## Variety (v150)
+
+- `vary()` in `data/schedules.js` changes only outdoor blocks, seeded by the date: a slow morning, an early or late
+  evening, a round walked another way, a detour to a FAVOURITE place. Anything a player relies on (work hours, the
+  Lantern, lunch, shopping, visits) stays put. A new neighbour who walks about should get a favourite place.
