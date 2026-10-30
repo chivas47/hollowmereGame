@@ -20,6 +20,7 @@ import './systems/buildings.js';
 import './systems/economy.js';
 import './systems/npcs.js';
 import './systems/chatter.js';
+import './systems/news.js';   // v153: what you did, for tomorrow's talk
 import './systems/homes.js';   // v76: the neighbours' cottages
 import './systems/venues.js';   // v98: buildings you walk into
 import './systems/fishing.js';

@@ -39,3 +39,18 @@ export const BIRTHDAY = {
 
 // The festival tomorrow: its name and intro (data/festivals.js) follow.
 export const EVE = 'The {name} is tomorrow. {intro}';
+
+// v153: what you did yesterday (systems/news.js). Most notable first; the quieter ones are only mentioned by
+// some (NEWS.chance of them, a different few each day), so the whole valley does not say the same thing.
+// {festival}: its name; {n}: how many; {name}: who you helped; {skill}: which skill.
+export const NEWS = {
+  bigShip: 1500,   // gold shipped in one night that people notice (Stardew's scale: a good early summer day)
+  chance: 1 / 2,
+  wed: ['The wedding yesterday! I have not cried like that since the last one.', 'What a day yesterday. The square still has petals in every corner.'],
+  won: 'First prize at the {festival} yesterday! The whole square is still talking about it.',
+  helpedMe: 'Thank you again for yesterday. You did not have to, and you did.',
+  donated: { one: 'Word is you gave something to the museum yesterday. The curator has not stopped smiling.', many: 'Word is you gave {n} things to the museum yesterday. The curator is beside themselves.' },
+  helpedFriend: '{name} told me you helped out yesterday. That was kind of you.',
+  shipped: 'Juno says your shipping bin was full to the lid last night. Good harvest?',
+  skill: 'Getting good at {skill}, I hear. It shows.',
+};

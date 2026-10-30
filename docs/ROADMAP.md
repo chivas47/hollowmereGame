@@ -169,8 +169,8 @@ loop.
 | 74e | Friends and family | feature | done (chivas47/hollowmereGame#146) | Who likes whom (a small table in `data/npcs.js`): friends meet for a walk on rest days, visit each other's cottages in the evening, sit together at the Lantern and the festivals. |
 | 74f | A week that is not the same twice | feature | done (chivas47/hollowmereGame#147) | Seeded by the day: small changes to each routine (a later start, a different walk, a detour), so no two Mondays match. |
 | 74g | Mornings and evenings | feature | done (chivas47/hollowmereGame#148) | Before a festival opens they get ready (Hob carries the pot, Lio tunes up) and after it they walk home in twos; on a normal day they leave home and come back at their own times, and the lights go on in their windows. |
-| 74h | Talking about the day | feature | in progress (chivas47/hollowmereGame#149) | Lines from what is going on, no save change: their own birthday and others' (a friend says what the birthday neighbour loves), the festival tomorrow (in the festival's own words), the first day of a season, rain and snow, and now and then a word about a friend. |
-| 74i | Talking about what you did | feature | queued | Split from 74h (needs a save field, so its own PR): neighbours mention what you did yesterday (shipped a gold-star crop, gave something to the museum, a wedding, a festival win). A small saved record of yesterday's notable acts, newState, merge and a migration test. |
+| 74h | Talking about the day | feature | done (chivas47/hollowmereGame#149) | Lines from what is going on, no save change: their own birthday and others' (a friend says what the birthday neighbour loves), the festival tomorrow (in the festival's own words), the first day of a season, rain and snow, and now and then a word about a friend. |
+| 74i | Talking about what you did | feature | in progress (chivas47/hollowmereGame#150) | Split from 74h (needs a save field, so its own PR): neighbours mention what you did yesterday (shipped a gold-star crop, gave something to the museum, a wedding, a festival win). A small saved record of yesterday's notable acts, newState, merge and a migration test. |
 
 ## Done
 

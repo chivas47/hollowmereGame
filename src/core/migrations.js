@@ -29,6 +29,13 @@ export const MIGRATIONS = [
     if (saved.profile || saved.day > 1) s.firstWeek.arrived = true;
     if (saved.day > 7) s.firstWeek.over = true;
   } },
+  // v3 (v153): what you did yesterday (systems/news.js) counts from today. A farm from before starts its count at
+  // what it already has, so its first night does not report every donation and the wedding as new.
+  { v: 3, run(s, saved) {
+    if (saved.news) return;
+    s.news.today.museumAt = s.museum.donated.length;
+    s.news.today.spouseAt = s.spouse || null;
+  } },
 ];
 
 export const SAVE_VERSION = MIGRATIONS[MIGRATIONS.length - 1].v;
