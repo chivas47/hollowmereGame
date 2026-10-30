@@ -72,7 +72,7 @@ src/
     schedules.js      neighbour daily routines by weekday (go: walk a loop of spots, at: walk there and stay), spouse and festival days; v146: rainDay() (RAIN shelters), spouseRainDay(), RAIN_WEATHERS; v148: dailyLife() (LUNCH, errandOf(), SHOPPERS) inside scheduleFor(); v149: along() blocks (with: follow a friend), evening VISITS; v150: vary(id, day, blocks) (FAVOURITE detours, seeded by the date), applied before dailyLife()
     friends.js        v149: FRIENDS (pairs and why), friendsOf(), areFriends(), VISITS (evening calls), visitSpot(host)
     doings.js         v147: DOINGS (what each neighbour does where: map, stay, does, carry), doingFor(id, block)
-    crowd.js          v145: the festival crowd: STATIONS (places in the square, the way they face, festival kinds, a mood), ROLES (jobs by festival kind), CROWD (minutes per place), CHAT
+    crowd.js          v145: the festival crowd (v151: EARLY, SETUP, CLOSE): STATIONS (places in the square, the way they face, festival kinds, a mood), ROLES (jobs by festival kind), CROWD (minutes per place), CHAT
     homes.js          where each neighbour lives: door, cottage, door hours (v76); homeEntry() inside the front door (v97)
     venues.js         v98: VENUES, the buildings you walk into (shops, tavern, clinic, museum, ranch, town hall, theatre, lodge, Oasis, casino, coop, barn): where each stands, which tiles are its door, the dialog its counter opens, its floor plan; venueMap(), venueFront()
     interiors.js      v97: each cottage's floor plan (24x16 characters: walls, doors, rooms, a key of pieces with colours, things on top and a line to read), PIECES, piecesOf(), interiorGrid(), doorOf(), roomAt()
@@ -121,7 +121,7 @@ src/
     ponds.js          the fish pond (stock, breed, roe, requests) and the slime pen (trough, slime balls, addSlime)
     buildings.js      door (sleep), stall (shop), bin and mini bins (ship), well/pond refill
     economy.js        ship(), buy(), overnight payout; materials are never shipped
-    npcs.js           schedules across farm and village (v146: rain days; v149: follow() for `with` blocks), talk (v146: RAIN_LINES from data/npcs.js), gifts, hearts, 3-heart rewards, heart scenes
+    npcs.js           schedules across farm and village (v146: rain days; v149: follow() for `with` blocks; v151: homeNow(id), walking a friend home), talk (v146: RAIN_LINES from data/npcs.js), gifts, hearts, 3-heart rewards, heart scenes
     crowd.js          v145: crowdPlan(kind, ids, day, hours), a festival's blocks for everyone (seeded by the day), stationsFor(), rolesFor(); npcs.js uses it
     chatter.js        v145: pairs() of idle neighbours side by side; turns them to each other with chat emotes, and festival moods
     upgrades.js       smithy and carpentry purchases, material costs, recalcStats()
@@ -168,7 +168,7 @@ src/
     traditions.js     the wishing stone (solid Ӂ in the village at load, bless() sets G.S.blessing, read by buffs.js) and the Lantern Float on the beach (setLantern(), floatLights() for nightlights.js; npcs.js walks neighbours there) (v110, G.S.traditions)
     signs.js          signposts and notices outdoors: solid Ş tiles set on open ground at load, Use reads them (v107)
     shortcuts.js      fallen trunks across shortcuts, cut with the copper axe; then trunk tiles turn to path and the maps get exits (v106, G.S.shortcuts)
-    nightlights.js    outdoorLights(): lit windows, lamp posts and lanterns after dusk (renderer.js cuts them out of the dark); lit glass and lamp posts (v105, drawn only)
+    nightlights.js    outdoorLights(): lit windows (v151: a cottage only while homeNow(owner), ownerOf()), lamp posts and lanterns after dusk (renderer.js cuts them out of the dark); lit glass and lamp posts (v105, drawn only)
     falling.js        seasonal motion: petals, fluff, leaves, snow clumps from tree crowns, drifting with wind.js (v104, drawn only)
     sway.js           grass tufts off the farm and clotheslines, bending with wind.js (v103, drawn only)
     water.js          moving water: ripples, sunny glints, rain rings, reflections of entities at the bank (v102, drawn only)

@@ -1,10 +1,10 @@
 // v145: the festival crowd. crowdPlan() turns a festival day into schedule blocks for everyone who comes: the
 // neighbours with a job (data/crowd.js ROLES) keep to it, and the rest drift between the square's places
 // (STATIONS), staying 40 to 110 minutes at each, never two on one tile, and drawn to a spot next to someone so
-// they stop and talk. Seeded by the day, so a load or a second look plans the same day. Pure, nothing saved.
-import { STATIONS, ROLES, CROWD } from '../data/crowd.js';
+// they stop and talk (v151: plus the setup before it opens and the lingering after it closes). Seeded by the day, so a load or a second look plans the same day. Pure, nothing saved.
+import { STATIONS, ROLES, CROWD, EARLY, SETUP, CLOSE } from '../data/crowd.js';
 import { rng } from '../render/pixel.js';
-import { areFriends } from '../data/friends.js';
+import { areFriends, FRIENDS } from '../data/friends.js';
 
 const MAP = 'village';
 const fits = (s, kind) => (!s.only || s.only.includes(kind)) && !s.not?.includes(kind);
@@ -25,7 +25,7 @@ export function crowdPlan(kind, ids, day, hours) {
   const minglers = [];
   for (const id of ids) {
     const r = roles[id];
-    if (r) plan[id] = [block(hours.from, hours.to, r.roam || [r.at], r)];
+    if (r) plan[id] = [block(hours.from - (r.at && EARLY[id] ? EARLY[id] : 0), hours.to, r.roam || [r.at], r)];   // v151: some come early
     else { plan[id] = []; minglers.push({ id, until: hours.from, at: null, last: null }); }
   }
   const open = stationsFor(kind, roles), taken = new Map(), step = CROWD.step;   // tile -> who stands there
@@ -54,6 +54,17 @@ export function crowdPlan(kind, ids, day, hours) {
       if (prev && prev.path[0] === s.at) prev.to = m.until;   // the same place again: one longer block
       else list.push(block(t, m.until, [s.at], s));
     }
+  }
+  // v151: the square goes up before opening (the crew are back at a mingling place by the time it opens).
+  for (const [id, c] of Object.entries(SETUP.crew)) if (plan[id] && !roles[id]) plan[id].unshift({ ...block(hours.from - SETUP.minutes, hours.from, [c.at], c), does: c.does });
+  // v151: closing time: each lingers a little; friends leave together, the second walking the first home.
+  const last = (id) => plan[id][plan[id].length - 1];
+  for (const m of minglers) last(m.id).to = hours.to + step * Math.floor(rand() * (CLOSE.linger / step + 1));
+  for (const { a, b } of FRIENDS) {
+    if (roles[a] || roles[b] || !plan[a]?.length || !plan[b]?.length) continue;
+    const end = Math.max(last(a).to, last(b).to);
+    last(a).to = end; last(b).to = end;
+    plan[b].push({ ...block(end, end + CLOSE.walkHome, [last(b).path[0]]), stay: false, with: a, home: true });
   }
   return plan;
 }
