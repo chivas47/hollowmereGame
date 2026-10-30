@@ -168,7 +168,7 @@ loop.
 | 74d | Meals and errands | feature | done (chivas47/hollowmereGame#145) | Lunch at the Lantern or at home, a stop at Fenn's on the way back, Maren's house calls to whoever is unwell. Gives each day a reason for its blocks. v148 does lunch and the store; Maren's house calls wait for a reason to be unwell (no illness in the game yet). |
 | 74e | Friends and family | feature | done (chivas47/hollowmereGame#146) | Who likes whom (a small table in `data/npcs.js`): friends meet for a walk on rest days, visit each other's cottages in the evening, sit together at the Lantern and the festivals. |
 | 74f | A week that is not the same twice | feature | done (chivas47/hollowmereGame#147) | Seeded by the day: small changes to each routine (a later start, a different walk, a detour), so no two Mondays match. |
-| 74g | Mornings and evenings | feature | in progress | Before a festival opens they get ready (Hob carries the pot, Lio tunes up) and after it they walk home in twos; on a normal day they leave home and come back at their own times, and the lights go on in their windows. |
+| 74g | Mornings and evenings | feature | in progress (chivas47/hollowmereGame#148) | Before a festival opens they get ready (Hob carries the pot, Lio tunes up) and after it they walk home in twos; on a normal day they leave home and come back at their own times, and the lights go on in their windows. |
 | 74h | Talking about the day | feature | next | Lines that come from what is going on: the weather, a festival tomorrow, someone's birthday, what you did yesterday (shipped a gold crop, the museum, a wedding). Our own words for each neighbour. |
 
 ## Done
