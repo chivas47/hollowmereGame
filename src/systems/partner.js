@@ -11,6 +11,10 @@
 // PARTNER.tethered (until split screen, item 73e).
 // v140 (item 73e): untethered. They take map exits and doors alone; in the mine whoever changes floor brings the
 // other along (one floor at a time, Nuno's 73a call); each morning they wake beside you.
+// v142 (item 73g): saved (G.S.partner): their look, picked the first time they join on a farm, where they stood
+// and their hotbar slot, so they come back there; their own bed in the farmhouse (placeBed). The day ends when
+// both are in bed (bedtime(), and their Use at a bed), moving gets either of you up again, and if they leave
+// while you wait in bed the night comes at once. Passing out at 2 am still takes you both home.
 // v134: they fish too (systems/fishing.js), one line at a time; their line holds them still and draws from their rod.
 // v136: they ride the horse too (systems/stable.js), when you are not on it.
 import { G } from '../core/game.js';
@@ -22,7 +26,8 @@ import { HOTBAR } from '../data/hotbar.js';
 import { drawPerson, drawHorse } from '../render/sprites.js';
 import { STABLE } from '../data/upgrades.js';
 import { drawHeld, drawRod, handPoint, swingAngle } from '../render/animation.js';
-import { moveBox, blocked, playerTile, facing, tileAt, mover, placePlayer } from './world.js';
+import { moveBox, blocked, playerTile, facing, tileAt, mover, placePlayer, placeKey } from './world.js';
+import { sleep } from './days.js';
 import { MAPS } from '../data/maps.js';
 import { promptFor } from '../core/registry.js';
 import { lean } from './wind.js';
@@ -31,7 +36,7 @@ import { stepAnim, playAnim } from './animation.js';
 import { rodBend } from './player.js';
 
 G.P2 = null;   // { map, x, y, dir, moving, walkT, keys, slot, anim } (energy lives in G.S.partner, saved)
-let lastSlot = 0;   // their hotbar choice, kept for when they rejoin this session
+G.bed = { you: false, p2: false };   // v142: who lies in bed waiting for the other
 
 // The first free tile beside the first farmer (their own tile if every one is taken).
 export function besideYou() {
@@ -53,16 +58,50 @@ export function onPhone(m = (q) => !!globalThis.matchMedia?.(q).matches, screen 
 export function join() {
   if (G.P2) return;
   if (onPhone()) { notify(PARTNER.phone.note); return; }
-  G.P2 = { map: G.S.map, ...besideYou(), dir: G.S.dir, moving: false, walkT: 0, keys: {}, slot: lastSlot, anim: null };
-  notify(`${PARTNER.name} joins you. Press B on their controller to leave.`);
+  const P = G.S.partner, at = backTo(P.at);
+  G.P2 = { ...(at || { map: G.S.map, ...besideYou(), dir: G.S.dir }), moving: false, walkT: 0, keys: {}, slot: P.slot || 0, anim: null };
+  notify(`${P.name} joins you. Press B on their controller to leave.`);
+  if (!P.picked) { P.picked = true; placeBed(); asPartner(() => emit('ui:partnerLook')); }   // v142: their look, in their half
   changed();   // their energy bar
+}
+
+// v142: a saved place they can come back to, or null (a map rebuilt every visit, or a spot now blocked).
+function backTo(at) {
+  if (!at || PARTNER.fresh.includes(at.map) || !MAPS[at.map] || blocked(at.x, at.y, undefined, at.map)) return null;
+  return { map: at.map, x: at.x, y: at.y, dir: at.dir || 'down' };
+}
+const keep = () => { const p = G.P2; if (p) Object.assign(G.S.partner, { at: { map: p.map, x: p.x, y: p.y, dir: p.dir }, slot: p.slot }); };
+
+// v142: their bed: the first free pair of floor tiles in PARTNER.beds, written into the farmhouse once they have
+// played here. Nothing placed is ever moved: a pair with anything on it is skipped.
+let bed2 = null;
+export function placeBed() {
+  const g = MAPS.house.grid;
+  if (bed2) bed2.forEach(([x, y]) => { if (g[y][x] === 'Z') g[y][x] = 'h'; });   // one bed for them, never a second
+  bed2 = null;
+  if (!G.S?.partner?.picked) return null;
+  const free = ([x, y]) => g[y]?.[x] === 'h' && !G.S.placed[placeKey('house', x, y)];
+  bed2 = PARTNER.beds.find((pair) => pair.every(free)) || null;
+  if (bed2) bed2.forEach(([x, y]) => { g[y][x] = 'Z'; });
+  return bed2;
+}
+on('game:loaded', placeBed); on('world:changed', () => { if (bed2 && MAPS.house.grid[bed2[0][1]][bed2[0][0]] !== 'Z') placeBed(); });
+
+// v142: your Sleep. With farmer two in and not yet in bed you lie down and wait; otherwise the night comes.
+export function bedtime() {
+  if (!G.P2 || G.bed.p2) { G.bed = { you: false, p2: false }; sleep(false); return true; }
+  G.bed.you = true; G.keys = {};
+  notify(PARTNER.waitYou);
+  return false;
 }
 export function leave() {
   if (!G.P2) return;
-  lastSlot = G.P2.slot;
+  keep();
   G.P2 = null;
+  G.bed.p2 = false;
+  if (G.bed.you) { G.bed.you = false; sleep(false); }   // v142: you were waiting for them
   if (G.fishing?.p2) G.fishing = null;   // their line comes in with them (a horse they rode stays where they left it)
-  notify(`${PARTNER.name} heads home.`);
+  notify(`${G.S.partner.name} heads home.`);
   changed();
 }
 export const partnerKeys = (keys) => { if (G.P2) G.P2.keys = keys; };
@@ -96,7 +135,7 @@ export function partnerPrompt() {
   let out = null;
   if (G.P2) asPartner(() => {
     const { tx, ty } = facing(), item = HOTBAR[G.S.slot];
-    const text = atBed() ? null : promptFor({ tx, ty, tile: tileAt(tx, ty), mapId: G.S.map, item });
+    const text = atBed() ? (G.bed.p2 ? null : 'Sleep') : promptFor({ tx, ty, tile: tileAt(tx, ty), mapId: G.S.map, item });
     out = { tx, ty, text };
   });
   return out;
@@ -112,15 +151,19 @@ export function partnerUse() {
   if (p.anim?.gate && p.anim.t < p.anim.dur) return;   // mid-swing: dropped (your Use queues presses; theirs does not, so none is replayed as yours)
   const line = G.fishing;
   asPartner(() => {
-    if (atBed()) notify(PARTNER.yours.bed); else act();
+    if (atBed()) { if (!G.bed.p2) { G.bed.p2 = true; p.keys = {}; if (!G.bed.you) notify(PARTNER.waitThem); } } else act();
     if (G.fishing?.p2 && !line) playAnim('rod');   // their cast (G.anim is theirs in here)
   });
+  if (G.bed.p2 && G.bed.you) { G.bed = { you: false, p2: false }; sleep(false); }   // v142: both in bed (outside their Use)
   changed();
 }
 
 addUpdater((dt) => {
+  if (G.bed.you && ['up', 'down', 'left', 'right'].some((d) => G.keys[d])) G.bed.you = false;   // v142: walking gets you up
   const p = G.P2;
   if (!p) return;
+  if (G.bed.p2 && ['up', 'down', 'left', 'right'].some((d) => p.keys[d])) G.bed.p2 = false;
+  keep();
   if (p.anim) p.anim = stepAnim(p.anim, dt, p);
   if ((p.anim && p.anim.t < (p.anim.root || 0)) || G.fishing?.p2) { p.moving = false; return; }   // held on the wind-up, as you are, and while their line is out
   const k = p.keys, dx = (k.right ? 1 : 0) - (k.left ? 1 : 0), dy = (k.down ? 1 : 0) - (k.up ? 1 : 0);
@@ -157,16 +200,17 @@ function afterPartner() {
 }
 on('day:report', () => { if (G.P2) Object.assign(G.P2, { map: G.S.map }, besideYou(), { dir: G.S.dir, moving: false }); });   // they wake beside you
 on('game:reset', () => { G.P2 = null; });
+on('day:start', () => { G.bed = { you: false, p2: false }; });
 on('day:start', (report) => { G.S.partner.energy = report.passedOut ? Math.round(G.S.maxEnergy * 0.6) : G.S.maxEnergy; });   // they sleep when you do
 
 const SWUNG = new Set(['hoe', 'pick', 'axe', 'can', 'sword', 'rod', 'pan']);
 function drawPartner(c) {
   const p = G.P2, a = p.anim, held = a && SWUNG.has(a.kind), dir = a ? a.dir : p.dir;
-  if (p.riding) { drawHorse(c, p.x, p.y, p.dir, p.moving); drawPerson(c, p.x, p.y - 7, p.dir, false, 0, PARTNER.look, lean(p.x)); return; }   // as you ride (systems/player.js)
+  if (p.riding) { drawHorse(c, p.x, p.y, p.dir, p.moving); drawPerson(c, p.x, p.y - 7, p.dir, false, 0, G.S.partner.look, lean(p.x)); return; }   // as you ride (systems/player.js)
   const rod = G.fishing?.p2 && a?.kind !== 'rod';   // their line is out: the rod held out over the water
   if (held && dir === 'up') drawHeld(c, a, p.x, p.y);   // behind them when facing away
   if (rod && dir === 'up') p.rodTip = drawRod(c, p.x, p.y, dir, rodBend());
-  drawPerson(c, p.x, p.y, dir, p.moving, p.walkT, PARTNER.look, lean(p.x));
+  drawPerson(c, p.x, p.y, dir, p.moving, p.walkT, G.S.partner.look, lean(p.x));
   if (held && dir !== 'up') drawHeld(c, a, p.x, p.y);
   if (rod && dir !== 'up') p.rodTip = drawRod(c, p.x, p.y, dir, rodBend());
   if (a?.kind === 'rod') p.rodTip = handPoint(p.x, p.y, a.dir, swingAngle(a, Math.min(1, a.t / a.dur)), 13);

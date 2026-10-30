@@ -16,5 +16,12 @@ export const PARTNER = {
   // v137: no two-player on a phone (Nuno, item 73b): a touch-only screen whose short side is under this many CSS
   // pixels. Tablets and touch laptops with a mouse or trackpad still play two.
   phone: { short: 600, note: 'Two-player needs a bigger screen than a phone. Play it on a computer or tablet.' },
-  yours: { bed: "The first farmer's bed ends the day for you both." },   // v131: Nuno's call (v134 fishing and v136 riding are theirs too)
+  // v142 (item 73g): their own bed in the farmhouse once they have played on this farm, on the first free pair
+  // of floor tiles (head, foot) among these, so no furniture is ever moved. The day ends when both are in bed.
+  beds: [[[9, 3], [9, 4]], [[6, 3], [6, 4]], [[9, 6], [9, 7]], [[6, 6], [6, 7]], [[9, 9], [9, 10]], [[6, 9], [6, 10]]],
+  // v142: the first time they join on a farm they pick a look (shirt and hair from data/profile.js LOOKS).
+  // Maps they never come back to on loading (rebuilt every visit): they start beside you instead.
+  fresh: ['mine', 'maze'],
+  waitYou: 'You lie down and wait for farmer two.',
+  waitThem: 'Farmer two lies down and waits for you.',
 };

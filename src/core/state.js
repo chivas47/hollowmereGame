@@ -10,6 +10,7 @@ import { HOTBAR } from '../data/hotbar.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { SKILLS } from '../data/skills.js';
 import { DEFAULT_PROFILE } from '../data/profile.js';
+import { PARTNER } from '../data/partner.js';
 import { LAYOUTS } from '../data/layouts.js';
 import { SAVE_VERSION, migrate } from './migrations.js';
 
@@ -29,7 +30,9 @@ export function newState() {
     journal: { story: {}, log: [], seen: [], pins: [], track: null, markers: true },   // v114: story steps done, finished quests, places found, map pins, tracked objective (systems/journal.js)
     firstWeek: { arrived: false, done: {}, over: false },   // v122: the arrival scene and the first week's goals (systems/firstweek.js)
     reckoning: { done: 0, points: 0, lamps: 0, pending: false, again: 0, lid: false },   // v128: Bram's reckoning (systems/reckoning.js)
-    partner: { energy: 270 },   // v130: the second farmer's energy (systems/partner.js); full each morning
+    // v130: the second farmer's energy (systems/partner.js); full each morning. v142: their name and look, where
+    // they stood (at: { map, x, y, dir } or null), their hotbar slot, and picked: they have played on this farm.
+    partner: { energy: 270, name: PARTNER.name, look: { ...PARTNER.look }, at: null, slot: 0, picked: false },
     hints: true,        // v101: the stuck-tool tip and the morning report's tip (systems/hints.js)
     traditions: { blessed: 0, floated: [] },   // v110: the day the wishing stone was last touched, the years a lantern was floated
     blessing: null,     // v110: today's blessing { id, until, ...effects } (systems/traditions.js, read by buffs.js)
@@ -148,7 +151,9 @@ export function merge(saved) {
   const fw = saved.firstWeek || {};   // v122
   s.firstWeek = { arrived: !!fw.arrived, done: { ...(fw.done || {}) }, over: !!fw.over };
   s.reckoning = { ...newState().reckoning, ...(saved.reckoning || {}) };   // v128
-  s.partner = { energy: s.maxEnergy, ...(saved.partner || {}) };   // v130; v131: a farm with a bigger energy bar starts them at its top
+  s.partner = { ...newState().partner, energy: s.maxEnergy, ...(saved.partner || {}) };   // v130; v131: a farm with a bigger energy bar starts them at its top
+  s.partner.look = { ...PARTNER.look, ...(saved.partner?.look || {}) };   // v142
+  if (s.partner.at && !MAPS[s.partner.at.map]) s.partner.at = null;
   if (!Array.isArray(s.bagFav)) s.bagFav = [];   // v113
   s.bagView = { ...newState().bagView, ...(saved.bagView || {}) };
   s.skills = Object.assign(newState().skills, saved.skills || {});

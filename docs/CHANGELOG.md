@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v142: Farmer two stays
+- Farmer two is kept with your farm: the first time they join they pick a shirt and hair in their half, and when they rejoin they come back where they left off, holding what they held (never into a mine floor or the maze, which are rebuilt every visit).
+- Their own bed appears in the farmhouse the first time they play: on free floor in the bed corner, so nothing you placed is moved.
+- The day ends when both of you are in bed. Whoever lies down first waits; walking gets you up again; if farmer two leaves while you wait, the night comes. Alone, Sleep works as before, and passing out at 2 am still takes you both home.
+- New save fields (their name, look, place, slot); older saves get the defaults. No prices or keys changed.
+
 ## v141: Their own menus
 - In two-player a dialog belongs to whoever opened it: it covers only their half of the screen and the game keeps going. The other farmer keeps walking, working and fishing, and the clock runs.
 - Farmer two works their dialog with their own controller (stick, A, B); its buttons act as them (where they stand, their energy). Your keys and Escape no longer touch their dialog.

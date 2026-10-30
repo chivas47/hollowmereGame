@@ -93,11 +93,15 @@ test('their prompt names what their A does, over the tile they face', () => {
   assert.deepEqual({ x: G.S.x, y: G.S.y, dir: G.S.dir }, me);
 });
 
-test('only your bed ends the day', () => {
+test('their A at a bed lies them down to wait for you (v142); the day waits for you too', () => {
   let asked = 0; on('ui:sleep', () => asked++);
   placePlayer('house', 2, 6, 'down'); join(); put(G.P2, 7, 5, 'up');   // facing the bed
+  assert.equal(partnerPrompt().text, 'Sleep');
+  const day = G.S.day;
   partnerUse();
   assert.equal(asked, 0);
+  assert.equal(G.bed.p2, true);
+  assert.equal(G.S.day, day);
   assert.equal(partnerPrompt().text, null);
 });
 
@@ -325,4 +329,59 @@ test('asThem runs a dialog button as the second farmer and gives you back your p
   assert.deepEqual({ x: G.S.x, y: G.S.y }, you);
   leave(); asThem(() => { seen = { x: G.S.x, acting: !!G.partnerActing }; });
   assert.deepEqual(seen, { x: you.x, acting: false });   // alone: just you
+});
+
+// v142 (item 73g): farmer two saved, their bed, and the night when both are in bed.
+const { bedtime, placeBed } = await import('../src/systems/partner.js');
+const { merge, newState } = await import('../src/core/state.js');
+const { MAPS } = await import('../src/data/maps.js');
+
+test('the day ends only when both of you are in bed, whoever lies down first', () => {
+  placePlayer('house', 8, 5, 'up'); join(); put(G.P2, 7, 5, 'up');
+  const day = G.S.day;
+  assert.equal(bedtime(), false);                 // you lie down and wait
+  assert.equal(G.bed.you, true); assert.equal(G.S.day, day);
+  partnerUse();                                   // they get into bed: the night comes
+  assert.equal(G.S.day, day + 1);
+  assert.deepEqual(G.bed, { you: false, p2: false });
+});
+
+test('walking gets you up, and if they leave while you wait the night comes', () => {
+  join(); bedtime(); G.keys = { up: true }; runUpdaters(0.05); G.keys = {};
+  assert.equal(G.bed.you, false);
+  const day = G.S.day; bedtime(); leave();
+  assert.equal(G.S.day, day + 1);
+});
+
+test('alone, Sleep ends the day at once as before', () => {
+  const day = G.S.day; assert.equal(bedtime(), true); assert.equal(G.S.day, day + 1);
+});
+
+test('where they stood and their slot come back when they rejoin', () => {
+  join(); Object.assign(G.P2, { map: 'farm', x: 12 * T + 8, y: 10 * T + 12, dir: 'left', slot: 3 }); runUpdaters(0.01); leave();
+  join();
+  assert.deepEqual({ map: G.P2.map, x: G.P2.x, y: G.P2.y, slot: G.P2.slot }, { map: 'farm', x: 12 * T + 8, y: 10 * T + 12, slot: 3 });
+  leave(); G.S.partner.at = { map: 'mine', x: 40, y: 40, dir: 'down' }; join();
+  assert.equal(G.P2.map, G.S.map, 'never back into a floor rebuilt every visit');
+});
+
+test('their name, look and place are saved, and an old save gets the defaults', () => {
+  const s = merge({ ...newState(), partner: { energy: 100 } });
+  assert.equal(s.partner.energy, 100);
+  assert.equal(s.partner.name, 'Farmer two');
+  assert.ok(s.partner.look.shirt && s.partner.look.hair);
+  assert.equal(s.partner.at, null); assert.equal(s.partner.picked, false);
+  const t = merge({ ...newState(), partner: { energy: 100, look: { shirt: '#b5452f' }, at: { map: 'nowhere', x: 1, y: 1 } } });
+  assert.equal(t.partner.look.shirt, '#b5452f'); assert.ok(t.partner.look.hair);
+  assert.equal(t.partner.at, null, 'a place on a map that no longer exists is dropped');
+});
+
+test('their bed goes on the first free pair of floor tiles and never over furniture', () => {
+  G.S.partner.picked = false; assert.equal(placeBed(), null);   // not before they have played here
+  G.S.partner.picked = true;
+  G.S.placed['house:9,3'] = { kind: 'chair' };                  // something stands on the first spot
+  const pair = placeBed();
+  assert.deepEqual(pair, [[6, 3], [6, 4]]);
+  assert.equal(MAPS.house.grid[3][6], 'Z'); assert.equal(MAPS.house.grid[3][9], 'h');
+  delete G.S.placed['house:9,3'];
 });
