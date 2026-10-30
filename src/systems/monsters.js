@@ -14,7 +14,7 @@ import { PEAK } from '../data/nuts.js';
 import { ITEMS } from '../data/items.js';
 import { drawSlime, drawMonster } from '../render/sprites.js';
 import { moveBox, occupied, mover } from './world.js';
-import { hurtPlayer } from './health.js';
+import { hurtPlayer, hurtPartner } from './health.js';
 import { has } from './professions.js';
 import { attackMult } from './buffs.js';
 import { weapon, weaponKind, wearing, giveFind, forgeBonus, weaponEnchant } from './gear.js';
@@ -69,7 +69,7 @@ function step(m, vx, vy, dist) {
   const ny = m.y + vy * dist; if (inside(m.x, ny)) m.y = ny; else m.ty = m.y;
 }
 
-// v140: monsters chase the nearer farmer on their map. Only you can be hurt; farmer two is knocked back.
+// v140: monsters chase the nearer farmer on their map. v143: and hurt either of you.
 const here = () => [G.S, G.P2].filter((f) => f && (f.map ?? G.S.map) === slimeMap);
 addUpdater((dt) => {
   const farmers = here();
@@ -96,8 +96,7 @@ addUpdater((dt) => {
       m.kx *= 0.85; m.ky *= 0.85;
       if (Math.abs(m.kx) < 1) m.kx = 0; if (Math.abs(m.ky) < 1) m.ky = 0;
     }
-    if (d < TOUCH && f === G.P2) { if (d > 0.5) moveBox(f, (dx / d) * 10, (dy / d) * 10); continue; }   // v140: a shove, no harm
-    if (d < TOUCH && !(m.kind === 'slime' && wearing('slimeward'))) hurtPlayer(m.dmg, m.x, m.y);   // v36: the slime ward
+    if (d < TOUCH && !(m.kind === 'slime' && wearing('slimeward'))) (f === G.P2 ? hurtPartner : hurtPlayer)(m.dmg, m.x, m.y);   // v36: the slime ward; v143: whoever it reached
     if (G.S.map !== slimeMap) return;   // fainting moved us out
   }
 });

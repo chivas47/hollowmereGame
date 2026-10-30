@@ -308,14 +308,14 @@ test('each morning they wake beside you wherever they were', () => {
   assert.equal(G.P2.map, 'house');
 });
 
-test('monsters chase the nearer farmer and only shove farmer two', () => {
+test('monsters chase the nearer farmer and hurt them, not you (v143)', () => {
   join(); placePlayer('farm', 2, 8, 'down'); spawnSlimes('farm', 1);
-  const m = slimes[0]; Object.assign(G.P2, { map: 'farm', x: m.x + 30, y: m.y });
-  const hp = G.S.health; G.S.x = m.x - 200;
-  const d0 = Math.hypot(G.P2.x - m.x, G.P2.y - m.y);
-  for (let i = 0; i < 10; i++) runUpdaters(0.05);
-  assert.ok(Math.hypot(G.P2.x - m.x, G.P2.y - m.y) < d0 + 30, 'it went for them');
-  assert.equal(G.S.health, hp);
+  const m = slimes[0]; Object.assign(G.P2, { map: 'farm', x: m.x + 6, y: m.y });
+  G.S.x = m.x - 200; G.S.partner.hp = G.S.maxHp;
+  const yours = G.S.hp;
+  for (let i = 0; i < 20 && G.S.partner.hp === G.S.maxHp; i++) runUpdaters(0.05);
+  assert.ok(G.S.partner.hp < G.S.maxHp, 'it hurt them');
+  assert.equal(G.S.hp, yours);
 });
 
 // v141 (item 73f): their dialog's buttons run as them.
@@ -384,4 +384,33 @@ test('their bed goes on the first free pair of floor tiles and never over furnit
   assert.deepEqual(pair, [[6, 3], [6, 4]]);
   assert.equal(MAPS.house.grid[3][6], 'Z'); assert.equal(MAPS.house.grid[3][9], 'h');
   delete G.S.placed['house:9,3'];
+});
+
+// v143 (item 73h): farmer two's own health.
+const { hurtPartner } = await import('../src/systems/health.js');
+const { CLINIC_BED } = await import('../src/data/maps.js');
+
+test('a hit costs their health, then a moment of safety', () => {
+  join(); G.S.partner.hp = G.S.maxHp;
+  hurtPartner(10, G.P2.x + 5, G.P2.y);
+  const after = G.S.partner.hp;
+  assert.ok(after < G.S.maxHp);
+  hurtPartner(10, G.P2.x + 5, G.P2.y);
+  assert.equal(G.S.partner.hp, after, 'no second hit while they blink');
+});
+
+test('at zero they faint to the clinic and the bill comes out of the shared gold; you stay put', () => {
+  join(); G.S.gold = 10000; G.S.partner.hp = 1; G.P2.hurtT = 0;
+  const you = { map: G.S.map, x: G.S.x };
+  hurtPartner(50, G.P2.x + 5, G.P2.y);
+  assert.equal(G.P2.map, CLINIC_BED.map);
+  assert.equal(G.S.partner.hp, Math.round(G.S.maxHp / 2));
+  assert.ok(G.S.gold < 10000);
+  assert.deepEqual({ map: G.S.map, x: G.S.x }, you);
+});
+
+test('their health is full each morning, and an old save starts them at the top', () => {
+  G.S.partner.hp = 5; emit('day:start', {});
+  assert.equal(G.S.partner.hp, G.S.maxHp);
+  assert.equal(merge({ ...newState(), maxHp: 120, partner: { energy: 10 } }).partner.hp, 120);
 });
