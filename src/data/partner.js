@@ -10,5 +10,8 @@ export const PARTNER = {
   // Where they stand when they follow you onto a map: the first free tile among these, beside you.
   beside: [[-1, 0], [1, 0], [0, 1], [0, -1], [-1, 1], [1, 1], [-1, -1], [1, -1]],
   // v130: what only the first farmer does for now: fishing (one catch bar on screen) and riding the horse.
+  // v137: no two-player on a phone (Nuno, item 73b): a touch-only screen whose short side is under this many CSS
+  // pixels. Tablets and touch laptops with a mouse or trackpad still play two.
+  phone: { short: 600, note: 'Two-player needs a bigger screen than a phone. Play it on a computer or tablet.' },
   yours: { bed: "The first farmer's bed ends the day for you both." },   // v131: Nuno's call (v134 fishing and v136 riding are theirs too)
 };

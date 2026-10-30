@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v137: No two-player on phones
+- On a phone (a touch-only screen with a short side under 600 px), a second controller's A shows "Two-player needs a bigger screen than a phone" instead of bringing in the second farmer. This is the first step to split screen, which phones will not get.
+- Tablets, computers and touch laptops with a mouse or trackpad still play two. No prices, keys or saves changed.
+
 ## v136: Farmer two rides
 - The second farmer gets on the horse by facing it and pressing A, rides at the horse's speed, and gets off with A, as you do.
 - One rider at a time: while either of you is on it, the other cannot get on and the whistle waits. Going indoors sets the rider down and leaves the horse outside, and leaving with B leaves it where they were.
