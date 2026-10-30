@@ -19,6 +19,8 @@ import { SCENES, SCENE_HEARTS } from '../data/scenes.js';
 import { GIFT_POINTS, BIRTHDAY_MULT, UNIVERSAL } from '../data/gifts.js';
 import { CANDIDATES, HEART_CAP, BOUQUET, JEALOUSY, DATE_LINES, PENDANT, WEDDING_DAYS, SPOUSE_CAP, SPOUSE_LINES } from '../data/romance.js';
 import { drawPerson, drawBubble, drawBlink, drawEmote } from '../render/sprites.js';
+import { drawDoing } from '../render/doings.js';
+import { doingFor } from '../data/doings.js';
 import { rng } from '../render/pixel.js';
 import { emote, emoteOf, gestureOffset } from './emotes.js';
 import { GIFT_EMOTE, SIGH } from '../data/emotes.js';
@@ -321,6 +323,8 @@ addEntities(() => NPCRT.filter((n) => n.visible && n.map === G.S.map).map((n) =>
     const look = lookOf(n.def), e = emoteOf(n.id), g = gestureOffset(e), x = n.x + g.x, y = n.y + g.y;
     drawPerson(c, x, y, n.dir, n.moving, n.walkT, look, lean(n.x));
     if (blinks(n, NPCRT.indexOf(n))) drawBlink(c, x, y, n.dir, look);
+    const does = doingFor(n.id, n.block);   // v147: what they are doing here (data/doings.js), while they stop
+    if (does && (does.carry || !n.moving)) drawDoing(c, x, y, n.dir, does.does);
     if (e) drawEmote(c, x, y, e.kind, e.k, look);   // v124
     else if (G.S.npcs[n.id].talked !== G.S.day && G.talking !== n.id) drawBubble(c, n.x, n.y);
   },

@@ -31,10 +31,10 @@ const DAYS = {
   bram: (wd, def) => (wd === 1
     ? [go(9, 12, 'village', ...SQUARE), go(12, 17, 'farm', ...def.path)]
     : [at(9, 17, ...KEEP('carpenter')), at(17, 19, LANTERN, TAVERN.bram)]),
-  // Odile fishes the Wilds pond at dawn, walks the farm, then mends nets on the pier. Fridays she only fishes.
+  // Odile fishes the Wilds pond at dawn (v147: facing the water), walks the farm, then mends nets on the pier. Fridays she only fishes.
   odile: (wd, def) => (wd === 4
-    ? [at(6, 11, 'wilds', [14, 10]), go(11, 17, 'village', ...SQUARE)]
-    : [at(6, 10, 'wilds', [14, 10]), go(10, 14, 'farm', ...def.path), at(14, 18, 'beach', [7, 9])]),
+    ? [{ ...at(6, 11, 'wilds', [14, 10]), face: 'right' }, go(11, 17, 'village', ...SQUARE)]
+    : [{ ...at(6, 10, 'wilds', [14, 10]), face: 'right' }, go(10, 14, 'farm', ...def.path), at(14, 18, 'beach', [7, 9])]),
   // Tavi charts the valley: the village lanes, your fence line and the forest one day, the town and the shore the next.
   tavi: (wd, def) => (wd === 6
     ? [go(10, 16, 'village', ...SQUARE)]
