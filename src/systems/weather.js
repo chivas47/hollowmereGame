@@ -2,6 +2,7 @@
 // morning report). Rain, storms and Silvermist water the farm's soil in the morning and anything
 // tilled that day; storms send lightning at the farm overnight; on Silvermist days forage.js adds mist lilies.
 import { G } from '../core/game.js';
+import { visible } from '../render/views.js';
 import { T, W, H } from '../core/constants.js';
 import { on } from '../core/events.js';
 import { addLayer } from '../core/registry.js';
@@ -72,7 +73,8 @@ const drops = Array.from({ length: 140 }, (_, i) => ({ x: (i * 97) % (W * T), y:
 addLayer(96, (c) => {
   const S = G.S, kind = S.weather;
   if (!underSky(S.map) || kind === 'sun' || !WEATHER[kind]) return;
-  const t = performance.now() / 1000, w = W * T, h = H * T;
+  const t = performance.now() / 1000, w = W * T, h = H * T, v = visible();
+  c.save(); c.translate(v.x, v.y);   // v156: weather falls over the screen, wherever the camera is
   if (kind === 'rain' || kind === 'storm') {
     c.fillStyle = kind === 'storm' ? 'rgba(20,30,50,.28)' : 'rgba(40,60,90,.16)'; c.fillRect(0, 0, w, h);
     for (const d of drops) {
@@ -91,4 +93,5 @@ addLayer(96, (c) => {
       c.fillStyle = 'rgba(235,248,242,.16)'; c.fillRect(Math.floor(x), y, 90, 18);
     }
   }
+  c.restore();
 });

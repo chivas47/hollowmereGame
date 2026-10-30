@@ -1,18 +1,17 @@
 // Water (v102): ripples that drift, glints on sunny days, rain rings, and reflections of whatever stands at the bank.
 // Drawn only, never saved. Ripples cost two small rects a water tile; reflections redraw only the entities near water.
 import { G } from '../core/game.js';
-import { T, W, H } from '../core/constants.js';
+import { T } from '../core/constants.js';
 import { on } from '../core/events.js';
 import { addLayer, addUpdater, collectEntities } from '../core/registry.js';
 import { today } from '../core/time.js';
-import { MAPS } from '../data/maps.js';
+import { MAPS, sizeOf } from '../data/maps.js';
 import { PAL } from '../data/seasons.js';
 import { ICE_HOLE } from '../data/fish.js';
 import { underSky } from '../data/weather.js';
 import { WATER } from '../data/atmosphere.js';
 import { r, rng } from '../render/pixel.js';
 
-const w = W * T, h = H * T;
 
 // The water of each map: its tiles and the pixel rows it covers (the clip path is made on first draw). Rebuilt when the world changes.
 let waters = {};
@@ -52,7 +51,9 @@ let off = null;
 function reflect(c, wd, t, calm) {
   const near = collectEntities().filter((e) => e.y > wd.top - WATER.reach * T && e.y < wd.bottom);
   if (!near.length) return;
-  if (!off) { off = document.createElement('canvas'); off.width = w; off.height = h; }
+  const s = sizeOf(G.S.map), w = s.w * T, h = s.h * T;   // v156: the map's own size
+  if (!off) off = document.createElement('canvas');
+  if (off.width !== w || off.height !== h) Object.assign(off, { width: w, height: h });
   const o = off.getContext('2d');
   o.clearRect(0, 0, w, h); o.imageSmoothingEnabled = false;
   for (const e of near) { o.save(); o.translate(0, 2 * e.y); o.scale(1, -1); e.draw(o); o.restore(); }

@@ -1,6 +1,7 @@
 // The Hollow: procedurally generated mine floors, rock breaking, ladders and lighting.
 // Floors are rebuilt every visit (seeded by floor and day); only the deepest floor is saved.
 import { G } from '../core/game.js';
+import { visible } from '../render/views.js';
 import { T, W, H } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer } from '../core/registry.js';
@@ -194,5 +195,5 @@ addLayer(95, (c) => {
   grad.addColorStop(0, 'rgba(6,5,10,0)');
   grad.addColorStop(1, 'rgba(6,5,10,.88)');
   c.fillStyle = grad;
-  c.fillRect(0, 0, W * T, H * T);
+  const v = visible(); c.fillRect(v.x, v.y, v.w, v.h);
 });

@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v156: Camera: following you
+- A map can now be larger than the screen. The view follows you both ways and stops at the map's edges; in split screen each half follows its own farmer over their own map. No map is larger yet: the world's maps grow once the rules that still assume one screen are updated (roadmap 75h).
+- The light of the hour, lights after dark, rain, snow, mist, lightning, splashes, water reflections, the mine's dark, indoor light, the fishing bar, the action prompts and taps all follow the camera.
+- Every map today is the size of the screen and draws exactly as before.
+- Nothing saved; no prices, keys or saves changed.
+
 ## v155: The world joined up
 - Climbing out of the sewer now puts you beside the grate, facing up. Since v50 it set you down inside the wall of Nell's cottage.
 - A new test walks the whole world: every map reachable from the farm, every exit landing on open ground with a way back beside it, every exit, door and way in reachable on foot from each place you arrive, and every neighbour's home standing with an open door. It guards the maps as the world grows (roadmap 75b).
