@@ -53,3 +53,10 @@ A neighbour feels real when:
   the table sides, the notices, the ring round the ribbon pole on dance day. 40 to 110 minutes at each, never
   two on a tile, more likely to stop next to someone than alone.
 - Two standing side by side turn and talk ("..." bubbles); dancers and Lio show a note now and then.
+
+## Rain and doing (v146, v147)
+
+- Rain (74b): outdoor blocks go to each neighbour's own shelter (`data/schedules.js` RAIN); two go out anyway,
+  because not everyone hides from the weather.
+- Doing (74c): where they stop, a prop for what they do there (`data/doings.js`, art in `render/doings.js`).
+  A new place in a routine should get its doing too, or a reason not to.

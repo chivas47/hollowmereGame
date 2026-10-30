@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v147: Doing, not standing
+- Where neighbours stop, they are busy: Odile fishes the Wilds pond (facing the water) and mends nets on the pier and at the Lantern, Esme paints at an easel in the forest and sketches at the Lantern and on the shore, Corvin hammers at the anvil, Bram saws a plank, Wren keeps the ledger, Hob polishes a mug, Pell and Warden Hale read, Lio fiddles, Nell gardens with a trug of greens, Rook paints the rowboat, Tavi checks the map, Ines's bees follow her round the meadow, Doctor Maren's bag stands by the counter, Kit carries a wrench and the Lamplighter a lantern.
+- Juno carries the mail satchel all day, walking too.
+- Each prop moves a little (the hammer swings, the bobber dips, the bow saws) and hides when they face away. Looks only: nothing saved, no prices, keys or saves changed.
+
 ## v146: Rain days
 - In rain or a storm the neighbours get out of it: Ines, Bram, Tavi, Rook and Hob stay home (visit their cottages), Odile mends nets and Esme sketches by the Lantern's window, Nell sits by the fire, Wren, Pell and Lio spend the day at the Lantern (Lio playing), and Doctor Maren keeps the clinic open till 6 pm for the colds. Nobody walks your farm in the rain.
 - Juno still carries the mail, and Kit is out testing the go-cart in the wet.

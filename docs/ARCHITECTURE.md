@@ -70,6 +70,7 @@ src/
     hints.js          HINTS (id, when(S, facts), text) most pressing first, TOOL_TIPS, STUCK_PRESSES (v101)
     animation.js      SWINGS (tool arcs and timings), COMBO (weapon combo steps), PICKUP, CRAFTED, PLACE, IMPACT colours (v74); MOTION (v115: easing, turns, idling)
     schedules.js      neighbour daily routines by weekday (go: walk a loop of spots, at: walk there and stay), spouse and festival days; v146: rainDay() (RAIN shelters), spouseRainDay(), RAIN_WEATHERS
+    doings.js         v147: DOINGS (what each neighbour does where: map, stay, does, carry), doingFor(id, block)
     crowd.js          v145: the festival crowd: STATIONS (places in the square, the way they face, festival kinds, a mood), ROLES (jobs by festival kind), CROWD (minutes per place), CHAT
     homes.js          where each neighbour lives: door, cottage, door hours (v76); homeEntry() inside the front door (v97)
     venues.js         v98: VENUES, the buildings you walk into (shops, tavern, clinic, museum, ranch, town hall, theatre, lodge, Oasis, casino, coop, barn): where each stands, which tiles are its door, the dialog its counter opens, its floor plan; venueMap(), venueFront()
@@ -179,6 +180,7 @@ src/
     pixel.js          r() rectangle primitive, rng(seed), blink()
     tiles.js          static art: grass, path, trees, water, rocks, buildings, cave tiles
     sprites.js        per-frame art: soil, crops, forage, people, chickens, slimes, fruit trees, giant crops, effects
+    doings.js         v147: drawDoing(c, px, py, dir, kind), the props neighbours hold or set down (DOING_KINDS)
     icons.js          16x16 hotbar icons
     itemIcons.js      v113: 16x16 item icons for the Bag and chests, one shape per kind coloured per item, cached as data URLs (iconURL)
     arcade.js         the arcade cabinets' screens (v70)
