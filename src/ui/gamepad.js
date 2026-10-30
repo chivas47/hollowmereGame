@@ -12,7 +12,7 @@ import { runAction, escape } from './input.js';
 import { selectSlot } from './hotbar.js';
 import { modalOpen } from './modal.js';
 import { menuOpen, openMenu } from './menu.js';
-import { join, leave, partnerKeys } from '../systems/partner.js';
+import { join, leave, partnerKeys, partnerUse, partnerSlot } from '../systems/partner.js';
 import { $ } from './dom.js';
 
 const DIRS = ['up', 'down', 'left', 'right'];
@@ -62,11 +62,14 @@ function read(pad) {
 }
 
 // v129: the second controller is the second farmer (systems/partner.js): A joins, B leaves, the stick walks.
-// They wait while a dialog or the menu is open, which stay the first player's.
+// They wait while a dialog or the menu is open, which stay the first player's. v130: once in, A uses and
+// LB and RB step through their hotbar.
 function partner(pad, box) {
-  const down = pad && !box ? read(pad) : {};
-  if (down.use && !was2.use) join();
-  if (down.back && !was2.back) leave();
+  const down = pad && !box ? read(pad) : {}, press = (k) => down[k] && !was2[k];
+  if (press('use')) { if (G.P2) partnerUse(); else join(); }
+  if (press('back')) leave();
+  if (press('prev')) partnerSlot(-1);
+  if (press('next')) partnerSlot(1);
   partnerKeys({ up: !!down.up, down: !!down.down, left: !!down.left, right: !!down.right });
   was2 = down;
 }
