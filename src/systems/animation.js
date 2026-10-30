@@ -120,17 +120,23 @@ on('crafted', ({ key, kit }) => { crafted = { key, kit }; });
 
 // ---- tool impacts and the rod ----
 let fishing = false;
-const AT = (a) => { const [dx, dy] = DIRS[a.dir]; return { x: G.S.x + dx * 14, y: G.S.y - 3 + dy * 12 }; };
+const AT = (a, who = G.S) => { const [dx, dy] = DIRS[a.dir]; return { x: who.x + dx * 14, y: who.y - 3 + dy * 12 }; };
+
+// Advances an action pose by dt (held still during hit-stop) and lands its impact; null once it is over.
+// who: whose hands it is in (v129: the second farmer's swings run through here too, systems/partner.js).
+export function stepAnim(a, dt, who = G.S) {
+  if (a.hold > 0) a.hold -= dt;
+  else a.t += dt;
+  if (!a.hit && a.impact && a.t >= a.dur * (a.strike + 0.12)) { a.hit = true; const p = a.at || AT(a, who); impact(a.impact, p.x, p.y); }
+  return a.t >= a.dur ? null : a;
+}
 
 addUpdater((dt) => {
   if (!ready) { ready = true; snapshot(); }
   const a = G.anim;
   if (a) {
-    if (a.hold > 0) a.hold -= dt;
-    else a.t += dt;
-    if (!a.hit && a.impact && a.t >= a.dur * (a.strike + 0.12)) { a.hit = true; const p = a.at || AT(a); impact(a.impact, p.x, p.y); }
     if (a.kind === 'crafted' && rand() < dt * 14) burst(G.S.x + (rand() - 0.5) * 14, G.S.y - 26 + (rand() - 0.5) * 8, IMPACT.craft, 1, { speed: 8, up: 10, size: 1, life: 0.5, gravity: -10 });
-    if (a.t >= a.dur) G.anim = null;
+    G.anim = stepAnim(a, dt);
   }
   if (!G.anim && crafted) {
     playAnim('crafted', { dur: CRAFTED.dur, item: crafted });

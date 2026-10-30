@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v130: Local two-player, part two
+- The second farmer works: A uses whatever they hold (tilling, watering, chopping, mining, talking, gifts, doors and map exits) through the same rules as you, LB and RB step through their own hotbar choice.
+- They have their own energy (270, refilled each morning, saved with the farm); the bag and gold stay shared.
+- Not yet: fishing and riding stay the first farmer's, and their HUD comes next (roadmap 33c).
+- No prices, keys or old saves changed.
+
 ## v129: Local two-player, part one
 - Connect a second controller and press A on it: a second farmer joins on the same screen. They walk with their stick, are set down beside you whenever you change map, and leave with B or when their controller disconnects.
 - Working together (tools, talking, their own energy) and their HUD come next (roadmap 33b and 33c).
