@@ -138,11 +138,16 @@ function travel(n, map, tile, step, dt) {
   return false;
 }
 
+// v151: someone you walked home is in (indoors, or out of sight at their door).
+const leftFor = (id) => { const m = NPCRT.find((x) => x.id === id); return !m?.visible || m.map.startsWith('home_'); };
+// v151: is a neighbour in their own cottage now (systems/nightlights.js lights its windows only then)?
+export const homeNow = (id) => NPCRT.some((n) => n.id === id && n.map === homeMap(id));
+
 // v149: walking with a friend (a `with` block, data/friends.js): keep a tile from them wherever they go, and wait at
 // the block's place while they are indoors or at home.
 function follow(n, b, step, dt) {
   const lead = NPCRT.find((m) => m.id === b.with);
-  if (!lead?.visible || !lead.block) { travel(n, b.map, b.path[0], step, dt); return; }
+  if (!lead?.visible || (!lead.block && !b.home)) { travel(n, b.map, b.path[0], step, dt); return; }   // v151: b.home: walking them home
   const here = tileOf(n.x, n.y), there = tileOf(lead.x, lead.y);
   if (n.map === lead.map && Math.abs(here.tx - there.tx) + Math.abs(here.ty - there.ty) <= 1) { n.moving = false; n.route = null; return; }
   travel(n, lead.map, [there.tx, there.ty], step, dt);
@@ -152,7 +157,9 @@ addUpdater((dt) => {
   const t = G.S.time, step = SPEED * dt;
   for (const n of NPCRT) {
     if (G.talking === n.id) { n.moving = false; continue; }
-    const blocks = blocksOf(n), b = goalOf(blocks, t);
+    const blocks = blocksOf(n);
+    let b = goalOf(blocks, t);
+    if (b?.home && leftFor(b.with)) b = null;   // v151: seen them to their door: home too
     n.block = b;   // v145: for systems/chatter.js (a festival place's mood)
     if (n.snap) settle(n, t <= START ? null : b);
     if (n.goal !== keyOf(b)) Object.assign(n, { goal: keyOf(b), wi: 0, wait: 0 });

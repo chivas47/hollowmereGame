@@ -43,3 +43,14 @@ export const CROWD = { stayMin: 40, stayMax: 110, step: 10, company: 3, friend: 
 // Two neighbours standing still side by side turn to each other and talk (anywhere, any day): one of them shows
 // a chat bubble about once every `every` seconds.
 export const CHAT = { every: 5 };
+
+// v151: before and after. Some come early: the musician to tune up, Hob to set out the pot or the stall (minutes
+// before opening). Bram and Corvin put the square up before anyone else (SETUP: minutes before opening, a place
+// each and what they do there). When it closes, nobody leaves on the stroke: each lingers 0 to `linger` minutes,
+// and friends (data/friends.js) leave together, one walking the other home for `walkHome` minutes.
+export const EARLY = { lio: 60, hob: 90 };
+export const SETUP = {
+  minutes: 90,
+  crew: { bram: { at: [8, 6], face: 'up', does: 'saw' }, corvin: { at: [16, 11], face: 'left', does: 'hammer' } },
+};
+export const CLOSE = { linger: 40, walkHome: 15 };

@@ -79,3 +79,9 @@ A neighbour feels real when:
 - `vary()` in `data/schedules.js` changes only outdoor blocks, seeded by the date: a slow morning, an early or late
   evening, a round walked another way, a detour to a FAVOURITE place. Anything a player relies on (work hours, the
   Lantern, lunch, shopping, visits) stays put. A new neighbour who walks about should get a favourite place.
+
+## Mornings and evenings (v151)
+
+- A festival has a before and an after: the crew and the early arrivals (`data/crowd.js` SETUP, EARLY) and the
+  lingering and walking home (CLOSE). A cottage window is lit only while its owner is in (`homeNow()`), so the
+  village at night shows who is home.

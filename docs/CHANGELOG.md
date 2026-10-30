@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v151: Mornings and evenings
+- Festival mornings: Bram and Corvin put the square up from 7:30 (a saw and a hammer), Hob comes at 7:30 to set out the pot or the stall, and Lio tunes up from 8:00. Everyone else walks in at opening.
+- Festival nights: nobody leaves on the stroke of closing. Each lingers up to 40 minutes, and friends leave together, one walking the other home.
+- A cottage's windows light up at night only while its owner is in: dark while Rook is at the Lantern, while Kit is still out, while Ines is round at Nell's.
+- Nothing saved; no prices, keys or saves changed.
+
 ## v150: No two weeks the same
 - Neighbours' days vary with the date: some mornings they head out up to 40 minutes later, they come home up to half an hour earlier or later, and they walk their rounds from another corner or the other way round.
 - About twice a week each takes a 45-minute detour to a favourite place: Ines to look at the sea, Odile to the fountain for the ducks, Tavi to the old mine mouth, Lio to the forest to write a tune, and so on (twelve neighbours, 68 detours in four weeks).
