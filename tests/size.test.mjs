@@ -8,6 +8,8 @@ import { MAPS } from '../src/data/maps.js';
 import { tilePath } from '../src/systems/routes.js';
 import { slimes, spawnSlimes } from '../src/systems/monsters.js';
 import { noFit } from '../src/systems/sites.js';
+import { GROVE } from '../src/data/hidden.js';
+import { VIGNETTES } from '../src/data/vignettes.js';
 import { freshFarm } from './setup.mjs';
 
 const BW = W * 2, BH = H * 2;
@@ -45,4 +47,16 @@ test('a building fits anywhere on a larger farm, up to its own edges', () => {
     assert.equal(noFit('shed', W + 10, H + 10), null);
     assert.ok(noFit('shed', BW - 2, H + 10), 'still kept off the edge');
   } finally { MAPS.farm.grid = was; }
+});
+
+// v158 (roadmap 75i): the grove grew east and south to 40 x 24, so nothing a save holds there moved: the stumps,
+// the cairn and the old pond keep their tiles, and the way in from Brackenwood lands at its new east edge.
+test('the grove grew without moving anything a save holds', () => {
+  const g = MAPS.grove.grid;
+  assert.deepEqual([g[0].length, g.length], [40, 24]);
+  for (const [x, y] of GROVE.stumps) assert.ok(['g', 'Y'].includes(g[y][x]), `stump ${x},${y}`);
+  for (const v of VIGNETTES.grove) assert.equal(g[v.y][v.x], 'g', `the ${v.art}`);
+  assert.equal(g[6][6], 'O');                                         // the old pond and its falls
+  assert.deepEqual(MAPS.forest.exits['0,12'], { to: 'grove', x: 38, y: 12, dir: 'left' });
+  assert.equal(MAPS.grove.exits['39,12'].to, 'forest');
 });

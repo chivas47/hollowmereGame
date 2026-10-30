@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v158: The grove grows
+- The hidden grove is the first place larger than the screen: 40 by 24 tiles, and the view follows you across it. East of the old glade, a ring of old trees round a mossy clearing; south, a still pool among more old trees, with the same glade fish as the pond.
+- It grew east and south, so everything already there kept its place: the six stumps, the cairn, the pond and its falls, the morning's forage. Old saves load as they were; nothing needed moving.
+- The way in from Brackenwood now arrives at the grove's new east edge, and the signpost moved with it.
+- No prices, keys or saves changed. The grove still grows three forage a morning.
+
 ## v157: Camera: the rules at any size
 - The rules that still assumed a one-screen map now read the map's own size: where slimes appear and how far flying monsters roam, where a farm building may stand, where the gold pan's shimmer can show, how far falling leaves and fleeing birds go, and where wildlife settles on a map with no grass.
 - Neighbours on their way down to the sewer now stand beside the grate instead of on Nell's wall (the same old spot the player's exit had, fixed in v155).

@@ -293,7 +293,7 @@ Stardew's secret woods, railroad and sewers by role.
 
 | Place | Way in (Stardew) | What is there |
 |---|---|---|
-| Hidden grove (forest, west) | Fallen log at (1, 12): the copper axe, our second axe (the steel axe's large log) | Pond with the Glade skipper (75g, d3, all year; Stardew's woodskip); 3 forage a morning: wood ear 70g, glade mint 60g; 6 big stumps, 10 hits with the copper axe, 2 hardwood each, back every morning (Stardew's 6 large stumps) |
+| Hidden grove (forest, west) | Fallen log at (1, 12): the copper axe, our second axe (the steel axe's large log) | 40 x 24 since v158, the first map larger than the screen (the camera follows you): east, a ring of old trees round a mossy clearing; south, a still pool. Pond and pool with the Glade skipper (75g, d3, all year; Stardew's woodskip); 3 forage a morning: wood ear 70g, glade mint 60g; 6 big stumps, 10 hits with the copper axe, 2 hardwood each, back every morning (Stardew's 6 large stumps) |
 | Railway (Wilds, east) | Rubble at (22, 3) clears on Summer 3, year 1 (the landslide, same day) | 3 forage a morning: track poppy 45g, cinder berry 60g (summer); hot spring: an hour's soak gives 60 energy and half your health (the spa) |
 | Sewer (village, west corner) | Grate at (2, 11): the rusty key in the floor 40 chest (Stardew's rusty key, from 60 museum donations) | Gutter pike 60g, d3, all year (Stardew's sewer has only the legend; scaled like a common river fish, the chub); Crooked carp 1,000g, d6, legend (Stardew's mutant carp, 1,000g); the Lamplighter from 18:00 |
 

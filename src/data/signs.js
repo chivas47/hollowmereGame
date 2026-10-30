@@ -33,7 +33,7 @@ export const SIGNS = {
     { x: 3, y: 1, kind: 'notice', text: 'No swimming past the rocks. The tide is quicker than you are.' },
   ],
   railway: [{ x: 1, y: 4, kind: 'post', dir: 'left', text: 'West: the Wilds.' }],
-  grove: [{ x: 22, y: 11, kind: 'post', dir: 'right', text: 'East: Brackenwood.' }],
+  grove: [{ x: 37, y: 11, kind: 'post', dir: 'right', text: 'East: Brackenwood.' }],
   mountain: [
     { x: 20, y: 14, kind: 'post', dir: 'down', text: 'South: the Wilds.' },
     { x: 22, y: 6, kind: 'post', dir: 'right', text: 'East: the quarry.' },
