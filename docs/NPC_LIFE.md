@@ -90,3 +90,10 @@ A neighbour feels real when:
 
 - `systems/topics.js` picks a line about what is going on, before their usual words. New events that the whole
   village would notice (a new festival, a new kind of weather) should get a topic, written in `data/topics.js`.
+
+## Talking about what you did (v153)
+
+- `systems/news.js` keeps a small saved record of today (G.S.news) and turns it into yesterday's at night; topics
+  use it the next day. A new notable act (a building finished, a legend caught) adds a field to `recordDay()`,
+  a line in `data/topics.js` NEWS, and a test. Old saves get a migration step that starts the count from what they
+  already have.

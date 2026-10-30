@@ -11,6 +11,7 @@ import { NPCS, OUTFITS } from '../data/npcs.js';
 import { festivalOn, hoursOf } from '../data/festivals.js';
 import { scheduleFor, spouseDay, festivalDay, rainDay, spouseRainDay, RAIN_WEATHERS } from '../data/schedules.js';
 import { topicFor } from './topics.js';
+import { yesterday } from './news.js';
 import { crowdPlan } from './crowd.js';
 import { floatOn } from '../data/traditions.js';
 import { buff } from './buffs.js';
@@ -226,7 +227,7 @@ export function startTalk(n) {
   if (scene) { emit('ui:scene', { npc: n, ...scene, extra }); return; }
   const lines = st.married ? SPOUSE_LINES[d.id] : st.dating && DATE_LINES[d.id] ? DATE_LINES[d.id] : d.lines[h >= 5 ? 2 : h >= 2 ? 1 : 0];   // v51: partners talk like partners; v52: and spouses like spouses
   // v146 the weather, v152 what is going on (systems/topics.js); partners and spouses keep their own words
-  const topic = !st.married && !st.dating && topicFor(d, { day: G.S.day, date: today(), weather: G.S.weather, tomorrow: festivalOn(dateParts(G.S.day + 1)), npcs: NPCS });
+  const topic = !st.married && !st.dating && topicFor(d, { day: G.S.day, date: today(), weather: G.S.weather, tomorrow: festivalOn(dateParts(G.S.day + 1)), npcs: NPCS, news: yesterday() });
   emit('ui:talk', { npc: n, text: fest?.lines?.[d.id] || topic || lines[(G.S.day + d.seed) % lines.length], extra });
 }
 

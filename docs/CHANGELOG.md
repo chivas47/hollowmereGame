@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v153: Talking about what you did
+- The day after, neighbours talk about what you did: the wedding and a first prize at a festival (everyone), a quest you did for them (thanks from that neighbour), and some of them about gifts to the museum, a quest for their friend, a shipping bin of 1,500g or more, or a skill level gained.
+- Birthdays still come first; partners and spouses keep their own words.
+- New save field (what happened today and yesterday). Older saves start counting from what they already have, so the first night after loading reports nothing old as new. No prices or keys changed.
+
 ## v152: Talking about the day
 - Neighbours talk about what is going on: their own birthday, someone else's (a friend of the birthday neighbour tells you what they love), the festival tomorrow (with what to bring), the first day of a season, rain and snow.
 - About one day in three each of the ten friends says something about the other: Ines on Nell's seedlings, Kit on Tavi's map, Juno on Pell's marking, and so on.
