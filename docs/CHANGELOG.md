@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v155: The world joined up
+- Climbing out of the sewer now puts you beside the grate, facing up. Since v50 it set you down inside the wall of Nell's cottage.
+- A new test walks the whole world: every map reachable from the farm, every exit landing on open ground with a way back beside it, every exit, door and way in reachable on foot from each place you arrive, and every neighbour's home standing with an open door. It guards the maps as the world grows (roadmap 75b).
+- Nothing saved; no prices, keys or saves changed.
+
 ## v154: A week watched
 - Neighbours walking a round no longer stop on top of someone already standing at a corner of the square; they walk on.
 - Lunch at the Lantern only for those already in the village or the town just before noon. From the farm or the Wilds the walk took longer than lunch, so Odile, Nell and Juno never sat down; now they eat a packed lunch where they are (a bowl in hand).

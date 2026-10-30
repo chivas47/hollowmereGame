@@ -58,7 +58,9 @@ A place feels real when:
    changes. `tests/week.test.mjs` must pass; a new map or home adds its people to it.
 7. **Test what a player would notice.** In `tests/*.test.mjs`: every map is reachable from the farm, every exit
    lands on a walkable tile with a way back, every door leads somewhere, no home or shop door is walled in,
-   every neighbour sleeps in a home that exists.
+   every neighbour sleeps in a home that exists. `tests/world.test.mjs` (v155) checks all of this for every map;
+   a new way in that is not an exit tile (a door you face, a ride) goes in its WAYS table, a tile that opens in
+   play in its GATES.
 8. **Walk it in the browser.** Playwright: enter the map from every exit, walk to every door, screenshot it by
    day, by night and in winter. No console errors, nobody walking through a wall, an old save still loads.
 9. **Docs.** GAME_DESIGN's map list, ARCHITECTURE's tile table if tiles were added, a CHANGELOG entry, and

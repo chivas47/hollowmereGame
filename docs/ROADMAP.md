@@ -182,8 +182,8 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | # | Item | Type | Status | Notes |
 |---|---|---|---|---|
 | 75a | Screens or a camera | decision | done | Nuno's pick (October 2026): a camera, so maps can be larger than the screen. Built as 75g to 75i before the village is laid out. |
-| 75b | The world joined up | test | next | One test over every map: reachable from the farm, every exit lands on a walkable tile with a way back, every door leads somewhere, every neighbour has a home that exists. Buildable before 75a; it guards every item after it. |
-| 75g | Camera: following you | feature | queued | A map can be larger than 24 x 16; the view follows the player and stops at the map's edges. Screen maps draw exactly as today. One half each in split screen. |
+| 75b | The world joined up | test | in progress | One test over every map: reachable from the farm, every exit lands on a walkable tile with a way back, every door leads somewhere, every neighbour has a home that exists. Buildable before 75a; it guards every item after it. |
+| 75g | Camera: following you | feature | next | A map can be larger than 24 x 16; the view follows the player and stops at the map's edges. Screen maps draw exactly as today. One half each in split screen. |
 | 75h | Camera: the rules at any size | feature | queued | Everything that assumes 24 x 16 (placement, pathing, neighbours' walks, exits on the edges, the minimap and mouse clicks) reads the map's own size. Tests over a large test map. |
 | 75i | Camera: saves | feature | queued | A save field and a migration step only if a map's size changes under saved things; otherwise none. Proved by growing one quiet map first. |
 | 75c | The village laid out | feature | queued | Rearrange Hollowmere Village and Town by the WORLD_BUILDING test: homes facing their lanes with yards, fences and gardens, shops where people pass, the smithy at the edge, a centre round the square. Moves doors and homes, so a migration step and every routine rechecked. Needs the camera (75g to 75i). |
