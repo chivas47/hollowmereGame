@@ -7,7 +7,8 @@ import { hoursOf } from '../data/festivals.js';
 import { newState, save } from '../core/state.js';
 import { CROPS } from '../data/crops.js';
 import { ITEMS } from '../data/items.js';
-import { sleep } from '../systems/days.js';
+import { bedtime } from '../systems/partner.js';   // v142: with farmer two in, you may wait for them in bed
+import { LOOKS } from '../data/profile.js';
 import { buy, canBuy, inSeason, buySupply, canBuySupply } from '../systems/economy.js';
 import { SUPPLIES, PLACEABLES } from '../data/crafting.js';
 import { BAIT_PRICE } from '../data/angling.js';
@@ -43,13 +44,25 @@ on('ui:sleep', () => {
   if (askingTonight()) {   // v53: your spouse asks about a child at bedtime
     const who = NPCS.find((n) => n.id === G.S.spouse)?.name || 'Your spouse';
     openModal(`<h2>Before you sleep</h2><p>${esc(who)} sits on the edge of the bed. "Have you ever thought about having a child?"</p>`,
-      [['Not now', () => { answerChild(false); closeModal(); sleep(false); }], ['Yes', () => { answerChild(true); closeModal(); sleep(false); }, true]]);
+      [['Not now', () => { answerChild(false); closeModal(); bedtime(); }], ['Yes', () => { answerChild(true); closeModal(); bedtime(); }, true]]);
     return;
   }
   openModal(
     `<h2>Go to bed?</h2><p>Watered crops grow one day. Anything in the bin gets paid. ${late ? 'It is getting late.' : 'There is still daylight left.'}</p>`,
-    [['Not yet', closeModal], ['Sleep', () => { closeModal(); sleep(false); }, true]],
+    [['Not yet', closeModal], ['Sleep', () => { closeModal(); bedtime(); }, true]],
   );
+});
+
+// v142: the first time farmer two joins on a farm they pick a shirt and hair (opened as them, in their half).
+on('ui:partnerLook', () => {
+  const P = G.S.partner, row = (part, label) => `<div class="pick"><span>${label}</span>${LOOKS[part].map((v) =>
+    `<button class="swatch" aria-pressed="${P.look[part] === v}" data-plook="${part}" data-v="${v}" style="background:${v}" aria-label="${label} ${v}"></button>`).join('')}</div>`;
+  openModal(`<h2>${esc(P.name)}</h2><p>Pick a shirt and hair for the second farmer. It is kept with this farm.</p>${row('shirt', 'Shirt')}${row('hair', 'Hair')}`,
+    [['Done', closeModal, true]]);
+  document.querySelectorAll('[data-plook]').forEach((b) => b.addEventListener('click', () => {
+    P.look[b.dataset.plook] = b.dataset.v;
+    document.querySelectorAll(`[data-plook="${b.dataset.plook}"]`).forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+  }));
 });
 
 function refreshShop() {
