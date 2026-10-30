@@ -764,7 +764,7 @@ Small, and only what matters right now. Nothing here touches the economy.
 | Energy | bar and value | always |
 | Health | bar and value | hurt, or on the map where monsters live |
 | Water | bar and value | the can in hand |
-| Use prompt | what Use does on the faced tile, with its key (the verb on the touch Use button) | something registered a prompt there; off with Prompts |
+| Use prompt | what Use does on the faced tile, with its key (the verb on the touch Use button); v135: casting and hooking a bite too | something registered a prompt there; off with Prompts |
 | Objective | the order or challenge in hand, else the board request due soonest | any open; off with Objective, gone in minimal |
 | Messages | up to three, fading out after 2.6 to 7 s by length | on any message; on a new farm, held until the new game screen and arrival scene are done (v133) |
 

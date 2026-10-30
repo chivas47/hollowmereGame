@@ -141,6 +141,7 @@ Every system in the Stardew feature guide is built (items 1 to 54). What the gam
 | 68 | Phones held upright | fix | done (chivas47/hollowmereGame#128) | Nuno's pick after two-player: the field sized to its own height in portrait with the pad and Use at the bottom, the time on one line, a long place name cut short, and no key hints on the menu buttons under 600 px (Menu fell off a narrow window). |
 | 69 | Messages over the new game screen | fix | done (chivas47/hollowmereGame#129) | Toasts sit above dialogs (shop feedback), so the mailbox and first-hint messages covered the new farm form. Held until the farm is made and the arrival scene is over. |
 | 70 | Farmer two fishes | feature | done (chivas47/hollowmereGame#130) | Nuno's pick: their rod casts and their A works the bite and catch bar; one line in the water at a time, whoever bites first fishes and the other waits. |
+| 71 | A prompt at the water | fix | done (PR_LINK) | Nothing on screen said the rod casts at water: "Cast your line" with the rod at water, "Hook it" on a bite of your own line, for both farmers. |
 | 67 | Translations | feature | not now | Move UI and data text behind a lookup so the game can be translated. Touches every data file; worth it only if Nuno wants other languages. |
 
 ## Done

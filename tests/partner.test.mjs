@@ -156,3 +156,18 @@ test('leaving brings their line in', () => {
   castP2(); leave();
   assert.equal(G.fishing, null);
 });
+
+// v135: the cast prompt.
+const { promptFor } = await import('../src/core/registry.js');
+const { tileAt } = await import('../src/systems/world.js');
+test('the rod at water says it casts, and a bite on your line says hook it', () => {
+  placePlayer('forest', 3, 7, 'down'); G.fishing = null;
+  const ask = (item) => promptFor({ tx: 3, ty: 8, tile: tileAt(3, 8), mapId: 'forest', item });
+  assert.equal(ask('rod'), 'Cast your line');
+  assert.equal(ask('hoe'), null);
+  castP2();
+  assert.equal(ask('rod'), null, 'not while a line is out');
+  G.fishing.phase = 'bite';
+  assert.equal(ask('rod'), null, 'their bite is not yours to hook');
+  assert.equal(partnerPrompt().text, 'Hook it');
+});

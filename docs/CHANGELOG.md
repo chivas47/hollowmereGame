@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v135: A prompt at the water
+- With the rod in hand, facing water shows "Cast your line" (not on the frozen pond away from the ice hole, and not while a line is out); a bite on your own line shows "Hook it". Farmer two gets the same over their own prompt.
+- No prices, keys or saves changed.
+
 ## v134: Farmer two fishes
 - The second farmer casts with their rod (8 of their energy) and works the bite and catch bar with their own A; their held A lifts the bar.
 - One line in the water at a time: while either farmer's line is out, the other's cast is refused, and their Use leaves it alone. A line holds only whoever cast it, so you can walk while they fish.
