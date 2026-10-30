@@ -402,7 +402,7 @@ export const MAPS = {
   },
   sewer: {
     name: 'The sewer', salt: 71, base: 'cave', theme: 'sewer', grid: sewerGrid(), objects: [],
-    exits: { '3,1': { to: 'village', x: 2, y: 12, dir: 'down' } },
+    exits: { '3,1': { to: 'village', x: 2, y: 10, dir: 'up' } },   // v155: beside the grate (2,12 is Nell's wall since v50)
   },
   mountain: {
     name: 'Cragmoor', salt: 53, grid: mountainGrid(), objects: [],
