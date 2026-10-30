@@ -138,6 +138,16 @@ function travel(n, map, tile, step, dt) {
   return false;
 }
 
+// v149: walking with a friend (a `with` block, data/friends.js): keep a tile from them wherever they go, and wait at
+// the block's place while they are indoors or at home.
+function follow(n, b, step, dt) {
+  const lead = NPCRT.find((m) => m.id === b.with);
+  if (!lead?.visible || !lead.block) { travel(n, b.map, b.path[0], step, dt); return; }
+  const here = tileOf(n.x, n.y), there = tileOf(lead.x, lead.y);
+  if (n.map === lead.map && Math.abs(here.tx - there.tx) + Math.abs(here.ty - there.ty) <= 1) { n.moving = false; n.route = null; return; }
+  travel(n, lead.map, [there.tx, there.ty], step, dt);
+}
+
 addUpdater((dt) => {
   const t = G.S.time, step = SPEED * dt;
   for (const n of NPCRT) {
@@ -157,6 +167,7 @@ addUpdater((dt) => {
       continue;
     }
     if (n.inside) Object.assign(n, { inside: false, visible: true });   // stepping out of the shop or lodge
+    if (b.with) { follow(n, b, step, dt); continue; }   // v149: out with a friend
     const last = b.path.length - 1;
     if (b.stay && n.wi > last) { n.moving = false; continue; }   // standing at their place
     if (travel(n, b.map, b.path[Math.min(n.wi, last)], step, dt)) {

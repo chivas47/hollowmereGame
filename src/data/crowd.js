@@ -38,7 +38,7 @@ export const ROLES = {
 
 // Minutes at one place before moving on (rounded to `step`), and how much more likely a chat spot is
 // when someone already stands next to it.
-export const CROWD = { stayMin: 40, stayMax: 110, step: 10, company: 3 };
+export const CROWD = { stayMin: 40, stayMax: 110, step: 10, company: 3, friend: 12 };   // v149: friend, beside a friend (data/friends.js)
 
 // Two neighbours standing still side by side turn to each other and talk (anywhere, any day): one of them shows
 // a chat bubble about once every `every` seconds.
