@@ -6,6 +6,7 @@
 // without a second copy. A door they open takes you both. Their energy is saved in G.S.partner.
 // v131: their Use prompt (partnerPrompt, ui/prompt.js) and energy bar (ui/hud.js); your bed ends the day for both
 // (they wake beside you, rested as you are: map:changed and day:start below).
+// v137: not on a phone (onPhone below): their A shows a note instead of joining.
 // v134: they fish too (systems/fishing.js), one line at a time; their line holds them still and draws from their rod.
 // v136: they ride the horse too (systems/stable.js), when you are not on it.
 import { G } from '../core/game.js';
@@ -37,8 +38,16 @@ export function besideYou() {
   return { x: G.S.x, y: G.S.y };
 }
 
+// v137: a phone is a touch-only device (coarse pointer, no fine one anywhere) with a short side under
+// PARTNER.phone.short. `m` answers a media query, `screen` gives the size; both default to the browser's.
+export function onPhone(m = (q) => !!globalThis.matchMedia?.(q).matches, screen = globalThis.screen) {
+  if (!screen || !m('(pointer: coarse)') || m('(any-pointer: fine)')) return false;
+  return Math.min(screen.width, screen.height) < PARTNER.phone.short;
+}
+
 export function join() {
   if (G.P2) return;
+  if (onPhone()) { notify(PARTNER.phone.note); return; }
   G.P2 = { ...besideYou(), dir: G.S.dir, moving: false, walkT: 0, keys: {}, slot: lastSlot, anim: null };
   notify(`${PARTNER.name} joins you. Press B on their controller to leave.`);
   changed();   // their energy bar

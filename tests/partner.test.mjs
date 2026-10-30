@@ -203,3 +203,27 @@ test('one rider at a time, and going indoors leaves the horse outside', () => {
   assert.equal(G.P2.riding, false);
   assert.equal(G.S.horse.map, 'farm');
 });
+
+// v137: no two-player on a phone (item 73b).
+import { onPhone } from '../src/systems/partner.js';
+const media = (coarse, fine) => (q) => (q.includes('any-pointer') ? fine : coarse);
+
+test('a touch-only small screen is a phone; a mouse, a trackpad or a big screen is not', () => {
+  assert.equal(onPhone(media(true, false), { width: 390, height: 844 }), true);
+  assert.equal(onPhone(media(true, false), { width: 820, height: 1180 }), false);   // tablet
+  assert.equal(onPhone(media(true, true), { width: 390, height: 844 }), false);    // touch with a mouse too
+  assert.equal(onPhone(media(false, true), { width: 1920, height: 1080 }), false);
+});
+
+test('without a browser (tests, the balance bot) nothing is a phone and they still join', () => {
+  assert.equal(onPhone(), false);
+  join(); assert.ok(G.P2);
+});
+
+test('on a phone their A gives a note instead of a second farmer', () => {
+  const was = { m: globalThis.matchMedia, s: globalThis.screen };
+  globalThis.matchMedia = (q) => ({ matches: !q.includes('any-pointer') });
+  Object.defineProperty(globalThis, 'screen', { value: { width: 390, height: 844 }, configurable: true });
+  try { join(); assert.equal(G.P2, null); }
+  finally { globalThis.matchMedia = was.m; Object.defineProperty(globalThis, 'screen', { value: was.s, configurable: true }); }
+});
