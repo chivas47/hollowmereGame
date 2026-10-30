@@ -12,11 +12,13 @@ const def = (id) => NPCS.find((d) => d.id === id);
 const at = (id, day, t) => scheduleFor(def(id), day).find((b) => t >= b.from && t < b.to) || null;
 const OUT = new Set(['farm', 'village', 'town', 'beach', 'forest', 'wilds']);
 
-test('lunch: home for Ines, a Lantern table for Odile, the counter for Corvin', () => {
+test('lunch: home for Ines, a Lantern table for Lio, a packed lunch on the farm for Odile, the counter for Corvin', () => {
   assert.equal(at('ines', 1, 12.5 * 60), null, 'Ines goes home for lunch');
   assert.ok(at('ines', 1, 13.5 * 60), 'and back out after');
-  const o = at('odile', 1, 12.5 * 60);
-  assert.equal(o.map, venueMap('tavern')); assert.equal(doingFor('odile', o).does, 'meal');
+  const l = at('lio', 1, 12.5 * 60);
+  assert.equal(l.map, venueMap('tavern')); assert.equal(doingFor('lio', l).does, 'meal');
+  const o = at('odile', 1, 12.5 * 60);   // v154: the farm is too far from the Lantern for an hour's lunch
+  assert.equal(o.map, 'farm'); assert.equal(doingFor('odile', o).does, 'meal');
   assert.equal(at('corvin', 1, 12.5 * 60).map, venueMap('smithy'));
 });
 

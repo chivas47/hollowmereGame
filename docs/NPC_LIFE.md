@@ -39,6 +39,8 @@ A neighbour feels real when:
 6. **Test what a player would notice.** In `tests/*.test.mjs`: everyone has somewhere to be at every minute,
    never two on one tile, never on a solid tile, nobody stuck in one place all day, the same plan after a reload,
    and the special cases (jobs, rest days, rain).
+   `tests/week.test.mjs` (v154) walks everyone through eleven days with the real updaters: keep it passing, and
+   add a day to it when a change only shows on one (a new festival, a new weather).
 7. **Watch it in the browser.** Playwright: set the day and time, stand in the place, wait a few game hours,
    screenshot before and after. Check nobody walks through walls, blocks a door or counter you need, or stands
    on top of someone.

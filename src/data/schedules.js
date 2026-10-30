@@ -170,6 +170,7 @@ const LUNCH = {
   odile: [LANTERN, [3, 8]], nell: [LANTERN, [9, 8]], lio: [LANTERN, TAVERN.lio], juno: [LANTERN, TAVERN.juno], rook: [LANTERN, TAVERN.rook],
 };
 const STORE = venueMap('store'), STORE_SHUT = 2;
+const NEAR_LANTERN = new Set(['village', 'town']);   // v154: close enough to walk to the Lantern for lunch
 const AISLES = [{ at: [4, 5], face: 'up' }, { at: [8, 8], face: 'left' }, { at: [11, 8], face: 'up' }];   // the shelves, the produce table, the counter's end
 export const SHOPPERS = ['ines', 'odile', 'tavi', 'nell', 'rook', 'juno', 'pell', 'lio', 'esme', 'kit', 'bram'];
 const SHOP_DAYS = { bram: [1] };   // Bram shops on his rest day; everyone else twice a week, staggered
@@ -194,7 +195,14 @@ export function errandOf(id, wd) {
 export function dailyLife(id, wd, blocks) {
   let day = blocks;
   const lunch = LUNCH[id];
-  if (lunch && covering(day, 12.5 * H) && outOrHome(day, 12.5 * H)) day = lunch === 'home' ? cut(day, 12 * H, 13 * H) : visit(day, { ...at(12, 13, ...lunch), does: 'meal' });
+  const noon = covering(day, 12.5 * H);
+  if (lunch && noon && outOrHome(day, 12.5 * H)) {
+    // v154: the Lantern only from the village or the town; from the farm or the Wilds the walk would eat the hour,
+    // so they eat a packed lunch where they are.
+    const where = covering(day, 11.5 * H) || noon;   // where they are on the way up to noon
+    const packed = { ...at(12, 13, where.map, where.path[0]), does: 'meal' };
+    day = lunch === 'home' ? cut(day, 12 * H, 13 * H) : visit(day, NEAR_LANTERN.has(where.map) ? { ...at(12, 13, ...lunch), does: 'meal' } : packed);
+  }
   for (const v of VISITS) if (v.who === id && v.days.includes(wd)) day = visit(day, at(v.from, v.to, homeMap(v.host), visitSpot(v.host)));   // v149
   const e = errandOf(id, wd);
   if (e && outOrHome(day, e.from) && outOrHome(day, e.to - 1)) day = visit(day, e);
