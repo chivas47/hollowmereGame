@@ -355,7 +355,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | Event | Payload | Emitted by | Typical listener |
 |---|---|---|---|
 | `state:changed` | none | everywhere via `changed()` | HUD, hotbar |
-| `toast` | message | `notify()` | ui/toast.js |
+| `toast` | message | `notify()` | ui/toast.js (v133: held on a new farm until the arrival scene is done) |
 | `hud:prefs` | none | ui/hudPrefs.js (v120: also text size and contrast) | ui/goal.js, ui/prompt.js (v112) |
 | `report:closed` | none | ui/dialogs.js, Start the day (v128) | ui/reckoning.js |
 | `motion:prefs` | none | core/motion.js (v125) | ui/motion.js (the buttons) |

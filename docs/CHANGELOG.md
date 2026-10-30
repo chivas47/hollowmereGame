@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v133: A quiet first screen
+- On a new farm, messages (the mailbox, the first hint) wait until the new game screen and the arrival scene are done instead of covering their fields; they show together as you step onto the farm.
+- Nothing else changed: a farm already made shows its messages at once.
+
 ## v132: Phones held upright
 - The field no longer floats between two empty bands: it sits under the meters with the hotbar right below, and the pad and Use button move to the bottom of the screen, where thumbs rest.
 - The time stays on one line, and a long place name is cut short instead of running into the gold.
