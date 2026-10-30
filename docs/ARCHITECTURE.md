@@ -69,7 +69,8 @@ src/
     traditions.js     v110: the wishing stone (STONE, STONE_TILE, BLESSINGS) and the Lantern Float (FLOAT: day, hours, the neighbours' spots on the beach, lines), floatOn()
     hints.js          HINTS (id, when(S, facts), text) most pressing first, TOOL_TIPS, STUCK_PRESSES (v101)
     animation.js      SWINGS (tool arcs and timings), COMBO (weapon combo steps), PICKUP, CRAFTED, PLACE, IMPACT colours (v74); MOTION (v115: easing, turns, idling)
-    schedules.js      neighbour daily routines by weekday (go: walk a loop of spots, at: walk there and stay), spouse and festival days; v146: rainDay() (RAIN shelters), spouseRainDay(), RAIN_WEATHERS; v148: dailyLife() (LUNCH, errandOf(), SHOPPERS) inside scheduleFor()
+    schedules.js      neighbour daily routines by weekday (go: walk a loop of spots, at: walk there and stay), spouse and festival days; v146: rainDay() (RAIN shelters), spouseRainDay(), RAIN_WEATHERS; v148: dailyLife() (LUNCH, errandOf(), SHOPPERS) inside scheduleFor(); v149: along() blocks (with: follow a friend), evening VISITS
+    friends.js        v149: FRIENDS (pairs and why), friendsOf(), areFriends(), VISITS (evening calls), visitSpot(host)
     doings.js         v147: DOINGS (what each neighbour does where: map, stay, does, carry), doingFor(id, block)
     crowd.js          v145: the festival crowd: STATIONS (places in the square, the way they face, festival kinds, a mood), ROLES (jobs by festival kind), CROWD (minutes per place), CHAT
     homes.js          where each neighbour lives: door, cottage, door hours (v76); homeEntry() inside the front door (v97)
@@ -120,7 +121,7 @@ src/
     ponds.js          the fish pond (stock, breed, roe, requests) and the slime pen (trough, slime balls, addSlime)
     buildings.js      door (sleep), stall (shop), bin and mini bins (ship), well/pond refill
     economy.js        ship(), buy(), overnight payout; materials are never shipped
-    npcs.js           schedules across farm and village (v146: rain days), talk (v146: RAIN_LINES from data/npcs.js), gifts, hearts, 3-heart rewards, heart scenes
+    npcs.js           schedules across farm and village (v146: rain days; v149: follow() for `with` blocks), talk (v146: RAIN_LINES from data/npcs.js), gifts, hearts, 3-heart rewards, heart scenes
     crowd.js          v145: crowdPlan(kind, ids, day, hours), a festival's blocks for everyone (seeded by the day), stationsFor(), rolesFor(); npcs.js uses it
     chatter.js        v145: pairs() of idle neighbours side by side; turns them to each other with chat emotes, and festival moods
     upgrades.js       smithy and carpentry purchases, material costs, recalcStats()

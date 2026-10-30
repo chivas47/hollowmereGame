@@ -4,6 +4,7 @@
 // they stop and talk. Seeded by the day, so a load or a second look plans the same day. Pure, nothing saved.
 import { STATIONS, ROLES, CROWD } from '../data/crowd.js';
 import { rng } from '../render/pixel.js';
+import { areFriends } from '../data/friends.js';
 
 const MAP = 'village';
 const fits = (s, kind) => (!s.only || s.only.includes(kind)) && !s.not?.includes(kind);
@@ -27,12 +28,15 @@ export function crowdPlan(kind, ids, day, hours) {
     if (r) plan[id] = [block(hours.from, hours.to, r.roam || [r.at], r)];
     else { plan[id] = []; minglers.push({ id, until: hours.from, at: null, last: null }); }
   }
-  const open = stationsFor(kind, roles), taken = new Set(), step = CROWD.step;
+  const open = stationsFor(kind, roles), taken = new Map(), step = CROWD.step;   // tile -> who stands there
   const stay = () => step * Math.round((CROWD.stayMin + rand() * (CROWD.stayMax - CROWD.stayMin)) / step);
   const pick = (m) => {
     const free = open.filter((s) => !taken.has(key(s.at)) && s !== m.at && s !== m.last);
     if (!free.length) return m.at;   // nowhere free: stay put
-    const weights = free.map((s) => (open.some((o) => taken.has(key(o.at)) && near(o.at, s.at)) ? CROWD.company : 1));
+    const weights = free.map((s) => {
+      const by = open.filter((o) => taken.has(key(o.at)) && near(o.at, s.at)).map((o) => taken.get(key(o.at)));
+      return by.some((id) => areFriends(id, m.id)) ? CROWD.friend : by.length ? CROWD.company : 1;   // v149: friends first
+    });
     let roll = rand() * weights.reduce((a, b) => a + b, 0);
     return free.find((_, i) => (roll -= weights[i]) < 0) || free[free.length - 1];
   };
@@ -44,7 +48,7 @@ export function crowdPlan(kind, ids, day, hours) {
       const s = pick(m);
       m.last = m.at; m.at = s;
       if (!s) { m.until = t + step; continue; }
-      taken.add(key(s.at));
+      taken.set(key(s.at), m.id);
       m.until = Math.min(hours.to, t + (t === hours.from ? step * (1 + Math.floor(rand() * 6)) : stay()));
       const list = plan[m.id], prev = list[list.length - 1];
       if (prev && prev.path[0] === s.at) prev.to = m.until;   // the same place again: one longer block

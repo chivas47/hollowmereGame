@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v149: Friends
+- Five friendships among the neighbours: Ines and Nell, Odile and Esme, Tavi and Kit, Wren and Rook, Pell and Juno.
+- Ines calls on Nell on Tuesday and Friday evenings, 7 to 9 pm; find them talking in Nell's kitchen.
+- On Sundays Nell walks the shore with Ines in the afternoon, and Kit tags along on Tavi's round of the village, following them wherever they go.
+- On Fridays Odile joins Esme on the shore at dusk. Wren now spends evenings at the Lantern, at the table beside Rook; Pell and Juno already share one.
+- At festivals friends drift towards each other: side by side about twice as often as other pairs.
+- Between neighbours only; your hearts with them do not change. Nothing saved; no prices, keys or saves changed.
+
 ## v148: Meals and errands
 - Lunch: whoever is out at noon stops for it. Ines, Tavi and Kit go home (visit their cottages); Odile, Nell, Lio, Juno and Rook take a table at the Lantern with a steaming bowl. Shopkeepers eat at their counters and Esme takes a picnic to her easel.
 - The shopping: twice a week most neighbours stop at Fenn's Provisions for half an hour between 3 and 5 pm with a basket on the arm, at the shelves, the produce table or the end of the counter; Bram goes on his Tuesday rest day. Never on Wednesdays, when Wren shuts.

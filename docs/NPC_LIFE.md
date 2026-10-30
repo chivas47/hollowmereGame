@@ -66,3 +66,10 @@ A neighbour feels real when:
 - Lunch and the shopping are cut into the weekday routine by `dailyLife()` in `data/schedules.js`, so rain,
   festivals and the tests see them too. A new neighbour who is out at noon needs a LUNCH entry; a new shopper
   needs a place in SHOPPERS that does not share a time and aisle with anyone else's (the tests check).
+
+## Friends (v149)
+
+- Who likes whom is `data/friends.js` (FRIENDS, with a line of why). Friends get time together through ordinary
+  blocks: an `along()` block follows the friend (Sunday walks), a VISITS entry puts the visitor beside the host at
+  home, and Lantern tables seat them side by side. The festival crowd weights a place beside a friend highest.
+- A new friendship needs at least one place in the week where you can see it, or it is only a line in a table.
