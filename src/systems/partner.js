@@ -9,18 +9,21 @@
 // v137: not on a phone (onPhone below): their A shows a note instead of joining.
 // v138 (item 73c): they carry their own map (G.P2.map), walk and use against it, and only follow you while
 // PARTNER.tethered (until split screen, item 73e).
+// v140 (item 73e): untethered. They take map exits and doors alone; in the mine whoever changes floor brings the
+// other along (one floor at a time, Nuno's 73a call); each morning they wake beside you.
 // v134: they fish too (systems/fishing.js), one line at a time; their line holds them still and draws from their rod.
 // v136: they ride the horse too (systems/stable.js), when you are not on it.
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
-import { on, notify, changed } from '../core/events.js';
+import { on, notify, changed, emit } from '../core/events.js';
 import { addUpdater, addEntities } from '../core/registry.js';
 import { PARTNER } from '../data/partner.js';
 import { HOTBAR } from '../data/hotbar.js';
 import { drawPerson, drawHorse } from '../render/sprites.js';
 import { STABLE } from '../data/upgrades.js';
 import { drawHeld, drawRod, handPoint, swingAngle } from '../render/animation.js';
-import { moveBox, blocked, playerTile, facing, tileAt, mover } from './world.js';
+import { moveBox, blocked, playerTile, facing, tileAt, mover, placePlayer } from './world.js';
+import { MAPS } from '../data/maps.js';
 import { promptFor } from '../core/registry.js';
 import { lean } from './wind.js';
 import { act } from './interact.js';
@@ -82,6 +85,7 @@ function asPartner(fn) {
     const spot = follow ? { map: S.map, ...besideYou() } : me;   // through a door: you come too, beside them (G.S is them here)
     Object.assign(p, { map: S.map, x: S.x, y: S.y, dir: S.dir, slot: S.slot, anim: G.anim }); S.partner.energy = S.energy;
     Object.assign(S, { map: spot.map, x: spot.x, y: spot.y, dir: me.dir, slot: me.slot, energy: me.energy }); G.anim = me.anim;
+    afterPartner();
   }
 }
 
@@ -90,7 +94,7 @@ const atBed = () => { const { tx, ty } = facing(); return G.S.map === 'house' &&
 // What their A would do where they stand, and the tile it is over: { tx, ty, text } (text null for nothing).
 export function partnerPrompt() {
   let out = null;
-  if (G.P2?.map === G.S.map) asPartner(() => {
+  if (G.P2) asPartner(() => {
     const { tx, ty } = facing(), item = HOTBAR[G.S.slot];
     const text = atBed() ? null : promptFor({ tx, ty, tile: tileAt(tx, ty), mapId: G.S.map, item });
     out = { tx, ty, text };
@@ -122,12 +126,33 @@ addUpdater((dt) => {
   if (!p.moving) return;
   p.dir = dx && !dy ? (dx < 0 ? 'left' : 'right') : (dy < 0 ? 'up' : 'down');
   const step = PARTNER.speed * (p.riding ? STABLE.speed : 1) * dt * (dx && dy ? 0.7071 : 1);
-  moveBox(p, dx * step, dy * step);   // map exits are yours: they follow you instead of leading
+  moveBox(p, dx * step, dy * step);
   p.walkT += dt;
+  if (PARTNER.tethered) return;   // map exits were yours: they followed you instead of leading
+  const exit = MAPS[p.map].exits?.[`${Math.floor(p.x / T)},${Math.floor((p.y - 2) / T)}`];
+  if (exit) asPartner(() => { placePlayer(exit.to, exit.x, exit.y, exit.dir); emit('map:changed', exit.to); });
 });
 
 // Your map change brings them along while tethered (theirs is handled in asPartner).
-on('map:changed', () => { if (G.P2 && mover() === 'you' && PARTNER.tethered) Object.assign(G.P2, { map: G.S.map }, besideYou(), { dir: G.S.dir, moving: false }); });
+on('map:changed', (id) => {
+  const p = G.P2;
+  if (!p) return;
+  if (mover() === 'you' && PARTNER.tethered) { Object.assign(p, { map: G.S.map }, besideYou(), { dir: G.S.dir, moving: false }); return; }
+  if (id !== 'mine') return;
+  // v140: the mine holds one floor, rebuilt whenever someone enters a floor: the other farmer down there comes too.
+  if (mover() === 'you' && p.map === 'mine') Object.assign(p, besideYou(), { moving: false });
+  if (mover() === 'p2') mineTogether = true;   // you are moved once their Use is done (G.S is them in there)
+});
+let mineTogether = false;
+// After their Use: if they changed the mine floor while you were in the mine, you come to them.
+function afterPartner() {
+  if (!mineTogether) return;
+  mineTogether = false;
+  if (G.S.map !== 'mine' || G.P2.map !== 'mine') return;
+  const { x, y } = G.P2, spot = PARTNER.beside.map(([dx, dy]) => ({ x: x + dx * T, y: y + dy * T })).find((s) => !blocked(s.x, s.y)) || { x, y };
+  Object.assign(G.S, spot);
+}
+on('day:report', () => { if (G.P2) Object.assign(G.P2, { map: G.S.map }, besideYou(), { dir: G.S.dir, moving: false }); });   // they wake beside you
 on('game:reset', () => { G.P2 = null; });
 on('day:start', (report) => { G.S.partner.energy = report.passedOut ? Math.round(G.S.maxEnergy * 0.6) : G.S.maxEnergy; });   // they sleep when you do
 

@@ -104,11 +104,11 @@ const SWUNG = new Set(['hoe', 'pick', 'axe', 'can', 'sword', 'rod', 'pan']);
 const mine = () => G.fishing && !G.fishing.p2;   // v134: a line of yours, not the second farmer's
 export const rodBend = () => { const f = G.fishing; return f?.phase === 'reel' ? 25 + Math.sin(performance.now() / 90) * 6 : f?.phase === 'bite' ? 18 : Math.sin(performance.now() / 600) * 2; };
 
-addEntities(() => [{
+addEntities(() => (G.youMap ? [] : [{   // v140: not drawn in their half when you are elsewhere
   y: G.S.y,
   draw: (c) => {
     if (G.hurtT > 0 && Math.floor(performance.now() / 80) % 2) return;   // blink while hurt
     if (G.riding) { drawHorse(c, G.S.x, G.S.y, G.S.dir, G.moving); drawBody(c, G.S.x, G.S.y - 7, false); return; }
     drawBody(c, G.S.x, G.S.y, G.moving);
   },
-}]);
+}]));

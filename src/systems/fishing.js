@@ -17,14 +17,15 @@ import { CATCH, BAIT, TACKLE, TACKLE_USES, BOBBERS, BOBBER_EVERY, TRASH, TRASH_C
 import { tier } from '../data/upgrades.js';
 import { r } from '../render/pixel.js';
 import { drawBubble } from '../render/sprites.js';
-import { useEnergy } from './world.js';
+import { useEnergy, mover } from './world.js';
 import { skillLevel } from './skills.js';
 
 const ENERGY = 8, BITE_WINDOW = 1.1;
 const WATER = new Set(['O']);
 
 function end() { G.fishing = null; G.lock = false; }
-on('map:changed', end); on('day:start', end); on('game:reset', end);
+on('map:changed', () => { if (G.fishing && !!G.fishing.p2 === (mover() === 'p2')) end(); });   // v140: only the line of whoever left
+on('day:start', end); on('game:reset', end);
 
 // In winter the pond freezes: only the ice hole can be fished, and it has ice-only fish too.
 const frozen = () => today().season === 'Winter';

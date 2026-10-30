@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v140: Separate ways
+- Farmer two no longer follows you: they walk off the map by its exits and through doors on their own, and their half of the screen shows wherever they are. Your doors take only you.
+- The mine holds one floor at a time: whoever takes a ladder or enters a floor brings the other farmer along if they are in the mine too.
+- Fishing lines, the horse and your combo only end or move for the farmer who changed map.
+- Monsters chase whichever farmer is nearer; farmer two is shoved back, not hurt.
+- Each morning farmer two wakes beside you. No prices, keys or saves changed.
+
 ## v139: Split screen
 - With a second farmer in, the screen splits down the middle: you on the left, farmer two on the right. Each half follows its farmer across the farm, with its own facing outline, its own light after dark and its own circle of light in the mine.
 - Each Use prompt sits in its farmer's half. Tapping the screen acts only in your half.

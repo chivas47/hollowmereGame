@@ -13,7 +13,7 @@ import { VENT } from '../data/forge.js';
 import { PEAK } from '../data/nuts.js';
 import { ITEMS } from '../data/items.js';
 import { drawSlime, drawMonster } from '../render/sprites.js';
-import { moveBox, occupied } from './world.js';
+import { moveBox, occupied, mover } from './world.js';
 import { hurtPlayer } from './health.js';
 import { has } from './professions.js';
 import { attackMult } from './buffs.js';
@@ -69,14 +69,18 @@ function step(m, vx, vy, dist) {
   const ny = m.y + vy * dist; if (inside(m.x, ny)) m.y = ny; else m.ty = m.y;
 }
 
+// v140: monsters chase the nearer farmer on their map. Only you can be hurt; farmer two is knocked back.
+const here = () => [G.S, G.P2].filter((f) => f && (f.map ?? G.S.map) === slimeMap);
 addUpdater((dt) => {
-  if (G.S.map !== slimeMap || !slimes.length) return;
+  const farmers = here();
+  if (!farmers.length || !slimes.length) return;
   for (const m of [...slimes]) {
     if (m.hurt > 0) m.hurt -= dt;
     if (m.frozen > 0) { m.frozen -= dt; continue; }   // v39: the frost rod
     m.hop += dt;
     const active = m.hop % HOP < HOP_ACTIVE;
-    const dx = G.S.x - m.x, dy = G.S.y - m.y, d = Math.hypot(dx, dy);
+    const f = farmers.reduce((a, b) => (Math.hypot(b.x - m.x, b.y - m.y) < Math.hypot(a.x - m.x, a.y - m.y) ? b : a));
+    const dx = f.x - m.x, dy = f.y - m.y, d = Math.hypot(dx, dy);
     let vx = 0, vy = 0;
     if (d < AGGRO) { if (d > 1) { vx = dx / d; vy = dy / d; } }
     else {
@@ -92,6 +96,7 @@ addUpdater((dt) => {
       m.kx *= 0.85; m.ky *= 0.85;
       if (Math.abs(m.kx) < 1) m.kx = 0; if (Math.abs(m.ky) < 1) m.ky = 0;
     }
+    if (d < TOUCH && f === G.P2) { if (d > 0.5) moveBox(f, (dx / d) * 10, (dy / d) * 10); continue; }   // v140: a shove, no harm
     if (d < TOUCH && !(m.kind === 'slime' && wearing('slimeward'))) hurtPlayer(m.dmg, m.x, m.y);   // v36: the slime ward
     if (G.S.map !== slimeMap) return;   // fainting moved us out
   }
@@ -108,7 +113,7 @@ addUpdater((dt) => {
     if (cooldown <= 0 && buffered) { buffered = false; if (!G.paused && HOTBAR[G.S.slot] === 'sword') strike(); }
   } else since += dt;
 });
-on('map:changed', () => { cooldown = 0; buffered = false; combo = 0; since = 99; });
+on('map:changed', () => { if (mover() === 'you') { cooldown = 0; buffered = false; combo = 0; since = 99; } });
 export function damageOf() {
   return weapon().damage * attackMult() * (has('fighter') ? 1.1 : 1) * (has('brute') ? 1.15 : 1) * (wearing('emberring') ? 1.1 : 1) * forgeBonus().damage * (G.S.mastery.claimed.includes('combat') ? 1.15 : 1);   // v39: heartstones; v40: combat mastery
 }

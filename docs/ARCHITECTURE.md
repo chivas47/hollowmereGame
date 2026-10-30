@@ -363,7 +363,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `controls:changed` | none | core/controls.js (v119) | ui/controls.js (labels, the list), ui/hotbar.js (slot keys) |
 | `game:loaded` | none | main.js, reset | forage, upgrades (recalc), coop (place), mine (eject) |
 | `game:reset` | none | ui/dialogs.js | renderer cache, npcs, coop, fishing |
-| `map:changed` | map id (v138: `mover()` in world.js says whether you or the second farmer moved) | player.js, days.js, mine.js | fishing, monsters, partner |
+| `map:changed` | map id (v138: `mover()` in world.js says whether you or the second farmer moved; v140: fishing, the horse, combat, effects and queued Use act only for the mover) | player.js, days.js, mine.js, partner.js (their exits) | fishing, monsters, partner, stable, animation, interact |
 | `world:changed` | none | coop.js, mine.js | renderer (drop background cache) |
 | `day:end` | report | days.js | weather (lightning, next forecast), farming (growth), economy (payout), coop (eggs) |
 | `season:changed` | {from, to, report} | days.js | farming (wither), trees (drop fruit), renderer |
