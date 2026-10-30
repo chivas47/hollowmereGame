@@ -85,3 +85,8 @@ A neighbour feels real when:
 - A festival has a before and an after: the crew and the early arrivals (`data/crowd.js` SETUP, EARLY) and the
   lingering and walking home (CLOSE). A cottage window is lit only while its owner is in (`homeNow()`), so the
   village at night shows who is home.
+
+## Talking about the day (v152)
+
+- `systems/topics.js` picks a line about what is going on, before their usual words. New events that the whole
+  village would notice (a new festival, a new kind of weather) should get a topic, written in `data/topics.js`.
