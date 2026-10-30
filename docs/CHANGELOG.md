@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v136: Farmer two rides
+- The second farmer gets on the horse by facing it and pressing A, rides at the horse's speed, and gets off with A, as you do.
+- One rider at a time: while either of you is on it, the other cannot get on and the whistle waits. Going indoors sets the rider down and leaves the horse outside, and leaving with B leaves it where they were.
+- No prices, keys or saves changed.
+
 ## v135: A prompt at the water
 - With the rod in hand, facing water shows "Cast your line" (not on the frozen pond away from the ice hole, and not while a line is out); a bite on your own line shows "Hook it". Farmer two gets the same over their own prompt.
 - No prices, keys or saves changed.

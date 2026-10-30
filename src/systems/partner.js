@@ -7,13 +7,15 @@
 // v131: their Use prompt (partnerPrompt, ui/prompt.js) and energy bar (ui/hud.js); your bed ends the day for both
 // (they wake beside you, rested as you are: map:changed and day:start below).
 // v134: they fish too (systems/fishing.js), one line at a time; their line holds them still and draws from their rod.
+// v136: they ride the horse too (systems/stable.js), when you are not on it.
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, notify, changed } from '../core/events.js';
 import { addUpdater, addEntities } from '../core/registry.js';
 import { PARTNER } from '../data/partner.js';
 import { HOTBAR } from '../data/hotbar.js';
-import { drawPerson } from '../render/sprites.js';
+import { drawPerson, drawHorse } from '../render/sprites.js';
+import { STABLE } from '../data/upgrades.js';
 import { drawHeld, drawRod, handPoint, swingAngle } from '../render/animation.js';
 import { moveBox, blocked, playerTile, facing, tileAt } from './world.js';
 import { promptFor } from '../core/registry.js';
@@ -45,7 +47,7 @@ export function leave() {
   if (!G.P2) return;
   lastSlot = G.P2.slot;
   G.P2 = null;
-  if (G.fishing?.p2) G.fishing = null;   // their line comes in with them
+  if (G.fishing?.p2) G.fishing = null;   // their line comes in with them (a horse they rode stays where they left it)
   notify(`${PARTNER.name} heads home.`);
   changed();
 }
@@ -89,12 +91,11 @@ export function partnerUse() {
   const p = G.P2;
   if (!p || G.paused) return;
   if (p.anim?.gate && p.anim.t < p.anim.dur) return;   // mid-swing: dropped (your Use queues presses; theirs does not, so none is replayed as yours)
-  const riding = G.riding, line = G.fishing;
+  const line = G.fishing;
   asPartner(() => {
     if (atBed()) notify(PARTNER.yours.bed); else act();
     if (G.fishing?.p2 && !line) playAnim('rod');   // their cast (G.anim is theirs in here)
   });
-  if (G.riding && !riding) { G.riding = false; notify(PARTNER.yours.horse); }
   changed();
 }
 
@@ -108,7 +109,7 @@ addUpdater((dt) => {
   p.moving = !!(dx || dy);
   if (!p.moving) return;
   p.dir = dx && !dy ? (dx < 0 ? 'left' : 'right') : (dy < 0 ? 'up' : 'down');
-  const step = PARTNER.speed * dt * (dx && dy ? 0.7071 : 1);
+  const step = PARTNER.speed * (p.riding ? STABLE.speed : 1) * dt * (dx && dy ? 0.7071 : 1);
   moveBox(p, dx * step, dy * step);   // map exits are yours: they follow you instead of leading
   p.walkT += dt;
 });
@@ -120,6 +121,7 @@ on('day:start', (report) => { G.S.partner.energy = report.passedOut ? Math.round
 const SWUNG = new Set(['hoe', 'pick', 'axe', 'can', 'sword', 'rod', 'pan']);
 function drawPartner(c) {
   const p = G.P2, a = p.anim, held = a && SWUNG.has(a.kind), dir = a ? a.dir : p.dir;
+  if (p.riding) { drawHorse(c, p.x, p.y, p.dir, p.moving); drawPerson(c, p.x, p.y - 7, p.dir, false, 0, PARTNER.look, lean(p.x)); return; }   // as you ride (systems/player.js)
   const rod = G.fishing?.p2 && a?.kind !== 'rod';   // their line is out: the rod held out over the water
   if (held && dir === 'up') drawHeld(c, a, p.x, p.y);   // behind them when facing away
   if (rod && dir === 'up') p.rodTip = drawRod(c, p.x, p.y, dir, rodBend());

@@ -3,6 +3,7 @@
 // follows you between the farm, the Wilds and the village, and waits outside the mine and the
 // greenhouse. H whistles it over. Each morning it is back at the stable.
 // G.S.horse = { name, map, x, y } once built; riding is G.riding (not saved).
+// v136: the second farmer can ride it too (G.P2.riding); one rider at a time, whoever gets on first.
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
@@ -16,6 +17,10 @@ import { placeBuilding } from './sites.js';
 
 export const stableBuilt = () => G.S.built.stable === true;
 let last = null;   // last outdoor spot while riding, where the horse waits if you go indoors
+// v136: who is on the horse. Inside the second farmer's Use (G.partnerActing) "mine" means theirs.
+const rider = () => (G.riding ? G.S : G.P2?.riding ? G.P2 : null);
+const mine = () => (G.partnerActing ? !!G.P2?.riding : G.riding);
+function setMine(on) { if (G.partnerActing) G.P2.riding = on; else G.riding = on; }
 
 function placeStable() {
   placeBuilding('stable');   // systems/sites.js writes the tiles wherever it stands
@@ -28,7 +33,7 @@ on('site:moved', (key) => { if (key === 'stable' && G.S.horse && !G.riding) home
 on('game:reset', () => { G.riding = false; });
 on('day:start', (report) => {
   if (G.S.built.stable === 'pending') { G.S.built.stable = true; report.built = report.built ? `${report.built} and stable` : 'stable'; placeStable(); }
-  G.riding = false;
+  G.riding = false; if (G.P2) G.P2.riding = false;
   if (G.S.horse) home();
 });
 
@@ -45,17 +50,17 @@ export function orderStable() {
 
 // The horse follows you outdoors; going inside leaves it where you last were.
 on('map:changed', (id) => {
-  if (!G.riding) return;
+  if (!rider()) return;
   if (OUTDOORS.includes(id)) { Object.assign(G.S.horse, { map: id }); return; }
-  G.riding = false;
+  G.riding = false; if (G.P2) G.P2.riding = false;
   if (last) Object.assign(G.S.horse, last);
   notify(`${G.S.horse.name} waits outside.`);
 });
 addUpdater(() => {
-  if (!G.riding) return;
-  const S = G.S;
-  Object.assign(S.horse, { map: S.map, x: S.x, y: S.y, dir: S.dir });
-  last = { map: S.map, x: S.x, y: S.y };
+  const r = rider();
+  if (!r) return;
+  Object.assign(G.S.horse, { map: G.S.map, x: r.x, y: r.y, dir: r.dir });
+  last = { map: G.S.map, x: r.x, y: r.y };
 });
 
 // Whistle (H): the horse trots over to you, outdoors only.
@@ -63,7 +68,7 @@ export function whistle() {
   const S = G.S;
   if (!S.horse) { notify('You have no horse yet. Bram can build a stable.'); return false; }
   if (!OUTDOORS.includes(S.map)) { notify('Your horse cannot come in here.'); return false; }
-  if (G.riding) return false;
+  if (rider()) return false;
   Object.assign(S.horse, { map: S.map, x: S.x + (S.dir === 'left' ? 14 : -14), y: S.y, dir: S.dir });
   emit('sfx', 'pet');
   notify(`${S.horse.name} comes trotting over.`);
@@ -73,8 +78,8 @@ export function whistle() {
 
 // Getting off: any Use while riding. Priority 199, just below a fishing line (200).
 addInteraction(199, () => {
-  if (!G.riding) return false;
-  G.riding = false;
+  if (!mine()) return false;
+  setMine(false);
   const S = G.S; Object.assign(S.horse, { map: S.map, x: S.x, y: S.y + 2, dir: S.dir });
   notify(`You get off ${S.horse.name}.`);
   changed();
@@ -84,10 +89,10 @@ addInteraction(199, () => {
 // Getting on: face the horse. Priority 97, above pets and chickens.
 addInteraction(97, ({ tx, ty, mapId }) => {
   const h = G.S.horse;
-  if (!h || h.map !== mapId || G.riding) return false;
+  if (!h || h.map !== mapId || rider()) return false;
   const t = tileOf(h.x, h.y);
   if (Math.abs(t.tx - tx) > 0 || Math.abs(t.ty - ty) > 0) return false;
-  G.riding = true;
+  setMine(true);
   Object.assign(G.S, { x: h.x, y: h.y });
   notify(`You ride ${h.name}. Press Use to get off.`);
   changed();
@@ -96,6 +101,6 @@ addInteraction(97, ({ tx, ty, mapId }) => {
 
 addEntities(() => {
   const h = G.S.horse;
-  if (!h || G.riding || h.map !== G.S.map) return [];
+  if (!h || rider() || h.map !== G.S.map) return [];
   return [{ y: h.y, draw: (c) => drawHorse(c, h.x, h.y, h.dir, false) }];
 });
