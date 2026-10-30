@@ -124,6 +124,7 @@ Stardew counterparts by role: keg (wine 3 x fruit, juice 2.25 x vegetable), mayo
 
 - v129: with a second controller, press A on it to bring in a second farmer (their own look) on the same screen. They walk with the stick, go where you go when you change map, and leave with B or when their controller disconnects. Dialogs and the menu stay the first player's.
 - v130: once in, the second farmer's A uses what they hold, through the same rules as yours (tools, talking, gifts, doors, map exits, which take you both), and LB and RB step through their hotbar. They have their own energy (270, refilled each morning, saved); the bag and gold are shared.
+- v140: you go separate ways: farmer two takes map exits and doors alone and their half shows where they are. In the mine you share one floor: whoever changes floor brings the other along if they are down there. Each morning they wake beside you.
 - v139: while they play the screen splits: you on the left half, them on the right, each half following its farmer (12 of the map's 24 columns at a time). Alone, the whole map shows.
 - v137: not on a phone: on a touch-only screen with a short side under 600 px, the second controller's A shows a note instead of joining. Tablets, and touch screens with a mouse or trackpad, still play two.
 - v136: they ride the horse too, one rider at a time (whoever gets on first), at its speed; going indoors sets them down and the horse waits outside.
@@ -1184,6 +1185,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 ## Known issues and open questions
 
 - v130: The second farmer's pickups fly to you and their tool level, enchantments and skills are yours; and only your bed ends the day.
+- v140: Monsters chase the nearer farmer but only hurt you; farmer two is shoved back instead (they have no health of their own). Effects (particles, pickups) show only on your map, so farmer two's swings elsewhere have no sparks.
 - v129: The second farmer is not saved (their energy is, v130). They walk through neighbours and animals as you do, and stay in the house while you are in bed.
 - v128: The reckoning is a dialog, not a walked scene; Bram is not by the bin while it shows. The two-year balance run in CI ends the day before it, so its gleamfruit never shows in the report.
 - v127: A farm cannot be deleted from its slot (New farm starts over in the slot in play). Key, sound and display settings are shared by all three farms.

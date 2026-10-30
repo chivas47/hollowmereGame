@@ -11,6 +11,7 @@ export const G = {
   anim: null,       // v74: the player's current action pose (systems/animation.js)
   fx: { parts: [], floats: [], pickups: [] },   // v74: particles, labels and flying pickups
   view: null,       // v139: while the renderer draws a view, the farmer it follows (render/views.js)
+  youMap: null,     // v140: while their half draws a map you are not on, your own map (G.S.map is theirs then)
   shake: null,      // v74: screen shake {mag, t}
   bounce: 0,        // v74: the little hop when a pickup lands
   moving: false,

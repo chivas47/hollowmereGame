@@ -11,7 +11,7 @@ import { ITEMS } from '../data/items.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { drawFx } from '../render/animation.js';
 import { rng } from '../render/pixel.js';
-import { facing } from './world.js';
+import { facing, mover } from './world.js';
 
 // Cosmetic randomness has its own generator, so effects never shift the game's rolls (tools/balance.mjs seeds Math.random).
 const rand = rng(0x5eed);
@@ -64,7 +64,7 @@ let last = {}, ready = false, dropAt = null;
 const snapshot = () => { last = { ...G.S.bag }; };
 on('game:loaded', () => { snapshot(); ready = false; G.anim = null; G.fx = { parts: [], floats: [], pickups: [] }; });
 on('game:reset', () => { G.anim = null; G.fx = { parts: [], floats: [], pickups: [] }; });
-on('map:changed', () => { G.fx.pickups.length = 0; G.fx.parts.length = 0; G.fx.floats.length = 0; G.anim = null; });
+on('map:changed', () => { if (mover() === 'you') { G.fx.pickups.length = 0; G.fx.parts.length = 0; G.fx.floats.length = 0; } G.anim = null; });   // v140: G.anim is the mover's
 on('monster:slain', ({ x, y }) => { dropAt = { x, y: y - 6, at: performance.now() }; burst(x, y - 4, IMPACT.slain, 10, { speed: 30, up: 20, size: 3, life: 0.45, gravity: 20, shrink: true }); ring(x, y, 'rgba(255,255,255,.7)', 10); });
 on('state:changed', () => {
   if (!G.S?.bag) return;
@@ -181,4 +181,4 @@ addUpdater((dt) => {
   if (G.bounce > 0) G.bounce -= fdt;
 });
 
-addLayer(61, (c) => drawFx(c, G.fx, G.S));
+addLayer(61, (c) => { if (!G.youMap) drawFx(c, G.fx, G.S); });   // v140: effects belong to your map

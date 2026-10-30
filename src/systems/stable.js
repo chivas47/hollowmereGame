@@ -11,7 +11,7 @@ import { addInteraction, addUpdater, addEntities } from '../core/registry.js';
 import { STABLE } from '../data/upgrades.js';
 import { OUTDOORS } from '../data/weather.js';
 import { drawHorse } from '../render/sprites.js';
-import { tileOf } from './world.js';
+import { tileOf, mover } from './world.js';
 import { affordable } from './upgrades.js';
 import { placeBuilding } from './sites.js';
 
@@ -50,7 +50,7 @@ export function orderStable() {
 
 // The horse follows you outdoors; going inside leaves it where you last were.
 on('map:changed', (id) => {
-  if (!rider()) return;
+  if (!rider() || !mine()) return;   // v140: only the rider's own map change moves or leaves the horse
   if (OUTDOORS.includes(id)) { Object.assign(G.S.horse, { map: id }); return; }
   G.riding = false; if (G.P2) G.P2.riding = false;
   if (last) Object.assign(G.S.horse, last);

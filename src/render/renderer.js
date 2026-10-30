@@ -105,8 +105,12 @@ export function draw(c) {
   for (const v of list) {
     c.save();
     if (list.length > 1) { c.beginPath(); c.rect(v.x0, 0, v.w, v.h); c.clip(); c.translate(v.x0 - v.cam, 0); }
+    // v140: their half draws their map: G.S.map is theirs while it draws, G.youMap keeps yours (so you are not
+    // drawn on a map you are not on).
+    const yours = G.S.map, apart = v.farmer !== G.S && v.farmer.map !== yours;
     G.view = v.farmer;
-    try { drawWorld(c); } finally { G.view = null; c.restore(); }
+    if (apart) { G.youMap = yours; G.S.map = v.farmer.map; }
+    try { drawWorld(c); } finally { G.view = null; if (apart) { G.S.map = yours; G.youMap = null; } c.restore(); }
   }
   if (list.length > 1) { c.fillStyle = '#1c1612'; c.fillRect(list[1].x0 - 1, 0, 2, H * T); }   // the line between the halves
 }

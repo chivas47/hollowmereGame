@@ -28,10 +28,14 @@ test('they walk with their own stick and stop when it lets go', () => {
   assert.equal(G.P2.moving, false);
 });
 
-test('when you change map they are set down beside you there', () => {
-  join();
+test('when you change map they stay where they are (v140); tethered, they were set down beside you', async () => {
+  const { PARTNER } = await import('../src/data/partner.js');
+  join(); const at = { map: G.P2.map, x: G.P2.x, y: G.P2.y };
   placePlayer('village', 10, 8, 'down'); emit('map:changed', 'village');
-  assert.deepEqual({ x: G.P2.x, y: G.P2.y }, besideYou());
+  assert.deepEqual({ map: G.P2.map, x: G.P2.x, y: G.P2.y }, at);
+  PARTNER.tethered = true;
+  try { placePlayer('farm', 10, 8, 'down'); emit('map:changed', 'farm'); assert.deepEqual({ x: G.P2.x, y: G.P2.y }, besideYou()); }
+  finally { PARTNER.tethered = false; }
 });
 
 // v130: working together. Tools and doors need the systems that answer Use loaded, as in the game.
@@ -61,11 +65,13 @@ test('their slot steps on its own', () => {
   assert.equal(G.S.slot, yours);
 });
 
-test('a door they open takes you both through', () => {
+test('a door they open takes only them through (v140)', () => {
   join(); put(G.S, 12, 8, 'down'); put(G.P2, 3, 4, 'up');   // facing the farmhouse door
+  const you = { x: G.S.x, y: G.S.y };
   partnerUse();
-  assert.equal(G.S.map, 'house');
-  assert.ok(Math.abs(G.P2.x - G.S.x) + Math.abs(G.P2.y - G.S.y) <= 32, 'you are beside them inside');
+  assert.equal(G.P2.map, 'house');
+  assert.equal(G.S.map, 'farm');
+  assert.deepEqual({ x: G.S.x, y: G.S.y }, you);
 });
 
 test('their energy is full again each morning', () => {
@@ -198,9 +204,13 @@ test('one rider at a time, and going indoors leaves the horse outside', () => {
   horseBy(); partnerUse();
   put(G.S, 6, 10, 'left'); act();   // you face the horse they are on
   assert.equal(G.riding, false);
-  G.anim = null; put(G.S, 3, 4, 'up'); act();      // the farmhouse door
+  G.anim = null; put(G.S, 3, 4, 'up'); act();      // you go in by the farmhouse door
   assert.equal(G.S.map, 'house');
+  assert.equal(G.P2.riding, true, 'your door leaves their ride alone (v140)');
+  G.P2.anim = null; put(G.P2, 3, 4, 'up'); partnerUse();   // at the door their A gets them off first
   assert.equal(G.P2.riding, false);
+  G.P2.anim = null; partnerUse();
+  assert.equal(G.P2.map, 'house');
   assert.equal(G.S.horse.map, 'farm');
 });
 
@@ -232,11 +242,11 @@ test('on a phone their A gives a note instead of a second farmer', () => {
 const { farmerMaps, occupied, moveBox: move, blocked: isBlocked } = await import('../src/systems/world.js');
 const { PARTNER: P } = await import('../src/data/partner.js');
 
-test('they carry their own map: joining and following you set it', () => {
+test('they carry their own map: joining sets it, and apart both maps are in use', () => {
   join(); assert.equal(G.P2.map, G.S.map);
   placePlayer('village', 10, 8, 'down'); emit('map:changed', 'village');
-  assert.equal(G.P2.map, 'village');
-  assert.deepEqual([...farmerMaps()], ['village']);
+  assert.equal(G.P2.map, 'farm');
+  assert.deepEqual([...farmerMaps()].sort(), ['farm', 'village']);
 });
 
 test('both maps count as occupied when they stand apart', () => {
@@ -268,9 +278,38 @@ test('their Use runs on their map and gives you yours back', () => {
   assert.ok(!G.S.soil['10,9'], 'the hoe did not till your farm from the village');
 });
 
-test('untethered, your map change leaves them where they are', () => {
-  join(); P.tethered = false;
-  try { const at = { map: G.P2.map, x: G.P2.x, y: G.P2.y }; placePlayer('village', 10, 8, 'down'); emit('map:changed', 'village');
-    assert.deepEqual({ map: G.P2.map, x: G.P2.x, y: G.P2.y }, at); }
-  finally { P.tethered = true; }
+
+
+// v140 (item 73e): going separate ways.
+const { enterMine } = await import('../src/systems/mine.js');
+const { slimes, spawnSlimes } = await import('../src/systems/monsters.js');
+
+test('they walk off the map by an exit alone and arrive where it leads', () => {
+  join(); put(G.S, 12, 8, 'down'); put(G.P2, 22, 4, 'right');
+  partnerKeys({ right: true }); for (let i = 0; i < 20 && G.P2.map === 'farm'; i++) runUpdaters(0.05); partnerKeys({});
+  assert.equal(G.P2.map, 'wilds');
+  assert.equal(G.S.map, 'farm');
+});
+
+test('in the mine, whoever changes floor brings the other farmer down there along', () => {
+  join(); enterMine(3); assert.equal(G.S.map, 'mine');
+  G.P2.map = 'mine'; G.P2.x = 2 * T + 8; G.P2.y = 2 * T + 12;
+  enterMine(4);   // you take a ladder
+  assert.ok(Math.abs(G.P2.x - G.S.x) + Math.abs(G.P2.y - G.S.y) <= 32, 'they come down beside you');
+});
+
+test('each morning they wake beside you wherever they were', () => {
+  join(); G.P2.map = 'village';
+  placePlayer('house', 5, 5, 'down'); emit('day:report', {});
+  assert.equal(G.P2.map, 'house');
+});
+
+test('monsters chase the nearer farmer and only shove farmer two', () => {
+  join(); placePlayer('farm', 2, 8, 'down'); spawnSlimes('farm', 1);
+  const m = slimes[0]; Object.assign(G.P2, { map: 'farm', x: m.x + 30, y: m.y });
+  const hp = G.S.health; G.S.x = m.x - 200;
+  const d0 = Math.hypot(G.P2.x - m.x, G.P2.y - m.y);
+  for (let i = 0; i < 10; i++) runUpdaters(0.05);
+  assert.ok(Math.hypot(G.P2.x - m.x, G.P2.y - m.y) < d0 + 30, 'it went for them');
+  assert.equal(G.S.health, hp);
 });

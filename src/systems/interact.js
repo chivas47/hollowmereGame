@@ -2,7 +2,7 @@
 import { G } from '../core/game.js';
 import { runInteractions, addUpdater } from '../core/registry.js';
 import { HOTBAR } from '../data/hotbar.js';
-import { facing, tileAt } from './world.js';
+import { facing, tileAt, mover } from './world.js';
 import { busy, busyLeft } from './animation.js';
 import { TOOL_BUFFER } from '../data/animation.js';
 import { on, emit } from '../core/events.js';
@@ -21,4 +21,4 @@ export function act() {
 }
 
 addUpdater(() => { if (queued && !busy()) { queued = false; act(); } });
-on('map:changed', () => { queued = false; });
+on('map:changed', () => { if (mover() === 'you') queued = false; });
