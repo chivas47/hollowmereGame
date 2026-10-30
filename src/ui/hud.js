@@ -26,6 +26,8 @@ function render() {
   $('#gold').textContent = `${S.gold}g`;
   meter('#energy', S.energy, S.maxEnergy);
   $('#energy').classList.toggle('low', S.energy < S.maxEnergy * 0.25);
+  $('#energy2').parentElement.hidden = !G.P2;   // v131: the second farmer's, while they play
+  if (G.P2) { meter('#energy2', S.partner.energy, S.maxEnergy); $('#energy2').classList.toggle('low', S.partner.energy < S.maxEnergy * 0.25); }
   meter('#water', S.water, S.maxw);
   meter('#health', S.hp, S.maxHp);
   $('#health').classList.toggle('low', S.hp < S.maxHp * 0.25);

@@ -121,7 +121,7 @@ Items are ordered so each builds on the last. Every item is one PR through the f
 | 57 | Motion settings | feature | done (chivas47/hollowmereGame#121) | Particles full, fewer or off, a cap on how many show at once, screen shake and hit-stop on or off, an animation speed for cosmetic motion only (tool swings keep their timing, since they set how fast tools work). Asked for by Nuno, October 2026 (from the animation polish list). |
 | 33a | Local two-player: the second farmer | feature | done (chivas47/hollowmereGame#125) | A second controller's A joins a second farmer on the same screen (every map fits one); they walk with your collision rules, are set down beside you when you change map, and leave with B or when their pad disconnects. Not saved yet. Nuno: their own energy, a second controller, your bed ends the day. |
 | 33b | Local two-player: working together | feature | done (chivas47/hollowmereGame#126) | The second farmer uses tools, talks and opens doors through the same interactions as you, with their own hotbar choice and energy (saved); the bag and gold stay shared. |
-| 33c | Local two-player: their HUD and the day | feature | next | Their energy bar and Use prompt on screen; your bed ends the day for both and they wake beside you; passing out at 2 am takes both home. |
+| 33c | Local two-player: their HUD and the day | feature | done (PR_LINK) | Their energy bar and Use prompt on screen; your bed ends the day for both and they wake beside you; passing out at 2 am takes both home. |
 
 ## The modern-standards plan (October 2026)
 

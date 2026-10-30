@@ -74,3 +74,40 @@ test('their energy is full again each morning', () => {
   G.S.partner.energy = 3; emit('day:start', {});
   assert.equal(G.S.partner.energy, G.S.maxEnergy);
 });
+
+// v131: their prompt, your bed and the night.
+const { partnerPrompt } = await import('../src/systems/partner.js');
+const { on } = await import('../src/core/events.js');
+const { sleep } = await import('../src/systems/days.js');
+
+test('their prompt names what their A does, over the tile they face', () => {
+  assert.equal(partnerPrompt(), null);
+  join(); put(G.P2, 3, 4, 'up');
+  const p = partnerPrompt(), me = { x: G.S.x, y: G.S.y, dir: G.S.dir };
+  assert.deepEqual([p.tx, p.ty], [3, 3]);
+  assert.ok(p.text, 'the farmhouse door has a prompt');
+  assert.deepEqual({ x: G.S.x, y: G.S.y, dir: G.S.dir }, me);
+});
+
+test('only your bed ends the day', () => {
+  let asked = 0; on('ui:sleep', () => asked++);
+  placePlayer('house', 2, 6, 'down'); join(); put(G.P2, 7, 5, 'up');   // facing the bed
+  partnerUse();
+  assert.equal(asked, 0);
+  assert.equal(partnerPrompt().text, null);
+});
+
+test('after the night they wake beside you, and passing out tires them as it does you', () => {
+  join(); G.S.partner.energy = 10;
+  sleep(true);
+  assert.equal(G.S.map, 'house');
+  assert.ok(Math.abs(G.P2.x - G.S.x) + Math.abs(G.P2.y - G.S.y) <= 32);
+  assert.equal(G.S.partner.energy, G.S.energy);
+  assert.ok(G.S.energy < G.S.maxEnergy);
+});
+
+test('a farm with a bigger energy bar starts them at its top', async () => {
+  const { merge } = await import('../src/core/state.js');
+  assert.equal(merge({ day: 40, maxEnergy: 385 }).partner.energy, 385);
+  assert.equal(merge({ day: 40, maxEnergy: 385, partner: { energy: 12 } }).partner.energy, 12);
+});

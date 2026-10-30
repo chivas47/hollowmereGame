@@ -4,6 +4,8 @@
 // v130: partnerUse() runs the same Use as yours (systems/interact.js) with their place, facing, hotbar slot,
 // energy and tool swing swapped into G.S and G.anim for that moment, so every tool and talk works for them
 // without a second copy. A door they open takes you both. Their energy is saved in G.S.partner.
+// v131: their Use prompt (partnerPrompt, ui/prompt.js) and energy bar (ui/hud.js); your bed ends the day for both
+// (they wake beside you, rested as you are: map:changed and day:start below).
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, notify, changed } from '../core/events.js';
@@ -12,7 +14,8 @@ import { PARTNER } from '../data/partner.js';
 import { HOTBAR } from '../data/hotbar.js';
 import { drawPerson } from '../render/sprites.js';
 import { drawHeld } from '../render/animation.js';
-import { moveBox, blocked, playerTile } from './world.js';
+import { moveBox, blocked, playerTile, facing, tileAt } from './world.js';
+import { promptFor } from '../core/registry.js';
 import { lean } from './wind.js';
 import { act } from './interact.js';
 import { stepAnim } from './animation.js';
@@ -34,12 +37,14 @@ export function join() {
   if (G.P2) return;
   G.P2 = { ...besideYou(), dir: G.S.dir, moving: false, walkT: 0, keys: {}, slot: lastSlot, anim: null };
   notify(`${PARTNER.name} joins you. Press B on their controller to leave.`);
+  changed();   // their energy bar
 }
 export function leave() {
   if (!G.P2) return;
   lastSlot = G.P2.slot;
   G.P2 = null;
   notify(`${PARTNER.name} heads home.`);
+  changed();
 }
 export const partnerKeys = (keys) => { if (G.P2) G.P2.keys = keys; };
 
@@ -62,6 +67,19 @@ function asPartner(fn) {
   }
 }
 
+const atBed = () => { const { tx, ty } = facing(); return G.S.map === 'house' && tileAt(tx, ty) === 'Z'; };
+
+// What their A would do where they stand, and the tile it is over: { tx, ty, text } (text null for nothing).
+export function partnerPrompt() {
+  let out = null;
+  if (G.P2) asPartner(() => {
+    const { tx, ty } = facing(), item = HOTBAR[G.S.slot];
+    const text = atBed() || item === 'rod' ? null : promptFor({ tx, ty, tile: tileAt(tx, ty), mapId: G.S.map, item });
+    out = { tx, ty, text };
+  });
+  return out;
+}
+
 // The second farmer presses A: Use as you would, from where they stand.
 export function partnerUse() {
   const p = G.P2;
@@ -69,7 +87,7 @@ export function partnerUse() {
   if (p.anim?.gate && p.anim.t < p.anim.dur) return;   // mid-swing: dropped (your Use queues presses; theirs does not, so none is replayed as yours)
   if (HOTBAR[p.slot] === 'rod') { notify(PARTNER.yours.rod); return; }
   const riding = G.riding;
-  asPartner(act);
+  asPartner(() => { if (atBed()) notify(PARTNER.yours.bed); else act(); });
   if (G.riding && !riding) { G.riding = false; notify(PARTNER.yours.horse); }
   changed();
 }
@@ -91,7 +109,7 @@ addUpdater((dt) => {
 
 on('map:changed', () => { if (G.P2) Object.assign(G.P2, besideYou(), { dir: G.S.dir, moving: false }); });
 on('game:reset', () => { G.P2 = null; });
-on('day:start', () => { G.S.partner.energy = G.S.maxEnergy; });   // they sleep when you do (33c: waking beside you)
+on('day:start', (report) => { G.S.partner.energy = report.passedOut ? Math.round(G.S.maxEnergy * 0.6) : G.S.maxEnergy; });   // they sleep when you do
 
 const SWUNG = new Set(['hoe', 'pick', 'axe', 'can', 'sword', 'pan']);
 function drawPartner(c) {
