@@ -173,6 +173,21 @@ loop.
 | 74i | Talking about what you did | feature | done (chivas47/hollowmereGame#150) | Split from 74h (needs a save field, so its own PR): neighbours mention what you did yesterday (shipped a gold-star crop, gave something to the museum, a wedding, a festival win). A small saved record of yesterday's notable acts, newState, merge and a migration test. |
 | 74j | A week watched | test | in progress (chivas47/hollowmereGame#151) | Recommended after 74i: every neighbour walked through eleven days (sun, rain, storm, snow, two festivals, a Sunday) with the real updaters, as a test. It found two bugs, fixed here: walkers pausing on top of each other at the square's corners for up to 11 game minutes, and Lantern lunches out of reach from the farm and the Wilds (Odile, Nell, Juno never sat down). |
 
+## A real world (October 2026)
+
+Nuno asked for the world organised into a real game world: the village houses arranged, more maps, more
+people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top of the feature loop, and
+`docs/NPC_LIFE.md` too when it touches how a neighbour lives. 75a decides the shape of everything after it.
+
+| # | Item | Type | Status | Notes |
+|---|---|---|---|---|
+| 75a | Screens or a camera | decision | needs decision | Every map is one 24 x 16 screen with no camera. Either keep screens and grow the world by adding more (cheap, nothing old breaks) or add a camera so a map can be larger than the screen (a village of 48 x 32 with real streets; touches the renderer, split screen, every placement rule and the saves of anything placed). |
+| 75b | The world joined up | test | queued | One test over every map: reachable from the farm, every exit lands on a walkable tile with a way back, every door leads somewhere, every neighbour has a home that exists. Buildable before 75a; it guards every item after it. |
+| 75c | The village laid out | feature | queued | Rearrange Hollowmere Village and Town by the WORLD_BUILDING test: homes facing their lanes with yards, fences and gardens, shops where people pass, the smithy at the edge, a centre round the square. Moves doors and homes, so a migration step and every routine rechecked. Depends on 75a. |
+| 75d | New places | feature | needs decision | Each new map needs a reason. Candidates, original names: the mere itself (the lake the valley is named for: reeds, a boathouse, its own fish), a river hamlet with a mill, a hill farmstead on the way to Cragmoor. Nuno picks which and in what order. |
+| 75e | New neighbours | feature | queued | We have 17; Stardew's valley has about 30. A few at a time, each with a home on a real map, a job, friends in `data/friends.js` and a full week by NPC_LIFE. The first ones belong to the first place from 75d. |
+| 75f | The world that changes | feature | queued | Audit then fill gaps: wildlife in the world (birds that scatter, a cat on a wall, fish jumping in the mere), seasonal changes to maps (snow on roofs, autumn leaves, a frozen pond), and town projects that change a map for good. |
+
 ## Done
 
 | Item | PR |
