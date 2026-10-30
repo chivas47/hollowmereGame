@@ -3,6 +3,8 @@
 // bite  -> short window to press Use (trash comes in at once)
 // reel  -> v41: the catch bar. Hold Use to lift your bar, let go and it falls; keep the fish inside it until the
 //          meter fills (data/angling.js CATCH). A treasure chest sometimes rises in the column: keep it in the bar too.
+// v134: either farmer can fish, one line in the water at a time. A line the second farmer cast (G.fishing.p2) is
+// theirs: their A works it, their held A lifts the bar, and it holds them in place instead of you.
 import { G } from '../core/game.js';
 import { has } from './professions.js';
 import { T, W } from '../core/constants.js';
@@ -83,7 +85,7 @@ function startReel(f) {
   const d = FISH[f.fish].difficulty, h = barHeight();
   Object.assign(f, { phase: 'reel', prog: CATCH.start, bar: { y: 0, v: 0, h }, fy: h / 2, ft: h / 2, pause: 1, d,   // the fish starts inside your bar
     treasure: Math.random() < CATCH.treasure * (tackle() === 'treasurer' ? 2 : 1) ? { y: 20 + Math.random() * (CATCH.track - 40), prog: 0, got: false } : null });
-  notify('Hold Use to lift the bar; keep the fish inside it.');
+  notify(`Hold ${f.p2 ? 'A' : 'Use'} to lift the bar; keep the fish inside it.`);
 }
 
 function giveTreasure() {
@@ -134,7 +136,7 @@ export function finishReel(won, treasure = false) {
 // While a line is out, Use always goes to fishing.
 addInteraction(200, () => {
   const f = G.fishing;
-  if (!f) return false;
+  if (!f || !!f.p2 !== !!G.partnerActing) return false;   // the other farmer's line: theirs to work
   if (f.phase === 'wait') { notify('You reeled in too early.'); emit('sfx', 'miss'); end(); }
   else if (f.phase === 'bite') startReel(f);
   return true;   // while reeling, holding Use lifts the bar (the updater reads G.useHeld)
@@ -143,20 +145,21 @@ addInteraction(200, () => {
 // Casting. Priority 65 beats the can refill (60) on the same water.
 addInteraction(65, ({ tx, ty, tile, item, mapId }) => {
   if (item !== 'rod' || !WATER.has(tile)) return false;
+  if (G.fishing) { notify('One line in the water at a time.'); return true; }
   const S = G.S, pond = mapId === ICE_HOLE.map, ice = pond && frozen() && atHole(tx, ty, mapId);   // v43: only the pond freezes
   if (pond && frozen() && !ice) { notify('The pond is frozen solid. Fish through the ice hole on its west edge.'); return true; }
   if (!useEnergy(ENERGY)) return true;
   const bait = baitOk() && S.bait && S.bag[S.bait] > 0 ? S.bait : null;
   if (bait) { S.bag[bait]--; if (!S.bag[bait]) notify(`That was your last ${ITEMS[bait].name.toLowerCase()}.`); }
   const wait = (1.5 + Math.random() * 2.5) * (bait ? BAIT[bait].wait : 1) * (tackle() === 'spinner' ? 0.75 : 1);
-  G.fishing = { phase: 'wait', t: wait, tx, ty, ice, bait, water: WATERS[mapId] || 'pond' };
-  G.lock = true;
+  G.fishing = { phase: 'wait', t: wait, tx, ty, ice, bait, water: WATERS[mapId] || 'pond', p2: !!G.partnerActing };
+  G.lock = !G.partnerActing;   // the second farmer's line holds them instead (systems/partner.js)
   changed();
   return true;
 });
 
 function reel(f, dt) {
-  const b = f.bar, H = CATCH.track, held = !!G.useHeld;
+  const b = f.bar, H = CATCH.track, held = f.p2 ? !!G.P2?.useHeld : !!G.useHeld;
   b.v = Math.max(-CATCH.maxSpeed, Math.min(CATCH.maxSpeed, b.v + (held ? CATCH.lift : -CATCH.fall) * dt));
   b.y += b.v * dt;
   if (b.y < 0) { b.y = 0; b.v = tackle() === 'leadbob' ? 0 : -b.v * CATCH.bounce; }
@@ -191,7 +194,7 @@ addUpdater((dt) => {
     if (f.t <= 0) {
       f.phase = 'bite'; f.t = BITE_WINDOW;
       if (Math.random() < TRASH_CHANCE) { const k = Object.keys(TRASH); f.trash = k[Math.floor(Math.random() * k.length)]; } else f.fish = pickFish(f.ice, f.water);
-      notify('A bite! Press Use.'); emit('sfx', 'bite');
+      notify(f.p2 ? 'A bite on the second line! Press A.' : 'A bite! Press Use.'); emit('sfx', 'bite');
     }
   } else if (f.phase === 'bite') {
     f.t -= dt;
@@ -211,12 +214,13 @@ addLayer(55, (c) => {
   const f = G.fishing;
   if (!f) return;
   const bx = f.tx * T + 8, dip = f.phase === 'wait' ? Math.round(Math.sin(performance.now() / 300)) : 2;
-  const by = f.ty * T + 8 + dip, tip = G.rodTip, hx = Math.round(tip ? tip.x : G.S.x), hy = Math.round(tip ? tip.y : G.S.y - 12);   // v74: from the rod's tip
+  const who = f.p2 ? G.P2 || G.S : G.S, tip = f.p2 ? G.P2?.rodTip : G.rodTip;   // v134: from whoever holds the rod
+  const by = f.ty * T + 8 + dip, hx = Math.round(tip ? tip.x : who.x), hy = Math.round(tip ? tip.y : who.y - 12);   // v74: from the rod's tip
   c.strokeStyle = 'rgba(244,234,210,.7)'; c.lineWidth = 1;
   c.beginPath(); c.moveTo(hx + 0.5, hy + 0.5); c.lineTo(bx + 0.5, by + 0.5); c.stroke();
   const bob = BOBBERS[Math.min(G.S.bobber || 0, bobberStyles() - 1)] || BOBBERS[0];   // v41: bobber styles
   r(c, bx - 1, by - 1, 3, 3, bob.body); r(c, bx - 1, by - 1, 3, 1, bob.top);
-  if (f.phase === 'bite') drawBubble(c, G.S.x, G.S.y);
+  if (f.phase === 'bite') drawBubble(c, who.x, who.y);
 });
 
 // v41: the catch bar, a column of water at the right of the screen with your bar, the fish and its meter.

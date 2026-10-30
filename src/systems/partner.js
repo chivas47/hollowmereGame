@@ -6,6 +6,7 @@
 // without a second copy. A door they open takes you both. Their energy is saved in G.S.partner.
 // v131: their Use prompt (partnerPrompt, ui/prompt.js) and energy bar (ui/hud.js); your bed ends the day for both
 // (they wake beside you, rested as you are: map:changed and day:start below).
+// v134: they fish too (systems/fishing.js), one line at a time; their line holds them still and draws from their rod.
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, notify, changed } from '../core/events.js';
@@ -13,12 +14,13 @@ import { addUpdater, addEntities } from '../core/registry.js';
 import { PARTNER } from '../data/partner.js';
 import { HOTBAR } from '../data/hotbar.js';
 import { drawPerson } from '../render/sprites.js';
-import { drawHeld } from '../render/animation.js';
+import { drawHeld, drawRod, handPoint, swingAngle } from '../render/animation.js';
 import { moveBox, blocked, playerTile, facing, tileAt } from './world.js';
 import { promptFor } from '../core/registry.js';
 import { lean } from './wind.js';
 import { act } from './interact.js';
-import { stepAnim } from './animation.js';
+import { stepAnim, playAnim } from './animation.js';
+import { rodBend } from './player.js';
 
 G.P2 = null;   // { x, y, dir, moving, walkT, keys, slot, anim } (energy lives in G.S.partner, saved)
 let lastSlot = 0;   // their hotbar choice, kept for when they rejoin this session
@@ -43,6 +45,7 @@ export function leave() {
   if (!G.P2) return;
   lastSlot = G.P2.slot;
   G.P2 = null;
+  if (G.fishing?.p2) G.fishing = null;   // their line comes in with them
   notify(`${PARTNER.name} heads home.`);
   changed();
 }
@@ -59,8 +62,9 @@ export function partnerSlot(step) {
 // if fn takes them through a door, you are set down beside them on the other side.
 function asPartner(fn) {
   const p = G.P2, S = G.S, map = S.map, me = { x: S.x, y: S.y, dir: S.dir, slot: S.slot, energy: S.energy, anim: G.anim };
-  Object.assign(S, { x: p.x, y: p.y, dir: p.dir, slot: p.slot, energy: S.partner.energy }); G.anim = p.anim;
+  Object.assign(S, { x: p.x, y: p.y, dir: p.dir, slot: p.slot, energy: S.partner.energy }); G.anim = p.anim; G.partnerActing = true;
   try { fn(); } finally {
+    G.partnerActing = false;
     const spot = S.map !== map ? besideYou() : me;   // through a door: you come too, beside them (G.S is them here)
     Object.assign(p, { x: S.x, y: S.y, dir: S.dir, slot: S.slot, anim: G.anim }); S.partner.energy = S.energy;
     Object.assign(S, { x: spot.x, y: spot.y, dir: me.dir, slot: me.slot, energy: me.energy }); G.anim = me.anim;
@@ -74,7 +78,7 @@ export function partnerPrompt() {
   let out = null;
   if (G.P2) asPartner(() => {
     const { tx, ty } = facing(), item = HOTBAR[G.S.slot];
-    const text = atBed() || item === 'rod' ? null : promptFor({ tx, ty, tile: tileAt(tx, ty), mapId: G.S.map, item });
+    const text = atBed() ? null : promptFor({ tx, ty, tile: tileAt(tx, ty), mapId: G.S.map, item });
     out = { tx, ty, text };
   });
   return out;
@@ -85,9 +89,11 @@ export function partnerUse() {
   const p = G.P2;
   if (!p || G.paused) return;
   if (p.anim?.gate && p.anim.t < p.anim.dur) return;   // mid-swing: dropped (your Use queues presses; theirs does not, so none is replayed as yours)
-  if (HOTBAR[p.slot] === 'rod') { notify(PARTNER.yours.rod); return; }
-  const riding = G.riding;
-  asPartner(() => { if (atBed()) notify(PARTNER.yours.bed); else act(); });
+  const riding = G.riding, line = G.fishing;
+  asPartner(() => {
+    if (atBed()) notify(PARTNER.yours.bed); else act();
+    if (G.fishing?.p2 && !line) playAnim('rod');   // their cast (G.anim is theirs in here)
+  });
   if (G.riding && !riding) { G.riding = false; notify(PARTNER.yours.horse); }
   changed();
 }
@@ -96,7 +102,7 @@ addUpdater((dt) => {
   const p = G.P2;
   if (!p) return;
   if (p.anim) p.anim = stepAnim(p.anim, dt, p);
-  if (p.anim && p.anim.t < (p.anim.root || 0)) { p.moving = false; return; }   // held in place on the wind-up, as you are
+  if ((p.anim && p.anim.t < (p.anim.root || 0)) || G.fishing?.p2) { p.moving = false; return; }   // held on the wind-up, as you are, and while their line is out
   const k = p.keys, dx = (k.right ? 1 : 0) - (k.left ? 1 : 0), dy = (k.down ? 1 : 0) - (k.up ? 1 : 0);
   if (!p.moving && (dx || dy)) p.walkT = 0;
   p.moving = !!(dx || dy);
@@ -111,11 +117,15 @@ on('map:changed', () => { if (G.P2) Object.assign(G.P2, besideYou(), { dir: G.S.
 on('game:reset', () => { G.P2 = null; });
 on('day:start', (report) => { G.S.partner.energy = report.passedOut ? Math.round(G.S.maxEnergy * 0.6) : G.S.maxEnergy; });   // they sleep when you do
 
-const SWUNG = new Set(['hoe', 'pick', 'axe', 'can', 'sword', 'pan']);
+const SWUNG = new Set(['hoe', 'pick', 'axe', 'can', 'sword', 'rod', 'pan']);
 function drawPartner(c) {
   const p = G.P2, a = p.anim, held = a && SWUNG.has(a.kind), dir = a ? a.dir : p.dir;
+  const rod = G.fishing?.p2 && a?.kind !== 'rod';   // their line is out: the rod held out over the water
   if (held && dir === 'up') drawHeld(c, a, p.x, p.y);   // behind them when facing away
+  if (rod && dir === 'up') p.rodTip = drawRod(c, p.x, p.y, dir, rodBend());
   drawPerson(c, p.x, p.y, dir, p.moving, p.walkT, PARTNER.look, lean(p.x));
   if (held && dir !== 'up') drawHeld(c, a, p.x, p.y);
+  if (rod && dir !== 'up') p.rodTip = drawRod(c, p.x, p.y, dir, rodBend());
+  if (a?.kind === 'rod') p.rodTip = handPoint(p.x, p.y, a.dir, swingAngle(a, Math.min(1, a.t / a.dur)), 13);
 }
 addEntities(() => (G.P2 ? [{ y: G.P2.y, draw: drawPartner }] : []));
