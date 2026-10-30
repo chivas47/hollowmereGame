@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v134: Farmer two fishes
+- The second farmer casts with their rod (8 of their energy) and works the bite and catch bar with their own A; their held A lifts the bar.
+- One line in the water at a time: while either farmer's line is out, the other's cast is refused, and their Use leaves it alone. A line holds only whoever cast it, so you can walk while they fish.
+- The catch goes to the shared bag and fishing skill. No prices, keys or saves changed.
+
 ## v133: A quiet first screen
 - On a new farm, messages (the mailbox, the first hint) wait until the new game screen and the arrival scene are done instead of covering their fields; they show together as you step onto the farm.
 - Nothing else changed: a farm already made shows its messages at once.

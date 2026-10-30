@@ -144,8 +144,9 @@ addUpdater((dt) => {
     floatText(G.S.x, G.S.y - 32, `Made: ${crafted.kit ? PLACEABLES[crafted.key]?.name : ITEMS[crafted.key]?.name || crafted.key}`, '#fff1b8', { life: 1.4, rise: 8, pop: true, stack: true });
     crafted = null;
   }
-  if (G.fishing && !fishing) playAnim('rod');   // the cast
-  fishing = !!G.fishing;
+  const mine = !!G.fishing && !G.fishing.p2;   // v134: the second farmer's cast is drawn on them (systems/partner.js)
+  if (mine && !fishing) playAnim('rod');   // the cast
+  fishing = mine;
   if (G.shake && (G.shake.t -= dt) <= 0) G.shake = null;
   // walking dust
   if (G.moving && !G.riding && rand() < dt * 5) burst(G.S.x + (rand() - 0.5) * 4, G.S.y, ['rgba(232,224,208,.45)'], 1, { speed: 6, up: 3, size: 2, life: 0.35, gravity: 0, shrink: true });

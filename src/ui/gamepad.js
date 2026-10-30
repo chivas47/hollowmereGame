@@ -71,6 +71,7 @@ function partner(pad, box) {
   if (press('prev')) partnerSlot(-1);
   if (press('next')) partnerSlot(1);
   partnerKeys({ up: !!down.up, down: !!down.down, left: !!down.left, right: !!down.right });
+  if (G.P2) G.P2.useHeld = !!down.use;   // v134: held A lifts their catch bar
   was2 = down;
 }
 

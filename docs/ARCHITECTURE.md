@@ -86,7 +86,7 @@ src/
     journal.js        v114: story steps checked against the save, objectives() (main and optional, for the journal and the HUD), tracked(), the finished-quest log, places found, map pins, quest markers, recap() (G.S.journal)
     firstweek.js      v122: weekGoal() (the open goal), checkWeek(); goals read from the save; journal.js shows the goal first
     reckoning.js      v128: score(), the morning judgement, the carved lid's daily gleamfruit, askAgain() (through npcs.js addGiftHook), the porch lamps layer
-    partner.js        v129: G.P2 (not saved): join(), leave(), partnerKeys(), besideYou(); walks, follows map:changed, drawn; v130: partnerUse() runs act() as them (asPartner swaps position, slot, energy and swing into G.S), partnerSlot(); S.partner.energy; v131: partnerPrompt() for ui/prompt.js, your bed only
+    partner.js        v129: G.P2 (not saved): join(), leave(), partnerKeys(), besideYou(); walks, follows map:changed, drawn; v130: partnerUse() runs act() as them (asPartner swaps position, slot, energy and swing into G.S), partnerSlot(); S.partner.energy; v131: partnerPrompt() for ui/prompt.js, your bed only; v134: G.partnerActing while act() runs as them, their rod and line
     emotes.js         v124: emote(id, kind), emoteOf(id), gestureOffset(); npcs.js starts them and draws them
     pets.js           the farm pet: wandering, pats, the water bowl, gifts, hats
     stable.js         stable building, horse riding, following between maps, whistle
@@ -99,7 +99,7 @@ src/
     animation.js      v74: player action poses (playAnim, rooted), pickups flying in, particles (burst, ring), damage numbers (floatText), screen shake (shake), hit-stop (holdSwing); cosmetic only, its own RNG; v130: stepAnim() advances any farmer's swing
     farming.js        till (wide hoe), water, plant, harvest, growth, withering
     forage.js         daily forage spawns in the Wilds
-    fishing.js        cast, bite, the catch bar (v41: hold Use, G.useHeld), bait, tackle, treasure, trash, fish log
+    fishing.js        cast, bite, the catch bar (v41: hold Use, G.useHeld), bait, tackle, treasure, trash, fish log; v134: G.fishing.p2 is the second farmer's line (their A, G.P2.useHeld)
     sites.js          where every farm building stands: moving and placing buildings, writing their tiles
     mill.js           the mill (wheat and beets overnight) and the shed door
     cooking.js        recipes, cooking at the stove, the fridge, eating, buffs on G.S.buff and G.S.drink, daily luck, the TV show, wishfruit sources
@@ -250,7 +250,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | Priority | Owner | Claims |
 |---|---|---|
 | 300 | sites.js | Any Use while placing or moving a building |
-| 200 | fishing.js | Any Use while a line is out |
+| 200 | fishing.js | Any Use while a line is out, by whoever cast it (v134) |
 | 199 | stable.js | Any Use while riding (get off) |
 | 100 | npcs.js | Facing a neighbour |
 | 97 | stable.js | Facing the horse (get on) |

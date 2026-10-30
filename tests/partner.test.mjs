@@ -54,10 +54,8 @@ test('their hoe tills where they face and spends their energy, not yours', () =>
   assert.ok(G.P2.anim, 'they swing the hoe');
 });
 
-test('they cannot fish yet, and their slot steps on its own', () => {
+test('their slot steps on its own', () => {
   join(); G.P2.slot = HOTBAR.indexOf('rod');
-  partnerUse();
-  assert.equal(G.fishing ?? null, null);
   const yours = G.S.slot; partnerSlot(1);
   assert.equal(G.P2.slot, (HOTBAR.indexOf('rod') + 1) % HOTBAR.length);
   assert.equal(G.S.slot, yours);
@@ -110,4 +108,51 @@ test('a farm with a bigger energy bar starts them at its top', async () => {
   const { merge } = await import('../src/core/state.js');
   assert.equal(merge({ day: 40, maxEnergy: 385 }).partner.energy, 385);
   assert.equal(merge({ day: 40, maxEnergy: 385, partner: { energy: 12 } }).partner.energy, 12);
+});
+
+// v134: they fish, one line at a time.
+const { act } = await import('../src/systems/interact.js');
+const { stepReel } = await import('../src/systems/fishing.js');
+const castP2 = () => {   // you on the forest path, them facing the river
+  placePlayer('forest', 10, 4, 'down'); join(); put(G.P2, 1, 7, 'down');
+  G.P2.slot = HOTBAR.indexOf('rod'); G.P2.anim = null; G.fishing = null; G.lock = false;
+  partnerUse();
+};
+
+test('their cast is their line: their energy, their pose, and you can still walk', () => {
+  const mine = G.S.energy, theirs = G.S.partner.energy;
+  castP2();
+  assert.equal(G.fishing?.p2, true);
+  assert.deepEqual([G.fishing.tx, G.fishing.ty], [1, 8]);
+  assert.equal(G.S.partner.energy, theirs - 8);
+  assert.equal(G.S.energy, mine);
+  assert.equal(G.lock, false);
+  assert.equal(G.P2.anim?.kind, 'rod');
+  const x = G.P2.x; partnerKeys({ right: true }); runUpdaters(0.1);
+  assert.equal(G.P2.x, x, 'their line holds them');
+});
+
+test('one line in the water at a time, and yours does not answer their bite', () => {
+  castP2(); const line = G.fishing;
+  put(G.S, 3, 7, 'down'); G.S.slot = HOTBAR.indexOf('rod');
+  act();
+  assert.equal(G.fishing, line, 'your cast is refused');
+  Object.assign(line, { phase: 'bite', fish: 'carp', t: 1 });
+  act();
+  assert.equal(G.fishing.phase, 'bite', 'your Use leaves their bite alone');
+});
+
+test('their held A lifts their catch bar, not yours', () => {
+  castP2(); Object.assign(G.fishing, { phase: 'bite', fish: 'carp', t: 1 });
+  G.P2.anim = null; partnerUse();
+  assert.equal(G.fishing.phase, 'reel');
+  G.useHeld = true; G.P2.useHeld = false; G.fishing.prog = 0.5; stepReel(0.3);
+  assert.equal(G.fishing.bar.y, 0, 'your Use does not lift it');
+  G.useHeld = false; G.P2.useHeld = true; G.fishing.prog = 0.5; stepReel(0.3);
+  assert.ok(G.fishing.bar.y > 0);
+});
+
+test('leaving brings their line in', () => {
+  castP2(); leave();
+  assert.equal(G.fishing, null);
 });
