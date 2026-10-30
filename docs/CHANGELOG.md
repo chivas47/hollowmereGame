@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v141: Their own menus
+- In two-player a dialog belongs to whoever opened it: it covers only their half of the screen and the game keeps going. The other farmer keeps walking, working and fishing, and the clock runs.
+- Farmer two works their dialog with their own controller (stick, A, B); its buttons act as them (where they stand, their energy). Your keys and Escape no longer touch their dialog.
+- One dialog at a time: while one farmer is in a dialog, the other's Use cannot open a second one ("Wait for ... to finish").
+- You cannot be hurt while your own dialog is open. The menu (Esc) still pauses the game for both. Playing alone, dialogs pause as before.
+- No prices, keys or saves changed.
+
 ## v140: Separate ways
 - Farmer two no longer follows you: they walk off the map by its exits and through doors on their own, and their half of the screen shows wherever they are. Your doors take only you.
 - The mine holds one floor at a time: whoever takes a ladder or enters a floor brings the other farmer along if they are in the mine too.

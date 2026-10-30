@@ -102,10 +102,13 @@ export function partnerPrompt() {
   return out;
 }
 
+// v141: runs fn as the second farmer (their dialog's buttons, ui/modal.js), or as you when they are not in.
+export function asThem(fn) { if (G.P2) { asPartner(fn); changed(); } else fn(); }
+
 // The second farmer presses A: Use as you would, from where they stand.
 export function partnerUse() {
   const p = G.P2;
-  if (!p || G.paused) return;
+  if (!p || G.paused || G.dialogBy === 'p2') return;   // v141: their own dialog takes their A
   if (p.anim?.gate && p.anim.t < p.anim.dur) return;   // mid-swing: dropped (your Use queues presses; theirs does not, so none is replayed as yours)
   const line = G.fishing;
   asPartner(() => {
