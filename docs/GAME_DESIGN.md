@@ -124,6 +124,7 @@ Stardew counterparts by role: keg (wine 3 x fruit, juice 2.25 x vegetable), mayo
 
 - v129: with a second controller, press A on it to bring in a second farmer (their own look) on the same screen. They walk with the stick, go where you go when you change map, and leave with B or when their controller disconnects. Dialogs and the menu stay the first player's.
 - v130: once in, the second farmer's A uses what they hold, through the same rules as yours (tools, talking, gifts, doors, map exits, which take you both), and LB and RB step through their hotbar. They have their own energy (270, refilled each morning, saved); the bag and gold are shared.
+- v136: they ride the horse too, one rider at a time (whoever gets on first), at its speed; going indoors sets them down and the horse waits outside.
 - v134: they fish too, with their own A for the bite and the catch bar, one line in the water at a time (the other farmer's cast is refused while it is out). Their line holds them, not you.
 - v131: their energy bar shows under yours while they play, and their own prompt (with A) floats over the tile they face. Your bed ends the day for you both: they wake beside you, rested as you are, and passing out at 2 am takes both home with 60% energy.
 - v126: controllers (the browser's standard layout; fixed, not rebindable): stick or d-pad walks; A uses (held, it lifts the fishing bar); B closes a dialog or the menu or stops placing a building; X bag, Y crafting, View journal, L3 neighbours; LB and RB the previous and next hotbar slot; LT seeds, RT turn furniture, R3 whistle; Menu opens and closes the menu. In a dialog or the menu the stick or d-pad moves between buttons (left and right move a slider) and A presses. Once the pad is used, the Use prompt shows A. The menu's Controls section lists it.
@@ -1180,7 +1181,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
-- v130: The second farmer cannot ride the horse (fishing came in v134, one line at a time); their pickups fly to you and their tool level, enchantments and skills are yours; and only your bed ends the day.
+- v130: The second farmer's pickups fly to you and their tool level, enchantments and skills are yours; and only your bed ends the day.
 - v129: The second farmer is not saved (their energy is, v130). They walk through neighbours and animals as you do, and stay in the house while you are in bed.
 - v128: The reckoning is a dialog, not a walked scene; Bram is not by the bin while it shows. The two-year balance run in CI ends the day before it, so its gleamfruit never shows in the report.
 - v127: A farm cannot be deleted from its slot (New farm starts over in the slot in play). Key, sound and display settings are shared by all three farms.

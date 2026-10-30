@@ -10,6 +10,5 @@ export const PARTNER = {
   // Where they stand when they follow you onto a map: the first free tile among these, beside you.
   beside: [[-1, 0], [1, 0], [0, 1], [0, -1], [-1, 1], [1, 1], [-1, -1], [1, -1]],
   // v130: what only the first farmer does for now: fishing (one catch bar on screen) and riding the horse.
-  yours: { horse: 'Only the first farmer rides the horse.',   // v134: fishing is theirs too now
-    bed: "The first farmer's bed ends the day for you both." },   // v131: Nuno's call
+  yours: { bed: "The first farmer's bed ends the day for you both." },   // v131: Nuno's call (v134 fishing and v136 riding are theirs too)
 };

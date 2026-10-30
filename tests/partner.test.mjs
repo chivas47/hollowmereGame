@@ -8,7 +8,7 @@ import { placePlayer, blocked } from '../src/systems/world.js';
 import { join, leave, partnerKeys, besideYou } from '../src/systems/partner.js';
 import { freshFarm } from './setup.mjs';
 
-beforeEach(() => { freshFarm(); G.P2 = null; G.keys = {}; });
+beforeEach(() => { freshFarm(); G.P2 = null; G.keys = {}; G.fishing = null; G.lock = false; G.riding = false; });
 
 test('they join on a free tile beside you, once, and can leave', () => {
   join();
@@ -170,4 +170,36 @@ test('the rod at water says it casts, and a bite on your line says hook it', () 
   G.fishing.phase = 'bite';
   assert.equal(ask('rod'), null, 'their bite is not yours to hook');
   assert.equal(partnerPrompt().text, 'Hook it');
+});
+
+// v136: they ride the horse, one rider at a time.
+await import('../src/systems/stable.js');
+const { STABLE } = await import('../src/data/upgrades.js');
+const PARTNER_SPEED = (await import('../src/data/partner.js')).PARTNER.speed;
+const horseBy = () => {   // a horse on the farm, the second farmer facing it
+  placePlayer('farm', 12, 8, 'down'); join(); put(G.P2, 4, 10, 'right'); G.P2.anim = null; G.riding = false;
+  G.S.horse = { name: 'Hazel', map: 'farm', x: 5 * T + 8, y: 10 * T + 12, dir: 'right' };
+};
+
+test('they get on the horse, ride faster, and get off with their Use', () => {
+  horseBy(); G.P2.slot = HOTBAR.indexOf('hoe');
+  partnerUse();
+  assert.equal(G.P2.riding, true);
+  assert.equal(G.riding, false, 'you stay on foot');
+  assert.equal(G.P2.x, G.S.horse.x);
+  const x = G.P2.x; partnerKeys({ right: true }); runUpdaters(0.25); partnerKeys({});
+  assert.ok(Math.abs(G.P2.x - x - PARTNER_SPEED * STABLE.speed * 0.25) < 1.5, 'at the horse\'s speed');
+  assert.equal(G.S.horse.x, G.P2.x, 'the horse goes with them');
+  G.P2.anim = null; partnerUse();
+  assert.equal(G.P2.riding, false);
+});
+
+test('one rider at a time, and going indoors leaves the horse outside', () => {
+  horseBy(); partnerUse();
+  put(G.S, 6, 10, 'left'); act();   // you face the horse they are on
+  assert.equal(G.riding, false);
+  G.anim = null; put(G.S, 3, 4, 'up'); act();      // the farmhouse door
+  assert.equal(G.S.map, 'house');
+  assert.equal(G.P2.riding, false);
+  assert.equal(G.S.horse.map, 'farm');
 });
