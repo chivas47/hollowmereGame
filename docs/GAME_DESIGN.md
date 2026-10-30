@@ -769,6 +769,8 @@ Small, and only what matters right now. Nothing here touches the economy.
 
 HUD size: 100% to 140%, never smaller (HUD text stays 16 px or larger). Full, minimal or hidden: V or the menu. Settings live in the browser, not the save.
 
+Phones held upright (v132): the field takes only its own height under the meters, the hotbar sits right under it, and the pad and Use button sit at the bottom of the screen by your thumbs. A long place name is cut short before it reaches the gold. Under 600 px wide the menu buttons drop their key hints.
+
 v120: Text size, 100% to 150%, scales dialogs, the menu and the bag (the HUD has its own size); a card still fits the window and scrolls. Contrast puts solid black behind the objective, the Use prompt, messages and the basket line, with cream edges on the meters, buttons and hotbar slots. Signals no longer rest on colour alone: quality in the bag and chests shows as 1 to 3 pips (fine, prime, heirloom) in the tier's colour, a low meter is striped as well as red, and ripe crops and forage glint with a small cross instead of a single dot. The objective and the Use prompt now sit under open dialogs instead of over them.
 
 ## The Bag (v113)

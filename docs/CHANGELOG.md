@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v132: Phones held upright
+- The field no longer floats between two empty bands: it sits under the meters with the hotbar right below, and the pad and Use button move to the bottom of the screen, where thumbs rest.
+- The time stays on one line, and a long place name is cut short instead of running into the gold.
+- In a browser window under 600 px wide the menu buttons drop their key hints, so Menu no longer falls off the right edge.
+- Phones held sideways and wide screens are unchanged. Nothing in the save, prices or keys changed.
+
 ## v131: Local two-player, part three
 - The second farmer has their own energy bar under yours and their own Use prompt over the tile they face, with the controller's A.
 - The first farmer's bed ends the day for both; the second farmer wakes beside you, and passing out at 2 am takes both home at 60% energy.

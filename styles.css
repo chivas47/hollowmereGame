@@ -121,7 +121,8 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
   .clock h1{font-size:18px}
   #date{grid-column:1/-1;order:-1}
   .clock h1{display:none}
-  .clockrow{gap:8px}
+  .clockrow{gap:8px;min-width:0}
+  #place{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}   /* v132: shortened before it runs into the gold */
   .meters{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
   .stat{flex-direction:column;align-items:stretch;gap:0}
   .lbl{line-height:1.1}
@@ -133,6 +134,13 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
   .held{display:inline}
   .dpad{grid-template-columns:repeat(3,48px);grid-template-rows:repeat(3,48px)}
   .toast{font-size:16px;max-width:96%;padding:6px 10px}
+  .menubar kbd{display:none}   /* v132: key hints made five buttons wider than a narrow window */
+  #time{white-space:nowrap}
+}
+/* v132: phones held upright: the field takes only its own height, and the spare room goes to the controls, at the bottom by your thumbs */
+@media (max-width:600px) and (orientation:portrait){
+  .game{grid-template-rows:auto auto auto minmax(0,calc((100vw - 32px) / 1.5 + 12px)) auto minmax(auto,1fr)}
+  .dpad,#use{align-self:end}
 }
 /* Phones held sideways */
 @media (pointer:coarse) and (orientation:landscape) and (max-height:600px){
