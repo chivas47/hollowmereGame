@@ -6,7 +6,7 @@ import { scheduleFor, vary } from '../src/data/schedules.js';
 import { NPCS } from '../src/data/npcs.js';
 import { MAPS, SOLID } from '../src/data/maps.js';
 
-const OUT = new Set(['farm', 'village', 'town', 'beach', 'forest', 'wilds']);
+const OUT = new Set(['farm', 'village', 'town', 'beach', 'forest', 'wilds', 'mere']);   // v161: the mere too
 const show = (list) => JSON.stringify(list);
 
 test('the same date plans the same day; Mondays a week apart mostly differ', () => {

@@ -21,7 +21,7 @@ const LANE = [[3, 8], [12, 8], [30, 8], [12, 8]];                   // the town'
 const LOWER = [[3, 12], [12, 12], [20, 12], [12, 12]];              // the town's lower lane
 // In the Lantern in the evening, each in their own place (v98: inside, at the tables; Lio on the stage).
 const LANTERN = venueMap('tavern');
-const TAVERN = { bram: [4, 9], corvin: [7, 9], maren: [10, 9], hale: [13, 9], lio: [15, 10], juno: [11, 11], rook: [5, 11], wren: [6, 11], pell: [12, 11] };
+const TAVERN = { garrow: [4, 11], ferran: [8, 11], bram: [4, 9], corvin: [7, 9], maren: [10, 9], hale: [13, 9], lio: [15, 10], juno: [11, 11], rook: [5, 11], wren: [6, 11], pell: [12, 11] };
 // v98: keepers work inside their buildings, behind the counter (data/venues.js spot).
 const KEEP = (id) => [venueMap(id), VENUES[id].spot];
 // Every front door in the village, for Juno's round.
@@ -71,6 +71,20 @@ const DAYS = {
   nell: (wd) => [go(7, 10.5, 'village', [5, 17], [8, 17], [3, 17]), wd === 6 ? along(13, 15, 'beach', 'ines', [8, 4]) : go(10.5, 15, 'wilds', [12, 2], [10, 4], [13, 5]), at(15, 19, 'village', [8, 11])],
   // Rook works on the beach all day, then the Lantern.
   rook: () => [go(8, 17, 'beach', [6, 11], [6, 9], [8, 7], [4, 8]), at(17, 21, LANTERN, TAVERN.rook)],
+  // v161 (roadmap 75e, docs/sketches/75e-neighbours.md). Garrow lines out at dawn, keeps the boathouse counter 9 to 5
+  // (out of sight inside; shut Thursdays: the dock, lunch at the Lantern, the square), then the Lantern with Rook.
+  garrow: (wd) => (wd === 3
+    ? [{ ...at(6, 11, 'mere', [17, 15]), face: 'up' }, go(13, 17, 'village', ...SQUARE), at(18, 21, LANTERN, TAVERN.garrow)]
+    : [{ ...at(6, 8.5, 'mere', [17, 15]), face: 'up' }, go(17, 18, 'village', [33, 20], [20, 20], [11, 12]), at(18, 21, LANTERN, TAVERN.garrow)]),
+  // Ysolde cuts reeds on the north shore at dawn, weaves on her step, takes baskets into town, then the square;
+  // Sundays she walks the shore with Esme.
+  ysolde: (wd) => [go(7, 10, 'mere', [12, 3], [20, 3], [28, 3]), { ...at(10, 12, 'mere', [7, 20]), face: 'up' }, go(13, 15, 'town', ...LANE),
+    wd === 6 ? along(16, 19, 'village', 'esme', ...SQUARE) : go(15, 18, 'village', ...SQUARE)],
+  // Ferran lifts his eel traps on the east shore before dawn, mends them by Rook's boat, fishes the Wilds pond with
+  // Odile on Tuesdays and Fridays (otherwise sleeps after lunch), then races Kit along the east road.
+  ferran: (wd) => [go(5.5, 9, 'mere', [37, 9], [38, 12], [37, 15]), at(9, 12, 'beach', [8, 8]),
+    ...([1, 4].includes(wd) ? [{ ...at(13, 15.5, 'wilds', [14, 11]), face: 'right' }] : []), go(16, 18, 'village', [34, 8], [24, 9], [34, 8]),
+    ...(wd === 5 ? [at(19, 21, LANTERN, TAVERN.ferran)] : [])],
   // Esme paints in the forest, then the village, then the shore at dusk.
   esme: () => [go(9, 16, 'forest', [4, 4], [16, 6], [6, 11]), go(16, 19, 'village', ...SQUARE), at(19, 21, 'beach', [12, 4])],
   // Kit hangs about the Anvil in the morning and the square after; Saturdays at the beach.
@@ -87,7 +101,7 @@ const DAYS = {
 // neighbour's shelter instead: 'home' (their cottage, or out of sight over their shop), a place indoors, or 'out'
 // for the two who go out anyway (Juno's mail does not wait; Kit tests the go-cart). Blocks already indoors stay.
 export const RAIN_WEATHERS = ['rain', 'storm'];
-const OUTDOORS = new Set(['farm', 'village', 'town', 'beach', 'forest', 'wilds', 'mountain', 'railway', 'grove', 'desert']);
+const OUTDOORS = new Set(['farm', 'village', 'town', 'beach', 'forest', 'wilds', 'mountain', 'railway', 'grove', 'desert', 'mere']);
 const RAIN = {
   ines: 'home',                      // jars honey in the kitchen
   bram: 'home',                      // his rest day by the stove
@@ -103,6 +117,9 @@ const RAIN = {
   rook: 'home',
   esme: [LANTERN, [3, 7]],           // sketches the regulars, beside Odile
   kit: 'out',                        // tests the go-cart in the wet
+  garrow: 'home',                    // v161: the boathouse counter
+  ysolde: 'home',                    // the loom: reeds weave best damp
+  ferran: 'out',                     // eels love the rain
 };
 export function rainDay(id, blocks) {
   const shelter = RAIN[id] || 'home';
@@ -133,6 +150,9 @@ const FAVOURITE = {
   lio: ['forest', [20, 5], 'down'],      // to write a tune where nobody can hear
   bram: ['wilds', [5, 6], 'down'],
   wren: ['forest', [3, 3], 'down'],
+  garrow: ['mere', [17, 15], 'up'],      // v161: the dock, watching the water
+  ysolde: ['mere', [16, 3], 'down'],     // the reed beds at dawn
+  ferran: ['mere', [38, 11], 'left'],    // the east shore
 };
 const DETOUR = { chance: 2 / 7, length: 45 };
 const hash = (str) => [...str].reduce((h, ch) => Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0, 2166136261);
@@ -166,7 +186,7 @@ export function vary(id, day, blocks) {
 // each of the shoppers stops at Fenn's for half an hour in the afternoon (never on Wednesdays, when Wren shuts),
 // each at their own time and aisle, so two never meet on one tile. does: what they hold there (data/doings.js).
 const LUNCH = {
-  ines: 'home', tavi: 'home', kit: 'home',
+  ines: 'home', tavi: 'home', kit: 'home', ysolde: 'home', garrow: [LANTERN, TAVERN.garrow], ferran: [LANTERN, TAVERN.ferran],   // v161
   odile: [LANTERN, [3, 8]], nell: [LANTERN, [9, 8]], lio: [LANTERN, TAVERN.lio], juno: [LANTERN, TAVERN.juno], rook: [LANTERN, TAVERN.rook],
 };
 const STORE = venueMap('store'), STORE_SHUT = 2;

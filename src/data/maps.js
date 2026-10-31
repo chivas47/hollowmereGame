@@ -119,6 +119,9 @@ function mereGrid() {
   m[20][0] = 'E'; fill(m, 1, 20, MERE.dock.x, 20, 'P');   // the lane from the village
   const { x: bx, y: by } = MERE.boathouse; fill(m, bx, by, bx + 2, by + 1, 'β');
   fill(m, MERE.dock.x, MERE.dock.from, MERE.dock.x, MERE.dock.to, 'P');   // the dock, out over the water
+  // v161 (roadmap 75e): Ysolde's cottage on the west plot, onto the lane; Ferran's on the east plot, its own path
+  for (const [x, y] of MERE.cottages) fill(m, x, y, x + 2, y + 1, 'V');
+  fill(m, MERE.dock.x, 21, 31, 21, 'P');
   put(m, [[3, 3], [6, 12], [3, 24], [9, 25], [20, 24], [27, 22], [33, 25], [37, 20], [38, 4], [35, 2], [8, 6]], 'T');
   return m;
 }
@@ -437,7 +440,7 @@ export const MAPS = {
     exits: { '0,3': { to: 'wilds', x: W - 2, y: 3, dir: 'left' } },
   },
   mere: {   // v160 (roadmap 75d)
-    name: 'The mere', salt: 79, grid: mereGrid(), objects: [{ art: 'boathouse', x: MERE.boathouse.x, y: MERE.boathouse.y }],
+    name: 'The mere', salt: 79, grid: mereGrid(), objects: [{ art: 'boathouse', x: MERE.boathouse.x, y: MERE.boathouse.y }, { art: 'cottage', x: 4, y: 18, roof: '#a0a45a' }, { art: 'cottage', x: 30, y: 19, roof: '#5a6a3a' }],   // v161: Ysolde, Ferran
     exits: { '0,20': { to: 'village', x: VILLAGE_SIZE.w - 2, y: 20, dir: 'left' } },
   },
   town: {
