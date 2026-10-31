@@ -60,8 +60,10 @@ export function crowdPlan(kind, ids, day, hours) {
   // v151: closing time: each lingers a little; friends leave together, the second walking the first home.
   const last = (id) => plan[id][plan[id].length - 1];
   for (const m of minglers) last(m.id).to = hours.to + step * Math.floor(rand() * (CLOSE.linger / step + 1));
+  const gone = new Set();   // v161: some have two friends now; each leaves with the first, once
   for (const { a, b } of FRIENDS) {
-    if (roles[a] || roles[b] || !plan[a]?.length || !plan[b]?.length) continue;
+    if (roles[a] || roles[b] || !plan[a]?.length || !plan[b]?.length || gone.has(a) || gone.has(b)) continue;
+    gone.add(a); gone.add(b);
     const end = Math.max(last(a).to, last(b).to);
     last(a).to = end; last(b).to = end;
     plan[b].push({ ...block(end, end + CLOSE.walkHome, [last(b).path[0]]), stay: false, with: a, home: true });
