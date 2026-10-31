@@ -17,7 +17,7 @@ const along = (from, to, map, leader, ...path) => ({ from: from * H, to: to * H,
 // Places they share.
 const SQUARE = [[9, 7], [14, 7], [14, 10], [9, 10]];               // around the fountain
 const BOARD = [11, 6];                                              // in front of the quest board
-const LANE = [[3, 8], [12, 8], [21, 8], [12, 8]];                   // the town's upper lane
+const LANE = [[3, 8], [12, 8], [30, 8], [12, 8]];                   // the town's upper lane (v159: longer)
 const LOWER = [[3, 12], [12, 12], [20, 12], [12, 12]];              // the town's lower lane
 // In the Lantern in the evening, each in their own place (v98: inside, at the tables; Lio on the stage).
 const LANTERN = venueMap('tavern');
@@ -25,7 +25,7 @@ const TAVERN = { bram: [4, 9], corvin: [7, 9], maren: [10, 9], hale: [13, 9], li
 // v98: keepers work inside their buildings, behind the counter (data/venues.js spot).
 const KEEP = (id) => [venueMap(id), VENUES[id].spot];
 // Every front door in the village, for Juno's round.
-const DOORS = [[2, 4], [6, 4], [17, 4], [21, 4], [19, 14], [15, 14], [7, 14], [3, 14]];
+const DOORS = [[2, 4], [6, 4], [17, 4], [21, 4], [25, 8], [31, 8], [14, 20], [5, 20]];   // v159: Esme and Kit on the east road, Rook and Nell on the lower lane
 
 const DAYS = {
   // Ines keeps hives in the Wilds meadow and lets the bees work your field; Sundays in the square and on the shore.
@@ -38,7 +38,7 @@ const DAYS = {
     : [at(9, 17, ...KEEP('carpenter')), at(17, 19, LANTERN, TAVERN.bram)]),
   // Odile fishes the Wilds pond at dawn (v147: facing the water), walks the farm, then mends nets on the pier. Fridays she only fishes.
   odile: (wd, def) => (wd === 4
-    ? [{ ...at(6, 11, 'wilds', [14, 10]), face: 'right' }, go(11, 17, 'village', ...SQUARE), { ...at(19, 21, 'beach', [13, 4]), face: 'left' }]   // v149: dusk on the shore with Esme
+    ? [{ ...at(6, 10.5, 'wilds', [14, 10]), face: 'right' }, go(10.5, 17, 'village', ...SQUARE), { ...at(19, 21, 'beach', [13, 4]), face: 'left' }]   // v149: dusk on the shore with Esme; v159: half an hour sooner, the village is bigger
     : [{ ...at(6, 10, 'wilds', [14, 10]), face: 'right' }, go(10, 14, 'farm', ...def.path), at(14, 18, 'beach', [7, 9])]),
   // Tavi charts the valley: the village lanes, your fence line and the forest one day, the town and the shore the next.
   tavi: (wd, def) => (wd === 6
@@ -48,7 +48,7 @@ const DAYS = {
       : [go(8, 12, 'town', [2, 9], [21, 9], [21, 13], [2, 13]), go(12, 16, 'beach', [2, 2], [21, 4], [12, 8]), go(16, 18, 'village', ...SQUARE)]),
   // Wren keeps the store 9 to 5 (shut Wednesdays), then a stroll through the village and the Lantern.
   wren: (wd) => (wd === 2
-    ? [go(10, 16, 'village', ...SQUARE, [8, 14], [18, 14]), go(16, 19, 'beach', [10, 3], [18, 6])]
+    ? [go(10, 16, 'village', ...SQUARE, [8, 13], [8, 20], [26, 20]), go(16, 19, 'beach', [10, 3], [18, 6])]
     : [at(9, 17, ...KEEP('store')), go(17, 19, 'village', ...SQUARE), at(19, 21, LANTERN, TAVERN.wren)]),   // v149: then the Lantern, beside Rook
   // Corvin at his anvil, then the Lantern.
   corvin: () => [at(9, 16, ...KEEP('smithy')), at(16, 20, LANTERN, TAVERN.corvin)],
@@ -65,10 +65,10 @@ const DAYS = {
     ? [go(9, 16, 'forest', [4, 4], [16, 6], [3, 10]), go(16, 19, 'town', ...LOWER)]
     : [at(9, 15, venueMap('hall'), [14, 5]), go(15, 18, 'village', ...SQUARE), at(18, 21, LANTERN, TAVERN.pell)]),
   // Juno carries the mail: every village door, your farm, the town's doors, then the Lantern.
-  juno: () => [go(7, 10, 'village', ...DOORS), go(10, 12, 'farm', [4, 4], [12, 4], [20, 5]), go(12, 17, 'town', [4, 7], [11, 7], [16, 7], [5, 12], [15, 12], [19, 12], [14, 3]), at(17, 21, LANTERN, TAVERN.juno)],
+  juno: () => [go(7, 10, 'village', ...DOORS), go(10, 12, 'farm', [4, 4], [12, 4], [20, 5]), go(12, 17, 'town', [4, 7], [34, 7], [16, 7], [5, 12], [15, 12], [19, 12], [14, 3]), at(17, 21, LANTERN, TAVERN.juno)],
   // Nell tends the garden between the south cottages, visits the old mine mouth, then sits by the square.
   // v149: Sundays she walks the shore with Ines.
-  nell: (wd) => [go(7, 11, 'village', [5, 12], [4, 11], [6, 11]), wd === 6 ? along(13, 15, 'beach', 'ines', [8, 4]) : go(11, 15, 'wilds', [12, 2], [10, 4], [13, 5]), at(15, 19, 'village', [8, 11])],
+  nell: (wd) => [go(7, 10.5, 'village', [5, 17], [8, 17], [3, 17]), wd === 6 ? along(13, 15, 'beach', 'ines', [8, 4]) : go(10.5, 15, 'wilds', [12, 2], [10, 4], [13, 5]), at(15, 19, 'village', [8, 11])],
   // Rook works on the beach all day, then the Lantern.
   rook: () => [go(8, 17, 'beach', [6, 11], [6, 9], [8, 7], [4, 8]), at(17, 21, LANTERN, TAVERN.rook)],
   // Esme paints in the forest, then the village, then the shore at dusk.
@@ -77,7 +77,7 @@ const DAYS = {
   kit: (wd) => (wd === 5
     ? [go(9, 17, 'beach', [4, 6], [18, 6])]
     : wd === 6   // v149: Sundays Kit tags along on Tavi's round
-      ? [at(8, 12, 'town', [12, 8]), along(13, 16, 'village', 'tavi', [12, 8]), at(16, 21, 'village', [20, 14])]
+      ? [at(8, 12, 'town', [12, 8]), along(13, 16, 'village', 'tavi', [12, 8]), at(16, 21, 'village', [29, 9])]
       : [at(8, 12, 'town', [12, 8]), go(12, 17, 'village', ...SQUARE), at(17, 21, 'village', [20, 14])]),
   // The Lamplighter only comes out after dark.
   lamp: () => [at(18, 26, 'sewer', [20, 3])],
@@ -124,7 +124,7 @@ const FAVOURITE = {
   ines: ['beach', [16, 5], 'down'],      // to look at the sea
   odile: ['village', [13, 9], 'left'],   // the fountain, for the ducks
   tavi: ['wilds', [12, 2], 'up'],        // the old mine mouth, still not on any map
-  nell: ['forest', [16, 6], 'down'],
+  nell: ['forest', [15, 5], 'down'],     // v159: a step from Esme's easel (16,6), so they never share it
   rook: ['forest', [4, 4], 'down'],      // to choose the next plank's wood
   esme: ['wilds', [8, 11], 'down'],
   kit: ['beach', [18, 6], 'down'],

@@ -34,7 +34,7 @@ import { VENUES, venueMap } from './venues.js';
 // v156 (roadmap 75g): a map's size in tiles, read from its grid, so a map can be larger than the screen (W x H).
 export const sizeOf = (id) => { const g = MAPS[id]?.grid; return g?.length ? { w: g[0].length, h: g.length } : { w: W, h: H }; };
 
-export const SOLID = new Set(['Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
+export const SOLID = new Set(['ħ', 'ǧ', 'ƀ', 'Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
 
 // v158: w and h for a map larger than the screen (roadmap 75i); the camera follows you across it.
 function emptyGrid(w = W, h = H) {
@@ -74,23 +74,32 @@ function wildsGrid() {
   return m;
 }
 
+// v159 (roadmap 75c, docs/sketches/75c-village.md): 40 x 28, grown east and south. The square, the north row and the
+// sewer grate keep their tiles; Esme and Kit moved onto the east road, Nell and Rook onto a new lower lane with two
+// empty lots, and the old south row became a green with benches and Nell's garden. A pond in the south-east.
+export const VILLAGE_SIZE = { w: 40, h: 28 };
 function villageGrid() {
-  const m = emptyGrid();
+  const { w, h } = VILLAGE_SIZE, m = emptyGrid(w, h);
   [[1, 2], [5, 2], [16, 2], [20, 2]].forEach(([x, y]) => fill(m, x, y, x + 2, y + 1, 'V'));
-  fill(m, 1, 4, W - 2, 4, 'P');
+  fill(m, 1, 4, 22, 4, 'P');
   fill(m, 8, 6, 15, 11, 'P');
   put(m, [[9, 5], [14, 5]], 'P');
-  fill(m, 16, 8, W - 2, 8, 'P'); m[8][W - 1] = 'E';
+  fill(m, 16, 8, w - 2, 8, 'P'); m[8][w - 1] = 'E';   // the east road to the farm
   fill(m, 11, 5, 12, 5, 'Q');
   fill(m, 11, 8, 12, 9, 'F');
   fill(m, 13, 11, 14, 11, 'J');
-  fill(m, 11, 12, 11, 14, 'P'); m[15][11] = 'E';   // v43: the path south to the beach
+  fill(m, 11, 12, 11, h - 2, 'P'); m[h - 1][11] = 'E';   // v43: the path south to the beach
   m[11][2] = ';';                                   // v45: the sewer grate
   fill(m, 10, 0, 10, 3, 'P'); m[0][10] = 'E';       // v46: the lane north to the town
-  put(m, [[3, 9], [5, 12], [2, 14], [21, 10], [6, 7]], 'T');
-  // v50: a row of cottages on the south lane (Nell, Rook, Esme, Kit), their doors onto row 14
-  [2, 6, 14, 18].forEach((x) => fill(m, x, 12, x + 2, 13, 'V'));
-  m[12][5] = 'g'; fill(m, 3, 14, 20, 14, 'P');
+  put(m, [[3, 9], [21, 10], [6, 7], [37, 3], [37, 13], [18, 14], [5, 24], [16, 24], [25, 24]], 'T');
+  [[24, 6], [30, 6]].forEach(([x, y]) => fill(m, x, y, x + 2, y + 1, 'V'));   // Esme and Kit, doors onto the east road
+  fill(m, 23, 5, 34, 5, 'ħ');                        // a hedge behind them
+  fill(m, 33, 9, 33, 19, 'P');                       // the east lane down to the lower lane
+  fill(m, 2, 20, 33, 20, 'P');                       // the lower lane
+  [[4, 18], [13, 18]].forEach(([x, y]) => fill(m, x, y, x + 2, y + 1, 'V'));   // Nell and Rook, doors onto it
+  put(m, [[2, 12], [5, 12], [2, 14], [5, 14]], 'ƀ');   // the green's benches
+  fill(m, 3, 15, 8, 16, 'ǧ');                        // Nell's garden behind her house
+  fill(m, 30, 22, 36, 25, 'O');                      // the village pond
   return m;
 }
 
@@ -152,7 +161,7 @@ function railwayGrid() {
 // v46: the town north of the village: three shops along a lane. v98: each one has an inside (data/venues.js).
 export const SHOP_SPOTS = {
   store:     { tile: '(', x: 3, y: 5 },
-  smithy:    { tile: ')', x: 10, y: 5 },
+  smithy:    { tile: ')', x: 33, y: 5 },   // v159 (roadmap 75c): moved to the east edge of town (fire, noise)
   carpenter: { tile: ']', x: 17, y: 5 },
   tavern:    { tile: '[', x: 4, y: 10 },    // v47: the south side, doors onto the lower lane
   clinic:    { tile: '/', x: 14, y: 10 },
@@ -160,22 +169,25 @@ export const SHOP_SPOTS = {
   ranch:     { tile: '£', x: 7, y: 10 },     // v69: the ranch counter, between the tavern and the lane
 };
 export const CLINIC_BED = { map: 'inside_clinic', x: 14, y: 12, dir: 'up' };   // v47: where you come to after fainting (v98: in the ward)
+// v159 (roadmap 75c): 40 x 24, grown east and south. The shops, hall and cottages keep their tiles; the Anvil moved
+// to the east edge and its old spot is a small green; the coach stop and the ridge path moved to the new east edge.
+export const TOWN_SIZE = { w: 40, h: 24 };
 function townGrid() {
-  const m = emptyGrid();
-  fill(m, 0, 0, W - 1, 0, 'T'); fill(m, 0, 0, 0, H - 1, 'T'); fill(m, W - 1, 0, W - 1, H - 1, 'T');
+  const { w, h } = TOWN_SIZE, m = emptyGrid(w, h);
   for (const s of Object.values(SHOP_SPOTS)) fill(m, s.x, s.y, s.x + 2, s.y + 1, s.tile);   // v98: keepers work inside now
-  fill(m, 2, 8, 21, 8, 'P');
+  fill(m, 2, 8, w - 2, 8, 'P');
   for (const s of Object.values(SHOP_SPOTS)) if (s.y < 8) m[7][s.x + 1] = 'P';
-  fill(m, 10, 9, 10, H - 1, 'P'); m[H - 1][10] = 'E';
-  fill(m, 2, 12, 21, 12, 'P');   // v47: the lower lane past the tavern and the clinic
-  put(m, [[3, 2], [7, 3], [7, 14], [21, 14], [2, 14], [17, 14]], 'T');
+  fill(m, 10, 9, 10, h - 1, 'P'); m[h - 1][10] = 'E';
+  fill(m, 2, 12, 30, 12, 'P');   // v47: the lower lane past the tavern and the clinic
+  put(m, [[3, 2], [7, 3], [24, 3], [7, 14], [2, 14], [30, 15], [36, 19]], 'T');
+  put(m, [[11, 5], [11, 6]], 'ƀ');   // benches on the green where the Anvil stood
   fill(m, 13, 1, 15, 2, 'V'); fill(m, 14, 3, 14, 7, 'P');   // v49: Lio's cottage on the north edge
   fill(m, 4, 1, 6, 2, 'V'); fill(m, 5, 3, 5, 7, 'P');        // v50: Pell's cottage
   fill(m, 18, 1, 20, 2, 'V'); fill(m, 19, 3, 20, 3, 'P'); fill(m, 20, 4, 20, 7, 'P');   // v50: Juno's cottage
   fill(m, 9, 1, 11, 2, '-'); fill(m, 8, 3, 10, 3, 'P'); fill(m, 8, 4, 8, 7, 'P');      // v53: the town hall
-  m[8][22] = 'P'; m[7][22] = '0';   // v64: the coach stop at the east end of the lane
+  m[7][36] = '0';   // v64: the coach stop at the east end of the lane (v159: the new east end)
   m[MACHINE.at.y][MACHINE.at.x] = '¤';   // v69: the prize machine by the town hall
-  m[4][W - 1] = 'E'; m[4][W - 2] = 'Ŧ'; m[4][W - 3] = 'P';   // v106: the ridge path east to the mountain, behind a fallen trunk
+  m[4][w - 1] = 'E'; m[4][w - 2] = 'Ŧ'; fill(m, w - 3, 4, w - 3, 7, 'P');   // v106: the ridge path east to the mountain, behind a fallen trunk
   return m;
 }
 
@@ -342,7 +354,7 @@ export const MAPS = {
     objects: [{ art: 'house', x: 1, y: 1 }, { art: 'bin', x: 8, y: 3 }, { art: 'well', x: 12, y: 3 }, { art: 'workbench', x: 15, y: 3 }, { art: 'shop', x: 19, y: 1 }],
     exits: {
       [`${W - 1},4`]: { to: 'wilds', x: 1, y: 4, dir: 'right' },
-      '0,4': { to: 'village', x: W - 2, y: 8, dir: 'left' },
+      '0,4': { to: 'village', x: VILLAGE_SIZE.w - 2, y: 8, dir: 'left' },
       '10,15': { to: 'forest', x: 10, y: 1, dir: 'down' },   // v43
     },
     spawn: { x: 3, y: 4, dir: 'down' },
@@ -358,9 +370,9 @@ export const MAPS = {
       { art: 'cottage', x: 1, y: 2, roof: '#a5432f' }, { art: 'cottage', x: 5, y: 2, roof: '#5d7a4a' },
       { art: 'cottage', x: 16, y: 2, roof: '#3f5f6e' }, { art: 'cottage', x: 20, y: 2, roof: '#8b6a9e' },
       { art: 'board', x: 11, y: 5 }, { art: 'fountain', x: 11, y: 8 }, { art: 'table', x: 13, y: 11 },
-      { art: 'cottage', x: 2, y: 12, roof: '#7a8a5a' }, { art: 'cottage', x: 6, y: 12, roof: '#4a6a7a' }, { art: 'cottage', x: 14, y: 12, roof: '#8a5a8a' }, { art: 'cottage', x: 18, y: 12, roof: '#c98a3a' },   // v50
+      { art: 'cottage', x: 4, y: 18, roof: '#7a8a5a' }, { art: 'cottage', x: 13, y: 18, roof: '#4a6a7a' }, { art: 'cottage', x: 24, y: 6, roof: '#8a5a8a' }, { art: 'cottage', x: 30, y: 6, roof: '#c98a3a' },   // v50: Nell, Rook, Esme, Kit (v159: moved, roadmap 75c)
     ],
-    exits: { [`${W - 1},8`]: { to: 'farm', x: 1, y: 4, dir: 'right' }, '11,15': { to: 'beach', x: 11, y: 1, dir: 'down' }, '10,0': { to: 'town', x: 10, y: H - 2, dir: 'up' } },   // v43: the beach; v46: the town
+    exits: { [`${VILLAGE_SIZE.w - 1},8`]: { to: 'farm', x: 1, y: 4, dir: 'right' }, [`11,${VILLAGE_SIZE.h - 1}`]: { to: 'beach', x: 11, y: 1, dir: 'down' }, '10,0': { to: 'town', x: 10, y: TOWN_SIZE.h - 2, dir: 'up' } },   // v43: the beach; v46: the town; v159: the new edges
   },
   house: {
     name: 'Farmhouse', salt: 3, base: 'house', grid: houseGrid(),
@@ -390,7 +402,7 @@ export const MAPS = {
   },
   beach: {
     name: 'Saltreach Beach', salt: 41, grid: beachGrid(), objects: [{ art: 'boat', x: 5, y: 12 }], ground: 'z',
-    exits: { '11,0': { to: 'village', x: 11, y: 14, dir: 'up' } },
+    exits: { '11,0': { to: 'village', x: 11, y: VILLAGE_SIZE.h - 2, dir: 'up' } },
   },
   forest: {
     name: 'Brackenwood', salt: 29, grid: forestGrid(), objects: [],
@@ -406,8 +418,8 @@ export const MAPS = {
   },
   town: {
     name: 'Hollowmere Town', salt: 83, grid: townGrid(),
-    objects: [{ art: 'board', x: 22, y: 7 }, ...Object.entries(SHOP_SPOTS).map(([kind, s]) => ({ art: 'storefront', kind, x: s.x, y: s.y })), { art: 'cottage', x: 13, y: 1, roof: '#7a4a8a' }, { art: 'cottage', x: 4, y: 1, roof: '#5f8fb5' }, { art: 'cottage', x: 18, y: 1, roof: '#a5432f' }, { art: 'storefront', kind: 'hall', x: 9, y: 1 }],
-    exits: { [`10,${H - 1}`]: { to: 'village', x: 10, y: 1, dir: 'down' } },
+    objects: [{ art: 'board', x: 36, y: 7 }, ...Object.entries(SHOP_SPOTS).map(([kind, s]) => ({ art: 'storefront', kind, x: s.x, y: s.y })), { art: 'cottage', x: 13, y: 1, roof: '#7a4a8a' }, { art: 'cottage', x: 4, y: 1, roof: '#5f8fb5' }, { art: 'cottage', x: 18, y: 1, roof: '#a5432f' }, { art: 'storefront', kind: 'hall', x: 9, y: 1 }],
+    exits: { [`10,${TOWN_SIZE.h - 1}`]: { to: 'village', x: 10, y: 1, dir: 'down' } },
   },
   maze: {
     name: 'The hedge maze', salt: 97, grid: mazeGrid(), objects: [],

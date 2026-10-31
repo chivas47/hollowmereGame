@@ -6,10 +6,10 @@ export const TRUNK = 'Ŧ';   // the grid letter of an uncut trunk (solid; drawn 
 export const SHORTCUTS = {
   ridge: {
     name: 'the ridge path', axe: 1, hp: 20, drops: { hardwood: 8 }, xp: ['foraging', 25],
-    trunks: [{ map: 'town', x: 22, y: 4 }, { map: 'mountain', x: 1, y: 10 }],
+    trunks: [{ map: 'town', x: 38, y: 4 }, { map: 'mountain', x: 1, y: 10 }],   // v159: the town's new east edge
     exits: [
-      { map: 'town', at: [23, 4], to: 'mountain', x: 1, y: 10, dir: 'right' },
-      { map: 'mountain', at: [0, 10], to: 'town', x: 22, y: 4, dir: 'left' },
+      { map: 'town', at: [39, 4], to: 'mountain', x: 1, y: 10, dir: 'right' },
+      { map: 'mountain', at: [0, 10], to: 'town', x: 38, y: 4, dir: 'left' },
     ],
     // What facing the trunk says, from each map, and the line when it splits.
     hint: { town: 'A fallen trunk blocks an old path east, toward the mountain. A copper axe could cut through it.',

@@ -12,15 +12,15 @@ export const HOMES = {
   bram: { map: 'village', cottage: [5, 2] },
   odile: { map: 'village', cottage: [16, 2] },
   tavi: { map: 'village', cottage: [20, 2] },
-  nell: { map: 'village', cottage: [2, 12] },
-  rook: { map: 'village', cottage: [6, 12] },
-  esme: { map: 'village', cottage: [14, 12] },
-  kit: { map: 'village', cottage: [18, 12] },
+  nell: { map: 'village', cottage: [4, 18] },    // v159 (roadmap 75c): the lower lane, her garden behind
+  rook: { map: 'village', cottage: [13, 18] },   // v159: the lower lane, by the beach path
+  esme: { map: 'village', cottage: [24, 6] },    // v159: the east road, light from the south
+  kit: { map: 'village', cottage: [30, 6] },     // v159: the east road, on the way to the farm
   lio: { map: 'town', cottage: [13, 1] },
   pell: { map: 'town', cottage: [4, 1] },
   juno: { map: 'town', cottage: [18, 1] },
   wren: { map: 'town', door: [4, 7] },     // over Fenn's Provisions
-  corvin: { map: 'town', door: [11, 7] },  // behind the Anvil
+  corvin: { map: 'town', door: [34, 7] },  // behind the Anvil (v159: at the east edge)
   hob: { map: 'town', door: [5, 12] },     // over the Lantern
   maren: { map: 'town', door: [15, 12] },  // over the clinic
   hale: { map: 'wilds', door: [14, 4] },   // the Wardens' Lodge

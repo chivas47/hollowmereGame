@@ -45,7 +45,7 @@ test('after closing: nobody stays long, friends leave at the same moment and one
 
 test('a cottage window belongs to its owner, and is theirs to light only while they are in', () => {
   const objs = MAPS.village.objects;
-  assert.equal(ownerOf('village', objs.find((o) => o.art === 'cottage' && o.x === 2 && o.y === 12)), 'nell');
+  assert.equal(ownerOf('village', objs.find((o) => o.art === 'cottage' && o.x === 4 && o.y === 18)), 'nell');   // v159: her cottage on the lower lane
   assert.equal(ownerOf('village', objs.find((o) => o.art === 'fountain')), null);
   const nell = NPCRT.find((n) => n.id === 'nell');
   nell.map = 'home_nell'; assert.equal(homeNow('nell'), true);

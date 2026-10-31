@@ -119,7 +119,7 @@ Legend as above, plus `(` store, `]` carpentry, `)` the Anvil, `[` Lantern, `£`
 Stardew's town by role: houses on their own lanes with yards, the square at the centre for festivals, the
 smithy at the edge, empty ground left for buildings that come later. Shapes, names and layout are ours.
 
-## Questions for Nuno
+## Questions for Nuno (answered, October 2026: two maps, move the Anvil, keep the lots, new tiles, river fish for now)
 
 1. **Two maps or one?** Recommended: keep the village and the town as two maps joined by the north lane.
    Joining them into one is possible but renames a map every save and every routine refers to.

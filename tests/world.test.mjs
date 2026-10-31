@@ -146,3 +146,17 @@ test('every map is at least the size of the screen, with rows of one length', ()
   const bad = Object.entries(MAPS).filter(([, m]) => m.grid.length < H || m.grid[0].length < W || m.grid.some((r) => r.length !== m.grid[0].length)).map(([id]) => id);
   assert.deepEqual(bad, []);
 });
+
+// v159 (roadmap 75c): the village and the town laid out again.
+import { WATERS } from '../src/systems/fishing.js';
+test('75c: the moved homes, the Anvil at the edge and the village pond with river fish', () => {
+  const g = (id) => MAPS[id].grid;
+  for (const [id, x, y] of [['nell', 4, 18], ['rook', 13, 18], ['esme', 24, 6], ['kit', 30, 6]]) {
+    assert.deepEqual(HOMES[id].cottage, [x, y]);
+    assert.equal(g('village')[y][x], 'V', `${id}'s cottage stands where HOMES says`);
+    assert.equal(g('village')[y + 2][x + 1], 'P', `${id}'s door opens onto a lane`);
+  }
+  assert.equal(g('town')[5][33], ')'); assert.equal(g('town')[7][34], 'P');
+  assert.equal(g('village')[23][33], 'O');
+  assert.equal(WATERS.village, 'river');
+});
