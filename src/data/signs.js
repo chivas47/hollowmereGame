@@ -6,14 +6,14 @@ export const SIGN = 'Ş';
 
 export const SIGNS = {
   village: [
-    { x: 22, y: 9, kind: 'post', dir: 'right', text: 'East: {farm} Farm.' },
-    { x: 12, y: 13, kind: 'post', dir: 'down', text: 'South: Saltreach Beach.' },
+    { x: 37, y: 9, kind: 'post', dir: 'right', text: 'East: {farm} Farm.' },   // v159: the village's new edges
+    { x: 12, y: 25, kind: 'post', dir: 'down', text: 'South: Saltreach Beach.' },
     { x: 11, y: 1, kind: 'post', dir: 'up', text: 'North: Hollowmere Town.' },
     { x: 18, y: 7, kind: 'notice', text: 'Whoever keeps borrowing the bucket from the fountain: please bring it back. It is not yours.' },
   ],
   town: [
-    { x: 11, y: 14, kind: 'post', dir: 'down', text: 'South: the village.' },
-    { x: 21, y: 3, kind: 'post', dir: 'right', text: 'East: the old ridge path to the mountain lake. A tree came down across it years ago.',
+    { x: 11, y: 21, kind: 'post', dir: 'down', text: 'South: the village.' },   // v159: the town's new edges
+    { x: 36, y: 3, kind: 'post', dir: 'right', text: 'East: the old ridge path to the mountain lake. A tree came down across it years ago.',
       after: { shortcut: 'ridge', text: 'East: the ridge path to the mountain lake. Open again, thanks to someone with a good axe.' } },
     { x: 13, y: 9, kind: 'notice', text: 'Lost: one grey cat, answers to Pudding, ignores everyone else. Reward at the tavern.' },
   ],

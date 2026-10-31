@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v159: The village laid out
+- Hollowmere Village is now 40 by 28 tiles and the town 40 by 24; the camera follows you across both. The square, the north row of cottages, the shops, the hall and the town cottages are where they were.
+- Esme and Kit live on the east road toward your farm, behind a hedge; Nell and Rook on a new lower lane, with two empty lots for newcomers. Nell's garden is behind her house, the old south row is a green with benches, and a pond in the south-east has the river's fish.
+- The Anvil moved to the east edge of town (fire and noise away from the shops); its old spot is a small green. The coach stop and the ridge path moved to the new east edge.
+- The ways in and out moved to the new edges: east to your farm, south to the beach, the lane between the village and the town. Signs, routines and Juno's round follow. Nell and Odile set out half an hour sooner on the days the bigger village would make them late.
+- A farm saved standing where there is now a bench or a garden starts on the nearest lane. No prices or keys changed.
+
 ## v158: The grove grows
 - The hidden grove is the first place larger than the screen: 40 by 24 tiles, and the view follows you across it. East of the old glade, a ring of old trees round a mossy clearing; south, a still pool among more old trees, with the same glade fish as the pond.
 - It grew east and south, so everything already there kept its place: the six stumps, the cairn, the pond and its falls, the morning's forage. Old saves load as they were; nothing needed moving.
