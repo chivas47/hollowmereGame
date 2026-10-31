@@ -7,6 +7,7 @@ export const SIGN = 'Ş';
 export const SIGNS = {
   village: [
     { x: 37, y: 9, kind: 'post', dir: 'right', text: 'East: {farm} Farm.' },   // v159: the village's new edges
+    { x: 37, y: 19, kind: 'post', dir: 'right', text: 'East: the mere.' },   // v160
     { x: 12, y: 25, kind: 'post', dir: 'down', text: 'South: Saltreach Beach.' },
     { x: 11, y: 1, kind: 'post', dir: 'up', text: 'North: Hollowmere Town.' },
     { x: 18, y: 7, kind: 'notice', text: 'Whoever keeps borrowing the bucket from the fountain: please bring it back. It is not yours.' },
@@ -34,6 +35,11 @@ export const SIGNS = {
   ],
   railway: [{ x: 1, y: 4, kind: 'post', dir: 'left', text: 'West: the Wilds.' }],
   grove: [{ x: 37, y: 11, kind: 'post', dir: 'right', text: 'East: Brackenwood.' }],
+  mere: [   // v160: the plots wait for the lakeside homes (75e)
+    { x: 2, y: 19, kind: 'post', dir: 'left', text: 'West: the village.' },
+    { x: 7, y: 22, kind: 'notice', text: 'Plot by the water. Someone means to build here.' },
+    { x: 30, y: 21, kind: 'notice', text: 'Plot by the water, spoken for. A house goes up when the family comes.' },
+  ],
   mountain: [
     { x: 20, y: 14, kind: 'post', dir: 'down', text: 'South: the Wilds.' },
     { x: 22, y: 6, kind: 'post', dir: 'right', text: 'East: the quarry.' },

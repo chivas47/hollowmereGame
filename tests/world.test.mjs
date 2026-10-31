@@ -160,3 +160,18 @@ test('75c: the moved homes, the Anvil at the edge and the village pond with rive
   assert.equal(g('village')[23][33], 'O');
   assert.equal(WATERS.village, 'river');
 });
+
+// v160 (roadmap 75d): the mere.
+import { FISH } from '../src/data/fish.js';
+import { MERE } from '../src/data/mere.js';
+test('75d: the mere joins the village, its dock reaches open water, and it has one fish a season', () => {
+  const g = MAPS.mere.grid, { x, from } = MERE.dock;
+  assert.deepEqual(MAPS.village.exits['39,20'], { to: 'mere', x: 1, y: 20, dir: 'right' });
+  assert.equal(MAPS.mere.exits['0,20'].to, 'village');
+  assert.equal(g[from][x], 'P'); assert.equal(g[from - 1][x], 'O', 'the end of the dock faces water');
+  assert.ok(SOLID.has(g[MERE.boathouse.y][MERE.boathouse.x]), 'the boathouse is shut');
+  assert.equal(WATERS.mere, 'mere');
+  for (const season of ['Spring', 'Summer', 'Autumn', 'Winter']) {
+    assert.equal(Object.values(FISH).filter((f) => f.water === 'mere' && f.seasons.includes(season)).length, 1, `one mere fish in ${season}`);
+  }
+});

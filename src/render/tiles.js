@@ -254,6 +254,17 @@ function shed(g, p, o) {
   r(g, X + 18, Y + 18, 12, 13, '#5c371e'); r(g, X + 18, Y + 18, 12, 2, '#c9a06a'); r(g, X + 27, Y + 25, 1, 2, '#e9c46a');
   r(g, X + 6, Y + 16, 7, 6, '#3f3226'); r(g, X + 7, Y + 17, 5, 4, '#bfe0ec'); r(g, X + 35, Y + 16, 7, 6, '#3f3226'); r(g, X + 36, Y + 17, 5, 4, '#bfe0ec');
 }
+// v160: the mere's boathouse, 3 x 2: plank walls, a slate roof, wide doors onto the water (shut).
+function boathouse(g, p, o) {
+  const X = o.x * T, Y = o.y * T;
+  r(g, X + 2, Y + 31, 44, 1, 'rgba(0,0,0,.25)');
+  r(g, X + 3, Y + 12, 42, 19, '#7a5a3a');
+  for (let i = 0; i < 7; i++) r(g, X + 3 + i * 6, Y + 12, 1, 19, '#5c4128');
+  for (let j = 0; j < 11; j++) r(g, X + 13 - j, Y + 1 + j, 22 + 2 * j, 1, j % 3 === 2 ? '#2f3a44' : '#4a5a66');
+  if (p.snow) for (let j = 0; j < 3; j++) r(g, X + 13 - j, Y + 1 + j, 22 + 2 * j, 1, SNOW);
+  r(g, X + 30, Y + 16, 12, 15, '#3f2c1c'); r(g, X + 35, Y + 16, 1, 15, '#2a1d12');   // the boat doors, toward the dock
+  r(g, X + 8, Y + 17, 12, 4, '#3f6b8a'); r(g, X + 9, Y + 18, 10, 2, '#5f8fb5');        // an oar sign
+}
 function mill(g, p, o) {
   const X = o.x * T, Y = o.y * T, a = 0.4;
   r(g, X + 1, Y + 31, 30, 1, 'rgba(0,0,0,.25)');
@@ -389,7 +400,7 @@ export function drawBuilding(g, p, o) {
   g.drawImage(sheet(name).img, sx, sy, w, h, o.x * T + dx, o.y * T + dy, w, h);
 }
 
-export const OBJECT_ART = { boat, storefront, lodge, helperhut, waystone, pond, slimepen, shed, mill, clocktower, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
+export const OBJECT_ART = { boathouse, boat, storefront, lodge, helperhut, waystone, pond, slimepen, shed, mill, clocktower, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
 
 // ---- Greenhouse interior (ignores seasons) ----
 export function drawGreenhouseFloor(g, x, y, t) {
@@ -534,6 +545,11 @@ function bench(g, x, y) {
   r(g, X + 1, Y + 6, 14, 3, '#8a5a32'); r(g, X + 1, Y + 6, 14, 1, '#b0804a'); r(g, X + 1, Y + 3, 14, 2, '#6e4626');
   r(g, X + 2, Y + 9, 2, 5, '#4a3020'); r(g, X + 12, Y + 9, 2, 5, '#4a3020');
 }
+// v160: reeds on the mere's shore.
+function reeds(g, x, y) {
+  const X = x * T, Y = y * T;
+  [[2, 3], [5, 1], [8, 4], [11, 2], [13, 5]].forEach(([a, b]) => { r(g, X + a, Y + b, 1, 14 - b, '#7a8a3a'); r(g, X + a, Y + b, 2, 3, '#8a5a32'); });
+}
 function hotSpring(g, x, y) {
   const X = x * T, Y = y * T;
   r(g, X, Y, T, T, '#4f9aa8'); r(g, X + 2, Y + 3, 4, 1, '#bfe6ec'); r(g, X + 9, Y + 9, 5, 1, '#bfe6ec'); r(g, X + 6, Y + 1, 1, 3, 'rgba(255,255,255,.4)');
@@ -598,6 +614,7 @@ export const PROP_ART = {
   '|': fallenLog, '}': rubble, ';': grate, '{': hotSpring, '?': traderSpot,
   '7': peakMouth, '8': shell, '9': basin, '<': altar, '`': lantern,
   'ħ': hedge, 'ǧ': gardenBed, 'ƀ': bench,   // v159
+  'ʋ': reeds,   // v160
 };
 // The ground under each prop: a cave's floor or wall, grass (with the salt its blades and flowers use) or sand.
 // Props not listed draw their whole tile, or sit on whatever the map has there (the ladder down, mine rocks).
@@ -605,7 +622,7 @@ export const PROP_GROUND = {
   U: 'wall', '^': 'wall', '>': 'wall', t: 'floor', $: 'floor', '!': 'floor', '=': 'floor', '+': 'floor', '?': 'floor',
   '|': 'grass:29', '}': 'grass:23', ';': 'grass:37', '9': 'grass:41', '<': 'grass:43', '`': 'grass:47',
   '¢': 'grass:53', '§': 'grass:59', '¤': 'grass:61', '8': 'sand',
-  'ħ': 'grass:67', 'ǧ': 'grass:71', 'ƀ': 'grass:73',
+  'ħ': 'grass:67', 'ǧ': 'grass:71', 'ƀ': 'grass:73', 'ʋ': 'grass:79', 'β': 'grass:83',
 };
 function propGround(t, g, x, y, p) {
   const k = PROP_GROUND[t];

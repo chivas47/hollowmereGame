@@ -45,6 +45,11 @@ export const FISH = {
   lakebass:  { name: 'Big-mouth bass',  sell: 100, difficulty: 3, color: '#5d8a4a', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], water: 'lake' },
   mooncarp:  { name: 'Moon carp',       sell: 150, difficulty: 4, color: '#8b86b0', seasons: ['Autumn', 'Winter'], water: 'lake' },
   sturgeon:  { name: 'Old sturgeon',    sell: 200, difficulty: 5, color: '#5a6a7a', seasons: ['Summer', 'Winter'], water: 'lake' },
+  // v160 (roadmap 75d): the mere, one fish a season (Nuno's pick). Stardew's lake and river fish by role: perch 55g,
+  // eel 85g, pike 100g; names and looks ours.
+  reedperch: { name: 'Reed perch',      sell: 55,  difficulty: 2, color: '#a0a45a', seasons: ['Spring', 'Summer'], water: 'mere' },
+  mereel:    { name: 'Mere eel',        sell: 85,  difficulty: 3, color: '#4a5a3a', seasons: ['Autumn'], water: 'mere' },
+  frostpike: { name: 'Frost pike',      sell: 100, difficulty: 3, color: '#8aa6b8', seasons: ['Winter'], water: 'mere' },
   // v45: the grove pond (Stardew's secret woods: woodskip 75g) and the sewer (Stardew: mutant carp, a legend, 1,000g).
   glideskip: { name: 'Glade skipper',   sell: 75,  difficulty: 3, color: '#7a8a5a', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], water: 'grove' },
   gutterpike:{ name: 'Gutter pike',     sell: 60,  difficulty: 3, color: '#5a6a4a', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], water: 'sewer' },

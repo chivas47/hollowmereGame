@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v160: The mere
+- A new place: the mere, the lake the valley is named for, 40 by 28 tiles. The village's lower lane runs on east to it.
+- Open water with reeds along the shore, an old boathouse (locked: its keeper left years ago) and its dock, which reaches out over the water to fish from.
+- Three new fish, one a season: Reed perch (spring and summer, 55g), Mere eel (autumn, 85g) and Frost pike (winter, 100g).
+- Two plots by the water wait for the lakeside families coming with the new neighbours. No prices of existing things or keys changed.
+
 ## v159: The village laid out
 - Hollowmere Village is now 40 by 28 tiles and the town 40 by 24; the camera follows you across both. The square, the north row of cottages, the shops, the hall and the town cottages are where they were.
 - Esme and Kit live on the east road toward your farm, behind a hedge; Nell and Rook on a new lower lane, with two empty lots for newcomers. Nell's garden is behind her house, the old south row is a green with benches, and a pond in the south-east has the river's fish.

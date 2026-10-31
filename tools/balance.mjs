@@ -601,7 +601,7 @@ function simulate(runSeed) {
     spend(TIME.travel);
     pond();
     while (s.energy >= COST.cast + stopAt && !late()) {
-      use('wilds', 15, 10, 'rod');
+      if (s.day % 2) use('wilds', 15, 10, 'rod'); else use('mere', 17, 13, 'rod');   // v160: the mere's dock every other day
       const f = G.fishing; if (!f) break;
       f.t = 0; runUpdaters(0.001);                 // the bite
       if (!G.fishing) break;
