@@ -66,6 +66,7 @@ import './systems/pots.js';
 import './systems/areas.js';
 import './systems/quarry.js';
 import './systems/hidden.js';
+import './systems/mere.js';   // v160: the mere's boathouse
 import './systems/town.js';
 import './systems/mail.js';
 import './systems/marriage.js';

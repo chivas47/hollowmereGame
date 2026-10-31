@@ -30,11 +30,12 @@ import { MACHINE } from './market.js';
 import { HOMES, homeMap } from './homes.js';
 import { INTERIORS, interiorGrid, doorOf } from './interiors.js';
 import { VENUES, venueMap } from './venues.js';
+import { MERE } from './mere.js';
 
 // v156 (roadmap 75g): a map's size in tiles, read from its grid, so a map can be larger than the screen (W x H).
 export const sizeOf = (id) => { const g = MAPS[id]?.grid; return g?.length ? { w: g[0].length, h: g.length } : { w: W, h: H }; };
 
-export const SOLID = new Set(['ħ', 'ǧ', 'ƀ', 'Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
+export const SOLID = new Set(['ħ', 'ǧ', 'ƀ', 'β', 'ʋ', 'Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
 
 // v158: w and h for a map larger than the screen (roadmap 75i); the camera follows you across it.
 function emptyGrid(w = W, h = H) {
@@ -100,6 +101,25 @@ function villageGrid() {
   put(m, [[2, 12], [5, 12], [2, 14], [5, 14]], 'ƀ');   // the green's benches
   fill(m, 3, 15, 8, 16, 'ǧ');                        // Nell's garden behind her house
   fill(m, 30, 22, 36, 25, 'O');                      // the village pond
+  fill(m, 34, 20, w - 2, 20, 'P'); m[20][w - 1] = 'E';   // v160: the lower lane runs on east to the mere
+  return m;
+}
+
+// v160 (roadmap 75d): the mere, the lake the valley is named for (data/mere.js). In from the village's lower lane on
+// the west; open water, reeds along the shore, the shut boathouse and its dock on the south-west bank.
+function mereGrid() {
+  const { w, h } = MERE.size, { cx, cy, rx, ry } = MERE.lake, m = emptyGrid(w, h);
+  const wet = (x, y) => ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 <= 1;
+  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) if (wet(x, y)) m[y][x] = 'O';
+  // reeds on every third shore tile (grass beside the water), clear of the dock's bank
+  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
+    if (m[y][x] !== 'g' || (x * 7 + y * 3) % 3 || Math.abs(x - MERE.dock.x) < 3) continue;
+    if ([[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => m[y + b][x + a] === 'O')) m[y][x] = 'ʋ';
+  }
+  m[20][0] = 'E'; fill(m, 1, 20, MERE.dock.x, 20, 'P');   // the lane from the village
+  const { x: bx, y: by } = MERE.boathouse; fill(m, bx, by, bx + 2, by + 1, 'β');
+  fill(m, MERE.dock.x, MERE.dock.from, MERE.dock.x, MERE.dock.to, 'P');   // the dock, out over the water
+  put(m, [[3, 3], [6, 12], [3, 24], [9, 25], [20, 24], [27, 22], [33, 25], [37, 20], [38, 4], [35, 2], [8, 6]], 'T');
   return m;
 }
 
@@ -372,7 +392,7 @@ export const MAPS = {
       { art: 'board', x: 11, y: 5 }, { art: 'fountain', x: 11, y: 8 }, { art: 'table', x: 13, y: 11 },
       { art: 'cottage', x: 4, y: 18, roof: '#7a8a5a' }, { art: 'cottage', x: 13, y: 18, roof: '#4a6a7a' }, { art: 'cottage', x: 24, y: 6, roof: '#8a5a8a' }, { art: 'cottage', x: 30, y: 6, roof: '#c98a3a' },   // v50: Nell, Rook, Esme, Kit (v159: moved, roadmap 75c)
     ],
-    exits: { [`${VILLAGE_SIZE.w - 1},8`]: { to: 'farm', x: 1, y: 4, dir: 'right' }, [`11,${VILLAGE_SIZE.h - 1}`]: { to: 'beach', x: 11, y: 1, dir: 'down' }, '10,0': { to: 'town', x: 10, y: TOWN_SIZE.h - 2, dir: 'up' } },   // v43: the beach; v46: the town; v159: the new edges
+    exits: { [`${VILLAGE_SIZE.w - 1},20`]: { to: 'mere', x: 1, y: 20, dir: 'right' }, [`${VILLAGE_SIZE.w - 1},8`]: { to: 'farm', x: 1, y: 4, dir: 'right' }, [`11,${VILLAGE_SIZE.h - 1}`]: { to: 'beach', x: 11, y: 1, dir: 'down' }, '10,0': { to: 'town', x: 10, y: TOWN_SIZE.h - 2, dir: 'up' } },   // v43: the beach; v46: the town; v159: the new edges
   },
   house: {
     name: 'Farmhouse', salt: 3, base: 'house', grid: houseGrid(),
@@ -415,6 +435,10 @@ export const MAPS = {
   railway: {
     name: 'The railway', salt: 67, grid: railwayGrid(), objects: [],
     exits: { '0,3': { to: 'wilds', x: W - 2, y: 3, dir: 'left' } },
+  },
+  mere: {   // v160 (roadmap 75d)
+    name: 'The mere', salt: 79, grid: mereGrid(), objects: [{ art: 'boathouse', x: MERE.boathouse.x, y: MERE.boathouse.y }],
+    exits: { '0,20': { to: 'village', x: VILLAGE_SIZE.w - 2, y: 20, dir: 'left' } },
   },
   town: {
     name: 'Hollowmere Town', salt: 83, grid: townGrid(),

@@ -245,6 +245,8 @@ Stardew's bobber bar by role: after a bite, hold Use to lift your bar (it falls 
 
 ### The beach and the forest (v43)
 
+v160 (roadmap 75d): the mere, east of the village's lower lane (40 by 28): open water ringed with reeds, the shut boathouse and its dock (fish from its end), two plots for the lakeside homes of 75e. Its fish (Stardew's perch, eel and pike by role): Reed perch 55g d2 spring and summer, Mere eel 85g d3 autumn, Frost pike 100g d3 winter.
+
 v159 (roadmap 75c): Hollowmere Village is 40 by 28 tiles and the town 40 by 24, both grown east and south. The village keeps its square and north row; Esme and Kit live on the east road behind a hedge, Nell and Rook on a new lower lane with two empty lots, the old south row is a green with benches and Nell's garden, and a pond in the south-east has the river's fish. In town the Anvil stands at the east edge (its old spot is a green with benches), with the coach stop and the ridge path at the new east edge.
 
 Stardew's beach and Cindersap forest by role. The farm's new path south (10, 14) leads to Brackenwood; the village's path south (11, 26 since v159) to Saltreach Beach. Each area has 5 forage spots a morning (6 with the tracker); the sea and the river never freeze.

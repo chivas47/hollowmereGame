@@ -454,6 +454,7 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | Ӂ | the wishing stone in the village (v110; written at load on open grass) | yes |
 | \|, }, ;, {, ? | fallen log, rubble, sewer grate, hot spring, sewer trader (v45; the gates become P once open) | yes |
 | ħ, ǧ, ƀ | hedge, garden bed, bench (v159: the village and the town; props drawn on grass, render/tiles.js) | yes |
+| ʋ, β | reeds, the boathouse's walls (v160: the mere; systems/mere.js answers its door) | yes |
 
 `objects` on a map draw building art from `OBJECT_ART` in render/tiles.js. Maps with `base: 'cave'` use cave floor art and skip the night tint; `home_<id>` maps (v76) are the neighbours' cottages, `base: 'house'` with a `home` owner id; `base: 'greenhouse'` uses plank floor and soil-bed art.
 

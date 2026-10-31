@@ -23,16 +23,16 @@ export const WATERFALLS = {
 // Wildlife, drawn only. birds peck on open grass by day and fly off when you come near (scare, tiles);
 // butterflies drift on fair spring and summer days; fireflies come out on summer nights.
 export const WILDLIFE = {
-  birds: { n: 4, scare: 2.5, maps: ['farm', 'wilds', 'village', 'forest', 'grove', 'mountain', 'beach', 'town', 'railway', 'island'] },
-  butterflies: { n: 4, seasons: ['Spring', 'Summer'], maps: ['farm', 'wilds', 'forest', 'grove', 'mountain', 'village'] },
-  fireflies: { n: 10, seasons: ['Summer'], from: 20 * 60, maps: ['farm', 'wilds', 'forest', 'grove', 'mountain'] },
+  birds: { n: 4, scare: 2.5, maps: ['farm', 'wilds', 'village', 'forest', 'grove', 'mere', 'mountain', 'beach', 'town', 'railway', 'island'] },
+  butterflies: { n: 4, seasons: ['Spring', 'Summer'], maps: ['farm', 'wilds', 'forest', 'grove', 'mere', 'mountain', 'village'] },
+  fireflies: { n: 10, seasons: ['Summer'], from: 20 * 60, maps: ['farm', 'wilds', 'forest', 'grove', 'mere', 'mountain'] },
 };
 export const BIRD_COLORS = { beach: ['#f2f2ee', '#9aa0a6'], island: ['#e0503a', '#3a9a5a'], Winter: ['#a33a2e', '#5a4a3a'], other: ['#7a5a3a', '#4a5a6a'] };
 
 // Ambient sound by area: wild (birdsong by day, crickets at night), shore (surf, gulls), town (birdsong,
 // a far bell), cave (drips, a low hum), wind (the Dunes, the quarry). Rain and storms add their own bed.
 export const AMBIENCE = {
-  farm: 'wild', wilds: 'wild', forest: 'wild', grove: 'wild', mountain: 'wild', railway: 'wild', maze: 'wild',
+  farm: 'wild', wilds: 'wild', forest: 'wild', grove: 'wild', mere: 'wild', mountain: 'wild', railway: 'wild', maze: 'wild',
   beach: 'shore', island: 'shore', digsite: 'shore',
   village: 'town', town: 'town',
   desert: 'wind', quarry: 'wind',

@@ -27,6 +27,7 @@ export const LANDMARKS = {
   beach: 'The pier and Rook\'s boat',
   forest: 'The river, the woodland paths',
   grove: 'The glade pond and the big stumps',
+  mere: 'The lake the valley is named for, and an old boathouse',   // v160
   desert: 'The Oasis, the barter trader, the Gilded Dune casino',
   island: 'The island farm, the trader, the old bridge',
   digsite: 'Fresh dig spots every morning',
