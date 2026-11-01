@@ -41,7 +41,7 @@ const ORCHARD = ['figtree', 'peartree', 'nectarinetree', 'persimmontree', 'plumt
 const STRATEGIES = {
   full: ['furnace', 'can', 'coop', 'grassstarter', 'grassstarter', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'kiln', 'house',
     'barn', 'pail', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'silo', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', 'shed', ...ORCHARD, 'stable', 'lodge:club', 'bigcoop', 'duck', 'duck', 'duck', 'duck', ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'pick', 'rod', 'can', 'pick',
-    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'pond', 'crabpot', 'crabpot', 'house', 'stalls',
+    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'pond', 'crabpot', 'crabpot', 'house', 'stalls', 'reno:corner',
     'brewbarrel', 'brewbarrel', 'eggpress', 'beebox', 'beebox', 'dryer', 'smoker', 'mushroomlog',   // wood-hungry, so last
     // v28: more livestock. The big coop comes in year one like a player's; the rest take hundreds of wood, so they come last.
     'bigbarn', 'cow', 'cow', 'goat', 'goat',
@@ -109,6 +109,8 @@ const { nextTier, buyUpgrade, orderCoop, affordable, buyCoal, buyMaterial } = aw
 const { buyChicken, collectEggs, buyFeed, flock } = await load('systems/coop.js');
 const { PROJECTS } = await load('data/projects.js');
 const { funded, fundProject } = await load('systems/projects.js');
+const { RENOVATIONS } = await load('data/furniture.js');   // v170
+const { buyRenovation } = await load('systems/house.js');
 const { orderBarn, buyAnimal, buyHay, collectMilk, herd } = await load('systems/barn.js');
 const { SITES, findSite, siteAt, noFit } = await load('systems/sites.js');
 const { millIn, millCollect } = await load('systems/mill.js');
@@ -245,6 +247,8 @@ function simulate(runSeed) {
       site: true, buy: () => track('buildings', () => { const at = botSite(k); GOAL[k].noSite = !at; return !!at && siteAt(k, 'new', at.x, at.y); }) };
   }
   GOAL.grassstarter = { shop: 'store', cost: () => SUPPLIES.grassstarter, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply('grassstarter', 1)) };
+  // v170: renovations at Bram's (reno:<key>).
+  for (const k of Object.keys(RENOVATIONS)) GOAL[`reno:${k}`] = { cost: () => RENOVATIONS[k].cost, needs: () => ({}), ok: () => !S().house.renos.includes(k), buy: () => track('upgrades', () => buyRenovation(k)) };
   for (const k of Object.keys(PROJECTS)) GOAL[k] = { cost: () => PROJECTS[k].cost, needs: () => PROJECTS[k].needs, ok: () => !funded(k), buy: () => track('projects', () => fundProject(k)) };
   for (const k of Object.keys(TREES)) GOAL[k] = { shop: 'store', cost: () => TREES[k].cost, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply(k, 1)) };
   // v37: weapons from the Wardens' Lodge; skipped when the bot has not reached the floor that sells them.
