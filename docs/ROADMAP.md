@@ -199,7 +199,7 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | 75p | The attic | feature | done (chivas47/hollowmereGame#173) | Nuno's pick with 75o: a loft by a ladder from the bed corner, 60,000g (no Stardew room; between its mid and large rooms). |
 | 75q | The dining room | feature | done (chivas47/hollowmereGame#174) | Nuno's pick with 75o: a large room east of the kitchen with a long table, 150,000g (Stardew's dining room). |
 | 75r | Birthday dinner | feature | done (chivas47/hollowmereGame#175) | Nuno's pick (November 2026): the farmer's birthday set in the Menu (no Stardew counterpart), and with the dining room, the top three friends at 4+ hearts to dinner that evening, +1 heart and a gift each, once a year. |
-| 75s | New neighbours, the next three | feature | in progress (link to follow) | Nuno's answers (November 2026): the museum's curator (Aldous) as a neighbour and a retired couple in the village (Hester, Wilmot); friends only. Sketch merged as written (chivas47/hollowmereGame#176; Nuno: next). Built with two changes: Hester's friend is Pell only and Wilmot's Corvin only (Nell and Kit are each already a festival walk-home partner), and three more crowd places on the square. 24 to 27 people. |
+| 75s | New neighbours, the next three | feature | in progress (chivas47/hollowmereGame#177) | Nuno's answers (November 2026): the museum's curator (Aldous) as a neighbour and a retired couple in the village (Hester, Wilmot); friends only. Sketch merged as written (chivas47/hollowmereGame#176; Nuno: next). Built with two changes: Hester's friend is Pell only and Wilmot's Corvin only (Nell and Kit are each already a festival walk-home partner), and three more crowd places on the square. 24 to 27 people. |
 
 ## Done
 
