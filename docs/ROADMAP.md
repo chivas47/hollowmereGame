@@ -198,7 +198,7 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | 75o | The south room | feature | done (chivas47/hollowmereGame#172) | Nuno's pick (November 2026): more late-game rooms, one PR each. Stardew's southern room, 30,000g. |
 | 75p | The attic | feature | done (chivas47/hollowmereGame#173) | Nuno's pick with 75o: a loft by a ladder from the bed corner, 60,000g (no Stardew room; between its mid and large rooms). |
 | 75q | The dining room | feature | done (chivas47/hollowmereGame#174) | Nuno's pick with 75o: a large room east of the kitchen with a long table, 150,000g (Stardew's dining room). |
-| 75r | Birthday dinner | feature | in progress (link to follow) | Nuno's pick (November 2026): the farmer's birthday set in the Menu (no Stardew counterpart), and with the dining room, the top three friends at 4+ hearts to dinner that evening, +1 heart and a gift each, once a year. |
+| 75r | Birthday dinner | feature | in progress (chivas47/hollowmereGame#175) | Nuno's pick (November 2026): the farmer's birthday set in the Menu (no Stardew counterpart), and with the dining room, the top three friends at 4+ hearts to dinner that evening, +1 heart and a gift each, once a year. |
 
 ## Done
 
