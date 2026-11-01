@@ -10,6 +10,7 @@ import { MAPS } from '../data/maps.js';
 import { NPCS, OUTFITS } from '../data/npcs.js';
 import { festivalOn, hoursOf } from '../data/festivals.js';
 import { scheduleFor, spouseDay, festivalDay, rainDay, spouseRainDay, RAIN_WEATHERS } from '../data/schedules.js';
+import { DINNER, dinnerSeat } from '../data/birthday.js';
 import { topicFor } from './topics.js';
 import { yesterday } from './news.js';
 import { crowdPlan } from './crowd.js';
@@ -86,7 +87,9 @@ function blocksOf(n) {
   const f = festival();
   if (f) return n.def.noFestival ? [] : crowdOf(f)[n.id] || [];   // v53: the Lamplighter stays below
   const wet = rainy(), day = spouse() === n.id ? (wet ? spouseRainDay() : spouseDay()) : wet ? rainDay(n.id, scheduleFor(n.def, G.S.day)) : scheduleFor(n.def, G.S.day), fl = floatOn(today());
-  return fl && fl.spots[n.id] ? [...festivalDay(fl.spots[n.id], fl.hours, fl.map), ...day] : day;
+  const seat = dinnerSeat(G.S, today(), n.id);   // v174: your birthday dinner comes first that evening
+  const out = seat ? [...festivalDay(seat, DINNER, 'house'), ...day] : day;
+  return fl && fl.spots[n.id] ? [...festivalDay(fl.spots[n.id], fl.hours, fl.map), ...out] : out;
 }
 const active = (blocks, t) => blocks.find((b) => t >= b.from && t < b.to) || null;
 const keyOf = (b) => (b ? `${b.map}@${b.from}` : 'home');   // blocks are built fresh, so compare by key
