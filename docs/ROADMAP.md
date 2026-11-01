@@ -194,7 +194,7 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | 75k | The newest neighbours join in | feature | done (chivas47/hollowmereGame#168) | Recommended after 75j (Nuno: next): the seven neighbours from 75e and 75j had no theatre tastes, doings, friend lines, Lantern Float spots or festival lines. Adds them; two birthdays moved off festival days. |
 | 75l | Late-game gold sinks | balance | done (chivas47/hollowmereGame#169) | Nuno's pick (November 2026): a gold-clock counterpart. It already exists: the clock tower (10,000,000g, v30), with the two 500,000g waystones. The gap was the balance bot never saving for them, so its "Gold does not pile up" warning counted an unfinished list as finished. The bot now buys all three last. |
 | 75m | The fortune statue | feature | done (chivas47/hollowmereGame#170) | Nuno's pick (November 2026): mid-priced late buys. Stardew's Statue of Endless Fortune (1,000,000g): a loved gift on each neighbour's birthday. |
-| 75n | More renovations | feature | in progress (link to follow) | Nuno's pick with 75m. Nuno chose (November 2026) one room of four offered: the corner room, 20,000g (Stardew's corner room). Not chosen: a south room, a dining room, an attic. |
+| 75n | More renovations | feature | in progress (chivas47/hollowmereGame#171) | Nuno's pick with 75m. Nuno chose (November 2026) one room of four offered: the corner room, 20,000g (Stardew's corner room). Not chosen: a south room, a dining room, an attic. |
 
 ## Done
 
