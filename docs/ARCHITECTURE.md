@@ -168,6 +168,7 @@ src/
     wind.js           lean(x): how far things lean in the wind now, by weather and the day (v103; no drawing, safe for the balance bot)
     wing.js           the town reacts to the old wing (boards, planter, flowers, fountain, smoke, bunting, plaque; the Ashgrove look) and the cart line; solid Ž and Ç tiles placed as rooms are done (v108)
     vignettes.js      small stories outdoors: solid Ѫ tiles set on open ground at load, drawn per art key with the season, Use reads them (v111)
+    stalls.js         Saturday stalls on the town green (stallsOpen, sellerOf weekly rotation, buyStall at twice sell; raises ʂ once funded) (v165)
     traditions.js     the wishing stone (solid Ӂ in the village at load, bless() sets G.S.blessing, read by buffs.js) and the Lantern Float on the beach (setLantern(), floatLights() for nightlights.js; npcs.js walks neighbours there) (v110, G.S.traditions)
     signs.js          signposts and notices outdoors: solid Ş tiles set on open ground at load, Use reads them (v107)
     shortcuts.js      fallen trunks across shortcuts, cut with the copper axe; then trunk tiles turn to path and the maps get exits (v106, G.S.shortcuts)
@@ -306,6 +307,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 72 | homes.js | Cottage V front row (enter the owner's cottage, or why it is locked) (v76) |
 | 72 | venues.js | The counter or hopper inside a building: its dialog (v98) |
 | 71 | venues.js | Any piece inside a cottage or building, on the floor or on a wall (its own line, v97, v98) (v76) |
+| 71 | stalls.js | The Saturday stalls ʂ on the town green (buy from this week's seller, ui:stalls) (v165) |
 | 71 | village.js | Fountain F, cottage V away from its front (where the door is) |
 | 71 | mail.js | The mailbox on the farmhouse front (farm H tile at 5,3) |
 | 71 | cooking.js | Farmhouse stove o (cook) and counters n (fridge) |
@@ -453,6 +455,7 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | U, L | ladder up, ladder down | yes |
 | Ѫ | a small story outdoors (v111; written at load on open grass or sand) | yes |
 | Ӂ | the wishing stone in the village (v110; written at load on open grass) | yes |
+| ʂ | a Saturday market stall on the town green (v165; written at load once the project is funded) | yes |
 | \|, }, ;, {, ? | fallen log, rubble, sewer grate, hot spring, sewer trader (v45; the gates become P once open) | yes |
 | ħ, ǧ, ƀ | hedge, garden bed, bench (v159: the village and the town; props drawn on grass, render/tiles.js) | yes |
 | ʋ, β | reeds, the boathouse's walls (v160: the mere; systems/mere.js answers its door) | yes |

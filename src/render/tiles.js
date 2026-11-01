@@ -545,6 +545,14 @@ function bench(g, x, y) {
   r(g, X + 1, Y + 6, 14, 3, '#8a5a32'); r(g, X + 1, Y + 6, 14, 1, '#b0804a'); r(g, X + 1, Y + 3, 14, 2, '#6e4626');
   r(g, X + 2, Y + 9, 2, 5, '#4a3020'); r(g, X + 12, Y + 9, 2, 5, '#4a3020');
 }
+// v165: a market stall on the town green: a striped awning over a plank counter.
+function stall(g, x, y) {
+  const X = x * T, Y = y * T;
+  r(g, X + 1, Y + 2, 2, 13, '#6e4626'); r(g, X + 13, Y + 2, 2, 13, '#6e4626');
+  for (let i = 0; i < 4; i++) r(g, X + i * 4, Y + 1, 4, 4, i % 2 ? '#f4ead2' : '#b5452f');
+  r(g, X, Y + 9, T, 4, '#a5753f'); r(g, X, Y + 9, T, 1, '#c9955a');
+  r(g, X + 3, Y + 7, 3, 2, '#e2a33a'); r(g, X + 9, Y + 7, 3, 2, '#5d7a4a');
+}
 // v160: reeds on the mere's shore.
 function reeds(g, x, y) {
   const X = x * T, Y = y * T;
@@ -615,6 +623,7 @@ export const PROP_ART = {
   '7': peakMouth, '8': shell, '9': basin, '<': altar, '`': lantern,
   'ħ': hedge, 'ǧ': gardenBed, 'ƀ': bench,   // v159
   'ʋ': reeds,   // v160
+  'ʂ': stall,   // v165
 };
 // The ground under each prop: a cave's floor or wall, grass (with the salt its blades and flowers use) or sand.
 // Props not listed draw their whole tile, or sit on whatever the map has there (the ladder down, mine rocks).
@@ -622,7 +631,7 @@ export const PROP_GROUND = {
   U: 'wall', '^': 'wall', '>': 'wall', t: 'floor', $: 'floor', '!': 'floor', '=': 'floor', '+': 'floor', '?': 'floor',
   '|': 'grass:29', '}': 'grass:23', ';': 'grass:37', '9': 'grass:41', '<': 'grass:43', '`': 'grass:47',
   '¢': 'grass:53', '§': 'grass:59', '¤': 'grass:61', '8': 'sand',
-  'ħ': 'grass:67', 'ǧ': 'grass:71', 'ƀ': 'grass:73', 'ʋ': 'grass:79', 'β': 'grass:83',
+  'ħ': 'grass:67', 'ǧ': 'grass:71', 'ƀ': 'grass:73', 'ʋ': 'grass:79', 'β': 'grass:83', 'ʂ': 'grass:89',
 };
 function propGround(t, g, x, y, p) {
   const k = PROP_GROUND[t];

@@ -41,7 +41,7 @@ const ORCHARD = ['figtree', 'peartree', 'nectarinetree', 'persimmontree', 'plumt
 const STRATEGIES = {
   full: ['furnace', 'can', 'coop', 'grassstarter', 'grassstarter', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'kiln', 'house',
     'barn', 'pail', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'silo', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', 'shed', ...ORCHARD, 'stable', 'lodge:club', 'bigcoop', 'duck', 'duck', 'duck', 'duck', ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'pick', 'rod', 'can', 'pick',
-    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'pond', 'crabpot', 'crabpot', 'house',
+    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'stalls', 'pond', 'crabpot', 'crabpot', 'house',
     'brewbarrel', 'brewbarrel', 'eggpress', 'beebox', 'beebox', 'dryer', 'smoker', 'mushroomlog',   // wood-hungry, so last
     // v28: more livestock. The big coop comes in year one like a player's; the rest take hundreds of wood, so they come last.
     'bigbarn', 'cow', 'cow', 'goat', 'goat',

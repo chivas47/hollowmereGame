@@ -66,6 +66,8 @@ import './systems/pots.js';
 import './systems/areas.js';
 import './systems/quarry.js';
 import './systems/hidden.js';
+import './systems/stalls.js';   // v165: the Saturday stalls
+import './ui/stalls.js';
 import './systems/cat.js';   // v164: Pudding, the village cat
 import './systems/mere.js';   // v160: the mere's boathouse (v161: Garrow's counter)
 import './ui/boathouse.js';   // v161
