@@ -26,6 +26,12 @@ export const WILDLIFE = {
   birds: { n: 4, scare: 2.5, maps: ['farm', 'wilds', 'village', 'forest', 'grove', 'mere', 'mountain', 'beach', 'town', 'railway', 'island'] },
   butterflies: { n: 4, seasons: ['Spring', 'Summer'], maps: ['farm', 'wilds', 'forest', 'grove', 'mere', 'mountain', 'village'] },
   fireflies: { n: 10, seasons: ['Summer'], from: 20 * 60, maps: ['farm', 'wilds', 'forest', 'grove', 'mere', 'mountain'] },
+  // v162 (roadmap 75f): life in the water. A fish jumps every `every` seconds or so (open water, not in winter);
+  // ducks paddle about the mere and the village pond (not in winter); frogs sit at the water's edge on summer evenings
+  // and hop now and then.
+  jumps: { every: 6, seasons: ['Spring', 'Summer', 'Autumn'], maps: ['wilds', 'forest', 'grove', 'mere', 'mountain', 'village'] },
+  ducks: { n: { mere: 4, village: 2 }, speed: 6, seasons: ['Spring', 'Summer', 'Autumn'], maps: ['mere', 'village'] },
+  frogs: { n: 4, seasons: ['Summer'], from: 19 * 60, to: 23 * 60, maps: ['mere', 'wilds', 'forest', 'village'] },
 };
 export const BIRD_COLORS = { beach: ['#f2f2ee', '#9aa0a6'], island: ['#e0503a', '#3a9a5a'], Winter: ['#a33a2e', '#5a4a3a'], other: ['#7a5a3a', '#4a5a6a'] };
 

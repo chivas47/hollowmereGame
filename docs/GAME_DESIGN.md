@@ -245,6 +245,8 @@ Stardew's bobber bar by role: after a bite, hold Use to lift your bar (it falls 
 
 ### The beach and the forest (v43)
 
+v162 (roadmap 75f): life in the water, drawn only: fish jump on lakes, ponds and rivers (spring to autumn), ducks on the mere and the village pond (spring to autumn), frogs at the water's edge on summer evenings (19:00 to 23:00, not in rain).
+
 v161 (roadmap 75e): Garrow's boathouse counter (9:00 to 17:00, shut Thursdays), Stardew's fish shop by role: bait 50g for 10, trap and lead bobbers 500g, spinner and cork bobber 600g, treasure hunter 750g, crab pot 1,500g (still craftable).
 
 v160 (roadmap 75d): the mere, east of the village's lower lane (40 by 28): open water ringed with reeds, the shut boathouse and its dock (fish from its end), two plots for the lakeside homes of 75e. Its fish (Stardew's perch, eel and pike by role): Reed perch 55g d2 spring and summer, Mere eel 85g d3 autumn, Frost pike 100g d3 winter.
