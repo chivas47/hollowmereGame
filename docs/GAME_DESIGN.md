@@ -245,6 +245,8 @@ Stardew's bobber bar by role: after a bite, hold Use to lift your bar (it falls 
 
 ### The beach and the forest (v43)
 
+v163 (roadmap 75f): winter water: the mere and the village pond freeze in winter like the Wilds pond; fish the mere through its ice hole off the end of the dock; the village pond has no hole. Rivers and the sea never freeze.
+
 v162 (roadmap 75f): life in the water, drawn only: fish jump on lakes, ponds and rivers (spring to autumn), ducks on the mere and the village pond (spring to autumn), frogs at the water's edge on summer evenings (19:00 to 23:00, not in rain).
 
 v161 (roadmap 75e): Garrow's boathouse counter (9:00 to 17:00, shut Thursdays), Stardew's fish shop by role: bait 50g for 10, trap and lead bobbers 500g, spinner and cork bobber 600g, treasure hunter 750g, crab pot 1,500g (still craftable).
