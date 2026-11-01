@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v161: New neighbours at the mere
+- Three people move to the mere: Garrow, the old ferryman, keeps the boathouse; Ysolde weaves baskets from the reeds on the west plot; her brother Ferran traps eels from the east plot. Friends only.
+- Garrow's counter is open 9:00 to 17:00, shut Thursdays: bait (50g for 10), trap and lead bobbers (500g), spinner and cork bobber (600g), treasure hunter (750g) and the crab pot (1,500g, still craftable). Tackle had no shop before.
+- Each has a full week: Garrow lines out at dawn and argues hulls with Rook at the Lantern; Ysolde cuts reeds at dawn, sells in town and visits Nell; Ferran is out at five, mends traps by Rook's boat, fishes with Odile and races Kit. Ferran goes out in the rain; eels like it.
+- Their cottages can be visited like the others. After a festival each neighbour now walks home with one friend, the first they have.
+- No existing prices or keys changed.
+
 ## v160: The mere
 - A new place: the mere, the lake the valley is named for, 40 by 28 tiles. The village's lower lane runs on east to it.
 - Open water with reeds along the shore, an old boathouse (locked: its keeper left years ago) and its dock, which reaches out over the water to fish from.

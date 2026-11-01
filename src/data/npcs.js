@@ -208,6 +208,43 @@ export const NPCS = [
     ],
     react: { loved: 'A {item}! This is perfect. This is so perfect.', liked: 'A {item}! I can use this.', neutral: 'Oh. Thanks.', disliked: 'A {item}. Mum makes me eat that.', hated: 'Frost kale? I would rather eat a gear.', birthday: 'My birthday present? Best day. Best.' },
   },
+  // ---- v161 (roadmap 75e, docs/sketches/75e-neighbours.md): the first neighbours at the mere. Friends only. ----
+  {
+    id: 'garrow', name: 'Garrow', role: 'Keeps the boathouse on the mere; sells bait and tackle', seed: 17,
+    loves: ['frostpike', 'sturgeon'], likes: ['netstew', 'bread', 'thymetea', 'hardwood', 'lakebass'], dislikes: ['salad', 'pizza'], hates: ['glass'],
+    birthday: { season: 'Spring', d: 16 },
+    pal: { hat: '#3f4a5a', band: '#2b2f36', hair: '#cfcac2', shirt: '#4a5a66', pants: '#2b2f36', skin: '#c99a74', beard: true },
+    lines: [
+      ['I rowed folk across this water for thirty years. Then they built the lane round it.', 'Bait is by the door. Tackle behind me. Mind the step.'],
+      ['The pike come up in the cold. Everyone else goes home; that is when I fish.', 'Rook builds a good hull. I will not tell him that.', 'Morning, {name}. The mere is flat today.'],
+      ['My uncle left me this boathouse and a debt. The debt is paid. The boathouse is yours whenever you need it.', 'You fish like you mean it. Not many do.'],
+    ],
+    react: { loved: 'A {item}! You caught that yourself? Sit down, tell me how.', liked: 'A {item}. Good. Thank you.', neutral: 'Thanks.', disliked: 'A {item}. I will find someone who likes it.', hated: 'Glass. On the water that is a cut foot waiting to happen.', birthday: 'Somebody remembered. Well. Well, well.' },
+  },
+  {
+    id: 'ysolde', name: 'Ysolde', role: 'Weaves baskets and mats from the mere\'s reeds', seed: 18,
+    loves: ['cloth', 'honeycake'], likes: ['fiber', 'honey', 'thymetea', 'bread'], dislikes: ['crayfish', 'bait'], hates: ['mayo'],
+    birthday: { season: 'Summer', d: 20 },
+    pal: { hat: null, hair: '#b5452f', shirt: '#a0a45a', pants: '#5a5048', skin: '#e0ac7e', long: true },
+    lines: [
+      ['The best reeds in the valley grow on the north shore. Cut them at dawn, before they dry.', 'Ferran is asleep. He was up before the birds again.'],
+      ['Nell has a basket of mine for every vegetable she grows. She keeps asking for more.', 'Esme mixes the colours, I weave them. We never agree on green.', 'Hello, {name}. Mind the bundles.'],
+      ['I made you something. It is only a mat, but it is the best one I have made.', 'When the plot by our house fills up, I hope it is someone like you.'],
+    ],
+    react: { loved: 'A {item}! I know exactly what I will make with this.', liked: 'A {item}. That is kind of you.', neutral: 'Thank you.', disliked: 'A {item}? Ferran will have it.', hated: 'Please, not mayonnaise. Not near the reeds.', birthday: 'You knew? I did not tell anyone. Thank you.' },
+  },
+  {
+    id: 'ferran', name: 'Ferran', role: 'Traps eels on the mere at dawn; Ysolde\'s younger brother', seed: 19,
+    loves: ['smoked_mereel', 'lakebass'], likes: ['bait', 'crayfish', 'bread', 'netstew'], dislikes: ['salad', 'thymetea'], hates: ['frostkale'],
+    birthday: { season: 'Autumn', d: 11 },
+    pal: { hat: '#5a6a3a', band: '#3f4a2a', hair: '#5a3a22', shirt: '#6b5a48', pants: '#3f4a5a', skin: '#e0ac7e' },
+    lines: [
+      ['Eels like it dark and wet. So I am out at five. Do not ask me anything after lunch.', 'Rook lets me use his shed. I pretend I am not in the way.'],
+      ['Kit says he can beat me to the square. He cannot. Yet.', 'Odile knows the Wilds pond better than I know the mere. I am working on it.', '{name}! Heard the eels are running?'],
+      ['My sister worries. Tell her I said I am fine. I am fine.', 'If you ever want to come out at dawn, I will show you the traps.'],
+    ],
+    react: { loved: 'A {item}! You do not know what this means to a man who eats out of a bucket.', liked: 'A {item}! Thanks.', neutral: 'Oh. Thanks.', disliked: 'A {item}. That is a Ysolde gift, really.', hated: 'Frost kale. I would rather eat the trap.', birthday: 'Is it my birthday? Ysolde said it was, but she says a lot of things.' },
+  },
   // ---- v53: the Lamplighter, the sewer's trader (Stardew's Krobus): a friend, and a possible roommate. He keeps to
   // the sewer after dark, never posts quests and stays away from festivals.
   {
@@ -261,6 +298,9 @@ export const RAIN_LINES = {
   juno: 'The mail goes out, rain or shine. My boots, unfortunately, also go out.',
   nell: 'Rain makes my bones ache and my garden sing. I will sit by the fire and let it.',
   rook: 'You do not paint a boat in the rain. You sit and look at it through the window.',
+  garrow: 'Nobody buys bait in the rain. Then they all come in at once when it stops.',   // v161
+  ysolde: 'Reeds weave best damp. A wet day is a good day at the loom.',
+  ferran: 'Eels love the rain. So I am out in it. My sister thinks I am mad.',
   esme: 'I am drawing the regulars while they are trapped in here. Do not tell them.',
   kit: 'Rain is free testing. My go-cart leaks in four places. Now I know which four.',
   lamp: 'Rain runs down through the grates. It is the only time the sewer sings.',

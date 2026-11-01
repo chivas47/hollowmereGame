@@ -25,6 +25,9 @@ export const HOMES = {
   maren: { map: 'town', door: [15, 12] },  // over the clinic
   hale: { map: 'wilds', door: [14, 4] },   // the Wardens' Lodge
   lamp: { map: 'sewer', door: [21, 3] },   // a corner of the sewer
+  garrow: { map: 'mere', door: [15, 19] },   // v161 (roadmap 75e): over the boathouse
+  ysolde: { map: 'mere', cottage: [4, 18] },   // v161: the mere's west plot, onto the lane
+  ferran: { map: 'mere', cottage: [30, 19] },  // v161: the mere's east plot, a shout from his sister's
 };
 
 // A cottage's front door tile is the middle of its bottom row; you stand on the tile below it.

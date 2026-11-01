@@ -6,13 +6,13 @@ import { scheduleFor, rainDay } from '../src/data/schedules.js';
 import { NPCS, RAIN_LINES } from '../src/data/npcs.js';
 import { MAPS, SOLID } from '../src/data/maps.js';
 
-const OUT = new Set(['farm', 'village', 'town', 'beach', 'forest', 'wilds']);
+const OUT = new Set(['farm', 'village', 'town', 'beach', 'forest', 'wilds', 'mere']);   // v161: the mere too
 const week = [1, 2, 3, 4, 5, 6, 7];
 
-test('in the rain nobody but Juno and Kit has a block outdoors', () => {
+test('in the rain nobody but Juno, Kit and Ferran has a block outdoors', () => {   // v161: Ferran's eels like the rain
   for (const def of NPCS) for (const d of week) {
     const wet = rainDay(def.id, scheduleFor(def, d));
-    if (def.id === 'juno' || def.id === 'kit') { assert.deepEqual(wet, scheduleFor(def, d)); continue; }
+    if (['juno', 'kit', 'ferran'].includes(def.id)) { assert.deepEqual(wet, scheduleFor(def, d)); continue; }
     for (const b of wet) assert.ok(!OUT.has(b.map), `${def.id} out in the rain on ${b.map}, day ${d}`);
   }
 });

@@ -142,6 +142,7 @@ const { bless } = await load('systems/traditions.js');   // v110: the wishing st
 const { LODGE_SHOP } = await load('data/guild.js');
 const { readBook } = await load('systems/books.js');
 const { finishReel, stepReel, buyBait } = await load('systems/fishing.js');
+const { buyBoathouse, boathouseOpen } = await load('systems/mere.js');   // v161: Garrow's counter
 const { placePot, usePot, panAt } = await load('systems/pots.js');
 const { pickAreaForage } = await load('systems/areas.js');
 const { hitQuarryRock } = await load('systems/quarry.js');
@@ -601,7 +602,11 @@ function simulate(runSeed) {
     spend(TIME.travel);
     pond();
     while (s.energy >= COST.cast + stopAt && !late()) {
-      if (s.day % 2) use('wilds', 15, 10, 'rod'); else use('mere', 17, 13, 'rod');   // v160: the mere's dock every other day
+      if (s.day % 2) use('wilds', 15, 10, 'rod');
+      else {   // v160: the mere's dock every other day; v161: bait from Garrow's counter while it is open
+        if ((s.bag.bait || 0) < 5 && boathouseOpen(s) && s.gold > 500) track('bait', () => buyBoathouse(0));
+        use('mere', 17, 13, 'rod');
+      }
       const f = G.fishing; if (!f) break;
       f.t = 0; runUpdaters(0.001);                 // the bite
       if (!G.fishing) break;

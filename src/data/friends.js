@@ -11,6 +11,10 @@ export const FRIENDS = [
   { a: 'tavi', b: 'kit', why: 'The two youngest in the valley. Tavi maps it, Kit wants to build something on every page.' },
   { a: 'wren', b: 'rook', why: 'Wren keeps Rook in paint at cost. Rook pretends not to know.' },
   { a: 'pell', b: 'juno', why: 'The teacher and the post: between them they know everything, and tell nobody.' },
+  // v161 (roadmap 75e): the mere's three. b walks a home after a festival, so the one from the mere is b.
+  { a: 'rook', b: 'garrow', why: 'They argue about hulls every night at the Lantern. Neither has ever won.' },
+  { a: 'esme', b: 'ysolde', why: 'Esme mixes the colours, Ysolde weaves them. They never agree on green.' },
+  { a: 'kit', b: 'ferran', why: 'The two youngest on the east side. They race to the square every evening.' },
 ];
 export const friendsOf = (id) => FRIENDS.filter((f) => f.a === id || f.b === id).map((f) => (f.a === id ? f.b : f.a));
 export const areFriends = (x, y) => friendsOf(x).includes(y);
@@ -18,6 +22,7 @@ export const areFriends = (x, y) => friendsOf(x).includes(y);
 // Evening calls: who goes to whose cottage, on which weekdays (0 = Monday), and when. The host is home by then.
 export const VISITS = [
   { who: 'ines', host: 'nell', days: [1, 4], from: 19, to: 21 },
+  { who: 'ysolde', host: 'nell', days: [0, 3], from: 19, to: 21 },   // v161
 ];
 
 // Where a visitor stands: the first open floor tile beside the host's own spot indoors, so the two face and talk.

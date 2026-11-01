@@ -10,7 +10,7 @@ import { venueMap } from '../src/data/venues.js';
 
 const def = (id) => NPCS.find((d) => d.id === id);
 const at = (id, day, t) => scheduleFor(def(id), day).find((b) => t >= b.from && t < b.to) || null;
-const OUT = new Set(['farm', 'village', 'town', 'beach', 'forest', 'wilds']);
+const OUT = new Set(['farm', 'village', 'town', 'beach', 'forest', 'wilds', 'mere']);   // v161: the mere too
 
 test('lunch: home for Ines, a Lantern table for Lio, a packed lunch on the farm for Odile, the counter for Corvin', () => {
   assert.equal(at('ines', 1, 12.5 * 60), null, 'Ines goes home for lunch');

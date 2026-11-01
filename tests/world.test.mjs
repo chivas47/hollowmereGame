@@ -175,3 +175,21 @@ test('75d: the mere joins the village, its dock reaches open water, and it has o
     assert.equal(Object.values(FISH).filter((f) => f.water === 'mere' && f.seasons.includes(season)).length, 1, `one mere fish in ${season}`);
   }
 });
+
+// v161 (roadmap 75e): the first three at the mere, and Garrow's counter.
+import { G } from '../src/core/game.js';
+import { boathouseOpen, buyBoathouse } from '../src/systems/mere.js';
+import { newState } from '../src/core/state.js';
+test('75e: three new neighbours live at the mere, and Garrow sells bait and tackle in his hours', () => {
+  for (const id of ['garrow', 'ysolde', 'ferran']) { assert.ok(NPCS.find((n) => n.id === id), id); assert.equal(HOMES[id].map, 'mere'); }
+  for (const [x, y] of MERE.cottages) assert.equal(MAPS.mere.grid[y][x], 'V');
+  G.S = newState(); G.S.gold = 1000;
+  Object.assign(G.S, { day: 1, time: 10 * 60 }); assert.ok(boathouseOpen());
+  Object.assign(G.S, { day: 4 }); assert.ok(!boathouseOpen(), 'shut Thursdays');
+  Object.assign(G.S, { day: 1, time: 18 * 60 }); assert.ok(!boathouseOpen(), 'shut after five');
+  const bait = G.S.bag.bait || 0;
+  assert.ok(buyBoathouse(0)); assert.equal(G.S.bag.bait, bait + 10); assert.equal(G.S.gold, 950);
+  const spinner = MERE.stock.findIndex((o) => o.item === 'spinner');
+  assert.ok(buyBoathouse(spinner)); assert.equal(G.S.gold, 350);
+  assert.ok(!buyBoathouse(spinner), 'not enough gold');
+});

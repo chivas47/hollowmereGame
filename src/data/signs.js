@@ -37,8 +37,7 @@ export const SIGNS = {
   grove: [{ x: 37, y: 11, kind: 'post', dir: 'right', text: 'East: Brackenwood.' }],
   mere: [   // v160: the plots wait for the lakeside homes (75e)
     { x: 2, y: 19, kind: 'post', dir: 'left', text: 'West: the village.' },
-    { x: 7, y: 22, kind: 'notice', text: 'Plot by the water. Someone means to build here.' },
-    { x: 30, y: 21, kind: 'notice', text: 'Plot by the water, spoken for. A house goes up when the family comes.' },
+    { x: 13, y: 21, kind: 'notice', text: "Garrow's boathouse: bait and tackle. 9 till 5, shut Thursdays." },   // v161
   ],
   mountain: [
     { x: 20, y: 14, kind: 'post', dir: 'down', text: 'South: the Wilds.' },
