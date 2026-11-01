@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v173: The dining room
+- A new renovation at Bram's Carpentry: the dining room, 150,000g. It needs the kitchen (the first house upgrade); Bram says so if you ask without it. A 6 by 6 room opens through the kitchen's east wall, with a long table for eight.
+- The farmhouse map is seven columns wider to fit it (31 by 19); nothing already in the house moves. No new save field, no keys changed.
+- The balance bot buys it after the attic.
+
 ## v172: The attic
 - A new renovation at Bram's Carpentry: the attic, 60,000g. A ladder goes up on the bed corner's north wall; the attic is a long low room, 16 by 7, with pine walls, for furniture and chests like the house. The hatch in its floor takes you back down.
 - No new save field (one more renovation). No keys changed. The balance bot buys it after the south room.

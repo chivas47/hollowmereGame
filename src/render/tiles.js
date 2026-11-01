@@ -732,6 +732,14 @@ export function drawHouseTile(g, x, y, t, below, walls, floors, decor) {
 const bed = (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 1, Y, 14, T, '#7a4a2a'); r(g, X + 2, Y + 1, 12, 14, '#f4ead2'); r(g, X + 2, Y + 6, 12, 9, '#5f8fb5'); r(g, X + 2, Y + 6, 12, 1, '#3d6a8f'); };
 const bedHead = (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 1, Y, 14, T, '#7a4a2a'); r(g, X + 2, Y + 3, 12, 13, '#f4ead2'); r(g, X + 4, Y + 4, 8, 4, '#ffffff'); r(g, X + 1, Y, 14, 3, '#5c371e'); };
 export const HOUSE_ART = {
+  // v173: the dining room's long table: a polished top, an edge, chairs drawn at its long sides.
+  'ŧ': (g, x, y, m) => {
+    const X = x * T, Y = y * T, top = m[y - 1]?.[x] !== 'ŧ';
+    r(g, X, Y + (top ? 4 : 0), T, top ? 12 : 12, '#8a5a32'); r(g, X, Y + (top ? 4 : 0), T, 2, '#b0804a');
+    if (!top) r(g, X, Y + 11, T, 2, '#5c371e');
+    r(g, X + 5, top ? Y : Y + 13, 6, 3, '#6e4626');
+    if (top && x % 2) r(g, X + 6, Y + 7, 4, 3, '#f4ead2');
+  },
   // v172: the attic ladder: rails and rungs on a wall face, or a hatch in the attic floor's edge.
   'ʌ': (g, x, y, m) => {
     const X = x * T, Y = y * T;

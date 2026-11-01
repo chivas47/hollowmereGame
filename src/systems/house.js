@@ -57,6 +57,7 @@ export function buyCatalogue() {
 export function buyRenovation(k) {
   const S = G.S, r = RENOVATIONS[k];
   if (!r || S.house.renos.includes(k) || S.gold < r.cost) return false;
+  if (r.tier && (S.upgrades?.house || 0) < r.tier) { notify(`Bram needs the kitchen built before the ${r.name.toLowerCase()}.`); return false; }   // v173
   S.gold -= r.cost; S.house.renos.push(k);
   rebuildHouse(true);
   notify(`Bram did the ${r.name.toLowerCase()} while you were out.`);
