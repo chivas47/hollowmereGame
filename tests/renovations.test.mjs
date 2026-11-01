@@ -26,3 +26,15 @@ test('buying it takes the gold once and opens the room in the farmhouse', () => 
   assert.equal(MAPS.house.grid[12][2], 'h');
   assert.ok(!buyRenovation('corner'), 'once');
 });
+
+// v171 (roadmap 75o): the south room, 30,000g, through the living room's south wall east of the front door.
+test('the south room costs 30,000g and adds fifteen tiles below the living room, joined by a doorway', () => {
+  assert.equal(RENOVATIONS.south.cost, 30000);
+  for (const tier of [0, 1, 2, 3]) {
+    const before = houseGrid(tier, []), after = houseGrid(tier, ['south']);
+    assert.equal(floor(after) - floor(before), 17, `tier ${tier}: 15 tiles and a two-deep doorway`);
+    assert.equal(after[11][15], 'h'); assert.equal(after[12][15], 'h'); assert.equal(after[13][15], 'h'); assert.equal(after[14][15], 'h');
+    assert.equal(after[12][11], 'E', 'the front door stays');
+    for (let y = 0; y <= 11; y++) for (let x = 0; x < 24; x++) assert.equal(after[y][x], before[y][x], `nothing above moves (${x},${y})`);
+  }
+});

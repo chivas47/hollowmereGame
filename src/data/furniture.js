@@ -67,6 +67,7 @@ export const RENOVATIONS = {
   openplan: { name: 'Open-plan living room', cost: 10000, desc: 'Takes down the wall between the bed corner and the living room.' },
   nook:     { name: 'Reading nook',          cost: 5000,  desc: 'Knocks a bay into the north wall: two more tiles of floor under a window.' },
   // v170 (roadmap 75n): Stardew's corner room, 20,000g.
+  south:    { name: 'South room',            cost: 30000, desc: 'A room through the living room\'s south wall, beside the front door, five tiles by three.' },   // v171 (roadmap 75o): Stardew's southern room
   corner:   { name: 'Corner room',           cost: 20000, desc: 'A room off the living room\'s west side, four tiles by three, to furnish as you like.' },
 };
 
