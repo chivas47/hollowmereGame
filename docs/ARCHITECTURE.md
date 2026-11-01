@@ -122,6 +122,7 @@ src/
     helpers.js        helper hut harvests, waystones, the home charm, the farm cave (opening, choice, daily crate)
     statue.js         v169: the fortune statue: a loved gift on a neighbour's birthday morning (G.S.statue), Use takes it
     attic.js          v172: the attic ladder ʌ in the farmhouse and the hatch back down (the renovation)
+    birthday.js       v174: the farmer's birthday (G.S.birthday, set in the Menu by ui/birthday.js) and the birthday dinner's hearts and gifts; npcs.js seats the guests (data/birthday.js dinnerSeat)
     ponds.js          the fish pond (stock, breed, roe, requests) and the slime pen (trough, slime balls, addSlime)
     buildings.js      door (sleep), stall (shop), bin and mini bins (ship), well/pond refill
     economy.js        ship(), buy(), overnight payout; materials are never shipped

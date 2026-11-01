@@ -78,6 +78,8 @@ export function newState() {
     layout: 'open',                                     // farm layout (data/layouts.js), chosen on the new game screen
     farmForage: [],                                     // woodland layout: forage in the farm's wood today
     pet: null,                                          // the farm pet (systems/pets.js), made from the profile on load
+    birthday: null,                                     // v174: the farmer's { season, d }, set in the Menu (systems/birthday.js)
+    dinnerYear: 0,                                      // v174: the year of the last birthday dinner
     statue: null,                                       // v169: { day, who, item } on a birthday, until collected (systems/statue.js)
     horse: null,                                        // { name, map, x, y } once the stable is built (systems/stable.js)
     house: { wall: 0, floor: 0, renos: [], catalogue: false },   // farmhouse decor (systems/house.js)

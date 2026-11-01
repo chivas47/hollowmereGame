@@ -59,6 +59,8 @@ The catalogue lectern sells 30 pieces of furniture, 12 wallpapers and 12 floorin
 
 Renovations at Bram's Carpentry: open-plan living room (10,000g, removes the bed corner's wall), a reading nook (5,000g, a bay in the north wall) the corner room (v170, 20,000g, Stardew's corner room: a 4 by 3 room through the living room's west wall) and the south room (v171, 30,000g, Stardew's southern room: a 5 by 3 room through the south wall, east of the front door). The attic (v172, 60,000g, no Stardew room: priced between its southern room and dining room) adds a ladder on the bed corner's north wall up to a 16 by 7 loft for furniture and chests. The dining room (v173, 150,000g, Stardew's dining room) needs the kitchen: a 6 by 6 room through the kitchen's east wall with a table for eight. The farmhouse map is 31 by 19 since v173 (24 by 19 in v171); the camera follows you into the south room.
 
+Birthday dinner (v174, Nuno's design; Stardew has no player birthday): set your birthday in the Menu (any day but a festival). With the dining room, on that evening 18:00 to 21:00 your three closest friends at 4+ hearts sit at the table; being in the farmhouse during it gives each +100 friendship and their first liked gift, once a year.
+
 ## Clothing (v25)
 
 Tailoring as in Stardew: at the sewing machine one cloth plus one item makes the piece that item belongs to. Cloth is woven there from 5 fiber (Stardew weaves cloth from wool; sheep come with roadmap item 13). Cloth is a material: kept, never shipped.

@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v174: Your birthday dinner
+- You can set your birthday in the Menu (a season and a day; not a festival day). Older saves have none until you pick one.
+- With the dining room built, on your birthday evening (18:00 to 21:00) your three closest friends at 4 hearts or more come to the farmhouse and sit at the table. Be home during the dinner and each gives you a heart (+100 friendship) and a small gift, once a year.
+- New save fields: `birthday` (none in older saves) and `dinnerYear`. No prices or keys changed.
+
 ## v173: The dining room
 - A new renovation at Bram's Carpentry: the dining room, 150,000g. It needs the kitchen (the first house upgrade); Bram says so if you ask without it. A 6 by 6 room opens through the kitchen's east wall, with a long table for eight.
 - The farmhouse map is seven columns wider to fit it (31 by 19); nothing already in the house moves. No new save field, no keys changed.
