@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v167: The newest neighbours join in
+- Garrow, Ysolde, Ferran, Tamsin, Aurel, Bryn and Pip now take part in the valley's life: each has film and snack tastes at the theatre, things they are seen doing (Garrow's rod on the dock, Ferran's nets, Tamsin's feed basket, Aurel's hammer, Bryn's bag, Pip's schoolbook), lines about their friends, and lines at the Summer Potluck and the Grange Fair.
+- All but Pip set a lantern at the Lantern Float (he is in bed; Bryn sets his for him).
+- Ysolde's birthday moves from Summer 20 to Summer 22, and Pip's from Winter 12 to Winter 15: both had fallen on a festival day.
+- No prices, saves or keys changed.
+
 ## v166: Tamsin, and a family in town
 - Tamsin, whose name was on the Ranch Supply counter, is now a neighbour: she keeps cows and sheep at a ranch on the village's east road (her cottage and two pens south of the road), works the pens at dawn and dusk and stands behind her own counter 9 to 4 (shut Mondays and Tuesdays, as before).
 - A family moves into a new cottage on the town's south side: Aurel, a stonemason mending the valley's walls; Bryn, the clinic's nurse beside Doctor Maren; and their son Pip, seven, Pell's youngest pupil, drawn child-sized. Pip is home by six.

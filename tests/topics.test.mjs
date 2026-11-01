@@ -45,3 +45,11 @@ test('no em dashes, every line has a friend to talk about', () => {
   for (const line of all) assert.ok(!line.includes('—'), line);
   for (const [a, m] of Object.entries(ABOUT)) for (const b of Object.keys(m)) assert.ok(def(a) && def(b));
 });
+
+// v167 (roadmap 75k): every neighbour talks about a friend, and no birthday falls on a festival.
+import { FRIENDS, areFriends } from '../src/data/friends.js';
+test('75k: everyone with a friend has a line about one, only about friends; birthdays avoid festival days', () => {
+  for (const { a, b } of FRIENDS) for (const id of [a, b]) assert.ok(ABOUT[id], `${id} has a line about a friend`);
+  for (const [id, lines] of Object.entries(ABOUT)) for (const f of Object.keys(lines)) assert.ok(areFriends(id, f), `${id} talks about ${f}`);
+  for (const n of NPCS) if (n.birthday) assert.ok(!FESTIVALS.some((f) => f.season === n.birthday.season && f.day === n.birthday.d), `${n.id}'s birthday is a festival day`);
+});

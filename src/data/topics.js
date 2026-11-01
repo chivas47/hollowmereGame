@@ -4,14 +4,25 @@
 
 // About a friend (data/friends.js), keyed speaker then friend. Said on about one day in three.
 export const ABOUT = {
-  ines: { nell: 'Nell sent me home with seedlings again, and went home with a jar of honey. We call it trade.' },
+  ines: { nell: 'Nell sent me home with seedlings again, and went home with a jar of honey. We call it trade.', tamsin: 'Tamsin left a fleece on my gatepost. The bees have taken against it.' },
   nell: { ines: 'Ines came round last night. We talked about bees for an hour and the weather for two.' },
   odile: { esme: 'Esme painted my boat. It looks better in the painting. Do not tell the boat.' },
-  esme: { odile: 'Odile knows the name of every rock on the shore. I am painting them in order.' },
+  esme: { odile: 'Odile knows the name of every rock on the shore. I am painting them in order.', ysolde: 'Ysolde will not weave my green. I will not paint her ochre. We are both right.' },
   tavi: { kit: 'Kit wants a bridge on my map where there is no bridge. "Yet," Kit says.' },
-  kit: { tavi: 'Tavi says my go-cart cannot go on the map because it moves. That is the whole point of it.' },
+  kit: { tavi: 'Tavi says my go-cart cannot go on the map because it moves. That is the whole point of it.', ferran: 'Ferran says he let me win. He did not let me win.', pip: 'Pip broke the cart again. Good. Now I know where it was weak.' },
+  // v167 (roadmap 75k): the newest neighbours and their friends.
+  bram: { tamsin: 'I knocked on Tamsin\'s barn beams. Still sound. I built it well, if I say so myself, and I do.' },
+  corvin: { aurel: 'Aurel brought his chisels in to sharpen. He talks about stone the way I talk about iron. Rarely.' },
+  maren: { bryn: 'Bryn hid my bag again. I found it. She hid it better. I went home.' },
+  garrow: { rook: 'Rook builds a good hull. I will not be the one to tell him.' },
+  ysolde: { esme: 'Esme wants the mat in a green I have no reeds for. So I am dyeing reeds now.' },
+  ferran: { kit: 'Kit wants a rematch. Kit always wants a rematch.' },
+  tamsin: { ines: 'Ines left a jar of honey on my gatepost. I left a fleece on hers.', bram: 'Bram knocked on my barn beams again. Still sound, he says. He always sounds surprised.' },
+  aurel: { corvin: 'Corvin and I had lunch. We said maybe six words. Good lunch.' },
+  bryn: { maren: 'Maren has worked every day this season. I have started hiding her bag at five.' },
+  pip: { kit: 'Kit is making me a boat. It is going to go on the mere. Garrow said maybe.' },
   wren: { rook: 'Rook buys more blue paint than the rest of the valley together. I have stopped asking.' },
-  rook: { wren: 'Wren keeps the good brushes back for me and pretends it is an accident. I pretend to believe it.' },
+  rook: { wren: 'Wren keeps the good brushes back for me and pretends it is an accident. I pretend to believe it.', garrow: 'Garrow says my keel is too shallow. Garrow has been saying that for twenty years.' },
   pell: { juno: 'Juno knows who wrote to whom before the letter lands. I know who cannot spell. Between us, nothing gets past.' },
   juno: { pell: 'Pell marked my handwriting on the school post today. A seven. I will take it.' },
 };

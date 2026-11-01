@@ -224,7 +224,7 @@ export const NPCS = [
   {
     id: 'ysolde', name: 'Ysolde', role: 'Weaves baskets and mats from the mere\'s reeds', seed: 18,
     loves: ['cloth', 'honeycake'], likes: ['fiber', 'honey', 'thymetea', 'bread'], dislikes: ['crayfish', 'bait'], hates: ['mayo'],
-    birthday: { season: 'Summer', d: 20 },
+    birthday: { season: 'Summer', d: 22 },
     pal: { hat: null, hair: '#b5452f', shirt: '#a0a45a', pants: '#5a5048', skin: '#e0ac7e', long: true },
     lines: [
       ['The best reeds in the valley grow on the north shore. Cut them at dawn, before they dry.', 'Ferran is asleep. He was up before the birds again.'],
@@ -285,7 +285,7 @@ export const NPCS = [
   {
     id: 'pip', name: 'Pip', role: 'Seven; Pell\'s youngest pupil, Aurel and Bryn\'s son', seed: 23, child: true,
     loves: ['gleamfruit', 'honeycake'], likes: ['spiralshell', 'berry', 'quartz', 'pancakes', 'pear'], dislikes: ['carrot', 'snappea'], hates: ['frostkale'],
-    birthday: { season: 'Winter', d: 12 },
+    birthday: { season: 'Winter', d: 15 },
     pal: { hat: null, hair: '#d9a441', shirt: '#c96a3a', pants: '#3f4a5a', skin: '#e0ac7e', small: true },
     lines: [
       ['Have you seen Pudding? She was on the wall. Now she is not on the wall.', 'I am seven. Next year I will be eight. Kit says that is how it works.'],
