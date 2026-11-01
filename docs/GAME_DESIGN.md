@@ -245,6 +245,8 @@ Stardew's bobber bar by role: after a bite, hold Use to lift your bar (it falls 
 
 ### The beach and the forest (v43)
 
+v164 (roadmap 75f): Pudding, the village cat (data/atmosphere.js CAT): a new warm spot every hour and a half from 7:00 to 20:00, seeded by the day; asleep 13:00 to 16:00; in during rain, storms and snow. Use pets her.
+
 v163 (roadmap 75f): winter water: the mere and the village pond freeze in winter like the Wilds pond; fish the mere through its ice hole off the end of the dock; the village pond has no hole. Rivers and the sea never freeze.
 
 v162 (roadmap 75f): life in the water, drawn only: fish jump on lakes, ponds and rivers (spring to autumn), ducks on the mere and the village pond (spring to autumn), frogs at the water's edge on summer evenings (19:00 to 23:00, not in rain).
