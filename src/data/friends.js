@@ -15,6 +15,12 @@ export const FRIENDS = [
   { a: 'rook', b: 'garrow', why: 'They argue about hulls every night at the Lantern. Neither has ever won.' },
   { a: 'esme', b: 'ysolde', why: 'Esme mixes the colours, Ysolde weaves them. They never agree on green.' },
   { a: 'kit', b: 'ferran', why: 'The two youngest on the east side. They race to the square every evening.' },
+  // v166 (roadmap 75j): Tamsin, and the family in town.
+  { a: 'ines', b: 'tamsin', why: 'Honey for wool, wool for honey. Neither has paid the other a coin in eleven years.' },
+  { a: 'tamsin', b: 'bram', why: 'He built her mother\'s barn, and still knocks on its beams when he passes.' },
+  { a: 'corvin', b: 'aurel', why: 'Lunch together most days. Neither says much. Both call it the best hour of the day.' },
+  { a: 'maren', b: 'bryn', why: 'Maren wrote asking for help for a season. That was the spring before last.' },
+  { a: 'kit', b: 'pip', why: 'Kit builds Pip toys. Pip tests them to destruction. Both think this is the deal.' },
 ];
 export const friendsOf = (id) => FRIENDS.filter((f) => f.a === id || f.b === id).map((f) => (f.a === id ? f.b : f.a));
 export const areFriends = (x, y) => friendsOf(x).includes(y);

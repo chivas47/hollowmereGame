@@ -201,3 +201,27 @@ test('75f: every map with jumping fish, ducks or frogs has open water', () => {
   for (const k of ['jumps', 'ducks', 'frogs']) for (const id of WILDLIFE[k].maps) assert.ok(openWater(id), `${k} on ${id}`);
   for (const id of WILDLIFE.ducks.maps) assert.ok(WILDLIFE.ducks.n[id] > 0, `how many ducks on ${id}`);
 });
+
+// v166 (roadmap 75j): Tamsin at her ranch and behind her counter; a family of three sharing one cottage in town.
+import { livesWith } from '../src/data/homes.js';
+import { scheduleFor as plan } from '../src/data/schedules.js';
+test('75j: four new neighbours; the family shares a cottage; Tamsin keeps her counter; Pip is home by six', () => {
+  for (const id of ['tamsin', 'aurel', 'bryn', 'pip']) assert.ok(NPCS.find((n) => n.id === id), id);
+  assert.deepEqual(livesWith('aurel'), ['aurel', 'bryn', 'pip']);
+  for (const id of ['bryn', 'pip']) {
+    assert.equal(homeMap(id), 'home_aurel'); assert.deepEqual(HOMES[id].door, HOMES.aurel.door);
+    const [x, y] = HOMES[id].spot; assert.equal(MAPS.home_aurel.grid[y][x], 'h', `${id} stands on open floor`);
+  }
+  assert.notDeepEqual(HOMES.bryn.spot, HOMES.pip.spot);
+  assert.ok(!MAPS.home_bryn && !MAPS.home_pip, 'no second inside for those who share');
+  assert.equal(MAPS.village.grid[HOMES.tamsin.cottage[1]][HOMES.tamsin.cottage[0]], 'V');
+  assert.equal(MAPS.town.grid[HOMES.aurel.cottage[1]][HOMES.aurel.cottage[0]], 'V');
+  const tamsin = NPCS.find((n) => n.id === 'tamsin'), pip = NPCS.find((n) => n.id === 'pip');
+  for (const day of [3, 4, 5, 6, 7]) {   // Wednesday to Sunday: the counter's open days (shut Mondays and Tuesdays)
+    const b = plan(tamsin, day).find((x) => x.map === venueMap('ranch'));
+    assert.ok(b && b.from <= 9 * 60 && b.to >= 16 * 60, `Tamsin at the counter on day ${day}`);
+    assert.deepEqual(b.path.at(-1), VENUES.ranch.spot);
+  }
+  for (const day of [1, 2]) assert.ok(!plan(tamsin, day).some((x) => x.map === venueMap('ranch')), 'her days off');
+  for (let day = 1; day <= 7; day++) assert.ok(Math.max(...plan(pip, day).map((b) => b.to)) <= 18 * 60 + 30, `Pip home by six on day ${day}`);
+});

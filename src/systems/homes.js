@@ -5,7 +5,7 @@ import { emit, changed, notify } from '../core/events.js';
 import { addInteraction, addPrompt } from '../core/registry.js';
 import { fmtTime, today } from '../core/time.js';
 import { MAPS } from '../data/maps.js';
-import { HOMES, homeMap, homeEntry, HOME_OPEN } from '../data/homes.js';
+import { HOMES, homeMap, homeEntry, HOME_OPEN, livesWith } from '../data/homes.js';
 import { NPCS } from '../data/npcs.js';
 import { festivalOn, hoursOf } from '../data/festivals.js';
 import { placePlayer } from './world.js';
@@ -23,7 +23,7 @@ function shutWhy(id) {
   const t = G.S.time, f = festivalOn(today());
   if (f && t >= hoursOf(f).from && t < hoursOf(f).to) return 'Nobody is home. Everyone is in the square.';
   if (t >= HOME_OPEN.from && t < HOME_OPEN.to) return null;
-  if (heartsWith(id) >= HOME_OPEN.hearts) return null;
+  if (livesWith(id).some((k) => heartsWith(k) >= HOME_OPEN.hearts)) return null;   // v166: anyone who lives there
   return `The door is locked. ${nameOf(id)} keeps it open from ${fmtTime(HOME_OPEN.from)} to ${fmtTime(HOME_OPEN.to)}.`;
 }
 

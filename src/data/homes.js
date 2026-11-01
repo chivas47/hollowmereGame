@@ -28,6 +28,10 @@ export const HOMES = {
   garrow: { map: 'mere', door: [15, 19] },   // v161 (roadmap 75e): over the boathouse
   ysolde: { map: 'mere', cottage: [4, 18] },   // v161: the mere's west plot, onto the lane
   ferran: { map: 'mere', cottage: [30, 19] },  // v161: the mere's east plot, a shout from his sister's
+  tamsin: { map: 'village', cottage: [24, 11] },  // v166 (roadmap 75j): her ranch, south of the east road, the pens beside
+  aurel: { map: 'town', cottage: [14, 14] },      // v166: the family's cottage on the town's open south side
+  bryn: { shares: 'aurel' },                      // v166: a cottage can be home to more than one (its owner's plan)
+  pip: { shares: 'aurel' },
 };
 
 // A cottage's front door tile is the middle of its bottom row; you stand on the tile below it.
@@ -35,7 +39,15 @@ for (const [id, h] of Object.entries(HOMES)) {
   if (h.cottage) h.door = [h.cottage[0] + 1, h.cottage[1] + 2];
   if (h.cottage) h.spot = INTERIORS[id].spot;   // v97: where the floor plan has the owner stand
 }
-export const homeMap = (id) => `home_${id}`;
+// v166: those who share a cottage use its door and inside, each with their own spot from the owner's plan (spots).
+const sharing = {};
+for (const h of Object.values(HOMES)) if (h.shares) {
+  const o = HOMES[h.shares], i = sharing[h.shares] = (sharing[h.shares] ?? -1) + 1;
+  Object.assign(h, { map: o.map, door: o.door, spot: INTERIORS[h.shares].spots[i] });
+}
+export const ownerOfHome = (id) => HOMES[id]?.shares || id;
+export const livesWith = (owner) => Object.keys(HOMES).filter((k) => ownerOfHome(k) === owner);
+export const homeMap = (id) => `home_${ownerOfHome(id)}`;
 export const HOME_ENTRY = [11, 11];   // inside the farmhouse, just past the door mat (E at 11,12)
 // v97: the tile just inside a cottage's front door (each floor plan puts its door where the house needs it).
 export const homeEntry = (id) => doorOf(id).entry;

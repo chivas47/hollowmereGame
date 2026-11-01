@@ -67,7 +67,7 @@ const gathering = () => { const f = floatOn(today()); return f && G.S.map === f.
 // v76: each neighbour lives somewhere (data/homes.js) and starts and ends the day there, walking (systems/routes.js)
 // between home and the places on their schedule.
 const homeOf = (n) => (spouse() === n.id ? SPOUSE_HOME : HOMES[n.id]);
-const houseOf = (n) => (spouse() === n.id ? SPOUSE_HOME.house : HOMES[n.id].cottage ? homeMap(n.id) : null);
+const houseOf = (n) => (spouse() === n.id ? SPOUSE_HOME.house : (HOMES[n.id].cottage || HOMES[n.id].shares) ? homeMap(n.id) : null);
 // snap: put them where the hour has them (on a new day or a load); at the start of the day that is always home,
 // so they walk out to their first place.
 const snapAll = () => NPCRT.forEach((n) => { n.snap = true; });
