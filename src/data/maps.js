@@ -316,7 +316,7 @@ function quarryGrid() {
 // 3 the cellar); renos: renovation keys (data/furniture.js). Tiles: . nothing (solid), I wall, h floor,
 // Z bed, l catalogue lectern, n kitchen counter, o stove, x crib, v cask, E the front door.
 export function houseGrid(tier = 0, renos = []) {
-  const m = Array.from({ length: H }, () => Array.from({ length: W }, () => '.'));
+  const m = Array.from({ length: H + 3 }, () => Array.from({ length: W }, () => '.'));   // v171: three rows more, for the south room
   const room = (x0, y0, x1, y1) => { fill(m, x0 - 1, y0 - 2, x1 + 1, y1 + 1, 'I'); fill(m, x0, y0, x1, y1, 'h'); };
   room(6, 3, 17, 11);
   if (tier >= 1) { room(19, 3, 22, 8); fill(m, 18, 6, 18, 7, 'h'); put(m, [[19, 3], [20, 3], [22, 3]], 'n'); m[3][21] = 'o'; }
@@ -324,6 +324,7 @@ export function houseGrid(tier = 0, renos = []) {
   if (tier >= 3) { fill(m, 18, 9, 23, 15, 'I'); fill(m, 19, 10, 22, 14, 'h'); m[9][20] = 'h'; put(m, [[19, 14], [21, 14], [22, 14]], 'v'); }
   if (!renos.includes('openplan')) fill(m, 10, 3, 10, 5, 'I');   // the bed corner's wall
   if (renos.includes('nook')) fill(m, 12, 2, 13, 2, 'h');
+  if (renos.includes('south')) { room(13, 14, 17, 16); m[12][15] = 'h'; m[13][15] = 'h'; }   // v171: through the south wall, east of the door
   if (renos.includes('corner')) { room(1, 11, 4, 13); m[11][5] = 'h'; }   // v170: through the west wall, below the nursery
   put(m, [[7, 3], [7, 4]], 'Z'); m[3][16] = 'l';
   m[2][14] = '_';   // v47: the phone on the wall

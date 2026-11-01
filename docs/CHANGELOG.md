@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v171: The south room
+- A new renovation at Bram's Carpentry: the south room, 30,000g. A 5 by 3 room opens through the living room's south wall, east of the front door.
+- The farmhouse map is three rows taller to make room (24 by 19); the camera scrolls to follow you. Nothing already in the house moves.
+- No new save field and no keys changed. The balance bot buys it after the corner room.
+
 ## v170: The corner room
 - A new renovation at Bram's Carpentry: the corner room, 20,000g. A 4 by 3 room opens through the living room's west wall, below the nursery wing, to furnish as you like.
 - It joins the existing renovations in the same list; no new save field (it is one more entry in the house's renovations). No keys changed.

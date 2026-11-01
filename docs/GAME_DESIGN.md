@@ -57,7 +57,7 @@ The farm door leads inside; the bed ends the day and you wake beside it. Rooms c
 
 The catalogue lectern sells 30 pieces of furniture, 12 wallpapers and 12 floorings (Stardew's furniture shop prices: chairs 300 to 750, tables 750 to 1,500, rugs 1,000 to 1,500, a tall clock 2,000; patterns 100g each). Furniture goes to the kit (slot 7) and is placed on the floor; face it to pick it up. R (or Turn in its dialog) turns a piece you placed (v99): chairs, armchairs and sofas four ways, the long rug a quarter turn, lopsided pieces mirrored; symmetrical pieces do not change. U or Ctrl+Z undoes the day's last place, pick-up or turn (20 steps). Rugs can be walked over. Doorways stay clear. The full catalogue (30,000g, as in Stardew) makes everything in it free.
 
-Renovations at Bram's Carpentry: open-plan living room (10,000g, removes the bed corner's wall), a reading nook (5,000g, a bay in the north wall) and the corner room (v170, 20,000g, Stardew's corner room: a 4 by 3 room through the living room's west wall).
+Renovations at Bram's Carpentry: open-plan living room (10,000g, removes the bed corner's wall), a reading nook (5,000g, a bay in the north wall) the corner room (v170, 20,000g, Stardew's corner room: a 4 by 3 room through the living room's west wall) and the south room (v171, 30,000g, Stardew's southern room: a 5 by 3 room through the south wall, east of the front door). The farmhouse map is 24 by 19 since v171; the camera follows you into the south room.
 
 ## Clothing (v25)
 
