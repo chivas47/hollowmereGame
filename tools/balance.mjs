@@ -51,7 +51,7 @@ const STRATEGIES = {
     'lodge:saber', 'lodge:cutlass',   // v37: the lodge's weapons, skipped if the bot has not been deep enough
     'loom', 'mill', 'helperhut',   // the hut's 100 fiber come slowly from weeds
     // v168 (roadmap 75l): the late-game sinks, Stardew's obelisks and gold clock: two waystones, then the clock tower.
-    'wayvillage', 'wayhollow', 'clocktower'],
+    'wayvillage', 'statue', 'wayhollow', 'clocktower'],   // v169: the fortune statue before the quartz-hungry waystone
   crops: ['furnace', 'can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
 };
 

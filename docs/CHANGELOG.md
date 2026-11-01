@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v169: The fortune statue
+- A new farm building at Bram's: the fortune statue, 1,000,000g, placed like the waystones. On the morning of a neighbour's birthday its hands hold something that neighbour loves; press Use on it to take the gift.
+- New save field `statue` (empty in older saves). No prices or keys changed.
+- The balance bot buys it after the village waystone.
+
 ## v168: The balance bot buys the late game
 - The balance simulator now saves for the village waystone, the Hollow waystone (500,000g each) and the clock tower (10,000,000g), Stardew's obelisks and gold clock, once the rest of its list is bought. Before, it ended with millions and called it "nothing left to buy" while 11,000,000g of buildings sat unbought.
 - No change in the game itself: no prices, saves or keys.

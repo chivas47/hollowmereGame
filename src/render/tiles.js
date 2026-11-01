@@ -311,6 +311,15 @@ function helperhut(g, p, o) {
   if (p.snow) r(g, X + 10, Y + 5, 12, 3, SNOW);
   r(g, X + 13, Y + 22, 6, 9, '#3f3226'); r(g, X + 14, Y + 23, 4, 2, '#7fcf6a');
 }
+// v169: the fortune statue, a figure on a plinth with open hands, gilded.
+function statue(g, p, o) {
+  const X = o.x * T, Y = o.y * T, gold = '#e2b23a', dark = '#a5752a';
+  r(g, X + 2, Y + 31, 12, 1, 'rgba(0,0,0,.25)');
+  r(g, X + 2, Y + 24, 12, 7, '#8d8a84'); r(g, X + 2, Y + 24, 12, 1, '#b5b1a8');
+  r(g, X + 6, Y + 3, 4, 4, gold); r(g, X + 5, Y + 8, 6, 10, gold); r(g, X + 5, Y + 8, 1, 10, dark);
+  r(g, X + 2, Y + 12, 3, 2, gold); r(g, X + 11, Y + 12, 3, 2, gold); r(g, X + 6, Y + 18, 4, 6, dark);
+  r(g, X + 7, Y + 4, 1, 1, '#fff2c0');
+}
 function waystone(g, p, o) {
   const X = o.x * T, Y = o.y * T, hollow = o.site === 'wayhollow';
   r(g, X + 3, Y + 31, 10, 1, 'rgba(0,0,0,.25)');
@@ -401,7 +410,7 @@ export function drawBuilding(g, p, o) {
   g.drawImage(sheet(name).img, sx, sy, w, h, o.x * T + dx, o.y * T + dy, w, h);
 }
 
-export const OBJECT_ART = { boathouse, boat, storefront, lodge, helperhut, waystone, pond, slimepen, shed, mill, clocktower, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
+export const OBJECT_ART = { boathouse, boat, storefront, lodge, helperhut, waystone, pond, slimepen, shed, mill, clocktower, statue, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
 
 // ---- Greenhouse interior (ignores seasons) ----
 export function drawGreenhouseFloor(g, x, y, t) {

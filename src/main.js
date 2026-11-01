@@ -45,6 +45,7 @@ import './systems/greenhouse.js';
 import './systems/mill.js';
 import './systems/ponds.js';
 import './systems/helpers.js';
+import './systems/statue.js';     // v169: the fortune statue
 import './systems/professions.js';
 import './systems/cooking.js';
 import './systems/trees.js';
