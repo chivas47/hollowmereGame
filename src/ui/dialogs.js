@@ -143,7 +143,7 @@ on('day:report', (r) => {
   if (r.newSeason) {
     html += `<p class="gift">${r.newSeason} has arrived.`;
     if (r.withered) html += ` ${plural(r.withered, 'crop')} withered with the change of season.`;
-    if (r.newSeason === 'Winter') html += ' Nothing grows outside in winter. The pond has frozen: fish through the ice hole on its west edge.';
+    if (r.newSeason === 'Winter') html += ' Nothing grows outside in winter. The ponds and the mere have frozen: fish through the ice holes, at the west edge of the Wilds pond and off the end of the dock on the mere.';
     html += '</p>';
   }
   if (r.festival) html += `<p class="gift">Today is the ${r.festival.name}! Head to the village square, ${fmtTime(hoursOf(r.festival).from)} to ${fmtTime(hoursOf(r.festival).to)}. Your neighbours will be there instead of the farm.</p>`;

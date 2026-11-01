@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v163: Winter water
+- In winter the mere and the village pond freeze like the Wilds pond. The mere has an ice hole off the end of the boathouse dock (the Frost pike's season); the village pond has none. The forest river and the sea still never freeze.
+- The morning report on the first day of winter names both ice holes.
+- A new test checks every source file parses, including the screens the other tests never load (it would have caught a quote typo found while building this).
+- No prices or keys changed.
+
 ## v162: Life in the water
 - Fish jump now and then on the mere, the village pond, the Wilds pond, the forest river, the grove's pools and the mountain lake (not in winter), with a ring spreading where they land.
 - Ducks paddle about the mere and the village pond from spring to autumn, a duckling or two among them, turning back at the bank.

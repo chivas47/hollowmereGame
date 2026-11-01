@@ -7,7 +7,7 @@ import { addLayer, addUpdater, collectEntities } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { MAPS, sizeOf } from '../data/maps.js';
 import { PAL } from '../data/seasons.js';
-import { ICE_HOLE } from '../data/fish.js';
+import { ICE } from '../data/fish.js';
 import { underSky } from '../data/weather.js';
 import { WATER } from '../data/atmosphere.js';
 import { r, rng } from '../render/pixel.js';
@@ -28,7 +28,7 @@ function waterOf(mapId) {
   const ys = [...rows];
   return (waters[mapId] = { tiles, path: null, rows: ys.sort((a, b) => a - b), top: Math.min(...ys) * T, bottom: (Math.max(...ys) + 1) * T });
 }
-const still = () => today().season === 'Winter' && G.S.map === ICE_HOLE.map;
+const still = () => today().season === 'Winter' && G.S.map in ICE;   // v163: every water that freezes
 const wet = () => G.S.weather === 'rain' || G.S.weather === 'storm';
 
 // ---- Rain rings ----

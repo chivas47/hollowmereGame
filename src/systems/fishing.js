@@ -12,7 +12,7 @@ import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addUpdater, addLayer, addPrompt } from '../core/registry.js';
 import { today } from '../core/time.js';
-import { FISH, ICE_HOLE } from '../data/fish.js';
+import { FISH, ICE } from '../data/fish.js';
 import { ITEMS } from '../data/items.js';
 import { CATCH, BAIT, TACKLE, TACKLE_USES, BOBBERS, BOBBER_EVERY, TRASH, TRASH_CHANCE, FISH_TREASURE, LEGEND_CHANCE, BAIT_PRICE } from '../data/angling.js';
 import { tier } from '../data/upgrades.js';
@@ -30,7 +30,8 @@ on('day:start', end); on('game:reset', end);
 
 // In winter the pond freezes: only the ice hole can be fished, and it has ice-only fish too.
 const frozen = () => today().season === 'Winter';
-const atHole = (tx, ty, mapId) => mapId === ICE_HOLE.map && tx === ICE_HOLE.x && ty === ICE_HOLE.y;
+const atHole = (tx, ty, mapId) => !!ICE[mapId] && tx === ICE[mapId].x && ty === ICE[mapId].y;
+const iced = (mapId) => frozen() && mapId in ICE;   // v163: the Wilds pond, the mere and the village pond freeze
 
 // v42: the season's legendary fish, if you qualify and have not caught it yet.
 export function legendHere(ice, water = 'pond') {
@@ -148,8 +149,8 @@ addInteraction(200, () => {
 addInteraction(65, ({ tx, ty, tile, item, mapId }) => {
   if (item !== 'rod' || !WATER.has(tile)) return false;
   if (G.fishing) { notify('One line in the water at a time.'); return true; }
-  const S = G.S, pond = mapId === ICE_HOLE.map, ice = pond && frozen() && atHole(tx, ty, mapId);   // v43: only the pond freezes
-  if (pond && frozen() && !ice) { notify('The pond is frozen solid. Fish through the ice hole on its west edge.'); return true; }
+  const S = G.S, ice = iced(mapId) && atHole(tx, ty, mapId);   // v43: the pond freezes; v163: the mere and the village pond too
+  if (iced(mapId) && !ice) { notify(ICE[mapId] ? `The water is frozen solid. Fish through the ice hole ${ICE[mapId].where}.` : 'The pond is frozen solid.'); return true; }
   if (!useEnergy(ENERGY)) return true;
   const bait = baitOk() && S.bait && S.bag[S.bait] > 0 ? S.bait : null;
   if (bait) { S.bag[bait]--; if (!S.bag[bait]) notify(`That was your last ${ITEMS[bait].name.toLowerCase()}.`); }
@@ -164,7 +165,7 @@ addInteraction(65, ({ tx, ty, tile, item, mapId }) => {
 addPrompt(200, () => { const f = G.fishing; return f?.phase === 'bite' && !!f.p2 === !!G.partnerActing ? 'Hook it' : null; });
 addPrompt(65, ({ tx, ty, tile, item, mapId }) => {
   if (item !== 'rod' || !WATER.has(tile) || G.fishing) return null;
-  return mapId === ICE_HOLE.map && frozen() && !atHole(tx, ty, mapId) ? null : 'Cast your line';
+  return iced(mapId) && !atHole(tx, ty, mapId) ? null : 'Cast your line';
 });
 
 function reel(f, dt) {
@@ -211,10 +212,11 @@ addUpdater((dt) => {
   } else reel(f, dt);
 });
 
-// The ice hole, drawn on the frozen pond in winter.
+// The ice hole, drawn on the frozen water in winter (v163: wherever one is cut).
 addLayer(12, (c) => {
-  if (G.S.map !== ICE_HOLE.map || !frozen()) return;
-  const X = ICE_HOLE.x * T, Y = ICE_HOLE.y * T;
+  const hole = ICE[G.S.map];
+  if (!hole || !frozen()) return;
+  const X = hole.x * T, Y = hole.y * T;
   r(c, X + 3, Y + 4, 10, 8, '#e8f3f8'); r(c, X + 4, Y + 5, 8, 6, '#1f4f70'); r(c, X + 5, Y + 6, 3, 1, '#3f7fb0');
 });
 

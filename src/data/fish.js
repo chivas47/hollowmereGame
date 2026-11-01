@@ -68,3 +68,10 @@ export const FISH = {
 
 // In winter the Wilds pond freezes; this edge tile is the only place to fish.
 export const ICE_HOLE = { map: 'wilds', x: 15, y: 10 };
+// v163 (roadmap 75f): the still waters that freeze in winter, and where each one's ice hole is (null: none, so no
+// winter fishing there). The forest river and the sea never freeze.
+export const ICE = {
+  wilds: { x: ICE_HOLE.x, y: ICE_HOLE.y, where: 'on its west edge' },
+  mere: { x: 17, y: 13, where: 'off the end of the dock' },
+  village: null,
+};
