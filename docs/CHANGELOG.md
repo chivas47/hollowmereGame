@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v162: Life in the water
+- Fish jump now and then on the mere, the village pond, the Wilds pond, the forest river, the grove's pools and the mountain lake (not in winter), with a ring spreading where they land.
+- Ducks paddle about the mere and the village pond from spring to autumn, a duckling or two among them, turning back at the bank.
+- On summer evenings frogs sit at the water's edge and hop now and then.
+- Drawn only; nothing saved, no prices or keys changed.
+
 ## v161: New neighbours at the mere
 - Three people move to the mere: Garrow, the old ferryman, keeps the boathouse; Ysolde weaves baskets from the reeds on the west plot; her brother Ferran traps eels from the east plot. Friends only.
 - Garrow's counter is open 9:00 to 17:00, shut Thursdays: bait (50g for 10), trap and lead bobbers (500g), spinner and cork bobber (600g), treasure hunter (750g) and the crab pot (1,500g, still craftable). Tackle had no shop before.

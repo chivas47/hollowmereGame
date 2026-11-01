@@ -193,3 +193,11 @@ test('75e: three new neighbours live at the mere, and Garrow sells bait and tack
   assert.ok(buyBoathouse(spinner)); assert.equal(G.S.gold, 350);
   assert.ok(!buyBoathouse(spinner), 'not enough gold');
 });
+
+// v162 (roadmap 75f): life in the water only goes where there is water to live in.
+import { WILDLIFE } from '../src/data/atmosphere.js';
+test('75f: every map with jumping fish, ducks or frogs has open water', () => {
+  const openWater = (id) => MAPS[id].grid.some((row, y) => row.some((t, x) => t === 'O' && [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(([a, b]) => MAPS[id].grid[y + b]?.[x + a] === 'O').length >= 3));
+  for (const k of ['jumps', 'ducks', 'frogs']) for (const id of WILDLIFE[k].maps) assert.ok(openWater(id), `${k} on ${id}`);
+  for (const id of WILDLIFE.ducks.maps) assert.ok(WILDLIFE.ducks.n[id] > 0, `how many ducks on ${id}`);
+});
