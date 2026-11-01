@@ -32,6 +32,10 @@ export const DOINGS = {
   aurel: [{ map: 'village', stay: true, does: 'hammer' }, { map: 'town', stay: true, does: 'hammer' }],
   bryn: [{ map: venueMap('clinic'), does: 'bag' }],
   pip: [{ map: venueMap('hall'), does: 'book' }],
+  // v175 (roadmap 75s)
+  aldous: [{ map: venueMap('museum'), does: 'ledger' }],                 // labelling the day's donations
+  hester: [{ map: 'village', stay: true, does: 'book' }],                 // the almanac, on her bench and by the roses
+  wilmot: [{ map: venueMap('smithy'), does: 'wrench' }, { map: 'town', stay: true, does: 'wrench' }],   // springs; the hall clock
 };
 
 // What a neighbour is doing on this block (null: home, or nothing here), and whether it shows while they walk.

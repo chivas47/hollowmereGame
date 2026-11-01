@@ -13,6 +13,10 @@ export const STATIONS = [
   { at: [16, 10], face: 'right' }, { at: [17, 10], face: 'left' },
   { at: [4, 9], face: 'right' }, { at: [5, 9], face: 'left' },
   { at: [18, 5], face: 'down' }, { at: [18, 6], face: 'up' },
+  // v175: three more pairs, so a crowd of 27 has room to choose who it stands with
+  { at: [3, 7], face: 'right' }, { at: [4, 7], face: 'left' },
+  { at: [19, 11], face: 'right' }, { at: [20, 11], face: 'left' },
+  { at: [21, 6], face: 'right' }, { at: [22, 6], face: 'left' },
   // the fountain rim, looking at the water (the west side is the ribbon pole's on dance day)
   { at: [10, 8], face: 'right', not: ['dance'] }, { at: [10, 9], face: 'right', not: ['dance'] },
   { at: [13, 8], face: 'left' }, { at: [13, 9], face: 'left' },

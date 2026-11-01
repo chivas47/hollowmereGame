@@ -30,7 +30,7 @@ export const FLOAT = {
   set: 'You light your lantern and set it on the water. It turns once, then drifts out to join the others.',
   again: 'Your lantern is already out there, somewhere among the others.',
   early: 'The lanterns go on the water at 10 pm, when the whole village is here.',
-  spots: { ines: [8, 9], bram: [15, 9], odile: [6, 9], tavi: [17, 9], wren: [9, 8], corvin: [13, 8], hob: [11, 9], maren: [12, 9], hale: [19, 9], lio: [10, 9], pell: [7, 8], juno: [16, 8], nell: [14, 9], rook: [5, 9], esme: [18, 8], kit: [4, 9], garrow: [20, 9], ysolde: [9, 9], ferran: [13, 9], tamsin: [16, 9], aurel: [18, 9], bryn: [11, 8] },   // v167: Pip is in bed
+  spots: { ines: [8, 9], bram: [15, 9], odile: [6, 9], tavi: [17, 9], wren: [9, 8], corvin: [13, 8], hob: [11, 9], maren: [12, 9], hale: [19, 9], lio: [10, 9], pell: [7, 8], juno: [16, 8], nell: [14, 9], rook: [5, 9], esme: [18, 8], kit: [4, 9], garrow: [20, 9], ysolde: [9, 9], ferran: [13, 9], tamsin: [16, 9], aurel: [18, 9], bryn: [11, 8], aldous: [8, 8], hester: [14, 8], wilmot: [15, 8] },   // v167: Pip is in bed; v175
   lines: {
     ines: 'I fold mine from old seed packets. They float better than you would think.',
     bram: 'I made the first lantern frame here, years ago. Now everyone makes their own. Good.',
@@ -48,6 +48,9 @@ export const FLOAT = {
     tamsin: 'My mother never missed one. I came home from the coast the year she could not walk down.',
     aurel: 'Pip folded ours this year. It is mostly glue. It is perfect.',
     bryn: 'Pip is asleep. I promised to set his for him and tell him which way it went.',
+    aldous: 'I have one from every year in a drawer at the museum. The ones that washed back, anyway.',   // v175
+    hester: 'Fifty-two lanterns we have set together. I have every one written down.',
+    wilmot: 'They go out at eleven minutes past, every year. I timed it once. Now I just know.',
   },
   drift: 10,   // the village's lanterns on the water
 };

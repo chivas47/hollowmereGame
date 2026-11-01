@@ -32,6 +32,9 @@ export const HOMES = {
   aurel: { map: 'town', cottage: [14, 14] },      // v166: the family's cottage on the town's open south side
   bryn: { shares: 'aurel' },                      // v166: a cottage can be home to more than one (its owner's plan)
   pip: { shares: 'aurel' },
+  aldous: { map: 'town', door: [19, 12] },        // v175 (roadmap 75s): over the museum
+  hester: { map: 'village', cottage: [6, 22] },   // v175: the village's south-west corner, below the lower lane
+  wilmot: { shares: 'hester' },
 };
 
 // A cottage's front door tile is the middle of its bottom row; you stand on the tile below it.

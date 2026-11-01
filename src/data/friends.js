@@ -21,6 +21,11 @@ export const FRIENDS = [
   { a: 'corvin', b: 'aurel', why: 'Lunch together most days. Neither says much. Both call it the best hour of the day.' },
   { a: 'maren', b: 'bryn', why: 'Maren wrote asking for help for a season. That was the spring before last.' },
   { a: 'kit', b: 'pip', why: 'Kit builds Pip toys. Pip tests them to destruction. Both think this is the deal.' },
+  // v175 (roadmap 75s): the curator and the couple. Each is b at most once (b walks home with a after a festival).
+  { a: 'hale', b: 'aldous', why: 'Hale says the Hollow is old; Aldous says it is young. Forty years and neither has moved an inch.' },
+  { a: 'aldous', b: 'tavi', why: 'Tavi maps where things were found; Aldous labels where they are now.' },
+  { a: 'pell', b: 'hester', why: 'Pell was Hester\'s last pupil, and is now her successor. Hester still marks Pell\'s spelling.' },
+  { a: 'corvin', b: 'wilmot', why: 'Corvin forges the springs; Wilmot tells him they are not as good as his were. They are.' },
 ];
 export const friendsOf = (id) => FRIENDS.filter((f) => f.a === id || f.b === id).map((f) => (f.a === id ? f.b : f.a));
 export const areFriends = (x, y) => friendsOf(x).includes(y);

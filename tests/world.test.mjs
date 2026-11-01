@@ -227,3 +227,18 @@ test('75j: four new neighbours; the family shares a cottage; Tamsin keeps her co
   for (const day of [1, 2]) assert.ok(!plan(tamsin, day).some((x) => x.map === venueMap('ranch')), 'her days off');
   for (let day = 1; day <= 7; day++) assert.ok(Math.max(...plan(pip, day).map((b) => b.to)) <= 18 * 60 + 30, `Pip home by six on day ${day}`);
 });
+
+// v175 (roadmap 75s): the curator behind his own desk, and Hester and Wilmot sharing a cottage in the village.
+test('75s: three new neighbours; Aldous keeps the museum every day; Hester and Wilmot share a cottage', () => {
+  for (const id of ['aldous', 'hester', 'wilmot']) assert.ok(NPCS.find((n) => n.id === id), id);
+  assert.deepEqual(livesWith('hester'), ['hester', 'wilmot']);
+  assert.equal(homeMap('wilmot'), 'home_hester'); assert.notDeepEqual(HOMES.wilmot.spot, HOMES.hester.spot);
+  assert.equal(MAPS.home_hester.grid[HOMES.wilmot.spot[1]][HOMES.wilmot.spot[0]], 'h');
+  assert.equal(MAPS.village.grid[22][6], 'V');
+  const aldous = NPCS.find((n) => n.id === 'aldous');
+  for (let day = 1; day <= 7; day++) {
+    const b = plan(aldous, day).find((x) => x.map === venueMap('museum'));
+    assert.ok(b && b.from <= 8 * 60 && b.to >= 18 * 60, `Aldous at the desk on day ${day}`);
+    assert.deepEqual(b.path.at(-1), VENUES.museum.spot);
+  }
+});
