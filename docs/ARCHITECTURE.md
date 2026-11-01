@@ -121,6 +121,7 @@ src/
     professions.js    professions: has(id) for the systems that apply one, priceMult() for selling, choosing, combat health
     helpers.js        helper hut harvests, waystones, the home charm, the farm cave (opening, choice, daily crate)
     statue.js         v169: the fortune statue: a loved gift on a neighbour's birthday morning (G.S.statue), Use takes it
+    attic.js          v172: the attic ladder ʌ in the farmhouse and the hatch back down (the renovation)
     ponds.js          the fish pond (stock, breed, roe, requests) and the slime pen (trough, slime balls, addSlime)
     buildings.js      door (sleep), stall (shop), bin and mini bins (ship), well/pond refill
     economy.js        ship(), buy(), overnight payout; materials are never shipped
@@ -300,6 +301,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 57 | treasure.js | Kit slot with a bomb (throws it at the faced tile, Hollow only) |
 | 72 | helpers.js | Helper hut a, waystones e and d (warp), cave mouth y, the cave's crate t |
 | 72 | statue.js | The fortune statue ʘ on the farm (takes today's birthday gift) (v169) |
+| 72 | attic.js | The attic ladder ʌ in the farmhouse (up) and the attic's hatch ʌ (down) (v172) |
 | 57 | helpers.js | Kit slot with a home charm (warp home) |
 | 72 | market.js | The travelling cart ¢ in the forest, the bookseller § and the prize machine ¤ in the town (v69) |
 | 72 | theatre.js | The picture house Þ on the town's lower lane (dialog, or its hours) (v70) |
@@ -461,6 +463,7 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | ʂ | a Saturday market stall on the town green (v165; written at load once the project is funded) | yes |
 | ɲ | Tamsin's pens on the village's east road, fence and her animals drawn (v166) | yes |
 | ʘ | the fortune statue on the farm (v169; a placed building, systems/sites.js) | yes |
+| ʌ | the attic ladder on the farmhouse's bed corner wall, and the hatch in the attic (v172; house tile, drawn on the wall face) | yes |
 | \|, }, ;, {, ? | fallen log, rubble, sewer grate, hot spring, sewer trader (v45; the gates become P once open) | yes |
 | ħ, ǧ, ƀ | hedge, garden bed, bench (v159: the village and the town; props drawn on grass, render/tiles.js) | yes |
 | ʋ, β | reeds, the boathouse's walls (v160: the mere; systems/mere.js answers its door) | yes |

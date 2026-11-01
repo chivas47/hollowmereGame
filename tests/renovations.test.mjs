@@ -38,3 +38,20 @@ test('the south room costs 30,000g and adds fifteen tiles below the living room,
     for (let y = 0; y <= 11; y++) for (let x = 0; x < 24; x++) assert.equal(after[y][x], before[y][x], `nothing above moves (${x},${y})`);
   }
 });
+
+// v172 (roadmap 75p): the attic, 60,000g: a ladder in the bed corner up to a 16 by 7 loft for furniture and chests.
+import { emit } from '../src/core/events.js';
+import { runInteractions } from '../src/core/registry.js';
+import '../src/systems/attic.js';
+import { ATTIC } from '../src/systems/attic.js';
+test('the attic: 60,000g, a ladder only once bought, up and down again, and floor for 112 tiles', () => {
+  assert.equal(RENOVATIONS.attic.cost, 60000);
+  assert.equal(houseGrid(0, [])[2][9], 'I', 'no ladder before');
+  assert.equal(houseGrid(0, ['attic'])[2][9], ATTIC.tile);
+  assert.equal(MAPS.attic.grid.flat().filter((c) => c === 'h').length, 16 * 7);
+  G.S = newState(); G.S.gold = 60000; G.S.map = 'house';
+  assert.ok(buyRenovation('attic')); assert.equal(G.S.gold, 0);
+  assert.ok(runInteractions({ tx: 9, ty: 2, tile: ATTIC.tile, mapId: 'house' })); assert.equal(G.S.map, 'attic');
+  assert.ok(runInteractions({ tx: 11, ty: 10, tile: ATTIC.tile, mapId: 'attic' })); assert.equal(G.S.map, 'house');
+  G.S.map = 'attic'; G.S.house.renos = []; emit('game:loaded'); assert.equal(G.S.map, 'house', 'no attic, back in the house');
+});

@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v172: The attic
+- A new renovation at Bram's Carpentry: the attic, 60,000g. A ladder goes up on the bed corner's north wall; the attic is a long low room, 16 by 7, with pine walls, for furniture and chests like the house. The hatch in its floor takes you back down.
+- No new save field (one more renovation). No keys changed. The balance bot buys it after the south room.
+
 ## v171: The south room
 - A new renovation at Bram's Carpentry: the south room, 30,000g. A 5 by 3 room opens through the living room's south wall, east of the front door.
 - The farmhouse map is three rows taller to make room (24 by 19); the camera scrolls to follow you. Nothing already in the house moves.

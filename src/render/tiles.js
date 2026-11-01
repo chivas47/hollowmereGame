@@ -717,7 +717,7 @@ function pattern(g, X, Y, d, wall) {
 export function drawHouseTile(g, x, y, t, below, walls, floors, decor) {
   const X = x * T, Y = y * T;
   if (t === '.') { r(g, X, Y, T, T, '#14100c'); return; }
-  if (t === 'I' || t === '_') {   // v47: the phone hangs on a wall face
+  if (t === 'I' || t === '_' || t === 'ʌ') {   // v47: the phone hangs on a wall face (v172: and the attic ladder)
     if (below && below !== 'I' && below !== '.') {   // the wall's face (v87: from the wallpaper sheet once it has loaded)
       if (ready(DECOR_SHEETS.walls)) return g.drawImage(sheet(DECOR_SHEETS.walls).img, (walls[decor.wall] ? decor.wall : 0) * T, 0, T, T, X, Y, T, T);
       pattern(g, X, Y, walls[decor.wall] || walls[0], true); r(g, X, Y + 14, T, 2, '#3f3226'); return;
@@ -732,6 +732,12 @@ export function drawHouseTile(g, x, y, t, below, walls, floors, decor) {
 const bed = (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 1, Y, 14, T, '#7a4a2a'); r(g, X + 2, Y + 1, 12, 14, '#f4ead2'); r(g, X + 2, Y + 6, 12, 9, '#5f8fb5'); r(g, X + 2, Y + 6, 12, 1, '#3d6a8f'); };
 const bedHead = (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 1, Y, 14, T, '#7a4a2a'); r(g, X + 2, Y + 3, 12, 13, '#f4ead2'); r(g, X + 4, Y + 4, 8, 4, '#ffffff'); r(g, X + 1, Y, 14, 3, '#5c371e'); };
 export const HOUSE_ART = {
+  // v172: the attic ladder: rails and rungs on a wall face, or a hatch in the attic floor's edge.
+  'ʌ': (g, x, y, m) => {
+    const X = x * T, Y = y * T;
+    if (m[y + 1]?.[x] === '.') { r(g, X + 2, Y + 3, 12, 10, '#3f3226'); r(g, X + 3, Y + 4, 10, 8, '#14100c'); for (let i = 0; i < 3; i++) r(g, X + 4, Y + 5 + i * 3, 8, 1, '#8a5a32'); return; }
+    r(g, X + 3, Y, 2, T, '#8a5a32'); r(g, X + 11, Y, 2, T, '#8a5a32'); for (let i = 0; i < 4; i++) r(g, X + 3, Y + 2 + i * 4, 10, 1, '#a5753f');
+  },
   _: (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 5, Y + 3, 6, 9, '#3f3226'); r(g, X + 6, Y + 4, 4, 7, '#b5452f'); r(g, X + 4, Y + 4, 2, 6, '#2b211a'); r(g, X + 7, Y + 6, 2, 1, '#e9c46a'); r(g, X + 7, Y + 8, 2, 1, '#e9c46a'); },
   Z: (g, x, y, m) => (m[y - 1]?.[x] === 'Z' ? bed(g, x, y) : bedHead(g, x, y)),
   l: (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 6, Y + 8, 4, 7, '#6e4626'); r(g, X + 2, Y + 3, 12, 6, '#8a5a32'); r(g, X + 3, Y + 3, 5, 5, '#f4ead2'); r(g, X + 8, Y + 3, 5, 5, '#e8dcc0'); r(g, X + 7, Y + 3, 1, 5, '#b5452f'); },
