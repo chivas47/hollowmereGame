@@ -104,6 +104,7 @@ Bram's Carpentry moves any building for free: back on the farm, choose the spot 
 | Helper hut | 20,000 | 200 stone, 100 fiber, 9 gleamfruit | 2 by 2 | Harvests ripe crops within 8 tiles each morning (not in winter), at full quality rolls; collect at the hut | Junimo hut (starfruit becomes gleamfruit) |
 | Hollow waystone | 500,000 | 10 iron bars, 10 Hollow quartz | 1 by 2 | Warps you to the Hollow's entrance | Earth obelisk (iridium bars and earth crystals swapped) |
 | Village waystone | 500,000 | 5 iron bars, 100 stone | 1 by 2 | Warps you to the village fountain | Water obelisk (iridium bars, clams and coral swapped) |
+| Fortune statue (v169) | 1,000,000 | none | 1 by 2 | On a neighbour's birthday morning it holds something they love (the first of their loved gifts); Use takes it | Statue of Endless Fortune |
 
 - Home charm (crafted: 1 hardwood, 1 honey, 20 fiber; Stardew's farm warp totem): use it from the kit anywhere to go home. Used up.
 - Farm cave: opens once the farm has shipped 25,000g in all (Stardew's trigger; older saves count the gold they hold). The first visit offers fruit bats (up to 3 fruit of any tree, 60% each, every morning) or six mushroom logs (a Hollow cap each, 50%, every morning). The choice is for good. Stardew's mushroom cave grows several kinds; we have one.

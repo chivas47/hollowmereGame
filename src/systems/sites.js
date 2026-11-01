@@ -14,6 +14,7 @@ import { DEBRIS } from '../data/clearing.js';
 import { COOP, BARN, GREENHOUSE, STABLE, SHED, MILL, CLOCK } from '../data/upgrades.js';
 import { POND, SLIME_PEN } from '../data/ponds.js';
 import { HELPER_HUT, WAYSTONES } from '../data/helpers.js';
+import { STATUE } from '../data/statue.js';
 import { affordable } from './upgrades.js';
 
 // tile: what the building writes into the grid. art: render/tiles.js OBJECT_ART. placed: the player picks the spot.
@@ -30,6 +31,7 @@ export const SITES = {
   helperhut:  { def: HELPER_HUT, tile: 'a', art: 'helperhut',  name: 'Helper hut', placed: true },   // v32
   wayhollow:  { def: WAYSTONES.wayhollow,  tile: 'e', art: 'waystone', name: 'Hollow waystone', placed: true },
   wayvillage: { def: WAYSTONES.wayvillage, tile: 'd', art: 'waystone', name: 'Village waystone', placed: true },
+  statue:     { def: STATUE, tile: 'ʘ', art: 'statue', name: 'Fortune statue', placed: true },   // v169 (roadmap 75m)
 };
 const farm = MAPS.farm;
 const OFF = -99;   // a footprint that is nowhere yet

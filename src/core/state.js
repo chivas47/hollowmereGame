@@ -52,7 +52,7 @@ export function newState() {
     fishLog: {},        // fish key -> number caught
     upgrades: { can: 0, hoe: 0, axe: 0, rod: 0, house: 0, pick: 0, pan: 0 },   // tier index per upgrade line
     waterBonus: 0, maxEnergy: 270,                      // derived stats, see systems/upgrades.js
-    built: { coop: false, barn: false, greenhouse: false, stable: false, shed: false, mill: false, clocktower: false, pond: false, slimepen: false, helperhut: false, wayhollow: false, wayvillage: false },   // false | 'pending' | true
+    built: { coop: false, barn: false, greenhouse: false, stable: false, shed: false, mill: false, clocktower: false, pond: false, slimepen: false, helperhut: false, wayhollow: false, wayvillage: false, statue: false },   // false | 'pending' | true
     sites: {},                                          // v30: building -> { x, y } top-left on the farm, when moved or placed (systems/sites.js)
     mill: { in: {}, out: {} },
     pond: { fish: null, n: 0, cap: 3, timer: 0, roe: 0, ask: null },   // v31: the fish pond (systems/ponds.js)
@@ -78,6 +78,7 @@ export function newState() {
     layout: 'open',                                     // farm layout (data/layouts.js), chosen on the new game screen
     farmForage: [],                                     // woodland layout: forage in the farm's wood today
     pet: null,                                          // the farm pet (systems/pets.js), made from the profile on load
+    statue: null,                                       // v169: { day, who, item } on a birthday, until collected (systems/statue.js)
     horse: null,                                        // { name, map, x, y } once the stable is built (systems/stable.js)
     house: { wall: 0, floor: 0, renos: [], catalogue: false },   // farmhouse decor (systems/house.js)
     wardrobe: { straw: true }, outfit: { shirt: null, pants: null, hat: 'straw', shoes: null }, dyes: {},   // clothing (systems/clothing.js)
