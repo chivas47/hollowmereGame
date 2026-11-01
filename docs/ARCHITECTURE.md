@@ -288,6 +288,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 66 | pots.js | The gold pan in slot 9 on pond water |
 | 66 | quarry.js | Pickaxe on a quarry rock |
 | 64 | pots.js | Kit slot with a crab pot on pond water (set it) |
+| 64 | cat.js | Facing Pudding, the village cat (pet her; v164) |
 | 72 | treasure.js | Treasure chest $ in the Hollow |
 | 72 | guild.js | Wardens' Lodge & in the Wilds (dialog, or a barred door before floor 1) |
 | 72 | nuts.js | Smoke Peak gate 7 and shells 8, altar <, lantern ` on the island; the summit cache < in the mine (v67) |

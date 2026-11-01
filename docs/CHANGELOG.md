@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v164: Pudding
+- The grey cat from the town's lost-cat notice was never lost: Pudding lives in the village. She keeps a round of warm spots through the day (the green's benches, the hedge on the east road, the fountain, the north row's doorsteps), strolls from one to the next, naps through the afternoon and stays in when it rains or snows.
+- Face her and press Use to pet her.
+- Drawn only; nothing saved, no prices or keys changed.
+
 ## v163: Winter water
 - In winter the mere and the village pond freeze like the Wilds pond. The mere has an ice hole off the end of the boathouse dock (the Frost pike's season); the village pond has none. The forest river and the sea still never freeze.
 - The morning report on the first day of winter names both ice holes.
