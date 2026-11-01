@@ -17,6 +17,8 @@ const WAYS = [
   { from: 'farm', stand: [3, 4], to: 'house', land: [11, 11], why: 'the farmhouse door (systems/house.js)' },
   { from: 'farm', stand: [CAVE.mouth.x, CAVE.mouth.y + 1], to: 'cave', land: [CAVE.inside.x, CAVE.inside.y], why: 'the cave mouth (systems/helpers.js)' },
   { from: 'farm', stand: [3, 5], to: 'shed', land: [11, 11], why: 'the shed door, once built (systems/mill.js)' },
+  { from: 'house', stand: [9, 3], to: 'attic', land: [11, 9], why: 'the attic ladder, once renovated (systems/attic.js)' },   // v172
+  { from: 'attic', stand: [11, 9], to: 'house', land: [9, 3], why: 'the attic hatch (systems/attic.js)' },
   { from: 'farm', stand: [10, 3], to: 'greenhouse', land: [12, H - 2], why: 'the greenhouse, once mended (systems/greenhouse.js)' },
   { from: 'wilds', stand: [8, 2], to: 'shrine', land: [11, 11], why: 'the shrine door (systems/books.js)' },
   { from: 'village', stand: [2, 10], to: 'sewer', land: [3, 2], why: 'the sewer grate (systems/hidden.js)' },

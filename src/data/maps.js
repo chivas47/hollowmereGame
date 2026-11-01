@@ -36,7 +36,7 @@ import { MERE } from './mere.js';
 // v156 (roadmap 75g): a map's size in tiles, read from its grid, so a map can be larger than the screen (W x H).
 export const sizeOf = (id) => { const g = MAPS[id]?.grid; return g?.length ? { w: g[0].length, h: g.length } : { w: W, h: H }; };
 
-export const SOLID = new Set(['ħ', 'ǧ', 'ƀ', 'β', 'ʋ', 'ʂ', 'ɲ', 'ʘ', 'Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
+export const SOLID = new Set(['ħ', 'ǧ', 'ƀ', 'β', 'ʋ', 'ʂ', 'ɲ', 'ʘ', 'ʌ', 'Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
 
 // v158: w and h for a map larger than the screen (roadmap 75i); the camera follows you across it.
 function emptyGrid(w = W, h = H) {
@@ -325,6 +325,7 @@ export function houseGrid(tier = 0, renos = []) {
   if (!renos.includes('openplan')) fill(m, 10, 3, 10, 5, 'I');   // the bed corner's wall
   if (renos.includes('nook')) fill(m, 12, 2, 13, 2, 'h');
   if (renos.includes('south')) { room(13, 14, 17, 16); m[12][15] = 'h'; m[13][15] = 'h'; }   // v171: through the south wall, east of the door
+  if (renos.includes('attic')) m[2][9] = 'ʌ';   // v172: the attic ladder on the bed corner's north wall
   if (renos.includes('corner')) { room(1, 11, 4, 13); m[11][5] = 'h'; }   // v170: through the west wall, below the nursery
   put(m, [[7, 3], [7, 4]], 'Z'); m[3][16] = 'l';
   m[2][14] = '_';   // v47: the phone on the wall
@@ -353,6 +354,15 @@ const venueMaps = () => Object.fromEntries(Object.entries(VENUES).map(([id, V]) 
 }));
 
 // The shed inside (v30): one plank room. Machines, decorations and furniture go on its floor (h).
+// v172 (roadmap 75p): the attic, up the ladder from the bed corner (the renovation). A long low room; its hatch ʌ
+// in the south wall takes you back down.
+function atticGrid() {
+  const m = Array.from({ length: H }, () => Array.from({ length: W }, () => '.'));
+  fill(m, 3, 1, 20, 10, 'I'); fill(m, 4, 3, 19, 9, 'h');
+  m[10][11] = 'ʌ';
+  return m;
+}
+
 function shedGrid() {
   const m = Array.from({ length: H }, () => Array.from({ length: W }, () => '.'));
   fill(m, 3, 1, 20, 12, 'I'); fill(m, 4, 3, 19, 11, 'h');
@@ -476,6 +486,11 @@ export const MAPS = {
     name: 'The shrine', salt: 19, base: 'cave', grid: shrineGrid(),
     objects: [],
     exits: { '11,12': { to: 'wilds', x: 8, y: 2, dir: 'down' } },
+  },
+  attic: {   // v172
+    name: 'Attic', salt: 5, base: 'house', grid: atticGrid(),
+    decor: { wall: 6, floor: 2 },   // pine boards, dark boards
+    objects: [], exits: {}, keepClear: ['11,9'],
   },
   shed: {
     name: 'Shed', salt: 7, base: 'house', grid: shedGrid(),
