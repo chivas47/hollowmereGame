@@ -1,7 +1,7 @@
 // v98: the buildings you walk into, laid out like the cottages (see data/interiors.js for the plan format).
 // map and tiles: where the building stands and which of its tiles is the door (facing any of them goes in). ui: the
 // dialog the counter opens (a piece with opens: true). dir: which way you face when you come out (default down).
-// spot: where the keeper stands behind the counter (Wren, Corvin, Bram, Hob, Maren, Hale, Tamsin); staff who are not
+// spot: where the keeper stands behind the counter (Wren, Corvin, Bram, Hob, Maren, Hale, Tamsin, Aldous); staff who are not
 // villagers are 'attendant' pieces, drawn while the building is open. Opening hours: systems/venues.js.
 import { SHOPS } from './town.js';
 import { THEATRE } from './theatre.js';
@@ -294,7 +294,7 @@ export const VENUES = {
       '  #.......FFFF.....b.#  ',
       '  #...A..........B...#  ',
       '  #..................#  ',
-      '  #..ee.......a..ee..#  ',
+      '  #..ee..........ee..#  ',
       '  #..........CCC.....#  ',
       '  #g................G#  ',
       '  #########E##########  ',
@@ -316,14 +316,13 @@ export const VENUES = {
       A: ['pedestal', { top: ['shard'] }],
       B: ['pedestal', { top: ['gem'] }],
       e: ['bench', {}],
-      a: ['attendant', { pal: { skin: '#e2b896', hair: '#d9d4cc', shirt: '#5a4a6a', pants: '#3f3226', beard: true }, note: 'Curator Aldous, behind the donation desk. He looks pleased to see anything.' }],
       C: ['counter', { opens: true, c: ['#6e4626', '#c9a35a'], top: ['paper', 'inkpot'], note: 'The donation desk, and the register of everything given.' }],
       g: ['fern', {}],
       G: ['fern', {}],
     },
     rooms: [[3, 4, 20, 12, 5, 9]],
     rugs: [[9, 5, 6, 4, ['#8a3f2a', '#e9c46a'], 'diamond']],
-    spot: [12, 10],
+    spot: [14, 10],   // v175 (roadmap 75s): Aldous himself now, a villager behind his desk
   },
   // Tamsin's Ranch Supply: hay and feed by the door, the counter, ribbons from the fair, and a tack room.
   ranch: {

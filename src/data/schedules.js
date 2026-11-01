@@ -23,9 +23,11 @@ const PENS = [[27, 11], [32, 11], [27, 10], [32, 12]];              // v166: rou
 const GREEN = [[6, 13], [4, 11], [8, 13]];                          // v166: the green by the benches, south of the square
 const BENCH = [3, 12];                                              // v166: beside a bench on the green, watching Pip
 const MASON = [['village', [20, 21]], ['town', [31, 11]]];          // v166: Aurel's jobs, the lower lane's wall and the town's
+const ROSES = [4, 23];                                              // v175: beside Hester's rose bed
+const CLOCK_STEPS = [9, 4];                                         // v175: the town hall steps, under the clock
 // In the Lantern in the evening, each in their own place (v98: inside, at the tables; Lio on the stage).
 const LANTERN = venueMap('tavern');
-const TAVERN = { garrow: [4, 11], ferran: [8, 11], tamsin: [7, 11], aurel: [10, 11], bram: [4, 9], corvin: [7, 9], maren: [10, 9], hale: [13, 9], lio: [15, 10], juno: [11, 11], rook: [5, 11], wren: [6, 11], pell: [12, 11] };
+const TAVERN = { garrow: [4, 11], ferran: [8, 11], tamsin: [7, 11], aurel: [10, 11], aldous: [9, 11], bram: [4, 9], corvin: [7, 9], maren: [10, 9], hale: [13, 9], lio: [15, 10], juno: [11, 11], rook: [5, 11], wren: [6, 11], pell: [12, 11] };
 // v98: keepers work inside their buildings, behind the counter (data/venues.js spot).
 const KEEP = (id) => [venueMap(id), VENUES[id].spot];
 // Every front door in the village, for Juno's round.
@@ -117,6 +119,21 @@ const DAYS = {
     : wd === 5
       ? [along(10, 13, 'town', 'bryn', [10, 7]), go(14, 17, 'village', ...GREEN)]
       : [at(9, 14, venueMap('hall'), [12, 8]), go(14, 18, 'village', ...GREEN)]),
+  // v175 (roadmap 75s, docs/sketches/75s-neighbours-three.md). Aldous keeps the museum every day 8 to 6, as its
+  // hours are, then the Lantern.
+  aldous: () => [go(7, 8, 'town', ...LOWER), at(8, 18, ...KEEP('museum')), at(18, 21, LANTERN, TAVERN.aldous)],
+  // Hester tends her roses, writes the almanac on the green, sits in on Pell's lessons on Mondays and Thursdays,
+  // then Nell's garden; Sundays she goes with Wilmot to wind the town hall clock.
+  hester: (wd) => (wd === 6
+    ? [{ ...at(7, 9, 'village', ROSES), face: 'left' }, along(10, 12, 'town', 'wilmot', [11, 4])]
+    : [{ ...at(7, 9, 'village', ROSES), face: 'left' }, { ...at(9, 11, 'village', [3, 14]), face: 'down' },
+      [0, 3].includes(wd) ? at(13, 15, venueMap('hall'), [18, 8]) : go(13, 15, 'village', ...SQUARE), { ...at(15, 17, 'village', [4, 17]), face: 'up' }]),
+  // Wilmot walks slowly to town, the Anvil with Corvin (Kit's on the east road on Tuesdays and Fridays), a nap on
+  // the green; Sundays he winds the town hall clock.
+  wilmot: (wd) => (wd === 6
+    ? [{ ...at(10, 12, 'town', CLOCK_STEPS), face: 'up' }]
+    : [go(8, 10, 'town', ...LANE), [1, 4].includes(wd) ? { ...at(10, 12, 'village', [32, 9]), face: 'up' } : at(10, 12, venueMap('smithy'), [9, 6]),
+      { ...at(14, 17, 'village', [6, 14]), face: 'left' }]),
   // Esme paints in the forest, then the village, then the shore at dusk.
   esme: () => [go(9, 16, 'forest', [4, 4], [16, 6], [6, 11]), go(16, 19, 'village', ...SQUARE), at(19, 21, 'beach', [12, 4])],
   // Kit hangs about the Anvil in the morning and the square after; Saturdays at the beach.
@@ -156,6 +173,8 @@ const RAIN = {
   aurel: [venueMap('smithy'), [7, 7]],   // by Corvin's forge, complaining
   bryn: 'home',
   pip: 'home',
+  hester: 'home',                    // v175: the almanac
+  wilmot: 'home',
 };
 export function rainDay(id, blocks) {
   const shelter = RAIN[id] || 'home';
@@ -193,6 +212,9 @@ const FAVOURITE = {
   aurel: ['village', [20, 21], 'up'],       // his wall on the lower lane
   bryn: ['town', [11, 7], 'down'],          // by the green's benches
   pip: ['village', [6, 13], 'down'],        // wherever the cat is: the green
+  aldous: ['village', [11, 7], 'down'],     // v175: the fountain, counting coins people threw in
+  hester: ['village', [4, 23], 'left'],     // the rose bed
+  wilmot: ['town', [9, 4], 'up'],           // under the town hall clock
 };
 const DETOUR = { chance: 2 / 7, length: 45 };
 const hash = (str) => [...str].reduce((h, ch) => Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0, 2166136261);
@@ -228,6 +250,7 @@ export function vary(id, day, blocks) {
 const LUNCH = {
   ines: 'home', tavi: 'home', kit: 'home', ysolde: 'home', garrow: [LANTERN, TAVERN.garrow], ferran: [LANTERN, TAVERN.ferran],   // v161
   aurel: [LANTERN, TAVERN.aurel], pip: 'home',   // v166
+  hester: 'home', wilmot: 'home',   // v175
   odile: [LANTERN, [3, 8]], nell: [LANTERN, [9, 8]], lio: [LANTERN, TAVERN.lio], juno: [LANTERN, TAVERN.juno], rook: [LANTERN, TAVERN.rook],
 };
 const STORE = venueMap('store'), STORE_SHUT = 2;

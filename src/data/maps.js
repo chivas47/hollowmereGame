@@ -106,6 +106,8 @@ function villageGrid() {
   // v166 (roadmap 75j): Tamsin's ranch south of the east road: her cottage, a path to the east lane, the pens.
   fill(m, 24, 11, 26, 12, 'V'); fill(m, 25, 13, 32, 13, 'P');
   { const [x0, y0, x1, y1] = RANCH_PEN.box; fill(m, x0, y0, x1, y1, 'ɲ'); }
+  // v175 (roadmap 75s): Hester and Wilmot's cottage in the south-west corner, Hester's rose bed beside it.
+  fill(m, 6, 22, 8, 23, 'V'); fill(m, 2, 22, 3, 23, 'ǧ');
   return m;
 }
 
@@ -411,7 +413,7 @@ export const MAPS = {
       { art: 'cottage', x: 1, y: 2, roof: '#a5432f' }, { art: 'cottage', x: 5, y: 2, roof: '#5d7a4a' },
       { art: 'cottage', x: 16, y: 2, roof: '#3f5f6e' }, { art: 'cottage', x: 20, y: 2, roof: '#8b6a9e' },
       { art: 'board', x: 11, y: 5 }, { art: 'fountain', x: 11, y: 8 }, { art: 'table', x: 13, y: 11 },
-      { art: 'cottage', x: 4, y: 18, roof: '#7a8a5a' }, { art: 'cottage', x: 13, y: 18, roof: '#4a6a7a' }, { art: 'cottage', x: 24, y: 6, roof: '#8a5a8a' }, { art: 'cottage', x: 30, y: 6, roof: '#c98a3a' }, { art: 'cottage', x: 24, y: 11, roof: '#8a3f2a' },   // v166: Tamsin
+      { art: 'cottage', x: 4, y: 18, roof: '#7a8a5a' }, { art: 'cottage', x: 13, y: 18, roof: '#4a6a7a' }, { art: 'cottage', x: 24, y: 6, roof: '#8a5a8a' }, { art: 'cottage', x: 30, y: 6, roof: '#c98a3a' }, { art: 'cottage', x: 24, y: 11, roof: '#8a3f2a' }, { art: 'cottage', x: 6, y: 22, roof: '#9a5a6a' },   // v166: Tamsin; v175: Hester and Wilmot
         // v50: Nell, Rook, Esme, Kit (v159: moved, roadmap 75c)
     ],
     exits: { [`${VILLAGE_SIZE.w - 1},20`]: { to: 'mere', x: 1, y: 20, dir: 'right' }, [`${VILLAGE_SIZE.w - 1},8`]: { to: 'farm', x: 1, y: 4, dir: 'right' }, [`11,${VILLAGE_SIZE.h - 1}`]: { to: 'beach', x: 11, y: 1, dir: 'down' }, '10,0': { to: 'town', x: 10, y: TOWN_SIZE.h - 2, dir: 'up' } },   // v43: the beach; v46: the town; v159: the new edges

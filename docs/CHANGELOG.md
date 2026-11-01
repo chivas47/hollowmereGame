@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v175: The curator and the old couple
+- Curator Aldous, whose name was on the museum's desk, is now a neighbour: he lives over the museum, keeps it 8 to 6 every day from behind his own desk, and spends evenings at the Lantern.
+- Hester, a retired teacher who keeps the village almanac, and her husband Wilmot, a retired clockmaker who still winds the town hall clock on Sundays, share a new cottage in the village's south-west corner with Hester's rose bed beside it.
+- All three are friends only, with gifts, birthdays, lines, theatre tastes, a Lantern Float spot and a full week. The valley now has 27 people.
+- The festival square has three more places to stand, so a crowd of 27 still gathers by friends.
+- No prices, saves or keys changed.
+
 ## v174: Your birthday dinner
 - You can set your birthday in the Menu (a season and a day; not a festival day). Older saves have none until you pick one.
 - With the dining room built, on your birthday evening (18:00 to 21:00) your three closest friends at 4 hearts or more come to the farmhouse and sit at the table. Be home during the dinner and each gives you a heart (+100 friendship) and a small gift, once a year.

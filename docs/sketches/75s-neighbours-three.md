@@ -1,7 +1,7 @@
 # 75s: new neighbours, the next three (sketch for Nuno)
 
 NPC_LIFE step 1 and WORLD_BUILDING step 1: the people and their places in words, for Nuno to correct before any
-code. Nothing here is built yet. Nuno's answers (November 2026): the museum's curator becomes a neighbour, and a
+code. Built in v175. Nuno's answers (November 2026): the museum's curator becomes a neighbour, and a
 retired couple in the village; friends only (no new marriage candidates).
 
 ## Who

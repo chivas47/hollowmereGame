@@ -294,6 +294,43 @@ export const NPCS = [
     ],
     react: { loved: 'A {item}! For me? Really? I am keeping it forever.', liked: 'A {item}! Thank you!', neutral: 'Oh. Thanks.', disliked: 'A {item}. Mum would make me eat that.', hated: 'Frost kale! No! I will give it to Pudding. She will not eat it either.', birthday: 'It IS my birthday! How did you know? Did Mum tell you?' },
   },
+  // ---- v175 (roadmap 75s, docs/sketches/75s-neighbours-three.md): the curator, and a retired couple. Friends only. ----
+  {
+    id: 'aldous', name: 'Aldous', role: 'Curator of the Hollowmere Museum', seed: 24,
+    loves: ['coilfossil', 'fernfossil'], likes: ['ambergem', 'geode', 'thymetea', 'bonewhistle', 'quartz'], dislikes: ['salad', 'pizza'], hates: ['seaglass'],
+    birthday: { season: 'Autumn', d: 9 },
+    pal: { skin: '#e2b896', hair: '#d9d4cc', shirt: '#5a4a6a', pants: '#3f3226', beard: true },
+    lines: [
+      ['I came to the valley for one fossil. Forty years later I have a museum and still only one good fossil.', 'Anything you dig up, bring it here. Even if it looks like a stone. Especially then.'],
+      ['Hale says the Hollow is old. I say it is young. We have been having this argument since before Hale had a beard.', 'Tavi maps where things were found. I label where they are now. Between us we know where everything went.', 'Ah, {name}. Have you found something?'],
+      ['I write to the university every spring. They have never written back. I keep the copies; they make a fine history.', 'When the last case is full I shall sit in the middle of the gallery and do nothing for a whole day.'],
+    ],
+    react: { loved: 'A {item}! Look at the detail. I will give it a case of its own.', liked: 'A {item}. That will go in the drawer of interesting things.', neutral: 'Thank you.', disliked: 'A {item}. It is not very old, is it.', hated: 'Sea glass. It pretends to be a gem. I cannot abide a pretender.', birthday: 'My birthday? I had quite forgotten. I am usually busy dating other things.' },
+  },
+  {
+    id: 'hester', name: 'Hester', role: 'Retired teacher who keeps the village almanac', seed: 25,
+    loves: ['jar_rosehip', 'honeycake'], likes: ['thymetea', 'honey', 'bread', 'pear'], dislikes: ['netstew', 'bait'], hates: ['frostkale'],
+    birthday: { season: 'Spring', d: 7 },
+    pal: { hat: null, hair: '#e8e4dc', shirt: '#9a5a6a', pants: '#4a4038', skin: '#e0ac7e', long: true },
+    lines: [
+      ['I taught every child in this valley for forty years. Pell was the last, and the best. Do not tell the others.', 'The almanac says it rained on this day eleven years running. Then it did not. I wrote that down too.'],
+      ['Wilmot winds the town hall clock every Sunday. He says it would stop without him. I think it would stop to spite him.', 'The roses are older than most of the village. So am I.', 'Good morning, {name}. You look like someone who has been up since dawn. Good.'],
+      ['When I am gone, the almanac goes to Pell. Somebody has to remember who married whom.', 'You have put down roots here, {name}. I can tell. I have been watching people do it for seventy years.'],
+    ],
+    react: { loved: 'A {item}! Oh, that takes me back. Thank you, dear.', liked: 'A {item}. How kind of you.', neutral: 'Thank you.', disliked: 'A {item}. Wilmot will eat it.', hated: 'Frost kale. I made children eat that for forty years. I never had to.', birthday: 'You remembered? I put it in the almanac every year, but nobody else reads it.' },
+  },
+  {
+    id: 'wilmot', name: 'Wilmot', role: 'Retired clockmaker; still winds the town hall clock', seed: 26,
+    loves: ['goldbar', 'ambergem'], likes: ['copperbar', 'ironbar', 'thymetea', 'netstew'], dislikes: ['honeycake', 'salad'], hates: ['glass'],
+    birthday: { season: 'Winter', d: 6 },
+    pal: { hat: '#5a5048', band: '#3a3028', hair: '#cfcac2', shirt: '#6a7a5a', pants: '#3f3a33', skin: '#c99a74', beard: true },
+    lines: [
+      ['I came to mend the town hall clock. Fifty-one years ago. It still needs winding on Sundays, so I am still here.', 'A clock is just patience you can hear.'],
+      ['Corvin makes a good spring. Not as good as mine were. But good.', 'Hester writes down the weather. I write down the time. Between us nothing goes unrecorded.', 'Morning, {name}. You are four minutes early. Or I am four minutes slow.'],
+      ['My hands shake now. Not when I hold a gear. Only the rest of the time.', 'If you ever want to see the inside of the town hall clock, come on a Sunday morning. Mind your fingers.'],
+    ],
+    react: { loved: 'A {item}! I could make a whole movement out of this.', liked: 'A {item}. Useful. Thank you.', neutral: 'Thanks.', disliked: 'A {item}. Hester likes those.', hated: 'Glass. It cracks the moment you look at it wrong. Like a cheap watch.', birthday: 'My birthday? Hester will have told you. She tells everybody.' },
+  },
   // ---- v53: the Lamplighter, the sewer's trader (Stardew's Krobus): a friend, and a possible roommate. He keeps to
   // the sewer after dark, never posts quests and stays away from festivals.
   {
@@ -354,6 +391,9 @@ export const RAIN_LINES = {
   aurel: 'You cannot set mortar in the wet. Corvin lets me sit by his forge and complain.',
   bryn: 'Wet days fill the clinic. Everyone with a cough remembers they have one.',
   pip: 'Mum says I cannot jump in the puddles. Dad says I can jump in the small ones.',
+  aldous: 'Rain is good for the museum. People come in to stay dry and leave knowing something.',   // v175
+  hester: 'It rains like this one year in nine. The almanac says so. The roses like it.',
+  wilmot: 'Damp gets into a clock. I have spent the morning listening to the hall clock for coughs.',
   esme: 'I am drawing the regulars while they are trapped in here. Do not tell them.',
   kit: 'Rain is free testing. My go-cart leaks in four places. Now I know which four.',
   lamp: 'Rain runs down through the grates. It is the only time the sewer sings.',
