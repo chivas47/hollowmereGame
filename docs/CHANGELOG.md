@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v170: The corner room
+- A new renovation at Bram's Carpentry: the corner room, 20,000g. A 4 by 3 room opens through the living room's west wall, below the nursery wing, to furnish as you like.
+- It joins the existing renovations in the same list; no new save field (it is one more entry in the house's renovations). No keys changed.
+- The balance bot buys it after the Saturday stalls.
+
 ## v169: The fortune statue
 - A new farm building at Bram's: the fortune statue, 1,000,000g, placed like the waystones. On the morning of a neighbour's birthday its hands hold something that neighbour loves; press Use on it to take the gift.
 - New save field `statue` (empty in older saves). No prices or keys changed.

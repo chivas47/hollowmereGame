@@ -324,6 +324,7 @@ export function houseGrid(tier = 0, renos = []) {
   if (tier >= 3) { fill(m, 18, 9, 23, 15, 'I'); fill(m, 19, 10, 22, 14, 'h'); m[9][20] = 'h'; put(m, [[19, 14], [21, 14], [22, 14]], 'v'); }
   if (!renos.includes('openplan')) fill(m, 10, 3, 10, 5, 'I');   // the bed corner's wall
   if (renos.includes('nook')) fill(m, 12, 2, 13, 2, 'h');
+  if (renos.includes('corner')) { room(1, 11, 4, 13); m[11][5] = 'h'; }   // v170: through the west wall, below the nursery
   put(m, [[7, 3], [7, 4]], 'Z'); m[3][16] = 'l';
   m[2][14] = '_';   // v47: the phone on the wall
   m[12][11] = 'E';
