@@ -55,3 +55,19 @@ test('the attic: 60,000g, a ladder only once bought, up and down again, and floo
   assert.ok(runInteractions({ tx: 11, ty: 10, tile: ATTIC.tile, mapId: 'attic' })); assert.equal(G.S.map, 'house');
   G.S.map = 'attic'; G.S.house.renos = []; emit('game:loaded'); assert.equal(G.S.map, 'house', 'no attic, back in the house');
 });
+
+// v173 (roadmap 75q): the dining room, 150,000g, through the kitchen's east wall; it needs the kitchen.
+test('the dining room: 150,000g, only with the kitchen, a 6 by 6 room with the long table, nothing else moves', () => {
+  assert.equal(RENOVATIONS.dining.cost, 150000);
+  assert.deepEqual(houseGrid(0, ['dining']), houseGrid(0, []), 'no kitchen, no dining room');
+  for (const tier of [1, 2, 3]) {
+    const before = houseGrid(tier, []), after = houseGrid(tier, ['dining']);
+    assert.equal(after[6][23], 'h'); assert.equal(after[7][23], 'h'); assert.equal(after[5][25], 'ŧ');
+    assert.equal(after.flat().filter((c) => c === 'ŧ').length, 8, 'a table for eight');
+    for (let y = 0; y < before.length; y++) for (let x = 0; x < 23; x++) assert.equal(after[y][x], before[y][x], `nothing west of the kitchen wall moves (${x},${y})`);
+  }
+  G.S = newState(); G.S.gold = 150000;
+  assert.ok(!buyRenovation('dining'), 'Bram wants the kitchen first'); assert.equal(G.S.gold, 150000);
+  G.S.upgrades.house = 1;
+  assert.ok(buyRenovation('dining')); assert.equal(G.S.gold, 0);
+});

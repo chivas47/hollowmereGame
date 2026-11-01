@@ -36,7 +36,7 @@ import { MERE } from './mere.js';
 // v156 (roadmap 75g): a map's size in tiles, read from its grid, so a map can be larger than the screen (W x H).
 export const sizeOf = (id) => { const g = MAPS[id]?.grid; return g?.length ? { w: g[0].length, h: g.length } : { w: W, h: H }; };
 
-export const SOLID = new Set(['ħ', 'ǧ', 'ƀ', 'β', 'ʋ', 'ʂ', 'ɲ', 'ʘ', 'ʌ', 'Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
+export const SOLID = new Set(['ħ', 'ǧ', 'ƀ', 'β', 'ʋ', 'ʂ', 'ɲ', 'ʘ', 'ʌ', 'ŧ', 'Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
 
 // v158: w and h for a map larger than the screen (roadmap 75i); the camera follows you across it.
 function emptyGrid(w = W, h = H) {
@@ -316,7 +316,7 @@ function quarryGrid() {
 // 3 the cellar); renos: renovation keys (data/furniture.js). Tiles: . nothing (solid), I wall, h floor,
 // Z bed, l catalogue lectern, n kitchen counter, o stove, x crib, v cask, E the front door.
 export function houseGrid(tier = 0, renos = []) {
-  const m = Array.from({ length: H + 3 }, () => Array.from({ length: W }, () => '.'));   // v171: three rows more, for the south room
+  const m = Array.from({ length: H + 3 }, () => Array.from({ length: W + 7 }, () => '.'));   // v171: three rows more, for the south room; v173: seven columns, the dining room
   const room = (x0, y0, x1, y1) => { fill(m, x0 - 1, y0 - 2, x1 + 1, y1 + 1, 'I'); fill(m, x0, y0, x1, y1, 'h'); };
   room(6, 3, 17, 11);
   if (tier >= 1) { room(19, 3, 22, 8); fill(m, 18, 6, 18, 7, 'h'); put(m, [[19, 3], [20, 3], [22, 3]], 'n'); m[3][21] = 'o'; }
@@ -325,6 +325,7 @@ export function houseGrid(tier = 0, renos = []) {
   if (!renos.includes('openplan')) fill(m, 10, 3, 10, 5, 'I');   // the bed corner's wall
   if (renos.includes('nook')) fill(m, 12, 2, 13, 2, 'h');
   if (renos.includes('south')) { room(13, 14, 17, 16); m[12][15] = 'h'; m[13][15] = 'h'; }   // v171: through the south wall, east of the door
+  if (renos.includes('dining') && tier >= 1) { room(24, 3, 29, 8); fill(m, 23, 6, 23, 7, 'h'); fill(m, 25, 5, 28, 6, 'ŧ'); }   // v173: through the kitchen's east wall
   if (renos.includes('attic')) m[2][9] = 'ʌ';   // v172: the attic ladder on the bed corner's north wall
   if (renos.includes('corner')) { room(1, 11, 4, 13); m[11][5] = 'h'; }   // v170: through the west wall, below the nursery
   put(m, [[7, 3], [7, 4]], 'Z'); m[3][16] = 'l';

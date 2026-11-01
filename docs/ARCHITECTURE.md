@@ -464,6 +464,7 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | ɲ | Tamsin's pens on the village's east road, fence and her animals drawn (v166) | yes |
 | ʘ | the fortune statue on the farm (v169; a placed building, systems/sites.js) | yes |
 | ʌ | the attic ladder on the farmhouse's bed corner wall, and the hatch in the attic (v172; house tile, drawn on the wall face) | yes |
+| ŧ | the dining room's long table in the farmhouse (v173; house tile) | yes |
 | \|, }, ;, {, ? | fallen log, rubble, sewer grate, hot spring, sewer trader (v45; the gates become P once open) | yes |
 | ħ, ǧ, ƀ | hedge, garden bed, bench (v159: the village and the town; props drawn on grass, render/tiles.js) | yes |
 | ʋ, β | reeds, the boathouse's walls (v160: the mere; systems/mere.js answers its door) | yes |
