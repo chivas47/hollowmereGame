@@ -19,9 +19,13 @@ const SQUARE = [[9, 7], [14, 7], [14, 10], [9, 10]];               // around the
 const BOARD = [11, 6];                                              // in front of the quest board
 const LANE = [[3, 8], [12, 8], [30, 8], [12, 8]];                   // the town's upper lane (v159: longer)
 const LOWER = [[3, 12], [12, 12], [20, 12], [12, 12]];              // the town's lower lane
+const PENS = [[27, 11], [32, 11], [27, 10], [32, 12]];              // v166: round Tamsin's pens on the village's east road
+const GREEN = [[6, 13], [4, 11], [8, 13]];                          // v166: the green by the benches, south of the square
+const BENCH = [3, 12];                                              // v166: beside a bench on the green, watching Pip
+const MASON = [['village', [20, 21]], ['town', [31, 11]]];          // v166: Aurel's jobs, the lower lane's wall and the town's
 // In the Lantern in the evening, each in their own place (v98: inside, at the tables; Lio on the stage).
 const LANTERN = venueMap('tavern');
-const TAVERN = { garrow: [4, 11], ferran: [8, 11], bram: [4, 9], corvin: [7, 9], maren: [10, 9], hale: [13, 9], lio: [15, 10], juno: [11, 11], rook: [5, 11], wren: [6, 11], pell: [12, 11] };
+const TAVERN = { garrow: [4, 11], ferran: [8, 11], tamsin: [7, 11], aurel: [10, 11], bram: [4, 9], corvin: [7, 9], maren: [10, 9], hale: [13, 9], lio: [15, 10], juno: [11, 11], rook: [5, 11], wren: [6, 11], pell: [12, 11] };
 // v98: keepers work inside their buildings, behind the counter (data/venues.js spot).
 const KEEP = (id) => [venueMap(id), VENUES[id].spot];
 // Every front door in the village, for Juno's round.
@@ -85,6 +89,34 @@ const DAYS = {
   ferran: (wd) => [go(5.5, 9, 'mere', [37, 9], [38, 12], [37, 15]), at(9, 12, 'beach', [8, 8]),
     ...([1, 4].includes(wd) ? [{ ...at(13, 15.5, 'wilds', [14, 11]), face: 'right' }] : []), go(16, 18, 'village', [34, 8], [24, 9], [34, 8]),
     ...(wd === 5 ? [at(19, 21, LANTERN, TAVERN.ferran)] : [])],
+  // v166 (roadmap 75j, docs/sketches/75j-neighbours-two.md). Tamsin feeds and milks at the pens at dawn, keeps the
+  // Ranch Supply counter 9 to 4 (shut Mondays and Tuesdays: the ranch all day; Tuesdays lunch at the Lantern and the
+  // square), the pens again till dusk; Saturdays the Lantern after.
+  tamsin: (wd) => (wd === 0
+    ? [go(6, 12, 'village', ...PENS), go(13.5, 18, 'village', ...PENS)]
+    : wd === 1
+      ? [go(6, 11.5, 'village', ...PENS), at(12, 13.5, LANTERN, TAVERN.tamsin), go(14, 17, 'village', ...SQUARE)]
+      : [{ ...at(5.5, 8.5, 'village', PENS[0]), face: 'right' }, at(9, 16, ...KEEP('ranch')),
+        ...(wd === 5 ? [go(16.5, 17.5, 'village', ...PENS), at(18, 21, LANTERN, TAVERN.tamsin)] : [go(16.5, 19, 'village', ...PENS)])]),
+  // Aurel at the day's job, the lower lane's wall in the village or the town's south wall on alternate days, lunch
+  // at the Lantern, the job again, the square; Fridays the Lantern. Sundays the family's walk.
+  aurel: (wd) => (wd === 6
+    ? [go(10, 13, 'beach', [15, 3], [20, 5], [16, 7]), go(15, 17, 'village', ...SQUARE)]
+    : [{ ...at(7.5, 12, ...MASON[wd % 2]), face: 'up' }, { ...at(13, 17, ...MASON[wd % 2]), face: 'up' }, go(17, 18, 'village', ...SQUARE),
+      ...(wd === 4 ? [at(19, 21, LANTERN, TAVERN.aurel)] : [])]),
+  // Bryn nurses at the clinic beside Doctor Maren 9 to 3, then sits on the green while Pip plays; Saturdays the
+  // stalls with him.
+  bryn: (wd) => (wd === 6
+    ? [along(10, 13, 'beach', 'aurel', [17, 4]), along(15, 17, 'village', 'aurel', BENCH)]
+    : wd === 5
+      ? [go(10, 13, 'town', [9, 6], [10, 6], [12, 7]), { ...at(14, 17, 'village', BENCH), face: 'down' }]
+      : [at(9, 15, venueMap('clinic'), [14, 5]), { ...at(16, 18, 'village', BENCH), face: 'down' }]),
+  // Pip at school in the town hall with Pell (shut Saturdays), then the green with his mother watching; home by six.
+  pip: (wd) => (wd === 6
+    ? [go(10, 13, 'beach', [19, 3], [14, 5], [21, 7]), go(15, 17, 'village', ...GREEN)]   // runs ahead of them
+    : wd === 5
+      ? [along(10, 13, 'town', 'bryn', [10, 7]), go(14, 17, 'village', ...GREEN)]
+      : [at(9, 14, venueMap('hall'), [12, 8]), go(14, 18, 'village', ...GREEN)]),
   // Esme paints in the forest, then the village, then the shore at dusk.
   esme: () => [go(9, 16, 'forest', [4, 4], [16, 6], [6, 11]), go(16, 19, 'village', ...SQUARE), at(19, 21, 'beach', [12, 4])],
   // Kit hangs about the Anvil in the morning and the square after; Saturdays at the beach.
@@ -120,6 +152,10 @@ const RAIN = {
   garrow: 'home',                    // v161: the boathouse counter
   ysolde: 'home',                    // the loom: reeds weave best damp
   ferran: 'out',                     // eels love the rain
+  tamsin: 'home',                    // v166: the counter, or the kitchen on her days off
+  aurel: [venueMap('smithy'), [7, 7]],   // by Corvin's forge, complaining
+  bryn: 'home',
+  pip: 'home',
 };
 export function rainDay(id, blocks) {
   const shelter = RAIN[id] || 'home';
@@ -153,6 +189,10 @@ const FAVOURITE = {
   garrow: ['mere', [17, 15], 'up'],      // v161: the dock, watching the water
   ysolde: ['mere', [16, 3], 'down'],     // the reed beds at dawn
   ferran: ['mere', [38, 11], 'left'],    // the east shore
+  tamsin: ['village', [27, 11], 'right'],   // v166: the pen gate
+  aurel: ['village', [20, 21], 'up'],       // his wall on the lower lane
+  bryn: ['town', [11, 7], 'down'],          // by the green's benches
+  pip: ['village', [6, 13], 'down'],        // wherever the cat is: the green
 };
 const DETOUR = { chance: 2 / 7, length: 45 };
 const hash = (str) => [...str].reduce((h, ch) => Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0, 2166136261);
@@ -187,6 +227,7 @@ export function vary(id, day, blocks) {
 // each at their own time and aisle, so two never meet on one tile. does: what they hold there (data/doings.js).
 const LUNCH = {
   ines: 'home', tavi: 'home', kit: 'home', ysolde: 'home', garrow: [LANTERN, TAVERN.garrow], ferran: [LANTERN, TAVERN.ferran],   // v161
+  aurel: [LANTERN, TAVERN.aurel], pip: 'home',   // v166
   odile: [LANTERN, [3, 8]], nell: [LANTERN, [9, 8]], lio: [LANTERN, TAVERN.lio], juno: [LANTERN, TAVERN.juno], rook: [LANTERN, TAVERN.rook],
 };
 const STORE = venueMap('store'), STORE_SHUT = 2;

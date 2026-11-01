@@ -393,6 +393,10 @@ Homes and routines (v76, data/homes.js and data/schedules.js). Every neighbour s
 | Kit | Village, the east road (v159) | By the Anvil 8:00 to 12:00, the square to 17:00, outside home to 21:00 (Saturday: the beach) |
 | Garrow (v161) | Over the mere's boathouse | Lines out from the dock 6:00 to 8:30, the boathouse counter 9:00 to 17:00 (bait and tackle; shut Thursdays: the dock, lunch at the Lantern, the square), the Lantern with Rook 18:00 to 21:00 |
 | Ysolde (v161) | The mere, west plot | Cutting reeds on the north shore 7:00 to 10:00, weaving on her step to 12:00, lunch at home, town 13:00 to 15:00, the square to 18:00 (Sundays with Esme); Mondays and Thursdays evenings at Nell's |
+| Tamsin (v166) | Her ranch on the village's east road | The pens 5:30 to 8:30, the Ranch Supply counter 9:00 to 16:00, the pens to dusk (Saturdays the Lantern 18:00 to 21:00); Mondays the ranch all day, Tuesdays lunch at the Lantern and the square |
+| Aurel (v166) | The town cottage on the south side, with Bryn and Pip | His wall on the village's lower lane or the town's, alternate days, 7:30 to 17:00 with lunch at the Lantern; the square; Fridays the Lantern; in the rain by Corvin's forge |
+| Bryn (v166) | The same cottage | The clinic beside Maren 9:00 to 15:00, then on the green watching Pip 16:00 to 18:00; Saturdays the town green's stalls in the morning |
+| Pip (v166) | The same cottage | School in the town hall 9:00 to 14:00 (not Saturdays), the green to 18:00, home by six; Sundays all three walk the beach |
 | Ferran (v161) | The mere, east plot | Eel traps on the east shore 5:30 to 9:00, Rook's shed on the beach to 12:00, lunch at the Lantern, the Wilds pond with Odile Tuesdays and Fridays, racing Kit on the east road 16:00 to 18:00 (the Lantern Saturdays); out in the rain |
 | The Lamplighter | A corner of the sewer | The sewer 18:00 to 2:00 |
 
@@ -1241,7 +1245,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 - v72: Wildlife is drawn only: you cannot catch or befriend it, and it is not in the balance bot. The new light is darker than before from 8 pm (half dark at 10 pm, was about a third). (v100: the ambient sound has its own volume slider.)
 - v71: The bag still has no item limit, so chests organise and protect items rather than add room (Nuno's choice; a bag limit would be its own roadmap item). The balance bot ignores chests, signs and the computer (no gold). Signs show their text only when you face them. The world map is a grid of places without the connecting paths.
 - v70: The balance bot ignores the picture house (it skips friendship) and the cabinets (no gold). Neighbours go to the films whatever their schedule says.
-- v69: Tamsin, Odile and Quill are names on their counters, not villagers with schedules or gifts. The balance bot opens mystery boxes and spends prize tickets but does not shop at the cart, the bookseller or the ranch counter (same prices as the coop and barn).
+- v69: Odile and Quill are names on their counters (Tamsin is a neighbour since v166), not villagers with schedules or gifts. The balance bot opens mystery boxes and spends prize tickets but does not shop at the cart, the bookseller or the ranch counter (same prices as the coop and barn).
 - v68: the balance bot does not dig artifact spots or donate: artifacts are a small side income (about 40g a spot) and rewards are kit items. The excavator profession still only doubles gem and egg finds, not artifacts.
 
 ### Simulated balance (advisory)

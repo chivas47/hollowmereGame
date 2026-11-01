@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v166: Tamsin, and a family in town
+- Tamsin, whose name was on the Ranch Supply counter, is now a neighbour: she keeps cows and sheep at a ranch on the village's east road (her cottage and two pens south of the road), works the pens at dawn and dusk and stands behind her own counter 9 to 4 (shut Mondays and Tuesdays, as before).
+- A family moves into a new cottage on the town's south side: Aurel, a stonemason mending the valley's walls; Bryn, the clinic's nurse beside Doctor Maren; and their son Pip, seven, Pell's youngest pupil, drawn child-sized. Pip is home by six.
+- All four are friends only, with gifts, birthdays, lines and a full week. Sundays the family walks the beach together.
+- A cottage can now be home to more than one person: the family shares one door and one inside, each with their own place in it.
+- No existing prices, saves or keys changed.
+
 ## v165: Saturday stalls
 - A new village project on the quest board: Saturday stalls, 25,000g and 100 wood. Funded, two market stalls go up on the town green.
 - Saturday mornings, 9 till 2, a neighbour sells there, a different one each week: Nell (garden goods), Ysolde (honey, cloth and cake) or Ferran (smoked eel, crayfish, snails), at twice the sell price.

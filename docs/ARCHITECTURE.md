@@ -74,7 +74,8 @@ src/
     friends.js        v149: FRIENDS (pairs and why), friendsOf(), areFriends(), VISITS (evening calls), visitSpot(host)
     doings.js         v147: DOINGS (what each neighbour does where: map, stay, does, carry), doingFor(id, block)
     crowd.js          v145: the festival crowd (v151: EARLY, SETUP, CLOSE): STATIONS (places in the square, the way they face, festival kinds, a mood), ROLES (jobs by festival kind), CROWD (minutes per place), CHAT
-    homes.js          where each neighbour lives: door, cottage, door hours (v76); homeEntry() inside the front door (v97)
+    homes.js          where each neighbour lives: door, cottage, door hours (v76); homeEntry() inside the front door (v97); shares: a home of more than one, its owner's door and inside, a spot each from the plan's spots (v166)
+    ranch.js          Tamsin's pens on the village map and where her cows and sheep stand (v166)
     venues.js         v98: VENUES, the buildings you walk into (shops, tavern, clinic, museum, ranch, town hall, theatre, lodge, Oasis, casino, coop, barn): where each stands, which tiles are its door, the dialog its counter opens, its floor plan; venueMap(), venueFront()
     interiors.js      v97: each cottage's floor plan (24x16 characters: walls, doors, rooms, a key of pieces with colours, things on top and a line to read), PIECES, piecesOf(), interiorGrid(), doorOf(), roomAt()
     scenes.js         heart scenes at 4 and 8 hearts
@@ -456,6 +457,7 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | Ѫ | a small story outdoors (v111; written at load on open grass or sand) | yes |
 | Ӂ | the wishing stone in the village (v110; written at load on open grass) | yes |
 | ʂ | a Saturday market stall on the town green (v165; written at load once the project is funded) | yes |
+| ɲ | Tamsin's pens on the village's east road, fence and her animals drawn (v166) | yes |
 | \|, }, ;, {, ? | fallen log, rubble, sewer grate, hot spring, sewer trader (v45; the gates become P once open) | yes |
 | ħ, ǧ, ƀ | hedge, garden bed, bench (v159: the village and the town; props drawn on grass, render/tiles.js) | yes |
 | ʋ, β | reeds, the boathouse's walls (v160: the mere; systems/mere.js answers its door) | yes |

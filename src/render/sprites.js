@@ -204,6 +204,10 @@ function flutter(c, px, py, p, wind) {
 }
 
 export function drawPerson(c, px, py, dir, moving, walkT, p, wind = 0) {
+  if (p.small) {   // v166: a child (Pip), three quarters size, standing on the same spot
+    c.save(); c.translate(px, py); c.scale(0.75, 0.75); c.translate(-px, -py);
+    drawPerson(c, px, py, dir, moving, walkT, { ...p, small: false }, wind); c.restore(); return;
+  }
   const x = Math.round(px) - 5, y = Math.round(py) - 15, st = moving ? Math.floor(walkT * 8) % 2 : 0, eye = '#2b211a';
   if (ready(PERSON.sheet)) {
     sheetPerson(c, px, py, dir, moving, walkT, p);

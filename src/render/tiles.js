@@ -5,6 +5,7 @@ import { SHRINE } from '../data/books.js';
 import { CHIMES } from '../data/nuts.js';
 import { DECOR_SHEETS, BUILDING_SHEETS, PROPS_SHEET, GREENHOUSE_SHEET, VARIANTS_SHEET } from '../data/sprites.js';
 import { BUILDINGS } from '../data/buildings.js';
+import { RANCH_PEN } from '../data/ranch.js';
 import { ready, sheet } from './sheets.js';
 
 const SNOW = '#f2f6f8';
@@ -545,6 +546,24 @@ function bench(g, x, y) {
   r(g, X + 1, Y + 6, 14, 3, '#8a5a32'); r(g, X + 1, Y + 6, 14, 1, '#b0804a'); r(g, X + 1, Y + 3, 14, 2, '#6e4626');
   r(g, X + 2, Y + 9, 2, 5, '#4a3020'); r(g, X + 12, Y + 9, 2, 5, '#4a3020');
 }
+// v166: Tamsin's pens: fence rails round the box, grazed grass, her cows and sheep (data/maps.js RANCH_PEN).
+function pen(g, x, y, p) {
+  const X = x * T, Y = y * T, [x0, y0, x1, y1] = RANCH_PEN.box, rail = '#8a5a32', post = '#5c371e';
+  r(g, X, Y, T, T, p?.snow ? '#e6e2d6' : '#7a9a52');
+  if (y === y0) { r(g, X, Y + 2, T, 1, rail); r(g, X, Y + 5, T, 1, rail); }
+  if (y === y1) { r(g, X, Y + 11, T, 1, rail); r(g, X, Y + 14, T, 1, rail); }
+  if (x === x0) { r(g, X + 1, Y, 1, T, rail); r(g, X + 1, Y, 2, 4, post); }
+  if (x === x1) { r(g, X + 14, Y, 1, T, rail); r(g, X + 13, Y, 2, 4, post); }
+  const has = (list) => list.some(([a, b]) => a === x && b === y);
+  if (has(RANCH_PEN.cows)) {
+    r(g, X + 3, Y + 6, 9, 5, '#f4ead2'); r(g, X + 5, Y + 7, 3, 2, '#3a3028'); r(g, X + 11, Y + 5, 3, 4, '#f4ead2');
+    r(g, X + 12, Y + 6, 1, 1, '#2b211a'); r(g, X + 4, Y + 11, 1, 3, '#3a3028'); r(g, X + 10, Y + 11, 1, 3, '#3a3028');
+  }
+  if (has(RANCH_PEN.sheep)) {
+    r(g, X + 4, Y + 7, 7, 4, '#fffbe8'); r(g, X + 10, Y + 7, 3, 3, '#3a3028');
+    r(g, X + 5, Y + 11, 1, 2, '#3a3028'); r(g, X + 9, Y + 11, 1, 2, '#3a3028');
+  }
+}
 // v165: a market stall on the town green: a striped awning over a plank counter.
 function stall(g, x, y) {
   const X = x * T, Y = y * T;
@@ -621,7 +640,7 @@ export const PROP_ART = {
   '@': shrineDoor, '+': pedestal,
   '|': fallenLog, '}': rubble, ';': grate, '{': hotSpring, '?': traderSpot,
   '7': peakMouth, '8': shell, '9': basin, '<': altar, '`': lantern,
-  'ħ': hedge, 'ǧ': gardenBed, 'ƀ': bench,   // v159
+  'ħ': hedge, 'ǧ': gardenBed, 'ƀ': bench, 'ɲ': pen,   // v159; v166 the pens
   'ʋ': reeds,   // v160
   'ʂ': stall,   // v165
 };
@@ -631,7 +650,7 @@ export const PROP_GROUND = {
   U: 'wall', '^': 'wall', '>': 'wall', t: 'floor', $: 'floor', '!': 'floor', '=': 'floor', '+': 'floor', '?': 'floor',
   '|': 'grass:29', '}': 'grass:23', ';': 'grass:37', '9': 'grass:41', '<': 'grass:43', '`': 'grass:47',
   '¢': 'grass:53', '§': 'grass:59', '¤': 'grass:61', '8': 'sand',
-  'ħ': 'grass:67', 'ǧ': 'grass:71', 'ƀ': 'grass:73', 'ʋ': 'grass:79', 'β': 'grass:83', 'ʂ': 'grass:89',
+  'ħ': 'grass:67', 'ǧ': 'grass:71', 'ƀ': 'grass:73', 'ʋ': 'grass:79', 'β': 'grass:83', 'ʂ': 'grass:89', 'ɲ': 'grass:97',
 };
 function propGround(t, g, x, y, p) {
   const k = PROP_GROUND[t];

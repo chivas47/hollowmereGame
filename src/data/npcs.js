@@ -245,6 +245,55 @@ export const NPCS = [
     ],
     react: { loved: 'A {item}! You do not know what this means to a man who eats out of a bucket.', liked: 'A {item}! Thanks.', neutral: 'Oh. Thanks.', disliked: 'A {item}. That is a Ysolde gift, really.', hated: 'Frost kale. I would rather eat the trap.', birthday: 'Is it my birthday? Ysolde said it was, but she says a lot of things.' },
   },
+  // ---- v166 (roadmap 75j, docs/sketches/75j-neighbours-two.md): Tamsin, and a family in town. Friends only. ----
+  {
+    id: 'tamsin', name: 'Tamsin', role: 'Runs the Ranch Supply in town; raises cattle on the east road', seed: 20,
+    loves: ['cheese', 'truffle'], likes: ['cowmilk', 'wool', 'bigegg', 'thymetea', 'bread'], dislikes: ['seaglass', 'salad'], hates: ['truffleoil'],
+    birthday: { season: 'Spring', d: 23 },
+    pal: { skin: '#c99272', hair: '#b5452f', shirt: '#5d7a4a', pants: '#3f3a33', hat: '#a5753f', band: '#6e4626', long: true },
+    lines: [
+      ['My mother kept cows on this road for forty years. Now I do. They have not noticed the difference.', 'Hay by the sack, feed by the bag, animals to order. Mind the straw.'],
+      ['Ines brings honey, I bring wool. Neither of us has ever paid the other a coin.', 'Bram built my barn before I was born. He still knocks on the beams when he passes.', 'Morning, {name}. The cows were up before you.'],
+      ['I came home from the coast for a season. That was eleven years ago.', 'You look after your animals. I can tell by how they look at you.'],
+    ],
+    react: { loved: 'A {item}! Now that is a proper gift. Sit, I will put the kettle on.', liked: 'A {item}. That is kind.', neutral: 'Thanks.', disliked: 'A {item}. The cows will not want it either.', hated: 'Truffle oil? On a ranch? Take it back to town.', birthday: 'My birthday? Nobody has remembered that since my mother. Thank you.' },
+  },
+  {
+    id: 'aurel', name: 'Aurel', role: 'Stonemason mending the old wing and the valley\'s bridges', seed: 21,
+    loves: ['ambergem', 'netstew'], likes: ['stone', 'copperbar', 'ironbar', 'bread', 'quartz'], dislikes: ['honeycake', 'seaglass'], hates: ['glass'],
+    birthday: { season: 'Summer', d: 17 },
+    pal: { hat: '#8d8a84', band: '#5a5048', hair: '#3a2a1e', shirt: '#8a6a4a', pants: '#4a4038', skin: '#b07a52', beard: true },
+    lines: [
+      ['The town paid me to mend the old wing. I keep finding more of it to mend.', 'Stone is honest. If it is going to crack, it tells you first.'],
+      ['Corvin and I eat lunch together and do not talk. It is the best part of my day.', 'Pip wants to be a mason. Last week he wanted to be a cat.', 'Morning, {name}. Watch the loose step by the bridge; I have not got to it yet.'],
+      ['Bryn came for the work. I came for Bryn. The valley we both stayed for.', 'If you ever need a wall that will outlast you, ask me.'],
+    ],
+    react: { loved: 'A {item}! I will set it in a wall somewhere. Somewhere it will last.', liked: 'A {item}. Good, thank you.', neutral: 'Thanks.', disliked: 'A {item}. Bryn might like it.', hated: 'Glass. It breaks, and it never says when.', birthday: 'You remembered? Pip will be furious he did not get there first.' },
+  },
+  {
+    id: 'bryn', name: 'Bryn', role: 'Nurse at the clinic, Doctor Maren\'s right hand', seed: 22,
+    loves: ['tonic', 'mistlily'], likes: ['thymetea', 'pear', 'honey', 'glademint'], dislikes: ['netstew', 'truffleoil'], hates: ['frostkale'],
+    birthday: { season: 'Autumn', d: 19 },
+    pal: { hat: null, hair: '#d9a441', shirt: '#7a9ab0', pants: '#4a5a6a', skin: '#e0ac7e', long: true },
+    lines: [
+      ['Doctor Maren wrote to my school asking for help. I think she meant for a season.', 'If you are going to faint in the mine, faint near the ladder.'],
+      ['Pip is at school till two. After that he is wherever the cat is.', 'Esme is painting me for the clinic wall. I asked her to leave out the tired.', 'Hello, {name}. Have you been sleeping? You look like you have not.'],
+      ['Aurel builds things to last. I mend people so they do. Between us we keep this valley standing.', 'You are always welcome at ours. Pip will want to show you his drawings.'],
+    ],
+    react: { loved: 'A {item}! That is going straight into a vase. Or a tincture.', liked: 'A {item}. How thoughtful.', neutral: 'Thank you.', disliked: 'A {item}? Aurel will eat it.', hated: 'Frost kale. I have to tell Pip to eat it every night. Not for me, thank you.', birthday: 'My birthday? Did Pip tell you? He has been bursting all week.' },
+  },
+  {
+    id: 'pip', name: 'Pip', role: 'Seven; Pell\'s youngest pupil, Aurel and Bryn\'s son', seed: 23, child: true,
+    loves: ['gleamfruit', 'honeycake'], likes: ['spiralshell', 'berry', 'quartz', 'pancakes', 'pear'], dislikes: ['carrot', 'snappea'], hates: ['frostkale'],
+    birthday: { season: 'Winter', d: 12 },
+    pal: { hat: null, hair: '#d9a441', shirt: '#c96a3a', pants: '#3f4a5a', skin: '#e0ac7e', small: true },
+    lines: [
+      ['Have you seen Pudding? She was on the wall. Now she is not on the wall.', 'I am seven. Next year I will be eight. Kit says that is how it works.'],
+      ['Kit made me a cart. It goes fast downhill and not at all uphill.', 'Pell says I ask too many questions. Is that a question?', '{name}! Did you know cows have four stomachs? Tamsin told me.'],
+      ['When I grow up I will build bridges like Dad and fix people like Mum. On different days.', 'You can have my best shell. Not my best best shell. My second best.'],
+    ],
+    react: { loved: 'A {item}! For me? Really? I am keeping it forever.', liked: 'A {item}! Thank you!', neutral: 'Oh. Thanks.', disliked: 'A {item}. Mum would make me eat that.', hated: 'Frost kale! No! I will give it to Pudding. She will not eat it either.', birthday: 'It IS my birthday! How did you know? Did Mum tell you?' },
+  },
   // ---- v53: the Lamplighter, the sewer's trader (Stardew's Krobus): a friend, and a possible roommate. He keeps to
   // the sewer after dark, never posts quests and stays away from festivals.
   {
@@ -301,6 +350,10 @@ export const RAIN_LINES = {
   garrow: 'Nobody buys bait in the rain. Then they all come in at once when it stops.',   // v161
   ysolde: 'Reeds weave best damp. A wet day is a good day at the loom.',
   ferran: 'Eels love the rain. So I am out in it. My sister thinks I am mad.',
+  tamsin: 'The cows do not care about rain. So I do not get to either.',   // v166
+  aurel: 'You cannot set mortar in the wet. Corvin lets me sit by his forge and complain.',
+  bryn: 'Wet days fill the clinic. Everyone with a cough remembers they have one.',
+  pip: 'Mum says I cannot jump in the puddles. Dad says I can jump in the small ones.',
   esme: 'I am drawing the regulars while they are trapped in here. Do not tell them.',
   kit: 'Rain is free testing. My go-cart leaks in four places. Now I know which four.',
   lamp: 'Rain runs down through the grates. It is the only time the sewer sings.',

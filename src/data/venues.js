@@ -1,7 +1,7 @@
 // v98: the buildings you walk into, laid out like the cottages (see data/interiors.js for the plan format).
 // map and tiles: where the building stands and which of its tiles is the door (facing any of them goes in). ui: the
 // dialog the counter opens (a piece with opens: true). dir: which way you face when you come out (default down).
-// spot: where the keeper stands behind the counter (Wren, Corvin, Bram, Hob, Maren, Hale); staff who are not
+// spot: where the keeper stands behind the counter (Wren, Corvin, Bram, Hob, Maren, Hale, Tamsin); staff who are not
 // villagers are 'attendant' pieces, drawn while the building is open. Opening hours: systems/venues.js.
 import { SHOPS } from './town.js';
 import { THEATRE } from './theatre.js';
@@ -334,7 +334,7 @@ export const VENUES = {
       '  ##w#####w#p###KKK#w#  ',
       '  ##w#MMM#w#####KKK#w#  ',
       '  #HH.......sS#W.b.YY#  ',
-      '  #HH...a.....#......#  ',
+      '  #HH.........#......#  ',
       '  #...CCCCC...#......#  ',
       '  #...........#......#  ',
       '  #...........#j....k#  ',
@@ -354,7 +354,6 @@ export const VENUES = {
       H: ['haybale', {}],
       s: ['sack', {}],
       S: ['sack', { c: ['#c9b68e', '#8a6a3a'] }],
-      a: ['attendant', { pal: { skin: '#c99272', hair: '#b5452f', shirt: '#5d7a4a', pants: '#3f3a33', hat: '#a5753f', band: '#6e4626', long: true }, note: 'Tamsin, behind the counter, chewing a straw.' }],
       C: ['counter', { opens: true, top: ['paper', 'till'], note: 'The counter. Animals, hay and heaters to order.' }],
       h: ['haybale', {}],
       x: ['crate', {}],
@@ -371,7 +370,7 @@ export const VENUES = {
     },
     rooms: [[3, 4, 13, 12, 6, 7], [15, 4, 20, 12, 6, 2]],
     rugs: [],
-    spot: [11, 8],
+    spot: [7, 5],   // v166 (roadmap 75j): Tamsin herself now, a villager behind her counter
   },
   // The town hall: the clerk's office with the counter and the notice board, and the schoolroom through the door,
   // where Pell teaches at the front by the chalkboard.

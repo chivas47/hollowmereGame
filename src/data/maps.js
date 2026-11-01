@@ -25,6 +25,7 @@
 //   # cinder rock, ~ lava, > the door to the Ember Vent, = the forge (v39)
 // objects: art drawn on top of the tiles (see render/tiles.js OBJECT_ART).
 // exits: "x,y" of an E tile -> where it leads.
+import { RANCH_PEN } from './ranch.js';   // v166
 import { W, H } from '../core/constants.js';
 import { MACHINE } from './market.js';
 import { HOMES, homeMap } from './homes.js';
@@ -35,7 +36,7 @@ import { MERE } from './mere.js';
 // v156 (roadmap 75g): a map's size in tiles, read from its grid, so a map can be larger than the screen (W x H).
 export const sizeOf = (id) => { const g = MAPS[id]?.grid; return g?.length ? { w: g[0].length, h: g.length } : { w: W, h: H }; };
 
-export const SOLID = new Set(['ħ', 'ǧ', 'ƀ', 'β', 'ʋ', 'ʂ', 'Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
+export const SOLID = new Set(['ħ', 'ǧ', 'ƀ', 'β', 'ʋ', 'ʂ', 'ɲ', 'Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
 
 // v158: w and h for a map larger than the screen (roadmap 75i); the camera follows you across it.
 function emptyGrid(w = W, h = H) {
@@ -102,6 +103,9 @@ function villageGrid() {
   fill(m, 3, 15, 8, 16, 'ǧ');                        // Nell's garden behind her house
   fill(m, 30, 22, 36, 25, 'O');                      // the village pond
   fill(m, 34, 20, w - 2, 20, 'P'); m[20][w - 1] = 'E';   // v160: the lower lane runs on east to the mere
+  // v166 (roadmap 75j): Tamsin's ranch south of the east road: her cottage, a path to the east lane, the pens.
+  fill(m, 24, 11, 26, 12, 'V'); fill(m, 25, 13, 32, 13, 'P');
+  { const [x0, y0, x1, y1] = RANCH_PEN.box; fill(m, x0, y0, x1, y1, 'ɲ'); }
   return m;
 }
 
@@ -211,6 +215,7 @@ function townGrid() {
   m[7][36] = '0';   // v64: the coach stop at the east end of the lane (v159: the new east end)
   m[MACHINE.at.y][MACHINE.at.x] = '¤';   // v69: the prize machine by the town hall
   m[4][w - 1] = 'E'; m[4][w - 2] = 'Ŧ'; fill(m, w - 3, 4, w - 3, 7, 'P');   // v106: the ridge path east to the mountain, behind a fallen trunk
+  fill(m, 14, 14, 16, 15, 'V'); fill(m, 11, 16, 15, 16, 'P');   // v166 (roadmap 75j): Aurel, Bryn and Pip's cottage
   return m;
 }
 
@@ -393,7 +398,8 @@ export const MAPS = {
       { art: 'cottage', x: 1, y: 2, roof: '#a5432f' }, { art: 'cottage', x: 5, y: 2, roof: '#5d7a4a' },
       { art: 'cottage', x: 16, y: 2, roof: '#3f5f6e' }, { art: 'cottage', x: 20, y: 2, roof: '#8b6a9e' },
       { art: 'board', x: 11, y: 5 }, { art: 'fountain', x: 11, y: 8 }, { art: 'table', x: 13, y: 11 },
-      { art: 'cottage', x: 4, y: 18, roof: '#7a8a5a' }, { art: 'cottage', x: 13, y: 18, roof: '#4a6a7a' }, { art: 'cottage', x: 24, y: 6, roof: '#8a5a8a' }, { art: 'cottage', x: 30, y: 6, roof: '#c98a3a' },   // v50: Nell, Rook, Esme, Kit (v159: moved, roadmap 75c)
+      { art: 'cottage', x: 4, y: 18, roof: '#7a8a5a' }, { art: 'cottage', x: 13, y: 18, roof: '#4a6a7a' }, { art: 'cottage', x: 24, y: 6, roof: '#8a5a8a' }, { art: 'cottage', x: 30, y: 6, roof: '#c98a3a' }, { art: 'cottage', x: 24, y: 11, roof: '#8a3f2a' },   // v166: Tamsin
+        // v50: Nell, Rook, Esme, Kit (v159: moved, roadmap 75c)
     ],
     exits: { [`${VILLAGE_SIZE.w - 1},20`]: { to: 'mere', x: 1, y: 20, dir: 'right' }, [`${VILLAGE_SIZE.w - 1},8`]: { to: 'farm', x: 1, y: 4, dir: 'right' }, [`11,${VILLAGE_SIZE.h - 1}`]: { to: 'beach', x: 11, y: 1, dir: 'down' }, '10,0': { to: 'town', x: 10, y: TOWN_SIZE.h - 2, dir: 'up' } },   // v43: the beach; v46: the town; v159: the new edges
   },
@@ -445,7 +451,7 @@ export const MAPS = {
   },
   town: {
     name: 'Hollowmere Town', salt: 83, grid: townGrid(),
-    objects: [{ art: 'board', x: 36, y: 7 }, ...Object.entries(SHOP_SPOTS).map(([kind, s]) => ({ art: 'storefront', kind, x: s.x, y: s.y })), { art: 'cottage', x: 13, y: 1, roof: '#7a4a8a' }, { art: 'cottage', x: 4, y: 1, roof: '#5f8fb5' }, { art: 'cottage', x: 18, y: 1, roof: '#a5432f' }, { art: 'storefront', kind: 'hall', x: 9, y: 1 }],
+    objects: [{ art: 'cottage', x: 14, y: 14, roof: '#6e7a8a' }, { art: 'board', x: 36, y: 7 }, ...Object.entries(SHOP_SPOTS).map(([kind, s]) => ({ art: 'storefront', kind, x: s.x, y: s.y })), { art: 'cottage', x: 13, y: 1, roof: '#7a4a8a' }, { art: 'cottage', x: 4, y: 1, roof: '#5f8fb5' }, { art: 'cottage', x: 18, y: 1, roof: '#a5432f' }, { art: 'storefront', kind: 'hall', x: 9, y: 1 }],
     exits: { [`10,${TOWN_SIZE.h - 1}`]: { to: 'village', x: 10, y: 1, dir: 'down' } },
   },
   maze: {

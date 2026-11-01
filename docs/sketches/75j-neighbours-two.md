@@ -1,7 +1,7 @@
 # 75j: new neighbours, the next four (sketch for Nuno)
 
 NPC_LIFE step 1 and WORLD_BUILDING step 1: the people and their places in words, for Nuno to correct before any
-code. Nothing here is built yet. Nuno's answers (November 2026): Tamsin and a family of three with a young child,
+code. Built in v166 (chivas47/hollowmereGame#167). Nuno's answers (November 2026): Tamsin and a family of three with a young child,
 friends only (no new marriage candidates), Tamsin's ranch on the east road, the family in a new town cottage.
 
 ## Who
@@ -38,8 +38,8 @@ the green, chasing Pudding when she is out. 16:00 to 17:00 with his mother, 17:0
 road twice a week, otherwise home. In bed by 20:00. Saturdays the green and the stalls with Bryn. Rain: home after
 school. Favourite place: wherever the cat is.
 
-**Sundays,** the family walks together (an `along()` block): the forest in spring and summer, the beach in
-autumn, the square in winter.
+**Sundays,** the family walks the beach together (Bryn `along()` Aurel, Pip running ahead), then the square.
+(Built: the forest is too far from town for a morning, so the beach all year.)
 
 ## Places
 
