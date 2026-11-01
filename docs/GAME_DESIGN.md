@@ -700,6 +700,7 @@ Original where Stardew's mechanic does not exist here: Bountiful, Quickgrow, See
 |---|---|---|---|
 | Mine lift | 20000 | 8 iron bars | Start on any mine floor reached, not just every fifth |
 | Street lamps | 12000 | 60 stone | The day ends at 3 am instead of 2 am |
+| Saturday stalls (v165) | 25000 | 100 wood | Two stalls on the town green, Saturdays 9:00 to 14:00; Nell, Ysolde and Ferran take turns by week, selling three goods each at twice their sell price |
 
 ### Festivals (village square, 9:00 to 22:00)
 
@@ -727,7 +728,7 @@ Original where Stardew's mechanic does not exist here: Bountiful, Quickgrow, See
 
 ### Gold sinks
 
-One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up to 4,400g of animals, crafting (machines 400 to 600g each, sprinklers 75 to 200g each; a full field of iron sprinklers is about 1,600g and 24 iron), lanterns 350g each with no cap. Hillside manor 12,000g, village projects 32,000g. Recurring: seeds, hay (10g per animal per night) and chicken feed (5g per chicken per night).
+One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up to 4,400g of animals, crafting (machines 400 to 600g each, sprinklers 75 to 200g each; a full field of iron sprinklers is about 1,600g and 24 iron), lanterns 350g each with no cap. Hillside manor 12,000g, village projects 57,000g. Recurring: seeds, hay (10g per animal per night) and chicken feed (5g per chicken per night).
 
 ### Energy costs
 

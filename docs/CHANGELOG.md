@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v165: Saturday stalls
+- A new village project on the quest board: Saturday stalls, 25,000g and 100 wood. Funded, two market stalls go up on the town green.
+- Saturday mornings, 9 till 2, a neighbour sells there, a different one each week: Nell (garden goods), Ysolde (honey, cloth and cake) or Ferran (smoked eel, crayfish, snails), at twice the sell price.
+- New save field: none (the project sits in the existing projects list). No keys changed.
+
 ## v164: Pudding
 - The grey cat from the town's lost-cat notice was never lost: Pudding lives in the village. She keeps a round of warm spots through the day (the green's benches, the hedge on the east road, the fountain, the north row's doorsteps), strolls from one to the next, naps through the afternoon and stays in when it rains or snows.
 - Face her and press Use to pet her.
