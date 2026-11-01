@@ -52,6 +52,9 @@ export const FESTIVALS = [
       tavi: 'Someone put a boot in once. We do not talk about it.',
       hob: 'I taste whatever goes in. Whatever. Please be kind.',
       nell: 'In my day we put in what we grew. Simple is best.',
+      ferran: 'I put in an eel. Hob said "interesting". I am taking that as a win.',   // v167
+      tamsin: 'A jug of cream makes any soup better. That is not an opinion.',
+      pip: 'I put in a sweet. Mum says it does not count. Hob ate it anyway.',
     },
   },
   // v58. Stardew's Flower Dance (Spring 24): ask a marriage candidate to dance; they say yes from 4 hearts (or as
@@ -99,6 +102,9 @@ export const FESTIVALS = [
       tavi: 'I mapped last year\'s winning display. Item by item. It is framed in my kitchen.',
       hale: 'I judge, but only the knots on the ribbons.',
       nell: 'I won this fair thirty years ago with a marrow. They still talk about the marrow.',
+      tamsin: 'My mother took the ribbon here nine years running. I have taken it twice. I count those.',   // v167
+      ysolde: 'I wove the baskets half the displays sit in. Nobody judges the baskets.',
+      aurel: 'I built the stone plinth by the gate. It will be here long after the marrow.',
     },
   },
   {

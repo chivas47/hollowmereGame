@@ -24,6 +24,14 @@ export const DOINGS = {
   esme: [{ map: 'forest', does: 'easel' }, { map: LANTERN, does: 'sketch' }, { map: 'beach', does: 'sketch' }],
   kit: [{ map: '*', does: 'wrench' }],
   lamp: [{ map: 'sewer', does: 'lantern' }],
+  // v167 (roadmap 75k): the seven newest.
+  garrow: [{ map: 'mere', stay: true, does: 'rod' }],                     // lines out from the dock
+  ysolde: [{ map: 'mere', does: 'basket' }, { map: 'town', does: 'basket' }],
+  ferran: [{ map: 'mere', does: 'nets' }, { map: 'beach', does: 'nets' }],   // traps, then mending them
+  tamsin: [{ map: venueMap('ranch'), does: 'ledger' }, { map: 'village', does: 'basket' }],   // feed for the pens
+  aurel: [{ map: 'village', stay: true, does: 'hammer' }, { map: 'town', stay: true, does: 'hammer' }],
+  bryn: [{ map: venueMap('clinic'), does: 'bag' }],
+  pip: [{ map: venueMap('hall'), does: 'book' }],
 };
 
 // What a neighbour is doing on this block (null: home, or nothing here), and whether it shows while they walk.

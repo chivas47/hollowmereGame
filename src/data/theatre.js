@@ -51,6 +51,13 @@ export const TASTES = {
   rook:   { loves: 'adventure', hates: 'nature', snack: 'drink', nosnack: 'fresh' },
   esme:   { loves: 'romance', hates: 'adventure', snack: 'fresh', nosnack: 'salty' },
   kit:    { loves: 'spooky', hates: 'drama', snack: 'sweet', nosnack: 'fresh' },
+  garrow: { loves: 'adventure', hates: 'romance', snack: 'drink', nosnack: 'sweet' },   // v167 (roadmap 75k)
+  ysolde: { loves: 'drama', hates: 'spooky', snack: 'fresh', nosnack: 'salty' },
+  ferran: { loves: 'comedy', hates: 'drama', snack: 'salty', nosnack: 'fresh' },
+  tamsin: { loves: 'nature', hates: 'mystery', snack: 'salty', nosnack: 'sweet' },
+  aurel:  { loves: 'mystery', hates: 'comedy', snack: 'drink', nosnack: 'sweet' },
+  bryn:   { loves: 'romance', hates: 'spooky', snack: 'fresh', nosnack: 'salty' },
+  pip:    { loves: 'adventure', hates: 'romance', snack: 'sweet', nosnack: 'drink' },
 };
 
 // The two arcade cabinets in the tavern (Stardew's two in the Saloon pay nothing but bragging rights). Ours give a
