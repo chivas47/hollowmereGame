@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v168: The balance bot buys the late game
+- The balance simulator now saves for the village waystone, the Hollow waystone (500,000g each) and the clock tower (10,000,000g), Stardew's obelisks and gold clock, once the rest of its list is bought. Before, it ended with millions and called it "nothing left to buy" while 11,000,000g of buildings sat unbought.
+- No change in the game itself: no prices, saves or keys.
+
 ## v167: The newest neighbours join in
 - Garrow, Ysolde, Ferran, Tamsin, Aurel, Bryn and Pip now take part in the valley's life: each has film and snack tastes at the theatre, things they are seen doing (Garrow's rod on the dock, Ferran's nets, Tamsin's feed basket, Aurel's hammer, Bryn's bag, Pip's schoolbook), lines about their friends, and lines at the Summer Potluck and the Grange Fair.
 - All but Pip set a lantern at the Lantern Float (he is in bed; Bryn sets his for him).

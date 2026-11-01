@@ -49,7 +49,9 @@ const STRATEGIES = {
     // v30: the mill needs cloth, so a loom comes first. v63: the shed comes right after the greenhouse, so machines go
     // inside it and the farm keeps room for buildings. The bot picks the first free spot from the bottom right.
     'lodge:saber', 'lodge:cutlass',   // v37: the lodge's weapons, skipped if the bot has not been deep enough
-    'loom', 'mill', 'helperhut'],   // the hut's 100 fiber come slowly from weeds
+    'loom', 'mill', 'helperhut',   // the hut's 100 fiber come slowly from weeds
+    // v168 (roadmap 75l): the late-game sinks, Stardew's obelisks and gold clock: two waystones, then the clock tower.
+    'wayvillage', 'wayhollow', 'clocktower'],
   crops: ['furnace', 'can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
 };
 
