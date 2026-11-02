@@ -33,10 +33,13 @@ function journal(tab = TABS[0][0]) {
   let body = '';
   if (EXTRA[tab]) body = EXTRA[tab]();
   else if (tab === 'museum') {
-    const cell = (k) => (M.donated.includes(k) ? `<li>${ITEMS[k].name}</li>` : '<li class="role">Not yet donated</li>');
-    body = `<p>Donated ${M.donated.length} of ${MUSEUM_ITEMS.length}.</p><h3>Artifacts</h3><ul>${Object.keys(ARTIFACTS).map(cell).join('')}</ul><h3>Minerals</h3><ul>${MUSEUM_MINERALS.map(cell).join('')}</ul>`;
+    // v185 (polish 76f): what you have, then one line for what is left, not a line per missing entry
+    const part = (keys, what) => { const have = keys.filter((k) => M.donated.includes(k)), left = keys.length - have.length;
+      return `<ul>${have.map((k) => `<li>${ITEMS[k].name}</li>`).join('')}</ul>${left ? `<p class="role">${left} ${what} still to find.</p>` : `<p class="role">All ${keys.length} donated.</p>`}`; };
+    body = `<p>Donated ${M.donated.length} of ${MUSEUM_ITEMS.length}.</p><h3>Artifacts</h3>${part(Object.keys(ARTIFACTS), 'artifacts')}<h3>Minerals</h3>${part(MUSEUM_MINERALS, 'minerals')}`;
   } else if (tab === 'fish') {
-    body = `<p>Caught ${st.fish} of ${Object.keys(FISH).length} kinds.</p><ul>${Object.keys(FISH).map((k) => (S.fishLog[k] > 0 ? `<li>${ITEMS[k].name} (${S.fishLog[k]})</li>` : '<li class="role">Not yet caught</li>')).join('')}</ul>`;
+    const kinds = Object.keys(FISH), left = kinds.length - st.fish;
+    body = `<p>Caught ${st.fish} of ${kinds.length} kinds.</p><ul>${kinds.filter((k) => S.fishLog[k] > 0).map((k) => `<li>${ITEMS[k].name} (${S.fishLog[k]})</li>`).join('')}</ul>${left ? `<p class="role">${left} kinds still to catch.</p>` : ''}`;
   } else if (tab === 'notes') {
     const found = NOTES.filter((n) => M.notes.includes(n.id));
     body = `<p>Found ${found.length} of ${NOTES.length}. Notes turn up at artifact spots and while foraging.</p>${found.map((n) => `<p><b>Note #${n.id}.</b> ${n.text}${n.dig && M.dug.includes(n.id) ? ' <span class="role">(dug up)</span>' : ''}</p>`).join('')}`;

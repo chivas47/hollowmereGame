@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v185: Journal lists say what matters
+- The journal's Museum and Fish tabs list what you have and end with one line for the rest ("15 artifacts still to find", "29 kinds still to catch") instead of a line for every missing entry.
+- Achievements a farm has already met are awarded when the save loads, not only the next morning, so the Achievements and Completion tabs agree with what they show. Several earned at once make one notice.
+- Polish 76f, from the second polish sweep (docs/POLISH.md, finds 14 and 15).
+
 ## v184: The journal on small screens
 - Calendar: each day shows its number with a star for a festival and a dot for a birthday, and the season's events are listed in full under the grid. Names no longer break mid-word in the day cells, which made them unreadable on a phone.
 - Map: on a narrow screen (a phone, or one farmer's half in two-player) the places are a two-column list instead of a five-column grid whose names broke a letter or two a line. On a wide screen the grid stays, with more room for each name, and a long name hyphenates instead of breaking anywhere.

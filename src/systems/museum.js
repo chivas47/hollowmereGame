@@ -139,14 +139,15 @@ export function stats() {
 const goal = (a) => (a.n !== 'all' ? a.n : { fish: Object.keys(FISH).length, donated: MUSEUM_ITEMS.length, skills10: Object.keys(SKILLS).length, notes: NOTES.length }[a.stat]);
 export const achievementGoal = goal;
 export function checkAchievements() {
-  const st = stats();
-  for (const a of ACHIEVEMENTS) {
-    if (M().ach.includes(a.id) || st[a.stat] < goal(a)) continue;
-    M().ach.push(a.id);
-    notify(`Achievement: ${a.name}. ${a.desc}`);
-  }
+  const st = stats(), got = ACHIEVEMENTS.filter((a) => !M().ach.includes(a.id) && st[a.stat] >= goal(a));
+  for (const a of got) M().ach.push(a.id);
+  // v185: several at once (a save loading) make one notice, not a stack of them
+  if (got.length === 1) notify(`Achievement: ${got[0].name}. ${got[0].desc}`);
+  else if (got.length > 1) notify(`Achievements: ${got.slice(0, -1).map((a) => a.name).join(', ')} and ${got[got.length - 1].name}.`);
+  return got;
 }
 on('day:start', checkAchievements);
+on('game:loaded', checkAchievements);   // v185 (polish 76f): a save that already met some is awarded them on load, not next morning
 
 // Each part as a fraction of done (0 to 1), and the weighted total in percent.
 export function completion() {
