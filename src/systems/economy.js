@@ -6,6 +6,7 @@ import { CROPS } from '../data/crops.js';
 import { ITEMS } from '../data/items.js';
 import { SUPPLIES, PLACEABLES } from '../data/crafting.js';
 import { valueOf, clearQuality } from './quality.js';
+import { fmtGold } from '../core/format.js';
 
 export const inSeason = (crop) => CROPS[crop].seasons.includes(today().season);
 export const canBuy = (crop, n) => !CROPS[crop].crafted && inSeason(crop) && G.S.gold >= CROPS[crop].seed * n;
@@ -40,12 +41,12 @@ export function ship() {
   }
   if (!count) {
     notify(kept ? 'Ore and stone stay in your bag for upgrades. Nothing else to ship.'
-      : S.bin ? `The bin holds ${S.bin}g of goods. It pays out tonight.` : 'Your basket is empty. Harvest or forage something first.');
+      : S.bin ? `The bin holds ${fmtGold(S.bin)} of goods. It pays out tonight.` : 'Your basket is empty. Harvest or forage something first.');
     return;
   }
   S.bin += value;
   emit('sfx', 'coin');
-  notify(`Shipped ${count} item${count > 1 ? 's' : ''} for ${value}g. Paid while you sleep.`);
+  notify(`Shipped ${count} item${count > 1 ? 's' : ''} for ${fmtGold(value)}. Paid while you sleep.`);
   changed();
 }
 

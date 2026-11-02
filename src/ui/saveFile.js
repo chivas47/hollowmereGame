@@ -5,6 +5,7 @@ import { today, dateParts } from '../core/time.js';
 import { exportSave, importSave, save, restoreMorning } from '../core/state.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
+import { fmtGold } from '../core/format.js';
 
 export function downloadSave() {
   save();
@@ -20,7 +21,7 @@ export function downloadSave() {
 // what: 'The file holds' or 'This morning was'; v118: also used for going back to this morning.
 function confirmLoad(S, what = 'The file holds') {
   const d = dateParts(S.day);
-  openModal(`<h2>Load this save?</h2><p>${what} a farm on ${d.season} ${d.d}, Year ${d.year} with ${S.gold}g. Your current farm will be replaced. Export it first if you want to keep it.</p>`, [
+  openModal(`<h2>Load this save?</h2><p>${what} a farm on ${d.season} ${d.d}, Year ${d.year} with ${fmtGold(S.gold)}. Your current farm will be replaced. Export it first if you want to keep it.</p>`, [
     ['Keep playing', closeModal, true],
     ['Load save', () => {
       G.S = S;

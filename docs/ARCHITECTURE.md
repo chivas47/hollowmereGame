@@ -22,6 +22,7 @@ src/
     pad.js            v126: the controller's pure parts: stickDirs(), nextInDirection() (menu focus); tested
     registry.js       addInteraction, addLayer, addEntities, addUpdater (+ run/draw/collect)
     time.js           dateParts(day), today(), fmtTime(minutes), dayEnd() (END, later with street lamps)
+    format.js         v189: fmtGold(n), every gold amount the player reads ("1,725,356g")
   data/               content only, no logic
     crops.js forage.js fish.js minerals.js products.js artisan.js items.js
     npcs.js maps.js seasons.js hotbar.js upgrades.js (incl. COOP, BARN)

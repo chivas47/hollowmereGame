@@ -6,6 +6,7 @@ import { buyFurniture, furniturePrice, setDecor, buyCatalogue } from '../systems
 import { drawFurniture } from '../render/sprites.js';
 import { openModal, closeModal } from './modal.js';
 import { $, $$ } from './dom.js';
+import { fmtGold } from '../core/format.js';
 
 let tab = 'furniture';
 
@@ -17,17 +18,17 @@ function catalogue() {
   let body = '';
   if (tab === 'furniture') {
     body = Object.entries(FURNITURE).map(([k, f]) => `
-      <div class="shoprow"><div class="furnrow"><canvas data-furn="${k}" width="16" height="22"></canvas><div><b>${f.name}</b><span>${free ? 'Free' : `${f.cost}g`}${f.walk ? ', walk over it' : ''}${S.kit[k] ? `. ${S.kit[k]} in your kit` : ''}</span></div></div>
+      <div class="shoprow"><div class="furnrow"><canvas data-furn="${k}" width="16" height="22"></canvas><div><b>${f.name}</b><span>${free ? 'Free' : `${fmtGold(f.cost)}`}${f.walk ? ', walk over it' : ''}${S.kit[k] ? `. ${S.kit[k]} in your kit` : ''}</span></div></div>
       <div class="btns"><button data-buy-furn="${k}" ${S.gold < furniturePrice(k) ? 'disabled' : ''}>Buy</button></div></div>`).join('');
   } else {
     const part = tab === 'wallpaper' ? 'wall' : 'floor', list = part === 'wall' ? WALLPAPERS : FLOORS;
     body = list.map((d, i) => `
-      <div class="shoprow"><div class="furnrow">${swatch(d)}<div><b>${d.name}</b><span>${S.house[part] === i ? 'In use' : free ? 'Free' : `${DECOR_COST}g`}</span></div></div>
+      <div class="shoprow"><div class="furnrow">${swatch(d)}<div><b>${d.name}</b><span>${S.house[part] === i ? 'In use' : free ? 'Free' : `${fmtGold(DECOR_COST)}`}</span></div></div>
       <div class="btns"><button data-decor="${part}:${i}" ${S.house[part] === i || (!free && S.gold < DECOR_COST) ? 'disabled' : ''}>Use</button></div></div>`).join('');
   }
   const full = free ? '<p class="gift">You own the full catalogue: everything here is free.</p>'
-    : `<div class="shoprow"><div><b>Full catalogue</b><span>${CATALOGUE_COST.toLocaleString('en-US')}g. Every piece, wallpaper and floor free from then on.</span></div><div class="btns"><button data-catalogue ${S.gold < CATALOGUE_COST ? 'disabled' : ''}>Buy</button></div></div>`;
-  openModal(`<h2>Catalogue</h2><p class="role">You have <b>${S.gold}g</b>. Furniture goes to the kit (slot 7): face the floor and press Use to place it, face it again to pick it up.</p>
+    : `<div class="shoprow"><div><b>Full catalogue</b><span>${fmtGold(CATALOGUE_COST)}. Every piece, wallpaper and floor free from then on.</span></div><div class="btns"><button data-catalogue ${S.gold < CATALOGUE_COST ? 'disabled' : ''}>Buy</button></div></div>`;
+  openModal(`<h2>Catalogue</h2><p class="role">You have <b>${fmtGold(S.gold)}</b>. Furniture goes to the kit (slot 7): face the floor and press Use to place it, face it again to pick it up.</p>
     <div class="pick">${tabs}</div>${body}${full}`, [['Close', closeModal, true]]);
   $$('[data-furn]').forEach((c) => { const g = c.getContext('2d'); drawFurniture(g, 0, 6, FURNITURE[c.dataset.furn]); });
 }

@@ -35,6 +35,7 @@ import { iconURL } from '../render/itemIcons.js';
 import { onDrop } from './drag.js';
 import { $ } from './dom.js';
 import { keyName } from '../core/controls.js';
+import { fmtGold } from '../core/format.js';
 
 const row = (left, right, cls = '') => `<div class="inv-row ${cls}"><span>${left}</span><span>${right}</span></div>`;
 
@@ -109,7 +110,7 @@ function cell(e) {
   const t = best(e), cls = `${V.sel === e.id ? ' sel' : ''}${pinned(e.id) ? ' pin' : ''}`;
   const tip = `${e.name} × ${e.n}${t ? `, best ${QUALITY[t].name.toLowerCase()}` : ''}`;
   if (G.S.bagView.view === 'list') {
-    return `<button class="bagline${cls}" data-bagitem="${e.id}" data-drag="${e.id}" aria-label="${esc(tip)}">${icon(e)}<span>${esc(e.name)}${t ? ` ${pct(t)}` : ''}</span><span>× ${e.n}</span><span class="role">${e.worth ? `${e.worth}g` : BAG_KINDS[e.kind].name}</span></button>`;
+    return `<button class="bagline${cls}" data-bagitem="${e.id}" data-drag="${e.id}" aria-label="${esc(tip)}">${icon(e)}<span>${esc(e.name)}${t ? ` ${pct(t)}` : ''}</span><span>× ${e.n}</span><span class="role">${e.worth ? `${fmtGold(e.worth)}` : BAG_KINDS[e.kind].name}</span></button>`;
   }
   return `<button class="bagcell${cls}" data-bagitem="${e.id}" data-drag="${e.id}" title="${esc(tip)}" aria-label="${esc(tip)}">${icon(e)}<b>${e.n}</b>${qualityMark(t)}</button>`;
 }
@@ -140,13 +141,13 @@ function actions(e) {
 
 function detail(e) {
   const k = e.key, quals = e.q ? e.q.map((n, t) => (n ? `${n} ${pct(t)}` : '')).filter(Boolean).join(', ') : '';
-  const sell = shippable(e.id) ? prices(k).map((v, t) => `${pct(t)} ${v}g`).join(' · ') : '';
+  const sell = shippable(e.id) ? prices(k).map((v, t) => `${pct(t)} ${fmtGold(v)}`).join(' · ') : '';
   const uses = e.kind === 'seed' || e.kind === 'kit' ? [] : usedIn(k), needs = needsOf(e.id);
   return `<div class="bagdetail"><div class="baghead">${icon(e)}<div><b>${esc(e.name)}</b><span class="role">${BAG_KINDS[e.kind].name}${FISH[k]?.legendary ? ', legendary' : ''}</span></div></div>
     <p>${describe(e.id)}</p>
     ${row('You have', `${e.n}${quals ? ` (${quals})` : ''}`)}
     ${sell ? row('Sells for', sell) : row('Sells for', e.kind === 'seed' || e.kind === 'kit' ? 'Not shipped' : 'Not shipped: kept for crafting and upgrades')}
-    ${e.worth ? row('Worth if shipped', `${e.worth}g`, 'total') : ''}
+    ${e.worth ? row('Worth if shipped', `${fmtGold(e.worth)}`, 'total') : ''}
     ${needs.length ? `<h3>Made from</h3>${needs.map((x) => row(esc(x.name), `${x.n} <span class="role">(you have ${x.have})</span>`, x.have >= x.n ? '' : 'muted')).join('')}` : ''}
     ${uses.length ? `<h3>Used in</h3>${uses.map((u) => row(`${esc(u.name)} <span class="role">${u.where}</span>`, `needs ${u.n}`)).join('')}` : ''}
     ${actions(e)}</div>`;
@@ -154,11 +155,11 @@ function detail(e) {
 
 function compare(a, b) {
   const line = (label, f) => `<tr><th>${label}</th><td>${f(a)}</td><td>${f(b)}</td></tr>`;
-  const sell = (e) => (shippable(e.id) ? `${prices(e.key)[0]}g` : 'Not shipped'), top = (e) => (shippable(e.id) ? `${prices(e.key)[3]}g` : '');
+  const sell = (e) => (shippable(e.id) ? `${fmtGold(prices(e.key)[0])}` : 'Not shipped'), top = (e) => (shippable(e.id) ? `${fmtGold(prices(e.key)[3])}` : '');
   const eat = (e) => (DISHES[e.key] ? `${DISHES[e.key].energy}` : '');
   return `<div class="bagdetail"><h3>Compare</h3><table class="bagcmp"><tr><th></th><td>${icon(a)} ${esc(a.name)}</td><td>${icon(b)} ${esc(b.name)}</td></tr>
     ${line('Kind', (e) => BAG_KINDS[e.kind].name)}${line('You have', (e) => e.n)}${line('Plain price', sell)}${line('Heirloom price', top)}
-    ${line('Worth if shipped', (e) => (e.worth ? `${e.worth}g` : ''))}${line('Energy', eat)}${line('Used in', (e) => (e.kind === 'seed' || e.kind === 'kit' ? '' : usedIn(e.key).length || 'nothing'))}
+    ${line('Worth if shipped', (e) => (e.worth ? `${fmtGold(e.worth)}` : ''))}${line('Energy', eat)}${line('Used in', (e) => (e.kind === 'seed' || e.kind === 'kit' ? '' : usedIn(e.key).length || 'nothing'))}
     </table><div class="btns"><button data-cmpoff>Stop comparing</button></div></div>`;
 }
 
@@ -175,7 +176,7 @@ function itemsTab() {
   return `<div class="bagbar"><input id="bagSearch" type="search" placeholder="Search the bag" aria-label="Search the bag" value="${esc(V.q)}">
       <label>Sort <select id="bagSort">${sorts}</select></label><div class="btns">${views}</div></div>
     <div class="btns bagcats">${cats}</div>
-    <p class="role">${all.length} kinds carried. Worth ${worth}g if shipped. Drag an item onto Pinned to pin it${chest ? ', or onto the chest to put it away' : ''}.</p>
+    <p class="role">${all.length} kinds carried. Worth ${fmtGold(worth)} if shipped. Drag an item onto Pinned to pin it${chest ? ', or onto the chest to put it away' : ''}.</p>
     <div class="bagdrops"><div class="bagzone" data-drop="pins">Pinned</div>${chest ? '<div class="bagzone" data-drop="chest">Chest you face</div>' : ''}</div>
     <div id="bagItems" data-drop="bag">${itemsGrid()}</div>
     ${sel && cmp && sel !== cmp ? compare(cmp, sel) : sel ? detail(sel) : '<p class="role">Pick an item to read about it.</p>'}

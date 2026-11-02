@@ -17,6 +17,7 @@ import { openModal, closeModal } from './modal.js';
 import { counts, unitValue } from '../systems/quality.js';
 import { QUALITY } from '../data/quality.js';
 import { $ } from './dom.js';
+import { fmtGold } from '../core/format.js';
 
 const npcName = (id) => NPCS.find((d) => d.id === id).name;
 let display = [];   // v59: the grange fair's display while you arrange it
@@ -26,7 +27,7 @@ function board() {
   const notes = S.quests.length ? S.quests.map((q) => {
     const it = ITEMS[q.item], left = q.due - S.day;
     const text = (QUEST_NOTES[q.npc] || `${npcName(q.npc)}: Could someone bring {n} {item}?`).replace('{n}', q.n).replace('{item}', it.name.toLowerCase());
-    return `<div class="shoprow"><div><b>${text}</b><span>Pays ${q.reward}g and ${npcName(q.npc)}'s friendship. You have ${S.bag[q.item]}. ${left ? `${left + 1} days left` : 'Last day'}.</span></div>
+    return `<div class="shoprow"><div><b>${text}</b><span>Pays ${fmtGold(q.reward)} and ${npcName(q.npc)}'s friendship. You have ${S.bag[q.item]}. ${left ? `${left + 1} days left` : 'Last day'}.</span></div>
       <div class="btns"><button data-quest="${q.id}" ${canDeliver(q) ? '' : 'disabled'}>Deliver</button></div></div>`;
   }).join('') : '<p class="role">No requests today. A new one goes up most mornings.</p>';
   const n = nextFestival();
@@ -34,7 +35,7 @@ function board() {
   const needs = (p) => Object.entries(p.needs).map(([k, n]) => `${n} ${ITEMS[k].name} (you have ${S.bag[k]})`).join(', ');
   const projects = `<h3>Village projects</h3>` + Object.entries(PROJECTS).map(([k, p]) => (funded(k)
     ? `<div class="shoprow"><div><b>${p.name}</b><span>Built. ${p.desc}</span></div></div>`
-    : `<div class="shoprow"><div><b>${p.name}</b><span>${p.desc} ${p.cost.toLocaleString('en-US')}g<br>Needs ${needs(p)}</span></div><div class="btns"><button data-project="${k}" ${affordable(p.cost, p.needs) ? '' : 'disabled'}>Fund</button></div></div>`)).join('');
+    : `<div class="shoprow"><div><b>${p.name}</b><span>${p.desc} ${fmtGold(p.cost)}<br>Needs ${needs(p)}</span></div><div class="btns"><button data-project="${k}" ${affordable(p.cost, p.needs) ? '' : 'disabled'}>Fund</button></div></div>`)).join('');
   // v61: special orders, from Autumn of the first year.
   let orders = '';
   if (ordersOpen()) {
@@ -42,13 +43,13 @@ function board() {
     orders = `<h3>Special orders</h3>`;
     if (a) {
       const o = ORDERS[a.key], left = a.due - S.day;
-      orders += `<div class="shoprow"><div><b>${o.name}</b><span>${npcName(o.npc)}: "${o.text}" ${a.given} of ${o.n} handed in. ${left ? `${left + 1} days left` : 'Last day'}. Pays ${o.gold.toLocaleString('en-US')}g.</span></div></div>`
+      orders += `<div class="shoprow"><div><b>${o.name}</b><span>${npcName(o.npc)}: "${o.text}" ${a.given} of ${o.n} handed in. ${left ? `${left + 1} days left` : 'Last day'}. Pays ${fmtGold(o.gold)}.</span></div></div>`
         + (orderItems(a.key).map((k) => `<div class="shoprow"><div><b>${ITEMS[k].name}</b><span>You have ${S.bag[k]}.</span></div><div class="btns"><button data-hand="${k}">Hand in ${Math.min(S.bag[k], orderLeft())}</button></div></div>`).join('') || '<p class="role">Nothing in your bag for this order yet.</p>');
     }
-    orders += S.orders.offer.length ? S.orders.offer.map((k) => { const o = ORDERS[k]; return `<div class="shoprow"><div><b>${o.name}</b><span>${npcName(o.npc)} wants ${what(o)} within ${o.days} days. Pays ${o.gold.toLocaleString('en-US')}g and their thanks.</span></div><div class="btns"><button data-order="${k}" ${a ? 'disabled' : ''}>Take</button></div></div>`; }).join('') + (a ? '<p class="role">Finish your order before taking another.</p>' : '')
+    orders += S.orders.offer.length ? S.orders.offer.map((k) => { const o = ORDERS[k]; return `<div class="shoprow"><div><b>${o.name}</b><span>${npcName(o.npc)} wants ${what(o)} within ${o.days} days. Pays ${fmtGold(o.gold)} and their thanks.</span></div><div class="btns"><button data-order="${k}" ${a ? 'disabled' : ''}>Take</button></div></div>`; }).join('') + (a ? '<p class="role">Finish your order before taking another.</p>' : '')
       : '<p class="role">New orders go up on Monday.</p>';
   }
-  openModal(`<h2>Quest board</h2><p class="role">Requests from your neighbours. Requests completed: ${S.questsDone || 0}. You have <b>${S.gold}g</b>.</p>${notes}${orders}${fest}${projects}`, [['Close', closeModal, true]]);
+  openModal(`<h2>Quest board</h2><p class="role">Requests from your neighbours. Requests completed: ${S.questsDone || 0}. You have <b>${fmtGold(S.gold)}</b>.</p>${notes}${orders}${fest}${projects}`, [['Close', closeModal, true]]);
 }
 
 function festival() {
@@ -56,23 +57,23 @@ function festival() {
   let html = `<h2>${f.name}</h2><p>${f.intro}</p>`;
   if (f.kind === 'contest') {
     const done = entry(f);
-    html += `<p class="role">Prizes: ${f.ranks.map((rk) => `${rk.label} ${rk.gold}g${rk.min ? ` (worth ${rk.min}g or more)` : ''}`).join(', ')}.</p>`;
+    html += `<p class="role">Prizes: ${f.ranks.map((rk) => `${rk.label} ${fmtGold(rk.gold)}${rk.min ? ` (worth ${fmtGold(rk.min)} or more)` : ''}`).join(', ')}.</p>`;
     if (done) html += `<p class="gift">You entered your ${ITEMS[done.item].name.toLowerCase()}. ${done.rank}! See you next year.</p>`;
     else {
       const best = (k) => { const c = counts(k); let t = 3; while (t > 0 && !c[t]) t--; return t; };
       const items = contestItems(f).sort((a, b) => unitValue(b, best(b)) - unitValue(a, best(a)));
       html += items.length
-        ? items.map((k) => `<div class="shoprow"><div><b>${best(k) ? `${QUALITY[best(k)].name} ` : ''}${ITEMS[k].name}</b><span>Worth ${unitValue(k, best(k))}g. Your best one is entered.</span></div><div class="btns"><button data-enter="${k}">Enter</button></div></div>`).join('')
+        ? items.map((k) => `<div class="shoprow"><div><b>${best(k) ? `${QUALITY[best(k)].name} ` : ''}${ITEMS[k].name}</b><span>Worth ${fmtGold(unitValue(k, best(k)))}. Your best one is entered.</span></div><div class="btns"><button data-enter="${k}">Enter</button></div></div>`).join('')
         : `<p class="role">Bring ${ACCEPT_TEXT[f.accepts]} to enter. One entry per year.</p>`;
     }
   } else if (f.kind === 'grange') {   // v59
     const done = entry(f);
-    if (done) html += `<p class="gift">Your display scored ${done.score} points: ${done.rank}, ${done.gold}g. Your things are back in your bag. See you next autumn.</p>`;
+    if (done) html += `<p class="gift">Your display scored ${done.score} points: ${done.rank}, ${fmtGold(done.gold)}. Your things are back in your bag. See you next autumn.</p>`;
     else {
       const g = f.grange, have = grangeItems();
       display = display.filter((k) => have.includes(k));
       const kinds = new Set(display.map(grangeKind)).size;
-      html += `<p class="role">Prizes: ${g.ranks.map((rk) => `${rk.label} ${rk.gold}g`).join(', ')}. The judges score variety (up to ${g.kinds} kinds of thing), quality and value, and dislike empty slots. You get everything back.</p>`
+      html += `<p class="role">Prizes: ${g.ranks.map((rk) => `${rk.label} ${fmtGold(rk.gold)}`).join(', ')}. The judges score variety (up to ${g.kinds} kinds of thing), quality and value, and dislike empty slots. You get everything back.</p>`
         + `<h3>Your display (${display.length}/${g.slots}, ${kinds} kind${kinds === 1 ? '' : 's'})</h3>`
         + (display.length ? display.map((k) => `<div class="shoprow"><div><b>${ITEMS[k].name}</b></div><div class="btns"><button data-gout="${k}">Take back</button></div></div>`).join('') : '<p class="role">Empty. Add things from your bag below.</p>')
         + `<div class="btns"><button data-judge ${display.length ? '' : 'disabled'}>Call the judges</button></div><h3>Your bag</h3>`
@@ -105,14 +106,14 @@ function festival() {
       const best = (k) => { const c = counts(k); let t = 3; while (t > 0 && !c[t]) t--; return t; };
       const items = potItems().sort((a, b) => unitValue(b, best(b)) - unitValue(a, best(a)));
       html += `<p class="role">The better the ingredient, the happier everyone is with you: a magnificent soup raises every neighbour's friendship, a poor one lowers it. Your best one goes in.</p>`
-        + (items.length ? items.map((k) => `<div class="shoprow"><div><b>${best(k) ? `${QUALITY[best(k)].name} ` : ''}${ITEMS[k].name}</b><span>Worth ${unitValue(k, best(k))}g.</span></div><div class="btns"><button data-pot="${k}">Add</button></div></div>`).join('') : '<p class="role">Bring something to eat: a crop, fish, forage, an animal product, an artisan good or a dish.</p>');
+        + (items.length ? items.map((k) => `<div class="shoprow"><div><b>${best(k) ? `${QUALITY[best(k)].name} ` : ''}${ITEMS[k].name}</b><span>Worth ${fmtGold(unitValue(k, best(k)))}.</span></div><div class="btns"><button data-pot="${k}">Add</button></div></div>`).join('') : '<p class="role">Bring something to eat: a crop, fish, forage, an animal product, an artisan good or a dish.</p>');
     }
   } else if (f.kind === 'hunt') {   // v54
     const done = entry(f);
     html += done ? `<p class="gift">You found ${done.found} eggs${done.won ? ' and won' : ''}. See you next year.</p>`
-      : `<p class="role">Find ${f.hunt.need} of the ${f.hunt.eggs} eggs in ${f.hunt.seconds} seconds: walk over them to pick them up. The first win earns the ${CLOTHES[f.hunt.prize].name.toLowerCase()}, later wins ${f.hunt.gold}g.</p><div class="btns"><button data-hunt>Start the hunt</button></div>`;
+      : `<p class="role">Find ${f.hunt.need} of the ${f.hunt.eggs} eggs in ${f.hunt.seconds} seconds: walk over them to pick them up. The first win earns the ${CLOTHES[f.hunt.prize].name.toLowerCase()}, later wins ${fmtGold(f.hunt.gold)}.</p><div class="btns"><button data-hunt>Start the hunt</button></div>`;
   } else {
-    html += `<p class="role">You have <b>${G.S.gold}g</b>.</p>` + f.stall.map((it) => `<div class="shoprow"><div><b>${it.label}</b><span>${it.desc} ${it.cost}g</span></div><div class="btns"><button data-stall="${it.key}" ${G.S.gold < it.cost || (it.once && G.S.wish[it.once]) ? 'disabled' : ''}>Buy</button></div></div>`).join('');
+    html += `<p class="role">You have <b>${fmtGold(G.S.gold)}</b>.</p>` + f.stall.map((it) => `<div class="shoprow"><div><b>${it.label}</b><span>${it.desc} ${fmtGold(it.cost)}</span></div><div class="btns"><button data-stall="${it.key}" ${G.S.gold < it.cost || (it.once && G.S.wish[it.once]) ? 'disabled' : ''}>Buy</button></div></div>`).join('');
   }
   openModal(html, [['Leave', closeModal, true]]);
 }
@@ -131,7 +132,7 @@ $('#mbody').addEventListener('click', (e) => {
   const en = e.target.closest('[data-enter]');
   if (en) {
     const res = enterContest(en.dataset.enter);
-    if (res) notify(`${res.rank.label}! The judges award you ${res.rank.gold}g.`);
+    if (res) notify(`${res.rank.label}! The judges award you ${fmtGold(res.rank.gold)}.`);
     festival(); return;
   }
   if (e.target.closest('[data-hunt]')) { closeModal(); startHunt(); return; }   // v54
@@ -141,7 +142,7 @@ $('#mbody').addEventListener('click', (e) => {
   if (gout) { display = display.filter((k) => k !== gout.dataset.gout); festival(); return; }
   if (e.target.closest('[data-judge]')) {
     const r = judgeGrange(display);
-    if (r) { display = []; emit('ui:message', { title: r.rank.label, text: `The judges walk along your display, whispering and making notes. ${r.score} points: ${r.rank.label.toLowerCase()}, and ${r.rank.gold}g.` }); }
+    if (r) { display = []; emit('ui:message', { title: r.rank.label, text: `The judges walk along your display, whispering and making notes. ${r.score} points: ${r.rank.label.toLowerCase()}, and ${fmtGold(r.rank.gold)}.` }); }
     return;
   }
   const dn = e.target.closest('[data-dance]');   // v58

@@ -6,8 +6,9 @@ import { NPCS } from '../data/npcs.js';
 import { filmNow, watchedToday, guests, seenThisWeek, showCost, watch } from '../systems/theatre.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
+import { fmtGold } from '../core/format.js';
 
-const g = (n) => `${n.toLocaleString('en-US')}g`;
+const g = (n) => `${fmtGold(n)}`;
 const row = (title, detail, button) => `<div class="shoprow"><div><b>${title}</b><span>${detail}</span></div><div class="btns">${button}</div></div>`;
 const name = (id) => NPCS.find((d) => d.id === id).name;
 let pick = { guest: null, snack: null };

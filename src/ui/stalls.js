@@ -5,12 +5,13 @@ import { ITEMS } from '../data/items.js';
 import { buyStall, sellerOf, stallPrice } from '../systems/stalls.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
+import { fmtGold } from '../core/format.js';
 
 function stall() {
   const S = G.S, s = sellerOf(S.day);
-  const rows = s.items.map((k) => `<div class="shoprow"><div><b>${ITEMS[k].name}</b><span>${stallPrice(k).toLocaleString('en-US')}g</span></div>
+  const rows = s.items.map((k) => `<div class="shoprow"><div><b>${ITEMS[k].name}</b><span>${fmtGold(stallPrice(k))}</span></div>
     <div class="btns"><button data-stall="${k}" ${S.gold < stallPrice(k) ? 'disabled' : ''}>Buy</button></div></div>`).join('');
-  openModal(`<h2>${s.name}</h2><p class="role">Saturday on the green. You have <b>${S.gold.toLocaleString('en-US')}g</b>.</p>${rows}`, [['Leave', closeModal, true]]);
+  openModal(`<h2>${s.name}</h2><p class="role">Saturday on the green. You have <b>${fmtGold(S.gold)}</b>.</p>${rows}`, [['Leave', closeModal, true]]);
 }
 on('ui:stalls', stall);
 
