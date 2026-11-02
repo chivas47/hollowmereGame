@@ -68,6 +68,10 @@ for (const id of maps) {
 }
 if (!QUICK) for (const id of ['farm', 'town'].filter((m) => maps.includes(m)))
   SEASONS.forEach((s, i) => stops.push({ name: `${id}-${s}`, map: id, time: 13 * 60, day: i * SEASON_LENGTH + 5 }));
+// Fourth sweep: weather on the three busiest outdoor maps (snow in winter, silvermist in summer, as the game rolls them)
+const WEATHER_DAYS = { rain: 5, storm: SEASON_LENGTH + 5, snow: 3 * SEASON_LENGTH + 5, mist: SEASON_LENGTH + 12 };
+if (!QUICK) for (const id of ['farm', 'town', 'wilds'].filter((m) => maps.includes(m)))
+  for (const [w, day] of Object.entries(WEATHER_DAYS)) stops.push({ name: `${id}-${w}`, map: id, time: 11 * 60, day, weather: w });
 
 const issues = [];   // { stop, kind, text }
 const note = (stop, kind, text) => issues.push({ stop, kind, text: String(text).slice(0, 400) });
@@ -188,7 +192,7 @@ try {
     const at = standOn(s.map);
     await page.evaluate(async ({ s, at, T }) => {
       const { G } = await import('/src/core/game.js');
-      Object.assign(G.S, { map: s.map, x: at.x * T + 8, y: at.y * T + 12, dir: at.dir || 'down', time: s.time }, s.day ? { day: s.day } : {});
+      Object.assign(G.S, { map: s.map, x: at.x * T + 8, y: at.y * T + 12, dir: at.dir || 'down', time: s.time, weather: s.weather || 'sun' }, s.day ? { day: s.day } : {});
       (await import('/src/ui/modal.js')).closeModal();
       G.paused = false;
       (await import('/src/core/events.js')).changed();   // the HUD redraws on state:changed
@@ -199,6 +203,47 @@ try {
     if (f.avg > 20) note(s.name, 'slow', `average frame ${f.avg.toFixed(1)} ms (worst ${f.worst.toFixed(0)} ms), twice in a row`);
     await page.screenshot({ path: join(OUT, 'shots', `${s.name}.png`) });
     rows.push({ stop: s.name, avg: f.avg, worst: f.worst });
+  }
+
+  // The Hollow and the zones below it: one floor each, deep enough to have its own rocks and monsters.
+  if (!QUICK && !ONLY.length) for (const [n, zone] of [[1, 'hollow'], [45, 'hollow'], [5, 'cavern'], [5, 'vent'], [5, 'peak']]) {
+    const name = `mine-${zone}-${n}`;
+    ref.stop = name;
+    await page.evaluate(async ({ n, zone }) => {
+      const { G } = await import('/src/core/game.js'); (await import('/src/ui/modal.js')).closeModal();
+      Object.assign(G.S, { day: 5, time: 10 * 60, weather: 'sun', hp: G.S.maxHp }); G.paused = false; G.hurtT = 999;   // full health and untouchable: a deep floor's monsters hit a day-5 farmer hard, which is the game, not a find
+      (await import('/src/systems/mine.js')).enterMine(n, zone);
+    }, { n, zone }).catch((e) => note(name, 'page error', e.message));
+    await page.waitForTimeout(600);
+    let f = await frameStats(page);
+    if (f.avg > 20) f = await frameStats(page);
+    if (f.avg > 20) note(name, 'slow', `average frame ${f.avg.toFixed(1)} ms (worst ${f.worst.toFixed(0)} ms), twice in a row`);
+    await page.screenshot({ path: join(OUT, 'shots', `${name}.png`) });
+    rows.push({ stop: name, avg: f.avg, worst: f.worst });
+  }
+
+  // Two farmers, split screen: walking about, then a dialog over one half.
+  if (!QUICK && !ONLY.length) {
+    ref.stop = 'split';
+    const ok = await page.evaluate(async () => {
+      const { G } = await import('/src/core/game.js'); (await import('/src/ui/modal.js')).closeModal();
+      (await import('/src/systems/mine.js')).leaveMine(); G.hurtT = 0;
+      Object.assign(G.S, { map: 'farm', day: 5, time: 10 * 60, weather: 'sun' }); G.paused = false;
+      (await import('/src/systems/partner.js')).join();
+      return !!G.P2;
+    }).catch((e) => { note('split', 'page error', e.message); return false; });
+    if (ok) {
+      await page.waitForTimeout(600);
+      await page.screenshot({ path: join(OUT, 'shots', 'split.png') });
+      rows.push({ stop: 'split', avg: NaN, worst: NaN });
+      ref.stop = 'split-dialog';
+      await page.evaluate(async () => (await import('/src/core/events.js')).emit('ui:sleep'));
+      await page.waitForTimeout(300);
+      (await layoutIssues(page, '.modal:not([hidden])')).forEach((t) => note('split-dialog', 'layout', t));
+      await page.screenshot({ path: join(OUT, 'shots', 'split-dialog.png') });
+      rows.push({ stop: 'split-dialog', avg: NaN, worst: NaN });
+      await page.evaluate(async () => { (await import('/src/ui/modal.js')).closeModal(); (await import('/src/systems/partner.js')).leave(); });
+    } else note('split', 'layout', 'the second farmer did not join');
   }
   await ctx.close();
 
