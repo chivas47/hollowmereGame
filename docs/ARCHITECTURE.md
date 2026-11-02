@@ -123,6 +123,7 @@ src/
     statue.js         v169: the fortune statue: a loved gift on a neighbour's birthday morning (G.S.statue), Use takes it
     attic.js          v172: the attic ladder ʌ in the farmhouse and the hatch back down (the renovation)
     birthday.js       v174: the farmer's birthday (G.S.birthday, set in the Menu by ui/birthday.js) and the birthday dinner's hearts and gifts; npcs.js seats the guests (data/birthday.js dinnerSeat)
+    train.js          v179: the goods train on the railway (trainOn(day), seeded; drops by the line in G.S.trainDrops, Use picks one up)
     ponds.js          the fish pond (stock, breed, roe, requests) and the slime pen (trough, slime balls, addSlime)
     buildings.js      door (sleep), stall (shop), bin and mini bins (ship), well/pond refill
     economy.js        ship(), buy(), overnight payout; materials are never shipped
@@ -302,6 +303,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 57 | treasure.js | Kit slot with a bomb (throws it at the faced tile, Hollow only) |
 | 72 | helpers.js | Helper hut a, waystones e and d (warp), cave mouth y, the cave's crate t |
 | 72 | statue.js | The fortune statue ʘ on the farm (takes today's birthday gift) (v169) |
+| 73 | train.js | A parcel the goods train left beside the railway line (pick it up) (v179) |
 | 72 | attic.js | The attic ladder ʌ in the farmhouse (up) and the attic's hatch ʌ (down) (v172) |
 | 57 | helpers.js | Kit slot with a home charm (warp home) |
 | 72 | market.js | The travelling cart ¢ in the forest, the bookseller § and the prize machine ¤ in the town (v69) |
