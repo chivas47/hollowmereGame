@@ -48,5 +48,12 @@ Mark the backlog rows fixed with the PR link. After each merge, the next sweep c
 
 | # | Group | Where | What is wrong | Shot | Status |
 |---|---|---|---|---|---|
-| 1 | 2 | HUD, phone screen | The goal line's "+2 in the journal" runs off the right edge at 390 px wide. | phone.png | open |
-| 2 | 2 | HUD clock panel | On maps with a long name (Hollowmere Town) the time wraps onto two lines ("10:00" / "pm"). | town-night.png | open |
+| 1 | 2 | HUD, phone screen | The goal line's "+2 in the journal" runs off the right edge at 390 px wide. | phone.png | 76a |
+| 2 | 2 | HUD clock panel | On maps with a long name (Hollowmere Town) the time wraps onto two lines ("10:00" / "pm"). | town-night.png | 76a |
+| 3 | 3 | Phone screen | The map fills about a quarter of the screen and half the screen below the hotbar is empty; the two start-of-day notices then cover most of the map. | phone.png | 76a |
+| 4 | 2 | Farm, autumn | The border trees turn orange but the trees inside the farm stay summer green. | farm-Autumn.png | 76b |
+| 5 | 2 | Farm, winter | Grown trees on the farm show as 1 px poles with no branches; bushes and weeds stay bright summer green on the snow. | farm-Winter.png | 76b |
+| 6 | 2 | Desert, dig site | Both are ringed by the green forest trees and dotted with green grass tufts on the sand. | desert-morning.png, digsite-morning.png | 76b |
+| 7 | 3 | Neighbour homes | Hester, Thorne and Sabine have the identical floor plan; Ferran, Kit, Tamsin and Ysolde look nearly the same (starry navy wallpaper, checked kitchen, blue bathroom). Thorne, the mountain hermit, lives in a town cottage interior. | home_hester/thorne/sabine-morning.png | 76c |
+| 8 | 3 | Town, first visit | One frame took 217 ms on the first stop of the sweep (average 20.8 ms): a hitch when the first big map draws, probably sprite sheets tinting on first use. | town-morning | 76d |
+| 9 | 4 | Farmhouse, renovated | With all renovations the farmhouse is a large bare hall next to furnished neighbour homes. Players furnish it themselves, so this may be intended. | save-v90.png | idea for Nuno |

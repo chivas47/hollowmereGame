@@ -1,6 +1,7 @@
 # Roadmap
 
 The work queue for the feature loop in `CLAUDE.md`. Nuno owns this list: order, scope and what goes on it.
+Kinds include `polish` (from a sweep, see docs/POLISH.md).
 Status: `next` (do it now, top first), `queued`, `in progress (PR link)`, `done (PR link)`, `needs decision`, `not now` (Nuno decided against it for now).
 
 ## The full-genre plan (from Nuno's feature guide, October 2026)
@@ -205,7 +206,11 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | 75v | Festival lines for 75s | feature | done (chivas47/hollowmereGame#180) | Nuno's pick (November 2026): festival lines for Aldous, Hester and Wilmot, as 75k gave the earlier newcomers. |
 | 75w | New neighbours, the next three | feature | done (chivas47/hollowmereGame#182) | Nuno's answers (November 2026): a hermit on the mountain (Thorne) and a stationmaster with her grown-up son at the railway (Sabine, Emmet); friends only. Sketch merged as written (chivas47/hollowmereGame#181; Nuno: next). Built with one change: Thorne's only friend is Hale (Esme already walks a friend home after festivals). No trains in the game; Sabine's train stays a running joke. The woodpile and fire ring are left out. 27 to 30 people. |
 | 75x | The goods train | feature | done (chivas47/hollowmereGame#183) | Nuno's pick (November 2026): a goods train at Sabine's halt about once a week, shedding a parcel or two by the line (Stardew's train by role: random days, coal, ore, geodes, wood). |
-| 75y | The train passes in front | fix | in progress (chivas47/hollowmereGame#184) | Nuno's pick, from the 75x PR: draw the train with the people (sorted by the line's lower edge) so no one appears on top of it. |
+| 75y | The train passes in front | fix | done (chivas47/hollowmereGame#184) | Nuno's pick, from the 75x PR: draw the train with the people (sorted by the line's lower edge) so no one appears on top of it. |
+| 76a | Polish: the HUD on small screens | polish | needs decision | From the first polish sweep (docs/POLISH.md, finds 1 to 3): the goal line fits a phone screen, the clock never wraps on long place names, and on a phone the map uses the empty half of the screen and start-of-day notices stop covering it. |
+| 76b | Polish: seasons and biomes look right | polish | needs decision | Finds 4 to 6: the farm's own trees turn with the season like its border (autumn colours, proper bare winter trees), bushes and weeds dull in winter, and the desert and dig site get a dry border and no green grass tufts. Drawing only. |
+| 76c | Polish: homes that look like their owners | polish | needs decision | Find 7: new floor plans for Hester, Thorne and Sabine (identical now) and a different look for Ferran, Kit, Tamsin and Ysolde. Thorne's should read as a mountain hermit's hut. Needs Nuno's say on each home's character (WORLD_BUILDING.md). |
+| 76d | Polish: no hitch on the first big map | polish | needs decision | Find 8: measure the 217 ms first-draw frame in town and, if it is sheet tinting, warm the tint cache while the game loads. |
 
 ## Done
 

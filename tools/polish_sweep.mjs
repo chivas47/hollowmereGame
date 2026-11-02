@@ -57,10 +57,14 @@ function standOn(id) {
 }
 
 const stops = [];
-const maps = Object.keys(MAPS).filter((id) => !ONLY.length || ONLY.includes(id));
+// The hedge maze only exists on its festival night: standing in it any other day ends the festival and leaks notices.
+const FESTIVAL_ONLY = new Set(['maze']);
+const { underSky } = await import(join(ROOT, 'src/data/weather.js'));
+const maps = Object.keys(MAPS).filter((id) => !FESTIVAL_ONLY.has(id) && (!ONLY.length || ONLY.includes(id)));
 for (const id of maps) {
   stops.push({ name: `${id}-morning`, map: id, time: 9 * 60 });
-  if (!QUICK && !id.startsWith('home_') && !id.startsWith('inside_')) stops.push({ name: `${id}-night`, map: id, time: 22 * 60 });
+  // Night only where the sky shows, plus the farmhouse and its rooms (lamps); caves look the same at any hour.
+  if (!QUICK && (underSky(id) || MAPS[id].base === 'house' || id === 'house')) stops.push({ name: `${id}-night`, map: id, time: 22 * 60 });
 }
 if (!QUICK) for (const id of ['farm', 'town'].filter((m) => maps.includes(m)))
   SEASONS.forEach((s, i) => stops.push({ name: `${id}-${s}`, map: id, time: 13 * 60, day: i * SEASON_LENGTH + 5 }));
