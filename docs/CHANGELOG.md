@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v184: The journal on small screens
+- Calendar: each day shows its number with a star for a festival and a dot for a birthday, and the season's events are listed in full under the grid. Names no longer break mid-word in the day cells, which made them unreadable on a phone.
+- Map: on a narrow screen (a phone, or one farmer's half in two-player) the places are a two-column list instead of a five-column grid whose names broke a letter or two a line. On a wide screen the grid stays, with more room for each name, and a long name hyphenates instead of breaking anywhere.
+- On a narrow screen the journal's twelve tabs are one row that scrolls sideways, with the open tab kept in view, instead of five rows.
+- Polish 76e, from the second polish sweep (docs/POLISH.md, finds 11 to 13).
+
 ## v183: No stall entering the town
 - Entering Hollowmere Town or the Village for the first time each season no longer freezes the game for a moment (up to about a fifth of a second). Building the map's picture copied each tree's trunk back from a second canvas, one tree at a time, which stalled the browser hundreds of times; the trunk is now drawn straight onto the ground. The maps look exactly the same (polish 76d).
 

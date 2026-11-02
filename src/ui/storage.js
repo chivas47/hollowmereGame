@@ -90,13 +90,19 @@ $('#mbody').addEventListener('click', (e) => {
 
 // ---- Journal tabs ----
 addJournalTab('cal', 'Calendar', () => {
-  const t = today();
+  // v184 (polish 76e): a day cell holds its number and a mark (star: a festival, dot: a birthday); the names are
+  // listed in full under the grid, since no cell is wide enough for them on a phone, nor for "Midsummer" anywhere.
+  const t = today(), events = [];
   const cells = Array.from({ length: SEASON_LENGTH }, (_, i) => {
     const d = i + 1, f = FESTIVALS.find((x) => x.season === t.season && x.day === d), b = NPCS.filter((n) => n.birthday?.season === t.season && n.birthday.d === d);
-    const fl = floatOn({ season: t.season, d }), marks = [f ? `<b>${f.name}</b>` : '', fl ? `<b>${fl.name}</b>` : '', ...b.map((n) => `${esc(n.name)}'s birthday`)].filter(Boolean).join('<br>');
-    return `<div class="cal${d === t.d ? ' now' : ''}${d < t.d ? ' past' : ''}"><span>${d}</span>${marks}</div>`;
+    const fl = floatOn({ season: t.season, d }), fest = [f?.name, fl?.name].filter(Boolean), born = b.map((n) => `${n.name}'s birthday`);
+    if (fest.length || born.length) events.push([d, fest, born]);
+    const what = [...fest, ...born].join(', '), marks = `${fest.length ? '<b>★</b>' : ''}${born.length ? '<i>●</i>' : ''}`;
+    return `<div class="cal${d === t.d ? ' now' : ''}${d < t.d ? ' past' : ''}"${what ? ` title="${esc(what)}" aria-label="${d}: ${esc(what)}"` : ''}><span>${d}</span>${marks}</div>`;
   }).join('');
-  return `<h3>${t.season}, year ${t.year}</h3><p>Today is ${t.wd} the ${t.d}.</p><div class="calgrid">${WEEKDAYS.map((w) => `<div class="calhead">${w}</div>`).join('')}${cells}</div>`;
+  const list = events.map(([d, fest, born]) => `<li class="${d < t.d ? 'past' : ''}${d === t.d ? ' now' : ''}"><span>${d}</span>${[...fest.map((x) => `<b>★ ${esc(x)}</b>`), ...born.map((x) => `<i>●</i> ${esc(x)}`)].join('; ')}</li>`).join('');
+  return `<h3>${t.season}, year ${t.year}</h3><p>Today is ${t.wd} the ${t.d}.</p><div class="calgrid">${WEEKDAYS.map((w) => `<div class="calhead">${w}</div>`).join('')}${cells}</div>
+    ${list ? `<h3>This season</h3><ul class="calist">${list}</ul>` : ''}`;
 });
 
 addJournalTab('animals', 'Animals', () => {
