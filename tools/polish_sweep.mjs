@@ -96,6 +96,50 @@ async function openPage(browser, viewport, stopName, save, device = {}) {
   return { page, ctx, ref };
 }
 
+// What a player would see as broken layout: text or boxes running off the screen (unless a parent clips them on
+// purpose, as an ellipsis does), and visible text under 16 px (PROJECT_INSTRUCTIONS rule 8). scope: a selector.
+const layoutIssues = (page, scope = 'body') => page.evaluate((scope) => {
+  const out = [], root = document.querySelector(scope) || document.body;
+  const name = (el) => { const p = el.closest('[id]'); return `${el.tagName.toLowerCase()}${typeof el.className === 'string' && el.className ? '.' + el.className.split(' ')[0] : ''}${p && p !== el ? ' in #' + p.id : ''} "${(el.textContent || '').trim().slice(0, 30)}"`; };
+  const shown = (el) => { const r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width && r.height && cs.visibility !== 'hidden' && cs.display !== 'none' && +cs.opacity !== 0; };
+  for (const el of root.querySelectorAll('*')) {
+    if (!shown(el)) continue;
+    const r = el.getBoundingClientRect();
+    if (r.right > innerWidth + 1 || r.left < -1) {
+      let clipped = false;
+      for (let p = el.parentElement; p && !clipped; p = p.parentElement) clipped = getComputedStyle(p).overflowX !== 'visible';
+      if (!clipped) out.push(`${name(el)} runs off the screen edge`);
+    }
+    const own = [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
+    const fs = parseFloat(getComputedStyle(el).fontSize) * (parseFloat(getComputedStyle(el).zoom) || 1);
+    if (own && fs < 15.5 && !el.closest('canvas')) out.push(`${name(el)} is ${fs.toFixed(1)} px text (rule 8: 16 px or larger)`);
+  }
+  return [...new Set(out)].slice(0, 12);
+}, scope);
+
+// The panels a player opens most, and every tab inside them (buttons carrying a data-...tab attribute).
+const PANELS = ['bagBtn', 'craftBtn', 'journalBtn', 'friends', 'menuBtn'];
+async function panelStops(page, prefix, ref) {
+  for (const id of PANELS) {
+    ref.stop = `${prefix}-${id}`;
+    await page.evaluate(async () => { (await import('/src/ui/modal.js')).closeModal(); });
+    const btn = page.locator('#' + id);
+    if (!(await btn.isVisible().catch(() => false))) continue;
+    await btn.click(); await page.waitForTimeout(300);
+    const tabs = await page.evaluate(() => [...document.querySelectorAll('.modal:not([hidden]) button')]
+      .map((b) => [...b.attributes].find((a) => /^data-\w*tab$/.test(a.name))).filter(Boolean).map((a) => `[${a.name}="${a.value}"]`));
+    for (const tab of [null, ...tabs.slice(1)]) {
+      const stop = `${prefix}-${id}${tab ? '-' + tab.replace(/.*="|"\]/g, '') : ''}`;
+      ref.stop = stop;
+      if (tab) { await page.locator(`.modal:not([hidden]) button${tab}`).first().click().catch(() => {}); await page.waitForTimeout(250); }
+      (await layoutIssues(page, '.modal:not([hidden])')).forEach((t) => note(stop, 'layout', t));
+      await page.screenshot({ path: join(OUT, 'shots', `${stop}.png`) });
+      rows.push({ stop, avg: NaN, worst: NaN });
+    }
+    await page.keyboard.press('Escape'); await page.waitForTimeout(200);
+  }
+}
+
 // Average and worst frame time over a second, from requestAnimationFrame.
 const frameStats = (page) => page.evaluate(() => new Promise((done) => {
   const ts = []; const t0 = performance.now();
@@ -131,16 +175,7 @@ try {
     // A phone screen: does the HUD fit, does anything spill off the edge?
     // A real phone: touch, so the pad and Use button show (CSS keys them off pointer:coarse).
     const phone = await openPage(browser, { width: 390, height: 844 }, 'phone', null, { isMobile: true, hasTouch: true, deviceScaleFactor: 3 });
-    const spill = await phone.page.evaluate(() => [...document.querySelectorAll('body *')]
-      .filter((el) => {
-        const r = el.getBoundingClientRect();
-        if (!r.width || getComputedStyle(el).visibility === 'hidden' || (r.right <= innerWidth + 1 && r.left >= -1)) return false;
-        // Cut off by a parent that clips (an ellipsis) is intended, not a spill.
-        for (let p = el.parentElement; p; p = p.parentElement) if (getComputedStyle(p).overflowX !== 'visible') return false;
-        return true;
-      })
-      .slice(0, 10).map((el) => { const p = el.closest('[id]'); return `${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}${typeof el.className === 'string' && el.className ? '.' + el.className.split(' ')[0] : ''}${p && p !== el ? ' in #' + p.id : ''} "${(el.textContent || '').trim().slice(0, 30)}"`; }));
-    spill.forEach((el) => note('phone', 'layout', `${el} runs off the screen edge`));
+    (await layoutIssues(phone.page)).forEach((t) => note('phone', 'layout', t));
     await phone.page.screenshot({ path: join(OUT, 'shots', 'phone.png') });
     await phone.ctx.close();
 
@@ -151,6 +186,14 @@ try {
       await s.page.screenshot({ path: join(OUT, 'shots', `${name}.png`) });
       rows.push({ stop: name, avg: NaN, worst: NaN });
       await s.ctx.close();
+    }
+
+    // The panels, full of a late-game farm, on a desktop and on a touch phone.
+    const late = await readFile(join(ROOT, 'tests/saves/v90.json'), 'utf8');
+    for (const [prefix, viewport, device] of [['ui', { width: 1280, height: 800 }, {}], ['ui-phone', { width: 390, height: 844 }, { isMobile: true, hasTouch: true, deviceScaleFactor: 3 }]]) {
+      const u = await openPage(browser, viewport, prefix, late, device);
+      await panelStops(u.page, prefix, u.ref);
+      await u.ctx.close();
     }
   }
 } finally {
