@@ -331,6 +331,43 @@ export const NPCS = [
     ],
     react: { loved: 'A {item}! I could make a whole movement out of this.', liked: 'A {item}. Useful. Thank you.', neutral: 'Thanks.', disliked: 'A {item}. Hester likes those.', hated: 'Glass. It cracks the moment you look at it wrong. Like a cheap watch.', birthday: 'My birthday? Hester will have told you. She tells everybody.' },
   },
+  // ---- v178 (roadmap 75w, docs/sketches/75w-neighbours-four.md): the hermit, and the railway halt. Friends only. ----
+  {
+    id: 'thorne', name: 'Thorne', role: 'A hermit on Cragmoor; forages and carves', seed: 27,
+    loves: ['morel', 'wildplum'], likes: ['hardwood', 'thymetea', 'berry', 'glademint'], dislikes: ['salad', 'honeycake'], hates: ['pizza'],
+    birthday: { season: 'Winter', d: 19 },
+    pal: { hat: '#4a4038', band: '#2b2f36', hair: '#8a8478', shirt: '#5a6a3a', pants: '#3f3a33', skin: '#b07a52', beard: true },
+    lines: [
+      ['I came up the mountain one bad winter. The next spring I did not see a reason to go down.', 'You are standing on a morel patch. Please do not.'],
+      ['Hale and I sit by the lodge fire on Wednesdays. We have said perhaps a hundred words to each other in ten years. All good ones.', 'Esme painted my hut. She gave it a better roof than it has.', '{name}. The mountain is quiet today. Keep it that way.'],
+      ['I carve what I see up here. A hare, an owl. Once, a very small Hale. He did not find it funny.', 'You come up here more than most. The mountain has noticed. So have I.'],
+    ],
+    react: { loved: 'A {item}. From the wild. Good. Thank you.', liked: 'A {item}. Useful.', neutral: 'Hm.', disliked: 'A {item}. Somebody in town will want it.', hated: 'Pizza. From a shop. In a box. Take it back down the mountain.', birthday: 'My birthday. I had forgotten. The mountain does not keep count.' },
+  },
+  {
+    id: 'sabine', name: 'Sabine', role: 'Keeps the railway halt', seed: 28,
+    loves: ['netstew', 'honeycake'], likes: ['thymetea', 'bread', 'mistlily'], dislikes: ['seaglass', 'bait'], hates: ['frostkale'],
+    birthday: { season: 'Spring', d: 18 },
+    pal: { hat: '#3a4a6a', band: '#c9a35a', hair: '#7a6a5a', shirt: '#3a4a6a', pants: '#2b2f36', skin: '#e0ac7e', long: true },
+    lines: [
+      ['The goods train comes now and then. Now and then has been a while.', 'Mind the platform edge. Not because of the trains. It is just a long way down for a short step.'],
+      ['Juno brings the post through here. We have the best gossip in the valley and nobody to tell it to but each other.', 'My father kept this halt before me. He never saw the train either.', 'Good morning, {name}. No train yet. There never is.'],
+      ['Emmet wants to ride every line there is. I tell him there is only the one. He says that is the point.', 'If the train ever comes, {name}, you will be the first one I tell.'],
+    ],
+    react: { loved: 'A {item}! Oh, that is lovely. Warm all the way down.', liked: 'A {item}. Thank you.', neutral: 'Thank you.', disliked: 'A {item}. Emmet might want it.', hated: 'Frost kale. I ate that every winter at this halt. Never again.', birthday: 'My birthday? I usually spend it waiting for a train. This is better.' },
+  },
+  {
+    id: 'emmet', name: 'Emmet', role: 'Mends the railway line; Sabine\'s son', seed: 29,
+    loves: ['goldbar', 'ironbar'], likes: ['copperbar', 'quartz', 'thymetea', 'lakebass'], dislikes: ['honeycake', 'mistlily'], hates: ['glass'],
+    birthday: { season: 'Summer', d: 6 },
+    pal: { hat: '#5a4a3a', band: '#3a3028', hair: '#3a2a1e', shirt: '#7a5a3a', pants: '#3f4a5a', skin: '#e0ac7e' },
+    lines: [
+      ['I keep the line in good order. For the train. Mum says it is coming. I have stopped asking when.', 'Kit and I are building a cart that runs on the rails. Do not tell my mother.'],
+      ['Corvin sells me bolts. He looks at me like I am going to do something stupid with them. He is usually right.', 'The tunnel at the east end goes somewhere. I have been in thirty paces. Next spring I will go further.', 'Oi, {name}. Seen a train?'],
+      ['I want to see where the line goes. Not yet. Mum would be on her own at the halt.', 'You are all right, {name}. You never ask me when the train is coming.'],
+    ],
+    react: { loved: 'A {item}! I know exactly what this is for.', liked: 'A {item}. Cheers.', neutral: 'Thanks.', disliked: 'A {item}. Mum will like it.', hated: 'Glass. Shatters in the cold. Useless on a railway.', birthday: 'My birthday? Did Mum tell you? She tells everyone. Every year.' },
+  },
   // ---- v53: the Lamplighter, the sewer's trader (Stardew's Krobus): a friend, and a possible roommate. He keeps to
   // the sewer after dark, never posts quests and stays away from festivals.
   {
@@ -394,6 +431,9 @@ export const RAIN_LINES = {
   aldous: 'Rain is good for the museum. People come in to stay dry and leave knowing something.',   // v175
   hester: 'It rains like this one year in nine. The almanac says so. The roses like it.',
   wilmot: 'Damp gets into a clock. I have spent the morning listening to the hall clock for coughs.',
+  thorne: 'Rain on the mountain is just weather. In town it is an event.',   // v178
+  sabine: 'Rain on the platform. Nobody waiting for a train that is not coming. Very peaceful.',
+  emmet: 'Rails rust in the wet. I will be oiling them for a week.',
   esme: 'I am drawing the regulars while they are trapped in here. Do not tell them.',
   kit: 'Rain is free testing. My go-cart leaks in four places. Now I know which four.',
   lamp: 'Rain runs down through the grates. It is the only time the sewer sings.',

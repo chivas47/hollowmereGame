@@ -36,6 +36,9 @@ export const DOINGS = {
   aldous: [{ map: venueMap('museum'), does: 'ledger' }],                 // labelling the day's donations
   hester: [{ map: 'village', stay: true, does: 'book' }],                 // the almanac, on her bench and by the roses
   wilmot: [{ map: venueMap('smithy'), does: 'wrench' }, { map: 'town', stay: true, does: 'wrench' }],   // springs; the hall clock
+  thorne: [{ map: 'mountain', stay: false, does: 'basket' }, { map: 'mountain', stay: true, does: 'saw' }],   // v178: foraging; carving
+  sabine: [{ map: 'railway', stay: true, does: 'ledger' }],               // the halt log
+  emmet: [{ map: 'railway', does: 'wrench' }, { map: venueMap('smithy'), does: 'wrench' }],
 };
 
 // What a neighbour is doing on this block (null: home, or nothing here), and whether it shows while they walk.

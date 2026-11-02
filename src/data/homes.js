@@ -35,6 +35,9 @@ export const HOMES = {
   aldous: { map: 'town', door: [19, 12] },        // v175 (roadmap 75s): over the museum
   hester: { map: 'village', cottage: [6, 22] },   // v175: the village's south-west corner, below the lower lane
   wilmot: { shares: 'hester' },
+  thorne: { map: 'mountain', cottage: [14, 8] },   // v178 (roadmap 75w): a hut on Cragmoor's east shelf
+  sabine: { map: 'railway', cottage: [8, 3] },     // v178: the halt house, facing the line
+  emmet: { shares: 'sabine' },
 };
 
 // A cottage's front door tile is the middle of its bottom row; you stand on the tile below it.

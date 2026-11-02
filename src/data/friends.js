@@ -25,6 +25,10 @@ export const FRIENDS = [
   { a: 'hale', b: 'aldous', why: 'Hale says the Hollow is old; Aldous says it is young. Forty years and neither has moved an inch.' },
   { a: 'aldous', b: 'tavi', why: 'Tavi maps where things were found; Aldous labels where they are now.' },
   { a: 'pell', b: 'hester', why: 'Pell was Hester\'s last pupil, and is now her successor. Hester still marks Pell\'s spelling.' },
+  // v178 (roadmap 75w)
+  { a: 'hale', b: 'thorne', why: 'Wednesdays by the lodge fire. A hundred words in ten years, all good ones.' },
+  { a: 'juno', b: 'sabine', why: 'The post comes through the halt. Between them they know everything first.' },
+  { a: 'kit', b: 'emmet', why: 'Two tinkerers and a cart that runs on rails. Nobody\'s mother knows.' },
   { a: 'corvin', b: 'wilmot', why: 'Corvin forges the springs; Wilmot tells him they are not as good as his were. They are.' },
 ];
 export const friendsOf = (id) => FRIENDS.filter((f) => f.a === id || f.b === id).map((f) => (f.a === id ? f.b : f.a));

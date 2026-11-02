@@ -396,6 +396,9 @@ Homes and routines (v76, data/homes.js and data/schedules.js). Every neighbour s
 | Kit | Village, the east road (v159) | By the Anvil 8:00 to 12:00, the square to 17:00, outside home to 21:00 (Saturday: the beach) |
 | Garrow (v161) | Over the mere's boathouse | Lines out from the dock 6:00 to 8:30, the boathouse counter 9:00 to 17:00 (bait and tackle; shut Thursdays: the dock, lunch at the Lantern, the square), the Lantern with Rook 18:00 to 21:00 |
 | Ysolde (v161) | The mere, west plot | Cutting reeds on the north shore 7:00 to 10:00, weaving on her step to 12:00, lunch at home, town 13:00 to 15:00, the square to 18:00 (Sundays with Esme); Mondays and Thursdays evenings at Nell's |
+| Thorne (v178) | A hut on Cragmoor's east shelf | Foraging the mountain 6:00 to 12:00, carving by his hut 13:00 to 17:00; Wednesdays outside the Wardens' Lodge with Hale, Saturdays to town |
+| Sabine (v178) | The railway halt house, with Emmet | The halt 7:00 to 17:00 (Sundays the hot spring); the Lantern Tuesdays and Fridays |
+| Emmet (v178) | The same house | Along the line 8:00 to 12:00, Kit's on Tuesdays and Thursdays or the Anvil 13:00 to 16:00; Saturdays the Lantern |
 | Aldous (v175) | Over the museum | A walk on the town's lower lane 7:00 to 8:00, the museum's desk 8:00 to 18:00 every day, the Lantern 18:00 to 21:00 |
 | Hester (v175) | The village's south-west cottage, with Wilmot | Her roses 7:00 to 9:00, the almanac on the green to 11:00, lunch at home, Pell's lessons on Mondays and Thursdays (the square otherwise) 13:00 to 15:00, Nell's garden to 17:00; Sundays with Wilmot at the town hall clock |
 | Wilmot (v175) | The same cottage | A slow walk to town 8:00 to 10:00, the Anvil with Corvin (Kit's on Tuesdays and Fridays) to 12:00, a nap on the green 14:00 to 17:00; Sundays 10:00 to 12:00 winding the town hall clock |

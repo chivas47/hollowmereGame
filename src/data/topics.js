@@ -9,11 +9,14 @@ export const ABOUT = {
   odile: { esme: 'Esme painted my boat. It looks better in the painting. Do not tell the boat.' },
   esme: { odile: 'Odile knows the name of every rock on the shore. I am painting them in order.', ysolde: 'Ysolde will not weave my green. I will not paint her ochre. We are both right.' },
   tavi: { kit: 'Kit wants a bridge on my map where there is no bridge. "Yet," Kit says.', aldous: 'Aldous wants a cross on my map for every bone anyone ever found. The map is mostly crosses now.' },
-  kit: { tavi: 'Tavi says my go-cart cannot go on the map because it moves. That is the whole point of it.', ferran: 'Ferran says he let me win. He did not let me win.', pip: 'Pip broke the cart again. Good. Now I know where it was weak.' },
-  hale: { aldous: 'Aldous came to the lodge with a bone yesterday. Claimed it was older than the Hollow. It was a cow.' },
+  kit: { tavi: 'Tavi says my go-cart cannot go on the map because it moves. That is the whole point of it.', ferran: 'Ferran says he let me win. He did not let me win.', pip: 'Pip broke the cart again. Good. Now I know where it was weak.', emmet: 'Emmet found a coupling hook on the line. We have plans for it. Big plans.' },
+  hale: { aldous: 'Aldous came to the lodge with a bone yesterday. Claimed it was older than the Hollow. It was a cow.', thorne: 'Thorne came down to the lodge. Sat by the fire. Left. Best afternoon this month.' },
   aldous: { hale: 'Hale thinks the Hollow is ancient. I have a drawer of evidence to the contrary. He has never opened it.', tavi: 'Tavi has drawn me a map of every find in the valley. I have framed it in the gallery.' },
   hester: { pell: 'Pell has my old chalk box. I can tell when it has been a hard day; the chalk is all in little pieces.' },
   wilmot: { corvin: 'Corvin made me a mainspring this week. I told him it was good. I have never seen a man look so worried.' },
+  thorne: { hale: 'Hale keeps a chair by his fire for me. I have never asked him to. That is why I go.' },
+  sabine: { juno: 'Juno brought the post and a story about Hob I am not allowed to repeat. I will repeat it.' },
+  emmet: { kit: 'Kit says the rail cart will go faster downhill. I said there are no hills on a railway. Kit said not yet.' },
   // v167 (roadmap 75k): the newest neighbours and their friends.
   bram: { tamsin: 'I knocked on Tamsin\'s barn beams. Still sound. I built it well, if I say so myself, and I do.' },
   corvin: { aurel: 'Aurel brought his chisels in to sharpen. He talks about stone the way I talk about iron. Rarely.', wilmot: 'Wilmot looked at my springs again. Said they were nearly as good as his. That is the nicest thing he has ever said.' },
@@ -28,7 +31,7 @@ export const ABOUT = {
   wren: { rook: 'Rook buys more blue paint than the rest of the valley together. I have stopped asking.' },
   rook: { wren: 'Wren keeps the good brushes back for me and pretends it is an accident. I pretend to believe it.', garrow: 'Garrow says my keel is too shallow. Garrow has been saying that for twenty years.' },
   pell: { juno: 'Juno knows who wrote to whom before the letter lands. I know who cannot spell. Between us, nothing gets past.', hester: 'Hester sat in on my lesson again. She corrected my spelling on the board. Gently. Twice.' },
-  juno: { pell: 'Pell marked my handwriting on the school post today. A seven. I will take it.' },
+  juno: { pell: 'Pell marked my handwriting on the school post today. A seven. I will take it.', sabine: 'Sabine says the train is coming this week. She has said that every week since I started.' },
 };
 export const ABOUT_CHANCE = 1 / 3;
 
