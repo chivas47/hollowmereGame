@@ -10,6 +10,7 @@ import { SHOPS, CLINIC } from '../data/town.js';
 import { moveBox, placePlayer } from './world.js';
 import { defense } from './clothing.js';
 import { asThem } from './partner.js';
+import { fmtGold } from '../core/format.js';
 
 const INVULNERABLE = 1, KNOCKBACK = 10;
 
@@ -52,7 +53,7 @@ function faintPartner() {
     emit('map:changed', CLINIC_BED.map);
     emit('ui:message', {
       title: `${P.name} blacked out`,
-      text: `${inMine ? 'Someone found them in the Hollow and carried them to town.' : 'Someone found them and carried them to town.'} They come to at ${SHOPS.clinic.name}.${bill ? ` ${SHOPS.clinic.keeper} patched them up: the bill is ${bill}g.` : ` ${SHOPS.clinic.keeper} waves away the bill.`}`,
+      text: `${inMine ? 'Someone found them in the Hollow and carried them to town.' : 'Someone found them and carried them to town.'} They come to at ${SHOPS.clinic.name}.${bill ? ` ${SHOPS.clinic.keeper} patched them up: the bill is ${fmtGold(bill)}.` : ` ${SHOPS.clinic.keeper} waves away the bill.`}`,
     });
   });
   changed();
@@ -70,7 +71,7 @@ function faint() {
   emit('map:changed', CLINIC_BED.map);
   emit('ui:message', {
     title: 'You blacked out',
-    text: `${inMine ? 'Someone found you in the Hollow and carried you to town.' : 'Someone found you and carried you to town.'} You come to at ${SHOPS.clinic.name}.${bill ? ` ${SHOPS.clinic.keeper} patched you up: the bill is ${bill}g.` : ` ${SHOPS.clinic.keeper} waves away the bill.`}`,
+    text: `${inMine ? 'Someone found you in the Hollow and carried you to town.' : 'Someone found you and carried you to town.'} You come to at ${SHOPS.clinic.name}.${bill ? ` ${SHOPS.clinic.keeper} patched you up: the bill is ${fmtGold(bill)}.` : ` ${SHOPS.clinic.keeper} waves away the bill.`}`,
   });
   changed();
 }

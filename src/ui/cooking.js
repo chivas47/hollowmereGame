@@ -9,13 +9,14 @@ import { pickUp } from '../systems/placeables.js';
 import { turnFurniture } from '../systems/house.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
+import { fmtGold } from '../core/format.js';
 
 const needsText = (d) => Object.entries(d.needs).map(([k, n]) => `${n} ${ITEMS[k].name.toLowerCase()} (${(G.S.bag[k] || 0) + (G.S.fridge[k] || 0)})`).join(', ');
 
 function cookDialog() {
   if (!kitchen()) { openModal('<h2>Stove</h2><p>Cooking needs a kitchen: the first farmhouse upgrade.</p>', [['Close', closeModal, true]]); return; }
   const known = Object.keys(DISHES).filter(knows);
-  const rows = known.map((k) => { const d = DISHES[k]; return `<div class="shoprow"><div><b>${d.name}</b><span>${needsText(d)}. ${d.energy} energy${d.buff ? `; ${buffText(d.buff)}` : ''}. Sells for ${d.sell}g.</span></div><div class="btns"><button data-cook="${k}" ${canCook(k) ? '' : 'disabled'}>Cook</button></div></div>`; }).join('');
+  const rows = known.map((k) => { const d = DISHES[k]; return `<div class="shoprow"><div><b>${d.name}</b><span>${needsText(d)}. ${d.energy} energy${d.buff ? `; ${buffText(d.buff)}` : ''}. Sells for ${fmtGold(d.sell)}.</span></div><div class="btns"><button data-cook="${k}" ${canCook(k) ? '' : 'disabled'}>Cook</button></div></div>`; }).join('');
   openModal(`<h2>Stove</h2><p class="role">You know ${known.length} of ${Object.keys(DISHES).length} recipes. Ingredients come from your bag and the fridge.</p>${rows}`, [['Close', closeModal, true]]);
 }
 

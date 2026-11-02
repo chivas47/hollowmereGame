@@ -6,6 +6,7 @@ import { ORDERS, ORDER_POINTS, ORDERS_FROM, ORDERS_OFFERED } from '../data/order
 import { NPCS } from '../data/npcs.js';
 import { addPoints } from './npcs.js';
 import { grangeKind } from './festivals.js';
+import { fmtGold } from '../core/format.js';
 
 const O = () => G.S.orders;
 export const ordersOpen = () => G.S.day >= ORDERS_FROM;
@@ -54,7 +55,7 @@ export function handIn(item) {
     S.gold += o.gold;
     addPoints(o.npc, ORDER_POINTS);
     O().active = null; O().done = (O().done || 0) + 1;
-    notify(`Order complete: ${o.name}. +${o.gold.toLocaleString('en-US')}g, and ${nameOf(o.npc)} is delighted.`);
+    notify(`Order complete: ${o.name}. +${fmtGold(o.gold)}, and ${nameOf(o.npc)} is delighted.`);
     emit('order:done', a.key);   // v69: a prize ticket (systems/market.js)
   } else notify(`Handed in ${n}. ${orderLeft()} more to go.`);
   changed();

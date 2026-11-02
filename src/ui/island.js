@@ -6,6 +6,7 @@ import { BOAT } from '../data/island.js';
 import { canRepair, repairBoat, sail } from '../systems/island.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
+import { fmtGold } from '../core/format.js';
 
 function boat() {
   const S = G.S;
@@ -16,7 +17,7 @@ function boat() {
     if (!canRepair()) $('#mact button').disabled = true;
     return;
   }
-  openModal(`<h2>Rook's boat</h2><p class="role">"The island and back, ${BOAT.fare.toLocaleString('en-US')}g. Fuel isn't free." You have <b>${S.gold.toLocaleString('en-US')}g</b>.</p>`,
+  openModal(`<h2>Rook's boat</h2><p class="role">"The island and back, ${fmtGold(BOAT.fare)}. Fuel isn't free." You have <b>${fmtGold(S.gold)}</b>.</p>`,
     [['Sail', () => { closeModal(); sail(); }], ['Not now', closeModal, true]]);
   if (S.gold < BOAT.fare) $('#mact button').disabled = true;
 }

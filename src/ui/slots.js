@@ -8,12 +8,13 @@ import { save, slotInfo, useSlot, currentSlot } from '../core/state.js';
 import { openModal, closeModal } from './modal.js';
 import { closeMenu } from './menu.js';
 import { $, esc } from './dom.js';
+import { fmtGold } from '../core/format.js';
 
 function describe(n) {
   const s = slotInfo(n);
   if (!s) return 'Empty';
   const d = dateParts(s.day);
-  return `${esc(s.farm ? `${s.farm} Farm` : 'A farm not yet named')}${s.name ? `, ${esc(s.name)}` : ''}: ${d.season} ${d.d}, Year ${d.year}, ${s.gold.toLocaleString('en-US')}g`;
+  return `${esc(s.farm ? `${s.farm} Farm` : 'A farm not yet named')}${s.name ? `, ${esc(s.name)}` : ''}: ${d.season} ${d.d}, Year ${d.year}, ${fmtGold(s.gold)}`;
 }
 
 function switchTo(n) {

@@ -7,6 +7,7 @@ import { POND, SLIME_PEN } from '../data/ponds.js';
 import { stockPond, takeFish, collectRoe, giveAsk, canGive, askText, collectBalls } from '../systems/ponds.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
+import { fmtGold } from '../core/format.js';
 
 function pondDialog() {
   const S = G.S, P = S.pond;
@@ -14,7 +15,7 @@ function pondDialog() {
   if (!P.fish) {
     const fish = Object.keys(FISH).filter((k) => S.bag[k] > 0);
     html += `<p class="role">${POND.desc}</p>`;
-    html += fish.length ? fish.map((k) => `<div class="shoprow"><div><b>${FISH[k].name} × ${S.bag[k]}</b><span>Roe sells for ${ITEMS[`roe_${k}`].sell}g. A new fish every ${POND.spawnEvery(FISH[k].sell)} nights.</span></div><div class="btns"><button data-pond="stock:${k}">Put one in</button></div></div>`).join('')
+    html += fish.length ? fish.map((k) => `<div class="shoprow"><div><b>${FISH[k].name} × ${S.bag[k]}</b><span>Roe sells for ${fmtGold(ITEMS[`roe_${k}`].sell)}. A new fish every ${POND.spawnEvery(FISH[k].sell)} nights.</span></div><div class="btns"><button data-pond="stock:${k}">Put one in</button></div></div>`).join('')
       : '<p class="role">Catch a fish and bring it here to start the pond.</p>';
   } else {
     html += `<p>${FISH[P.fish].name}: <b>${P.n}</b> of ${P.cap}.${P.n < P.cap ? ` Next fish in ${P.timer} night${P.timer === 1 ? '' : 's'}.` : ''}</p>`;

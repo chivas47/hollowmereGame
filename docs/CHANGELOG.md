@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v189: Gold written one way
+- Every gold amount has thousands separators: the HUD, every shop and dialog, notices and the journal ("1,725,356g", "10,000g"). About half the game wrote it bare before ("1725356g"). No amounts change.
+- Polish 76h, from the third polish sweep (docs/POLISH.md, find 16).
+
 ## v188: One button to give a gift
 - Talking to a neighbour shows their words, their hearts and two buttons: Give a gift and Goodbye. Give a gift opens a list of what you carry, with icons and counts, the things you have learned they love or like at the top; Back returns to the conversation. Before, there was a Give button for every kind of thing in your bag (twenty on a well-stocked farm), which on a phone pushed the neighbour's words out of view.
 - Polish 76i, from the third polish sweep (docs/POLISH.md, find 17), Nuno's pick.

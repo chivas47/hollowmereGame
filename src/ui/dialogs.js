@@ -39,6 +39,7 @@ import { BOUQUET } from '../data/romance.js';
 import { bouquetOnSale, buyBouquet } from '../systems/town.js';
 import { hintsNow, hintsOn } from '../systems/hints.js';
 import { keyName } from '../core/controls.js';
+import { fmtGold } from '../core/format.js';
 
 const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
@@ -69,14 +70,14 @@ on('ui:partnerLook', () => {
 });
 
 function refreshShop() {
-  const g = $('#shopGold'); if (g) g.textContent = `${G.S.gold}g`;
+  const g = $('#shopGold'); if (g) g.textContent = `${fmtGold(G.S.gold)}`;
   $$('[data-buy]').forEach((b) => { b.disabled = !canBuy(b.dataset.buy, +b.dataset.n); });
   $$('[data-supply]').forEach((b) => { b.disabled = !canBuySupply(b.dataset.supply, +b.dataset.n); });
 }
 
 const seedNote = (c) => (c.packet === 'wild' ? `grows a wild ${c.produce.map((k) => ITEMS[k].name.toLowerCase()).join(' or ')} in ${c.days} days`
   : c.packet === 'mixed' ? 'grows a random crop of the season'
-    : `ready in ${c.days} days, sells for ${c.sell}g${c.yield ? ` x${c.yield}` : ''}${c.regrow ? `, then again every ${c.regrow} days` : ''}${c.seasons.length > 1 ? ` (${c.seasons.join(' and ')})` : ''}`);
+    : `ready in ${c.days} days, sells for ${fmtGold(c.sell)}${c.yield ? ` x${c.yield}` : ''}${c.regrow ? `, then again every ${c.regrow} days` : ''}${c.seasons.length > 1 ? ` (${c.seasons.join(' and ')})` : ''}`);
 const supplyText = (d) => (d.kind === 'grass' ? 'A tuft of grass for open farm grass or an animal yard. It spreads; animals graze it instead of eating feed or hay, and with a silo cutting it gives hay.'
   : d.quality ? `Raises harvest quality (level ${d.quality}). Before planting.`
   : d.speed ? `Crops grow ${Math.round(d.speed * 100)}% faster. Before planting.` : `${Math.round(d.retain * 100)}% chance the soil stays watered overnight.`);
@@ -84,21 +85,21 @@ const supplyText = (d) => (d.kind === 'grass' ? 'A tuft of grass for open farm g
 on('ui:shop', () => {
   const season = today().season;
   const rows = Object.entries(CROPS).filter(([, c]) => !c.crafted && !c.shop).map(([k, c]) => `
-    <div class="shoprow"><div><b>${c.packet ? c.name : `${c.name} seeds`}</b><span>${inSeason(k) ? `${c.seed}g each, ${seedNote(c)}` : `Back in ${c.seasons.join(' and ')}`}</span></div>
+    <div class="shoprow"><div><b>${c.packet ? c.name : `${c.name} seeds`}</b><span>${inSeason(k) ? `${fmtGold(c.seed)} each, ${seedNote(c)}` : `Back in ${c.seasons.join(' and ')}`}</span></div>
     <div class="btns"><button data-buy="${k}" data-n="1">Buy 1</button><button data-buy="${k}" data-n="5">Buy 5</button></div></div>`).join('');
   const note = season === 'Winter' ? '<p class="role">Winter stock is thin: frost kale, wild seeds and mixed seeds. The rest is back in spring.</p>' : '';
   const supplies = Object.entries(SUPPLIES).filter(([k]) => !TREES[k]).map(([k, cost]) => `
-    <div class="shoprow"><div><b>${PLACEABLES[k].name}</b><span>${supplyText(PLACEABLES[k])} ${cost}g. Goes to slot 7; ${PLACEABLES[k].kind === 'grass' ? 'face open grass to plant it' : 'face tilled soil to spread it'}.</span></div>
+    <div class="shoprow"><div><b>${PLACEABLES[k].name}</b><span>${supplyText(PLACEABLES[k])} ${fmtGold(cost)}. Goes to slot 7; ${PLACEABLES[k].kind === 'grass' ? 'face open grass to plant it' : 'face tilled soil to spread it'}.</span></div>
     <div class="btns"><button data-supply="${k}" data-n="1">Buy 1</button><button data-supply="${k}" data-n="10">Buy 10</button></div></div>`).join('');
-  const baitRow = `<div class="shoprow"><div><b>Bait</b><span>${BAIT_PRICE}g each. You have ${G.S.bag.bait || 0}. For the rod (ashwood or better) and crab pots.</span></div>
+  const baitRow = `<div class="shoprow"><div><b>Bait</b><span>${fmtGold(BAIT_PRICE)} each. You have ${G.S.bag.bait || 0}. For the rod (ashwood or better) and crab pots.</span></div>
     <div class="btns"><button data-bait-buy="10" ${G.S.gold < BAIT_PRICE * 10 ? 'disabled' : ''}>Buy 10</button></div></div>`;   // v42
   const saplings = Object.entries(TREES).map(([k, t]) => `
-    <div class="shoprow"><div><b>${t.name}</b><span>${t.cost}g. Grows for ${TREE_DAYS} days, then a ${ITEMS[t.fruit].name.toLowerCase()} (${ITEMS[t.fruit].sell}g) every ${t.season} morning. Slot 7; plant on open grass with a free tile around it.</span></div>
+    <div class="shoprow"><div><b>${t.name}</b><span>${fmtGold(t.cost)}. Grows for ${TREE_DAYS} days, then a ${ITEMS[t.fruit].name.toLowerCase()} (${fmtGold(ITEMS[t.fruit].sell)}) every ${t.season} morning. Slot 7; plant on open grass with a free tile around it.</span></div>
     <div class="btns"><button data-supply="${k}" data-n="1">Buy 1</button></div></div>`).join('');
   const pet = G.S.pet, hats = pet ? Object.entries(PET_HATS).map(([k, h]) => `
-    <div class="shoprow"><div><b>${h.name}</b><span>${h.cost}g. For ${esc(pet.name)}.${pet.hats.includes(k) ? ' You have it.' : ''}</span></div>
+    <div class="shoprow"><div><b>${h.name}</b><span>${fmtGold(h.cost)}. For ${esc(pet.name)}.${pet.hats.includes(k) ? ' You have it.' : ''}</span></div>
     <div class="btns"><button data-hat="${k}" ${pet.hats.includes(k) || G.S.gold < h.cost ? 'disabled' : ''}>Buy</button></div></div>`).join('') : '';
-  openModal(`<h2>${SHOPS.store.name}</h2><p>You have <b id="shopGold">${G.S.gold}g</b>.</p>${note}${rows}<h3>Farm supplies</h3>${supplies}<h3>Fishing</h3>${baitRow}<h3>Fruit saplings</h3>${saplings}${hats ? `<h3>Pet hats</h3>${hats}` : ''}${bouquetOnSale() ? `<h3>Flowers</h3><div class="shoprow"><div><b>Bouquet</b><span>${BOUQUET.cost}g. Give it to someone you love at ${BOUQUET.hearts} hearts or more to ask them out. You have ${G.S.bag.bouquet || 0}.</span></div><div class="btns"><button data-bouquet ${G.S.gold < BOUQUET.cost ? 'disabled' : ''}>Buy</button></div></div>` : ''}`, [['Leave', closeModal, true]]);
+  openModal(`<h2>${SHOPS.store.name}</h2><p>You have <b id="shopGold">${fmtGold(G.S.gold)}</b>.</p>${note}${rows}<h3>Farm supplies</h3>${supplies}<h3>Fishing</h3>${baitRow}<h3>Fruit saplings</h3>${saplings}${hats ? `<h3>Pet hats</h3>${hats}` : ''}${bouquetOnSale() ? `<h3>Flowers</h3><div class="shoprow"><div><b>Bouquet</b><span>${fmtGold(BOUQUET.cost)}. Give it to someone you love at ${BOUQUET.hearts} hearts or more to ask them out. You have ${G.S.bag.bouquet || 0}.</span></div><div class="btns"><button data-bouquet ${G.S.gold < BOUQUET.cost ? 'disabled' : ''}>Buy</button></div></div>` : ''}`, [['Leave', closeModal, true]]);
   refreshShop();
 });
 
@@ -197,7 +198,7 @@ on('day:report', (r) => {
   if (r.forecast) html += `<p class="role">Forecast for tomorrow: ${WEATHER[r.forecast].name.toLowerCase()}.</p>`;
   if (hintsOn()) { const [tip] = hintsNow(1); if (tip && tip.id !== 'idle') html += `<p class="role">Tip: ${tip.text}</p>`; }   // v101
   html += `<p>${r.passedOut ? 'You woke up at home with only part of your energy back. ' : ''}`;
-  html += `${r.payout ? `The shipping bin paid out ${r.payout}g.` : 'Nothing was shipped yesterday.'} ${plural(r.grown, 'crop')} grew overnight.</p>`;
+  html += `${r.payout ? `The shipping bin paid out ${fmtGold(r.payout)}.` : 'Nothing was shipped yesterday.'} ${plural(r.grown, 'crop')} grew overnight.</p>`;
   openModal(html, [['Start the day', () => { closeModal(); emit('report:closed'); }, true]]);   // v128: ui/reckoning.js waits for it
 });
 

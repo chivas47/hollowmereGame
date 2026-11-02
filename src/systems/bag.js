@@ -19,6 +19,7 @@ import { counts, valueOf, unitValue } from './quality.js';
 import { buffText } from './cooking.js';
 import { facing } from './world.js';
 import { chestAt, store } from './storage.js';
+import { fmtGold } from '../core/format.js';
 
 // id is the item key, or "seed:turnip" / "kit:chest" for the other two stores.
 export function bagEntries() {
@@ -63,7 +64,7 @@ const place = (area) => MAPS[area]?.name || area;
 export function describe(id) {
   if (id.startsWith('seed:')) {
     const c = CROPS[id.slice(5)];
-    return `Plant in ${c.seasons.length === 4 ? 'any season' : seasons(c.seasons)}. Ready in ${c.days} days${c.regrow ? `, then every ${c.regrow} days` : ''}. A ${c.name.toLowerCase()} sells for ${c.sell}g.`;
+    return `Plant in ${c.seasons.length === 4 ? 'any season' : seasons(c.seasons)}. Ready in ${c.days} days${c.regrow ? `, then every ${c.regrow} days` : ''}. A ${c.name.toLowerCase()} sells for ${fmtGold(c.sell)}.`;
   }
   if (id.startsWith('kit:')) return RECIPES[id.slice(4)]?.desc || 'Place it from slot 7.';
   const k = id, it = ITEMS[k], kind = ITEM_KIND[k];
@@ -93,7 +94,7 @@ export function describe(id) {
   if (kind === 'animal') return 'From your animals.';
   if (kind === 'mineral') return it.gem ? 'A gem. The museum would like one.' : 'A find for the museum.';
   if (it.material) return 'A material for crafting and upgrades. Materials are never shipped.';
-  return `Sells for ${it.sell}g.`;
+  return `Sells for ${fmtGold(it.sell)}.`;
 }
 
 // What an item goes into: crafting recipes, dishes and tool upgrades, with how many each needs.
