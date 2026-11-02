@@ -59,7 +59,11 @@ function renderBackground(mapId, season) {
     if (map.base === 'house') { const ha = HOUSE_ART[map.grid[y][x]]; if (ha) ha(g, x, y, map.grid); continue; }
     const t = map.grid[y][x], art = TILE_ART[t];
     if (sheetGround && PROP_ART[t]) drawProp(g, t, x, y, p);   // v89: the prop alone, its ground is in the tile set
-    else if (art === drawTree) { art(k, x, y, p); g.drawImage(crowns, x * T, y * T + CROWN, T, T - CROWN, x * T, y * T + CROWN, T, T - CROWN); trees.push([x, y]); }
+    else if (art === drawTree) {   // v183: the trunk foot drawn straight onto the ground through a clip; copying it back
+      art(k, x, y, p);             // from the crowns canvas after each tree stalled the canvas, 258 times in town (polish 76d)
+      g.save(); g.beginPath(); g.rect(x * T, y * T + CROWN, T, T - CROWN); g.clip(); art(g, x, y, p); g.restore();
+      trees.push([x, y]);
+    }
     else if (art && !(sheetGround && (map.base === 'cave' ? t === 'X' : t === 'O'))) art(g, x, y, p);   // v85: outdoor water (v87: cave walls) are in the tile set
   }
   map.objects.forEach((o) => drawBuilding(g, p, o));   // v88: from the building sheets

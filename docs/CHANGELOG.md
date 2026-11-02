@@ -2,6 +2,9 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v183: No stall entering the town
+- Entering Hollowmere Town or the Village for the first time each season no longer freezes the game for a moment (up to about a fifth of a second). Building the map's picture copied each tree's trunk back from a second canvas, one tree at a time, which stalled the browser hundreds of times; the trunk is now drawn straight onto the ground. The maps look exactly the same (polish 76d).
+
 ## v182: Seasons and biomes look right
 - Grown alders on the farm are proper bare trees in winter. They showed as thin bare saplings, and young alders showed as full green trees, because the sprite sheet's bare frames were read one frame early.
 - Alders turn rust in autumn, like the trees around them. Grass and weeds on the farm dry to a dull khaki in winter instead of staying summer green on the snow.
