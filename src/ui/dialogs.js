@@ -27,6 +27,9 @@ const WEATHER_LINES = {
   mist: 'Silvermist: a pale, warm mist over everything. The farm is watered, and mist lilies have opened in the Wilds.',
 };
 import { hearts, heartStr, giftOptions, giveGift, chooseScene } from '../systems/npcs.js';
+import { TIER_NAMES } from '../data/gifts.js';
+import { ITEM_KIND } from '../data/bag.js';
+import { iconURL } from '../render/itemIcons.js';
 import { openModal, closeModal } from './modal.js';
 import { $, $$, esc } from './dom.js';
 import { SHOPS } from '../data/town.js';
@@ -112,7 +115,23 @@ $('#mbody').addEventListener('click', (e) => {
   if (bb && !bb.disabled && buyBait(+bb.dataset.baitBuy)) emit('ui:shop');
 });
 
+// v188 (polish 76i, Nuno's pick): one "Give a gift" button opens a picker, instead of a Give button per kind of
+// thing carried, which on a phone pushed the neighbour's words out of view. Tastes you have learned sort first.
+let talking = null;   // the conversation the picker goes back to
+const TASTE_ORDER = ['loved', 'liked', 'neutral', 'disliked', 'hated'];
+function giftPicker(npc) {
+  const st = G.S.npcs[npc.id], known = st.known || {}, rank = (k) => (known[k] ? TASTE_ORDER.indexOf(known[k]) : 2.5);
+  const keys = giftOptions(npc).sort((a, b) => rank(a) - rank(b) || ITEMS[a].name.localeCompare(ITEMS[b].name));
+  const rows = keys.map((k) => `<div class="shoprow giftrow"><div><b><img src="${iconURL(k, ITEM_KIND[k])}" alt="" width="32" height="32"> ${esc(ITEMS[k].name)}</b>`
+    + `<span>You have ${G.S.bag[k]}.${known[k] ? ` ${npc.def.name} ${TIER_NAMES[known[k]].toLowerCase()} it.` : ''}</span></div>`
+    + `<div class="btns"><button data-gift="${k}">Give</button></div></div>`).join('');
+  openModal(`<h2>A gift for ${npc.def.name}</h2><p class="role">One gift a day. What you have learned they like is at the top.</p>${rows}`,
+    [['Back', () => emit('ui:talk', talking)], ['Goodbye', closeModal, true]]);
+  $$('[data-gift]').forEach((b) => b.addEventListener('click', () => giveGift(npc, b.dataset.gift)));
+}
+
 on('ui:talk', ({ npc, text, extra }) => {
+  talking = { npc, text, extra };
   const st = G.S.npcs[npc.id], d = npc.def, gifts = giftOptions(npc);
   const pr = G.S.profile, said = esc(text).replace(/\{name\}/g, esc(pr?.name || 'friend')).replace(/\{fav\}/g, esc(pr?.favourite || 'a good harvest'));
   let html = `<h2>${d.name}</h2><p class="role">${d.role}</p><p>“${said}”</p>`;
@@ -120,7 +139,7 @@ on('ui:talk', ({ npc, text, extra }) => {
   html += `<p class="hearts" aria-label="${hearts(st)} of ${st.married ? 14 : 10} hearts">${heartStr(st)}</p>`;
   if (st.gifted === G.S.day) html += `<p class="role">You already gave ${d.name} a gift today.</p>`;
   else if (!gifts.length) html += `<p class="role">Harvest or forage something to bring ${d.name} a gift.</p>`;
-  const actions = gifts.map((k) => [`Give ${ITEMS[k].name}`, () => giveGift(npc, k)]);
+  const actions = gifts.length ? [['Give a gift', () => giftPicker(npc)]] : [];
   actions.push(['Goodbye', closeModal, true]);
   openModal(html, actions);
 });

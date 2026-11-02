@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v188: One button to give a gift
+- Talking to a neighbour shows their words, their hearts and two buttons: Give a gift and Goodbye. Give a gift opens a list of what you carry, with icons and counts, the things you have learned they love or like at the top; Back returns to the conversation. Before, there was a Give button for every kind of thing in your bag (twenty on a well-stocked farm), which on a phone pushed the neighbour's words out of view.
+- Polish 76i, from the third polish sweep (docs/POLISH.md, find 17), Nuno's pick.
+
 ## v187: Homes that look like their owners
 - Thorne lives in a one-room hut now, like the hut outside: a bedroll on the frame he made, the hearth he cooks on, his carving bench and the only chair. It was a copy of Hester's three-room cottage.
 - Sabine and Emmet's halt house has the halt office across the front (the ticket counter, the halt clock, the timetable, sixty years of ticket stubs), with the living room, Sabine's room and Emmet's workshop behind. It was also a copy of Hester's.
