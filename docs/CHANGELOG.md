@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v176: Notices in split screen
+- With a second farmer in, each farmer's notices appear over their own half: yours on the left, farmer two's on the right. Yours no longer cover farmer two's dialog. Playing alone, notices sit in the middle as before.
+- No saves, prices or keys changed.
+
 ## v175: The curator and the old couple
 - Curator Aldous, whose name was on the museum's desk, is now a neighbour: he lives over the museum, keeps it 8 to 6 every day from behind his own desk, and spends evenings at the Lantern.
 - Hester, a retired teacher who keeps the village almanac, and her husband Wilmot, a retired clockmaker who still winds the town hall clock on Sundays, share a new cottage in the village's south-west corner with Hester's rose bed beside it.

@@ -2,6 +2,8 @@
 // longer it is; the same message again while it shows keeps it up instead of stacking a copy.
 // v133: on a new farm, messages wait until the new game screen and the arrival scene are done, instead of
 // covering them (toasts sit above dialogs so a shop can say what you bought).
+// v176 (roadmap 75u): with a second farmer in, notices sit over the half of whoever caused them (#toast for
+// you, #toast2 for farmer two), so one never covers the other's dialog buttons.
 import { G } from '../core/game.js';
 import { on } from '../core/events.js';
 import { $ } from './dom.js';
@@ -19,8 +21,10 @@ function retire(t) {
 const held = new Set();
 const settling = () => !G.S?.profile || !G.S.firstWeek?.arrived;
 
-function show(msg) {
-  const box = $('#toast');
+export const toastBox = () => (G.P2 && G.partnerActing ? 'toast2' : 'toast');
+function show(msg, id = toastBox()) {
+  const box = document.getElementById(id);
+  document.getElementById('toast').classList.toggle('split', !!G.P2);
   let t = [...box.children].find((c) => c.textContent === msg && !c.classList.contains('out'));
   if (!t) {
     t = document.createElement('div');
@@ -34,4 +38,5 @@ function show(msg) {
 }
 
 on('toast', (msg) => { if (settling()) held.add(msg); else show(msg); });
-on('state:changed', () => { if (held.size && !settling()) { held.forEach(show); held.clear(); } });
+on('state:changed', () => { if (!G.P2) document.getElementById('toast')?.classList.remove('split'); });   // back to the middle alone
+on('state:changed', () => { if (held.size && !settling()) { held.forEach((m) => show(m)); held.clear(); } });
