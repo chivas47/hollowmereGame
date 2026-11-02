@@ -191,6 +191,7 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
 .shoprow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:2px solid var(--seam);flex-wrap:wrap}
 .shoprow div:first-child{display:flex;flex-direction:column;min-width:0}
 .shoprow span{font-size:16px;color:var(--straw)}
+.giftrow b img{width:32px;height:32px;vertical-align:middle;image-rendering:pixelated;margin-right:4px}   /* v188: the gift picker */
 .btns{display:flex;gap:6px;flex-wrap:wrap}
 .card button{background:var(--plank);border:2px solid var(--seam);border-radius:6px;color:var(--cream);font-size:18px;padding:6px 12px;min-height:40px;cursor:pointer}
 .card button:hover:not(:disabled){border-color:var(--frame-hi)}
