@@ -4,7 +4,7 @@
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, changed, notify } from '../core/events.js';
-import { addInteraction, addPrompt, addUpdater, addLayer } from '../core/registry.js';
+import { addInteraction, addPrompt, addUpdater, addLayer, addEntities } from '../core/registry.js';
 import { rng, r } from '../render/pixel.js';
 import { ITEMS } from '../data/items.js';
 import { MAPS } from '../data/maps.js';
@@ -57,14 +57,18 @@ export function pickDrop(tx, ty) {
 addInteraction(73, ({ tx, ty, mapId }) => mapId === TRAIN.map && pickDrop(tx, ty));
 addPrompt(73, ({ tx, ty, mapId }) => (mapId === TRAIN.map && dropAt(tx, ty) >= 0 ? 'Pick up what fell off the train' : null));
 
-// The train itself, crossing the line west to east, and the parcels by the track.
+// The parcels by the track (v180: the train is drawn with the people, below).
 addLayer(11, (c) => {
   if (G.S.map !== TRAIN.map) return;
   for (const d of G.S.trainDrops || []) {
     const X = d.x * T, Y = d.y * T;
     r(c, X + 3, Y + 6, 10, 8, '#a5753f'); r(c, X + 3, Y + 6, 10, 2, '#c9955a'); r(c, X + 7, Y + 6, 2, 8, '#6e4626');
   }
-  const t = trainOn(G.S.day); if (!t || G.S.time < t.at || G.S.time >= t.at + TRAIN.pass) return;
+});
+
+// v180 (roadmap 75y): the train itself is an entity, sorted by the line's lower edge, so whoever stands on or above
+// the line is drawn behind it and whoever stands below it in front.
+function drawTrain(c, t) {
   const w = MAPS[TRAIN.map].grid[0].length * T, len = 6 * 2 * T, p = (G.S.time - t.at) / TRAIN.pass, x0 = -len + p * (w + len), Y = TRAIN.rows[0] * T;
   for (let k = 0; k < 6; k++) {
     const X = x0 + (5 - k) * 2 * T;
@@ -73,4 +77,9 @@ addLayer(11, (c) => {
     r(c, X + 4, Y + 2 * T - 5, 4, 4, '#2b211a'); r(c, X + 2 * T - 8, Y + 2 * T - 5, 4, 4, '#2b211a');
     if (k === 0) { r(c, X + 2 * T - 8, Y - 4, 5, 6, '#2b211a'); r(c, X + 2 * T - 9, Y - 10, 6, 5, 'rgba(220,220,220,.5)'); }
   }
+}
+addEntities(() => {
+  if (G.S.map !== TRAIN.map) return [];
+  const t = trainOn(G.S.day); if (!t || G.S.time < t.at || G.S.time >= t.at + TRAIN.pass) return [];
+  return [{ y: (TRAIN.rows[1] + 1) * T, draw: (c) => drawTrain(c, t) }];
 });
