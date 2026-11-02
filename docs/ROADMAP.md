@@ -212,7 +212,7 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | 76c | Polish: homes that look like their owners | polish | needs decision | Find 7: new floor plans for Hester, Thorne and Sabine (identical now) and a different look for Ferran, Kit, Tamsin and Ysolde. Thorne's should read as a mountain hermit's hut. Needs Nuno's say on each home's character (WORLD_BUILDING.md). |
 | 76d | Polish: no hitch on the first big map | polish | done (chivas47/hollowmereGame#187) | Nuno: next. Find 8: measure the 217 ms first-draw frame in town and, if it is sheet tinting, warm the tint cache while the game loads. |
 | 76e | Polish: the journal on small screens | polish | done (chivas47/hollowmereGame#189) | Nuno: next. From the second polish sweep (docs/POLISH.md, finds 11 to 13): calendar and map cells never break a word (shorter labels or a list on phones), and the journal's tabs fit in one or two rows on a phone. Layout only. |
-| 76f | Polish: journal lists say what matters | polish | in progress | Nuno: next. Finds 14 and 15: the Museum and Fish tabs show one "N still to find" line instead of a line per missing entry, and achievements already met are awarded when a save loads, not only the next morning. |
+| 76f | Polish: journal lists say what matters | polish | in progress (chivas47/hollowmereGame#190) | Nuno: next. Finds 14 and 15: the Museum and Fish tabs show one "N still to find" line instead of a line per missing entry, and achievements already met are awarded when a save loads, not only the next morning. |
 
 ## Done
 
