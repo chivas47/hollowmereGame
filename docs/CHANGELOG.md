@@ -2,6 +2,9 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v180: The train passes in front
+- The goods train is drawn with the people now, so anyone standing on the line or just above it is hidden behind the cars as they pass, and anyone below the line stays in front. Nobody appears to stand on top of the train any more.
+
 ## v179: The goods train
 - About one day in seven, between 9:00 and 17:00, a goods train crosses the railway with a whistle. When it has gone, one to three parcels lie beside the line: coal, a geode, copper or iron ore, hardwood, stone or wood. Face one and press Use to pick it up. They are gone by the next morning.
 - Sabine's running joke is over: her lines now say the train is real, and Emmet means to ride it one day.
