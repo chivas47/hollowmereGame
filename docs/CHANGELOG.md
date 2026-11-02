@@ -2,6 +2,9 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v190: Silvermist that looks like fog
+- On silvermist days the drifting mist banks are tapered, layered strips that fade at their ends instead of flat rectangles with hard edges, so they read as fog rather than a drawing glitch. Polish 76j, from the fourth polish sweep (docs/POLISH.md, find 18).
+
 ## v189: Gold written one way
 - Every gold amount has thousands separators: the HUD, every shop and dialog, notices and the journal ("1,725,356g", "10,000g"). About half the game wrote it bare before ("1725356g"). No amounts change.
 - Polish 76h, from the third polish sweep (docs/POLISH.md, find 16).
