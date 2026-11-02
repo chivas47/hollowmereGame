@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v187: Homes that look like their owners
+- Thorne lives in a one-room hut now, like the hut outside: a bedroll on the frame he made, the hearth he cooks on, his carving bench and the only chair. It was a copy of Hester's three-room cottage.
+- Sabine and Emmet's halt house has the halt office across the front (the ticket counter, the halt clock, the timetable, sixty years of ticket stubs), with the living room, Sabine's room and Emmet's workshop behind. It was also a copy of Hester's.
+- Hester, Ysolde, Ferran, Tamsin and Kit each have their own colours instead of one shared scheme (night-blue walls, a checked kitchen, a blue bathroom). Every note you read when you look at things is kept.
+- Polish 76c, built from docs/sketches/76c-homes.md as written (Nuno merged the sketch, chivas47/hollowmereGame#192).
+
 ## v186: One notice at a time on a phone
 - On a phone-sized screen notices show one at a time instead of stacking over the field; the rest wait their turn and nothing is dropped. While others wait, each stays at most a little over three seconds. Wide screens still stack up to three (polish 76g, find 10, Nuno's pick).
 

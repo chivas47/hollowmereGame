@@ -1,7 +1,8 @@
 # 76c: homes that look like their owners (sketch for Nuno)
 
 Polish find 7 (docs/POLISH.md). WORLD_BUILDING step 1: the homes in words and rough plans, for Nuno to correct
-before any code. Nuno's answer (November 2026): sketch first.
+before any code. Nuno's answer (November 2026): sketch first. Merged as written (chivas47/hollowmereGame#192), built in v187
+(the ticket counter moved to the office's east end so the living-room doorway is clear).
 
 ## What is wrong now
 
