@@ -350,9 +350,9 @@ export const NPCS = [
     birthday: { season: 'Spring', d: 18 },
     pal: { hat: '#3a4a6a', band: '#c9a35a', hair: '#7a6a5a', shirt: '#3a4a6a', pants: '#2b2f36', skin: '#e0ac7e', long: true },
     lines: [
-      ['The goods train comes now and then. Now and then has been a while.', 'Mind the platform edge. Not because of the trains. It is just a long way down for a short step.'],
-      ['Juno brings the post through here. We have the best gossip in the valley and nobody to tell it to but each other.', 'My father kept this halt before me. He never saw the train either.', 'Good morning, {name}. No train yet. There never is.'],
-      ['Emmet wants to ride every line there is. I tell him there is only the one. He says that is the point.', 'If the train ever comes, {name}, you will be the first one I tell.'],
+      ['The goods train comes about once a week. Nobody believed me for years.', 'Mind the platform edge. Not because of the trains. It is just a long way down for a short step.'],
+      ['Juno brings the post through here. We have the best gossip in the valley and nobody to tell it to but each other.', 'My father kept this halt before me. He waved at every train. I do too.', 'Good morning, {name}. Listen for the whistle. Things fall off the back.'],
+      ['Emmet wants to ride every line there is. I tell him there is only the one. He says that is the point.', 'If something good falls off the train, {name}, I will tell you first.'],
     ],
     react: { loved: 'A {item}! Oh, that is lovely. Warm all the way down.', liked: 'A {item}. Thank you.', neutral: 'Thank you.', disliked: 'A {item}. Emmet might want it.', hated: 'Frost kale. I ate that every winter at this halt. Never again.', birthday: 'My birthday? I usually spend it waiting for a train. This is better.' },
   },
@@ -362,9 +362,9 @@ export const NPCS = [
     birthday: { season: 'Summer', d: 6 },
     pal: { hat: '#5a4a3a', band: '#3a3028', hair: '#3a2a1e', shirt: '#7a5a3a', pants: '#3f4a5a', skin: '#e0ac7e' },
     lines: [
-      ['I keep the line in good order. For the train. Mum says it is coming. I have stopped asking when.', 'Kit and I are building a cart that runs on the rails. Do not tell my mother.'],
+      ['I keep the line in good order for the goods train. One day I will be on it.', 'Kit and I are building a cart that runs on the rails. Do not tell my mother.'],
       ['Corvin sells me bolts. He looks at me like I am going to do something stupid with them. He is usually right.', 'The tunnel at the east end goes somewhere. I have been in thirty paces. Next spring I will go further.', 'Oi, {name}. Seen a train?'],
-      ['I want to see where the line goes. Not yet. Mum would be on her own at the halt.', 'You are all right, {name}. You never ask me when the train is coming.'],
+      ['I want to see where the line goes. Not yet. Mum would be on her own at the halt.', 'You are all right, {name}. You pick up what falls off the train before I can.'],
     ],
     react: { loved: 'A {item}! I know exactly what this is for.', liked: 'A {item}. Cheers.', neutral: 'Thanks.', disliked: 'A {item}. Mum will like it.', hated: 'Glass. Shatters in the cold. Useless on a railway.', birthday: 'My birthday? Did Mum tell you? She tells everyone. Every year.' },
   },
@@ -432,7 +432,7 @@ export const RAIN_LINES = {
   hester: 'It rains like this one year in nine. The almanac says so. The roses like it.',
   wilmot: 'Damp gets into a clock. I have spent the morning listening to the hall clock for coughs.',
   thorne: 'Rain on the mountain is just weather. In town it is an event.',   // v178
-  sabine: 'Rain on the platform. Nobody waiting for a train that is not coming. Very peaceful.',
+  sabine: 'Rain on the platform. If the train comes today it will come wet.',
   emmet: 'Rails rust in the wet. I will be oiling them for a week.',
   esme: 'I am drawing the regulars while they are trapped in here. Do not tell them.',
   kit: 'Rain is free testing. My go-cart leaks in four places. Now I know which four.',

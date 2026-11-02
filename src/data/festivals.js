@@ -177,7 +177,7 @@ export const FESTIVALS = [
       hester: 'Fifty-two Longnights we have sat through together, Wilmot and I. He still falls asleep before the end.', // v177 (roadmap 75v)
       aldous: 'The longest night of the year. I spend it cataloguing. It is very peaceful.',
       sabine: 'The longest night. At the halt you notice it; the lamp is lit by four.', // v178 (roadmap 75w)
-      emmet: 'Mum says the train will come on Longnight one year. She has said that for twenty years.',
+      emmet: 'Mum says the train will come on Longnight one year. It never runs on a festival. She knows that.',
     },
   },
 ];

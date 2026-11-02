@@ -47,6 +47,7 @@ import './systems/ponds.js';
 import './systems/helpers.js';
 import './systems/statue.js';     // v169: the fortune statue
 import './systems/attic.js';      // v172: the attic ladder
+import './systems/train.js';      // v179: the goods train
 import './systems/birthday.js';   // v174: the birthday dinner
 import './ui/birthday.js';
 import './systems/professions.js';

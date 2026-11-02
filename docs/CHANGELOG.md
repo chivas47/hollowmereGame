@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v179: The goods train
+- About one day in seven, between 9:00 and 17:00, a goods train crosses the railway with a whistle. When it has gone, one to three parcels lie beside the line: coal, a geode, copper or iron ore, hardwood, stone or wood. Face one and press Use to pick it up. They are gone by the next morning.
+- Sabine's running joke is over: her lines now say the train is real, and Emmet means to ride it one day.
+- New save fields: `trainDrops` and `trainDay` (empty in older saves). No prices or keys changed.
+
 ## v178: The hermit and the railway halt
 - Thorne, a hermit, lives in a hut on Cragmoor's east shelf: he forages the mountain in the morning, carves by his hut in the afternoon, sits outside the Wardens' Lodge with Hale on Wednesdays and goes to town for flour on Saturdays.
 - Sabine keeps the railway halt and lives in the halt house with her son Emmet, who mends the line. She waits, every day, for a goods train nobody has ever seen.
