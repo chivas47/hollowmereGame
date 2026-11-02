@@ -72,8 +72,8 @@ if (!QUICK) for (const id of ['farm', 'town'].filter((m) => maps.includes(m)))
 const issues = [];   // { stop, kind, text }
 const note = (stop, kind, text) => issues.push({ stop, kind, text: String(text).slice(0, 400) });
 
-async function openPage(browser, viewport, stopName, save) {
-  const ctx = await browser.newContext({ viewport });
+async function openPage(browser, viewport, stopName, save, device = {}) {
+  const ctx = await browser.newContext({ viewport, ...device });
   if (save) await ctx.addInitScript(([s, key, slotKey]) => { if (sessionStorage.getItem('seeded')) return; sessionStorage.setItem('seeded', '1'); localStorage.clear(); localStorage.setItem(slotKey, '1'); localStorage.setItem(key, s); }, [save, SAVE_KEY, SLOT_KEY]);
   const page = await ctx.newPage();
   const ref = { stop: stopName };
@@ -129,9 +129,16 @@ try {
 
   if (!QUICK) {
     // A phone screen: does the HUD fit, does anything spill off the edge?
-    const phone = await openPage(browser, { width: 390, height: 844 }, 'phone');
+    // A real phone: touch, so the pad and Use button show (CSS keys them off pointer:coarse).
+    const phone = await openPage(browser, { width: 390, height: 844 }, 'phone', null, { isMobile: true, hasTouch: true, deviceScaleFactor: 3 });
     const spill = await phone.page.evaluate(() => [...document.querySelectorAll('body *')]
-      .filter((el) => { const r = el.getBoundingClientRect(); return r.width && getComputedStyle(el).visibility !== 'hidden' && (r.right > innerWidth + 1 || r.left < -1); })
+      .filter((el) => {
+        const r = el.getBoundingClientRect();
+        if (!r.width || getComputedStyle(el).visibility === 'hidden' || (r.right <= innerWidth + 1 && r.left >= -1)) return false;
+        // Cut off by a parent that clips (an ellipsis) is intended, not a spill.
+        for (let p = el.parentElement; p; p = p.parentElement) if (getComputedStyle(p).overflowX !== 'visible') return false;
+        return true;
+      })
       .slice(0, 10).map((el) => { const p = el.closest('[id]'); return `${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}${typeof el.className === 'string' && el.className ? '.' + el.className.split(' ')[0] : ''}${p && p !== el ? ' in #' + p.id : ''} "${(el.textContent || '').trim().slice(0, 30)}"`; }));
     spill.forEach((el) => note('phone', 'layout', `${el} runs off the screen edge`));
     await phone.page.screenshot({ path: join(OUT, 'shots', 'phone.png') });

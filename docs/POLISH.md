@@ -48,9 +48,10 @@ Mark the backlog rows fixed with the PR link. After each merge, the next sweep c
 
 | # | Group | Where | What is wrong | Shot | Status |
 |---|---|---|---|---|---|
-| 1 | 2 | HUD, phone screen | The goal line's "+2 in the journal" runs off the right edge at 390 px wide. | phone.png | 76a |
-| 2 | 2 | HUD clock panel | On maps with a long name (Hollowmere Town) the time wraps onto two lines ("10:00" / "pm"). | town-night.png | 76a |
-| 3 | 3 | Phone screen | The map fills about a quarter of the screen and half the screen below the hotbar is empty; the two start-of-day notices then cover most of the map. | phone.png | 76a |
+| 1 | 2 | HUD, phone screen | The goal line's "+2 in the journal" runs off the right edge at 390 px wide. | phone.png | not a bug: the goal line clips with an ellipsis on purpose; the sweep now ignores clipped text |
+| 2 | 2 | HUD clock panel | On maps with a long name (Hollowmere Town) the time wraps onto two lines ("10:00" / "pm"). | town-night.png | fixed in 76a (v181) |
+| 3 | 3 | Phone screen | The map fills about a quarter of the screen and half the screen below the hotbar is empty. | phone.png | not a bug: the sweep had no touch, so the pad and Use button (v132's thumb zone) were hidden; the sweep now emulates a touch phone |
+| 10 | 3 | Phone screen, upright | Two notices (a morning's usual) cover about half of the field until they fade. Moving them needs a design choice: there is no free space on short phones. | phone.png | needs decision |
 | 4 | 2 | Farm, autumn | The border trees turn orange but the trees inside the farm stay summer green. | farm-Autumn.png | 76b |
 | 5 | 2 | Farm, winter | Grown trees on the farm show as 1 px poles with no branches; bushes and weeds stay bright summer green on the snow. | farm-Winter.png | 76b |
 | 6 | 2 | Desert, dig site | Both are ringed by the green forest trees and dotted with green grass tufts on the sand. | desert-morning.png, digsite-morning.png | 76b |

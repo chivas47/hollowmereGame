@@ -2,6 +2,9 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v181: The clock keeps the time on one line
+- The time in the clock panel no longer breaks onto two lines ("10:00" / "pm") on places with long names. A long place name moves to its own line under the time instead (polish 76a). Phones are unchanged: the place name is still shortened to fit.
+
 ## v180: The train passes in front
 - The goods train is drawn with the people now, so anyone standing on the line or just above it is hidden behind the cars as they pass, and anyone below the line stays in front. Nobody appears to stand on top of the train any more.
 
