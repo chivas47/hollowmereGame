@@ -185,6 +185,7 @@ function railwayGrid() {
   fill(m, 1, 6, W - 2, 7, 'P');
   fill(m, 15, 10, 18, 11, '{');
   put(m, [[3, 10], [8, 12], [20, 3], [12, 2], [6, 13], [21, 13]], 'T');
+  fill(m, 8, 3, 10, 4, 'V');   // v178 (roadmap 75w): the halt house, Sabine and Emmet
   return m;
 }
 // v46: the town north of the village: three shops along a lane. v98: each one has an inside (data/venues.js).
@@ -305,6 +306,7 @@ function mountainGrid() {
   put(m, [[3, 3], [12, 3], [3, 9], [12, 9]], 'g');
   put(m, [[15, 2], [18, 3], [20, 2], [16, 11], [6, 12], [10, 13], [2, 12], [18, 13], [14, 4]], 'T');
   put(m, [[17, 5], [5, 11], [13, 12]], 'R');
+  fill(m, 14, 8, 16, 9, 'V');   // v178 (roadmap 75w): Thorne's hut
   return m;
 }
 // v44: the quarry east of the mountain: open stone floor where rocks come back every morning.
@@ -457,7 +459,7 @@ export const MAPS = {
     exits: { [`${GROVE_SIZE.w - 1},12`]: { to: 'forest', x: 1, y: 12, dir: 'right' } },
   },
   railway: {
-    name: 'The railway', salt: 67, grid: railwayGrid(), objects: [],
+    name: 'The railway', salt: 67, grid: railwayGrid(), objects: [{ art: 'cottage', x: 8, y: 3, roof: '#5a6a7a' }],   // v178: the halt house
     exits: { '0,3': { to: 'wilds', x: W - 2, y: 3, dir: 'left' } },
   },
   mere: {   // v160 (roadmap 75d)
@@ -478,7 +480,7 @@ export const MAPS = {
     exits: { '3,1': { to: 'village', x: 2, y: 10, dir: 'up' } },   // v155: beside the grate (2,12 is Nell's wall since v50)
   },
   mountain: {
-    name: 'Cragmoor', salt: 53, grid: mountainGrid(), objects: [],
+    name: 'Cragmoor', salt: 53, grid: mountainGrid(), objects: [{ art: 'cottage', x: 14, y: 8, roof: '#6e5a3a' }],   // v178: Thorne's hut
     exits: { '21,15': { to: 'wilds', x: 21, y: 1, dir: 'down' }, [`${W - 1},7`]: { to: 'quarry', x: 1, y: 7, dir: 'right' } },
   },
   quarry: {

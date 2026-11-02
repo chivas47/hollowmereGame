@@ -242,3 +242,14 @@ test('75s: three new neighbours; Aldous keeps the museum every day; Hester and W
     assert.deepEqual(b.path.at(-1), VENUES.museum.spot);
   }
 });
+
+// v178 (roadmap 75w): Thorne's hut on Cragmoor; Sabine and Emmet sharing the halt house at the railway.
+test('75w: three new neighbours; Thorne on the mountain; Sabine and Emmet share the halt house', () => {
+  for (const id of ['thorne', 'sabine', 'emmet']) assert.ok(NPCS.find((n) => n.id === id), id);
+  assert.equal(HOMES.thorne.map, 'mountain'); assert.equal(MAPS.mountain.grid[8][14], 'V');
+  assert.equal(MAPS.railway.grid[3][8], 'V');
+  assert.deepEqual(livesWith('sabine'), ['sabine', 'emmet']);
+  assert.equal(homeMap('emmet'), 'home_sabine');
+  assert.equal(MAPS.home_sabine.grid[HOMES.emmet.spot[1]][HOMES.emmet.spot[0]], 'h');
+  assert.equal(NPCS.length, 30, 'thirty people in the valley (the Lamplighter counted, as 75e to 75s did)');
+});

@@ -6,7 +6,7 @@ import { scheduleFor, rainDay } from '../src/data/schedules.js';
 import { NPCS, RAIN_LINES } from '../src/data/npcs.js';
 import { MAPS, SOLID } from '../src/data/maps.js';
 
-const OUT = new Set(['farm', 'village', 'town', 'beach', 'forest', 'wilds', 'mere']);   // v161: the mere too
+const OUT = new Set(['farm', 'village', 'town', 'beach', 'forest', 'wilds', 'mere', 'mountain', 'railway']);   // v161: the mere too   // v178: and the mountain and railway
 const week = [1, 2, 3, 4, 5, 6, 7];
 
 test('in the rain nobody but Juno, Kit and Ferran has a block outdoors', () => {   // v161: Ferran's eels like the rain

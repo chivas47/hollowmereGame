@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v178: The hermit and the railway halt
+- Thorne, a hermit, lives in a hut on Cragmoor's east shelf: he forages the mountain in the morning, carves by his hut in the afternoon, sits outside the Wardens' Lodge with Hale on Wednesdays and goes to town for flour on Saturdays.
+- Sabine keeps the railway halt and lives in the halt house with her son Emmet, who mends the line. She waits, every day, for a goods train nobody has ever seen.
+- All three are friends only, with gifts, birthdays, lines, theatre tastes, a Lantern Float spot, festival lines and a full week. The valley now has 30 people.
+- No prices, saves or keys changed.
+
 ## v177: Festival lines for the curator and the old couple
 - Aldous, Hester and Wilmot now have something to say at the festivals: the Blossom Show, the Egg Hunt, the Summer Potluck, the Grange Fair, the Frostlight Market and the Longnight Feast.
 - Lines only. No prices, saves or keys changed.

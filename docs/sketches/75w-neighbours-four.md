@@ -1,7 +1,7 @@
 # 75w: new neighbours, the next three (sketch for Nuno)
 
 NPC_LIFE step 1 and WORLD_BUILDING step 1: the people and their places in words, for Nuno to correct before any
-code. Nothing here is built yet. Nuno's answers (November 2026): a hermit on the mountain, and a stationmaster and
+code. Built in v178. Nuno's answers (November 2026): a hermit on the mountain, and a stationmaster and
 their grown-up child at the railway; friends only (no new marriage candidates). This takes the valley to 30.
 
 ## Who

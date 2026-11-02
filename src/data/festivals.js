@@ -17,6 +17,7 @@ export const FESTIVALS = [
       tavi: 'I mapped every flower bed in the square. Twenty-three. Nobody asked.',
       hester: 'Forty years I have judged the children\'s posies. They never let me judge the real show.', // v177 (roadmap 75v)
       aldous: 'I enter a pressed flower every year. It is a hundred years old. It never wins.',
+      sabine: 'I brought flowers from the embankment. They grow wild along the line. Nobody plants them.', // v178 (roadmap 75w)
     },
   },
   // v54. Stardew's Egg Festival (Spring 13): find 9 eggs in 50 seconds to win, a straw hat the first time.
@@ -60,6 +61,8 @@ export const FESTIVALS = [
       pip: 'I put in a sweet. Mum says it does not count. Hob ate it anyway.',
       aldous: 'I brought a soup from a very old recipe. Hob says it tastes very old.', // v177 (roadmap 75v)
       wilmot: 'Hester made the pie. I carried it. That is my contribution, and I am proud of it.',
+      thorne: 'Mushrooms. From the mountain. Hob looked at them for a long time before he put them in.', // v178 (roadmap 75w)
+      emmet: 'I brought bread. Mum made it. I carried it. That counts.',
     },
   },
   // v58. Stardew's Flower Dance (Spring 24): ask a marriage candidate to dance; they say yes from 4 hearts (or as
@@ -112,6 +115,7 @@ export const FESTIVALS = [
       aurel: 'I built the stone plinth by the gate. It will be here long after the marrow.',
       hester: 'I write down every winner in the almanac. Nell is in it eleven times.', // v177 (roadmap 75v)
       aldous: 'I would display the oldest seed in the valley, but the judges want them alive.',
+      thorne: 'I do not enter. I come to look at what people grow when they try very hard.', // v178 (roadmap 75w)
     },
   },
   {
@@ -172,6 +176,8 @@ export const FESTIVALS = [
       pell: 'The children made decorations. Please admire every one of them.',
       hester: 'Fifty-two Longnights we have sat through together, Wilmot and I. He still falls asleep before the end.', // v177 (roadmap 75v)
       aldous: 'The longest night of the year. I spend it cataloguing. It is very peaceful.',
+      sabine: 'The longest night. At the halt you notice it; the lamp is lit by four.', // v178 (roadmap 75w)
+      emmet: 'Mum says the train will come on Longnight one year. She has said that for twenty years.',
     },
   },
 ];

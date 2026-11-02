@@ -61,6 +61,9 @@ export const TASTES = {
   aldous: { loves: 'mystery', hates: 'comedy', snack: 'drink', nosnack: 'salty' },   // v175 (roadmap 75s)
   hester: { loves: 'drama', hates: 'spooky', snack: 'sweet', nosnack: 'salty' },
   wilmot: { loves: 'adventure', hates: 'romance', snack: 'drink', nosnack: 'sweet' },
+  thorne: { loves: 'nature', hates: 'comedy', snack: 'fresh', nosnack: 'sweet' },   // v178 (roadmap 75w)
+  sabine: { loves: 'mystery', hates: 'spooky', snack: 'drink', nosnack: 'salty' },
+  emmet:  { loves: 'adventure', hates: 'drama', snack: 'salty', nosnack: 'fresh' },
 };
 
 // The two arcade cabinets in the tavern (Stardew's two in the Saloon pay nothing but bragging rights). Ours give a
