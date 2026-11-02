@@ -117,6 +117,36 @@ const layoutIssues = (page, scope = 'body') => page.evaluate((scope) => {
   return [...new Set(out)].slice(0, 12);
 }, scope);
 
+// Every dialog the game opens with a ui:* event (found in src/ui/), for the dialog pass. Those that need arguments
+// (who you talk to, which chest) throw or stay shut with none and are skipped, except talking, given a neighbour.
+const DIALOGS = [...new Set((await Promise.all((await readdir(join(ROOT, 'src/ui'))).filter((f) => f.endsWith('.js'))
+  .map((f) => readFile(join(ROOT, 'src/ui', f), 'utf8')))).flatMap((s) => [...s.matchAll(/on\('ui:([a-z]+)'/g)].map((m) => m[1])))].sort();
+async function dialogStops(page, prefix, ref) {
+  let shown = 0;
+  for (const ev of [...DIALOGS, 'talk']) {
+    const stop = `${prefix}-${ev}`;
+    ref.stop = stop;
+    const open = await page.evaluate(async (ev) => {
+      const { emit } = await import('/src/core/events.js'); (await import('/src/ui/modal.js')).closeModal();
+      try {
+        if (ev === 'talk') {   // a neighbour, with a long line, to see how dialog text wraps
+          const { NPCRT } = await import('/src/systems/npcs.js');
+          emit('ui:talk', { npc: NPCRT[0], text: 'The almanac says the rain will hold until the harvest moon, and the almanac is never wrong, except about Tuesdays.', extra: '' });
+        } else emit('ui:' + ev);
+      } catch (e) { return false; }
+      await new Promise((ok) => setTimeout(ok, 150));
+      return !!document.querySelector('.modal:not([hidden])');
+    }, ev).catch(() => false);
+    if (!open) continue;
+    shown++;
+    (await layoutIssues(page, '.modal:not([hidden])')).forEach((t) => note(stop, 'layout', t));
+    await page.screenshot({ path: join(OUT, 'shots', `${stop}.png`) });
+    rows.push({ stop, avg: NaN, worst: NaN });
+  }
+  await page.evaluate(async () => (await import('/src/ui/modal.js')).closeModal());
+  return shown;
+}
+
 // The panels a player opens most, and every tab inside them (buttons carrying a data-...tab attribute).
 const PANELS = ['bagBtn', 'craftBtn', 'journalBtn', 'friends', 'menuBtn'];
 async function panelStops(page, prefix, ref) {
@@ -164,8 +194,9 @@ try {
       (await import('/src/core/events.js')).changed();   // the HUD redraws on state:changed
     }, { s, at, T });
     await page.waitForTimeout(500);
-    const f = await frameStats(page);
-    if (f.avg > 20) note(s.name, 'slow', `average frame ${f.avg.toFixed(1)} ms (worst ${f.worst.toFixed(0)} ms)`);
+    let f = await frameStats(page);
+    if (f.avg > 20) f = await frameStats(page);   // measure again: one stalled frame on a busy machine is not the game
+    if (f.avg > 20) note(s.name, 'slow', `average frame ${f.avg.toFixed(1)} ms (worst ${f.worst.toFixed(0)} ms), twice in a row`);
     await page.screenshot({ path: join(OUT, 'shots', `${s.name}.png`) });
     rows.push({ stop: s.name, avg: f.avg, worst: f.worst });
   }
@@ -193,6 +224,7 @@ try {
     for (const [prefix, viewport, device] of [['ui', { width: 1280, height: 800 }, {}], ['ui-phone', { width: 390, height: 844 }, { isMobile: true, hasTouch: true, deviceScaleFactor: 3 }]]) {
       const u = await openPage(browser, viewport, prefix, late, device);
       await panelStops(u.page, prefix, u.ref);
+      await dialogStops(u.page, prefix === 'ui' ? 'dlg' : 'dlg-phone', u.ref);   // every other dialog, the same way
       await u.ctx.close();
     }
   }
