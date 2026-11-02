@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v177: Festival lines for the curator and the old couple
+- Aldous, Hester and Wilmot now have something to say at the festivals: the Blossom Show, the Egg Hunt, the Summer Potluck, the Grange Fair, the Frostlight Market and the Longnight Feast.
+- Lines only. No prices, saves or keys changed.
+
 ## v176: Notices in split screen
 - With a second farmer in, each farmer's notices appear over their own half: yours on the left, farmer two's on the right. Yours no longer cover farmer two's dialog. Playing alone, notices sit in the middle as before.
 - No saves, prices or keys changed.
