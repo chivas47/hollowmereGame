@@ -1,0 +1,43 @@
+# Polish sweep (docs/POLISH.md): plays the game in Chromium, screenshots every map, season and old save,
+# and fails on console errors, page errors or failed loads. Runs on demand and every Monday; the report
+# and screenshots are uploaded as an artifact and the summary goes in the job summary.
+name: Polish sweep
+
+on:
+  workflow_dispatch:
+    inputs:
+      args:
+        description: 'Extra arguments, for example --quick or --maps farm,town'
+        required: false
+        default: ''
+  schedule:
+    - cron: '17 6 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright and Chromium
+        run: |
+          npm install --no-save playwright@1.48.2
+          npx playwright install --with-deps chromium
+      - name: Sweep
+        env:
+          ARGS: ${{ inputs.args }}
+        run: node tools/polish_sweep.mjs $ARGS
+      - name: Job summary
+        if: always()
+        run: '[ -f polish/report.md ] && sed -n "1,/## Stops/p" polish/report.md >> "$GITHUB_STEP_SUMMARY" || true'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: polish-sweep
+          path: polish/
+          if-no-files-found: ignore

@@ -29,6 +29,8 @@ For each item:
 
 When a PR merges, start the next `next` item on a fresh branch from `main`.
 
+When no item is `next`, or Nuno asks for polish, follow `docs/POLISH.md`: sweep with `tools/polish_sweep.mjs`, log finds, propose batches for Nuno to pick, then ship each through this loop.
+
 ## Stop and ask Nuno when
 
 - an item needs a design choice the roadmap does not settle (a new currency, removing a feature),
