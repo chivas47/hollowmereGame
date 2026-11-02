@@ -4,18 +4,24 @@
 // covering them (toasts sit above dialogs so a shop can say what you bought).
 // v176 (roadmap 75u): with a second farmer in, notices sit over the half of whoever caused them (#toast for
 // you, #toast2 for farmer two), so one never covers the other's dialog buttons.
+// v186 (polish 76g): on a phone-sized screen one notice shows at a time and the rest wait their turn, each a
+// little shorter while others wait, so a morning's notices no longer cover half the field at once.
 import { G } from '../core/game.js';
 import { on } from '../core/events.js';
 import { $ } from './dom.js';
 
-const MAX = 3, FADE = 400;
+const MAX = 3, FADE = 400, QUEUED_STAY = 3200;
 const stayFor = (msg) => Math.min(7000, Math.max(2600, 1800 + msg.length * 45));
+const narrow = () => typeof matchMedia === 'function' && matchMedia('(max-width: 600px)').matches;   // the phone layout's breakpoint (styles.css)
+const waiting = { toast: [], toast2: [] };
+const liveIn = (box) => [...box.children].filter((c) => !c.classList.contains('out'));
 
 function retire(t) {
   if (t.classList.contains('out')) return;
   clearTimeout(t.timer);
   t.classList.add('out');
-  setTimeout(() => t.remove(), FADE);
+  const id = t.parentElement?.id;
+  setTimeout(() => { t.remove(); const next = waiting[id]?.shift(); if (next) show(next, id); }, FADE);
 }
 
 const held = new Set();
@@ -26,6 +32,15 @@ function show(msg, id = toastBox()) {
   const box = document.getElementById(id);
   document.getElementById('toast').classList.toggle('split', !!G.P2);
   let t = [...box.children].find((c) => c.textContent === msg && !c.classList.contains('out'));
+  if (!t && narrow() && (liveIn(box).length || box.querySelector('.out'))) {   // one at a time: wait for this one to go
+    if (!waiting[id].includes(msg)) waiting[id].push(msg);
+    const cur = liveIn(box)[0];
+    if (cur && !cur.hurried) {   // others are waiting: cut its stay to QUEUED_STAY, never lengthen it
+      cur.hurried = true; const left = Math.min(QUEUED_STAY, cur.until - Date.now());
+      clearTimeout(cur.timer); cur.timer = setTimeout(() => retire(cur), Math.max(0, left));
+    }
+    return;
+  }
   if (!t) {
     t = document.createElement('div');
     t.className = 'toast'; t.textContent = msg;
@@ -34,7 +49,8 @@ function show(msg, id = toastBox()) {
     live.slice(0, Math.max(0, live.length - MAX)).forEach(retire);
   }
   clearTimeout(t.timer);
-  t.timer = setTimeout(() => retire(t), stayFor(msg));
+  const stay = waiting[id].length ? Math.min(QUEUED_STAY, stayFor(msg)) : stayFor(msg);
+  t.until = Date.now() + stay; t.timer = setTimeout(() => retire(t), stay);
 }
 
 on('toast', (msg) => { if (settling()) held.add(msg); else show(msg); });
