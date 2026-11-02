@@ -48,7 +48,8 @@ function journal(tab = TABS[0][0]) {
     body = `<p>Your farm is <b>${c.total}% complete</b>.</p>${c.rows.map((x) => row(x.label, `${Math.floor(x.done * 100)}% done, worth ${x.weight}% of the total.`)).join('')}`;
   }
   const tabs = TABS.map(([k, l]) => `<button data-jtab="${k}" ${k === tab ? 'disabled' : ''}>${l}</button>`).join('');
-  openModal(`<h2>Journal</h2><div class="btns">${tabs}</div>${body}`, [['Close', closeModal, true]], { wide: true });   // v114: wide, for the map
+  openModal(`<h2>Journal</h2><div class="btns jtabs">${tabs}</div>${body}`, [['Close', closeModal, true]], { wide: true });   // v114: wide, for the map
+  $('.jtabs [disabled]')?.scrollIntoView({ block: 'nearest', inline: 'center' });   // v184: on a narrow dialog the tabs are one scrolling row
 }
 
 on('ui:museum', museum);

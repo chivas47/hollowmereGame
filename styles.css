@@ -269,12 +269,15 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
 /* v71: the journal's calendar and world map */
 .calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:8px}
 .calhead{font-size:16px;color:var(--straw);text-align:center}
-.cal{min-height:56px;padding:4px;border:2px solid var(--seam);border-radius:4px;font-size:16px;overflow-wrap:anywhere;color:var(--leaf)}
+.cal{min-height:48px;padding:4px;border:2px solid var(--seam);border-radius:4px;font-size:16px;color:var(--leaf);text-align:center}
+.cal b{color:var(--harvest);font-weight:400}.cal i{font-style:normal;color:var(--leaf)}   /* v184: a festival's star, a birthday's dot */
+.calist{list-style:none;padding:0;margin:4px 0 0}.calist li{padding:3px 0;border-top:1px solid var(--seam)}.calist li span{display:inline-block;min-width:2.5em;color:var(--straw)}
+.calist b{color:var(--harvest);font-weight:600}.calist i{font-style:normal;color:var(--leaf)}.calist .past{opacity:.55}.calist .now span{color:var(--harvest)}
 .cal span{display:block;color:var(--cream)}
 .cal.past{opacity:.55}
 .cal.now{border-color:var(--harvest)}
 .worldmap{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin:8px 0}
-.wm{padding:4px;border:2px solid var(--seam);border-radius:4px;font-size:16px;overflow-wrap:break-word;background:var(--bark);color:var(--straw)}
+.wm{padding:4px;border:2px solid var(--seam);border-radius:4px;font-size:16px;overflow-wrap:break-word;hyphens:auto;background:var(--bark);color:var(--straw)}   /* v184: a long name hyphenates, not breaks anywhere */
 .wm span{display:block;color:var(--leaf)}
 .wm.here{border-color:var(--harvest);background:var(--harvest);color:var(--soil)}
 .wm.here span{color:var(--soil)}
@@ -287,7 +290,17 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
 .hud-minimal .basket,.hud-minimal .binrow,.hud-minimal .clock h1,.hud-minimal .goal,.hud-minimal .menubar .pill:not(#menuBtn){display:none}
 .hud-hidden .meters,.hud-hidden .clock,.hud-hidden .bottom,.hud-hidden .goal,.hud-hidden .prompt,.hud-hidden .menubar .pill:not(#menuBtn){display:none!important}
 /* v114: the journal's map: found places are buttons; quest markers and pins */
-button.wm{font:inherit;text-align:left;cursor:pointer;min-height:44px}
+button.wm{font:inherit;text-align:left;cursor:pointer;min-height:44px;padding:4px 6px}   /* v184: not .card button's 12 px sides */
+/* v184 (polish 76e): in a narrow dialog (a phone, a split-screen half) the journal's map becomes a two-column list
+   of the places found, and its tabs one row that scrolls sideways. */
+.card{container-type:inline-size}
+@container (max-width:520px){
+  .worldmap{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .worldmap .wm{grid-column:auto!important;grid-row:auto!important}
+  .worldmap .wm.unknown{display:none}
+  .jtabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;padding-bottom:4px}
+  .jtabs button{flex:none}
+}
 .wm.unknown{text-align:center;color:var(--seam);background:transparent;border-style:dashed}
 .wm.pick{outline:3px solid var(--leaf);outline-offset:1px}
 .wm em{display:block;font-style:normal}
