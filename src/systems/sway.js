@@ -19,7 +19,8 @@ function tuftsHere() {
   const key = G.S.map;
   if (tufts.key === key) return tufts.list;
   const map = MAPS[key], R = rng(map.salt * 13 + 5), list = [];
-  if (key !== 'farm' && !map.base) map.grid.forEach((row, y) => [...row].forEach((t, x) => {
+  // v181: none on sand or stone ground (the desert, dig site, beach and quarry)
+  if (key !== 'farm' && !map.base && !map.ground) map.grid.forEach((row, y) => [...row].forEach((t, x) => {
     const below = map.grid[y + 1]?.[x];
     if (t === 'g' && (!SOLID.has(below) || below === 'T') && R() < WIND.tufts / 100) list.push({ x, y, ox: 2 + ((R() * 9) | 0), oy: 6 + ((R() * 7) | 0) });
   }));

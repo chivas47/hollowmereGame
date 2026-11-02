@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v182: Seasons and biomes look right
+- Grown alders on the farm are proper bare trees in winter. They showed as thin bare saplings, and young alders showed as full green trees, because the sprite sheet's bare frames were read one frame early.
+- Alders turn rust in autumn, like the trees around them. Grass and weeds on the farm dry to a dull khaki in winter instead of staying summer green on the snow.
+- The Dunes and the dig site are ringed by dusty scrub standing on sand, not green forest on grass, and no longer grow green grass tufts in the wind. The beach keeps its green border.
+- Polish 76b, from the first polish sweep (docs/POLISH.md, finds 4 to 6).
+
 ## v181: The clock keeps the time on one line
 - The time in the clock panel no longer breaks onto two lines ("10:00" / "pm") on places with long names. A long place name moves to its own line under the time instead (polish 76a). Phones are unchanged: the place name is still shortened to fit.
 

@@ -9,3 +9,6 @@ export const PAL = {
   Autumn: { g: '#998f4a', gl: '#b5a45a', gd: '#7d743b', tr: '#a8582a', trd: '#934a22', trl: '#d68b3a', path: '#c4a26c', pathd: '#a98754', fl: ['#d9644a', '#e8862a'], water: '#3a6f9a', ripple: '#5f97bf' },
   Winter: { g: '#dfe7ea', gl: '#ffffff', gd: '#c3ced3', tr: '#3d5f4c', trd: '#34533f', trl: '#4c7360', path: '#cfd4d6', pathd: '#b7bec2', fl: null, water: '#7fa9c4', ripple: '#c9e2ee', snow: true },
 };
+
+// v181: trees on dry maps (MAPS[id].dry: the desert, the dig site) are dusty scrub, not forest green, all year.
+export const DRY_TREES = { tr: '#8a8a4a', trd: '#77773e', trl: '#a8a35e' };

@@ -124,7 +124,16 @@ export const MONSTERS = {
 
 // v91 alders.png: wild alders, 32x48 frames, the tree's tile at the bottom centre (origin: the frame's top-left from
 // the tile's), one row: stages 0 to 4, bare stages 1 to 4, then the tree tap. Colours drawn in; the tap's drop in code.
-export const ALDERS_SHEET = { sheet: 'alders', w: 32, h: 48, origin: [-8, -32], bare: 4, tap: 9 };
+// Frames: stages 0 to 4, then bare stages 1 to 4 from frame `bare` (v181: was 4, which drew grown trees in winter
+// as bare saplings and stage-1 saplings as full green trees), then the tap.
+export const ALDERS_SHEET = { sheet: 'alders', w: 32, h: 48, origin: [-8, -32], bare: 5, tap: 9 };
+// v181: the farm's wild plants follow the season: green pixels of a sheet frame are shifted to `to` keeping their
+// brightness, `mix` of the way (render/sheets.js recoloured). light: the code art's highlight, before sheets load.
+export const SEASON_WASH = {
+  alder: { Autumn: { to: '#b8602c', light: '#d68b3a', mix: 1 } },
+  grass: { Winter: { to: '#a09a72', light: '#c4bd94', mix: 0.8 } },
+  weeds: { Winter: { to: '#8c8560', light: '#b0a87c', mix: 0.8 } },
+};
 // v91 fences.png: 16x18 frames (the tile's top 2 px above), a column per neighbour mask (up 1, right 2, down 4,
 // left 8). Bands: main (tinted to the fence's colour), ink (see-through light). fixtures.png: 16x16 over the tile,
 // colours drawn in, one row in this order (gate: across or along, closed or open; paths by kind).

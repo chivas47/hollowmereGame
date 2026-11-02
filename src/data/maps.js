@@ -438,11 +438,11 @@ export const MAPS = {
     exits: {},
   },
   digsite: {   // v66
-    name: 'The dig site', salt: 37, grid: digsiteGrid(), ground: 'z', objects: [],
+    name: 'The dig site', salt: 37, grid: digsiteGrid(), ground: 'z', dry: true, objects: [],
     exits: {},
   },
   desert: {   // v64
-    name: 'The Dunes', salt: 29, grid: desertGrid(), ground: 'z',
+    name: 'The Dunes', salt: 29, grid: desertGrid(), ground: 'z', dry: true,
     objects: [{ art: 'storefront', kind: 'oasis', x: 4, y: 2 }, { art: 'storefront', kind: 'casino', x: 15, y: 2 }, { art: 'board', x: 1, y: 7 }, { art: 'table', x: 12, y: 10 }],
     exits: {},
   },

@@ -4,7 +4,7 @@ import { CROPS } from '../data/crops.js';
 import { TURNS, TURN_STEPS } from '../data/furniture.js';
 import { FLUTTER } from '../data/animation.js';
 import { r, blink } from './pixel.js';
-import { ready, tinted, frame, sheet } from './sheets.js';
+import { ready, tinted, frame, sheet, recoloured } from './sheets.js';
 import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET, DEBRIS_SHEET, GIANTS_SHEET, PLACED_SHEET, FURN_SHEET, SOIL_SHEET, ALDERS_SHEET, FENCES_SHEET, FIXTURES_SHEET, CHILDREN_SHEET, GLOW_SHEET, BUNTING_SHEET, PENS_SHEET } from '../data/sprites.js';
 
 const FERT_DOT = { booster: '#c9b68e', booster2: '#e9b44c', booster3: '#b98ae0', tonic: '#86b86a', tonic2: '#5fd36a', mulch: '#a0805a', mulch2: '#7a5a3a' };
@@ -731,22 +731,22 @@ const DEBRIS_ART = {
   crate: (c, X, Y) => { r(c, X + 2, Y + 5, 12, 10, '#a5753f'); r(c, X + 2, Y + 5, 12, 1, '#c9955a'); r(c, X + 2, Y + 9, 12, 1, '#6e4626'); r(c, X + 7, Y + 5, 2, 10, '#6e4626'); r(c, X + 3, Y + 13, 3, 1, '#5fa8d3'); },
   alderstump: (c, X, Y) => { r(c, X + 4, Y + 9, 8, 6, '#7a5a3a'); r(c, X + 4, Y + 8, 8, 2, '#c9a06a'); r(c, X + 6, Y + 8, 4, 1, '#a07a4a'); r(c, X + 3, Y + 14, 10, 1, 'rgba(0,0,0,.2)'); },
 };
-// v83: from the debris sheet once it has loaded, else drawn in code.
-export function drawDebris(c, X, Y, kind) {
+// v83: from the debris sheet once it has loaded, else drawn in code. v181: wash, the season's shift (SEASON_WASH).
+export function drawDebris(c, X, Y, kind, wash) {
   const i = DEBRIS_SHEET.order.indexOf(kind);
-  if (i >= 0 && ready(DEBRIS_SHEET.sheet)) return frame(c, sheet(DEBRIS_SHEET.sheet).img, i, DEBRIS_SHEET.size, X, Y);
+  if (i >= 0 && ready(DEBRIS_SHEET.sheet)) return frame(c, wash ? recoloured(DEBRIS_SHEET.sheet, wash) : sheet(DEBRIS_SHEET.sheet).img, i, DEBRIS_SHEET.size, X, Y);
   (DEBRIS_ART[kind] || DEBRIS_ART.stone)(c, X, Y);
 }
 
 // A wild alder: stage 0 a cone, 1 to 3 young, 4 grown (a tall canopy reaching two tiles up).
 // v91: from the alders sheet once it has loaded, else drawn in code.
-export function drawAlder(c, X, Y, stage, bare) {
+export function drawAlder(c, X, Y, stage, bare, wash) {
   const A = ALDERS_SHEET;
-  if (!ready(A.sheet)) return alderArt(c, X, Y, stage, bare);
-  c.drawImage(sheet(A.sheet).img, (bare && stage ? A.bare + stage - 1 : stage) * A.w, 0, A.w, A.h, X + A.origin[0], Y + A.origin[1], A.w, A.h);
+  if (!ready(A.sheet)) return alderArt(c, X, Y, stage, bare, wash);
+  c.drawImage(wash && !bare ? recoloured(A.sheet, wash) : sheet(A.sheet).img, (bare && stage ? A.bare + stage - 1 : stage) * A.w, 0, A.w, A.h, X + A.origin[0], Y + A.origin[1], A.w, A.h);
 }
-function alderArt(c, X, Y, stage, bare) {
-  const cx = X + 8, trunk = '#6b4a2b', leaf = '#2f6b3a', light = '#3f7f45';
+function alderArt(c, X, Y, stage, bare, wash) {
+  const cx = X + 8, trunk = '#6b4a2b', leaf = wash?.to || '#2f6b3a', light = wash?.light || '#3f7f45';
   if (stage === 0) { r(c, cx - 2, Y + 11, 4, 3, '#8a5a32'); r(c, cx - 1, Y + 10, 2, 1, '#6e4626'); return; }
   if (stage < 4) {
     const h = 4 + stage * 3;

@@ -5,7 +5,7 @@ import { on } from '../core/events.js';
 import { drawLayers, collectEntities } from '../core/registry.js';
 import { today, dayEnd } from '../core/time.js';
 import { MAPS, sizeOf } from '../data/maps.js';
-import { PAL } from '../data/seasons.js';
+import { PAL, DRY_TREES } from '../data/seasons.js';
 import { LIGHT, NIGHT_FROM } from '../data/atmosphere.js';
 import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, drawQuarry, drawSand, drawBowl, drawHouseTile, drawTerrain, drawFlowers, drawBuilding, drawProp, HOUSE_ART, CAVE_ART, PROP_ART, PROP_GROUND } from './tiles.js';
 import { facing, tileAt } from '../systems/world.js';
@@ -35,7 +35,7 @@ function renderBackground(mapId, season) {
   const c = document.createElement('canvas'); c.width = MW * T; c.height = MH * T;
   const crowns = document.createElement('canvas'); crowns.width = MW * T; crowns.height = MH * T;
   const k = crowns.getContext('2d'), trees = [];
-  const g = c.getContext('2d'), map = MAPS[mapId], p = map.theme ? { ...PAL[season], theme: map.theme } : PAL[season];   // v38: theme (the cavern's sand)
+  const g = c.getContext('2d'), map = MAPS[mapId], p = { ...PAL[season], ...(map.theme ? { theme: map.theme } : {}), ...(map.dry ? DRY_TREES : {}) };   // v38: theme (the cavern's sand); v181: dry scrub
   const ground = map.base === 'cave' ? CAVE_SHEET.sheet(map.theme) : TERRAIN_SHEET.sheet(season);
   const sheetGround = (!map.base || map.base === 'cave') && ready(ground);   // v85: outdoor ground (v87: and caves) from a tile set
   if (sheetGround && map.base === 'cave') drawTerrain(g, sheet(ground).img, CAVE_SHEET, (x, y) => (map.grid[y][x] === 'X' || PROP_GROUND[map.grid[y][x]] === 'wall' ? 'wall' : 'floor'), 'floor', MW, MH);
@@ -52,7 +52,7 @@ function renderBackground(mapId, season) {
     else if (map.base === 'greenhouse' && t !== 'E') drawGreenhouseFloor(g, x, y, t);
     else if (t === 'P' || t === 'E') drawPath(g, x, y, p);
     else if (t === 'q' || (map.ground === 'q' && t !== 'T')) drawQuarry(g, x, y, p);   // v44: the quarry's rocks sit on stone
-    else if (t === 'z' || (map.ground === 'z' && t !== 'T')) drawSand(g, x, y, p);   // v43: the beach's rocks sit on sand
+    else if (t === 'z' || (map.ground === 'z' && (t !== 'T' || map.dry))) drawSand(g, x, y, p);   // v43: the beach's rocks sit on sand
     else drawGrass(g, x, y, p, map.salt);
   }
   for (let y = 0; y < MH; y++) for (let x = 0; x < MW; x++) {
@@ -79,7 +79,7 @@ function groundOf(map, t) {
   if (t === 'P' || t === 'E') return 'path';
   if (t === 'O') return 'water';
   if (t === 'q' || (map.ground === 'q' && t !== 'T')) return 'quarry';
-  if (t === 'z' || (map.ground === 'z' && t !== 'T') || PROP_GROUND[t] === 'sand') return 'sand';
+  if (t === 'z' || (map.ground === 'z' && (t !== 'T' || map.dry)) || PROP_GROUND[t] === 'sand') return 'sand';   // v181: dry maps' trees stand on sand
   return 'grass';
 }
 
