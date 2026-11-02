@@ -2,6 +2,9 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v186: One notice at a time on a phone
+- On a phone-sized screen notices show one at a time instead of stacking over the field; the rest wait their turn and nothing is dropped. While others wait, each stays at most a little over three seconds. Wide screens still stack up to three (polish 76g, find 10, Nuno's pick).
+
 ## v185: Journal lists say what matters
 - The journal's Museum and Fish tabs list what you have and end with one line for the rest ("15 artifacts still to find", "29 kinds still to catch") instead of a line for every missing entry.
 - Achievements a farm has already met are awarded when the save loads, not only the next morning, so the Achievements and Completion tabs agree with what they show. Several earned at once make one notice.
