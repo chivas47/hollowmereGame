@@ -210,7 +210,7 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | 76a | Polish: the HUD on small screens | polish | done (chivas47/hollowmereGame#185) | From the first polish sweep (docs/POLISH.md, finds 1 to 3; Nuno: next). Built: the clock keeps the time on one line. Finds 1 and 3 were sweep mistakes (no touch emulation, clipped text counted as a spill), fixed in the sweep. Notices covering the field on phones split off as find 10, needs decision. |
 | 76b | Polish: seasons and biomes look right | polish | done (chivas47/hollowmereGame#186) | Nuno: next. Finds 4 to 6: the farm's own trees turn with the season like its border (autumn colours, proper bare winter trees), bushes and weeds dull in winter, and the desert and dig site get a dry border and no green grass tufts. Drawing only. |
 | 76c | Polish: homes that look like their owners | polish | needs decision | Find 7: new floor plans for Hester, Thorne and Sabine (identical now) and a different look for Ferran, Kit, Tamsin and Ysolde. Thorne's should read as a mountain hermit's hut. Needs Nuno's say on each home's character (WORLD_BUILDING.md). |
-| 76d | Polish: no hitch on the first big map | polish | in progress | Nuno: next. Find 8: measure the 217 ms first-draw frame in town and, if it is sheet tinting, warm the tint cache while the game loads. |
+| 76d | Polish: no hitch on the first big map | polish | in progress (chivas47/hollowmereGame#187) | Nuno: next. Find 8: measure the 217 ms first-draw frame in town and, if it is sheet tinting, warm the tint cache while the game loads. |
 
 ## Done
 
