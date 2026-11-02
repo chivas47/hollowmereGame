@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v191: Neighbours' props redrawn
+- Everything neighbours hold or set down while they work has been redrawn: shading in three tones, an outline in the prop's own darker colour, and held where the hand actually is. Ground props (the easel, trug, sawhorse, paint pot, doctor's bag) cast a soft shadow. The fishing line now runs from the rod tip to a bobber that dips and ripples, the fiddle's bow crosses the strings, Bram saws a plank on a sawhorse and sawdust piles up, Juno's satchel has a strap, and the Lamplighter's lantern throws a round pool of light instead of a square one. Chest-held things (book, ledger, map, sketchbook, bowl) sit a pixel lower, so they no longer cover faces.
+- Drawing only (render/doings.js): no props change who does what or where. Polish 76k, Nuno's ask.
+
 ## v190: Silvermist that looks like fog
 - On silvermist days the drifting mist banks are tapered, layered strips that fade at their ends instead of flat rectangles with hard edges, so they read as fog rather than a drawing glitch. Polish 76j, from the fourth polish sweep (docs/POLISH.md, find 18).
 

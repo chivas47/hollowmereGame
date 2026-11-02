@@ -353,7 +353,7 @@ addEntities(() => NPCRT.filter((n) => n.visible && n.map === G.S.map).map((n) =>
     drawPerson(c, x, y, n.dir, n.moving, n.walkT, look, lean(n.x));
     if (blinks(n, NPCRT.indexOf(n))) drawBlink(c, x, y, n.dir, look);
     const does = doingFor(n.id, n.block);   // v147: what they are doing here (data/doings.js), while they stop
-    if (does && (does.carry || !n.moving)) drawDoing(c, x, y, n.dir, does.does);
+    if (does && (does.carry || !n.moving)) drawDoing(c, x, y, n.dir, does.does, undefined, look);
     if (e) drawEmote(c, x, y, e.kind, e.k, look);   // v124
     else if (G.S.npcs[n.id].talked !== G.S.day && G.talking !== n.id) drawBubble(c, n.x, n.y);
   },
