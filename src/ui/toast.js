@@ -29,6 +29,7 @@ const settling = () => !G.S?.profile || !G.S.firstWeek?.arrived;
 
 export const toastBox = () => (G.P2 && G.partnerActing ? 'toast2' : 'toast');
 function show(msg, id = toastBox()) {
+  placeToasts();
   const box = document.getElementById(id);
   document.getElementById('toast').classList.toggle('split', !!G.P2);
   let t = [...box.children].find((c) => c.textContent === msg && !c.classList.contains('out'));
@@ -56,3 +57,23 @@ function show(msg, id = toastBox()) {
 on('toast', (msg) => { if (settling()) held.add(msg); else show(msg); });
 on('state:changed', () => { if (!G.P2) document.getElementById('toast')?.classList.remove('split'); });   // back to the middle alone
 on('state:changed', () => { if (held.size && !settling()) { held.forEach((m) => show(m)); held.clear(); } });
+
+// v193 (roadmap 76n): while a farmer's dialog is open, their notices sit at the top of its card instead of over
+// the field, so a long one never covers the rows of the Bag, a shop or the journal. The whole box moves (its
+// queue and timers with it) and goes back over the field when the dialog closes.
+const PAIRS = [['toast', 'modal'], ['toast2', 'modal2']];
+const home = {};
+export function placeToasts() {
+  for (const [tid, mid] of PAIRS) {
+    const t = document.getElementById(tid), m = document.getElementById(mid), card = m?.querySelector('.card');
+    if (!t || !card) continue;
+    if (!home[tid]) home[tid] = { parent: t.parentElement, next: t.nextSibling };
+    const open = !m.hidden;
+    if (open && t.parentElement !== card) { card.prepend(t); t.classList.add('incard'); }
+    else if (!open && t.parentElement === card) { home[tid].parent.insertBefore(t, home[tid].next); t.classList.remove('incard'); }
+  }
+}
+if (typeof MutationObserver !== 'undefined') {
+  const watch = new MutationObserver(placeToasts);
+  for (const [, mid] of PAIRS) { const m = document.getElementById(mid); if (m) watch.observe(m, { attributes: true, attributeFilter: ['hidden'] }); }
+}
