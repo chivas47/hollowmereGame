@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v192: Neighbours redrawn
+- The farmer and every neighbour have a new look: a rounder head with two clear eyes (the old front view merged them into one), a shine on the hair and a touch of colour in the cheeks, arms that swing as they walk, and a one-pixel outline in each part's own darker colour, like the props in v191. Long hair falls past the shoulders and beards frame the jaw.
+- Same size and footprint as before, so hats, props, emotes and the blink still sit where they did; the blink now closes both rows of the taller eyes.
+- The sheet is now built by a script (tools/sprites/person.py) instead of edited by hand. Polish 76l, Nuno's pick after 76k.
+
 ## v191: Neighbours' props redrawn
 - Everything neighbours hold or set down while they work has been redrawn: shading in three tones, an outline in the prop's own darker colour, and held where the hand actually is. Ground props (the easel, trug, sawhorse, paint pot, doctor's bag) cast a soft shadow. The fishing line now runs from the rod tip to a bobber that dips and ripples, the fiddle's bow crosses the strings, Bram saws a plank on a sawhorse and sawdust piles up, Juno's satchel has a strap, and the Lamplighter's lantern throws a round pool of light instead of a square one. Chest-held things (book, ledger, map, sketchbook, bowl) sit a pixel lower, so they no longer cover faces.
 - Drawing only (render/doings.js): no props change who does what or where. Polish 76k, Nuno's ask.

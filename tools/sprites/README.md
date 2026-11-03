@@ -4,6 +4,7 @@ Scripts that build the placeholder sheets in `assets/sprites/` (needs Python 3 w
 
 | Sheet | Build |
 | --- | --- |
+| person.png | `python3 tools/sprites/person.py assets/sprites/person.png` (v192: the frames are letter grids in the script; outlines worked out) |
 | animals.png | `python3 tools/sprites/animals.py assets/sprites/animals.png preview.png` |
 | pets.png, horse.png | `python3 tools/sprites/pets.py assets/sprites` |
 | monsters.png | `python3 tools/sprites/monsters.py assets/sprites/monsters.png` |
@@ -13,4 +14,3 @@ Scripts that build the placeholder sheets in `assets/sprites/` (needs Python 3 w
 
 These come from the game's own code art (rendered in a browser, then outlined), so they follow any change to `FORAGE_ART`, `drawFruitTree`, `DEBRIS_ART`, `drawGiant`, `PLACED_ART`, `FURN_ART`, `drawAlder`, `drawTap`, `drawFence`, `drawGate`, `drawFloor`, `drawChild`, `drawGlow`, `drawFlag`, `PEN_ART` or `PROP_ART`. A new variant needs its key added to `VARIANTS_SHEET.order` (the dump fails if a key draws as a different variant). The dump blocks the sheets themselves, so it always captures the code art. A new forage, debris, placed or furniture kind also needs its name added to its sheet's `order` in `src/data/sprites.js`.
 
-person.png (v77) was made before these scripts were kept; edit it by hand.
