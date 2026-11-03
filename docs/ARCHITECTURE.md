@@ -191,7 +191,7 @@ src/
     pixel.js          r() rectangle primitive, rng(seed), blink()
     tiles.js          static art: grass, path, trees, water, rocks, buildings, cave tiles
     sprites.js        per-frame art: soil, crops, forage, people, chickens, slimes, fruit trees, giant crops, effects
-    doings.js         v147: drawDoing(c, px, py, dir, kind), the props neighbours hold or set down (DOING_KINDS)
+    doings.js         v147: drawDoing(c, px, py, dir, kind, t, look), the props (v191: letter-row sprites over one shared PAL) neighbours hold or set down (DOING_KINDS)
     icons.js          16x16 hotbar icons
     itemIcons.js      v113: 16x16 item icons for the Bag and chests, one shape per kind coloured per item, cached as data URLs (iconURL)
     arcade.js         the arcade cabinets' screens (v70)
