@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v193: Notices that leave dialogs readable
+- While a dialog is open, its notices show at the top of the dialog instead of over the middle of it, so a long one (the achievements line after loading a save) no longer covers rows in the Bag, a shop or the journal. When the dialog closes, any notice still showing goes back over the field.
+- In two-player, each farmer's notices go to the top of their own dialog.
+- No saves, prices or keys changed.
+
 ## v192: Neighbours redrawn
 - The farmer and every neighbour have a new look: a rounder head with two clear eyes (the old front view merged them into one), a shine on the hair and a touch of colour in the cheeks, arms that swing as they walk, and a one-pixel outline in each part's own darker colour, like the props in v191. Long hair falls past the shoulders and beards frame the jaw.
 - Same size and footprint as before, so hats, props, emotes and the blink still sit where they did; the blink now closes both rows of the taller eyes.
