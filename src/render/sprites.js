@@ -241,9 +241,9 @@ export function drawPerson(c, px, py, dir, moving, walkT, p, wind = 0) {
 // v115: closed eyes, drawn in skin over a standing person's eyes (the sheet and the code art put them on the same row).
 export function drawBlink(c, px, py, dir, p) {
   const x = Math.round(px), y = Math.round(py) - 11, sheet = ready(PERSON.sheet);
-  if (dir === 'down') { if (sheet) r(c, x - 2, y, 4, 1, p.skin); else { r(c, x - 2, y, 1, 1, p.skin); r(c, x + 1, y, 1, 1, p.skin); } }
-  else if (dir === 'left') r(c, sheet ? x - 3 : x - 2, y, 1, 1, p.skin);
-  else if (dir === 'right') r(c, sheet ? x + 2 : x + 1, y, 1, 1, p.skin);
+  if (dir === 'down') { if (sheet) { r(c, x - 2, y, 1, 2, p.skin); r(c, x + 1, y, 1, 2, p.skin); } else { r(c, x - 2, y, 1, 1, p.skin); r(c, x + 1, y, 1, 1, p.skin); } }
+  else if (dir === 'left') r(c, sheet ? x - 3 : x - 2, y, 1, sheet ? 2 : 1, p.skin);
+  else if (dir === 'right') r(c, sheet ? x + 2 : x + 1, y, 1, sheet ? 2 : 1, p.skin);
 }
 
 // v124: a neighbour's emote (data/emotes.js) over their head, k from 0 to 1 through it. Most are a bubble with a
