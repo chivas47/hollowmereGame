@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v194: Shop rows line up
+- In Garrow's boathouse, the old boatman and the arcade cabinets, a long description no longer pushes Buy or Play onto its own line under the item: the button sits at the row's right, as in every other shop. On a phone, rows with two or more buttons still put them under the item when there is no room beside it.
+- No saves, prices or keys changed.
+
 ## v193: Notices that leave dialogs readable
 - While a dialog is open, its notices show at the top of the dialog instead of over the middle of it, so a long one (the achievements line after loading a save) no longer covers rows in the Bag, a shop or the journal. When the dialog closes, any notice still showing goes back over the field.
 - In two-player, each farmer's notices go to the top of their own dialog.
