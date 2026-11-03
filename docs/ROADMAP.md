@@ -221,7 +221,7 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | 76l | Polish: neighbours redrawn | polish | in progress (chivas47/hollowmereGame#200) | Nuno: next (November 2026), after 76k: the person sheet the farmer and every neighbour use, redrawn to match the props: a rounder head, two clear eyes, arms that swing, self-coloured outlines. Same frame layout and footprint (hats, props, emotes, blink). Built by tools/sprites/person.py. Drawing only. |
 | 76m | Polish: animal names that are not neighbours' names | polish | needs decision | From the fifth polish sweep (docs/POLISH.md, find 19): rename the default chicken Pip, duck Wren and strider Rook. Animals already named in a save keep their names; only new animals change. |
 | 76n | Polish: notices that leave dialogs readable | polish | done (chivas47/hollowmereGame#201) | Find 20: on a desktop a long notice covers rows in the middle of an open dialog. Nuno's pick (November 2026). Options: lift notices above the dialog while one is open, or cap a notice to one line with the rest in the journal. |
-| 76o | Polish: shop rows line up | polish | needs decision | Find 21: Buy sits under the item in the boathouse, boatman and arcade instead of at its right, as everywhere else. |
+| 76o | Polish: shop rows line up | polish | done (chivas47/hollowmereGame#202) | Find 21: Buy sits under the item in the boathouse, boatman and arcade instead of at its right, as everywhere else. |
 
 ## Done
 
