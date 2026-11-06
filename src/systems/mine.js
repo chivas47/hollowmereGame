@@ -1,6 +1,7 @@
 // The Hollow: procedurally generated mine floors, rock breaking, ladders and lighting.
 // Floors are rebuilt every visit (seeded by floor and day); only the deepest floor is saved.
 import { G } from '../core/game.js';
+import { visible } from '../render/views.js';
 import { T, W, H } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer } from '../core/registry.js';
@@ -25,6 +26,7 @@ const CHECKPOINT_EVERY = 5, PICK_ENERGY = 2;
 // zone: 'hollow', 'cavern' (v38: the Sunken Cavern reuses the mine map), 'vent' (v39) or 'peak' (v67); eff: the Hollow-floor strength of this floor.
 export const MINE = { floor: 0, rocks: {}, ladder: null, zone: 'hollow', eff: 0 };
 
+// Mine floors are one screen (W x H) by design (v157): a floor is a single room you clear, not a place to travel.
 const solidGrid = () => Array.from({ length: H }, () => Array(W).fill('X'));
 MAPS.mine = { name: 'The Hollow', salt: 0, base: 'cave', grid: solidGrid(), objects: [], exits: {} };
 
@@ -188,11 +190,11 @@ addInteraction(66, ({ tx, ty, tile, item, mapId }) => {
 // Darkness with a pool of light around the player.
 addLayer(95, (c) => {
   if (G.S.map !== 'mine') return;
-  const px = G.S.x, py = G.S.y - 6;
+  const px = (G.view || G.S).x, py = (G.view || G.S).y - 6;   // v139: around the farmer this view follows
   const glow = G.S.rings?.includes('glowring') ? 1.4 : 1;   // v36: the glow ring
   const grad = c.createRadialGradient(px, py, 18 * glow, px, py, 120 * glow);
   grad.addColorStop(0, 'rgba(6,5,10,0)');
   grad.addColorStop(1, 'rgba(6,5,10,.88)');
   c.fillStyle = grad;
-  c.fillRect(0, 0, W * T, H * T);
+  const v = visible(); c.fillRect(v.x, v.y, v.w, v.h);
 });

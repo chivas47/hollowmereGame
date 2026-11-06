@@ -24,7 +24,9 @@
   </nav>
   <div class="meters">
     <div class="stat"><span class="lbl">Energy</span><div class="meter" id="energy" role="meter" aria-label="Energy" aria-valuemin="0"><i></i></div></div>
+    <div class="stat" hidden><span class="lbl">Farmer two</span><div class="meter p2" id="energy2" role="meter" aria-label="Farmer two's energy" aria-valuemin="0"><i></i></div></div>
     <div class="stat"><span class="lbl">Health</span><div class="meter" id="health" role="meter" aria-label="Health" aria-valuemin="0"><i></i></div></div>
+    <div class="stat" hidden><span class="lbl">Their HP</span><div class="meter" id="health2" role="meter" aria-label="Farmer two's health" aria-valuemin="0"><i></i></div></div>
     <div class="stat"><span class="lbl">Water</span><div class="meter" id="water" role="meter" aria-label="Water in the can" aria-valuemin="0"><i></i></div></div>
   </div>
   <div class="clock" aria-label="Day, time and gold">
@@ -39,7 +41,9 @@
       <canvas id="game" width="384" height="256" aria-label="Game world"></canvas>
       <div class="goal" id="goal" hidden></div>
       <div class="prompt" id="prompt" aria-hidden="true" hidden></div>
+      <div class="prompt p2" id="prompt2" aria-hidden="true" hidden></div>
       <div class="toasts" id="toast" role="status" aria-live="polite"></div>
+      <div class="toasts p2" id="toast2" role="status" aria-live="polite" aria-label="Farmer two"></div>
     </div>
   </main>
   <div class="bottom">
@@ -60,6 +64,9 @@
   <div class="cardhead"><h2 id="menuTitle">Menu</h2><button class="close" id="menuClose" aria-label="Close menu">✕</button></div>
   <h3>Settings</h3>
   <div class="footbtns"><button class="ghost" id="undoBtn" aria-keyshortcuts="U" data-shortcut="undo">Undo <kbd data-control="undo">U</kbd></button><button class="ghost" id="sfxToggle" aria-pressed="true">Sound: on</button><button class="ghost" id="musicToggle" aria-pressed="true">Music: on</button><label class="ghost slider" for="ambientVol">Ambience <input type="range" id="ambientVol" min="0" max="100" step="5" value="100"> <output id="ambientVal" for="ambientVol">100%</output></label><button class="ghost" id="stepsToggle" aria-pressed="true" title="Footsteps, at the Ambience volume">Steps: on</button><label class="ghost slider" for="hudScale">HUD size <input type="range" id="hudScale" min="100" max="140" step="10" value="100"> <output id="hudScaleVal" for="hudScale">100%</output></label><label class="ghost slider" for="textScale" title="Dialogs, the menu and the bag">Text size <input type="range" id="textScale" min="100" max="150" step="10" value="100"> <output id="textScaleVal" for="textScale">100%</output></label><button class="ghost" id="contrastToggle" aria-pressed="false" title="Solid backgrounds and brighter edges on the HUD, prompts and messages">Contrast: off</button><button class="ghost" id="particlesBtn" title="Dust, sparks, splashes and drips: full, fewer or off">Particles: full</button><button class="ghost" id="shakeBtn" aria-pressed="true" title="The screen shakes on heavy hits">Shake: on</button><button class="ghost" id="hitstopBtn" aria-pressed="true" title="A swing and the monster it strikes hold still for a moment on contact">Hit-stop: on</button><button class="ghost" id="motionSpeedBtn" title="Particles, labels, pickups, reactions and wind; tool swings keep their timing">Motion speed: 100%</button><button class="ghost" id="hudMode" aria-keyshortcuts="V" title="Full, minimal (the essentials only) or hidden (just the field)">HUD: full <kbd>V</kbd></button><button class="ghost" id="goalToggle" aria-pressed="true" title="The objective reminder in the corner of the field">Objective: on</button><button class="ghost" id="promptToggle" aria-pressed="true" title="What Use will do, shown by what you face">Prompts: on</button><button class="ghost" id="tipsToggle" aria-pressed="true" title="Tool tips when nothing happens, and a tip in the morning report">Tips: on</button><button class="ghost" id="farmsBtn" title="Up to three farms in this browser">Farms</button><button class="ghost" id="exportSave">Export save</button><button class="ghost" id="importSave">Import save</button><button class="ghost" id="morningSave" title="The farm as it was when you woke today">Back to this morning</button><button class="ghost" id="reset">New farm</button><button class="ghost" id="debugToggle" aria-expanded="false" aria-controls="debug">Debug tools</button><input type="file" id="importFile" accept=".json,application/json" hidden></div>
+  <h3>Your birthday</h3>
+  <div class="footbtns" id="birthdayRow"></div>
+  <p class="hint" id="birthdayNote" role="status"></p>
   <section class="debug" id="debug" hidden aria-label="Debug tools">
     <button data-debug="day">Skip to tomorrow</button>
     <button data-debug="season">Skip to next season</button>
@@ -98,6 +105,8 @@
   <p class="hint">East of the farm are the Ashgrove Wilds: forage, refill your can at the pond, or face it with the rod to fish (stop the marker in the green). The cave there leads into the Hollow for stone, ore and slimes. West of the farmhouse is the village: neighbours, the quest board and a festival each season.</p>
 </div></div>
 <div class="modal" id="modal" hidden><div class="card" role="dialog" aria-modal="true"><div id="mbody"></div><div class="actions" id="mact"></div></div></div>
+<!-- v144: farmer two's dialog (ui/dom.js finds its #mbody and #mact while they act) -->
+<div class="modal" id="modal2" hidden><div class="card" role="dialog" aria-label="Farmer two"><div id="mbody"></div><div class="actions" id="mact"></div></div></div>
 <script type="module" src="src/main.js"></script>
 </body>
 </html>

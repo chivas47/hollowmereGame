@@ -55,3 +55,13 @@ test('importing rejects files that are not a farm, with a reason', () => {
   assert.throws(() => importSave('not json'), /not valid JSON/);
   assert.throws(() => importSave('{"game":"hollowmere-farm","S":{}}'), /does not contain a Hollowmere farm/);
 });
+
+test('v159: a farmer saved where the new village has a bench moves to the lane; one on open ground stays', () => {
+  const at = (x, y) => ({ x: x * 16 + 8, y: y * 16 + 12 });
+  const bench = merge({ day: 9, gold: 0, v: 3, map: 'village', ...at(5, 12) });   // the green's bench
+  assert.deepEqual({ x: bench.x, y: bench.y }, at(10, 1));
+  const open = merge({ day: 9, gold: 0, v: 3, map: 'village', ...at(12, 7) });    // by the fountain
+  assert.deepEqual({ x: open.x, y: open.y }, at(12, 7));
+  const town = merge({ day: 9, gold: 0, v: 3, map: 'town', ...at(11, 5) });       // the Anvil's old spot, a bench now
+  assert.deepEqual({ x: town.x, y: town.y }, at(10, 22));
+});

@@ -22,6 +22,7 @@ src/
     pad.js            v126: the controller's pure parts: stickDirs(), nextInDirection() (menu focus); tested
     registry.js       addInteraction, addLayer, addEntities, addUpdater (+ run/draw/collect)
     time.js           dateParts(day), today(), fmtTime(minutes), dayEnd() (END, later with street lamps)
+    format.js         v189: fmtGold(n), every gold amount the player reads ("1,725,356g")
   data/               content only, no logic
     crops.js forage.js fish.js minerals.js products.js artisan.js items.js
     npcs.js maps.js seasons.js hotbar.js upgrades.js (incl. COOP, BARN)
@@ -49,6 +50,7 @@ src/
     journal.js        v114: STORY (the main line: each step's name, hint and map), LANDMARKS per world map place, PIN_MAX, PIN_LENGTH, LOG_MAX
     firstweek.js      v122: ARRIVAL (the opening scene's pages), FIRST_WEEK (a goal a day: name, hint, map, done(S))
     reckoning.js      v128: RECKONING (day, the gem to ask again, the reward, lamp thresholds, porch spots), RECKON_POINTS (Stardew's 21), RECKON_LINES
+    partner.js        v129: PARTNER (the second farmer's name, speed, look, where they stand beside you); v130: what only you can do (yours)
     emotes.js         v124: EMOTES (each reaction's length and gesture), GIFT_EMOTE by taste tier, SIGH (rain)
     gamepad.js        v126: PAD_BUTTONS (standard layout to actions), PAD_LABELS, PAD (dead zone, menu repeat)
     bag.js            v113: BAG_KINDS (the Bag's category tabs and icon tints), ITEM_KIND (every item's kind), ICON_COLOURS, MADE_FROM and madeFrom() (wine_plum -> plum), BAG_SORTS, BAG_VIEWS
@@ -68,8 +70,13 @@ src/
     traditions.js     v110: the wishing stone (STONE, STONE_TILE, BLESSINGS) and the Lantern Float (FLOAT: day, hours, the neighbours' spots on the beach, lines), floatOn()
     hints.js          HINTS (id, when(S, facts), text) most pressing first, TOOL_TIPS, STUCK_PRESSES (v101)
     animation.js      SWINGS (tool arcs and timings), COMBO (weapon combo steps), PICKUP, CRAFTED, PLACE, IMPACT colours (v74); MOTION (v115: easing, turns, idling)
-    schedules.js      neighbour daily routines by weekday (go: walk a loop of spots, at: walk there and stay), spouse and festival days
-    homes.js          where each neighbour lives: door, cottage, door hours (v76); homeEntry() inside the front door (v97)
+    schedules.js      neighbour daily routines by weekday (go: walk a loop of spots, at: walk there and stay), spouse and festival days; v146: rainDay() (RAIN shelters), spouseRainDay(), RAIN_WEATHERS; v148: dailyLife() (LUNCH, errandOf(), SHOPPERS) inside scheduleFor(); v149: along() blocks (with: follow a friend), evening VISITS; v150: vary(id, day, blocks) (FAVOURITE detours, seeded by the date), applied before dailyLife()
+    topics.js         v152: ABOUT (a line about a friend), SEASON_START, SNOW, BIRTHDAY, EVE (the festival tomorrow); v153: NEWS (lines about what you did)
+    friends.js        v149: FRIENDS (pairs and why), friendsOf(), areFriends(), VISITS (evening calls), visitSpot(host)
+    doings.js         v147: DOINGS (what each neighbour does where: map, stay, does, carry), doingFor(id, block)
+    crowd.js          v145: the festival crowd (v151: EARLY, SETUP, CLOSE): STATIONS (places in the square, the way they face, festival kinds, a mood), ROLES (jobs by festival kind), CROWD (minutes per place), CHAT
+    homes.js          where each neighbour lives: door, cottage, door hours (v76); homeEntry() inside the front door (v97); shares: a home of more than one, its owner's door and inside, a spot each from the plan's spots (v166)
+    ranch.js          Tamsin's pens on the village map and where her cows and sheep stand (v166)
     venues.js         v98: VENUES, the buildings you walk into (shops, tavern, clinic, museum, ranch, town hall, theatre, lodge, Oasis, casino, coop, barn): where each stands, which tiles are its door, the dialog its counter opens, its floor plan; venueMap(), venueFront()
     interiors.js      v97: each cottage's floor plan (24x16 characters: walls, doors, rooms, a key of pieces with colours, things on top and a line to read), PIECES, piecesOf(), interiorGrid(), doorOf(), roomAt()
     scenes.js         heart scenes at 4 and 8 hearts
@@ -85,19 +92,20 @@ src/
     journal.js        v114: story steps checked against the save, objectives() (main and optional, for the journal and the HUD), tracked(), the finished-quest log, places found, map pins, quest markers, recap() (G.S.journal)
     firstweek.js      v122: weekGoal() (the open goal), checkWeek(); goals read from the save; journal.js shows the goal first
     reckoning.js      v128: score(), the morning judgement, the carved lid's daily gleamfruit, askAgain() (through npcs.js addGiftHook), the porch lamps layer
-    emotes.js         v124: emote(id, kind), emoteOf(id), gestureOffset(); npcs.js starts them and draws them
+    partner.js        v143: G.S.partner.hp (health.js hurtPartner). v142: G.S.partner saves their name, look, place (at), slot and picked; placeBed() (their bed), bedtime() and G.bed (the night when both are in bed). v129: G.P2 (the live farmer): join(), leave(), partnerKeys(), besideYou(); walks, follows map:changed, drawn; v130: partnerUse() runs act() as them (asPartner swaps position, slot, energy and swing into G.S), partnerSlot(); S.partner.energy; v131: partnerPrompt() for ui/prompt.js, your bed only; v134: G.partnerActing while act() runs as them, their rod and line; v136: G.P2.riding (systems/stable.js rider())
+    emotes.js         v124: emote(id, kind), emoteOf(id), gestureOffset(); npcs.js and chatter.js (v145) start them, npcs.js draws them
     pets.js           the farm pet: wandering, pats, the water bowl, gifts, hats
-    stable.js         stable building, horse riding, following between maps, whistle
-    world.js          tile queries, collision, facing(), placePlayer(), useEnergy(), soilOf(map), placeKey()/parsePlaceKey()
+    stable.js         stable building, horse riding, following between maps, whistle; v136: either farmer rides, one at a time (rider())
+    world.js          tile queries, collision (v138: on a given map; moveBox uses pos.map), farmerMaps()/occupied(map)/mover() (v138: a map per farmer), facing(), placePlayer(), useEnergy(), soilOf(map), placeKey()/parsePlaceKey()
     player.js         movement, map exits, player sprite (respects G.lock)
     clock.js          advances time, pass out at END
     days.js           sleep(): day:end -> date++ -> season:changed -> day:start -> day:report
     interact.js       act(): builds {tx, ty, tile, mapId, item} and runs interactions; v75: waits out a tool swing (animation.js busy())
     effects.js        tool swing feedback (swingAt: the water and seed overlay, starts the player's swing)
-    animation.js      v74: player action poses (playAnim, rooted), pickups flying in, particles (burst, ring), damage numbers (floatText), screen shake (shake), hit-stop (holdSwing); cosmetic only, its own RNG
+    animation.js      v74: player action poses (playAnim, rooted), pickups flying in, particles (burst, ring), damage numbers (floatText), screen shake (shake), hit-stop (holdSwing); cosmetic only, its own RNG; v130: stepAnim() advances any farmer's swing
     farming.js        till (wide hoe), water, plant, harvest, growth, withering
     forage.js         daily forage spawns in the Wilds
-    fishing.js        cast, bite, the catch bar (v41: hold Use, G.useHeld), bait, tackle, treasure, trash, fish log
+    fishing.js        cast, bite, the catch bar (v41: hold Use, G.useHeld), bait, tackle, treasure, trash, fish log; v134: G.fishing.p2 is the second farmer's line (their A, G.P2.useHeld)
     sites.js          where every farm building stands: moving and placing buildings, writing their tiles
     mill.js           the mill (wheat and beets overnight) and the shed door
     cooking.js        recipes, cooking at the stove, the fridge, eating, buffs on G.S.buff and G.S.drink, daily luck, the TV show, wishfruit sources
@@ -113,10 +121,18 @@ src/
     guild.js          the Wardens' Lodge in the Wilds: shop, slaying goals (G.S.slain, G.S.goalsClaimed), its keeper
     professions.js    professions: has(id) for the systems that apply one, priceMult() for selling, choosing, combat health
     helpers.js        helper hut harvests, waystones, the home charm, the farm cave (opening, choice, daily crate)
+    statue.js         v169: the fortune statue: a loved gift on a neighbour's birthday morning (G.S.statue), Use takes it
+    attic.js          v172: the attic ladder ʌ in the farmhouse and the hatch back down (the renovation)
+    birthday.js       v174: the farmer's birthday (G.S.birthday, set in the Menu by ui/birthday.js) and the birthday dinner's hearts and gifts; npcs.js seats the guests (data/birthday.js dinnerSeat)
+    train.js          v179: the goods train on the railway (trainOn(day), seeded; drops by the line in G.S.trainDrops, Use picks one up)
     ponds.js          the fish pond (stock, breed, roe, requests) and the slime pen (trough, slime balls, addSlime)
     buildings.js      door (sleep), stall (shop), bin and mini bins (ship), well/pond refill
     economy.js        ship(), buy(), overnight payout; materials are never shipped
-    npcs.js           schedules across farm and village, talk, gifts, hearts, 3-heart rewards, heart scenes
+    npcs.js           schedules across farm and village (v146: rain days; v149: follow() for `with` blocks; v151: homeNow(id), walking a friend home), talk (v146: RAIN_LINES from data/npcs.js), gifts, hearts, 3-heart rewards, heart scenes
+    crowd.js          v145: crowdPlan(kind, ids, day, hours), a festival's blocks for everyone (seeded by the day), stationsFor(), rolesFor(); npcs.js uses it
+    news.js           v153: G.S.news (today: museumAt, spouseAt, quests, skills; yesterday: shipped, donated, won, wed, helped, skills), recordDay(), wonFestival(), yesterday(); listens to quest:done, skill:level, day:end
+    topics.js         v152: topicFor(def, ctx), the line about what is going on today, or null; npcs.js startTalk uses it
+    chatter.js        v145: pairs() of idle neighbours side by side; turns them to each other with chat emotes, and festival moods
     upgrades.js       smithy and carpentry purchases, material costs, recalcStats()
     family.js         children (G.S.children, G.S.baby, G.S.childAsk), growing up, hugs; divorce at the town hall (v53)
     nuts.js           tide nuts (G.S.nuts): beach digs, first island harvests and catches, the dig site bridge (tile 6) and its daily dig spots, the island trader (tile 5) (v66); the Smoke Peak gate (tile 7), its nut floors and summit cache (tile < in the mine), the puzzles: shells 8, basins 9, altar <, lantern ` (v67)
@@ -158,10 +174,11 @@ src/
     wind.js           lean(x): how far things lean in the wind now, by weather and the day (v103; no drawing, safe for the balance bot)
     wing.js           the town reacts to the old wing (boards, planter, flowers, fountain, smoke, bunting, plaque; the Ashgrove look) and the cart line; solid Ž and Ç tiles placed as rooms are done (v108)
     vignettes.js      small stories outdoors: solid Ѫ tiles set on open ground at load, drawn per art key with the season, Use reads them (v111)
+    stalls.js         Saturday stalls on the town green (stallsOpen, sellerOf weekly rotation, buyStall at twice sell; raises ʂ once funded) (v165)
     traditions.js     the wishing stone (solid Ӂ in the village at load, bless() sets G.S.blessing, read by buffs.js) and the Lantern Float on the beach (setLantern(), floatLights() for nightlights.js; npcs.js walks neighbours there) (v110, G.S.traditions)
     signs.js          signposts and notices outdoors: solid Ş tiles set on open ground at load, Use reads them (v107)
     shortcuts.js      fallen trunks across shortcuts, cut with the copper axe; then trunk tiles turn to path and the maps get exits (v106, G.S.shortcuts)
-    nightlights.js    outdoorLights(): lit windows, lamp posts and lanterns after dusk (renderer.js cuts them out of the dark); lit glass and lamp posts (v105, drawn only)
+    nightlights.js    outdoorLights(): lit windows (v151: a cottage only while homeNow(owner), ownerOf()), lamp posts and lanterns after dusk (renderer.js cuts them out of the dark); lit glass and lamp posts (v105, drawn only)
     falling.js        seasonal motion: petals, fluff, leaves, snow clumps from tree crowns, drifting with wind.js (v104, drawn only)
     sway.js           grass tufts off the farm and clotheslines, bending with wind.js (v103, drawn only)
     water.js          moving water: ripples, sunny glints, rain rings, reflections of entities at the bank (v102, drawn only)
@@ -174,11 +191,13 @@ src/
     pixel.js          r() rectangle primitive, rng(seed), blink()
     tiles.js          static art: grass, path, trees, water, rocks, buildings, cave tiles
     sprites.js        per-frame art: soil, crops, forage, people, chickens, slimes, fruit trees, giant crops, effects
+    doings.js         v147: drawDoing(c, px, py, dir, kind, t, look), the props (v191: letter-row sprites over one shared PAL) neighbours hold or set down (DOING_KINDS)
     icons.js          16x16 hotbar icons
     itemIcons.js      v113: 16x16 item icons for the Bag and chests, one shape per kind coloured per item, cached as data URLs (iconURL)
     arcade.js         the arcade cabinets' screens (v70)
     animation.js      v74: the tool or weapon in hand (drawHeld, rotated hotbar icons), the rod (drawRod), the crafted pose, item pictures, particles and labels (drawFx)
-    renderer.js       composes a frame, caches backgrounds per map + season
+    renderer.js       composes a frame, caches backgrounds per map + season; v139: draws each view (G.view = the farmer it follows: night light, mine dark, facing outline)
+    views.js          v139: split screen: views() (one alone, two halves side by side with a second farmer), camera(), onScreen(), toWorld() for prompts and taps; v156: the camera moves both ways over each farmer's own map (sizeOf() in data/maps.js), and visible() is the world rectangle a frame draws (G.drawing), for layers that cover the screen
     interiors.js      v97: cottage rooms (each room its own wallpaper and floor, two-row north walls), every floor-plan piece at its full size, small things on surfaces (TOPS), rugs; windows follow the hour, fires and stoves flicker
     sheets.js         v77: PNG sprite sheets from assets/sprites/: sheet(), ready(), tinted() (grey layers tinted to a palette, cached, up to 256), frame() (v78: optional row), onSheet()
   audio/              Web Audio output (like render/, but for sound); imported only by main.js and ui/
@@ -211,13 +230,13 @@ src/
     nuts.js           the bridge and the island trader (ui:bridge, ui:islandshop, v66; ui:peak, v67)
     social.js         the social menu (F, or the Friends button) and letters (v48)
     menu.js           the pause menu (Esc or the Menu button): settings, save files, debug tools, controls (v96)
-    dom.js toast.js modal.js (openModal(html, actions, {wide})) hud.js hudPrefs.js goal.js prompt.js hotbar.js dialogs.js
+    dom.js toast.js modal.js (openModal(html, actions, {wide}); v141: over the owner's half in two-player, no pause; v144: one dialog each, #modal yours and #modal2 farmer two's, G.dialog.{you,p2}; dom.js $ and $$ search only the acting farmer's box (G.partnerActing); listeners on #mbody/#mact serve both; clicks, input and change in #modal2 run through asThem) hud.js hudPrefs.js goal.js prompt.js hotbar.js dialogs.js
     workshop.js mine.js input.js (keys go through core/controls.js actionOf; v126: runAction(), escape() for the pad too) debugPanel.js
     offline.js        v121: registers sw.js and hands it the files the first visit loaded
     slots.js          v127: the menu's Farms dialog (three save slots)
     reckoning.js      v128: the reckoning dialog after the morning report (waits for report:closed)
     motion.js         v125: the menu's Particles, Shake, Hit-stop and Motion speed buttons
-    gamepad.js        v126: polls the pad: walking, actions, held A; in dialogs and the menu, focus moves and A presses
+    gamepad.js        v126: polls the pad: walking, actions, held A; in dialogs and the menu, focus moves and A presses; v129: a second pad steers the second farmer; v130: its A uses, LB and RB pick their slot
     controls.js       v119: the menu's Controls list (click a key, press the new one) and every <kbd data-control> label
     crafting.js (craft menu, placed-object dialog) barn.js village.js (board, festival)
 tools/
@@ -248,7 +267,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | Priority | Owner | Claims |
 |---|---|---|
 | 300 | sites.js | Any Use while placing or moving a building |
-| 200 | fishing.js | Any Use while a line is out |
+| 200 | fishing.js | Any Use while a line is out, by whoever cast it (v134) |
 | 199 | stable.js | Any Use while riding (get off) |
 | 100 | npcs.js | Facing a neighbour |
 | 97 | stable.js | Facing the horse (get on) |
@@ -276,6 +295,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 66 | pots.js | The gold pan in slot 9 on pond water |
 | 66 | quarry.js | Pickaxe on a quarry rock |
 | 64 | pots.js | Kit slot with a crab pot on pond water (set it) |
+| 64 | cat.js | Facing Pudding, the village cat (pet her; v164) |
 | 72 | treasure.js | Treasure chest $ in the Hollow |
 | 72 | guild.js | Wardens' Lodge & in the Wilds (dialog, or a barred door before floor 1) |
 | 72 | nuts.js | Smoke Peak gate 7 and shells 8, altar <, lantern ` on the island; the summit cache < in the mine (v67) |
@@ -283,6 +303,9 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 56 | nuts.js | Dry basins 9 on the island, with the can (v67) |
 | 57 | treasure.js | Kit slot with a bomb (throws it at the faced tile, Hollow only) |
 | 72 | helpers.js | Helper hut a, waystones e and d (warp), cave mouth y, the cave's crate t |
+| 72 | statue.js | The fortune statue ʘ on the farm (takes today's birthday gift) (v169) |
+| 73 | train.js | A parcel the goods train left beside the railway line (pick it up) (v179) |
+| 72 | attic.js | The attic ladder ʌ in the farmhouse (up) and the attic's hatch ʌ (down) (v172) |
 | 57 | helpers.js | Kit slot with a home charm (warp home) |
 | 72 | market.js | The travelling cart ¢ in the forest, the bookseller § and the prize machine ¤ in the town (v69) |
 | 72 | theatre.js | The picture house Þ on the town's lower lane (dialog, or its hours) (v70) |
@@ -293,6 +316,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 72 | homes.js | Cottage V front row (enter the owner's cottage, or why it is locked) (v76) |
 | 72 | venues.js | The counter or hopper inside a building: its dialog (v98) |
 | 71 | venues.js | Any piece inside a cottage or building, on the floor or on a wall (its own line, v97, v98) (v76) |
+| 71 | stalls.js | The Saturday stalls ʂ on the town green (buy from this week's seller, ui:stalls) (v165) |
 | 71 | village.js | Fountain F, cottage V away from its front (where the door is) |
 | 71 | mail.js | The mailbox on the farmhouse front (farm H tile at 5,3) |
 | 71 | cooking.js | Farmhouse stove o (cook) and counters n (fridge) |
@@ -353,14 +377,14 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | Event | Payload | Emitted by | Typical listener |
 |---|---|---|---|
 | `state:changed` | none | everywhere via `changed()` | HUD, hotbar |
-| `toast` | message | `notify()` | ui/toast.js |
+| `toast` | message | `notify()` | ui/toast.js (v133: held on a new farm until the arrival scene is done; v176: in two-player, over the half of whoever caused it, #toast or #toast2; v193: inside the top of that farmer's open dialog card) |
 | `hud:prefs` | none | ui/hudPrefs.js (v120: also text size and contrast) | ui/goal.js, ui/prompt.js (v112) |
 | `report:closed` | none | ui/dialogs.js, Start the day (v128) | ui/reckoning.js |
 | `motion:prefs` | none | core/motion.js (v125) | ui/motion.js (the buttons) |
 | `controls:changed` | none | core/controls.js (v119) | ui/controls.js (labels, the list), ui/hotbar.js (slot keys) |
 | `game:loaded` | none | main.js, reset | forage, upgrades (recalc), coop (place), mine (eject) |
 | `game:reset` | none | ui/dialogs.js | renderer cache, npcs, coop, fishing |
-| `map:changed` | map id | player.js, days.js, mine.js | fishing, monsters |
+| `map:changed` | map id (v138: `mover()` in world.js says whether you or the second farmer moved; v140: fishing, the horse, combat, effects and queued Use act only for the mover) | player.js, days.js, mine.js, partner.js (their exits) | fishing, monsters, partner, stable, animation, interact |
 | `world:changed` | none | coop.js, mine.js | renderer (drop background cache) |
 | `day:end` | report | days.js | weather (lightning, next forecast), farming (growth), economy (payout), coop (eggs) |
 | `season:changed` | {from, to, report} | days.js | farming (wither), trees (drop fruit), renderer |
@@ -440,7 +464,14 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | U, L | ladder up, ladder down | yes |
 | Ѫ | a small story outdoors (v111; written at load on open grass or sand) | yes |
 | Ӂ | the wishing stone in the village (v110; written at load on open grass) | yes |
+| ʂ | a Saturday market stall on the town green (v165; written at load once the project is funded) | yes |
+| ɲ | Tamsin's pens on the village's east road, fence and her animals drawn (v166) | yes |
+| ʘ | the fortune statue on the farm (v169; a placed building, systems/sites.js) | yes |
+| ʌ | the attic ladder on the farmhouse's bed corner wall, and the hatch in the attic (v172; house tile, drawn on the wall face) | yes |
+| ŧ | the dining room's long table in the farmhouse (v173; house tile) | yes |
 | \|, }, ;, {, ? | fallen log, rubble, sewer grate, hot spring, sewer trader (v45; the gates become P once open) | yes |
+| ħ, ǧ, ƀ | hedge, garden bed, bench (v159: the village and the town; props drawn on grass, render/tiles.js) | yes |
+| ʋ, β | reeds, the boathouse's walls (v160: the mere; systems/mere.js answers its door) | yes |
 
 `objects` on a map draw building art from `OBJECT_ART` in render/tiles.js. Maps with `base: 'cave'` use cave floor art and skip the night tint; `home_<id>` maps (v76) are the neighbours' cottages, `base: 'house'` with a `home` owner id; `base: 'greenhouse'` uses plank floor and soil-bed art.
 

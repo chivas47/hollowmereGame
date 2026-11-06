@@ -25,17 +25,23 @@
 //   # cinder rock, ~ lava, > the door to the Ember Vent, = the forge (v39)
 // objects: art drawn on top of the tiles (see render/tiles.js OBJECT_ART).
 // exits: "x,y" of an E tile -> where it leads.
+import { RANCH_PEN } from './ranch.js';   // v166
 import { W, H } from '../core/constants.js';
 import { MACHINE } from './market.js';
 import { HOMES, homeMap } from './homes.js';
 import { INTERIORS, interiorGrid, doorOf } from './interiors.js';
 import { VENUES, venueMap } from './venues.js';
+import { MERE } from './mere.js';
 
-export const SOLID = new Set(['Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
+// v156 (roadmap 75g): a map's size in tiles, read from its grid, so a map can be larger than the screen (W x H).
+export const sizeOf = (id) => { const g = MAPS[id]?.grid; return g?.length ? { w: g[0].length, h: g.length } : { w: W, h: H }; };
 
-function emptyGrid() {
-  return Array.from({ length: H }, (_, y) =>
-    Array.from({ length: W }, (_, x) => (x === 0 || y === 0 || x === W - 1 || y === H - 1 ? 'T' : 'g')));
+export const SOLID = new Set(['ħ', 'ǧ', 'ƀ', 'β', 'ʋ', 'ʂ', 'ɲ', 'ʘ', 'ʌ', 'ŧ', 'Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
+
+// v158: w and h for a map larger than the screen (roadmap 75i); the camera follows you across it.
+function emptyGrid(w = W, h = H) {
+  return Array.from({ length: h }, (_, y) =>
+    Array.from({ length: w }, (_, x) => (x === 0 || y === 0 || x === w - 1 || y === h - 1 ? 'T' : 'g')));
 }
 const put = (m, list, t) => list.forEach(([x, y]) => { m[y][x] = t; });
 const fill = (m, x0, y0, x1, y1, t) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) m[y][x] = t; };
@@ -70,23 +76,59 @@ function wildsGrid() {
   return m;
 }
 
+// v159 (roadmap 75c, docs/sketches/75c-village.md): 40 x 28, grown east and south. The square, the north row and the
+// sewer grate keep their tiles; Esme and Kit moved onto the east road, Nell and Rook onto a new lower lane with two
+// empty lots, and the old south row became a green with benches and Nell's garden. A pond in the south-east.
+export const VILLAGE_SIZE = { w: 40, h: 28 };
 function villageGrid() {
-  const m = emptyGrid();
+  const { w, h } = VILLAGE_SIZE, m = emptyGrid(w, h);
   [[1, 2], [5, 2], [16, 2], [20, 2]].forEach(([x, y]) => fill(m, x, y, x + 2, y + 1, 'V'));
-  fill(m, 1, 4, W - 2, 4, 'P');
+  fill(m, 1, 4, 22, 4, 'P');
   fill(m, 8, 6, 15, 11, 'P');
   put(m, [[9, 5], [14, 5]], 'P');
-  fill(m, 16, 8, W - 2, 8, 'P'); m[8][W - 1] = 'E';
+  fill(m, 16, 8, w - 2, 8, 'P'); m[8][w - 1] = 'E';   // the east road to the farm
   fill(m, 11, 5, 12, 5, 'Q');
   fill(m, 11, 8, 12, 9, 'F');
   fill(m, 13, 11, 14, 11, 'J');
-  fill(m, 11, 12, 11, 14, 'P'); m[15][11] = 'E';   // v43: the path south to the beach
+  fill(m, 11, 12, 11, h - 2, 'P'); m[h - 1][11] = 'E';   // v43: the path south to the beach
   m[11][2] = ';';                                   // v45: the sewer grate
   fill(m, 10, 0, 10, 3, 'P'); m[0][10] = 'E';       // v46: the lane north to the town
-  put(m, [[3, 9], [5, 12], [2, 14], [21, 10], [6, 7]], 'T');
-  // v50: a row of cottages on the south lane (Nell, Rook, Esme, Kit), their doors onto row 14
-  [2, 6, 14, 18].forEach((x) => fill(m, x, 12, x + 2, 13, 'V'));
-  m[12][5] = 'g'; fill(m, 3, 14, 20, 14, 'P');
+  put(m, [[3, 9], [21, 10], [6, 7], [37, 3], [37, 13], [18, 14], [5, 24], [16, 24], [25, 24]], 'T');
+  [[24, 6], [30, 6]].forEach(([x, y]) => fill(m, x, y, x + 2, y + 1, 'V'));   // Esme and Kit, doors onto the east road
+  fill(m, 23, 5, 34, 5, 'ħ');                        // a hedge behind them
+  fill(m, 33, 9, 33, 19, 'P');                       // the east lane down to the lower lane
+  fill(m, 2, 20, 33, 20, 'P');                       // the lower lane
+  [[4, 18], [13, 18]].forEach(([x, y]) => fill(m, x, y, x + 2, y + 1, 'V'));   // Nell and Rook, doors onto it
+  put(m, [[2, 12], [5, 12], [2, 14], [5, 14]], 'ƀ');   // the green's benches
+  fill(m, 3, 15, 8, 16, 'ǧ');                        // Nell's garden behind her house
+  fill(m, 30, 22, 36, 25, 'O');                      // the village pond
+  fill(m, 34, 20, w - 2, 20, 'P'); m[20][w - 1] = 'E';   // v160: the lower lane runs on east to the mere
+  // v166 (roadmap 75j): Tamsin's ranch south of the east road: her cottage, a path to the east lane, the pens.
+  fill(m, 24, 11, 26, 12, 'V'); fill(m, 25, 13, 32, 13, 'P');
+  { const [x0, y0, x1, y1] = RANCH_PEN.box; fill(m, x0, y0, x1, y1, 'ɲ'); }
+  // v175 (roadmap 75s): Hester and Wilmot's cottage in the south-west corner, Hester's rose bed beside it.
+  fill(m, 6, 22, 8, 23, 'V'); fill(m, 2, 22, 3, 23, 'ǧ');
+  return m;
+}
+
+// v160 (roadmap 75d): the mere, the lake the valley is named for (data/mere.js). In from the village's lower lane on
+// the west; open water, reeds along the shore, the shut boathouse and its dock on the south-west bank.
+function mereGrid() {
+  const { w, h } = MERE.size, { cx, cy, rx, ry } = MERE.lake, m = emptyGrid(w, h);
+  const wet = (x, y) => ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 <= 1;
+  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) if (wet(x, y)) m[y][x] = 'O';
+  // reeds on every third shore tile (grass beside the water), clear of the dock's bank
+  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
+    if (m[y][x] !== 'g' || (x * 7 + y * 3) % 3 || Math.abs(x - MERE.dock.x) < 3) continue;
+    if ([[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => m[y + b][x + a] === 'O')) m[y][x] = 'ʋ';
+  }
+  m[20][0] = 'E'; fill(m, 1, 20, MERE.dock.x, 20, 'P');   // the lane from the village
+  const { x: bx, y: by } = MERE.boathouse; fill(m, bx, by, bx + 2, by + 1, 'β');
+  fill(m, MERE.dock.x, MERE.dock.from, MERE.dock.x, MERE.dock.to, 'P');   // the dock, out over the water
+  // v161 (roadmap 75e): Ysolde's cottage on the west plot, onto the lane; Ferran's on the east plot, its own path
+  for (const [x, y] of MERE.cottages) fill(m, x, y, x + 2, y + 1, 'V');
+  fill(m, MERE.dock.x, 21, 31, 21, 'P');
+  put(m, [[3, 3], [6, 12], [3, 24], [9, 25], [20, 24], [27, 22], [33, 25], [37, 20], [38, 4], [35, 2], [8, 6]], 'T');
   return m;
 }
 
@@ -119,12 +161,21 @@ function forestGrid() {
 }
 
 // v45: the hidden grove west of the forest: old trees, big stumps that grow back and a still pond.
+// v158 (roadmap 75i): the first map larger than the screen, 40 x 24. It grew east and south, so everything that was
+// here keeps its tile (the stumps, the forage, the cairn): east, a ring of old trees round a mossy clearing; south,
+// a still pool among more old trees.
+export const GROVE_SIZE = { w: 40, h: 24 };
 function groveGrid() {
-  const m = emptyGrid();
-  m[12][W - 1] = 'E'; fill(m, 14, 12, W - 2, 12, 'P');
+  const { w, h } = GROVE_SIZE, m = emptyGrid(w, h);
+  m[12][w - 1] = 'E'; fill(m, 14, 12, w - 2, 12, 'P');
   fill(m, 4, 4, 9, 8, 'O'); put(m, [[4, 4], [9, 4], [4, 8], [9, 8]], 'g');
   fill(m, 6, 1, 7, 3, 'O');   // v72: the falls into the pool (data/atmosphere.js)
   put(m, [[2, 2], [12, 2], [17, 3], [20, 6], [2, 11], [7, 13], [12, 10], [16, 9], [21, 2], [14, 14]], 'T');
+  for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) {   // the ring, open to the south
+    if (Math.round(Math.hypot(dx, dy)) === 3 && !(dx === 0 && dy === 3)) m[5 + dy][32 + dx] = 'T';
+  }
+  fill(m, 27, 16, 32, 19, 'O'); put(m, [[27, 16], [32, 16], [27, 19], [32, 19]], 'g');   // the still pool
+  put(m, [[3, 18], [8, 20], [13, 17], [17, 21], [22, 19], [25, 22], [11, 22], [36, 20], [35, 15], [26, 9], [38, 2], [24, 4], [20, 17], [5, 22]], 'T');
   return m;
 }
 // v45: the railway east of the Wilds: tracks across it and a hot spring beside them.
@@ -134,12 +185,13 @@ function railwayGrid() {
   fill(m, 1, 6, W - 2, 7, 'P');
   fill(m, 15, 10, 18, 11, '{');
   put(m, [[3, 10], [8, 12], [20, 3], [12, 2], [6, 13], [21, 13]], 'T');
+  fill(m, 8, 3, 10, 4, 'V');   // v178 (roadmap 75w): the halt house, Sabine and Emmet
   return m;
 }
 // v46: the town north of the village: three shops along a lane. v98: each one has an inside (data/venues.js).
 export const SHOP_SPOTS = {
   store:     { tile: '(', x: 3, y: 5 },
-  smithy:    { tile: ')', x: 10, y: 5 },
+  smithy:    { tile: ')', x: 33, y: 5 },   // v159 (roadmap 75c): moved to the east edge of town (fire, noise)
   carpenter: { tile: ']', x: 17, y: 5 },
   tavern:    { tile: '[', x: 4, y: 10 },    // v47: the south side, doors onto the lower lane
   clinic:    { tile: '/', x: 14, y: 10 },
@@ -147,22 +199,26 @@ export const SHOP_SPOTS = {
   ranch:     { tile: '£', x: 7, y: 10 },     // v69: the ranch counter, between the tavern and the lane
 };
 export const CLINIC_BED = { map: 'inside_clinic', x: 14, y: 12, dir: 'up' };   // v47: where you come to after fainting (v98: in the ward)
+// v159 (roadmap 75c): 40 x 24, grown east and south. The shops, hall and cottages keep their tiles; the Anvil moved
+// to the east edge and its old spot is a small green; the coach stop and the ridge path moved to the new east edge.
+export const TOWN_SIZE = { w: 40, h: 24 };
 function townGrid() {
-  const m = emptyGrid();
-  fill(m, 0, 0, W - 1, 0, 'T'); fill(m, 0, 0, 0, H - 1, 'T'); fill(m, W - 1, 0, W - 1, H - 1, 'T');
+  const { w, h } = TOWN_SIZE, m = emptyGrid(w, h);
   for (const s of Object.values(SHOP_SPOTS)) fill(m, s.x, s.y, s.x + 2, s.y + 1, s.tile);   // v98: keepers work inside now
-  fill(m, 2, 8, 21, 8, 'P');
+  fill(m, 2, 8, w - 2, 8, 'P');
   for (const s of Object.values(SHOP_SPOTS)) if (s.y < 8) m[7][s.x + 1] = 'P';
-  fill(m, 10, 9, 10, H - 1, 'P'); m[H - 1][10] = 'E';
-  fill(m, 2, 12, 21, 12, 'P');   // v47: the lower lane past the tavern and the clinic
-  put(m, [[3, 2], [7, 3], [7, 14], [21, 14], [2, 14], [17, 14]], 'T');
+  fill(m, 10, 9, 10, h - 1, 'P'); m[h - 1][10] = 'E';
+  fill(m, 2, 12, 30, 12, 'P');   // v47: the lower lane past the tavern and the clinic
+  put(m, [[3, 2], [7, 3], [24, 3], [7, 14], [2, 14], [30, 15], [36, 19]], 'T');
+  put(m, [[11, 5], [11, 6]], 'ƀ');   // benches on the green where the Anvil stood
   fill(m, 13, 1, 15, 2, 'V'); fill(m, 14, 3, 14, 7, 'P');   // v49: Lio's cottage on the north edge
   fill(m, 4, 1, 6, 2, 'V'); fill(m, 5, 3, 5, 7, 'P');        // v50: Pell's cottage
   fill(m, 18, 1, 20, 2, 'V'); fill(m, 19, 3, 20, 3, 'P'); fill(m, 20, 4, 20, 7, 'P');   // v50: Juno's cottage
   fill(m, 9, 1, 11, 2, '-'); fill(m, 8, 3, 10, 3, 'P'); fill(m, 8, 4, 8, 7, 'P');      // v53: the town hall
-  m[8][22] = 'P'; m[7][22] = '0';   // v64: the coach stop at the east end of the lane
+  m[7][36] = '0';   // v64: the coach stop at the east end of the lane (v159: the new east end)
   m[MACHINE.at.y][MACHINE.at.x] = '¤';   // v69: the prize machine by the town hall
-  m[4][W - 1] = 'E'; m[4][W - 2] = 'Ŧ'; m[4][W - 3] = 'P';   // v106: the ridge path east to the mountain, behind a fallen trunk
+  m[4][w - 1] = 'E'; m[4][w - 2] = 'Ŧ'; fill(m, w - 3, 4, w - 3, 7, 'P');   // v106: the ridge path east to the mountain, behind a fallen trunk
+  fill(m, 14, 14, 16, 15, 'V'); fill(m, 11, 16, 15, 16, 'P');   // v166 (roadmap 75j): Aurel, Bryn and Pip's cottage
   return m;
 }
 
@@ -250,6 +306,7 @@ function mountainGrid() {
   put(m, [[3, 3], [12, 3], [3, 9], [12, 9]], 'g');
   put(m, [[15, 2], [18, 3], [20, 2], [16, 11], [6, 12], [10, 13], [2, 12], [18, 13], [14, 4]], 'T');
   put(m, [[17, 5], [5, 11], [13, 12]], 'R');
+  fill(m, 14, 8, 16, 9, 'V');   // v178 (roadmap 75w): Thorne's hut
   return m;
 }
 // v44: the quarry east of the mountain: open stone floor where rocks come back every morning.
@@ -263,7 +320,7 @@ function quarryGrid() {
 // 3 the cellar); renos: renovation keys (data/furniture.js). Tiles: . nothing (solid), I wall, h floor,
 // Z bed, l catalogue lectern, n kitchen counter, o stove, x crib, v cask, E the front door.
 export function houseGrid(tier = 0, renos = []) {
-  const m = Array.from({ length: H }, () => Array.from({ length: W }, () => '.'));
+  const m = Array.from({ length: H + 3 }, () => Array.from({ length: W + 7 }, () => '.'));   // v171: three rows more, for the south room; v173: seven columns, the dining room
   const room = (x0, y0, x1, y1) => { fill(m, x0 - 1, y0 - 2, x1 + 1, y1 + 1, 'I'); fill(m, x0, y0, x1, y1, 'h'); };
   room(6, 3, 17, 11);
   if (tier >= 1) { room(19, 3, 22, 8); fill(m, 18, 6, 18, 7, 'h'); put(m, [[19, 3], [20, 3], [22, 3]], 'n'); m[3][21] = 'o'; }
@@ -271,6 +328,10 @@ export function houseGrid(tier = 0, renos = []) {
   if (tier >= 3) { fill(m, 18, 9, 23, 15, 'I'); fill(m, 19, 10, 22, 14, 'h'); m[9][20] = 'h'; put(m, [[19, 14], [21, 14], [22, 14]], 'v'); }
   if (!renos.includes('openplan')) fill(m, 10, 3, 10, 5, 'I');   // the bed corner's wall
   if (renos.includes('nook')) fill(m, 12, 2, 13, 2, 'h');
+  if (renos.includes('south')) { room(13, 14, 17, 16); m[12][15] = 'h'; m[13][15] = 'h'; }   // v171: through the south wall, east of the door
+  if (renos.includes('dining') && tier >= 1) { room(24, 3, 29, 8); fill(m, 23, 6, 23, 7, 'h'); fill(m, 25, 5, 28, 6, 'ŧ'); }   // v173: through the kitchen's east wall
+  if (renos.includes('attic')) m[2][9] = 'ʌ';   // v172: the attic ladder on the bed corner's north wall
+  if (renos.includes('corner')) { room(1, 11, 4, 13); m[11][5] = 'h'; }   // v170: through the west wall, below the nursery
   put(m, [[7, 3], [7, 4]], 'Z'); m[3][16] = 'l';
   m[2][14] = '_';   // v47: the phone on the wall
   m[12][11] = 'E';
@@ -298,6 +359,15 @@ const venueMaps = () => Object.fromEntries(Object.entries(VENUES).map(([id, V]) 
 }));
 
 // The shed inside (v30): one plank room. Machines, decorations and furniture go on its floor (h).
+// v172 (roadmap 75p): the attic, up the ladder from the bed corner (the renovation). A long low room; its hatch ʌ
+// in the south wall takes you back down.
+function atticGrid() {
+  const m = Array.from({ length: H }, () => Array.from({ length: W }, () => '.'));
+  fill(m, 3, 1, 20, 10, 'I'); fill(m, 4, 3, 19, 9, 'h');
+  m[10][11] = 'ʌ';
+  return m;
+}
+
 function shedGrid() {
   const m = Array.from({ length: H }, () => Array.from({ length: W }, () => '.'));
   fill(m, 3, 1, 20, 12, 'I'); fill(m, 4, 3, 19, 11, 'h');
@@ -329,7 +399,7 @@ export const MAPS = {
     objects: [{ art: 'house', x: 1, y: 1 }, { art: 'bin', x: 8, y: 3 }, { art: 'well', x: 12, y: 3 }, { art: 'workbench', x: 15, y: 3 }, { art: 'shop', x: 19, y: 1 }],
     exits: {
       [`${W - 1},4`]: { to: 'wilds', x: 1, y: 4, dir: 'right' },
-      '0,4': { to: 'village', x: W - 2, y: 8, dir: 'left' },
+      '0,4': { to: 'village', x: VILLAGE_SIZE.w - 2, y: 8, dir: 'left' },
       '10,15': { to: 'forest', x: 10, y: 1, dir: 'down' },   // v43
     },
     spawn: { x: 3, y: 4, dir: 'down' },
@@ -345,9 +415,10 @@ export const MAPS = {
       { art: 'cottage', x: 1, y: 2, roof: '#a5432f' }, { art: 'cottage', x: 5, y: 2, roof: '#5d7a4a' },
       { art: 'cottage', x: 16, y: 2, roof: '#3f5f6e' }, { art: 'cottage', x: 20, y: 2, roof: '#8b6a9e' },
       { art: 'board', x: 11, y: 5 }, { art: 'fountain', x: 11, y: 8 }, { art: 'table', x: 13, y: 11 },
-      { art: 'cottage', x: 2, y: 12, roof: '#7a8a5a' }, { art: 'cottage', x: 6, y: 12, roof: '#4a6a7a' }, { art: 'cottage', x: 14, y: 12, roof: '#8a5a8a' }, { art: 'cottage', x: 18, y: 12, roof: '#c98a3a' },   // v50
+      { art: 'cottage', x: 4, y: 18, roof: '#7a8a5a' }, { art: 'cottage', x: 13, y: 18, roof: '#4a6a7a' }, { art: 'cottage', x: 24, y: 6, roof: '#8a5a8a' }, { art: 'cottage', x: 30, y: 6, roof: '#c98a3a' }, { art: 'cottage', x: 24, y: 11, roof: '#8a3f2a' }, { art: 'cottage', x: 6, y: 22, roof: '#9a5a6a' },   // v166: Tamsin; v175: Hester and Wilmot
+        // v50: Nell, Rook, Esme, Kit (v159: moved, roadmap 75c)
     ],
-    exits: { [`${W - 1},8`]: { to: 'farm', x: 1, y: 4, dir: 'right' }, '11,15': { to: 'beach', x: 11, y: 1, dir: 'down' }, '10,0': { to: 'town', x: 10, y: H - 2, dir: 'up' } },   // v43: the beach; v46: the town
+    exits: { [`${VILLAGE_SIZE.w - 1},20`]: { to: 'mere', x: 1, y: 20, dir: 'right' }, [`${VILLAGE_SIZE.w - 1},8`]: { to: 'farm', x: 1, y: 4, dir: 'right' }, [`11,${VILLAGE_SIZE.h - 1}`]: { to: 'beach', x: 11, y: 1, dir: 'down' }, '10,0': { to: 'town', x: 10, y: TOWN_SIZE.h - 2, dir: 'up' } },   // v43: the beach; v46: the town; v159: the new edges
   },
   house: {
     name: 'Farmhouse', salt: 3, base: 'house', grid: houseGrid(),
@@ -367,34 +438,38 @@ export const MAPS = {
     exits: {},
   },
   digsite: {   // v66
-    name: 'The dig site', salt: 37, grid: digsiteGrid(), ground: 'z', objects: [],
+    name: 'The dig site', salt: 37, grid: digsiteGrid(), ground: 'z', dry: true, objects: [],
     exits: {},
   },
   desert: {   // v64
-    name: 'The Dunes', salt: 29, grid: desertGrid(), ground: 'z',
+    name: 'The Dunes', salt: 29, grid: desertGrid(), ground: 'z', dry: true,
     objects: [{ art: 'storefront', kind: 'oasis', x: 4, y: 2 }, { art: 'storefront', kind: 'casino', x: 15, y: 2 }, { art: 'board', x: 1, y: 7 }, { art: 'table', x: 12, y: 10 }],
     exits: {},
   },
   beach: {
     name: 'Saltreach Beach', salt: 41, grid: beachGrid(), objects: [{ art: 'boat', x: 5, y: 12 }], ground: 'z',
-    exits: { '11,0': { to: 'village', x: 11, y: 14, dir: 'up' } },
+    exits: { '11,0': { to: 'village', x: 11, y: VILLAGE_SIZE.h - 2, dir: 'up' } },
   },
   forest: {
     name: 'Brackenwood', salt: 29, grid: forestGrid(), objects: [],
-    exits: { '10,0': { to: 'farm', x: 10, y: 14, dir: 'up' }, '0,12': { to: 'grove', x: W - 2, y: 12, dir: 'left' } },   // v45: the grove
+    exits: { '10,0': { to: 'farm', x: 10, y: 14, dir: 'up' }, '0,12': { to: 'grove', x: GROVE_SIZE.w - 2, y: 12, dir: 'left' } },   // v45: the grove
   },
   grove: {
     name: 'The hidden grove', salt: 61, grid: groveGrid(), objects: [],
-    exits: { [`${W - 1},12`]: { to: 'forest', x: 1, y: 12, dir: 'right' } },
+    exits: { [`${GROVE_SIZE.w - 1},12`]: { to: 'forest', x: 1, y: 12, dir: 'right' } },
   },
   railway: {
-    name: 'The railway', salt: 67, grid: railwayGrid(), objects: [],
+    name: 'The railway', salt: 67, grid: railwayGrid(), objects: [{ art: 'cottage', x: 8, y: 3, roof: '#5a6a7a' }],   // v178: the halt house
     exits: { '0,3': { to: 'wilds', x: W - 2, y: 3, dir: 'left' } },
+  },
+  mere: {   // v160 (roadmap 75d)
+    name: 'The mere', salt: 79, grid: mereGrid(), objects: [{ art: 'boathouse', x: MERE.boathouse.x, y: MERE.boathouse.y }, { art: 'cottage', x: 4, y: 18, roof: '#a0a45a' }, { art: 'cottage', x: 30, y: 19, roof: '#5a6a3a' }],   // v161: Ysolde, Ferran
+    exits: { '0,20': { to: 'village', x: VILLAGE_SIZE.w - 2, y: 20, dir: 'left' } },
   },
   town: {
     name: 'Hollowmere Town', salt: 83, grid: townGrid(),
-    objects: [{ art: 'board', x: 22, y: 7 }, ...Object.entries(SHOP_SPOTS).map(([kind, s]) => ({ art: 'storefront', kind, x: s.x, y: s.y })), { art: 'cottage', x: 13, y: 1, roof: '#7a4a8a' }, { art: 'cottage', x: 4, y: 1, roof: '#5f8fb5' }, { art: 'cottage', x: 18, y: 1, roof: '#a5432f' }, { art: 'storefront', kind: 'hall', x: 9, y: 1 }],
-    exits: { [`10,${H - 1}`]: { to: 'village', x: 10, y: 1, dir: 'down' } },
+    objects: [{ art: 'cottage', x: 14, y: 14, roof: '#6e7a8a' }, { art: 'board', x: 36, y: 7 }, ...Object.entries(SHOP_SPOTS).map(([kind, s]) => ({ art: 'storefront', kind, x: s.x, y: s.y })), { art: 'cottage', x: 13, y: 1, roof: '#7a4a8a' }, { art: 'cottage', x: 4, y: 1, roof: '#5f8fb5' }, { art: 'cottage', x: 18, y: 1, roof: '#a5432f' }, { art: 'storefront', kind: 'hall', x: 9, y: 1 }],
+    exits: { [`10,${TOWN_SIZE.h - 1}`]: { to: 'village', x: 10, y: 1, dir: 'down' } },
   },
   maze: {
     name: 'The hedge maze', salt: 97, grid: mazeGrid(), objects: [],
@@ -402,10 +477,10 @@ export const MAPS = {
   },
   sewer: {
     name: 'The sewer', salt: 71, base: 'cave', theme: 'sewer', grid: sewerGrid(), objects: [],
-    exits: { '3,1': { to: 'village', x: 2, y: 12, dir: 'down' } },
+    exits: { '3,1': { to: 'village', x: 2, y: 10, dir: 'up' } },   // v155: beside the grate (2,12 is Nell's wall since v50)
   },
   mountain: {
-    name: 'Cragmoor', salt: 53, grid: mountainGrid(), objects: [],
+    name: 'Cragmoor', salt: 53, grid: mountainGrid(), objects: [{ art: 'cottage', x: 14, y: 8, roof: '#6e5a3a' }],   // v178: Thorne's hut
     exits: { '21,15': { to: 'wilds', x: 21, y: 1, dir: 'down' }, [`${W - 1},7`]: { to: 'quarry', x: 1, y: 7, dir: 'right' } },
   },
   quarry: {
@@ -416,6 +491,11 @@ export const MAPS = {
     name: 'The shrine', salt: 19, base: 'cave', grid: shrineGrid(),
     objects: [],
     exits: { '11,12': { to: 'wilds', x: 8, y: 2, dir: 'down' } },
+  },
+  attic: {   // v172
+    name: 'Attic', salt: 5, base: 'house', grid: atticGrid(),
+    decor: { wall: 6, floor: 2 },   // pine boards, dark boards
+    objects: [], exits: {}, keepClear: ['11,9'],
   },
   shed: {
     name: 'Shed', salt: 7, base: 'house', grid: shedGrid(),

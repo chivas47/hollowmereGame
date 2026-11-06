@@ -60,7 +60,7 @@ function rest(dt) {
   if (!a && M.last && SWUNG.has(M.last.kind) && M.last.kind !== 'rod') M.tail = { a: { ...M.last, t: M.last.dur, trail: false }, t: MOTION.lower };
   if (a) M.tail = null; else if (M.tail && (M.tail.t -= dt) <= 0) M.tail = null;
   M.last = a;
-  if (G.moving || a || G.fishing || G.riding || G.lock) { M.idle = 0; M.glance = null; M.nextLook = MOTION.lookAfter; return; }
+  if (G.moving || a || mine() || G.riding || G.lock) { M.idle = 0; M.glance = null; M.nextLook = MOTION.lookAfter; return; }
   M.idle += dt;
   if ((M.nextBlink -= dt) <= 0) { M.blink = MOTION.blinkFor; M.nextBlink = between(MOTION.blink); }
   if (M.glance && (M.look -= dt) <= 0) M.glance = null;
@@ -85,14 +85,14 @@ function drawBody(c, x, y, moving) {
   }
   const held = a && SWUNG.has(a.kind), behind = held && a.dir === 'up';
   if (held && behind) drawHeld(c, a, x + ox, y + oy);
-  if (G.fishing && a?.kind !== 'rod' && G.S.dir === 'up') G.rodTip = drawRod(c, x, y, G.S.dir, rodBend());
+  if (mine() && a?.kind !== 'rod' && G.S.dir === 'up') G.rodTip = drawRod(c, x, y, G.S.dir, rodBend());
   const tail = !a && M.tail, dir = a ? a.dir : tail ? tail.a.dir : shown();
   if (tail && dir === 'up') lowered(c, tail, x, y);
   drawPerson(c, x + ox, y + oy, dir, moving, G.walkT, pal, lean(x));   // v123: wind in the hair and clothes
   if (!a && !moving && M.blink > 0) drawBlink(c, x + ox, y + oy, dir, pal);
   if (tail && dir !== 'up') lowered(c, tail, x, y);
   if (held && !behind) drawHeld(c, a, x + ox, y + oy);
-  if (G.fishing && a?.kind !== 'rod' && G.S.dir !== 'up') G.rodTip = drawRod(c, x, y, G.S.dir, rodBend());
+  if (mine() && a?.kind !== 'rod' && G.S.dir !== 'up') G.rodTip = drawRod(c, x, y, G.S.dir, rodBend());
   if (a?.kind === 'rod') G.rodTip = handPoint(x + ox, y + oy, a.dir, swingAngle(a, Math.min(1, a.t / a.dur)), 13);
   if (a?.kind === 'crafted') drawCrafted(c, x, y, a.item, a.t / a.dur);
 }
@@ -101,13 +101,14 @@ function lowered(c, tail, x, y) {
   c.save(); c.globalAlpha = tail.t / MOTION.lower; drawHeld(c, tail.a, x, y); c.restore();
 }
 const SWUNG = new Set(['hoe', 'pick', 'axe', 'can', 'sword', 'rod', 'pan']);
-const rodBend = () => { const f = G.fishing; return f?.phase === 'reel' ? 25 + Math.sin(performance.now() / 90) * 6 : f?.phase === 'bite' ? 18 : Math.sin(performance.now() / 600) * 2; };
+const mine = () => G.fishing && !G.fishing.p2;   // v134: a line of yours, not the second farmer's
+export const rodBend = () => { const f = G.fishing; return f?.phase === 'reel' ? 25 + Math.sin(performance.now() / 90) * 6 : f?.phase === 'bite' ? 18 : Math.sin(performance.now() / 600) * 2; };
 
-addEntities(() => [{
+addEntities(() => (G.youMap ? [] : [{   // v140: not drawn in their half when you are elsewhere
   y: G.S.y,
   draw: (c) => {
     if (G.hurtT > 0 && Math.floor(performance.now() / 80) % 2) return;   // blink while hurt
     if (G.riding) { drawHorse(c, G.S.x, G.S.y, G.S.dir, G.moving); drawBody(c, G.S.x, G.S.y - 7, false); return; }
     drawBody(c, G.S.x, G.S.y, G.moving);
   },
-}]);
+}]));

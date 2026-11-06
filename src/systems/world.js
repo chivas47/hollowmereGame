@@ -7,13 +7,20 @@ import { HOTBAR } from '../data/hotbar.js';
 
 export const currentMap = () => MAPS[G.S.map];
 
+// v138 (item 73c): each farmer carries their own map: you G.S.map, the second farmer G.P2.map. These are the
+// maps someone stands on, which systems keep live; mover() says who a map:changed is for (the second farmer's
+// own Use runs with G.partnerActing set, systems/partner.js).
+export const farmerMaps = () => new Set([G.S.map, G.P2?.map].filter(Boolean));
+export const occupied = (mapId) => farmerMaps().has(mapId);
+export const mover = () => (G.partnerActing ? 'p2' : 'you');
+
 export function tileAt(x, y, mapId = G.S.map) {
   const g = MAPS[mapId].grid;
   return g[y] && g[y][x];
 }
 
-export function solidAt(px, py) {
-  const t = tileAt(Math.floor(px / T), Math.floor(py / T));
+export function solidAt(px, py, mapId = G.S.map) {
+  const t = tileAt(Math.floor(px / T), Math.floor(py / T), mapId);
   return !t || SOLID.has(t);
 }
 
@@ -26,29 +33,29 @@ const SUB = 4;     // longest sub-step in px, so a slow frame or the horse canno
 const NUDGE = 6;   // how far off a corner the player still slides around it
 
 const span = (lo, hi) => [Math.floor(lo / T), Math.ceil(hi / T) - 1];
-function solidTiles(x, y, box = BOX) {
+function solidTiles(x, y, box = BOX, mapId = G.S.map) {
   const [x0, x1] = span(x - box.l, x + box.r), [y0, y1] = span(y - box.t, y + box.b), out = [];
-  for (let ty = y0; ty <= y1; ty++) for (let tx = x0; tx <= x1; tx++) { const t = tileAt(tx, ty); if (!t || SOLID.has(t)) out.push(`${tx},${ty}`); }
+  for (let ty = y0; ty <= y1; ty++) for (let tx = x0; tx <= x1; tx++) { const t = tileAt(tx, ty, mapId); if (!t || SOLID.has(t)) out.push(`${tx},${ty}`); }
   return out;
 }
-const hits = (x, y, box, skip) => solidTiles(x, y, box).some((k) => !skip.has(k));
+const hits = (x, y, box, skip, mapId) => solidTiles(x, y, box, mapId).some((k) => !skip.has(k));
 
-export function blocked(x, y, box = BOX) { return solidTiles(x, y, box).length > 0; }
+export function blocked(x, y, box = BOX, mapId = G.S.map) { return solidTiles(x, y, box, mapId).length > 0; }
 
-// Moves pos ({x, y}) by (dx, dy) with sliding; returns which axes hit something.
+// Moves pos ({x, y}, and v138 an optional map, else yours) by (dx, dy) with sliding; returns which axes hit something.
 export function moveBox(pos, dx, dy, box = BOX) {
-  const skip = new Set(solidTiles(pos.x, pos.y, box));
+  const mapId = pos.map || G.S.map, skip = new Set(solidTiles(pos.x, pos.y, box, mapId));
   const n = Math.max(1, Math.ceil(Math.max(Math.abs(dx), Math.abs(dy)) / SUB));
   const hit = { x: false, y: false };
   for (let i = 0; i < n; i++) {
-    if (dx) hit.x = axis(pos, 'x', dx / n, dy === 0, box, skip) || hit.x;
-    if (dy) hit.y = axis(pos, 'y', dy / n, dx === 0, box, skip) || hit.y;
+    if (dx) hit.x = axis(pos, 'x', dx / n, dy === 0, box, skip, mapId) || hit.x;
+    if (dy) hit.y = axis(pos, 'y', dy / n, dx === 0, box, skip, mapId) || hit.y;
   }
   return hit;
 }
 
-function axis(pos, a, d, nudge, box, skip) {
-  const b = a === 'x' ? 'y' : 'x', at = (p, q) => (a === 'x' ? hits(p, q, box, skip) : hits(q, p, box, skip));
+function axis(pos, a, d, nudge, box, skip, mapId) {
+  const b = a === 'x' ? 'y' : 'x', at = (p, q) => (a === 'x' ? hits(p, q, box, skip, mapId) : hits(q, p, box, skip, mapId));
   const next = pos[a] + d;
   if (!at(next, pos[b])) { pos[a] = next; return false; }
   // Flush against the wall: the box edge on the tile boundary it was about to cross.

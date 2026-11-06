@@ -19,6 +19,8 @@ import './systems/forage.js';
 import './systems/buildings.js';
 import './systems/economy.js';
 import './systems/npcs.js';
+import './systems/chatter.js';
+import './systems/news.js';   // v153: what you did, for tomorrow's talk
 import './systems/homes.js';   // v76: the neighbours' cottages
 import './systems/venues.js';   // v98: buildings you walk into
 import './systems/fishing.js';
@@ -43,6 +45,11 @@ import './systems/greenhouse.js';
 import './systems/mill.js';
 import './systems/ponds.js';
 import './systems/helpers.js';
+import './systems/statue.js';     // v169: the fortune statue
+import './systems/attic.js';      // v172: the attic ladder
+import './systems/train.js';      // v179: the goods train
+import './systems/birthday.js';   // v174: the birthday dinner
+import './ui/birthday.js';
 import './systems/professions.js';
 import './systems/cooking.js';
 import './systems/trees.js';
@@ -64,6 +71,11 @@ import './systems/pots.js';
 import './systems/areas.js';
 import './systems/quarry.js';
 import './systems/hidden.js';
+import './systems/stalls.js';   // v165: the Saturday stalls
+import './ui/stalls.js';
+import './systems/cat.js';   // v164: Pudding, the village cat
+import './systems/mere.js';   // v160: the mere's boathouse (v161: Garrow's counter)
+import './ui/boathouse.js';   // v161
 import './systems/town.js';
 import './systems/mail.js';
 import './systems/marriage.js';
@@ -81,6 +93,7 @@ import './systems/storage.js';   // v71: chests, signs, the farm computer, the l
 import './systems/journal.js';   // v114: story, quest log, places found, map pins
 import './systems/firstweek.js';   // v122: the first week's goals
 import './systems/reckoning.js';   // v128: Bram's reckoning
+import './systems/partner.js';   // v129: the second farmer
 import './systems/atmosphere.js';   // v72: waterfalls, splashes, lightning, wildlife
 import './systems/water.js';   // v102: moving water and reflections
 import './systems/sway.js';   // v103: wind in grass, trees and washing

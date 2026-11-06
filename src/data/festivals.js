@@ -4,7 +4,7 @@
 // kind 'exchange' (v57): a gift for your secret friend, and one back. kind 'dance' (v58): ask someone to dance.
 // kind 'grange' (v59): a display of nine items, scored for variety, quality and price.
 // Neighbours spend the
-// festival in the square.
+// festival moving about the square (v145, data/crowd.js).
 export const FESTIVALS = [
   {
     key: 'blossom', name: 'Blossom Show', season: 'Spring', day: 9, kind: 'contest', accepts: 'produce',
@@ -15,6 +15,9 @@ export const FESTIVALS = [
       bram: 'I judged this once. Never again. Everyone has a cousin.',
       odile: 'I only come for the bread stall. Do not tell the judges.',
       tavi: 'I mapped every flower bed in the square. Twenty-three. Nobody asked.',
+      hester: 'Forty years I have judged the children\'s posies. They never let me judge the real show.', // v177 (roadmap 75v)
+      aldous: 'I enter a pressed flower every year. It is a hundred years old. It never wins.',
+      sabine: 'I brought flowers from the embankment. They grow wild along the line. Nobody plants them.', // v178 (roadmap 75w)
     },
   },
   // v54. Stardew's Egg Festival (Spring 13): find 9 eggs in 50 seconds to win, a straw hat the first time.
@@ -29,6 +32,7 @@ export const FESTIVALS = [
       tavi: 'I know where every egg is. I am not allowed to play any more.',
       kit: 'This year I am winning. I have a system.',
       lio: 'I play a little tune when someone finds one. Listen for it!',
+      wilmot: 'I hid the eggs when I was young enough to bend. Now I just know where they are.', // v177 (roadmap 75v)
     },
   },
   // v55. Stardew's Luau (Summer 11): one item into the soup; the taster's verdict moves everyone's friendship
@@ -52,6 +56,13 @@ export const FESTIVALS = [
       tavi: 'Someone put a boot in once. We do not talk about it.',
       hob: 'I taste whatever goes in. Whatever. Please be kind.',
       nell: 'In my day we put in what we grew. Simple is best.',
+      ferran: 'I put in an eel. Hob said "interesting". I am taking that as a win.',   // v167
+      tamsin: 'A jug of cream makes any soup better. That is not an opinion.',
+      pip: 'I put in a sweet. Mum says it does not count. Hob ate it anyway.',
+      aldous: 'I brought a soup from a very old recipe. Hob says it tastes very old.', // v177 (roadmap 75v)
+      wilmot: 'Hester made the pie. I carried it. That is my contribution, and I am proud of it.',
+      thorne: 'Mushrooms. From the mountain. Hob looked at them for a long time before he put them in.', // v178 (roadmap 75w)
+      emmet: 'I brought bread. Mum made it. I carried it. That counts.',
     },
   },
   // v58. Stardew's Flower Dance (Spring 24): ask a marriage candidate to dance; they say yes from 4 hearts (or as
@@ -99,6 +110,12 @@ export const FESTIVALS = [
       tavi: 'I mapped last year\'s winning display. Item by item. It is framed in my kitchen.',
       hale: 'I judge, but only the knots on the ribbons.',
       nell: 'I won this fair thirty years ago with a marrow. They still talk about the marrow.',
+      tamsin: 'My mother took the ribbon here nine years running. I have taken it twice. I count those.',   // v167
+      ysolde: 'I wove the baskets half the displays sit in. Nobody judges the baskets.',
+      aurel: 'I built the stone plinth by the gate. It will be here long after the marrow.',
+      hester: 'I write down every winner in the almanac. Nell is in it eleven times.', // v177 (roadmap 75v)
+      aldous: 'I would display the oldest seed in the valley, but the judges want them alive.',
+      thorne: 'I do not enter. I come to look at what people grow when they try very hard.', // v178 (roadmap 75w)
     },
   },
   {
@@ -141,6 +158,7 @@ export const FESTIVALS = [
       bram: 'I carved the lantern frames. Every one of them. My hands ache.',
       odile: 'Too cold to fish. Not too cold for cider.',
       tavi: 'I am drawing the square by lantern light. The shadows keep moving.',
+      wilmot: 'The lanterns at the market used to be lit by hand, one by one. I lit half of them for thirty years.', // v177 (roadmap 75v)
     },
   },
   // v57. Stardew's Feast of the Winter Star (Winter 25): a secret friend is named a week before; your gift to them
@@ -156,6 +174,10 @@ export const FESTIVALS = [
       tavi: 'I mapped who gave what to whom for ten years. Do not ask to see it.',
       juno: 'Every gift in this square passed through my mailbag at some point.',
       pell: 'The children made decorations. Please admire every one of them.',
+      hester: 'Fifty-two Longnights we have sat through together, Wilmot and I. He still falls asleep before the end.', // v177 (roadmap 75v)
+      aldous: 'The longest night of the year. I spend it cataloguing. It is very peaceful.',
+      sabine: 'The longest night. At the halt you notice it; the lamp is lit by four.', // v178 (roadmap 75w)
+      emmet: 'Mum says the train will come on Longnight one year. It never runs on a festival. She knows that.',
     },
   },
 ];
@@ -166,7 +188,6 @@ export const FESTIVAL_ITEMS = { gildedgourd: { name: 'Gilded gourd', sell: 2500 
 export const FESTIVAL_HOURS = { from: 9 * 60, to: 22 * 60 };
 export const hoursOf = (f) => f?.hours || FESTIVAL_HOURS;   // v56: a festival may keep its own hours (maze night)
 
-// Where neighbours stand in the village during a festival (tile coordinates).
-export const FESTIVAL_SPOTS = { ines: [9, 7], bram: [15, 7], odile: [9, 10], tavi: [15, 10], wren: [8, 9], corvin: [16, 9], hob: [13, 12], maren: [10, 12], hale: [17, 8], lio: [12, 7], pell: [8, 7], juno: [16, 7], nell: [8, 11], rook: [16, 11], esme: [11, 11], kit: [14, 7] };   // v49, v50: the town villagers
+// v145: where neighbours go during a festival is data/crowd.js.
 
 export const festivalOn = ({ season, d }) => FESTIVALS.find((f) => f.season === season && f.day === d) || null;

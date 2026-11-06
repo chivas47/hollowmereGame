@@ -62,10 +62,15 @@ export const FLOORS = [
 export const DECOR_COST = 100;
 export const CATALOGUE_COST = 30000;
 
-// Renovations at Bram's workbench (Stardew: 5,000 to 15,000g for room changes). They only open space.
+// Renovations at Bram's workbench (Stardew: 5,000 to 15,000g for room changes, 20,000g for the corner room). They only open space.
 export const RENOVATIONS = {
   openplan: { name: 'Open-plan living room', cost: 10000, desc: 'Takes down the wall between the bed corner and the living room.' },
   nook:     { name: 'Reading nook',          cost: 5000,  desc: 'Knocks a bay into the north wall: two more tiles of floor under a window.' },
+  // v170 (roadmap 75n): Stardew's corner room, 20,000g.
+  south:    { name: 'South room',            cost: 30000, desc: 'A room through the living room\'s south wall, beside the front door, five tiles by three.' },   // v171 (roadmap 75o): Stardew's southern room
+  attic:    { name: 'Attic',                 cost: 60000, desc: 'A loft over the house, up a ladder in the bed corner: sixteen tiles by seven for furniture and chests.' },   // v172 (roadmap 75p)
+  dining:   { name: 'Dining room',           cost: 150000, tier: 1, desc: 'A long room through the kitchen\'s east wall, with a table for eight. Needs the kitchen (the first house upgrade).' },   // v173 (roadmap 75q): Stardew's dining room
+  corner:   { name: 'Corner room',           cost: 20000, desc: 'A room off the living room\'s west side, four tiles by three, to furnish as you like.' },
 };
 
 // v99: how a placed piece turns (systems/house.js, R key or the Turn button). By shape:

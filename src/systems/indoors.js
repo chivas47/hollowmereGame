@@ -3,9 +3,9 @@
 // every window shows rain on the glass while it rains outside. Drawn only, never saved.
 // Sets G.indoorRain (render/interiors.js window art, audio/ambience.js) and G.fires (ambience's crackle).
 import { G } from '../core/game.js';
-import { T, W, H } from '../core/constants.js';
+import { T } from '../core/constants.js';
 import { addLayer, addUpdater } from '../core/registry.js';
-import { MAPS } from '../data/maps.js';
+import { MAPS, sizeOf } from '../data/maps.js';
 import { underSky } from '../data/weather.js';
 import { PIECES, piecesOf } from '../data/interiors.js';
 import { FURNITURE } from '../data/furniture.js';
@@ -72,8 +72,9 @@ addLayer(990, (c) => {
   if (!indoors()) return;
   const d = darkness();
   if (d <= 0.01) return;
-  const w = W * T, h = H * T;
-  if (!shade) { shade = document.createElement('canvas'); shade.width = w; shade.height = h; }
+  const s = sizeOf(G.S.map), w = s.w * T, h = s.h * T;   // v156: the room's own size
+  if (!shade) shade = document.createElement('canvas');
+  if (shade.width !== w || shade.height !== h) Object.assign(shade, { width: w, height: h });
   const g = shade.getContext('2d'), now = performance.now() / 1000;
   g.globalCompositeOperation = 'source-over'; g.clearRect(0, 0, w, h);
   g.fillStyle = `rgba(16,14,34,${d})`; g.fillRect(0, 0, w, h);

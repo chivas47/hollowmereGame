@@ -1,0 +1,54 @@
+// v147: what a neighbour is doing where they stop, so they are never just standing there. Each neighbour has a list
+// of { map, does } (map '*': anywhere; stay true or false: only on a block where they stand, or one they walk
+// round and pause in). The first that fits their current block wins. carry: something they have on them all day,
+// walking too. A block can name its own (v148: lunch and shopping). The art for each `does` is render/doings.js.
+import { venueMap } from './venues.js';
+
+const LANTERN = venueMap('tavern');
+
+export const DOINGS = {
+  ines: [{ map: 'wilds', does: 'bees' }],                                  // her bees follow her round the meadow
+  bram: [{ map: venueMap('carpenter'), does: 'saw' }],
+  odile: [{ map: 'wilds', does: 'rod' }, { map: 'beach', does: 'nets' }, { map: LANTERN, does: 'nets' }],
+  tavi: [{ map: '*', stay: false, does: 'map' }],                          // stops to check the map on every round
+  wren: [{ map: venueMap('store'), does: 'ledger' }],
+  corvin: [{ map: venueMap('smithy'), does: 'hammer' }],
+  hob: [{ map: LANTERN, does: 'cloth' }],
+  maren: [{ map: venueMap('clinic'), does: 'bag' }],
+  hale: [{ map: venueMap('lodge'), does: 'book' }],                        // the lodge's log
+  lio: [{ map: '*', stay: true, does: 'fiddle' }],
+  pell: [{ map: venueMap('hall'), does: 'book' }, { map: 'forest', does: 'book' }],
+  juno: [{ map: '*', does: 'satchel', carry: true }],
+  nell: [{ map: 'village', stay: false, does: 'trowel' }],                 // the garden between the south cottages
+  rook: [{ map: 'beach', does: 'brush' }],                                 // one plank a day
+  esme: [{ map: 'forest', does: 'easel' }, { map: LANTERN, does: 'sketch' }, { map: 'beach', does: 'sketch' }],
+  kit: [{ map: '*', does: 'wrench' }],
+  lamp: [{ map: 'sewer', does: 'lantern' }],
+  // v167 (roadmap 75k): the seven newest.
+  garrow: [{ map: 'mere', stay: true, does: 'rod' }],                     // lines out from the dock
+  ysolde: [{ map: 'mere', does: 'basket' }, { map: 'town', does: 'basket' }],
+  ferran: [{ map: 'mere', does: 'nets' }, { map: 'beach', does: 'nets' }],   // traps, then mending them
+  tamsin: [{ map: venueMap('ranch'), does: 'ledger' }, { map: 'village', does: 'basket' }],   // feed for the pens
+  aurel: [{ map: 'village', stay: true, does: 'hammer' }, { map: 'town', stay: true, does: 'hammer' }],
+  bryn: [{ map: venueMap('clinic'), does: 'bag' }],
+  pip: [{ map: venueMap('hall'), does: 'book' }],
+  // v175 (roadmap 75s)
+  aldous: [{ map: venueMap('museum'), does: 'ledger' }],                 // labelling the day's donations
+  hester: [{ map: 'village', stay: true, does: 'book' }],                 // the almanac, on her bench and by the roses
+  wilmot: [{ map: venueMap('smithy'), does: 'wrench' }, { map: 'town', stay: true, does: 'wrench' }],   // springs; the hall clock
+  thorne: [{ map: 'mountain', stay: false, does: 'basket' }, { map: 'mountain', stay: true, does: 'saw' }],   // v178: foraging; carving
+  sabine: [{ map: 'railway', stay: true, does: 'ledger' }],               // the halt log
+  emmet: [{ map: 'railway', does: 'wrench' }, { map: venueMap('smithy'), does: 'wrench' }],
+};
+
+// What a neighbour is doing on this block (null: home, or nothing here), and whether it shows while they walk.
+export function doingFor(id, block) {
+  if (block?.does) return { does: block.does };   // v148: a block that says (lunch, shopping, data/schedules.js)
+  for (const d of DOINGS[id] || []) {
+    if (d.carry) return d;
+    if (!block || (d.map !== '*' && d.map !== block.map)) continue;
+    if (d.stay !== undefined && d.stay !== !!block.stay) continue;
+    return d;
+  }
+  return null;
+}

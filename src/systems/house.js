@@ -57,6 +57,7 @@ export function buyCatalogue() {
 export function buyRenovation(k) {
   const S = G.S, r = RENOVATIONS[k];
   if (!r || S.house.renos.includes(k) || S.gold < r.cost) return false;
+  if (r.tier && (S.upgrades?.house || 0) < r.tier) { notify(`Bram needs the kitchen built before the ${r.name.toLowerCase()}.`); return false; }   // v173
   S.gold -= r.cost; S.house.renos.push(k);
   rebuildHouse(true);
   notify(`Bram did the ${r.name.toLowerCase()} while you were out.`);
@@ -80,7 +81,7 @@ addInteraction(70, ({ tile, mapId }) => {
   return false;
 });
 
-const inHouse = () => Object.entries(G.S.placed).map(([k, p]) => ({ p, ...parsePlaceKey(k) })).filter((e) => e.map === G.S.map && (e.map === 'house' || e.map === 'shed') && FURNITURE[e.p.kind]);   // v30: the shed takes furniture too
+const inHouse = () => Object.entries(G.S.placed).map(([k, p]) => ({ p, ...parsePlaceKey(k) })).filter((e) => e.map === G.S.map && (e.map === 'house' || e.map === 'shed' || e.map === 'attic') && FURNITURE[e.p.kind]);   // v30: the shed takes furniture too
 addLayer(9, (c) => { for (const e of inHouse()) if (FURNITURE[e.p.kind].walk) drawFurniture(c, e.x * T, e.y * T, FURNITURE[e.p.kind], e.p.rot); });
 addEntities(() => inHouse().filter((e) => !FURNITURE[e.p.kind].walk).map((e) => ({ y: (e.y + 1) * T - 3, draw: (c) => drawFurniture(c, e.x * T, e.y * T, FURNITURE[e.p.kind], e.p.rot) })));
 

@@ -12,8 +12,9 @@ import { buyFeed } from '../systems/coop.js';
 import { buyHay } from '../systems/barn.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
+import { fmtGold } from '../core/format.js';
 
-const g = (n) => `${n.toLocaleString('en-US')}g`;
+const g = (n) => `${fmtGold(n)}`;
 const row = (title, detail, button) => `<div class="shoprow"><div><b>${title}</b><span>${detail}</span></div><div class="btns">${button}</div></div>`;
 const buy = (attr, key, cost, label = 'Buy') => `<button data-${attr}="${key}" ${G.S.gold < cost ? 'disabled' : ''}>${label}</button>`;
 let shown = null;

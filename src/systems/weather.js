@@ -2,6 +2,7 @@
 // morning report). Rain, storms and Silvermist water the farm's soil in the morning and anything
 // tilled that day; storms send lightning at the farm overnight; on Silvermist days forage.js adds mist lilies.
 import { G } from '../core/game.js';
+import { visible } from '../render/views.js';
 import { T, W, H } from '../core/constants.js';
 import { on } from '../core/events.js';
 import { addLayer } from '../core/registry.js';
@@ -68,11 +69,14 @@ on('game:loaded', () => {
 });
 
 // ---- Drawing: rain streaks, snowflakes, the silver mist (lightning and splashes: systems/atmosphere.js) ----
+// v190: a mist bank's rows, top to bottom: [half-width in px, opacity]
+const MIST_BANK = [[22, 0.06], [36, 0.1], [45, 0.14], [45, 0.16], [38, 0.12], [26, 0.08], [14, 0.05]];
 const drops = Array.from({ length: 140 }, (_, i) => ({ x: (i * 97) % (W * T), y: (i * 53) % (H * T), s: 0.8 + ((i * 37) % 10) / 20 }));
 addLayer(96, (c) => {
   const S = G.S, kind = S.weather;
   if (!underSky(S.map) || kind === 'sun' || !WEATHER[kind]) return;
-  const t = performance.now() / 1000, w = W * T, h = H * T;
+  const t = performance.now() / 1000, w = W * T, h = H * T, v = visible();
+  c.save(); c.translate(v.x, v.y);   // v156: weather falls over the screen, wherever the camera is
   if (kind === 'rain' || kind === 'storm') {
     c.fillStyle = kind === 'storm' ? 'rgba(20,30,50,.28)' : 'rgba(40,60,90,.16)'; c.fillRect(0, 0, w, h);
     for (const d of drops) {
@@ -86,9 +90,17 @@ addLayer(96, (c) => {
     }
   } else if (kind === 'mist') {
     c.fillStyle = 'rgba(205,228,220,.22)'; c.fillRect(0, 0, w, h);
+    // v190 (polish 76j): each bank is a stack of thin strips, widest in the middle and fading at the ends, so it
+    // reads as drifting fog rather than the hard-edged rectangle it was. Stepped, to match the pixel art.
     for (let i = 0; i < 8; i++) {
-      const x = ((i * 71 + t * 9) % (w + 120)) - 60, y = (i * 47) % h;
-      c.fillStyle = 'rgba(235,248,242,.16)'; c.fillRect(Math.floor(x), y, 90, 18);
+      const cx = ((i * 71 + t * 9) % (w + 160)) - 80 + 45, y = (i * 47) % h;
+      MIST_BANK.forEach(([half, a], row) => {
+        c.fillStyle = `rgba(235,248,242,${a})`;
+        c.fillRect(Math.floor(cx - half), y + row * 3, half * 2, 3);
+        c.fillStyle = `rgba(235,248,242,${a * 0.5})`;   // a softer lip either side
+        c.fillRect(Math.floor(cx - half - 8), y + row * 3, 8, 3); c.fillRect(Math.floor(cx + half), y + row * 3, 8, 3);
+      });
     }
   }
+  c.restore();
 });

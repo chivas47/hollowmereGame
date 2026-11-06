@@ -10,6 +10,7 @@ import { HOTBAR } from '../data/hotbar.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { SKILLS } from '../data/skills.js';
 import { DEFAULT_PROFILE } from '../data/profile.js';
+import { PARTNER } from '../data/partner.js';
 import { LAYOUTS } from '../data/layouts.js';
 import { SAVE_VERSION, migrate } from './migrations.js';
 
@@ -29,6 +30,10 @@ export function newState() {
     journal: { story: {}, log: [], seen: [], pins: [], track: null, markers: true },   // v114: story steps done, finished quests, places found, map pins, tracked objective (systems/journal.js)
     firstWeek: { arrived: false, done: {}, over: false },   // v122: the arrival scene and the first week's goals (systems/firstweek.js)
     reckoning: { done: 0, points: 0, lamps: 0, pending: false, again: 0, lid: false },   // v128: Bram's reckoning (systems/reckoning.js)
+    news: { day: 0, yesterday: {}, today: { museumAt: 0, spouseAt: null, quests: [], skills: [] } },   // v153: what you did, for the neighbours to talk about (systems/news.js)
+    // v130: the second farmer's energy (systems/partner.js); full each morning. v142: their name and look, where
+    // they stood (at: { map, x, y, dir } or null), their hotbar slot, and picked: they have played on this farm.
+    partner: { energy: 270, hp: 100, name: PARTNER.name, look: { ...PARTNER.look }, at: null, slot: 0, picked: false },
     hints: true,        // v101: the stuck-tool tip and the morning report's tip (systems/hints.js)
     traditions: { blessed: 0, floated: [] },   // v110: the day the wishing stone was last touched, the years a lantern was floated
     blessing: null,     // v110: today's blessing { id, until, ...effects } (systems/traditions.js, read by buffs.js)
@@ -47,7 +52,7 @@ export function newState() {
     fishLog: {},        // fish key -> number caught
     upgrades: { can: 0, hoe: 0, axe: 0, rod: 0, house: 0, pick: 0, pan: 0 },   // tier index per upgrade line
     waterBonus: 0, maxEnergy: 270,                      // derived stats, see systems/upgrades.js
-    built: { coop: false, barn: false, greenhouse: false, stable: false, shed: false, mill: false, clocktower: false, pond: false, slimepen: false, helperhut: false, wayhollow: false, wayvillage: false },   // false | 'pending' | true
+    built: { coop: false, barn: false, greenhouse: false, stable: false, shed: false, mill: false, clocktower: false, pond: false, slimepen: false, helperhut: false, wayhollow: false, wayvillage: false, statue: false },   // false | 'pending' | true
     sites: {},                                          // v30: building -> { x, y } top-left on the farm, when moved or placed (systems/sites.js)
     mill: { in: {}, out: {} },
     pond: { fish: null, n: 0, cap: 3, timer: 0, roe: 0, ask: null },   // v31: the fish pond (systems/ponds.js)
@@ -73,6 +78,10 @@ export function newState() {
     layout: 'open',                                     // farm layout (data/layouts.js), chosen on the new game screen
     farmForage: [],                                     // woodland layout: forage in the farm's wood today
     pet: null,                                          // the farm pet (systems/pets.js), made from the profile on load
+    trainDrops: [], trainDay: 0,                        // v179: what the goods train shed today (systems/train.js)
+    birthday: null,                                     // v174: the farmer's { season, d }, set in the Menu (systems/birthday.js)
+    dinnerYear: 0,                                      // v174: the year of the last birthday dinner
+    statue: null,                                       // v169: { day, who, item } on a birthday, until collected (systems/statue.js)
     horse: null,                                        // { name, map, x, y } once the stable is built (systems/stable.js)
     house: { wall: 0, floor: 0, renos: [], catalogue: false },   // farmhouse decor (systems/house.js)
     wardrobe: { straw: true }, outfit: { shirt: null, pants: null, hat: 'straw', shoes: null }, dyes: {},   // clothing (systems/clothing.js)
@@ -147,6 +156,11 @@ export function merge(saved) {
   const fw = saved.firstWeek || {};   // v122
   s.firstWeek = { arrived: !!fw.arrived, done: { ...(fw.done || {}) }, over: !!fw.over };
   s.reckoning = { ...newState().reckoning, ...(saved.reckoning || {}) };   // v128
+  const sn = saved.news || {}, st = sn.today || {};   // v153
+  s.news = { day: sn.day || 0, yesterday: { ...(sn.yesterday || {}) }, today: { museumAt: st.museumAt || 0, spouseAt: st.spouseAt || null, quests: [...(st.quests || [])], skills: [...(st.skills || [])] } };
+  s.partner = { ...newState().partner, energy: s.maxEnergy, hp: s.maxHp, ...(saved.partner || {}) };   // v143: hp   // v130; v131: a farm with a bigger energy bar starts them at its top
+  s.partner.look = { ...PARTNER.look, ...(saved.partner?.look || {}) };   // v142
+  if (s.partner.at && !MAPS[s.partner.at.map]) s.partner.at = null;
   if (!Array.isArray(s.bagFav)) s.bagFav = [];   // v113
   s.bagView = { ...newState().bagView, ...(saved.bagView || {}) };
   s.skills = Object.assign(newState().skills, saved.skills || {});

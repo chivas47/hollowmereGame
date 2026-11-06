@@ -14,8 +14,9 @@ import { CHALLENGES, MOON_SHOP } from '../data/challenges.js';
 import { sableHere, challengeLeft, challengeItems, takeChallenge, handInChallenge, buyMoon } from '../systems/challenges.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
+import { fmtGold } from '../core/format.js';
 
-const g = (n) => `${n.toLocaleString('en-US')}g`;
+const g = (n) => `${fmtGold(n)}`;
 const row = (title, detail, button) => `<div class="shoprow"><div><b>${title}</b><span>${detail}</span></div><div class="btns">${button}</div></div>`;
 
 function tavern() {

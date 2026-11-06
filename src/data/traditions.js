@@ -30,7 +30,7 @@ export const FLOAT = {
   set: 'You light your lantern and set it on the water. It turns once, then drifts out to join the others.',
   again: 'Your lantern is already out there, somewhere among the others.',
   early: 'The lanterns go on the water at 10 pm, when the whole village is here.',
-  spots: { ines: [8, 9], bram: [15, 9], odile: [6, 9], tavi: [17, 9], wren: [9, 8], corvin: [13, 8], hob: [11, 9], maren: [12, 9], hale: [19, 9], lio: [10, 9], pell: [7, 8], juno: [16, 8], nell: [14, 9], rook: [5, 9], esme: [18, 8], kit: [4, 9] },
+  spots: { ines: [8, 9], bram: [15, 9], odile: [6, 9], tavi: [17, 9], wren: [9, 8], corvin: [13, 8], hob: [11, 9], maren: [12, 9], hale: [19, 9], lio: [10, 9], pell: [7, 8], juno: [16, 8], nell: [14, 9], rook: [5, 9], esme: [18, 8], kit: [4, 9], garrow: [20, 9], ysolde: [9, 9], ferran: [13, 9], tamsin: [16, 9], aurel: [18, 9], bryn: [11, 8], aldous: [8, 8], hester: [14, 8], wilmot: [15, 8], thorne: [3, 8], sabine: [5, 8], emmet: [6, 8] },   // v167: Pip is in bed; v175
   lines: {
     ines: 'I fold mine from old seed packets. They float better than you would think.',
     bram: 'I made the first lantern frame here, years ago. Now everyone makes their own. Good.',
@@ -42,6 +42,18 @@ export const FLOAT = {
     lio: 'No music tonight. It is the one quiet night of the year.',
     esme: 'I can never paint it. The light is gone before the brush is wet.',
     kit: 'Mine is the one with the face on it. It is smiling. Look.',
+    garrow: 'I rowed out after them, the first year. You do not catch a lantern. You let it go.',   // v167
+    ysolde: 'I weave a little reed boat under mine. Ferran says it is cheating. It floats.',
+    ferran: 'The eels come up to look at the light. I have never told anyone that.',
+    tamsin: 'My mother never missed one. I came home from the coast the year she could not walk down.',
+    aurel: 'Pip folded ours this year. It is mostly glue. It is perfect.',
+    bryn: 'Pip is asleep. I promised to set his for him and tell him which way it went.',
+    aldous: 'I have one from every year in a drawer at the museum. The ones that washed back, anyway.',   // v175
+    hester: 'Fifty-two lanterns we have set together. I have every one written down.',
+    wilmot: 'They go out at eleven minutes past, every year. I timed it once. Now I just know.',
+    thorne: 'I can see them from the mountain. I come down anyway. Closer is better.',   // v178
+    sabine: 'My father set his from the end of the platform. The sea is farther, but I bring the habit.',
+    emmet: 'One day I will follow them out. Not tonight.',
   },
   drift: 10,   // the village's lanterns on the water
 };

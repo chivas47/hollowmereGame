@@ -18,7 +18,7 @@ function links() {
   for (const [id, h] of Object.entries(HOMES)) if (h.cottage) out.push({ from: h.map, at: h.door, to: homeMap(id), arrive: homeEntry(id) });
   for (const [id, V, f] of fronts) out.push({ from: V.map, at: f, to: venueMap(id), arrive: doorOf(id).entry }, { from: venueMap(id), at: doorOf(id).door, to: V.map, arrive: f });
   out.push({ from: SPOUSE_HOME.map, at: SPOUSE_HOME.door, to: SPOUSE_HOME.house, arrive: HOME_ENTRY });
-  out.push({ from: 'village', at: [2, 12], to: 'sewer', arrive: [3, 2] });
+  out.push({ from: 'village', at: [2, 10], to: 'sewer', arrive: [3, 2] });   // v157: beside the grate (2,12 is Nell's wall since v50)
   return out;
 }
 let LINKS = null;

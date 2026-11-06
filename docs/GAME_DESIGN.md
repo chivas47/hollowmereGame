@@ -57,7 +57,9 @@ The farm door leads inside; the bed ends the day and you wake beside it. Rooms c
 
 The catalogue lectern sells 30 pieces of furniture, 12 wallpapers and 12 floorings (Stardew's furniture shop prices: chairs 300 to 750, tables 750 to 1,500, rugs 1,000 to 1,500, a tall clock 2,000; patterns 100g each). Furniture goes to the kit (slot 7) and is placed on the floor; face it to pick it up. R (or Turn in its dialog) turns a piece you placed (v99): chairs, armchairs and sofas four ways, the long rug a quarter turn, lopsided pieces mirrored; symmetrical pieces do not change. U or Ctrl+Z undoes the day's last place, pick-up or turn (20 steps). Rugs can be walked over. Doorways stay clear. The full catalogue (30,000g, as in Stardew) makes everything in it free.
 
-Renovations at Bram's Carpentry: open-plan living room (10,000g, removes the bed corner's wall) and a reading nook (5,000g, a bay in the north wall).
+Renovations at Bram's Carpentry: open-plan living room (10,000g, removes the bed corner's wall), a reading nook (5,000g, a bay in the north wall) the corner room (v170, 20,000g, Stardew's corner room: a 4 by 3 room through the living room's west wall) and the south room (v171, 30,000g, Stardew's southern room: a 5 by 3 room through the south wall, east of the front door). The attic (v172, 60,000g, no Stardew room: priced between its southern room and dining room) adds a ladder on the bed corner's north wall up to a 16 by 7 loft for furniture and chests. The dining room (v173, 150,000g, Stardew's dining room) needs the kitchen: a 6 by 6 room through the kitchen's east wall with a table for eight. The farmhouse map is 31 by 19 since v173 (24 by 19 in v171); the camera follows you into the south room.
+
+Birthday dinner (v174, Nuno's design; Stardew has no player birthday): set your birthday in the Menu (any day but a festival). With the dining room, on that evening 18:00 to 21:00 your three closest friends at 4+ hearts sit at the table; being in the farmhouse during it gives each +100 friendship and their first liked gift, once a year.
 
 ## Clothing (v25)
 
@@ -104,6 +106,7 @@ Bram's Carpentry moves any building for free: back on the farm, choose the spot 
 | Helper hut | 20,000 | 200 stone, 100 fiber, 9 gleamfruit | 2 by 2 | Harvests ripe crops within 8 tiles each morning (not in winter), at full quality rolls; collect at the hut | Junimo hut (starfruit becomes gleamfruit) |
 | Hollow waystone | 500,000 | 10 iron bars, 10 Hollow quartz | 1 by 2 | Warps you to the Hollow's entrance | Earth obelisk (iridium bars and earth crystals swapped) |
 | Village waystone | 500,000 | 5 iron bars, 100 stone | 1 by 2 | Warps you to the village fountain | Water obelisk (iridium bars, clams and coral swapped) |
+| Fortune statue (v169) | 1,000,000 | none | 1 by 2 | On a neighbour's birthday morning it holds something they love (the first of their loved gifts); Use takes it | Statue of Endless Fortune |
 
 - Home charm (crafted: 1 hardwood, 1 honey, 20 fiber; Stardew's farm warp totem): use it from the kit anywhere to go home. Used up.
 - Farm cave: opens once the farm has shipped 25,000g in all (Stardew's trigger; older saves count the gold they hold). The first visit offers fruit bats (up to 3 fruit of any tree, 60% each, every morning) or six mushroom logs (a Hollow cap each, 50%, every morning). The choice is for good. Stardew's mushroom cave grows several kinds; we have one.
@@ -122,6 +125,18 @@ Stardew counterparts by role: keg (wine 3 x fruit, juice 2.25 x vegetable), mayo
 
 ## Controls
 
+- v129: with a second controller, press A on it to bring in a second farmer (their own look) on the same screen. They walk with the stick, go where you go when you change map, and leave with B or when their controller disconnects. Dialogs and the menu stay the first player's.
+- v130: once in, the second farmer's A uses what they hold, through the same rules as yours (tools, talking, gifts, doors, map exits, which take you both), and LB and RB step through their hotbar. They have their own energy (270, refilled each morning, saved); the bag and gold are shared.
+- v144: both farmers can have a dialog open at once (a shop each, the bag and a chest): each in its own half, each worked by its own player.
+- v143: farmer two has their own health (the same top as yours, full each morning), shown as "Their HP" when hurt or where monsters live. Monsters hurt whichever of you they reach; at zero farmer two faints to the clinic with the same bill as yours (from the shared gold) while you play on. Your shoes, rings and professions protect them too (gear is shared).
+- v142: farmer two is kept with the farm: the first time they join they pick a shirt and hair, and they get their own bed in the farmhouse (on free floor in the bed corner, never over furniture). When they rejoin they come back where they were, holding what they held. The day ends when both of you are in bed: whoever lies down first waits, walking gets you up, and if they leave while you wait the night comes. Passing out at 2 am still takes you both home.
+- v141: a dialog belongs to whoever opened it and covers their half; the game does not pause, so the other farmer plays on. Farmer two works theirs with their controller. Only one dialog at a time; the menu still pauses both.
+- v140: you go separate ways: farmer two takes map exits and doors alone and their half shows where they are. In the mine you share one floor: whoever changes floor brings the other along if they are down there. Each morning they wake beside you.
+- v139: while they play the screen splits: you on the left half, them on the right, each half following its farmer (12 of the map's 24 columns at a time). Alone, the whole map shows.
+- v137: not on a phone: on a touch-only screen with a short side under 600 px, the second controller's A shows a note instead of joining. Tablets, and touch screens with a mouse or trackpad, still play two.
+- v136: they ride the horse too, one rider at a time (whoever gets on first), at its speed; going indoors sets them down and the horse waits outside.
+- v134: they fish too, with their own A for the bite and the catch bar, one line in the water at a time (the other farmer's cast is refused while it is out). Their line holds them, not you.
+- v131: their energy bar shows under yours while they play, and their own prompt (with A) floats over the tile they face. Your bed ends the day for you both: they wake beside you, rested as you are, and passing out at 2 am takes both home with 60% energy.
 - v126: controllers (the browser's standard layout; fixed, not rebindable): stick or d-pad walks; A uses (held, it lifts the fishing bar); B closes a dialog or the menu or stops placing a building; X bag, Y crafting, View journal, L3 neighbours; LB and RB the previous and next hotbar slot; LT seeds, RT turn furniture, R3 whistle; Menu opens and closes the menu. In a dialog or the menu the stick or d-pad moves between buttons (left and right move a slider) and A presses. Once the pad is used, the Use prompt shows A. The menu's Controls section lists it.
 - v119: every key below except Esc and ` can be changed in the menu (Controls: click a key, press the new one; Esc cancels, Backspace removes a second key, Reset keys goes back). Each action takes up to two keys. A key another action used moves to this one, and that action takes the old key; a change that would leave an action with no key is refused. Keys are kept per browser, like the sound settings, not in the save. Messages, the hotbar corners, the Use prompt and the menu buttons show the key as bound. The defaults are as listed here.
 - v119: with Ctrl or Cmd held, keys stay the browser's (only Ctrl Z, undo, reaches the game), and holding a key opens a menu once rather than over and over.
@@ -233,7 +248,19 @@ Stardew's bobber bar by role: after a bite, hold Use to lift your bar (it falls 
 
 ### The beach and the forest (v43)
 
-Stardew's beach and Cindersap forest by role. The farm's new path south (10, 14) leads to Brackenwood; the village's path south (11, 14) to Saltreach Beach. Each area has 5 forage spots a morning (6 with the tracker); the sea and the river never freeze.
+v164 (roadmap 75f): Pudding, the village cat (data/atmosphere.js CAT): a new warm spot every hour and a half from 7:00 to 20:00, seeded by the day; asleep 13:00 to 16:00; in during rain, storms and snow. Use pets her.
+
+v163 (roadmap 75f): winter water: the mere and the village pond freeze in winter like the Wilds pond; fish the mere through its ice hole off the end of the dock; the village pond has no hole. Rivers and the sea never freeze.
+
+v162 (roadmap 75f): life in the water, drawn only: fish jump on lakes, ponds and rivers (spring to autumn), ducks on the mere and the village pond (spring to autumn), frogs at the water's edge on summer evenings (19:00 to 23:00, not in rain).
+
+v161 (roadmap 75e): Garrow's boathouse counter (9:00 to 17:00, shut Thursdays), Stardew's fish shop by role: bait 50g for 10, trap and lead bobbers 500g, spinner and cork bobber 600g, treasure hunter 750g, crab pot 1,500g (still craftable).
+
+v160 (roadmap 75d): the mere, east of the village's lower lane (40 by 28): open water ringed with reeds, the shut boathouse and its dock (fish from its end), two plots for the lakeside homes of 75e. Its fish (Stardew's perch, eel and pike by role): Reed perch 55g d2 spring and summer, Mere eel 85g d3 autumn, Frost pike 100g d3 winter.
+
+v159 (roadmap 75c): Hollowmere Village is 40 by 28 tiles and the town 40 by 24, both grown east and south. The village keeps its square and north row; Esme and Kit live on the east road behind a hedge, Nell and Rook on a new lower lane with two empty lots, the old south row is a green with benches and Nell's garden, and a pond in the south-east has the river's fish. In town the Anvil stands at the east edge (its old spot is a green with benches), with the coach stop and the ridge path at the new east edge.
+
+Stardew's beach and Cindersap forest by role. The farm's new path south (10, 14) leads to Brackenwood; the village's path south (11, 26 since v159) to Saltreach Beach. Each area has 5 forage spots a morning (6 with the tracker); the sea and the river never freeze.
 
 | Sea fish | Sell | Seasons | Diff. | Stardew |
 |---|---|---|---|---|
@@ -281,7 +308,7 @@ Stardew's secret woods, railroad and sewers by role.
 
 | Place | Way in (Stardew) | What is there |
 |---|---|---|
-| Hidden grove (forest, west) | Fallen log at (1, 12): the copper axe, our second axe (the steel axe's large log) | Pond with the Glade skipper (75g, d3, all year; Stardew's woodskip); 3 forage a morning: wood ear 70g, glade mint 60g; 6 big stumps, 10 hits with the copper axe, 2 hardwood each, back every morning (Stardew's 6 large stumps) |
+| Hidden grove (forest, west) | Fallen log at (1, 12): the copper axe, our second axe (the steel axe's large log) | 40 x 24 since v158, the first map larger than the screen (the camera follows you): east, a ring of old trees round a mossy clearing; south, a still pool. Pond and pool with the Glade skipper (75g, d3, all year; Stardew's woodskip); 3 forage a morning: wood ear 70g, glade mint 60g; 6 big stumps, 10 hits with the copper axe, 2 hardwood each, back every morning (Stardew's 6 large stumps) |
 | Railway (Wilds, east) | Rubble at (22, 3) clears on Summer 3, year 1 (the landslide, same day) | 3 forage a morning: track poppy 45g, cinder berry 60g (summer); hot spring: an hour's soak gives 60 energy and half your health (the spa) |
 | Sewer (village, west corner) | Grate at (2, 11): the rusty key in the floor 40 chest (Stardew's rusty key, from 60 museum donations) | Gutter pike 60g, d3, all year (Stardew's sewer has only the legend; scaled like a common river fish, the chub); Crooked carp 1,000g, d6, legend (Stardew's mutant carp, 1,000g); the Lamplighter from 18:00 |
 
@@ -356,20 +383,33 @@ Homes and routines (v76, data/homes.js and data/schedules.js). Every neighbour s
 | Odile | Village, north row, third | The Wilds pond at dawn 6:00 to 10:00, your field to 14:00, mending nets on the pier to 18:00 (Friday: the pond, then the square) |
 | Tavi | Village, north row, fourth | Mon, Wed, Fri: the village lanes, your fence line, the forest. Tue, Thu, Sat: the town lanes, the beach, the square (Sunday: the square) |
 | Wren | Over the store | The store counter 9:00 to 17:00, the square to 20:00 (Wednesday: the village and the beach) |
-| Corvin | Behind the Anvil | The anvil 9:00 to 16:00, the Lantern to 20:00 |
+| Corvin | Behind the Anvil (v159: at the east edge of town) | The anvil 9:00 to 16:00, the Lantern to 20:00 |
 | Hob | Over the Lantern | Errands in the village 9:00 to 11:00, the Lantern from noon to midnight |
 | Maren | Over the clinic | A walk 8:00, the clinic 9:00 to 15:00, house calls on the south lane and the square to 18:00, the Lantern to 21:00 |
 | Hale | The lodge | The lodge door 8:00 to 18:00, the Lantern to 21:00 |
 | Lio | Town, north edge | Fiddling by the fountain 10:00 to 13:00, the town lane to 17:00, outside the Lantern to 22:00 |
 | Pell | Town, north edge | The town hall school 9:00 to 15:00, the square to 18:00, the Lantern to 21:00 (Saturday: the forest, then the town) |
 | Juno | Town, north edge | Mail: every village door 7:00 to 10:00, your farm to 12:00, the town's doors to 17:00, the Lantern to 21:00 |
-| Nell | Village, south row, first | Her garden 7:00 to 11:00, the old mine mouth in the Wilds to 15:00, a seat by the square to 19:00 |
-| Rook | Village, south row, second | The beach and the pier 8:00 to 17:00, the Lantern to 21:00 |
-| Esme | Village, south row, third | Painting in the forest 9:00 to 16:00, the square to 19:00, the shore at dusk to 21:00 |
-| Kit | Village, south row, fourth | By the Anvil 8:00 to 12:00, the square to 17:00, outside home to 21:00 (Saturday: the beach) |
+| Nell | Village, the lower lane, west (v159) | Her garden 7:00 to 10:30, the old mine mouth in the Wilds to 15:00, a seat by the square to 19:00 |
+| Rook | Village, the lower lane, by the beach path (v159) | The beach and the pier 8:00 to 17:00, the Lantern to 21:00 |
+| Esme | Village, the east road (v159) | Painting in the forest 9:00 to 16:00, the square to 19:00, the shore at dusk to 21:00 |
+| Kit | Village, the east road (v159) | By the Anvil 8:00 to 12:00, the square to 17:00, outside home to 21:00 (Saturday: the beach) |
+| Garrow (v161) | Over the mere's boathouse | Lines out from the dock 6:00 to 8:30, the boathouse counter 9:00 to 17:00 (bait and tackle; shut Thursdays: the dock, lunch at the Lantern, the square), the Lantern with Rook 18:00 to 21:00 |
+| Ysolde (v161) | The mere, west plot | Cutting reeds on the north shore 7:00 to 10:00, weaving on her step to 12:00, lunch at home, town 13:00 to 15:00, the square to 18:00 (Sundays with Esme); Mondays and Thursdays evenings at Nell's |
+| Thorne (v178) | A hut on Cragmoor's east shelf | Foraging the mountain 6:00 to 12:00, carving by his hut 13:00 to 17:00; Wednesdays outside the Wardens' Lodge with Hale, Saturdays to town |
+| Sabine (v178) | The railway halt house, with Emmet | The halt 7:00 to 17:00 (Sundays the hot spring); the Lantern Tuesdays and Fridays |
+| Emmet (v178) | The same house | Along the line 8:00 to 12:00, Kit's on Tuesdays and Thursdays or the Anvil 13:00 to 16:00; Saturdays the Lantern |
+| Aldous (v175) | Over the museum | A walk on the town's lower lane 7:00 to 8:00, the museum's desk 8:00 to 18:00 every day, the Lantern 18:00 to 21:00 |
+| Hester (v175) | The village's south-west cottage, with Wilmot | Her roses 7:00 to 9:00, the almanac on the green to 11:00, lunch at home, Pell's lessons on Mondays and Thursdays (the square otherwise) 13:00 to 15:00, Nell's garden to 17:00; Sundays with Wilmot at the town hall clock |
+| Wilmot (v175) | The same cottage | A slow walk to town 8:00 to 10:00, the Anvil with Corvin (Kit's on Tuesdays and Fridays) to 12:00, a nap on the green 14:00 to 17:00; Sundays 10:00 to 12:00 winding the town hall clock |
+| Tamsin (v166) | Her ranch on the village's east road | The pens 5:30 to 8:30, the Ranch Supply counter 9:00 to 16:00, the pens to dusk (Saturdays the Lantern 18:00 to 21:00); Mondays the ranch all day, Tuesdays lunch at the Lantern and the square |
+| Aurel (v166) | The town cottage on the south side, with Bryn and Pip | His wall on the village's lower lane or the town's, alternate days, 7:30 to 17:00 with lunch at the Lantern; the square; Fridays the Lantern; in the rain by Corvin's forge |
+| Bryn (v166) | The same cottage | The clinic beside Maren 9:00 to 15:00, then on the green watching Pip 16:00 to 18:00; Saturdays the town green's stalls in the morning |
+| Pip (v166) | The same cottage | School in the town hall 9:00 to 14:00 (not Saturdays), the green to 18:00, home by six; Sundays all three walk the beach |
+| Ferran (v161) | The mere, east plot | Eel traps on the east shore 5:30 to 9:00, Rook's shed on the beach to 12:00, lunch at the Lantern, the Wilds pond with Odile Tuesdays and Fridays, racing Kit on the east road 16:00 to 18:00 (the Lantern Saturdays); out in the rain |
 | The Lamplighter | A corner of the sewer | The sewer 18:00 to 2:00 |
 
-Rest days are counted from Monday: (day - 1) % 7, 0 = Monday. Festival days: everyone walks to their place in the square for the festival's hours (the Lamplighter stays below), then home. A spouse lives in the farmhouse (indoors in the morning and evening, the yard 10:00 to 17:00).
+Rest days are counted from Monday: (day - 1) % 7, 0 = Monday. Festival days (v145): everyone walks to the square for the festival's hours (the Lamplighter stays below), then home. Lio fiddles by the fountain all day, Hob stirs the soup at the Potluck and keeps the stall at Frostlight, Kit runs round the village during the Egg Hunt; everyone else moves between places in the square (chat pairs, the fountain rim, the table sides, the notices, the ring round the ribbon pole on dance day), 40 to 110 minutes at each, never two on a tile. Anywhere, two neighbours standing side by side turn to each other and talk (a "..." bubble). How neighbour changes are made: docs/NPC_LIFE.md. Rain days (v146, Stardew's rain schedules): in rain or a storm every block outdoors goes to shelter instead: home for Ines, Bram, Tavi, Rook and Hob; the Lantern for Odile, Esme, Nell, Wren, Pell and Lio; the clinic till 18:00 for Maren. Juno and Kit go out anyway; a spouse stays in. Each neighbour has a rain line. Doing, not standing (v147): where they stop, each neighbour has something in hand or beside them for what they do there (data/doings.js): Odile's rod and nets, Esme's easel and sketchbook, Corvin's hammer, Bram's saw, Wren's ledger, Hob's mug and cloth, Pell's and Hale's books, Lio's fiddle, Nell's trowel, Rook's brush, Tavi's map, Ines's bees, Maren's bag, Kit's wrench, the Lamplighter's lantern; Juno's satchel all day. Meals and errands (v148): whoever is out at noon has lunch 12:00 to 13:00, at home (Ines, Tavi, Kit) or at the Lantern (Odile, Nell, Lio, Juno, Rook) when they are in the village or the town at 11:30, else a packed lunch where they are (v154); keepers eat at work. Shoppers stop at Fenn's for 30 minutes between 15:00 and 17:00 on two weekdays each (Bram on his Tuesday rest day), never Wednesday, each at their own time and aisle. Friends (v149, data/friends.js): Ines and Nell, Odile and Esme, Tavi and Kit, Wren and Rook, Pell and Juno. Ines visits Nell's cottage Tuesday and Friday 19:00 to 21:00; on Sundays Nell follows Ines on the shore 13:00 to 15:00 and Kit follows Tavi's village round 13:00 to 16:00; Odile joins Esme on the beach Friday 19:00 to 21:00; Wren and Rook, Pell and Juno share Lantern tables in the evening (Wren at the Lantern 19:00 to 21:00). At festivals a place beside a friend is 12 times as likely as an empty corner (beside anyone else 3 times). Variety (v150, seeded by the date, outdoor blocks only): the first block may start up to 40 minutes later, the last may end up to 30 minutes either way, walking rounds start from another spot or run backwards, and on about 2 days in 7 a 45-minute detour to a favourite place is cut into the longest outdoor block (twelve neighbours have one). Mornings and evenings (v151): on a festival day Bram (saw) and Corvin (hammer) set the square up 90 minutes before opening, Hob arrives 90 minutes early and Lio 60; at closing each mingler lingers 0 to 40 minutes, friends leave at the same moment and the second follows the first home for up to 15 minutes. A cottage's windows are lit after dusk only while its owner is inside (and still go dark at bedtime). Talking about the day (v152, systems/topics.js): the first talk line, most pressing first: their own birthday; another neighbour's birthday (a friend names a loved gift); the festival tomorrow (its intro); the first day of a season; rain or storm (their rain line); snow; on about 1 day in 3 a line about their friend; otherwise their usual line. A festival's own line comes first; partners and spouses keep their own. What you did (v153, systems/news.js, G.S.news): after birthdays, a line about yesterday: your wedding or a festival's top prize (everyone), a quest you did for the speaker (their thanks); half of them (a different half each day) also mention a museum gift, a quest for their friend, 1,500g or more shipped (a good early summer day on Stardew's scale), or a skill level. A spouse lives in the farmhouse (indoors in the morning and evening, the yard 10:00 to 17:00).
 
 Buildings (v98): every building whose door used to open a menu has an inside, laid out like the cottages: Fenn's Provisions, the Anvil, Bram's Carpentry, the Lantern, the clinic, the museum, Tamsin's Ranch Supply, the town hall (the clerk's office and Pell's schoolroom), the picture house, the Wardens' Lodge, the Oasis, the casino, the coop and the barn. The door goes in during the same hours as before (or gives the same note when shut); inside, the counter (the coop's and barn's hoppers) opens the old dialog. Wren, Corvin, Bram, Hob, Maren and Hale work behind their counters and Pell teaches in the schoolroom; staff who are not villagers (the curator, Tamsin, Salma, the clerk, the usher, the casino's cashier and dealers) stand behind theirs while open. The regulars spend the evening inside the Lantern, Lio on its stage. Fainting wakes you in the clinic's ward.
 
@@ -673,6 +713,7 @@ Original where Stardew's mechanic does not exist here: Bountiful, Quickgrow, See
 |---|---|---|---|
 | Mine lift | 20000 | 8 iron bars | Start on any mine floor reached, not just every fifth |
 | Street lamps | 12000 | 60 stone | The day ends at 3 am instead of 2 am |
+| Saturday stalls (v165) | 25000 | 100 wood | Two stalls on the town green, Saturdays 9:00 to 14:00; Nell, Ysolde and Ferran take turns by week, selling three goods each at twice their sell price |
 
 ### Festivals (village square, 9:00 to 22:00)
 
@@ -689,7 +730,7 @@ Original where Stardew's mechanic does not exist here: Bountiful, Quickgrow, See
 | Winter 12 | Frostlight Market | Stall: frost lantern 350g, warm cider 60g (+60 energy) | none |
 | Winter 25 (v57) | Longnight Feast | A secret friend is named on Winter 18 (a note under the door); give them one gift at the table | The gift's friendship counts 5 times; you get a present back (a gem, a dish, a wine or the Starlit Primer). Stardew's Feast of the Winter Star |
 
-- One contest entry per festival per year. On festival days neighbours skip the farm and stand in the square; talking there gives double points (40) and a festival line.
+- One contest entry per festival per year. On festival days neighbours skip the farm and move about the square (v145); talking there gives double points (40) and a festival line.
 
 ### Local traditions (v110)
 
@@ -700,7 +741,7 @@ Original where Stardew's mechanic does not exist here: Bountiful, Quickgrow, See
 
 ### Gold sinks
 
-One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up to 4,400g of animals, crafting (machines 400 to 600g each, sprinklers 75 to 200g each; a full field of iron sprinklers is about 1,600g and 24 iron), lanterns 350g each with no cap. Hillside manor 12,000g, village projects 32,000g. Recurring: seeds, hay (10g per animal per night) and chicken feed (5g per chicken per night).
+One-off: 6,100g of upgrades, coop 1,200g + 1,200g of chickens, barn 3,000g + up to 4,400g of animals, crafting (machines 400 to 600g each, sprinklers 75 to 200g each; a full field of iron sprinklers is about 1,600g and 24 iron), lanterns 350g each with no cap. Hillside manor 12,000g, village projects 57,000g. Recurring: seeds, hay (10g per animal per night) and chicken feed (5g per chicken per night).
 
 ### Energy costs
 
@@ -760,11 +801,13 @@ Small, and only what matters right now. Nothing here touches the economy.
 | Energy | bar and value | always |
 | Health | bar and value | hurt, or on the map where monsters live |
 | Water | bar and value | the can in hand |
-| Use prompt | what Use does on the faced tile, with its key (the verb on the touch Use button) | something registered a prompt there; off with Prompts |
+| Use prompt | what Use does on the faced tile, with its key (the verb on the touch Use button); v135: casting and hooking a bite too | something registered a prompt there; off with Prompts |
 | Objective | the order or challenge in hand, else the board request due soonest | any open; off with Objective, gone in minimal |
-| Messages | up to three, fading out after 2.6 to 7 s by length | on any message |
+| Messages | up to three, fading out after 2.6 to 7 s by length | on any message; on a new farm, held until the new game screen and arrival scene are done (v133) |
 
 HUD size: 100% to 140%, never smaller (HUD text stays 16 px or larger). Full, minimal or hidden: V or the menu. Settings live in the browser, not the save.
+
+Phones held upright (v132): the field takes only its own height under the meters, the hotbar sits right under it, and the pad and Use button sit at the bottom of the screen by your thumbs. A long place name is cut short before it reaches the gold. Under 600 px wide the menu buttons drop their key hints.
 
 v120: Text size, 100% to 150%, scales dialogs, the menu and the bag (the HUD has its own size); a card still fits the window and scrolls. Contrast puts solid black behind the objective, the Use prompt, messages and the basket line, with cream edges on the meters, buttons and hotbar slots. Signals no longer rest on colour alone: quality in the bag and chests shows as 1 to 3 pips (fine, prime, heirloom) in the tier's colour, a low meter is striped as well as red, and ripe crops and forage glint with a small cross instead of a single dot. The objective and the Use prompt now sit under open dialogs instead of over them.
 
@@ -1174,6 +1217,11 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v130: The second farmer's pickups fly to you and their tool level, enchantments and skills are yours; and only your bed ends the day.
+- v144: With both dialogs open, the keyboard's focus follows whichever box was used last: a controller takes it back on its first press, and the keyboard player can click or Tab back into theirs.
+- v140: Effects (particles, pickups) show only on your map, so farmer two's swings elsewhere have no sparks.
+- v142: Farmer two's name is always "Farmer two" (it is saved, but there is no way to type one with a controller yet); the look picker offers shirt and hair only.
+- v129: The second farmer is not saved (their energy is, v130). They walk through neighbours and animals as you do, and stay in the house while you are in bed.
 - v128: The reckoning is a dialog, not a walked scene; Bram is not by the bin while it shows. The two-year balance run in CI ends the day before it, so its gleamfruit never shows in the report.
 - v127: A farm cannot be deleted from its slot (New farm starts over in the slot in play). Key, sound and display settings are shared by all three farms.
 - v126: Controller buttons cannot be rebound, and there is no rumble. The arcade cabinets and dragging items in the bag still need the keyboard, mouse or touch (fishing works: A casts and, held, lifts the bar). Button names are Xbox-style. Only the first controller is read.
@@ -1206,7 +1254,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 - v72: Wildlife is drawn only: you cannot catch or befriend it, and it is not in the balance bot. The new light is darker than before from 8 pm (half dark at 10 pm, was about a third). (v100: the ambient sound has its own volume slider.)
 - v71: The bag still has no item limit, so chests organise and protect items rather than add room (Nuno's choice; a bag limit would be its own roadmap item). The balance bot ignores chests, signs and the computer (no gold). Signs show their text only when you face them. The world map is a grid of places without the connecting paths.
 - v70: The balance bot ignores the picture house (it skips friendship) and the cabinets (no gold). Neighbours go to the films whatever their schedule says.
-- v69: Tamsin, Odile and Quill are names on their counters, not villagers with schedules or gifts. The balance bot opens mystery boxes and spends prize tickets but does not shop at the cart, the bookseller or the ranch counter (same prices as the coop and barn).
+- v69: Odile and Quill are names on their counters (Tamsin is a neighbour since v166, Aldous since v175), not villagers with schedules or gifts. The balance bot opens mystery boxes and spends prize tickets but does not shop at the cart, the bookseller or the ranch counter (same prices as the coop and barn).
 - v68: the balance bot does not dig artifact spots or donate: artifacts are a small side income (about 40g a spot) and rewards are kit items. The excavator profession still only doubles gem and egg finds, not artifacts.
 
 ### Simulated balance (advisory)

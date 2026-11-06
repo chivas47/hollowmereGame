@@ -5,6 +5,7 @@ import { emit, changed, notify } from '../core/events.js';
 import { ROOMS, ROOM_GOLD, RIVAL } from '../data/restoration.js';
 import { ITEMS } from '../data/items.js';
 import { PLACEABLES } from '../data/crafting.js';
+import { fmtGold } from '../core/format.js';
 
 export const BUNDLES = Object.fromEntries(ROOMS.flatMap((r) => r.bundles.map((b) => [b.key, { ...b, room: r.key }])));
 const R = () => G.S.restore;
@@ -23,7 +24,7 @@ function grant(reward) {
   for (const [k, n] of Object.entries(reward.kit || {})) { S.kit[k] = (S.kit[k] || 0) + n; got.push(`${n} ${PLACEABLES[k]?.name || k}`); }
   for (const [k, n] of Object.entries(reward.seeds || {})) { S.seeds[k] = (S.seeds[k] || 0) + n; got.push(`${n} ${ITEMS[k]?.name || k}`); }
   for (const [k, n] of Object.entries(reward.bag || {})) { S.bag[k] = (S.bag[k] || 0) + n; got.push(`${n} ${ITEMS[k]?.name || k}`); }
-  if (reward.gold) { S.gold += reward.gold; got.push(`${reward.gold.toLocaleString('en-US')}g`); }
+  if (reward.gold) { S.gold += reward.gold; got.push(`${fmtGold(reward.gold)}`); }
   return got.join(', ');
 }
 
@@ -32,7 +33,7 @@ function checkRoom(roomKey) {
   if (roomDone(roomKey) || !room.bundles.every((b) => bundleDone(b.key))) return;
   R().rooms[roomKey] = true;
   G.S.gold += ROOM_GOLD;
-  emit('ui:message', { title: `${room.name[0].toUpperCase()}${room.name.slice(1)} is restored`, text: `Workers fill the room with light and noise, and the mayor's office sends ${ROOM_GOLD.toLocaleString('en-US')}g with a thank-you note.` });
+  emit('ui:message', { title: `${room.name[0].toUpperCase()}${room.name.slice(1)} is restored`, text: `Workers fill the room with light and noise, and the mayor's office sends ${fmtGold(ROOM_GOLD)} with a thank-you note.` });
   checkAll();
 }
 function checkAll() {

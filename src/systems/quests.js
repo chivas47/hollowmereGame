@@ -11,6 +11,7 @@ import { ITEMS } from '../data/items.js';
 import { NPCS } from '../data/npcs.js';
 import { QUEST } from '../data/quests.js';
 import { addPoints } from './npcs.js';
+import { fmtGold } from '../core/format.js';
 
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
 
@@ -68,7 +69,7 @@ export function deliver(id) {
   addPoints(q.npc, QUEST.friendship);
   S.quests = S.quests.filter((x) => x !== q);
   S.questsDone = (S.questsDone || 0) + 1;
-  notify(`Delivered. +${q.reward}g and ${NPCS.find((d) => d.id === q.npc).name} is grateful.`);
+  notify(`Delivered. +${fmtGold(q.reward)} and ${NPCS.find((d) => d.id === q.npc).name} is grateful.`);
   emit('quest:done', q);   // v69: a prize ticket (systems/market.js)
   changed();
   return true;

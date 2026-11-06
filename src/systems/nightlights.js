@@ -1,4 +1,5 @@
-// Outdoor night lights (v105): windows light up after dusk and go dark at bedtime, lamp posts stand along the
+// Outdoor night lights (v105): windows light up after dusk and go dark at bedtime (v151: a cottage only while its
+// owner is in), lamp posts stand along the
 // village and town paths, and placed lanterns light the ground around them (data/atmosphere.js NIGHT_LIGHTS).
 // render/renderer.js cuts outdoorLights() out of the dark; this file draws the lit glass and the lamp posts.
 // Drawn only, never saved.
@@ -10,11 +11,16 @@ import { NIGHT_LIGHTS as N } from '../data/atmosphere.js';
 import { r } from '../render/pixel.js';
 import { parsePlaceKey } from './world.js';
 import { floatLights } from './traditions.js';
+import { homeNow } from './npcs.js';
+import { HOMES } from '../data/homes.js';
 
 const outdoors = () => !!MAPS[G.S.map] && !MAPS[G.S.map].base;
 const night = () => G.S.time >= N.from;
 // 0 to 1 from a whole number, well spread for neighbouring numbers (the bedtime roll per building and day).
 const hash = (n) => { n = Math.imul(n ^ (n >>> 16), 0x45d9f3b); n = Math.imul(n ^ (n >>> 16), 0x45d9f3b); return ((n ^ (n >>> 16)) >>> 0) / 4294967296; };
+
+// v151: whose cottage this map object is (data/homes.js), or null (shops, the farmhouse, an empty cottage).
+export const ownerOf = (mapId, o) => (o.art === 'cottage' ? Object.keys(HOMES).find((id) => HOMES[id].map === mapId && HOMES[id].cottage?.[0] === o.x && HOMES[id].cottage?.[1] === o.y) || null : null);
 
 // The lit windows on this map now: { x, y, w, h } glass rects in pixels.
 function litWindows() {
@@ -24,6 +30,8 @@ function litWindows() {
     if (!win) return;
     const until = win.kinds?.[o.kind] ?? win.until, off = until - hash(G.S.day * 997 + i * 31 + (MAPS[G.S.map].salt || 0)) * N.early;
     if (G.S.time >= off) return;
+    const owner = ownerOf(G.S.map, o);
+    if (owner && !homeNow(owner)) return;   // v151: a neighbour's cottage is dark while they are out
     for (const [x, y, w, h] of win.glass) out.push({ x: o.x * T + x, y: o.y * T + y, w, h });
   });
   return out;

@@ -7,8 +7,9 @@ import { PLACEABLES } from '../data/crafting.js';
 import { BUNDLES, stillNeeds, bundleDone, roomDone, restored, donate, payVault, joinRival, buyRoom } from '../systems/restoration.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
+import { fmtGold } from '../core/format.js';
 
-const g = (n) => `${n.toLocaleString('en-US')}g`;
+const g = (n) => `${fmtGold(n)}`;
 const name = (k) => ITEMS[k]?.name || k;
 function rewardText(r) {
   return [...Object.entries(r.kit || {}).map(([k, n]) => `${n} ${PLACEABLES[k]?.name || k}`),

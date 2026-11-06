@@ -11,7 +11,7 @@ import { ITEMS } from '../data/items.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { drawFx } from '../render/animation.js';
 import { rng } from '../render/pixel.js';
-import { facing } from './world.js';
+import { facing, mover } from './world.js';
 
 // Cosmetic randomness has its own generator, so effects never shift the game's rolls (tools/balance.mjs seeds Math.random).
 const rand = rng(0x5eed);
@@ -64,11 +64,11 @@ let last = {}, ready = false, dropAt = null;
 const snapshot = () => { last = { ...G.S.bag }; };
 on('game:loaded', () => { snapshot(); ready = false; G.anim = null; G.fx = { parts: [], floats: [], pickups: [] }; });
 on('game:reset', () => { G.anim = null; G.fx = { parts: [], floats: [], pickups: [] }; });
-on('map:changed', () => { G.fx.pickups.length = 0; G.fx.parts.length = 0; G.fx.floats.length = 0; G.anim = null; });
+on('map:changed', () => { if (mover() === 'you') { G.fx.pickups.length = 0; G.fx.parts.length = 0; G.fx.floats.length = 0; } G.anim = null; });   // v140: G.anim is the mover's
 on('monster:slain', ({ x, y }) => { dropAt = { x, y: y - 6, at: performance.now() }; burst(x, y - 4, IMPACT.slain, 10, { speed: 30, up: 20, size: 3, life: 0.45, gravity: 20, shrink: true }); ring(x, y, 'rgba(255,255,255,.7)', 10); });
 on('state:changed', () => {
   if (!G.S?.bag) return;
-  if (G.paused || !ready) { snapshot(); return; }   // shops, dialogs and loading change the bag without a gather
+  if (G.paused || G.dialog.you || G.dialog.p2 || !ready) { snapshot(); return; }   // v141: dialogs no longer pause in two-player   // shops, dialogs and loading change the bag without a gather
   const f = facing(), src = dropAt && performance.now() - dropAt.at < 300 ? dropAt : { x: f.tx * T + 8, y: f.ty * T + 6 };
   let shown = 0;
   for (const k of Object.keys(G.S.bag)) {
@@ -120,17 +120,23 @@ on('crafted', ({ key, kit }) => { crafted = { key, kit }; });
 
 // ---- tool impacts and the rod ----
 let fishing = false;
-const AT = (a) => { const [dx, dy] = DIRS[a.dir]; return { x: G.S.x + dx * 14, y: G.S.y - 3 + dy * 12 }; };
+const AT = (a, who = G.S) => { const [dx, dy] = DIRS[a.dir]; return { x: who.x + dx * 14, y: who.y - 3 + dy * 12 }; };
+
+// Advances an action pose by dt (held still during hit-stop) and lands its impact; null once it is over.
+// who: whose hands it is in (v129: the second farmer's swings run through here too, systems/partner.js).
+export function stepAnim(a, dt, who = G.S) {
+  if (a.hold > 0) a.hold -= dt;
+  else a.t += dt;
+  if (!a.hit && a.impact && a.t >= a.dur * (a.strike + 0.12)) { a.hit = true; const p = a.at || AT(a, who); impact(a.impact, p.x, p.y); }
+  return a.t >= a.dur ? null : a;
+}
 
 addUpdater((dt) => {
   if (!ready) { ready = true; snapshot(); }
   const a = G.anim;
   if (a) {
-    if (a.hold > 0) a.hold -= dt;
-    else a.t += dt;
-    if (!a.hit && a.impact && a.t >= a.dur * (a.strike + 0.12)) { a.hit = true; const p = a.at || AT(a); impact(a.impact, p.x, p.y); }
     if (a.kind === 'crafted' && rand() < dt * 14) burst(G.S.x + (rand() - 0.5) * 14, G.S.y - 26 + (rand() - 0.5) * 8, IMPACT.craft, 1, { speed: 8, up: 10, size: 1, life: 0.5, gravity: -10 });
-    if (a.t >= a.dur) G.anim = null;
+    G.anim = stepAnim(a, dt);
   }
   if (!G.anim && crafted) {
     playAnim('crafted', { dur: CRAFTED.dur, item: crafted });
@@ -138,8 +144,9 @@ addUpdater((dt) => {
     floatText(G.S.x, G.S.y - 32, `Made: ${crafted.kit ? PLACEABLES[crafted.key]?.name : ITEMS[crafted.key]?.name || crafted.key}`, '#fff1b8', { life: 1.4, rise: 8, pop: true, stack: true });
     crafted = null;
   }
-  if (G.fishing && !fishing) playAnim('rod');   // the cast
-  fishing = !!G.fishing;
+  const mine = !!G.fishing && !G.fishing.p2;   // v134: the second farmer's cast is drawn on them (systems/partner.js)
+  if (mine && !fishing) playAnim('rod');   // the cast
+  fishing = mine;
   if (G.shake && (G.shake.t -= dt) <= 0) G.shake = null;
   // walking dust
   if (G.moving && !G.riding && rand() < dt * 5) burst(G.S.x + (rand() - 0.5) * 4, G.S.y, ['rgba(232,224,208,.45)'], 1, { speed: 6, up: 3, size: 2, life: 0.35, gravity: 0, shrink: true });
@@ -174,4 +181,4 @@ addUpdater((dt) => {
   if (G.bounce > 0) G.bounce -= fdt;
 });
 
-addLayer(61, (c) => drawFx(c, G.fx, G.S));
+addLayer(61, (c) => { if (!G.youMap) drawFx(c, G.fx, G.S); });   // v140: effects belong to your map

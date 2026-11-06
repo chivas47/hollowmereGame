@@ -41,7 +41,7 @@ const ORCHARD = ['figtree', 'peartree', 'nectarinetree', 'persimmontree', 'plumt
 const STRATEGIES = {
   full: ['furnace', 'can', 'coop', 'grassstarter', 'grassstarter', 'chicken', 'chicken', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'crock', 'crock', 'kiln', 'house',
     'barn', 'pail', 'cow', 'cow', 'churn', 'crock', 'goat', 'goat', 'vat', 'silo', 'lightningrod', 'lightningrod', ...Array(9).fill('sprinkler2'), 'greenhouse', 'shed', ...ORCHARD, 'stable', 'lodge:club', 'bigcoop', 'duck', 'duck', 'duck', 'duck', ...Array(14).fill('sprinkler2'), 'hoe', 'axe', 'pick', 'rod', 'can', 'pick',
-    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'pond', 'crabpot', 'crabpot', 'house',
+    'chicken', 'chicken', 'crock', 'crock', 'crock', 'house', 'lamps', 'lift', 'pond', 'crabpot', 'crabpot', 'house', 'stalls', 'reno:corner', 'reno:south', 'reno:attic', 'reno:dining',
     'brewbarrel', 'brewbarrel', 'eggpress', 'beebox', 'beebox', 'dryer', 'smoker', 'mushroomlog',   // wood-hungry, so last
     // v28: more livestock. The big coop comes in year one like a player's; the rest take hundreds of wood, so they come last.
     'bigbarn', 'cow', 'cow', 'goat', 'goat',
@@ -49,7 +49,9 @@ const STRATEGIES = {
     // v30: the mill needs cloth, so a loom comes first. v63: the shed comes right after the greenhouse, so machines go
     // inside it and the farm keeps room for buildings. The bot picks the first free spot from the bottom right.
     'lodge:saber', 'lodge:cutlass',   // v37: the lodge's weapons, skipped if the bot has not been deep enough
-    'loom', 'mill', 'helperhut'],   // the hut's 100 fiber come slowly from weeds
+    'loom', 'mill', 'helperhut',   // the hut's 100 fiber come slowly from weeds
+    // v168 (roadmap 75l): the late-game sinks, Stardew's obelisks and gold clock: two waystones, then the clock tower.
+    'wayvillage', 'statue', 'wayhollow', 'clocktower'],   // v169: the fortune statue before the quartz-hungry waystone
   crops: ['furnace', 'can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
 };
 
@@ -107,6 +109,8 @@ const { nextTier, buyUpgrade, orderCoop, affordable, buyCoal, buyMaterial } = aw
 const { buyChicken, collectEggs, buyFeed, flock } = await load('systems/coop.js');
 const { PROJECTS } = await load('data/projects.js');
 const { funded, fundProject } = await load('systems/projects.js');
+const { RENOVATIONS } = await load('data/furniture.js');   // v170
+const { buyRenovation } = await load('systems/house.js');
 const { orderBarn, buyAnimal, buyHay, collectMilk, herd } = await load('systems/barn.js');
 const { SITES, findSite, siteAt, noFit } = await load('systems/sites.js');
 const { millIn, millCollect } = await load('systems/mill.js');
@@ -142,6 +146,7 @@ const { bless } = await load('systems/traditions.js');   // v110: the wishing st
 const { LODGE_SHOP } = await load('data/guild.js');
 const { readBook } = await load('systems/books.js');
 const { finishReel, stepReel, buyBait } = await load('systems/fishing.js');
+const { buyBoathouse, boathouseOpen } = await load('systems/mere.js');   // v161: Garrow's counter
 const { placePot, usePot, panAt } = await load('systems/pots.js');
 const { pickAreaForage } = await load('systems/areas.js');
 const { hitQuarryRock } = await load('systems/quarry.js');
@@ -242,6 +247,8 @@ function simulate(runSeed) {
       site: true, buy: () => track('buildings', () => { const at = botSite(k); GOAL[k].noSite = !at; return !!at && siteAt(k, 'new', at.x, at.y); }) };
   }
   GOAL.grassstarter = { shop: 'store', cost: () => SUPPLIES.grassstarter, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply('grassstarter', 1)) };
+  // v170: renovations at Bram's (reno:<key>).
+  for (const k of Object.keys(RENOVATIONS)) GOAL[`reno:${k}`] = { cost: () => RENOVATIONS[k].cost, needs: () => ({}), ok: () => !S().house.renos.includes(k), buy: () => track('upgrades', () => buyRenovation(k)) };
   for (const k of Object.keys(PROJECTS)) GOAL[k] = { cost: () => PROJECTS[k].cost, needs: () => PROJECTS[k].needs, ok: () => !funded(k), buy: () => track('projects', () => fundProject(k)) };
   for (const k of Object.keys(TREES)) GOAL[k] = { shop: 'store', cost: () => TREES[k].cost, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply(k, 1)) };
   // v37: weapons from the Wardens' Lodge; skipped when the bot has not reached the floor that sells them.
@@ -601,7 +608,11 @@ function simulate(runSeed) {
     spend(TIME.travel);
     pond();
     while (s.energy >= COST.cast + stopAt && !late()) {
-      use('wilds', 15, 10, 'rod');
+      if (s.day % 2) use('wilds', 15, 10, 'rod');
+      else {   // v160: the mere's dock every other day; v161: bait from Garrow's counter while it is open
+        if ((s.bag.bait || 0) < 5 && boathouseOpen(s) && s.gold > 500) track('bait', () => buyBoathouse(0));
+        use('mere', 17, 13, 'rod');
+      }
       const f = G.fishing; if (!f) break;
       f.t = 0; runUpdaters(0.001);                 // the bite
       if (!G.fishing) break;

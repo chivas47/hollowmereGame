@@ -10,7 +10,7 @@ const have = () => `You have <b>${G.S.nuts.have} ${G.S.nuts.have === 1 ? NUT.nam
 function bridge() {
   openModal(`<h2>The old bridge</h2><p class="role">The planks east are rotten through. A green parrot on the rail cocks its head: it wants ${BRIDGE.nuts} ${NUT.plural} to fix it. ${have()}</p>`,
     [['Give the nuts', () => { if (fixBridge()) closeModal(); }], ['Not now', closeModal, true]]);
-  if (G.S.nuts.have < BRIDGE.nuts) document.querySelector('#mact button').disabled = true;
+  if (G.S.nuts.have < BRIDGE.nuts) $('#mact button').disabled = true;
 }
 function shop() {
   const n = G.S.nuts;
@@ -22,7 +22,7 @@ function shop() {
 function peak() {
   openModal(`<h2>${PEAK.name}</h2><p class="role">Smoke curls from the rocks above. A rope ladder hangs out of reach, and the green parrot eyes your pockets: ${PEAK.nuts} ${NUT.plural} to bring it down. ${have()}</p>`,
     [['Give the nuts', () => { if (openPeak()) closeModal(); }], ['Not now', closeModal, true]]);
-  if (G.S.nuts.have < PEAK.nuts) document.querySelector('#mact button').disabled = true;
+  if (G.S.nuts.have < PEAK.nuts) $('#mact button').disabled = true;
 }
 on('ui:bridge', bridge);
 on('ui:peak', peak);

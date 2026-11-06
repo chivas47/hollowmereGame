@@ -1,12 +1,13 @@
 // Keyboard, touch pad, canvas taps and footer buttons.
 import { G } from '../core/game.js';
-import { T, W, H } from '../core/constants.js';
+import { T } from '../core/constants.js';
+import { toWorld } from '../render/views.js';
 import { notify, emit } from '../core/events.js';
 import { save } from '../core/state.js';
 import { HOTBAR, SEED_SLOT } from '../data/hotbar.js';
 import { act } from '../systems/interact.js';
 import { playerTile } from '../systems/world.js';
-import { closeModal, modalOpen } from './modal.js';
+import { closeModal, dialogOf } from './modal.js';
 import { selectSlot } from './hotbar.js';
 import { confirmReset } from './dialogs.js';
 import { toggleDebug } from './debugPanel.js';
@@ -39,16 +40,20 @@ export const runAction = (a) => PRESS[a]?.();
 
 // What Esc does: close a dialog, then the menu, stop placing a building, else open the menu (also the pad's B).
 export function escape() {
-  if (modalOpen()) closeModal();
+  if (dialogOf('you')) closeModal();   // v141: farmer two's dialog is theirs to close (B)
   else if (menuOpen()) closeMenu();
   else if (G.siting) cancelSiting();
   else openMenu();
 }
 
+// v141: a key whose focus sits in farmer two's dialog: yours to play with, not a press of their button.
+const theirs = (e) => !!document.getElementById('modal2')?.contains(e.target);
+
 export function initInput(canvas) {
+  for (const ev of ['keydown', 'keyup']) addEventListener(ev, (e) => { if (theirs(e) && ['Space', 'Enter'].includes(e.code)) e.preventDefault(); }, true);
   addEventListener('keydown', (e) => {
     if (e.code === 'Escape') { escape(); return; }
-    if (modalOpen() || menuOpen()) return;
+    if (dialogOf('you') || menuOpen()) return;   // v141: farmer two's dialog leaves your keys to you
     if (e.code === 'Backquote') { toggleDebug(); return; }
     if (e.ctrlKey || e.metaKey) {   // browser shortcuts stay the browser's, except Ctrl Z (undo)
       if (e.code === 'KeyZ') { e.preventDefault(); if (!e.repeat) undo(); }
@@ -58,7 +63,7 @@ export function initInput(canvas) {
     if (!a) return;
     if (MOVES.includes(a)) { G.keys[a] = true; e.preventDefault(); return; }
     if (a === 'use') {
-      if (e.target.tagName === 'BUTTON' && (e.code === 'Space' || e.code === 'Enter')) return;
+      if (e.target.tagName === 'BUTTON' && (e.code === 'Space' || e.code === 'Enter') && !theirs(e)) return;
       e.preventDefault(); G.useHeld = true; if (!e.repeat) act(); return;   // v41: held Use lifts the catch bar
     }
     if (a === 'undo') e.preventDefault();
@@ -87,7 +92,9 @@ export function initInput(canvas) {
   canvas.addEventListener('pointerdown', (e) => {
     if (G.paused) return;
     const rc = canvas.getBoundingClientRect();
-    const tx = Math.floor((e.clientX - rc.left) / rc.width * W), ty = Math.floor((e.clientY - rc.top) / rc.height * H);
+    const at = toWorld((e.clientX - rc.left) / rc.width, (e.clientY - rc.top) / rc.height);   // v139: through your half's camera
+    if (at.v.who !== 'you') return;   // the second farmer's half: theirs is the controller
+    const tx = Math.floor(at.x / T), ty = Math.floor(at.y / T);
     const p = playerTile(), dx = tx - p.tx, dy = ty - p.ty;
     if (Math.abs(dx) + Math.abs(dy) === 1) { G.S.dir = dx < 0 ? 'left' : dx > 0 ? 'right' : dy < 0 ? 'up' : 'down'; act(); }
     else if (dx || dy) notify('Walk next to that tile, then tap it.');

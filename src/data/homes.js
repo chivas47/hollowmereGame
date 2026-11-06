@@ -12,19 +12,32 @@ export const HOMES = {
   bram: { map: 'village', cottage: [5, 2] },
   odile: { map: 'village', cottage: [16, 2] },
   tavi: { map: 'village', cottage: [20, 2] },
-  nell: { map: 'village', cottage: [2, 12] },
-  rook: { map: 'village', cottage: [6, 12] },
-  esme: { map: 'village', cottage: [14, 12] },
-  kit: { map: 'village', cottage: [18, 12] },
+  nell: { map: 'village', cottage: [4, 18] },    // v159 (roadmap 75c): the lower lane, her garden behind
+  rook: { map: 'village', cottage: [13, 18] },   // v159: the lower lane, by the beach path
+  esme: { map: 'village', cottage: [24, 6] },    // v159: the east road, light from the south
+  kit: { map: 'village', cottage: [30, 6] },     // v159: the east road, on the way to the farm
   lio: { map: 'town', cottage: [13, 1] },
   pell: { map: 'town', cottage: [4, 1] },
   juno: { map: 'town', cottage: [18, 1] },
   wren: { map: 'town', door: [4, 7] },     // over Fenn's Provisions
-  corvin: { map: 'town', door: [11, 7] },  // behind the Anvil
+  corvin: { map: 'town', door: [34, 7] },  // behind the Anvil (v159: at the east edge)
   hob: { map: 'town', door: [5, 12] },     // over the Lantern
   maren: { map: 'town', door: [15, 12] },  // over the clinic
   hale: { map: 'wilds', door: [14, 4] },   // the Wardens' Lodge
   lamp: { map: 'sewer', door: [21, 3] },   // a corner of the sewer
+  garrow: { map: 'mere', door: [15, 19] },   // v161 (roadmap 75e): over the boathouse
+  ysolde: { map: 'mere', cottage: [4, 18] },   // v161: the mere's west plot, onto the lane
+  ferran: { map: 'mere', cottage: [30, 19] },  // v161: the mere's east plot, a shout from his sister's
+  tamsin: { map: 'village', cottage: [24, 11] },  // v166 (roadmap 75j): her ranch, south of the east road, the pens beside
+  aurel: { map: 'town', cottage: [14, 14] },      // v166: the family's cottage on the town's open south side
+  bryn: { shares: 'aurel' },                      // v166: a cottage can be home to more than one (its owner's plan)
+  pip: { shares: 'aurel' },
+  aldous: { map: 'town', door: [19, 12] },        // v175 (roadmap 75s): over the museum
+  hester: { map: 'village', cottage: [6, 22] },   // v175: the village's south-west corner, below the lower lane
+  wilmot: { shares: 'hester' },
+  thorne: { map: 'mountain', cottage: [14, 8] },   // v178 (roadmap 75w): a hut on Cragmoor's east shelf
+  sabine: { map: 'railway', cottage: [8, 3] },     // v178: the halt house, facing the line
+  emmet: { shares: 'sabine' },
 };
 
 // A cottage's front door tile is the middle of its bottom row; you stand on the tile below it.
@@ -32,7 +45,15 @@ for (const [id, h] of Object.entries(HOMES)) {
   if (h.cottage) h.door = [h.cottage[0] + 1, h.cottage[1] + 2];
   if (h.cottage) h.spot = INTERIORS[id].spot;   // v97: where the floor plan has the owner stand
 }
-export const homeMap = (id) => `home_${id}`;
+// v166: those who share a cottage use its door and inside, each with their own spot from the owner's plan (spots).
+const sharing = {};
+for (const h of Object.values(HOMES)) if (h.shares) {
+  const o = HOMES[h.shares], i = sharing[h.shares] = (sharing[h.shares] ?? -1) + 1;
+  Object.assign(h, { map: o.map, door: o.door, spot: INTERIORS[h.shares].spots[i] });
+}
+export const ownerOfHome = (id) => HOMES[id]?.shares || id;
+export const livesWith = (owner) => Object.keys(HOMES).filter((k) => ownerOfHome(k) === owner);
+export const homeMap = (id) => `home_${ownerOfHome(id)}`;
 export const HOME_ENTRY = [11, 11];   // inside the farmhouse, just past the door mat (E at 11,12)
 // v97: the tile just inside a cottage's front door (each floor plan puts its door where the house needs it).
 export const homeEntry = (id) => doorOf(id).entry;

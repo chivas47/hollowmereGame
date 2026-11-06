@@ -21,6 +21,7 @@ import { orderLeft } from './orders.js';
 import { challengeLeft } from './challenges.js';
 import { hearts } from './npcs.js';
 import { weekGoal } from './firstweek.js';
+import { fmtGold } from '../core/format.js';
 
 const J = () => G.S.journal;
 const nameOf = (id) => NPCS.find((d) => d.id === id)?.name || 'Someone';
@@ -72,13 +73,13 @@ export function objectives() {
   const due = (d) => { const n = d - S.day + 1; return n <= 1 ? 'today' : `${n} days`; };
   const o = S.orders?.active, c = S.challenge?.active;
   if (o && ORDERS[o.key]) out.push({ id: 'order', name: ORDERS[o.key].name, map: 'village', optional: true,
-    text: `${ORDERS[o.key].name}: ${orderLeft()} to go, ${due(o.due)}`, how: `${o.given} of ${ORDERS[o.key].n} handed in at the village board. Pays ${ORDERS[o.key].gold.toLocaleString('en-US')}g.` });
+    text: `${ORDERS[o.key].name}: ${orderLeft()} to go, ${due(o.due)}`, how: `${o.given} of ${ORDERS[o.key].n} handed in at the village board. Pays ${fmtGold(ORDERS[o.key].gold)}.` });
   if (c && CHALLENGES[c.key]) out.push({ id: 'challenge', name: CHALLENGES[c.key].name, map: 'town', optional: true,
     text: `${CHALLENGES[c.key].name}: ${challengeLeft()} to go, ${due(c.due)}`, how: `${c.given} of ${CHALLENGES[c.key].n} handed in to Sable at the Lantern. Pays ${CHALLENGES[c.key].gems} moonstones.` });
   [...(S.quests || [])].sort((a, b) => a.due - b.due).forEach((q) => {
     const have = Math.min(S.bag[q.item] || 0, q.n), what = `${q.n} ${ITEMS[q.item].name}`;
     out.push({ id: `quest:${q.id}`, name: `${nameOf(q.npc)}: ${what}`, map: 'village', optional: true,
-      text: `${nameOf(q.npc)} wants ${what} (${have}/${q.n}), ${due(q.due)}`, how: `Bring them to the quest board in the village. You have ${have}. Pays ${q.reward}g.` });
+      text: `${nameOf(q.npc)} wants ${what} (${have}/${q.n}), ${due(q.due)}`, how: `Bring them to the quest board in the village. You have ${have}. Pays ${fmtGold(q.reward)}.` });
   });
   // v122: during the first week an open goal leads, and the story waits while one is open.
   const w = weekGoal(), s = w ? null : storyNext();
@@ -161,6 +162,6 @@ on('state:changed', () => {
   checkStory();
   if (J().track && !objectives().some((o) => o.id === J().track)) J().track = null;
 });
-on('quest:done', (q) => log(`${nameOf(q.npc)}: ${q.n} ${ITEMS[q.item].name} (${q.reward}g)`));
+on('quest:done', (q) => log(`${nameOf(q.npc)}: ${q.n} ${ITEMS[q.item].name} (${fmtGold(q.reward)})`));
 on('order:done', (key) => log(`Special order: ${ORDERS[key].name}`));
 on('challenge:done', (key) => log(`Sable's challenge: ${CHALLENGES[key].name}`));

@@ -1,6 +1,6 @@
 # Hollowmere Farm: how Claude works on this repo
 
-Read `docs/PROJECT_INSTRUCTIONS.md` (hard rules) and `docs/ARCHITECTURE.md` (where things go) before changing code. This file adds the delivery process.
+Read `docs/PROJECT_INSTRUCTIONS.md` (hard rules) and `docs/ARCHITECTURE.md` (where things go) before changing code, plus `docs/WORLD_BUILDING.md` for maps, buildings and homes and `docs/NPC_LIFE.md` for how neighbours live. This file adds the delivery process.
 
 ## Values: the Stardew scale
 
@@ -28,6 +28,8 @@ For each item:
 9. **Watch it to green.** CI runs the tests, simulates base and head and comments the comparison on the PR. Fix and push until green. Do not merge; Nuno merges.
 
 When a PR merges, start the next `next` item on a fresh branch from `main`.
+
+When no item is `next`, or Nuno asks for polish, follow `docs/POLISH.md`: sweep with `tools/polish_sweep.mjs`, log finds, propose batches for Nuno to pick, then ship each through this loop.
 
 ## Stop and ask Nuno when
 

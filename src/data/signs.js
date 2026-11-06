@@ -6,14 +6,15 @@ export const SIGN = 'Ş';
 
 export const SIGNS = {
   village: [
-    { x: 22, y: 9, kind: 'post', dir: 'right', text: 'East: {farm} Farm.' },
-    { x: 12, y: 13, kind: 'post', dir: 'down', text: 'South: Saltreach Beach.' },
+    { x: 37, y: 9, kind: 'post', dir: 'right', text: 'East: {farm} Farm.' },   // v159: the village's new edges
+    { x: 37, y: 19, kind: 'post', dir: 'right', text: 'East: the mere.' },   // v160
+    { x: 12, y: 25, kind: 'post', dir: 'down', text: 'South: Saltreach Beach.' },
     { x: 11, y: 1, kind: 'post', dir: 'up', text: 'North: Hollowmere Town.' },
     { x: 18, y: 7, kind: 'notice', text: 'Whoever keeps borrowing the bucket from the fountain: please bring it back. It is not yours.' },
   ],
   town: [
-    { x: 11, y: 14, kind: 'post', dir: 'down', text: 'South: the village.' },
-    { x: 21, y: 3, kind: 'post', dir: 'right', text: 'East: the old ridge path to the mountain lake. A tree came down across it years ago.',
+    { x: 11, y: 21, kind: 'post', dir: 'down', text: 'South: the village.' },   // v159: the town's new edges
+    { x: 36, y: 3, kind: 'post', dir: 'right', text: 'East: the old ridge path to the mountain lake. A tree came down across it years ago.',
       after: { shortcut: 'ridge', text: 'East: the ridge path to the mountain lake. Open again, thanks to someone with a good axe.' } },
     { x: 13, y: 9, kind: 'notice', text: 'Lost: one grey cat, answers to Pudding, ignores everyone else. Reward at the tavern.' },
   ],
@@ -33,7 +34,11 @@ export const SIGNS = {
     { x: 3, y: 1, kind: 'notice', text: 'No swimming past the rocks. The tide is quicker than you are.' },
   ],
   railway: [{ x: 1, y: 4, kind: 'post', dir: 'left', text: 'West: the Wilds.' }],
-  grove: [{ x: 22, y: 11, kind: 'post', dir: 'right', text: 'East: Brackenwood.' }],
+  grove: [{ x: 37, y: 11, kind: 'post', dir: 'right', text: 'East: Brackenwood.' }],
+  mere: [   // v160: the plots wait for the lakeside homes (75e)
+    { x: 2, y: 19, kind: 'post', dir: 'left', text: 'West: the village.' },
+    { x: 13, y: 21, kind: 'notice', text: "Garrow's boathouse: bait and tackle. 9 till 5, shut Thursdays." },   // v161
+  ],
   mountain: [
     { x: 20, y: 14, kind: 'post', dir: 'down', text: 'South: the Wilds.' },
     { x: 22, y: 6, kind: 'post', dir: 'right', text: 'East: the quarry.' },

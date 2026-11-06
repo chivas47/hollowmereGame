@@ -5,6 +5,7 @@ import { SHRINE } from '../data/books.js';
 import { CHIMES } from '../data/nuts.js';
 import { DECOR_SHEETS, BUILDING_SHEETS, PROPS_SHEET, GREENHOUSE_SHEET, VARIANTS_SHEET } from '../data/sprites.js';
 import { BUILDINGS } from '../data/buildings.js';
+import { RANCH_PEN } from '../data/ranch.js';
 import { ready, sheet } from './sheets.js';
 
 const SNOW = '#f2f6f8';
@@ -254,6 +255,17 @@ function shed(g, p, o) {
   r(g, X + 18, Y + 18, 12, 13, '#5c371e'); r(g, X + 18, Y + 18, 12, 2, '#c9a06a'); r(g, X + 27, Y + 25, 1, 2, '#e9c46a');
   r(g, X + 6, Y + 16, 7, 6, '#3f3226'); r(g, X + 7, Y + 17, 5, 4, '#bfe0ec'); r(g, X + 35, Y + 16, 7, 6, '#3f3226'); r(g, X + 36, Y + 17, 5, 4, '#bfe0ec');
 }
+// v160: the mere's boathouse, 3 x 2: plank walls, a slate roof, wide doors onto the water (shut).
+function boathouse(g, p, o) {
+  const X = o.x * T, Y = o.y * T;
+  r(g, X + 2, Y + 31, 44, 1, 'rgba(0,0,0,.25)');
+  r(g, X + 3, Y + 12, 42, 19, '#7a5a3a');
+  for (let i = 0; i < 7; i++) r(g, X + 3 + i * 6, Y + 12, 1, 19, '#5c4128');
+  for (let j = 0; j < 11; j++) r(g, X + 13 - j, Y + 1 + j, 22 + 2 * j, 1, j % 3 === 2 ? '#2f3a44' : '#4a5a66');
+  if (p.snow) for (let j = 0; j < 3; j++) r(g, X + 13 - j, Y + 1 + j, 22 + 2 * j, 1, SNOW);
+  r(g, X + 30, Y + 16, 12, 15, '#3f2c1c'); r(g, X + 35, Y + 16, 1, 15, '#2a1d12');   // the boat doors, toward the dock
+  r(g, X + 8, Y + 17, 12, 4, '#3f6b8a'); r(g, X + 9, Y + 18, 10, 2, '#5f8fb5');        // an oar sign
+}
 function mill(g, p, o) {
   const X = o.x * T, Y = o.y * T, a = 0.4;
   r(g, X + 1, Y + 31, 30, 1, 'rgba(0,0,0,.25)');
@@ -298,6 +310,15 @@ function helperhut(g, p, o) {
   for (let j = 0; j < 12; j++) r(g, X + 16 - j - 2, Y + 4 + j, 4 + 2 * j + 4, 1, j % 2 ? '#c9a24a' : '#b8913a');
   if (p.snow) r(g, X + 10, Y + 5, 12, 3, SNOW);
   r(g, X + 13, Y + 22, 6, 9, '#3f3226'); r(g, X + 14, Y + 23, 4, 2, '#7fcf6a');
+}
+// v169: the fortune statue, a figure on a plinth with open hands, gilded.
+function statue(g, p, o) {
+  const X = o.x * T, Y = o.y * T, gold = '#e2b23a', dark = '#a5752a';
+  r(g, X + 2, Y + 31, 12, 1, 'rgba(0,0,0,.25)');
+  r(g, X + 2, Y + 24, 12, 7, '#8d8a84'); r(g, X + 2, Y + 24, 12, 1, '#b5b1a8');
+  r(g, X + 6, Y + 3, 4, 4, gold); r(g, X + 5, Y + 8, 6, 10, gold); r(g, X + 5, Y + 8, 1, 10, dark);
+  r(g, X + 2, Y + 12, 3, 2, gold); r(g, X + 11, Y + 12, 3, 2, gold); r(g, X + 6, Y + 18, 4, 6, dark);
+  r(g, X + 7, Y + 4, 1, 1, '#fff2c0');
 }
 function waystone(g, p, o) {
   const X = o.x * T, Y = o.y * T, hollow = o.site === 'wayhollow';
@@ -389,7 +410,7 @@ export function drawBuilding(g, p, o) {
   g.drawImage(sheet(name).img, sx, sy, w, h, o.x * T + dx, o.y * T + dy, w, h);
 }
 
-export const OBJECT_ART = { boat, storefront, lodge, helperhut, waystone, pond, slimepen, shed, mill, clocktower, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
+export const OBJECT_ART = { boathouse, boat, storefront, lodge, helperhut, waystone, pond, slimepen, shed, mill, clocktower, statue, scaffold, stable, house, bin, well, shop, workbench, coop, cave, barn, cottage, board, fountain, table, greenhouse, trough };
 
 // ---- Greenhouse interior (ignores seasons) ----
 export function drawGreenhouseFloor(g, x, y, t) {
@@ -518,6 +539,53 @@ function grate(g, x, y, p) {
   const X = x * T, Y = y * T;
   r(g, X + 2, Y + 2, 12, 12, '#3f4850'); for (let i = 0; i < 4; i++) r(g, X + 3 + i * 3, Y + 3, 1, 10, '#1a1f22'); r(g, X + 2, Y + 2, 12, 1, '#6f7880');
 }
+// v159 (roadmap 75c): the village's hedges, garden beds and benches.
+function hedge(g, x, y) {
+  const X = x * T, Y = y * T;
+  r(g, X, Y + 3, T, 12, '#3f6b33'); r(g, X, Y + 3, T, 2, '#5a8a44');
+  [[2, 6], [8, 5], [12, 9], [4, 11]].forEach(([a, b]) => r(g, X + a, Y + b, 3, 2, '#6fa052'));
+}
+function gardenBed(g, x, y) {
+  const X = x * T, Y = y * T;
+  r(g, X + 1, Y + 2, 14, 12, '#6e4626'); r(g, X + 1, Y + 2, 14, 1, '#8a5a32');
+  [[3, 4, '#5d7a4a'], [8, 5, '#e2a33a'], [4, 9, '#b5452f'], [10, 10, '#5d7a4a']].forEach(([a, b, c]) => { r(g, X + a, Y + b, 3, 3, c); r(g, X + a + 1, Y + b + 3, 1, 2, '#3f6b33'); });
+}
+function bench(g, x, y) {
+  const X = x * T, Y = y * T;
+  r(g, X + 1, Y + 6, 14, 3, '#8a5a32'); r(g, X + 1, Y + 6, 14, 1, '#b0804a'); r(g, X + 1, Y + 3, 14, 2, '#6e4626');
+  r(g, X + 2, Y + 9, 2, 5, '#4a3020'); r(g, X + 12, Y + 9, 2, 5, '#4a3020');
+}
+// v166: Tamsin's pens: fence rails round the box, grazed grass, her cows and sheep (data/maps.js RANCH_PEN).
+function pen(g, x, y, p) {
+  const X = x * T, Y = y * T, [x0, y0, x1, y1] = RANCH_PEN.box, rail = '#8a5a32', post = '#5c371e';
+  r(g, X, Y, T, T, p?.snow ? '#e6e2d6' : '#7a9a52');
+  if (y === y0) { r(g, X, Y + 2, T, 1, rail); r(g, X, Y + 5, T, 1, rail); }
+  if (y === y1) { r(g, X, Y + 11, T, 1, rail); r(g, X, Y + 14, T, 1, rail); }
+  if (x === x0) { r(g, X + 1, Y, 1, T, rail); r(g, X + 1, Y, 2, 4, post); }
+  if (x === x1) { r(g, X + 14, Y, 1, T, rail); r(g, X + 13, Y, 2, 4, post); }
+  const has = (list) => list.some(([a, b]) => a === x && b === y);
+  if (has(RANCH_PEN.cows)) {
+    r(g, X + 3, Y + 6, 9, 5, '#f4ead2'); r(g, X + 5, Y + 7, 3, 2, '#3a3028'); r(g, X + 11, Y + 5, 3, 4, '#f4ead2');
+    r(g, X + 12, Y + 6, 1, 1, '#2b211a'); r(g, X + 4, Y + 11, 1, 3, '#3a3028'); r(g, X + 10, Y + 11, 1, 3, '#3a3028');
+  }
+  if (has(RANCH_PEN.sheep)) {
+    r(g, X + 4, Y + 7, 7, 4, '#fffbe8'); r(g, X + 10, Y + 7, 3, 3, '#3a3028');
+    r(g, X + 5, Y + 11, 1, 2, '#3a3028'); r(g, X + 9, Y + 11, 1, 2, '#3a3028');
+  }
+}
+// v165: a market stall on the town green: a striped awning over a plank counter.
+function stall(g, x, y) {
+  const X = x * T, Y = y * T;
+  r(g, X + 1, Y + 2, 2, 13, '#6e4626'); r(g, X + 13, Y + 2, 2, 13, '#6e4626');
+  for (let i = 0; i < 4; i++) r(g, X + i * 4, Y + 1, 4, 4, i % 2 ? '#f4ead2' : '#b5452f');
+  r(g, X, Y + 9, T, 4, '#a5753f'); r(g, X, Y + 9, T, 1, '#c9955a');
+  r(g, X + 3, Y + 7, 3, 2, '#e2a33a'); r(g, X + 9, Y + 7, 3, 2, '#5d7a4a');
+}
+// v160: reeds on the mere's shore.
+function reeds(g, x, y) {
+  const X = x * T, Y = y * T;
+  [[2, 3], [5, 1], [8, 4], [11, 2], [13, 5]].forEach(([a, b]) => { r(g, X + a, Y + b, 1, 14 - b, '#7a8a3a'); r(g, X + a, Y + b, 2, 3, '#8a5a32'); });
+}
 function hotSpring(g, x, y) {
   const X = x * T, Y = y * T;
   r(g, X, Y, T, T, '#4f9aa8'); r(g, X + 2, Y + 3, 4, 1, '#bfe6ec'); r(g, X + 9, Y + 9, 5, 1, '#bfe6ec'); r(g, X + 6, Y + 1, 1, 3, 'rgba(255,255,255,.4)');
@@ -581,6 +649,9 @@ export const PROP_ART = {
   '@': shrineDoor, '+': pedestal,
   '|': fallenLog, '}': rubble, ';': grate, '{': hotSpring, '?': traderSpot,
   '7': peakMouth, '8': shell, '9': basin, '<': altar, '`': lantern,
+  'ħ': hedge, 'ǧ': gardenBed, 'ƀ': bench, 'ɲ': pen,   // v159; v166 the pens
+  'ʋ': reeds,   // v160
+  'ʂ': stall,   // v165
 };
 // The ground under each prop: a cave's floor or wall, grass (with the salt its blades and flowers use) or sand.
 // Props not listed draw their whole tile, or sit on whatever the map has there (the ladder down, mine rocks).
@@ -588,6 +659,7 @@ export const PROP_GROUND = {
   U: 'wall', '^': 'wall', '>': 'wall', t: 'floor', $: 'floor', '!': 'floor', '=': 'floor', '+': 'floor', '?': 'floor',
   '|': 'grass:29', '}': 'grass:23', ';': 'grass:37', '9': 'grass:41', '<': 'grass:43', '`': 'grass:47',
   '¢': 'grass:53', '§': 'grass:59', '¤': 'grass:61', '8': 'sand',
+  'ħ': 'grass:67', 'ǧ': 'grass:71', 'ƀ': 'grass:73', 'ʋ': 'grass:79', 'β': 'grass:83', 'ʂ': 'grass:89', 'ɲ': 'grass:97',
 };
 function propGround(t, g, x, y, p) {
   const k = PROP_GROUND[t];
@@ -645,7 +717,7 @@ function pattern(g, X, Y, d, wall) {
 export function drawHouseTile(g, x, y, t, below, walls, floors, decor) {
   const X = x * T, Y = y * T;
   if (t === '.') { r(g, X, Y, T, T, '#14100c'); return; }
-  if (t === 'I' || t === '_') {   // v47: the phone hangs on a wall face
+  if (t === 'I' || t === '_' || t === 'ʌ') {   // v47: the phone hangs on a wall face (v172: and the attic ladder)
     if (below && below !== 'I' && below !== '.') {   // the wall's face (v87: from the wallpaper sheet once it has loaded)
       if (ready(DECOR_SHEETS.walls)) return g.drawImage(sheet(DECOR_SHEETS.walls).img, (walls[decor.wall] ? decor.wall : 0) * T, 0, T, T, X, Y, T, T);
       pattern(g, X, Y, walls[decor.wall] || walls[0], true); r(g, X, Y + 14, T, 2, '#3f3226'); return;
@@ -660,6 +732,20 @@ export function drawHouseTile(g, x, y, t, below, walls, floors, decor) {
 const bed = (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 1, Y, 14, T, '#7a4a2a'); r(g, X + 2, Y + 1, 12, 14, '#f4ead2'); r(g, X + 2, Y + 6, 12, 9, '#5f8fb5'); r(g, X + 2, Y + 6, 12, 1, '#3d6a8f'); };
 const bedHead = (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 1, Y, 14, T, '#7a4a2a'); r(g, X + 2, Y + 3, 12, 13, '#f4ead2'); r(g, X + 4, Y + 4, 8, 4, '#ffffff'); r(g, X + 1, Y, 14, 3, '#5c371e'); };
 export const HOUSE_ART = {
+  // v173: the dining room's long table: a polished top, an edge, chairs drawn at its long sides.
+  'ŧ': (g, x, y, m) => {
+    const X = x * T, Y = y * T, top = m[y - 1]?.[x] !== 'ŧ';
+    r(g, X, Y + (top ? 4 : 0), T, top ? 12 : 12, '#8a5a32'); r(g, X, Y + (top ? 4 : 0), T, 2, '#b0804a');
+    if (!top) r(g, X, Y + 11, T, 2, '#5c371e');
+    r(g, X + 5, top ? Y : Y + 13, 6, 3, '#6e4626');
+    if (top && x % 2) r(g, X + 6, Y + 7, 4, 3, '#f4ead2');
+  },
+  // v172: the attic ladder: rails and rungs on a wall face, or a hatch in the attic floor's edge.
+  'ʌ': (g, x, y, m) => {
+    const X = x * T, Y = y * T;
+    if (m[y + 1]?.[x] === '.') { r(g, X + 2, Y + 3, 12, 10, '#3f3226'); r(g, X + 3, Y + 4, 10, 8, '#14100c'); for (let i = 0; i < 3; i++) r(g, X + 4, Y + 5 + i * 3, 8, 1, '#8a5a32'); return; }
+    r(g, X + 3, Y, 2, T, '#8a5a32'); r(g, X + 11, Y, 2, T, '#8a5a32'); for (let i = 0; i < 4; i++) r(g, X + 3, Y + 2 + i * 4, 10, 1, '#a5753f');
+  },
   _: (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 5, Y + 3, 6, 9, '#3f3226'); r(g, X + 6, Y + 4, 4, 7, '#b5452f'); r(g, X + 4, Y + 4, 2, 6, '#2b211a'); r(g, X + 7, Y + 6, 2, 1, '#e9c46a'); r(g, X + 7, Y + 8, 2, 1, '#e9c46a'); },
   Z: (g, x, y, m) => (m[y - 1]?.[x] === 'Z' ? bed(g, x, y) : bedHead(g, x, y)),
   l: (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 6, Y + 8, 4, 7, '#6e4626'); r(g, X + 2, Y + 3, 12, 6, '#8a5a32'); r(g, X + 3, Y + 3, 5, 5, '#f4ead2'); r(g, X + 8, Y + 3, 5, 5, '#e8dcc0'); r(g, X + 7, Y + 3, 1, 5, '#b5452f'); },

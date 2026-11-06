@@ -7,7 +7,8 @@ import { hoursOf } from '../data/festivals.js';
 import { newState, save } from '../core/state.js';
 import { CROPS } from '../data/crops.js';
 import { ITEMS } from '../data/items.js';
-import { sleep } from '../systems/days.js';
+import { bedtime } from '../systems/partner.js';   // v142: with farmer two in, you may wait for them in bed
+import { LOOKS } from '../data/profile.js';
 import { buy, canBuy, inSeason, buySupply, canBuySupply } from '../systems/economy.js';
 import { SUPPLIES, PLACEABLES } from '../data/crafting.js';
 import { BAIT_PRICE } from '../data/angling.js';
@@ -26,8 +27,11 @@ const WEATHER_LINES = {
   mist: 'Silvermist: a pale, warm mist over everything. The farm is watered, and mist lilies have opened in the Wilds.',
 };
 import { hearts, heartStr, giftOptions, giveGift, chooseScene } from '../systems/npcs.js';
+import { TIER_NAMES } from '../data/gifts.js';
+import { ITEM_KIND } from '../data/bag.js';
+import { iconURL } from '../render/itemIcons.js';
 import { openModal, closeModal } from './modal.js';
-import { $, esc } from './dom.js';
+import { $, $$, esc } from './dom.js';
 import { SHOPS } from '../data/town.js';
 import { askingTonight, answerChild } from '../systems/family.js';
 import { NPCS } from '../data/npcs.js';
@@ -35,6 +39,7 @@ import { BOUQUET } from '../data/romance.js';
 import { bouquetOnSale, buyBouquet } from '../systems/town.js';
 import { hintsNow, hintsOn } from '../systems/hints.js';
 import { keyName } from '../core/controls.js';
+import { fmtGold } from '../core/format.js';
 
 const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
@@ -43,24 +48,36 @@ on('ui:sleep', () => {
   if (askingTonight()) {   // v53: your spouse asks about a child at bedtime
     const who = NPCS.find((n) => n.id === G.S.spouse)?.name || 'Your spouse';
     openModal(`<h2>Before you sleep</h2><p>${esc(who)} sits on the edge of the bed. "Have you ever thought about having a child?"</p>`,
-      [['Not now', () => { answerChild(false); closeModal(); sleep(false); }], ['Yes', () => { answerChild(true); closeModal(); sleep(false); }, true]]);
+      [['Not now', () => { answerChild(false); closeModal(); bedtime(); }], ['Yes', () => { answerChild(true); closeModal(); bedtime(); }, true]]);
     return;
   }
   openModal(
     `<h2>Go to bed?</h2><p>Watered crops grow one day. Anything in the bin gets paid. ${late ? 'It is getting late.' : 'There is still daylight left.'}</p>`,
-    [['Not yet', closeModal], ['Sleep', () => { closeModal(); sleep(false); }, true]],
+    [['Not yet', closeModal], ['Sleep', () => { closeModal(); bedtime(); }, true]],
   );
 });
 
+// v142: the first time farmer two joins on a farm they pick a shirt and hair (opened as them, in their half).
+on('ui:partnerLook', () => {
+  const P = G.S.partner, row = (part, label) => `<div class="pick"><span>${label}</span>${LOOKS[part].map((v) =>
+    `<button class="swatch" aria-pressed="${P.look[part] === v}" data-plook="${part}" data-v="${v}" style="background:${v}" aria-label="${label} ${v}"></button>`).join('')}</div>`;
+  openModal(`<h2>${esc(P.name)}</h2><p>Pick a shirt and hair for the second farmer. It is kept with this farm.</p>${row('shirt', 'Shirt')}${row('hair', 'Hair')}`,
+    [['Done', closeModal, true]]);
+  $$('[data-plook]').forEach((b) => b.addEventListener('click', () => {
+    P.look[b.dataset.plook] = b.dataset.v;
+    $$(`[data-plook="${b.dataset.plook}"]`).forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+  }));
+});
+
 function refreshShop() {
-  const g = $('#shopGold'); if (g) g.textContent = `${G.S.gold}g`;
-  document.querySelectorAll('[data-buy]').forEach((b) => { b.disabled = !canBuy(b.dataset.buy, +b.dataset.n); });
-  document.querySelectorAll('[data-supply]').forEach((b) => { b.disabled = !canBuySupply(b.dataset.supply, +b.dataset.n); });
+  const g = $('#shopGold'); if (g) g.textContent = `${fmtGold(G.S.gold)}`;
+  $$('[data-buy]').forEach((b) => { b.disabled = !canBuy(b.dataset.buy, +b.dataset.n); });
+  $$('[data-supply]').forEach((b) => { b.disabled = !canBuySupply(b.dataset.supply, +b.dataset.n); });
 }
 
 const seedNote = (c) => (c.packet === 'wild' ? `grows a wild ${c.produce.map((k) => ITEMS[k].name.toLowerCase()).join(' or ')} in ${c.days} days`
   : c.packet === 'mixed' ? 'grows a random crop of the season'
-    : `ready in ${c.days} days, sells for ${c.sell}g${c.yield ? ` x${c.yield}` : ''}${c.regrow ? `, then again every ${c.regrow} days` : ''}${c.seasons.length > 1 ? ` (${c.seasons.join(' and ')})` : ''}`);
+    : `ready in ${c.days} days, sells for ${fmtGold(c.sell)}${c.yield ? ` x${c.yield}` : ''}${c.regrow ? `, then again every ${c.regrow} days` : ''}${c.seasons.length > 1 ? ` (${c.seasons.join(' and ')})` : ''}`);
 const supplyText = (d) => (d.kind === 'grass' ? 'A tuft of grass for open farm grass or an animal yard. It spreads; animals graze it instead of eating feed or hay, and with a silo cutting it gives hay.'
   : d.quality ? `Raises harvest quality (level ${d.quality}). Before planting.`
   : d.speed ? `Crops grow ${Math.round(d.speed * 100)}% faster. Before planting.` : `${Math.round(d.retain * 100)}% chance the soil stays watered overnight.`);
@@ -68,21 +85,21 @@ const supplyText = (d) => (d.kind === 'grass' ? 'A tuft of grass for open farm g
 on('ui:shop', () => {
   const season = today().season;
   const rows = Object.entries(CROPS).filter(([, c]) => !c.crafted && !c.shop).map(([k, c]) => `
-    <div class="shoprow"><div><b>${c.packet ? c.name : `${c.name} seeds`}</b><span>${inSeason(k) ? `${c.seed}g each, ${seedNote(c)}` : `Back in ${c.seasons.join(' and ')}`}</span></div>
+    <div class="shoprow"><div><b>${c.packet ? c.name : `${c.name} seeds`}</b><span>${inSeason(k) ? `${fmtGold(c.seed)} each, ${seedNote(c)}` : `Back in ${c.seasons.join(' and ')}`}</span></div>
     <div class="btns"><button data-buy="${k}" data-n="1">Buy 1</button><button data-buy="${k}" data-n="5">Buy 5</button></div></div>`).join('');
   const note = season === 'Winter' ? '<p class="role">Winter stock is thin: frost kale, wild seeds and mixed seeds. The rest is back in spring.</p>' : '';
   const supplies = Object.entries(SUPPLIES).filter(([k]) => !TREES[k]).map(([k, cost]) => `
-    <div class="shoprow"><div><b>${PLACEABLES[k].name}</b><span>${supplyText(PLACEABLES[k])} ${cost}g. Goes to slot 7; ${PLACEABLES[k].kind === 'grass' ? 'face open grass to plant it' : 'face tilled soil to spread it'}.</span></div>
+    <div class="shoprow"><div><b>${PLACEABLES[k].name}</b><span>${supplyText(PLACEABLES[k])} ${fmtGold(cost)}. Goes to slot 7; ${PLACEABLES[k].kind === 'grass' ? 'face open grass to plant it' : 'face tilled soil to spread it'}.</span></div>
     <div class="btns"><button data-supply="${k}" data-n="1">Buy 1</button><button data-supply="${k}" data-n="10">Buy 10</button></div></div>`).join('');
-  const baitRow = `<div class="shoprow"><div><b>Bait</b><span>${BAIT_PRICE}g each. You have ${G.S.bag.bait || 0}. For the rod (ashwood or better) and crab pots.</span></div>
+  const baitRow = `<div class="shoprow"><div><b>Bait</b><span>${fmtGold(BAIT_PRICE)} each. You have ${G.S.bag.bait || 0}. For the rod (ashwood or better) and crab pots.</span></div>
     <div class="btns"><button data-bait-buy="10" ${G.S.gold < BAIT_PRICE * 10 ? 'disabled' : ''}>Buy 10</button></div></div>`;   // v42
   const saplings = Object.entries(TREES).map(([k, t]) => `
-    <div class="shoprow"><div><b>${t.name}</b><span>${t.cost}g. Grows for ${TREE_DAYS} days, then a ${ITEMS[t.fruit].name.toLowerCase()} (${ITEMS[t.fruit].sell}g) every ${t.season} morning. Slot 7; plant on open grass with a free tile around it.</span></div>
+    <div class="shoprow"><div><b>${t.name}</b><span>${fmtGold(t.cost)}. Grows for ${TREE_DAYS} days, then a ${ITEMS[t.fruit].name.toLowerCase()} (${fmtGold(ITEMS[t.fruit].sell)}) every ${t.season} morning. Slot 7; plant on open grass with a free tile around it.</span></div>
     <div class="btns"><button data-supply="${k}" data-n="1">Buy 1</button></div></div>`).join('');
   const pet = G.S.pet, hats = pet ? Object.entries(PET_HATS).map(([k, h]) => `
-    <div class="shoprow"><div><b>${h.name}</b><span>${h.cost}g. For ${esc(pet.name)}.${pet.hats.includes(k) ? ' You have it.' : ''}</span></div>
+    <div class="shoprow"><div><b>${h.name}</b><span>${fmtGold(h.cost)}. For ${esc(pet.name)}.${pet.hats.includes(k) ? ' You have it.' : ''}</span></div>
     <div class="btns"><button data-hat="${k}" ${pet.hats.includes(k) || G.S.gold < h.cost ? 'disabled' : ''}>Buy</button></div></div>`).join('') : '';
-  openModal(`<h2>${SHOPS.store.name}</h2><p>You have <b id="shopGold">${G.S.gold}g</b>.</p>${note}${rows}<h3>Farm supplies</h3>${supplies}<h3>Fishing</h3>${baitRow}<h3>Fruit saplings</h3>${saplings}${hats ? `<h3>Pet hats</h3>${hats}` : ''}${bouquetOnSale() ? `<h3>Flowers</h3><div class="shoprow"><div><b>Bouquet</b><span>${BOUQUET.cost}g. Give it to someone you love at ${BOUQUET.hearts} hearts or more to ask them out. You have ${G.S.bag.bouquet || 0}.</span></div><div class="btns"><button data-bouquet ${G.S.gold < BOUQUET.cost ? 'disabled' : ''}>Buy</button></div></div>` : ''}`, [['Leave', closeModal, true]]);
+  openModal(`<h2>${SHOPS.store.name}</h2><p>You have <b id="shopGold">${fmtGold(G.S.gold)}</b>.</p>${note}${rows}<h3>Farm supplies</h3>${supplies}<h3>Fishing</h3>${baitRow}<h3>Fruit saplings</h3>${saplings}${hats ? `<h3>Pet hats</h3>${hats}` : ''}${bouquetOnSale() ? `<h3>Flowers</h3><div class="shoprow"><div><b>Bouquet</b><span>${fmtGold(BOUQUET.cost)}. Give it to someone you love at ${BOUQUET.hearts} hearts or more to ask them out. You have ${G.S.bag.bouquet || 0}.</span></div><div class="btns"><button data-bouquet ${G.S.gold < BOUQUET.cost ? 'disabled' : ''}>Buy</button></div></div>` : ''}`, [['Leave', closeModal, true]]);
   refreshShop();
 });
 
@@ -99,7 +116,23 @@ $('#mbody').addEventListener('click', (e) => {
   if (bb && !bb.disabled && buyBait(+bb.dataset.baitBuy)) emit('ui:shop');
 });
 
+// v188 (polish 76i, Nuno's pick): one "Give a gift" button opens a picker, instead of a Give button per kind of
+// thing carried, which on a phone pushed the neighbour's words out of view. Tastes you have learned sort first.
+let talking = null;   // the conversation the picker goes back to
+const TASTE_ORDER = ['loved', 'liked', 'neutral', 'disliked', 'hated'];
+function giftPicker(npc) {
+  const st = G.S.npcs[npc.id], known = st.known || {}, rank = (k) => (known[k] ? TASTE_ORDER.indexOf(known[k]) : 2.5);
+  const keys = giftOptions(npc).sort((a, b) => rank(a) - rank(b) || ITEMS[a].name.localeCompare(ITEMS[b].name));
+  const rows = keys.map((k) => `<div class="shoprow giftrow"><div><b><img src="${iconURL(k, ITEM_KIND[k])}" alt="" width="32" height="32"> ${esc(ITEMS[k].name)}</b>`
+    + `<span>You have ${G.S.bag[k]}.${known[k] ? ` ${npc.def.name} ${TIER_NAMES[known[k]].toLowerCase()} it.` : ''}</span></div>`
+    + `<div class="btns"><button data-gift="${k}">Give</button></div></div>`).join('');
+  openModal(`<h2>A gift for ${npc.def.name}</h2><p class="role">One gift a day. What you have learned they like is at the top.</p>${rows}`,
+    [['Back', () => emit('ui:talk', talking)], ['Goodbye', closeModal, true]]);
+  $$('[data-gift]').forEach((b) => b.addEventListener('click', () => giveGift(npc, b.dataset.gift)));
+}
+
 on('ui:talk', ({ npc, text, extra }) => {
+  talking = { npc, text, extra };
   const st = G.S.npcs[npc.id], d = npc.def, gifts = giftOptions(npc);
   const pr = G.S.profile, said = esc(text).replace(/\{name\}/g, esc(pr?.name || 'friend')).replace(/\{fav\}/g, esc(pr?.favourite || 'a good harvest'));
   let html = `<h2>${d.name}</h2><p class="role">${d.role}</p><p>“${said}”</p>`;
@@ -107,7 +140,7 @@ on('ui:talk', ({ npc, text, extra }) => {
   html += `<p class="hearts" aria-label="${hearts(st)} of ${st.married ? 14 : 10} hearts">${heartStr(st)}</p>`;
   if (st.gifted === G.S.day) html += `<p class="role">You already gave ${d.name} a gift today.</p>`;
   else if (!gifts.length) html += `<p class="role">Harvest or forage something to bring ${d.name} a gift.</p>`;
-  const actions = gifts.map((k) => [`Give ${ITEMS[k].name}`, () => giveGift(npc, k)]);
+  const actions = gifts.length ? [['Give a gift', () => giftPicker(npc)]] : [];
   actions.push(['Goodbye', closeModal, true]);
   openModal(html, actions);
 });
@@ -130,7 +163,7 @@ on('day:report', (r) => {
   if (r.newSeason) {
     html += `<p class="gift">${r.newSeason} has arrived.`;
     if (r.withered) html += ` ${plural(r.withered, 'crop')} withered with the change of season.`;
-    if (r.newSeason === 'Winter') html += ' Nothing grows outside in winter. The pond has frozen: fish through the ice hole on its west edge.';
+    if (r.newSeason === 'Winter') html += ' Nothing grows outside in winter. The ponds and the mere have frozen: fish through the ice holes, at the west edge of the Wilds pond and off the end of the dock on the mere.';
     html += '</p>';
   }
   if (r.festival) html += `<p class="gift">Today is the ${r.festival.name}! Head to the village square, ${fmtTime(hoursOf(r.festival).from)} to ${fmtTime(hoursOf(r.festival).to)}. Your neighbours will be there instead of the farm.</p>`;
@@ -165,7 +198,7 @@ on('day:report', (r) => {
   if (r.forecast) html += `<p class="role">Forecast for tomorrow: ${WEATHER[r.forecast].name.toLowerCase()}.</p>`;
   if (hintsOn()) { const [tip] = hintsNow(1); if (tip && tip.id !== 'idle') html += `<p class="role">Tip: ${tip.text}</p>`; }   // v101
   html += `<p>${r.passedOut ? 'You woke up at home with only part of your energy back. ' : ''}`;
-  html += `${r.payout ? `The shipping bin paid out ${r.payout}g.` : 'Nothing was shipped yesterday.'} ${plural(r.grown, 'crop')} grew overnight.</p>`;
+  html += `${r.payout ? `The shipping bin paid out ${fmtGold(r.payout)}.` : 'Nothing was shipped yesterday.'} ${plural(r.grown, 'crop')} grew overnight.</p>`;
   openModal(html, [['Start the day', () => { closeModal(); emit('report:closed'); }, true]]);   // v128: ui/reckoning.js waits for it
 });
 

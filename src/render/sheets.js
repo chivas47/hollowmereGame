@@ -22,6 +22,30 @@ const listeners = [];
 // Runs fn(name) whenever a sheet finishes loading (for still pictures drawn once, like the creation preview).
 export const onSheet = (fn) => listeners.push(fn);
 
+// v181: a copy of a whole sheet with its green pixels shifted toward wash.to, each keeping its brightness, wash.mix
+// of the way (data/sprites.js SEASON_WASH). Browns, greys and outlines that are not green stay as drawn. Cached.
+export function recoloured(name, wash) {
+  const key = `${name}|wash|${wash.to}|${wash.mix}`;
+  let cv = tints.get(key);
+  if (cv) return cv;
+  const img = sheet(name).img;
+  cv = document.createElement('canvas'); cv.width = img.width; cv.height = img.height;
+  const g = cv.getContext('2d');
+  g.drawImage(img, 0, 0);
+  const d = g.getImageData(0, 0, cv.width, cv.height), px = d.data, n = parseInt(wash.to.slice(1), 16);
+  const to = [n >> 16, (n >> 8) & 255, n & 255], lum = (c) => 0.3 * c[0] + 0.59 * c[1] + 0.11 * c[2], tl = lum(to);
+  for (let i = 0; i < px.length; i += 4) {
+    const c = [px[i], px[i + 1], px[i + 2]];
+    if (!px[i + 3] || c[1] <= c[0] || c[1] < c[2]) continue;   // only green
+    const k = lum(c) / tl;
+    for (let j = 0; j < 3; j++) px[i + j] = Math.round(c[j] + (Math.min(255, to[j] * k) - c[j]) * wash.mix);
+  }
+  g.putImageData(d, 0, 0);
+  if (tints.size > 256) tints.delete(tints.keys().next().value);
+  tints.set(key, cv);
+  return cv;
+}
+
 // A canvas with every frame of a layered sheet tinted and stacked. layers: [[name, colour or null], ...] in draw
 // order; a null colour draws the band untinted (ink: eyes, shadow). Cached by sheet name and palette.
 export function tinted(name, layerNames, layers, size) {

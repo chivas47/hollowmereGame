@@ -2,6 +2,355 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v194: Shop rows line up
+- In Garrow's boathouse, the old boatman and the arcade cabinets, a long description no longer pushes Buy or Play onto its own line under the item: the button sits at the row's right, as in every other shop. On a phone, rows with two or more buttons still put them under the item when there is no room beside it.
+- No saves, prices or keys changed.
+
+## v193: Notices that leave dialogs readable
+- While a dialog is open, its notices show at the top of the dialog instead of over the middle of it, so a long one (the achievements line after loading a save) no longer covers rows in the Bag, a shop or the journal. When the dialog closes, any notice still showing goes back over the field.
+- In two-player, each farmer's notices go to the top of their own dialog.
+- No saves, prices or keys changed.
+
+## v192: Neighbours redrawn
+- The farmer and every neighbour have a new look: a rounder head with two clear eyes (the old front view merged them into one), a shine on the hair and a touch of colour in the cheeks, arms that swing as they walk, and a one-pixel outline in each part's own darker colour, like the props in v191. Long hair falls past the shoulders and beards frame the jaw.
+- Same size and footprint as before, so hats, props, emotes and the blink still sit where they did; the blink now closes both rows of the taller eyes.
+- The sheet is now built by a script (tools/sprites/person.py) instead of edited by hand. Polish 76l, Nuno's pick after 76k.
+
+## v191: Neighbours' props redrawn
+- Everything neighbours hold or set down while they work has been redrawn: shading in three tones, an outline in the prop's own darker colour, and held where the hand actually is. Ground props (the easel, trug, sawhorse, paint pot, doctor's bag) cast a soft shadow. The fishing line now runs from the rod tip to a bobber that dips and ripples, the fiddle's bow crosses the strings, Bram saws a plank on a sawhorse and sawdust piles up, Juno's satchel has a strap, and the Lamplighter's lantern throws a round pool of light instead of a square one. Chest-held things (book, ledger, map, sketchbook, bowl) sit a pixel lower, so they no longer cover faces.
+- Drawing only (render/doings.js): no props change who does what or where. Polish 76k, Nuno's ask.
+
+## v190: Silvermist that looks like fog
+- On silvermist days the drifting mist banks are tapered, layered strips that fade at their ends instead of flat rectangles with hard edges, so they read as fog rather than a drawing glitch. Polish 76j, from the fourth polish sweep (docs/POLISH.md, find 18).
+
+## v189: Gold written one way
+- Every gold amount has thousands separators: the HUD, every shop and dialog, notices and the journal ("1,725,356g", "10,000g"). About half the game wrote it bare before ("1725356g"). No amounts change.
+- Polish 76h, from the third polish sweep (docs/POLISH.md, find 16).
+
+## v188: One button to give a gift
+- Talking to a neighbour shows their words, their hearts and two buttons: Give a gift and Goodbye. Give a gift opens a list of what you carry, with icons and counts, the things you have learned they love or like at the top; Back returns to the conversation. Before, there was a Give button for every kind of thing in your bag (twenty on a well-stocked farm), which on a phone pushed the neighbour's words out of view.
+- Polish 76i, from the third polish sweep (docs/POLISH.md, find 17), Nuno's pick.
+
+## v187: Homes that look like their owners
+- Thorne lives in a one-room hut now, like the hut outside: a bedroll on the frame he made, the hearth he cooks on, his carving bench and the only chair. It was a copy of Hester's three-room cottage.
+- Sabine and Emmet's halt house has the halt office across the front (the ticket counter, the halt clock, the timetable, sixty years of ticket stubs), with the living room, Sabine's room and Emmet's workshop behind. It was also a copy of Hester's.
+- Hester, Ysolde, Ferran, Tamsin and Kit each have their own colours instead of one shared scheme (night-blue walls, a checked kitchen, a blue bathroom). Every note you read when you look at things is kept.
+- Polish 76c, built from docs/sketches/76c-homes.md as written (Nuno merged the sketch, chivas47/hollowmereGame#192).
+
+## v186: One notice at a time on a phone
+- On a phone-sized screen notices show one at a time instead of stacking over the field; the rest wait their turn and nothing is dropped. While others wait, each stays at most a little over three seconds. Wide screens still stack up to three (polish 76g, find 10, Nuno's pick).
+
+## v185: Journal lists say what matters
+- The journal's Museum and Fish tabs list what you have and end with one line for the rest ("15 artifacts still to find", "29 kinds still to catch") instead of a line for every missing entry.
+- Achievements a farm has already met are awarded when the save loads, not only the next morning, so the Achievements and Completion tabs agree with what they show. Several earned at once make one notice.
+- Polish 76f, from the second polish sweep (docs/POLISH.md, finds 14 and 15).
+
+## v184: The journal on small screens
+- Calendar: each day shows its number with a star for a festival and a dot for a birthday, and the season's events are listed in full under the grid. Names no longer break mid-word in the day cells, which made them unreadable on a phone.
+- Map: on a narrow screen (a phone, or one farmer's half in two-player) the places are a two-column list instead of a five-column grid whose names broke a letter or two a line. On a wide screen the grid stays, with more room for each name, and a long name hyphenates instead of breaking anywhere.
+- On a narrow screen the journal's twelve tabs are one row that scrolls sideways, with the open tab kept in view, instead of five rows.
+- Polish 76e, from the second polish sweep (docs/POLISH.md, finds 11 to 13).
+
+## v183: No stall entering the town
+- Entering Hollowmere Town or the Village for the first time each season no longer freezes the game for a moment (up to about a fifth of a second). Building the map's picture copied each tree's trunk back from a second canvas, one tree at a time, which stalled the browser hundreds of times; the trunk is now drawn straight onto the ground. The maps look exactly the same (polish 76d).
+
+## v182: Seasons and biomes look right
+- Grown alders on the farm are proper bare trees in winter. They showed as thin bare saplings, and young alders showed as full green trees, because the sprite sheet's bare frames were read one frame early.
+- Alders turn rust in autumn, like the trees around them. Grass and weeds on the farm dry to a dull khaki in winter instead of staying summer green on the snow.
+- The Dunes and the dig site are ringed by dusty scrub standing on sand, not green forest on grass, and no longer grow green grass tufts in the wind. The beach keeps its green border.
+- Polish 76b, from the first polish sweep (docs/POLISH.md, finds 4 to 6).
+
+## v181: The clock keeps the time on one line
+- The time in the clock panel no longer breaks onto two lines ("10:00" / "pm") on places with long names. A long place name moves to its own line under the time instead (polish 76a). Phones are unchanged: the place name is still shortened to fit.
+
+## v180: The train passes in front
+- The goods train is drawn with the people now, so anyone standing on the line or just above it is hidden behind the cars as they pass, and anyone below the line stays in front. Nobody appears to stand on top of the train any more.
+
+## v179: The goods train
+- About one day in seven, between 9:00 and 17:00, a goods train crosses the railway with a whistle. When it has gone, one to three parcels lie beside the line: coal, a geode, copper or iron ore, hardwood, stone or wood. Face one and press Use to pick it up. They are gone by the next morning.
+- Sabine's running joke is over: her lines now say the train is real, and Emmet means to ride it one day.
+- New save fields: `trainDrops` and `trainDay` (empty in older saves). No prices or keys changed.
+
+## v178: The hermit and the railway halt
+- Thorne, a hermit, lives in a hut on Cragmoor's east shelf: he forages the mountain in the morning, carves by his hut in the afternoon, sits outside the Wardens' Lodge with Hale on Wednesdays and goes to town for flour on Saturdays.
+- Sabine keeps the railway halt and lives in the halt house with her son Emmet, who mends the line. She waits, every day, for a goods train nobody has ever seen.
+- All three are friends only, with gifts, birthdays, lines, theatre tastes, a Lantern Float spot, festival lines and a full week. The valley now has 30 people.
+- No prices, saves or keys changed.
+
+## v177: Festival lines for the curator and the old couple
+- Aldous, Hester and Wilmot now have something to say at the festivals: the Blossom Show, the Egg Hunt, the Summer Potluck, the Grange Fair, the Frostlight Market and the Longnight Feast.
+- Lines only. No prices, saves or keys changed.
+
+## v176: Notices in split screen
+- With a second farmer in, each farmer's notices appear over their own half: yours on the left, farmer two's on the right. Yours no longer cover farmer two's dialog. Playing alone, notices sit in the middle as before.
+- No saves, prices or keys changed.
+
+## v175: The curator and the old couple
+- Curator Aldous, whose name was on the museum's desk, is now a neighbour: he lives over the museum, keeps it 8 to 6 every day from behind his own desk, and spends evenings at the Lantern.
+- Hester, a retired teacher who keeps the village almanac, and her husband Wilmot, a retired clockmaker who still winds the town hall clock on Sundays, share a new cottage in the village's south-west corner with Hester's rose bed beside it.
+- All three are friends only, with gifts, birthdays, lines, theatre tastes, a Lantern Float spot and a full week. The valley now has 27 people.
+- The festival square has three more places to stand, so a crowd of 27 still gathers by friends.
+- No prices, saves or keys changed.
+
+## v174: Your birthday dinner
+- You can set your birthday in the Menu (a season and a day; not a festival day). Older saves have none until you pick one.
+- With the dining room built, on your birthday evening (18:00 to 21:00) your three closest friends at 4 hearts or more come to the farmhouse and sit at the table. Be home during the dinner and each gives you a heart (+100 friendship) and a small gift, once a year.
+- New save fields: `birthday` (none in older saves) and `dinnerYear`. No prices or keys changed.
+
+## v173: The dining room
+- A new renovation at Bram's Carpentry: the dining room, 150,000g. It needs the kitchen (the first house upgrade); Bram says so if you ask without it. A 6 by 6 room opens through the kitchen's east wall, with a long table for eight.
+- The farmhouse map is seven columns wider to fit it (31 by 19); nothing already in the house moves. No new save field, no keys changed.
+- The balance bot buys it after the attic.
+
+## v172: The attic
+- A new renovation at Bram's Carpentry: the attic, 60,000g. A ladder goes up on the bed corner's north wall; the attic is a long low room, 16 by 7, with pine walls, for furniture and chests like the house. The hatch in its floor takes you back down.
+- No new save field (one more renovation). No keys changed. The balance bot buys it after the south room.
+
+## v171: The south room
+- A new renovation at Bram's Carpentry: the south room, 30,000g. A 5 by 3 room opens through the living room's south wall, east of the front door.
+- The farmhouse map is three rows taller to make room (24 by 19); the camera scrolls to follow you. Nothing already in the house moves.
+- No new save field and no keys changed. The balance bot buys it after the corner room.
+
+## v170: The corner room
+- A new renovation at Bram's Carpentry: the corner room, 20,000g. A 4 by 3 room opens through the living room's west wall, below the nursery wing, to furnish as you like.
+- It joins the existing renovations in the same list; no new save field (it is one more entry in the house's renovations). No keys changed.
+- The balance bot buys it after the Saturday stalls.
+
+## v169: The fortune statue
+- A new farm building at Bram's: the fortune statue, 1,000,000g, placed like the waystones. On the morning of a neighbour's birthday its hands hold something that neighbour loves; press Use on it to take the gift.
+- New save field `statue` (empty in older saves). No prices or keys changed.
+- The balance bot buys it after the village waystone.
+
+## v168: The balance bot buys the late game
+- The balance simulator now saves for the village waystone, the Hollow waystone (500,000g each) and the clock tower (10,000,000g), Stardew's obelisks and gold clock, once the rest of its list is bought. Before, it ended with millions and called it "nothing left to buy" while 11,000,000g of buildings sat unbought.
+- No change in the game itself: no prices, saves or keys.
+
+## v167: The newest neighbours join in
+- Garrow, Ysolde, Ferran, Tamsin, Aurel, Bryn and Pip now take part in the valley's life: each has film and snack tastes at the theatre, things they are seen doing (Garrow's rod on the dock, Ferran's nets, Tamsin's feed basket, Aurel's hammer, Bryn's bag, Pip's schoolbook), lines about their friends, and lines at the Summer Potluck and the Grange Fair.
+- All but Pip set a lantern at the Lantern Float (he is in bed; Bryn sets his for him).
+- Ysolde's birthday moves from Summer 20 to Summer 22, and Pip's from Winter 12 to Winter 15: both had fallen on a festival day.
+- No prices, saves or keys changed.
+
+## v166: Tamsin, and a family in town
+- Tamsin, whose name was on the Ranch Supply counter, is now a neighbour: she keeps cows and sheep at a ranch on the village's east road (her cottage and two pens south of the road), works the pens at dawn and dusk and stands behind her own counter 9 to 4 (shut Mondays and Tuesdays, as before).
+- A family moves into a new cottage on the town's south side: Aurel, a stonemason mending the valley's walls; Bryn, the clinic's nurse beside Doctor Maren; and their son Pip, seven, Pell's youngest pupil, drawn child-sized. Pip is home by six.
+- All four are friends only, with gifts, birthdays, lines and a full week. Sundays the family walks the beach together.
+- A cottage can now be home to more than one person: the family shares one door and one inside, each with their own place in it.
+- No existing prices, saves or keys changed.
+
+## v165: Saturday stalls
+- A new village project on the quest board: Saturday stalls, 25,000g and 100 wood. Funded, two market stalls go up on the town green.
+- Saturday mornings, 9 till 2, a neighbour sells there, a different one each week: Nell (garden goods), Ysolde (honey, cloth and cake) or Ferran (smoked eel, crayfish, snails), at twice the sell price.
+- New save field: none (the project sits in the existing projects list). No keys changed.
+
+## v164: Pudding
+- The grey cat from the town's lost-cat notice was never lost: Pudding lives in the village. She keeps a round of warm spots through the day (the green's benches, the hedge on the east road, the fountain, the north row's doorsteps), strolls from one to the next, naps through the afternoon and stays in when it rains or snows.
+- Face her and press Use to pet her.
+- Drawn only; nothing saved, no prices or keys changed.
+
+## v163: Winter water
+- In winter the mere and the village pond freeze like the Wilds pond. The mere has an ice hole off the end of the boathouse dock (the Frost pike's season); the village pond has none. The forest river and the sea still never freeze.
+- The morning report on the first day of winter names both ice holes.
+- A new test checks every source file parses, including the screens the other tests never load (it would have caught a quote typo found while building this).
+- No prices or keys changed.
+
+## v162: Life in the water
+- Fish jump now and then on the mere, the village pond, the Wilds pond, the forest river, the grove's pools and the mountain lake (not in winter), with a ring spreading where they land.
+- Ducks paddle about the mere and the village pond from spring to autumn, a duckling or two among them, turning back at the bank.
+- On summer evenings frogs sit at the water's edge and hop now and then.
+- Drawn only; nothing saved, no prices or keys changed.
+
+## v161: New neighbours at the mere
+- Three people move to the mere: Garrow, the old ferryman, keeps the boathouse; Ysolde weaves baskets from the reeds on the west plot; her brother Ferran traps eels from the east plot. Friends only.
+- Garrow's counter is open 9:00 to 17:00, shut Thursdays: bait (50g for 10), trap and lead bobbers (500g), spinner and cork bobber (600g), treasure hunter (750g) and the crab pot (1,500g, still craftable). Tackle had no shop before.
+- Each has a full week: Garrow lines out at dawn and argues hulls with Rook at the Lantern; Ysolde cuts reeds at dawn, sells in town and visits Nell; Ferran is out at five, mends traps by Rook's boat, fishes with Odile and races Kit. Ferran goes out in the rain; eels like it.
+- Their cottages can be visited like the others. After a festival each neighbour now walks home with one friend, the first they have.
+- No existing prices or keys changed.
+
+## v160: The mere
+- A new place: the mere, the lake the valley is named for, 40 by 28 tiles. The village's lower lane runs on east to it.
+- Open water with reeds along the shore, an old boathouse (locked: its keeper left years ago) and its dock, which reaches out over the water to fish from.
+- Three new fish, one a season: Reed perch (spring and summer, 55g), Mere eel (autumn, 85g) and Frost pike (winter, 100g).
+- Two plots by the water wait for the lakeside families coming with the new neighbours. No prices of existing things or keys changed.
+
+## v159: The village laid out
+- Hollowmere Village is now 40 by 28 tiles and the town 40 by 24; the camera follows you across both. The square, the north row of cottages, the shops, the hall and the town cottages are where they were.
+- Esme and Kit live on the east road toward your farm, behind a hedge; Nell and Rook on a new lower lane, with two empty lots for newcomers. Nell's garden is behind her house, the old south row is a green with benches, and a pond in the south-east has the river's fish.
+- The Anvil moved to the east edge of town (fire and noise away from the shops); its old spot is a small green. The coach stop and the ridge path moved to the new east edge.
+- The ways in and out moved to the new edges: east to your farm, south to the beach, the lane between the village and the town. Signs, routines and Juno's round follow. Nell and Odile set out half an hour sooner on the days the bigger village would make them late.
+- A farm saved standing where there is now a bench or a garden starts on the nearest lane. No prices or keys changed.
+
+## v158: The grove grows
+- The hidden grove is the first place larger than the screen: 40 by 24 tiles, and the view follows you across it. East of the old glade, a ring of old trees round a mossy clearing; south, a still pool among more old trees, with the same glade fish as the pond.
+- It grew east and south, so everything already there kept its place: the six stumps, the cairn, the pond and its falls, the morning's forage. Old saves load as they were; nothing needed moving.
+- The way in from Brackenwood now arrives at the grove's new east edge, and the signpost moved with it.
+- No prices, keys or saves changed. The grove still grows three forage a morning.
+
+## v157: Camera: the rules at any size
+- The rules that still assumed a one-screen map now read the map's own size: where slimes appear and how far flying monsters roam, where a farm building may stand, where the gold pan's shimmer can show, how far falling leaves and fleeing birds go, and where wildlife settles on a map with no grass.
+- Neighbours on their way down to the sewer now stand beside the grate instead of on Nell's wall (the same old spot the player's exit had, fixed in v155).
+- Mine floors stay one screen by design: each floor is a room you clear, not a place to travel.
+- The world test now allows maps larger than the screen, never smaller. No map is larger yet: the first grows in roadmap 75i.
+- Nothing saved; no prices, keys or saves changed.
+
+## v156: Camera: following you
+- A map can now be larger than the screen. The view follows you both ways and stops at the map's edges; in split screen each half follows its own farmer over their own map. No map is larger yet: the world's maps grow once the rules that still assume one screen are updated (roadmap 75h).
+- The light of the hour, lights after dark, rain, snow, mist, lightning, splashes, water reflections, the mine's dark, indoor light, the fishing bar, the action prompts and taps all follow the camera.
+- Every map today is the size of the screen and draws exactly as before.
+- Nothing saved; no prices, keys or saves changed.
+
+## v155: The world joined up
+- Climbing out of the sewer now puts you beside the grate, facing up. Since v50 it set you down inside the wall of Nell's cottage.
+- A new test walks the whole world: every map reachable from the farm, every exit landing on open ground with a way back beside it, every exit, door and way in reachable on foot from each place you arrive, and every neighbour's home standing with an open door. It guards the maps as the world grows (roadmap 75b).
+- Nothing saved; no prices, keys or saves changed.
+
+## v154: A week watched
+- Neighbours walking a round no longer stop on top of someone already standing at a corner of the square; they walk on.
+- Lunch at the Lantern only for those already in the village or the town just before noon. From the farm or the Wilds the walk took longer than lunch, so Odile, Nell and Juno never sat down; now they eat a packed lunch where they are (a bowl in hand).
+- Bram's setup spot on festival mornings moved off a mingling place.
+- A new test walks every neighbour through eleven days of the real game and fails if anyone stands on something solid, on top of someone else for more than a minute, or never reaches a place they mean to spend an hour.
+- Nothing saved; no prices, keys or saves changed.
+
+## v153: Talking about what you did
+- The day after, neighbours talk about what you did: the wedding and a first prize at a festival (everyone), a quest you did for them (thanks from that neighbour), and some of them about gifts to the museum, a quest for their friend, a shipping bin of 1,500g or more, or a skill level gained.
+- Birthdays still come first; partners and spouses keep their own words.
+- New save field (what happened today and yesterday). Older saves start counting from what they already have, so the first night after loading reports nothing old as new. No prices or keys changed.
+
+## v152: Talking about the day
+- Neighbours talk about what is going on: their own birthday, someone else's (a friend of the birthday neighbour tells you what they love), the festival tomorrow (with what to bring), the first day of a season, rain and snow.
+- About one day in three each of the ten friends says something about the other: Ines on Nell's seedlings, Kit on Tavi's map, Juno on Pell's marking, and so on.
+- Festival lines still come first; partners and spouses keep their own words; on a quiet day it is their usual line.
+- Nothing saved; no prices, keys or saves changed.
+
+## v151: Mornings and evenings
+- Festival mornings: Bram and Corvin put the square up from 7:30 (a saw and a hammer), Hob comes at 7:30 to set out the pot or the stall, and Lio tunes up from 8:00. Everyone else walks in at opening.
+- Festival nights: nobody leaves on the stroke of closing. Each lingers up to 40 minutes, and friends leave together, one walking the other home.
+- A cottage's windows light up at night only while its owner is in: dark while Rook is at the Lantern, while Kit is still out, while Ines is round at Nell's.
+- Nothing saved; no prices, keys or saves changed.
+
+## v150: No two weeks the same
+- Neighbours' days vary with the date: some mornings they head out up to 40 minutes later, they come home up to half an hour earlier or later, and they walk their rounds from another corner or the other way round.
+- About twice a week each takes a 45-minute detour to a favourite place: Ines to look at the sea, Odile to the fountain for the ducks, Tavi to the old mine mouth, Lio to the forest to write a tune, and so on (twelve neighbours, 68 detours in four weeks).
+- Work hours, the Lantern, lunch, the shopping and visits never move, so you can still find a shopkeeper at the counter. The same date always plays the same way, after a reload too.
+- Nothing saved; no prices, keys or saves changed.
+
+## v149: Friends
+- Five friendships among the neighbours: Ines and Nell, Odile and Esme, Tavi and Kit, Wren and Rook, Pell and Juno.
+- Ines calls on Nell on Tuesday and Friday evenings, 7 to 9 pm; find them talking in Nell's kitchen.
+- On Sundays Nell walks the shore with Ines in the afternoon, and Kit tags along on Tavi's round of the village, following them wherever they go.
+- On Fridays Odile joins Esme on the shore at dusk. Wren now spends evenings at the Lantern, at the table beside Rook; Pell and Juno already share one.
+- At festivals friends drift towards each other: side by side about twice as often as other pairs.
+- Between neighbours only; your hearts with them do not change. Nothing saved; no prices, keys or saves changed.
+
+## v148: Meals and errands
+- Lunch: whoever is out at noon stops for it. Ines, Tavi and Kit go home (visit their cottages); Odile, Nell, Lio, Juno and Rook take a table at the Lantern with a steaming bowl. Shopkeepers eat at their counters and Esme takes a picnic to her easel.
+- The shopping: twice a week most neighbours stop at Fenn's Provisions for half an hour between 3 and 5 pm with a basket on the arm, at the shelves, the produce table or the end of the counter; Bram goes on his Tuesday rest day. Never on Wednesdays, when Wren shuts.
+- Nothing saved; no prices, keys or saves changed.
+
+## v147: Doing, not standing
+- Where neighbours stop, they are busy: Odile fishes the Wilds pond (facing the water) and mends nets on the pier and at the Lantern, Esme paints at an easel in the forest and sketches at the Lantern and on the shore, Corvin hammers at the anvil, Bram saws a plank, Wren keeps the ledger, Hob polishes a mug, Pell and Warden Hale read, Lio fiddles, Nell gardens with a trug of greens, Rook paints the rowboat, Tavi checks the map, Ines's bees follow her round the meadow, Doctor Maren's bag stands by the counter, Kit carries a wrench and the Lamplighter a lantern.
+- Juno carries the mail satchel all day, walking too.
+- Each prop moves a little (the hammer swings, the bobber dips, the bow saws) and hides when they face away. Looks only: nothing saved, no prices, keys or saves changed.
+
+## v146: Rain days
+- In rain or a storm the neighbours get out of it: Ines, Bram, Tavi, Rook and Hob stay home (visit their cottages), Odile mends nets and Esme sketches by the Lantern's window, Nell sits by the fire, Wren, Pell and Lio spend the day at the Lantern (Lio playing), and Doctor Maren keeps the clinic open till 6 pm for the colds. Nobody walks your farm in the rain.
+- Juno still carries the mail, and Kit is out testing the go-cart in the wet.
+- Each neighbour has a line about the weather on a wet day (a festival line still comes first; partners and spouses keep their own words). A spouse stays in the farmhouse.
+- Nothing saved; no prices, keys or saves changed.
+
+## v145: Festival crowds
+- Festivals are busy: instead of standing on one spot from 9:00 to 22:00, neighbours move about the square, stopping to chat in pairs, at the fountain, beside the festival table and at the notices, 40 to 110 minutes at each.
+- Some have a job: Lio fiddles by the fountain all day, Hob stirs the soup at the Potluck and keeps the stall at Frostlight, and Kit runs round the village during the Egg Hunt. On dance day a ring forms round the ribbon pole.
+- Two neighbours standing side by side, anywhere (the square, the Lantern), turn to each other and talk, with a "..." bubble.
+- The front of the festival table stays clear for you. Nothing saved; no prices, keys or saves changed.
+- New: docs/NPC_LIFE.md, the workflow for making neighbours feel like real people, and a "Living neighbours" track in the roadmap.
+
+## v144: Two dialogs at once
+- In two-player both farmers can be in a dialog at the same time: your shop on the left, farmer two's bag on the right, each worked by its own player. The "Wait for ... to finish" note is gone.
+- Each dialog's buttons, tabs and fields act for its owner; your Escape closes yours, their B closes theirs.
+- Alone, nothing changes. No prices, keys or saves changed.
+
+## v143: Farmer two can be hurt
+- Farmer two has their own health: monsters that reach them hurt them (no longer just a shove), with a moment of safety after each hit, and their bar shows under yours as "Their HP".
+- At zero they faint and come to at the clinic, with the same bill as yours from the shared gold; the message opens in their half and you play on.
+- Their health is full each morning and saved; older saves start them at the top. No prices or keys changed.
+
+## v142: Farmer two stays
+- Farmer two is kept with your farm: the first time they join they pick a shirt and hair in their half, and when they rejoin they come back where they left off, holding what they held (never into a mine floor or the maze, which are rebuilt every visit).
+- Their own bed appears in the farmhouse the first time they play: on free floor in the bed corner, so nothing you placed is moved.
+- The day ends when both of you are in bed. Whoever lies down first waits; walking gets you up again; if farmer two leaves while you wait, the night comes. Alone, Sleep works as before, and passing out at 2 am still takes you both home.
+- New save fields (their name, look, place, slot); older saves get the defaults. No prices or keys changed.
+
+## v141: Their own menus
+- In two-player a dialog belongs to whoever opened it: it covers only their half of the screen and the game keeps going. The other farmer keeps walking, working and fishing, and the clock runs.
+- Farmer two works their dialog with their own controller (stick, A, B); its buttons act as them (where they stand, their energy). Your keys and Escape no longer touch their dialog.
+- One dialog at a time: while one farmer is in a dialog, the other's Use cannot open a second one ("Wait for ... to finish").
+- You cannot be hurt while your own dialog is open. The menu (Esc) still pauses the game for both. Playing alone, dialogs pause as before.
+- No prices, keys or saves changed.
+
+## v140: Separate ways
+- Farmer two no longer follows you: they walk off the map by its exits and through doors on their own, and their half of the screen shows wherever they are. Your doors take only you.
+- The mine holds one floor at a time: whoever takes a ladder or enters a floor brings the other farmer along if they are in the mine too.
+- Fishing lines, the horse and your combo only end or move for the farmer who changed map.
+- Monsters chase whichever farmer is nearer; farmer two is shoved back, not hurt.
+- Each morning farmer two wakes beside you. No prices, keys or saves changed.
+
+## v139: Split screen
+- With a second farmer in, the screen splits down the middle: you on the left, farmer two on the right. Each half follows its farmer across the farm, with its own facing outline, its own light after dark and its own circle of light in the mine.
+- Each Use prompt sits in its farmer's half. Tapping the screen acts only in your half.
+- Alone, the whole map shows as before. Phones never split (v137). You still travel together for now; going separate ways comes next.
+- No prices, keys or saves changed.
+
+## v138: A map for each farmer
+- Groundwork for split screen (roadmap 73c): the second farmer now carries their own map. They walk and use tools against it, and the game counts every map either farmer stands on as in use (monsters stay on a floor while either of you is there).
+- Nothing changes on screen yet: they still follow you onto every map and a door either of you opens takes you both. That stops when split screen arrives (73e).
+- No prices, keys or saves changed.
+
+## v137: No two-player on phones
+- On a phone (a touch-only screen with a short side under 600 px), a second controller's A shows "Two-player needs a bigger screen than a phone" instead of bringing in the second farmer. This is the first step to split screen, which phones will not get.
+- Tablets, computers and touch laptops with a mouse or trackpad still play two. No prices, keys or saves changed.
+
+## v136: Farmer two rides
+- The second farmer gets on the horse by facing it and pressing A, rides at the horse's speed, and gets off with A, as you do.
+- One rider at a time: while either of you is on it, the other cannot get on and the whistle waits. Going indoors sets the rider down and leaves the horse outside, and leaving with B leaves it where they were.
+- No prices, keys or saves changed.
+
+## v135: A prompt at the water
+- With the rod in hand, facing water shows "Cast your line" (not on the frozen pond away from the ice hole, and not while a line is out); a bite on your own line shows "Hook it". Farmer two gets the same over their own prompt.
+- No prices, keys or saves changed.
+
+## v134: Farmer two fishes
+- The second farmer casts with their rod (8 of their energy) and works the bite and catch bar with their own A; their held A lifts the bar.
+- One line in the water at a time: while either farmer's line is out, the other's cast is refused, and their Use leaves it alone. A line holds only whoever cast it, so you can walk while they fish.
+- The catch goes to the shared bag and fishing skill. No prices, keys or saves changed.
+
+## v133: A quiet first screen
+- On a new farm, messages (the mailbox, the first hint) wait until the new game screen and the arrival scene are done instead of covering their fields; they show together as you step onto the farm.
+- Nothing else changed: a farm already made shows its messages at once.
+
+## v132: Phones held upright
+- The field no longer floats between two empty bands: it sits under the meters with the hotbar right below, and the pad and Use button move to the bottom of the screen, where thumbs rest.
+- The time stays on one line, and a long place name is cut short instead of running into the gold.
+- In a browser window under 600 px wide the menu buttons drop their key hints, so Menu no longer falls off the right edge.
+- Phones held sideways and wide screens are unchanged. Nothing in the save, prices or keys changed.
+
+## v131: Local two-player, part three
+- The second farmer has their own energy bar under yours and their own Use prompt over the tile they face, with the controller's A.
+- The first farmer's bed ends the day for both; the second farmer wakes beside you, and passing out at 2 am takes both home at 60% energy.
+- A farm whose energy bar was raised starts the second farmer at its top, not at 270.
+- Local two-player is complete (roadmap 33a to 33c). No prices or keys changed.
+
+## v130: Local two-player, part two
+- The second farmer works: A uses whatever they hold (tilling, watering, chopping, mining, talking, gifts, doors and map exits) through the same rules as you, LB and RB step through their own hotbar choice.
+- They have their own energy (270, refilled each morning, saved with the farm); the bag and gold stay shared.
+- Not yet: fishing and riding stay the first farmer's, and their HUD comes next (roadmap 33c).
+- No prices, keys or old saves changed.
+
+## v129: Local two-player, part one
+- Connect a second controller and press A on it: a second farmer joins on the same screen. They walk with their stick, are set down beside you whenever you change map, and leave with B or when their controller disconnects.
+- Working together (tools, talking, their own energy) and their HUD come next (roadmap 33b and 33c).
+- Nothing saved yet. No prices, energy or keys changed.
+
 ## v128: Bram's reckoning
 - On Spring 1 of year three Bram judges what you made of the old plot: Stardew's categories by role (earnings, skills, collections, friends and family, the old wing, the Cavern and the boat), 21 points in all, lit as 1 to 4 lamps on your porch.
 - Four lamps: Bram carves the shipping bin's lid, and a gleamfruit waits on it every morning.

@@ -10,6 +10,9 @@ export const G = {
   swing: null,      // current tool effect {tx, ty, kind, t}
   anim: null,       // v74: the player's current action pose (systems/animation.js)
   fx: { parts: [], floats: [], pickups: [] },   // v74: particles, labels and flying pickups
+  view: null,       // v139: while the renderer draws a view, the farmer it follows (render/views.js)
+  youMap: null,
+  dialog: { you: false, p2: false },   // v144: whose dialog is open (ui/modal.js; one each in two-player)     // v140: while their half draws a map you are not on, your own map (G.S.map is theirs then)
   shake: null,      // v74: screen shake {mag, t}
   bounce: 0,        // v74: the little hop when a pickup lands
   moving: false,

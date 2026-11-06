@@ -18,7 +18,7 @@ import { keyName } from '../core/controls.js';
 const TILE = 'Y';
 const SELF_DRAWN = new Set(['tree', 'fence', 'gate', 'floor', 'furniture']);
 // Furniture goes in the farmhouse on its floor ('h'); everything else on farm grass or greenhouse beds ('g').
-const INDOORS = new Set(['house', 'shed']);   // floors ('h') rather than grass
+const INDOORS = new Set(['house', 'shed', 'attic']);   // v172: the attic   // floors ('h') rather than grass
 const ground = (map) => (INDOORS.has(map) ? 'h' : 'g');
 const canPlaceOn = (map) => INDOORS.has(map) || !!soilOf(map);
 export const tileFor = (p) => (PLACEABLES[p.kind].walk ? 'h' : PLACEABLES[p.kind].kind === 'floor' || p.open ? 'P' : TILE);

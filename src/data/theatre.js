@@ -51,6 +51,19 @@ export const TASTES = {
   rook:   { loves: 'adventure', hates: 'nature', snack: 'drink', nosnack: 'fresh' },
   esme:   { loves: 'romance', hates: 'adventure', snack: 'fresh', nosnack: 'salty' },
   kit:    { loves: 'spooky', hates: 'drama', snack: 'sweet', nosnack: 'fresh' },
+  garrow: { loves: 'adventure', hates: 'romance', snack: 'drink', nosnack: 'sweet' },   // v167 (roadmap 75k)
+  ysolde: { loves: 'drama', hates: 'spooky', snack: 'fresh', nosnack: 'salty' },
+  ferran: { loves: 'comedy', hates: 'drama', snack: 'salty', nosnack: 'fresh' },
+  tamsin: { loves: 'nature', hates: 'mystery', snack: 'salty', nosnack: 'sweet' },
+  aurel:  { loves: 'mystery', hates: 'comedy', snack: 'drink', nosnack: 'sweet' },
+  bryn:   { loves: 'romance', hates: 'spooky', snack: 'fresh', nosnack: 'salty' },
+  pip:    { loves: 'adventure', hates: 'romance', snack: 'sweet', nosnack: 'drink' },
+  aldous: { loves: 'mystery', hates: 'comedy', snack: 'drink', nosnack: 'salty' },   // v175 (roadmap 75s)
+  hester: { loves: 'drama', hates: 'spooky', snack: 'sweet', nosnack: 'salty' },
+  wilmot: { loves: 'adventure', hates: 'romance', snack: 'drink', nosnack: 'sweet' },
+  thorne: { loves: 'nature', hates: 'comedy', snack: 'fresh', nosnack: 'sweet' },   // v178 (roadmap 75w)
+  sabine: { loves: 'mystery', hates: 'spooky', snack: 'drink', nosnack: 'salty' },
+  emmet:  { loves: 'adventure', hates: 'drama', snack: 'salty', nosnack: 'fresh' },
 };
 
 // The two arcade cabinets in the tavern (Stardew's two in the Saloon pay nothing but bragging rights). Ours give a

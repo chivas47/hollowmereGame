@@ -208,6 +208,166 @@ export const NPCS = [
     ],
     react: { loved: 'A {item}! This is perfect. This is so perfect.', liked: 'A {item}! I can use this.', neutral: 'Oh. Thanks.', disliked: 'A {item}. Mum makes me eat that.', hated: 'Frost kale? I would rather eat a gear.', birthday: 'My birthday present? Best day. Best.' },
   },
+  // ---- v161 (roadmap 75e, docs/sketches/75e-neighbours.md): the first neighbours at the mere. Friends only. ----
+  {
+    id: 'garrow', name: 'Garrow', role: 'Keeps the boathouse on the mere; sells bait and tackle', seed: 17,
+    loves: ['frostpike', 'sturgeon'], likes: ['netstew', 'bread', 'thymetea', 'hardwood', 'lakebass'], dislikes: ['salad', 'pizza'], hates: ['glass'],
+    birthday: { season: 'Spring', d: 16 },
+    pal: { hat: '#3f4a5a', band: '#2b2f36', hair: '#cfcac2', shirt: '#4a5a66', pants: '#2b2f36', skin: '#c99a74', beard: true },
+    lines: [
+      ['I rowed folk across this water for thirty years. Then they built the lane round it.', 'Bait is by the door. Tackle behind me. Mind the step.'],
+      ['The pike come up in the cold. Everyone else goes home; that is when I fish.', 'Rook builds a good hull. I will not tell him that.', 'Morning, {name}. The mere is flat today.'],
+      ['My uncle left me this boathouse and a debt. The debt is paid. The boathouse is yours whenever you need it.', 'You fish like you mean it. Not many do.'],
+    ],
+    react: { loved: 'A {item}! You caught that yourself? Sit down, tell me how.', liked: 'A {item}. Good. Thank you.', neutral: 'Thanks.', disliked: 'A {item}. I will find someone who likes it.', hated: 'Glass. On the water that is a cut foot waiting to happen.', birthday: 'Somebody remembered. Well. Well, well.' },
+  },
+  {
+    id: 'ysolde', name: 'Ysolde', role: 'Weaves baskets and mats from the mere\'s reeds', seed: 18,
+    loves: ['cloth', 'honeycake'], likes: ['fiber', 'honey', 'thymetea', 'bread'], dislikes: ['crayfish', 'bait'], hates: ['mayo'],
+    birthday: { season: 'Summer', d: 22 },
+    pal: { hat: null, hair: '#b5452f', shirt: '#a0a45a', pants: '#5a5048', skin: '#e0ac7e', long: true },
+    lines: [
+      ['The best reeds in the valley grow on the north shore. Cut them at dawn, before they dry.', 'Ferran is asleep. He was up before the birds again.'],
+      ['Nell has a basket of mine for every vegetable she grows. She keeps asking for more.', 'Esme mixes the colours, I weave them. We never agree on green.', 'Hello, {name}. Mind the bundles.'],
+      ['I made you something. It is only a mat, but it is the best one I have made.', 'When the plot by our house fills up, I hope it is someone like you.'],
+    ],
+    react: { loved: 'A {item}! I know exactly what I will make with this.', liked: 'A {item}. That is kind of you.', neutral: 'Thank you.', disliked: 'A {item}? Ferran will have it.', hated: 'Please, not mayonnaise. Not near the reeds.', birthday: 'You knew? I did not tell anyone. Thank you.' },
+  },
+  {
+    id: 'ferran', name: 'Ferran', role: 'Traps eels on the mere at dawn; Ysolde\'s younger brother', seed: 19,
+    loves: ['smoked_mereel', 'lakebass'], likes: ['bait', 'crayfish', 'bread', 'netstew'], dislikes: ['salad', 'thymetea'], hates: ['frostkale'],
+    birthday: { season: 'Autumn', d: 11 },
+    pal: { hat: '#5a6a3a', band: '#3f4a2a', hair: '#5a3a22', shirt: '#6b5a48', pants: '#3f4a5a', skin: '#e0ac7e' },
+    lines: [
+      ['Eels like it dark and wet. So I am out at five. Do not ask me anything after lunch.', 'Rook lets me use his shed. I pretend I am not in the way.'],
+      ['Kit says he can beat me to the square. He cannot. Yet.', 'Odile knows the Wilds pond better than I know the mere. I am working on it.', '{name}! Heard the eels are running?'],
+      ['My sister worries. Tell her I said I am fine. I am fine.', 'If you ever want to come out at dawn, I will show you the traps.'],
+    ],
+    react: { loved: 'A {item}! You do not know what this means to a man who eats out of a bucket.', liked: 'A {item}! Thanks.', neutral: 'Oh. Thanks.', disliked: 'A {item}. That is a Ysolde gift, really.', hated: 'Frost kale. I would rather eat the trap.', birthday: 'Is it my birthday? Ysolde said it was, but she says a lot of things.' },
+  },
+  // ---- v166 (roadmap 75j, docs/sketches/75j-neighbours-two.md): Tamsin, and a family in town. Friends only. ----
+  {
+    id: 'tamsin', name: 'Tamsin', role: 'Runs the Ranch Supply in town; raises cattle on the east road', seed: 20,
+    loves: ['cheese', 'truffle'], likes: ['cowmilk', 'wool', 'bigegg', 'thymetea', 'bread'], dislikes: ['seaglass', 'salad'], hates: ['truffleoil'],
+    birthday: { season: 'Spring', d: 23 },
+    pal: { skin: '#c99272', hair: '#b5452f', shirt: '#5d7a4a', pants: '#3f3a33', hat: '#a5753f', band: '#6e4626', long: true },
+    lines: [
+      ['My mother kept cows on this road for forty years. Now I do. They have not noticed the difference.', 'Hay by the sack, feed by the bag, animals to order. Mind the straw.'],
+      ['Ines brings honey, I bring wool. Neither of us has ever paid the other a coin.', 'Bram built my barn before I was born. He still knocks on the beams when he passes.', 'Morning, {name}. The cows were up before you.'],
+      ['I came home from the coast for a season. That was eleven years ago.', 'You look after your animals. I can tell by how they look at you.'],
+    ],
+    react: { loved: 'A {item}! Now that is a proper gift. Sit, I will put the kettle on.', liked: 'A {item}. That is kind.', neutral: 'Thanks.', disliked: 'A {item}. The cows will not want it either.', hated: 'Truffle oil? On a ranch? Take it back to town.', birthday: 'My birthday? Nobody has remembered that since my mother. Thank you.' },
+  },
+  {
+    id: 'aurel', name: 'Aurel', role: 'Stonemason mending the old wing and the valley\'s bridges', seed: 21,
+    loves: ['ambergem', 'netstew'], likes: ['stone', 'copperbar', 'ironbar', 'bread', 'quartz'], dislikes: ['honeycake', 'seaglass'], hates: ['glass'],
+    birthday: { season: 'Summer', d: 17 },
+    pal: { hat: '#8d8a84', band: '#5a5048', hair: '#3a2a1e', shirt: '#8a6a4a', pants: '#4a4038', skin: '#b07a52', beard: true },
+    lines: [
+      ['The town paid me to mend the old wing. I keep finding more of it to mend.', 'Stone is honest. If it is going to crack, it tells you first.'],
+      ['Corvin and I eat lunch together and do not talk. It is the best part of my day.', 'Pip wants to be a mason. Last week he wanted to be a cat.', 'Morning, {name}. Watch the loose step by the bridge; I have not got to it yet.'],
+      ['Bryn came for the work. I came for Bryn. The valley we both stayed for.', 'If you ever need a wall that will outlast you, ask me.'],
+    ],
+    react: { loved: 'A {item}! I will set it in a wall somewhere. Somewhere it will last.', liked: 'A {item}. Good, thank you.', neutral: 'Thanks.', disliked: 'A {item}. Bryn might like it.', hated: 'Glass. It breaks, and it never says when.', birthday: 'You remembered? Pip will be furious he did not get there first.' },
+  },
+  {
+    id: 'bryn', name: 'Bryn', role: 'Nurse at the clinic, Doctor Maren\'s right hand', seed: 22,
+    loves: ['tonic', 'mistlily'], likes: ['thymetea', 'pear', 'honey', 'glademint'], dislikes: ['netstew', 'truffleoil'], hates: ['frostkale'],
+    birthday: { season: 'Autumn', d: 19 },
+    pal: { hat: null, hair: '#d9a441', shirt: '#7a9ab0', pants: '#4a5a6a', skin: '#e0ac7e', long: true },
+    lines: [
+      ['Doctor Maren wrote to my school asking for help. I think she meant for a season.', 'If you are going to faint in the mine, faint near the ladder.'],
+      ['Pip is at school till two. After that he is wherever the cat is.', 'Esme is painting me for the clinic wall. I asked her to leave out the tired.', 'Hello, {name}. Have you been sleeping? You look like you have not.'],
+      ['Aurel builds things to last. I mend people so they do. Between us we keep this valley standing.', 'You are always welcome at ours. Pip will want to show you his drawings.'],
+    ],
+    react: { loved: 'A {item}! That is going straight into a vase. Or a tincture.', liked: 'A {item}. How thoughtful.', neutral: 'Thank you.', disliked: 'A {item}? Aurel will eat it.', hated: 'Frost kale. I have to tell Pip to eat it every night. Not for me, thank you.', birthday: 'My birthday? Did Pip tell you? He has been bursting all week.' },
+  },
+  {
+    id: 'pip', name: 'Pip', role: 'Seven; Pell\'s youngest pupil, Aurel and Bryn\'s son', seed: 23, child: true,
+    loves: ['gleamfruit', 'honeycake'], likes: ['spiralshell', 'berry', 'quartz', 'pancakes', 'pear'], dislikes: ['carrot', 'snappea'], hates: ['frostkale'],
+    birthday: { season: 'Winter', d: 15 },
+    pal: { hat: null, hair: '#d9a441', shirt: '#c96a3a', pants: '#3f4a5a', skin: '#e0ac7e', small: true },
+    lines: [
+      ['Have you seen Pudding? She was on the wall. Now she is not on the wall.', 'I am seven. Next year I will be eight. Kit says that is how it works.'],
+      ['Kit made me a cart. It goes fast downhill and not at all uphill.', 'Pell says I ask too many questions. Is that a question?', '{name}! Did you know cows have four stomachs? Tamsin told me.'],
+      ['When I grow up I will build bridges like Dad and fix people like Mum. On different days.', 'You can have my best shell. Not my best best shell. My second best.'],
+    ],
+    react: { loved: 'A {item}! For me? Really? I am keeping it forever.', liked: 'A {item}! Thank you!', neutral: 'Oh. Thanks.', disliked: 'A {item}. Mum would make me eat that.', hated: 'Frost kale! No! I will give it to Pudding. She will not eat it either.', birthday: 'It IS my birthday! How did you know? Did Mum tell you?' },
+  },
+  // ---- v175 (roadmap 75s, docs/sketches/75s-neighbours-three.md): the curator, and a retired couple. Friends only. ----
+  {
+    id: 'aldous', name: 'Aldous', role: 'Curator of the Hollowmere Museum', seed: 24,
+    loves: ['coilfossil', 'fernfossil'], likes: ['ambergem', 'geode', 'thymetea', 'bonewhistle', 'quartz'], dislikes: ['salad', 'pizza'], hates: ['seaglass'],
+    birthday: { season: 'Autumn', d: 9 },
+    pal: { skin: '#e2b896', hair: '#d9d4cc', shirt: '#5a4a6a', pants: '#3f3226', beard: true },
+    lines: [
+      ['I came to the valley for one fossil. Forty years later I have a museum and still only one good fossil.', 'Anything you dig up, bring it here. Even if it looks like a stone. Especially then.'],
+      ['Hale says the Hollow is old. I say it is young. We have been having this argument since before Hale had a beard.', 'Tavi maps where things were found. I label where they are now. Between us we know where everything went.', 'Ah, {name}. Have you found something?'],
+      ['I write to the university every spring. They have never written back. I keep the copies; they make a fine history.', 'When the last case is full I shall sit in the middle of the gallery and do nothing for a whole day.'],
+    ],
+    react: { loved: 'A {item}! Look at the detail. I will give it a case of its own.', liked: 'A {item}. That will go in the drawer of interesting things.', neutral: 'Thank you.', disliked: 'A {item}. It is not very old, is it.', hated: 'Sea glass. It pretends to be a gem. I cannot abide a pretender.', birthday: 'My birthday? I had quite forgotten. I am usually busy dating other things.' },
+  },
+  {
+    id: 'hester', name: 'Hester', role: 'Retired teacher who keeps the village almanac', seed: 25,
+    loves: ['jar_rosehip', 'honeycake'], likes: ['thymetea', 'honey', 'bread', 'pear'], dislikes: ['netstew', 'bait'], hates: ['frostkale'],
+    birthday: { season: 'Spring', d: 7 },
+    pal: { hat: null, hair: '#e8e4dc', shirt: '#9a5a6a', pants: '#4a4038', skin: '#e0ac7e', long: true },
+    lines: [
+      ['I taught every child in this valley for forty years. Pell was the last, and the best. Do not tell the others.', 'The almanac says it rained on this day eleven years running. Then it did not. I wrote that down too.'],
+      ['Wilmot winds the town hall clock every Sunday. He says it would stop without him. I think it would stop to spite him.', 'The roses are older than most of the village. So am I.', 'Good morning, {name}. You look like someone who has been up since dawn. Good.'],
+      ['When I am gone, the almanac goes to Pell. Somebody has to remember who married whom.', 'You have put down roots here, {name}. I can tell. I have been watching people do it for seventy years.'],
+    ],
+    react: { loved: 'A {item}! Oh, that takes me back. Thank you, dear.', liked: 'A {item}. How kind of you.', neutral: 'Thank you.', disliked: 'A {item}. Wilmot will eat it.', hated: 'Frost kale. I made children eat that for forty years. I never had to.', birthday: 'You remembered? I put it in the almanac every year, but nobody else reads it.' },
+  },
+  {
+    id: 'wilmot', name: 'Wilmot', role: 'Retired clockmaker; still winds the town hall clock', seed: 26,
+    loves: ['goldbar', 'ambergem'], likes: ['copperbar', 'ironbar', 'thymetea', 'netstew'], dislikes: ['honeycake', 'salad'], hates: ['glass'],
+    birthday: { season: 'Winter', d: 6 },
+    pal: { hat: '#5a5048', band: '#3a3028', hair: '#cfcac2', shirt: '#6a7a5a', pants: '#3f3a33', skin: '#c99a74', beard: true },
+    lines: [
+      ['I came to mend the town hall clock. Fifty-one years ago. It still needs winding on Sundays, so I am still here.', 'A clock is just patience you can hear.'],
+      ['Corvin makes a good spring. Not as good as mine were. But good.', 'Hester writes down the weather. I write down the time. Between us nothing goes unrecorded.', 'Morning, {name}. You are four minutes early. Or I am four minutes slow.'],
+      ['My hands shake now. Not when I hold a gear. Only the rest of the time.', 'If you ever want to see the inside of the town hall clock, come on a Sunday morning. Mind your fingers.'],
+    ],
+    react: { loved: 'A {item}! I could make a whole movement out of this.', liked: 'A {item}. Useful. Thank you.', neutral: 'Thanks.', disliked: 'A {item}. Hester likes those.', hated: 'Glass. It cracks the moment you look at it wrong. Like a cheap watch.', birthday: 'My birthday? Hester will have told you. She tells everybody.' },
+  },
+  // ---- v178 (roadmap 75w, docs/sketches/75w-neighbours-four.md): the hermit, and the railway halt. Friends only. ----
+  {
+    id: 'thorne', name: 'Thorne', role: 'A hermit on Cragmoor; forages and carves', seed: 27,
+    loves: ['morel', 'wildplum'], likes: ['hardwood', 'thymetea', 'berry', 'glademint'], dislikes: ['salad', 'honeycake'], hates: ['pizza'],
+    birthday: { season: 'Winter', d: 19 },
+    pal: { hat: '#4a4038', band: '#2b2f36', hair: '#8a8478', shirt: '#5a6a3a', pants: '#3f3a33', skin: '#b07a52', beard: true },
+    lines: [
+      ['I came up the mountain one bad winter. The next spring I did not see a reason to go down.', 'You are standing on a morel patch. Please do not.'],
+      ['Hale and I sit by the lodge fire on Wednesdays. We have said perhaps a hundred words to each other in ten years. All good ones.', 'Esme painted my hut. She gave it a better roof than it has.', '{name}. The mountain is quiet today. Keep it that way.'],
+      ['I carve what I see up here. A hare, an owl. Once, a very small Hale. He did not find it funny.', 'You come up here more than most. The mountain has noticed. So have I.'],
+    ],
+    react: { loved: 'A {item}. From the wild. Good. Thank you.', liked: 'A {item}. Useful.', neutral: 'Hm.', disliked: 'A {item}. Somebody in town will want it.', hated: 'Pizza. From a shop. In a box. Take it back down the mountain.', birthday: 'My birthday. I had forgotten. The mountain does not keep count.' },
+  },
+  {
+    id: 'sabine', name: 'Sabine', role: 'Keeps the railway halt', seed: 28,
+    loves: ['netstew', 'honeycake'], likes: ['thymetea', 'bread', 'mistlily'], dislikes: ['seaglass', 'bait'], hates: ['frostkale'],
+    birthday: { season: 'Spring', d: 18 },
+    pal: { hat: '#3a4a6a', band: '#c9a35a', hair: '#7a6a5a', shirt: '#3a4a6a', pants: '#2b2f36', skin: '#e0ac7e', long: true },
+    lines: [
+      ['The goods train comes about once a week. Nobody believed me for years.', 'Mind the platform edge. Not because of the trains. It is just a long way down for a short step.'],
+      ['Juno brings the post through here. We have the best gossip in the valley and nobody to tell it to but each other.', 'My father kept this halt before me. He waved at every train. I do too.', 'Good morning, {name}. Listen for the whistle. Things fall off the back.'],
+      ['Emmet wants to ride every line there is. I tell him there is only the one. He says that is the point.', 'If something good falls off the train, {name}, I will tell you first.'],
+    ],
+    react: { loved: 'A {item}! Oh, that is lovely. Warm all the way down.', liked: 'A {item}. Thank you.', neutral: 'Thank you.', disliked: 'A {item}. Emmet might want it.', hated: 'Frost kale. I ate that every winter at this halt. Never again.', birthday: 'My birthday? I usually spend it waiting for a train. This is better.' },
+  },
+  {
+    id: 'emmet', name: 'Emmet', role: 'Mends the railway line; Sabine\'s son', seed: 29,
+    loves: ['goldbar', 'ironbar'], likes: ['copperbar', 'quartz', 'thymetea', 'lakebass'], dislikes: ['honeycake', 'mistlily'], hates: ['glass'],
+    birthday: { season: 'Summer', d: 6 },
+    pal: { hat: '#5a4a3a', band: '#3a3028', hair: '#3a2a1e', shirt: '#7a5a3a', pants: '#3f4a5a', skin: '#e0ac7e' },
+    lines: [
+      ['I keep the line in good order for the goods train. One day I will be on it.', 'Kit and I are building a cart that runs on the rails. Do not tell my mother.'],
+      ['Corvin sells me bolts. He looks at me like I am going to do something stupid with them. He is usually right.', 'The tunnel at the east end goes somewhere. I have been in thirty paces. Next spring I will go further.', 'Oi, {name}. Seen a train?'],
+      ['I want to see where the line goes. Not yet. Mum would be on her own at the halt.', 'You are all right, {name}. You pick up what falls off the train before I can.'],
+    ],
+    react: { loved: 'A {item}! I know exactly what this is for.', liked: 'A {item}. Cheers.', neutral: 'Thanks.', disliked: 'A {item}. Mum will like it.', hated: 'Glass. Shatters in the cold. Useless on a railway.', birthday: 'My birthday? Did Mum tell you? She tells everyone. Every year.' },
+  },
   // ---- v53: the Lamplighter, the sewer's trader (Stardew's Krobus): a friend, and a possible roommate. He keeps to
   // the sewer after dark, never posts quests and stays away from festivals.
   {
@@ -242,4 +402,39 @@ export const OUTFITS = {
   rook:   { Winter: { shirt: '#2b3f4a', hat: '#3f3a36', band: '#2b211a' }, Summer: { shirt: '#e8e0d0' } },
   esme:   { Winter: { shirt: '#5a3a5a', hat: '#c98a3a', band: '#8a5a8a' }, Summer: { shirt: '#c9b0d9' } },
   kit:    { Winter: { shirt: '#8a5a2a', hat: '#3f4a5a', band: '#c98a3a' } },
+};
+
+// v146: what each neighbour says on a rain or storm day (instead of their usual line; a festival line still wins,
+// and partners and spouses keep their own words).
+export const RAIN_LINES = {
+  ines: 'The bees stay in when it rains, so I do too. The whole kitchen smells of honey.',
+  bram: 'Rain on a rest day. Best kind. I have a chair, a stove and nowhere to be.',
+  odile: 'Fish bite in the rain, but my knees do not like it. Nets today, pond tomorrow.',
+  tavi: 'You cannot map in this. The ink runs. I am inking last week instead.',
+  wren: 'Wet days, everyone remembers they need candles. Then they stay for a drink.',
+  corvin: 'Forge does not care about the weather. Keep the door shut, the heat stays in.',
+  hob: 'Rain fills the Lantern. Good for business, bad for my floor.',
+  maren: 'Three colds and a sprained ankle before noon. Keep your feet dry.',
+  hale: 'The Hollow does not get wet. The path up to it does. Watch your footing.',
+  lio: 'Rain is the best audience. Nobody leaves halfway through.',
+  pell: 'The children are wild on rainy days. I let them read about storms. It helps.',
+  juno: 'The mail goes out, rain or shine. My boots, unfortunately, also go out.',
+  nell: 'Rain makes my bones ache and my garden sing. I will sit by the fire and let it.',
+  rook: 'You do not paint a boat in the rain. You sit and look at it through the window.',
+  garrow: 'Nobody buys bait in the rain. Then they all come in at once when it stops.',   // v161
+  ysolde: 'Reeds weave best damp. A wet day is a good day at the loom.',
+  ferran: 'Eels love the rain. So I am out in it. My sister thinks I am mad.',
+  tamsin: 'The cows do not care about rain. So I do not get to either.',   // v166
+  aurel: 'You cannot set mortar in the wet. Corvin lets me sit by his forge and complain.',
+  bryn: 'Wet days fill the clinic. Everyone with a cough remembers they have one.',
+  pip: 'Mum says I cannot jump in the puddles. Dad says I can jump in the small ones.',
+  aldous: 'Rain is good for the museum. People come in to stay dry and leave knowing something.',   // v175
+  hester: 'It rains like this one year in nine. The almanac says so. The roses like it.',
+  wilmot: 'Damp gets into a clock. I have spent the morning listening to the hall clock for coughs.',
+  thorne: 'Rain on the mountain is just weather. In town it is an event.',   // v178
+  sabine: 'Rain on the platform. If the train comes today it will come wet.',
+  emmet: 'Rails rust in the wet. I will be oiling them for a week.',
+  esme: 'I am drawing the regulars while they are trapped in here. Do not tell them.',
+  kit: 'Rain is free testing. My go-cart leaks in four places. Now I know which four.',
+  lamp: 'Rain runs down through the grates. It is the only time the sewer sings.',
 };

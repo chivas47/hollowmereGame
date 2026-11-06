@@ -23,16 +23,32 @@ export const WATERFALLS = {
 // Wildlife, drawn only. birds peck on open grass by day and fly off when you come near (scare, tiles);
 // butterflies drift on fair spring and summer days; fireflies come out on summer nights.
 export const WILDLIFE = {
-  birds: { n: 4, scare: 2.5, maps: ['farm', 'wilds', 'village', 'forest', 'grove', 'mountain', 'beach', 'town', 'railway', 'island'] },
-  butterflies: { n: 4, seasons: ['Spring', 'Summer'], maps: ['farm', 'wilds', 'forest', 'grove', 'mountain', 'village'] },
-  fireflies: { n: 10, seasons: ['Summer'], from: 20 * 60, maps: ['farm', 'wilds', 'forest', 'grove', 'mountain'] },
+  birds: { n: 4, scare: 2.5, maps: ['farm', 'wilds', 'village', 'forest', 'grove', 'mere', 'mountain', 'beach', 'town', 'railway', 'island'] },
+  butterflies: { n: 4, seasons: ['Spring', 'Summer'], maps: ['farm', 'wilds', 'forest', 'grove', 'mere', 'mountain', 'village'] },
+  fireflies: { n: 10, seasons: ['Summer'], from: 20 * 60, maps: ['farm', 'wilds', 'forest', 'grove', 'mere', 'mountain'] },
+  // v162 (roadmap 75f): life in the water. A fish jumps every `every` seconds or so (open water, not in winter);
+  // ducks paddle about the mere and the village pond (not in winter); frogs sit at the water's edge on summer evenings
+  // and hop now and then.
+  jumps: { every: 6, seasons: ['Spring', 'Summer', 'Autumn'], maps: ['wilds', 'forest', 'grove', 'mere', 'mountain', 'village'] },
+  ducks: { n: { mere: 4, village: 2 }, speed: 6, seasons: ['Spring', 'Summer', 'Autumn'], maps: ['mere', 'village'] },
+  frogs: { n: 4, seasons: ['Summer'], from: 19 * 60, to: 23 * 60, maps: ['mere', 'wilds', 'forest', 'village'] },
+};
+
+// v164 (roadmap 75f): Pudding, the grey cat from the town's lost-cat notice, who never was lost: she lives in the
+// village and keeps a round of warm spots: the green's benches, the hedge on the east road, the fountain rim, the
+// north row's doorsteps. A new spot every `every` minutes of game time from `from` to `to` (seeded by the day, so a
+// reload shows the same day); she naps through the afternoon and keeps indoors in rain, storms and snow.
+export const CAT = {
+  name: 'Pudding', map: 'village', from: 7 * 60, to: 20 * 60, every: 90, nap: [13 * 60, 16 * 60], walk: 18,
+  spots: [[2, 12], [5, 12], [2, 14], [5, 14], [26, 5], [31, 5], [12, 10], [2, 4], [17, 4]],
+  pet: ['Pudding opens one eye, then closes it again. She purrs.', 'Pudding leans into your hand and purrs like a kettle.', 'Pudding allows it, this once.'],
 };
 export const BIRD_COLORS = { beach: ['#f2f2ee', '#9aa0a6'], island: ['#e0503a', '#3a9a5a'], Winter: ['#a33a2e', '#5a4a3a'], other: ['#7a5a3a', '#4a5a6a'] };
 
 // Ambient sound by area: wild (birdsong by day, crickets at night), shore (surf, gulls), town (birdsong,
 // a far bell), cave (drips, a low hum), wind (the Dunes, the quarry). Rain and storms add their own bed.
 export const AMBIENCE = {
-  farm: 'wild', wilds: 'wild', forest: 'wild', grove: 'wild', mountain: 'wild', railway: 'wild', maze: 'wild',
+  farm: 'wild', wilds: 'wild', forest: 'wild', grove: 'wild', mere: 'wild', mountain: 'wild', railway: 'wild', maze: 'wild',
   beach: 'shore', island: 'shore', digsite: 'shore',
   village: 'town', town: 'town',
   desert: 'wind', quarry: 'wind',

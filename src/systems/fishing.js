@@ -3,30 +3,35 @@
 // bite  -> short window to press Use (trash comes in at once)
 // reel  -> v41: the catch bar. Hold Use to lift your bar, let go and it falls; keep the fish inside it until the
 //          meter fills (data/angling.js CATCH). A treasure chest sometimes rises in the column: keep it in the bar too.
+// v134: either farmer can fish, one line in the water at a time. A line the second farmer cast (G.fishing.p2) is
+// theirs: their A works it, their held A lifts the bar, and it holds them in place instead of you.
 import { G } from '../core/game.js';
+import { visible } from '../render/views.js';
 import { has } from './professions.js';
-import { T, W } from '../core/constants.js';
+import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addInteraction, addUpdater, addLayer } from '../core/registry.js';
+import { addInteraction, addUpdater, addLayer, addPrompt } from '../core/registry.js';
 import { today } from '../core/time.js';
-import { FISH, ICE_HOLE } from '../data/fish.js';
+import { FISH, ICE } from '../data/fish.js';
 import { ITEMS } from '../data/items.js';
 import { CATCH, BAIT, TACKLE, TACKLE_USES, BOBBERS, BOBBER_EVERY, TRASH, TRASH_CHANCE, FISH_TREASURE, LEGEND_CHANCE, BAIT_PRICE } from '../data/angling.js';
 import { tier } from '../data/upgrades.js';
 import { r } from '../render/pixel.js';
 import { drawBubble } from '../render/sprites.js';
-import { useEnergy } from './world.js';
+import { useEnergy, mover } from './world.js';
 import { skillLevel } from './skills.js';
 
 const ENERGY = 8, BITE_WINDOW = 1.1;
 const WATER = new Set(['O']);
 
 function end() { G.fishing = null; G.lock = false; }
-on('map:changed', end); on('day:start', end); on('game:reset', end);
+on('map:changed', () => { if (G.fishing && !!G.fishing.p2 === (mover() === 'p2')) end(); });   // v140: only the line of whoever left
+on('day:start', end); on('game:reset', end);
 
 // In winter the pond freezes: only the ice hole can be fished, and it has ice-only fish too.
 const frozen = () => today().season === 'Winter';
-const atHole = (tx, ty, mapId) => mapId === ICE_HOLE.map && tx === ICE_HOLE.x && ty === ICE_HOLE.y;
+const atHole = (tx, ty, mapId) => !!ICE[mapId] && tx === ICE[mapId].x && ty === ICE[mapId].y;
+const iced = (mapId) => frozen() && mapId in ICE;   // v163: the Wilds pond, the mere and the village pond freeze
 
 // v42: the season's legendary fish, if you qualify and have not caught it yet.
 export function legendHere(ice, water = 'pond') {
@@ -35,7 +40,7 @@ export function legendHere(ice, water = 'pond') {
     && (!f.rain || S.weather === 'rain' || S.weather === 'storm') && skillLevel('fishing') >= f.level && !S.legends.includes(k); }) || null;
 }
 // v43: which water a map holds: the Wilds pond, the sea at the beach, the river in the forest, the mountain lake.
-export const WATERS = { wilds: 'pond', beach: 'sea', forest: 'river', mountain: 'lake', grove: 'grove', sewer: 'sewer', desert: 'desert', island: 'sea' };   // v44: the mountain lake
+export const WATERS = { wilds: 'pond', beach: 'sea', forest: 'river', mountain: 'lake', grove: 'grove', sewer: 'sewer', desert: 'desert', island: 'sea', village: 'river', mere: 'mere' };   // v44: the mountain lake; v159: the village pond has the river's fish for now (Nuno, 75c)
 function pickFish(ice, water = 'pond') {
   const S = G.S, season = today().season, legend = legendHere(ice, water);
   if (legend && Math.random() < LEGEND_CHANCE) return legend;
@@ -83,7 +88,7 @@ function startReel(f) {
   const d = FISH[f.fish].difficulty, h = barHeight();
   Object.assign(f, { phase: 'reel', prog: CATCH.start, bar: { y: 0, v: 0, h }, fy: h / 2, ft: h / 2, pause: 1, d,   // the fish starts inside your bar
     treasure: Math.random() < CATCH.treasure * (tackle() === 'treasurer' ? 2 : 1) ? { y: 20 + Math.random() * (CATCH.track - 40), prog: 0, got: false } : null });
-  notify('Hold Use to lift the bar; keep the fish inside it.');
+  notify(`Hold ${f.p2 ? 'A' : 'Use'} to lift the bar; keep the fish inside it.`);
 }
 
 function giveTreasure() {
@@ -134,7 +139,7 @@ export function finishReel(won, treasure = false) {
 // While a line is out, Use always goes to fishing.
 addInteraction(200, () => {
   const f = G.fishing;
-  if (!f) return false;
+  if (!f || !!f.p2 !== !!G.partnerActing) return false;   // the other farmer's line: theirs to work
   if (f.phase === 'wait') { notify('You reeled in too early.'); emit('sfx', 'miss'); end(); }
   else if (f.phase === 'bite') startReel(f);
   return true;   // while reeling, holding Use lifts the bar (the updater reads G.useHeld)
@@ -143,20 +148,28 @@ addInteraction(200, () => {
 // Casting. Priority 65 beats the can refill (60) on the same water.
 addInteraction(65, ({ tx, ty, tile, item, mapId }) => {
   if (item !== 'rod' || !WATER.has(tile)) return false;
-  const S = G.S, pond = mapId === ICE_HOLE.map, ice = pond && frozen() && atHole(tx, ty, mapId);   // v43: only the pond freezes
-  if (pond && frozen() && !ice) { notify('The pond is frozen solid. Fish through the ice hole on its west edge.'); return true; }
+  if (G.fishing) { notify('One line in the water at a time.'); return true; }
+  const S = G.S, ice = iced(mapId) && atHole(tx, ty, mapId);   // v43: the pond freezes; v163: the mere and the village pond too
+  if (iced(mapId) && !ice) { notify(ICE[mapId] ? `The water is frozen solid. Fish through the ice hole ${ICE[mapId].where}.` : 'The pond is frozen solid.'); return true; }
   if (!useEnergy(ENERGY)) return true;
   const bait = baitOk() && S.bait && S.bag[S.bait] > 0 ? S.bait : null;
   if (bait) { S.bag[bait]--; if (!S.bag[bait]) notify(`That was your last ${ITEMS[bait].name.toLowerCase()}.`); }
   const wait = (1.5 + Math.random() * 2.5) * (bait ? BAIT[bait].wait : 1) * (tackle() === 'spinner' ? 0.75 : 1);
-  G.fishing = { phase: 'wait', t: wait, tx, ty, ice, bait, water: WATERS[mapId] || 'pond' };
-  G.lock = true;
+  G.fishing = { phase: 'wait', t: wait, tx, ty, ice, bait, water: WATERS[mapId] || 'pond', p2: !!G.partnerActing };
+  G.lock = !G.partnerActing;   // the second farmer's line holds them instead (systems/partner.js)
   changed();
   return true;
 });
 
+// v135: the HUD's prompt, as the two interactions above: hook a bite on your own line, or cast where a cast would go.
+addPrompt(200, () => { const f = G.fishing; return f?.phase === 'bite' && !!f.p2 === !!G.partnerActing ? 'Hook it' : null; });
+addPrompt(65, ({ tx, ty, tile, item, mapId }) => {
+  if (item !== 'rod' || !WATER.has(tile) || G.fishing) return null;
+  return iced(mapId) && !atHole(tx, ty, mapId) ? null : 'Cast your line';
+});
+
 function reel(f, dt) {
-  const b = f.bar, H = CATCH.track, held = !!G.useHeld;
+  const b = f.bar, H = CATCH.track, held = f.p2 ? !!G.P2?.useHeld : !!G.useHeld;
   b.v = Math.max(-CATCH.maxSpeed, Math.min(CATCH.maxSpeed, b.v + (held ? CATCH.lift : -CATCH.fall) * dt));
   b.y += b.v * dt;
   if (b.y < 0) { b.y = 0; b.v = tackle() === 'leadbob' ? 0 : -b.v * CATCH.bounce; }
@@ -191,7 +204,7 @@ addUpdater((dt) => {
     if (f.t <= 0) {
       f.phase = 'bite'; f.t = BITE_WINDOW;
       if (Math.random() < TRASH_CHANCE) { const k = Object.keys(TRASH); f.trash = k[Math.floor(Math.random() * k.length)]; } else f.fish = pickFish(f.ice, f.water);
-      notify('A bite! Press Use.'); emit('sfx', 'bite');
+      notify(f.p2 ? 'A bite on the second line! Press A.' : 'A bite! Press Use.'); emit('sfx', 'bite');
     }
   } else if (f.phase === 'bite') {
     f.t -= dt;
@@ -199,10 +212,11 @@ addUpdater((dt) => {
   } else reel(f, dt);
 });
 
-// The ice hole, drawn on the frozen pond in winter.
+// The ice hole, drawn on the frozen water in winter (v163: wherever one is cut).
 addLayer(12, (c) => {
-  if (G.S.map !== ICE_HOLE.map || !frozen()) return;
-  const X = ICE_HOLE.x * T, Y = ICE_HOLE.y * T;
+  const hole = ICE[G.S.map];
+  if (!hole || !frozen()) return;
+  const X = hole.x * T, Y = hole.y * T;
   r(c, X + 3, Y + 4, 10, 8, '#e8f3f8'); r(c, X + 4, Y + 5, 8, 6, '#1f4f70'); r(c, X + 5, Y + 6, 3, 1, '#3f7fb0');
 });
 
@@ -211,19 +225,20 @@ addLayer(55, (c) => {
   const f = G.fishing;
   if (!f) return;
   const bx = f.tx * T + 8, dip = f.phase === 'wait' ? Math.round(Math.sin(performance.now() / 300)) : 2;
-  const by = f.ty * T + 8 + dip, tip = G.rodTip, hx = Math.round(tip ? tip.x : G.S.x), hy = Math.round(tip ? tip.y : G.S.y - 12);   // v74: from the rod's tip
+  const who = f.p2 ? G.P2 || G.S : G.S, tip = f.p2 ? G.P2?.rodTip : G.rodTip;   // v134: from whoever holds the rod
+  const by = f.ty * T + 8 + dip, hx = Math.round(tip ? tip.x : who.x), hy = Math.round(tip ? tip.y : who.y - 12);   // v74: from the rod's tip
   c.strokeStyle = 'rgba(244,234,210,.7)'; c.lineWidth = 1;
   c.beginPath(); c.moveTo(hx + 0.5, hy + 0.5); c.lineTo(bx + 0.5, by + 0.5); c.stroke();
   const bob = BOBBERS[Math.min(G.S.bobber || 0, bobberStyles() - 1)] || BOBBERS[0];   // v41: bobber styles
   r(c, bx - 1, by - 1, 3, 3, bob.body); r(c, bx - 1, by - 1, 3, 1, bob.top);
-  if (f.phase === 'bite') drawBubble(c, G.S.x, G.S.y);
+  if (f.phase === 'bite') drawBubble(c, who.x, who.y);
 });
 
 // v41: the catch bar, a column of water at the right of the screen with your bar, the fish and its meter.
 addLayer(90, (c) => {
   const f = G.fishing;
   if (!f || f.phase !== 'reel') return;
-  const H = CATCH.track, x = W * T - 52, top = 40, bottom = top + H;
+  const v = visible(), H = CATCH.track, x = v.x + v.w - 52, top = v.y + 40, bottom = top + H;   // v156: at the right of the screen, wherever the camera is
   r(c, x - 8, top - 8, 44, H + 16, 'rgba(28,23,18,.92)');
   r(c, x - 8, top - 8, 44, 1, '#54463a'); r(c, x - 8, top + H + 7, 44, 1, '#54463a');
   r(c, x, top, 16, H, '#1f4f70'); r(c, x + 2, top, 1, H, '#2a6188');
