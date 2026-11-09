@@ -59,13 +59,19 @@ addLayer(1001, (c) => {
   for (const [x, y] of lampsHere()) { r(c, x * T + 6, y * T - 10, 4, 4, '#fff0c0'); }
 });
 
-// Lamp posts: an iron post with a glass lantern on top, unlit by day.
+// Lamp posts: an iron post with a glass lantern on top, unlit by day. v212: redrawn like the props sheet's lantern:
+// a dark outline, a lit left edge on the post, a stepped foot, a cap with a finial and a framed pane (the night glow
+// above is laid over the same 4x4 pane).
 addEntities(() => lampsHere().map(([x, y]) => ({
   y: y * T + 14,
   draw: (c) => {
-    const X = x * T + 8, Y = y * T;
-    r(c, X - 3, Y + 14, 7, 1, 'rgba(0,0,0,.25)');
-    r(c, X - 1, Y - 6, 2, 20, '#3a3a40'); r(c, X - 2, Y + 12, 4, 2, '#2a2a30');
-    r(c, X - 3, Y - 11, 6, 1, '#2a2a30'); r(c, X - 2, Y - 10, 4, 4, night() ? '#fff0c0' : '#c8d8e0'); r(c, X - 3, Y - 6, 6, 1, '#2a2a30');
+    const X = x * T + 8, Y = y * T, lit = night();
+    r(c, X - 4, Y + 14, 9, 1, 'rgba(0,0,0,.25)');
+    r(c, X - 2, Y - 6, 4, 20, '#1e1e24'); r(c, X - 1, Y - 6, 2, 20, '#4a4a52'); r(c, X - 1, Y - 6, 1, 20, '#6a6a74');   // post
+    r(c, X - 3, Y + 11, 6, 3, '#1e1e24'); r(c, X - 2, Y + 11, 4, 2, '#3a3a40'); r(c, X - 2, Y + 11, 4, 1, '#5a5a62');   // foot
+    r(c, X - 4, Y - 12, 8, 7, '#1e1e24');                                                                             // lantern outline
+    r(c, X - 3, Y - 12, 6, 1, '#3a3a40'); r(c, X - 1, Y - 14, 2, 2, '#1e1e24'); r(c, X - 1, Y - 13, 1, 1, '#6a6a74');   // cap and finial
+    r(c, X - 2, Y - 10, 4, 4, lit ? '#fff0c0' : '#c8d8e0'); r(c, X - 2, Y - 10, 1, 1, lit ? '#ffffff' : '#eef4f8');   // pane
+    r(c, X - 3, Y - 6, 6, 1, '#3a3a40');
   },
 })));
