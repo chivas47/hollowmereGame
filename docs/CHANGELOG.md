@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v211: Tool icons redrawn
+- The hoe, rod, pickaxe, sword, axe, pan, watering can, dagger and club are redrawn with lit wooden handles, bright steel edges and outlines: a hoe with a broad blade, a rod with a cork grip, a reel and a red and white float on its line, a pickaxe with a curved steel head, a sword and a dagger with a gleaming edge and a gold guard and pommel, an axe with a bright bit, a pan with gold flecks, a blue watering can with its rose, and a knotted club. The same pictures show in the hotbar and in the farmer's hand, held at the same grip as before.
+- tools.png is now built by tools/sprites/tools.py instead of from the code art. Drawing only: no saves, prices or keys changed.
+
 ## v210: Item icons redrawn
 - In the Bag, chests and the gift picker, crops and forage now show their own art: the ripe crop in its colours, the forage find as it looks on the ground. Seeds show their packet and kit shows the object itself.
 - Every other item has a shaded shape in its own colour with the same darker outline as the rest of the art: a fish with fins, an eye and a pale belly; an egg with a shine; a glass jar with a lid and label for jams, pickles and roe; a stoppered bottle for wine and juice; a plate of food; a cut gem; an ingot; a ring with a stone; a book with a label; bait in a tin with a worm over the rim; a red and white float for tackle; a fruit with a leaf; and a tied sack for anything else.

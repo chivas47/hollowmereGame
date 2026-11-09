@@ -97,12 +97,8 @@ for n, data in enumerate(art['gh']):
         if n < 2 or i >= 16: img.putpixel((n * 16 + i - (16 if n == 2 else 0), j), c)
 img.save(f'{OUT}/greenhouse.png', optimize=True)
 
-# tools.png: tool and weapon icons, 16x16 in one row (TOOLS_SHEET.order), outlined. packet.png: the seed packet in the
-# three bands (main, second, ink), one 16x16 column.
-img = Image.new('RGBA', (16 * len(art['tools']), 16), (0, 0, 0, 0))
-for n, (k, data) in enumerate(art['tools']):
-    for (i, j), (L, c) in tidy(grid(data, 16, 16), 16, 16).items(): img.putpixel((n * 16 + i, j), c)
-img.save(f'{OUT}/tools.png', optimize=True)
+# v211: tools.png is drawn by tools/sprites/tools.py, not from the code art.
+# packet.png: the seed packet in the three bands (main, second, ink), one 16x16 column.
 img = Image.new('RGBA', (16, 48), (0, 0, 0, 0))
 two_colour(img, 0, art['packet'][0], art['packet'][1], 16, 16)
 img.save(f'{OUT}/packet.png', optimize=True)
