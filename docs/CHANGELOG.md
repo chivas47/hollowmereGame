@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v214: Friendlier children
+- The farm's children are redrawn again after Nuno found the v213 ones looked like monsters: rounder heads, small eyes and rosy cheeks with no mouth, like the neighbours. The baby sleeps in its crib with its eyes closed, the crawler goes on two hands and two knees under a big round head, and the toddler no longer looks as if it is sticking its tongue out.
+- Drawing only (tools/sprites/small.py, children.png): no saves, prices or keys changed.
+
 ## v213: Greenhouse glass and the last small sheets redrawn
 - The greenhouse's glass walls have a wooden frame lit on its top and left, glass that deepens from pale to blue toward the foot, a crossbar, two diagonal glints and a sill. Its soil bed is furrowed and its boards have grain, a lit top edge and staggered seams.
 - The seed packet in the hotbar is a paper packet with a crimped top, a picture of the crop in its colours with a green sprout, and a label line.
