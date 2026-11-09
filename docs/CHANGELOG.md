@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v206: Farm machines and placed objects redrawn
+- All thirty things you craft and place are redrawn with shading, a darker outline in their own colours and a shadow: bombs with a lit fuse cap and a coloured band; chests with a lid, latch and (the big one) iron bands; the sign and the farm computer with lines of text on a green screen; sprinklers in copper, iron and gold-trimmed steel with water at the nozzles; the crock with a cream band, the churn and brew barrel with iron hoops, the vat with cream inside, the egg press, the loom with red thread on its warp, the oil press, a striped bee box with its door, the gem copier's glass case, the dryer's shelves with fruit, a mushroom log with caps and a cut end, the incubator's glass lid, a tall banded silo with a red cap and a door, the smoker and furnace with glowing fires, the brick kiln, the copper lightning rod, and a lantern with a lit pane.
+- Same sheet layout; the incubator's egg, the bee, the smoke and the working and ready marks are still drawn on top. placed.png is now built by tools/sprites/placed.py instead of from the code art. Drawing only: no saves, prices or keys changed.
+
 ## v205: Fences, gates and paths redrawn
 - Fences have a lit post with a pointed cap and a little grain, two rails each lit on top and shaded underneath with a knot in the grain, nails where they meet the post, a darker outline, and a shadow at the foot of the end posts. They still join up in every direction and take the wood, stone or hardwood colour.
 - Gates have dark capped posts with iron hinges, two rails and a diagonal brace; open, the leaf folds back against its post.

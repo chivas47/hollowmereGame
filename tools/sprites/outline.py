@@ -1,5 +1,5 @@
 # Turns code art frames (from dump.mjs) into sheets: shades bottom edges and outlines each silhouette.
-# placed.png and furniture.png: see below.
+# furniture.png: see below.
 import sys, json
 from PIL import Image
 art = json.load(open(sys.argv[1])); OUT = sys.argv[2]
@@ -28,12 +28,7 @@ def tidy(px, w, h, layer=lambda k, c: 'ink'):
 
 # v200: giants.png is drawn by tools/sprites/giants.py, not from the code art.
 
-# placed.png: 16x32 frames (the tile at the bottom), one row, in the order printed. Colours drawn in.
-img = Image.new('RGBA', (16 * len(art['placed']), 32), (0, 0, 0, 0))
-for n, (k, data) in enumerate(art['placed']):
-    for (i, j), (L, c) in tidy(grid(data, 16, 32), 16, 32).items(): img.putpixel((n * 16 + i, j), c)
-img.save(f'{OUT}/placed.png', optimize=True)
-print('PLACED order:', [k for k, _ in art['placed']])
+# v206: placed.png is drawn by tools/sprites/placed.py, not from the code art.
 
 # furniture.png: 16x32 frames, one row per band (main, second, ink), in the order printed. Comparing the white/red
 # probe with the black one: pixels that match are fixed colours (ink); red ones are the second colour, the rest the
