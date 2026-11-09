@@ -207,7 +207,7 @@ Lit bombs use the bomb frames of placed.png.
 | debris.png | Hollowmere Farm (original, v83; redrawn v198) | same as the game |
 | giants.png | Hollowmere Farm (original, v83; redrawn v200) | same as the game |
 | placed.png | Hollowmere Farm (original, v84; redrawn v206) | same as the game |
-| furniture.png | Hollowmere Farm (original placeholder, v84, from the game's code art) | same as the game |
+| furniture.png | Hollowmere Farm (original, v84; redrawn v207) | same as the game |
 | terrain-*.png | Hollowmere Farm (original, v85, colours from the season palettes; redrawn v204) | same as the game |
 | soil.png | Hollowmere Farm (original placeholder, v86) | same as the game |
 | cave-*.png | Hollowmere Farm (original placeholder, v87, colours from the cave themes) | same as the game |

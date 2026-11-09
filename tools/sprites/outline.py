@@ -1,5 +1,4 @@
 # Turns code art frames (from dump.mjs) into sheets: shades bottom edges and outlines each silhouette.
-# furniture.png: see below.
 import sys, json
 from PIL import Image
 art = json.load(open(sys.argv[1])); OUT = sys.argv[2]
@@ -30,7 +29,7 @@ def tidy(px, w, h, layer=lambda k, c: 'ink'):
 
 # v206: placed.png is drawn by tools/sprites/placed.py, not from the code art.
 
-# furniture.png: 16x32 frames, one row per band (main, second, ink), in the order printed. Comparing the white/red
+# two_colour (used by packet.png): one row per band (main, second, ink). Comparing the white/red
 # probe with the black one: pixels that match are fixed colours (ink); red ones are the second colour, the rest the
 # main; their grey is the shade drawn over them, and light on the black probe is a see-through shine (white in ink).
 FL = {'main': 0, 'second': 1, 'ink': 2}
@@ -49,10 +48,7 @@ def two_colour(img, n, lit, blk, w, h):
         if s: shine[k] = s
     for (i, j), (L, c) in tidy(px, w, h, lambda k, c: band.get(k, 'ink')).items(): img.putpixel((n * w + i, FL[L] * h + j), c)
     for (i, j), s in shine.items(): img.putpixel((n * w + i, FL['ink'] * h + j), (255, 255, 255, s))
-img = Image.new('RGBA', (16 * len(art['furniture']), 32 * 3), (0, 0, 0, 0))
-for n, (shape, lit, blk) in enumerate(art['furniture']): two_colour(img, n, lit, blk, 16, 32)
-img.save(f'{OUT}/furniture.png', optimize=True)
-print('FURNITURE order:', [k for k, _, _ in art['furniture']])
+# v207: furniture.png is drawn by tools/sprites/furniture.py, not from the code art.
 
 # wallpapers.png and floors.png: 16x16 swatches in one row, catalogue order, as drawn (they repeat edge to edge,
 # so they are not outlined). A wallpaper swatch is a whole wall face, its bottom trim included.
