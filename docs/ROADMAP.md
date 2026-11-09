@@ -233,7 +233,7 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | 76x | Polish: town pieces redrawn | polish | done (chivas47/hollowmereGame#211) | Nuno: next (November 2026). Buildings, part three: the seed stall, well, bin, workbench, board, fountain, table, trough, boat and statue. Drawing only. |
 | 76y | Polish: border trees and ground redrawn | polish | done (chivas47/hollowmereGame#212) | Nuno: next (November 2026), after 76x: the map-ring trees (render/tiles.js drawTree) and boulders, and the outdoor ground tiles (terrain-*.png). Drawing only. |
 | 76z | Polish: fences, gates and paths redrawn | polish | done (chivas47/hollowmereGame#213) | Nuno: next (November 2026), after 76y: fences.png and fixtures.png redrawn in the same style, built by the new tools/sprites/fences.py. Drawing only. |
-| 77a | Polish: farm machines and placed objects redrawn | polish | in progress | Nuno: next (November 2026), after 76z: placed.png (bombs, chests, signs, sprinklers, machines, silo, lantern) redrawn, built by the new tools/sprites/placed.py. Drawing only. |
+| 77a | Polish: farm machines and placed objects redrawn | polish | in progress (chivas47/hollowmereGame#214) | Nuno: next (November 2026), after 76z: placed.png (bombs, chests, signs, sprinklers, machines, silo, lantern) redrawn, built by the new tools/sprites/placed.py. Drawing only. |
 | 77b | Polish: furniture redrawn | polish | queued | Nuno: next, after 77a: furniture.png (28 pieces, tinted to each piece's colours). Drawing only. |
 
 ## Done
