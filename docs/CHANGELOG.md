@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v212: Mine rocks, ore, lava and props redrawn
+- The rocks you break on every mine floor and in the quarry are round boulders lit from the top left with a crack and chips, and each ore shows as glinting flecks in its own colour: copper, iron, gold, umbrite and cinder.
+- Lava is bubbling pools of bright magma between dark crust; the Ember Vent's door is a stone arch glowing red inside; the forge is an anvil with a hot ingot and sparks. Ladders, the cavern door, mine shafts, cave crates and treasure chests, the fallen log, rubble, the sewer grate, the hot spring, the trader's mat, the dry stone basins, the island's lanterns, the toy cart, the book stall and the prize machine are all redrawn in the same style.
+- The lamp posts along the village and town lanes get a dark outline, a stepped foot and a framed lantern, still glowing at night.
+- props.png is now built by tools/sprites/props.py instead of from the code art. Drawing only: no saves, prices or keys changed.
+
 ## v211: Tool icons redrawn
 - The hoe, rod, pickaxe, sword, axe, pan, watering can, dagger and club are redrawn with lit wooden handles, bright steel edges and outlines: a hoe with a broad blade, a rod with a cork grip, a reel and a red and white float on its line, a pickaxe with a curved steel head, a sword and a dagger with a gleaming edge and a gold guard and pommel, an axe with a bright bit, a pan with gold flecks, a blue watering can with its rose, and a knotted club. The same pictures show in the hotbar and in the farmer's hand, held at the same grip as before.
 - tools.png is now built by tools/sprites/tools.py instead of from the code art. Drawing only: no saves, prices or keys changed.

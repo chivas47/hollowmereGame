@@ -84,11 +84,7 @@ with open(data, 'w') as f:
     f.write('};\n')
 print('BUILDINGS:', len(bs), 'sheet', WIDTH, 'x', height, '->', data)
 
-# props.png: 16x16 props in one row, in the order of PROPS_SHEET.order, outlined like the debris.
-img = Image.new('RGBA', (16 * len(art['props']), 16), (0, 0, 0, 0))
-for n, (k, data) in enumerate(art['props']):
-    for (i, j), (L, c) in tidy(grid(data, 16, 16), 16, 16).items(): img.putpixel((n * 16 + i, j), c)
-img.save(f'{OUT}/props.png', optimize=True)
+# v212: props.png is drawn by tools/sprites/props.py, not from the code art.
 # greenhouse.png: soil bed, boards on an even column, boards on an odd column (drawn at x 16 to 32 of its frame).
 img = Image.new('RGBA', (48, 16), (0, 0, 0, 0))
 for n, data in enumerate(art['gh']):
