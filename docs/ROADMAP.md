@@ -227,7 +227,7 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | 76r | Polish: crops and forage redrawn | polish | done (chivas47/hollowmereGame#205) | Nuno: next (November 2026), after 76q: every crop stage and forage find redrawn in the same style (shading, self-coloured outlines, more detail). Same layout and tinting. Built by tools/sprites/crops.py and the new tools/sprites/forage.py. Drawing only. |
 | 76s | Polish: fruit trees and debris redrawn | polish | done (chivas47/hollowmereGame#206) | Nuno: next (November 2026), after 76r: fruit trees (every stage and bare) and field debris redrawn in the same style; fruit hangs from a stalk. Same layout and tinting. Built by the new tools/sprites/trees.py and debris.py. Drawing only. |
 | 76t | Polish: wild alders redrawn | polish | done (chivas47/hollowmereGame#207) | Nuno: next (November 2026), after 76s: the alder sheet (stages, bare stages, the tap) redrawn like the fruit trees. Autumn's season shift still applies. Built by the new tools/sprites/alders.py. Drawing only. |
-| 76u | Polish: giant crops redrawn | polish | in progress | Nuno: next (November 2026), after 76t: the giant crop sheet (pod, round, leafy) redrawn in the same style. Same layout and tinting. Built by the new tools/sprites/giants.py. Drawing only. |
+| 76u | Polish: giant crops redrawn | polish | in progress (chivas47/hollowmereGame#208) | Nuno: next (November 2026), after 76t: the giant crop sheet (pod, round, leafy) redrawn in the same style. Same layout and tinting. Built by the new tools/sprites/giants.py. Drawing only. |
 
 ## Done
 
