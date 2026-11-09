@@ -241,7 +241,8 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | 77f | Polish: tool icons redrawn | polish | done (chivas47/hollowmereGame#219) | Nuno: next (November 2026), after 77e: tools.png (hotbar and held tools) redrawn, built by the new tools/sprites/tools.py; same grip. Drawing only. |
 | 77g | Polish: mine rocks, ore, lava and props redrawn | polish | done (chivas47/hollowmereGame#221) | From the sixth polish sweep (docs/POLISH.md, finds 22, 23 and 25; November 2026, after the sprite redraw 76q to 77f): props.png (the rocks and ore nodes on every mine floor and in the quarry, lava, the vent door, the forge, lamp posts, plaques and the other small props) redrawn to match. Nuno: next. Built by the new tools/sprites/props.py; the lamp posts (systems/nightlights.js) too. Drawing only. |
 | 77h | Polish: greenhouse glass and the last small sheets | polish | done (chivas47/hollowmereGame#222) | Find 24: the greenhouse's glass walls (greenhouse.png), with the seed packet (packet.png) and the children (children.png), the last sheets still in the old style. Drawing only. |
-| 77i | Fix: friendlier children | fix | in progress (chivas47/hollowmereGame#223) | Nuno (November 2026): the children redrawn in 77h looked like monsters. Rounder heads, small eyes and cheeks, a sleeping baby, a crawler on hands and knees. Drawing only. |
+| 77i | Fix: friendlier children | fix | done (chivas47/hollowmereGame#223) | Nuno (November 2026): the children redrawn in 77h looked like monsters. Rounder heads, small eyes and cheeks, a sleeping baby, a crawler on hands and knees. Drawing only. |
+| 77j | Polish: no flowers on winter weeds | polish | needs decision | From the seventh polish sweep (docs/POLISH.md, find 26): the weeds' yellow flowers stay bright in winter. Options: a flowerless weeds frame used in winter (a debris variant), or no flowers on weeds at all. Drawing only. |
 
 ## Done
 
