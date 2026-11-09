@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v202: Farm buildings redrawn
+- The coop, barn, shed, stable, greenhouse, mill, helper hut, fish pond, slime pen, waystones, building scaffolds, the boathouse, the clocktower and the mine mouth are redrawn with the shared parts from v201 (shingled roofs, trimmed windows, panelled doors) plus two new ones: walls of upright planks with lit and shaded edges and a stone footing, and barn doors with a white X brace on each leaf.
+- The barn's hayloft is half open on hay under a pulley; the coop has a vent, a ramp and a stray feather; the stable's half door shows a hay rack in the dark stall under a horseshoe; the greenhouse shows its plants through panes with reflections; the mill is a tapering stone tower with ribbed sails; the helper hut has a layered thatch over wattle walls; the pond has a rim of fitted stones and a lily pad; the slime pen has shaded posts and rails; the waystones have cracks, moss and a glint in their rune; the scaffolds have cross braces; the mine mouth is stacked boulders round its timbers, with a lantern and rails.
+- Snow sits on every roof, rim and ledge in winter. Same footprints and doors. Drawing only: no saves, prices or keys changed.
+
 ## v201: Homes and shops redrawn
 - The farmhouse, every neighbour's cottage, all eleven town shops and the mountain lodge share a new, more detailed look: shingled roofs in courses with staggered tabs, a lit ridge and a dark eave; board walls with a shadow under the eaves, corner posts and a stone footing; windows with light trim, two panes of sky with a glint, a sill and (on homes) a flower box; panelled doors with a brass knob on a stone step; and brick chimneys with a cap. Snow sits on the ridge, drips over the first course and lines the eaves in winter.
 - The farmhouse gains a porch hood and a lamp by the door. Shop signs are framed boards; the store's awning, the museum's columns and the theatre's posters are shaded. The lodge has round log walls with cut ends and an antler sign.
