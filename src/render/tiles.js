@@ -7,6 +7,7 @@ import { DECOR_SHEETS, BUILDING_SHEETS, PROPS_SHEET, GREENHOUSE_SHEET, VARIANTS_
 import { BUILDINGS } from '../data/buildings.js';
 import { RANCH_PEN } from '../data/ranch.js';
 import { ready, sheet } from './sheets.js';
+import { SCENERY_ART } from './scenery.js';
 
 const SNOW = '#f2f6f8';
 
@@ -652,6 +653,7 @@ export const PROP_ART = {
   'ħ': hedge, 'ǧ': gardenBed, 'ƀ': bench, 'ɲ': pen,   // v159; v166 the pens
   'ʋ': reeds,   // v160
   'ʂ': stall,   // v165
+  ...SCENERY_ART,   // v195: bushes, boulders, stumps, woodpiles, hay, barrels, planters (render/scenery.js)
 };
 // The ground under each prop: a cave's floor or wall, grass (with the salt its blades and flowers use) or sand.
 // Props not listed draw their whole tile, or sit on whatever the map has there (the ladder down, mine rocks).
@@ -660,6 +662,7 @@ export const PROP_GROUND = {
   '|': 'grass:29', '}': 'grass:23', ';': 'grass:37', '9': 'grass:41', '<': 'grass:43', '`': 'grass:47',
   '¢': 'grass:53', '§': 'grass:59', '¤': 'grass:61', '8': 'sand',
   'ħ': 'grass:67', 'ǧ': 'grass:71', 'ƀ': 'grass:73', 'ʋ': 'grass:79', 'β': 'grass:83', 'ʂ': 'grass:89', 'ɲ': 'grass:97',
+  ...Object.fromEntries(Object.keys(SCENERY_ART).map((t, i) => [t, `grass:${101 + 2 * i}`])),   // v195
 };
 function propGround(t, g, x, y, p) {
   const k = PROP_GROUND[t];

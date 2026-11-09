@@ -18,6 +18,7 @@ import { WIND } from '../data/atmosphere.js';
 import { lean, shiftOf } from '../systems/wind.js';
 import { outdoorLights } from '../systems/nightlights.js';
 import { views, visible } from './views.js';
+import { drawCover } from './scenery.js';
 
 let cache = {};
 on('season:changed', () => { cache = {}; });
@@ -35,7 +36,7 @@ function renderBackground(mapId, season) {
   const c = document.createElement('canvas'); c.width = MW * T; c.height = MH * T;
   const crowns = document.createElement('canvas'); crowns.width = MW * T; crowns.height = MH * T;
   const k = crowns.getContext('2d'), trees = [];
-  const g = c.getContext('2d'), map = MAPS[mapId], p = { ...PAL[season], ...(map.theme ? { theme: map.theme } : {}), ...(map.dry ? DRY_TREES : {}) };   // v38: theme (the cavern's sand); v181: dry scrub
+  const g = c.getContext('2d'), map = MAPS[mapId], p = { ...PAL[season], season, ...(map.theme ? { theme: map.theme } : {}), ...(map.dry ? DRY_TREES : {}) };   // v38: theme (the cavern's sand); v181: dry scrub
   const ground = map.base === 'cave' ? CAVE_SHEET.sheet(map.theme) : TERRAIN_SHEET.sheet(season);
   const sheetGround = (!map.base || map.base === 'cave') && ready(ground);   // v85: outdoor ground (v87: and caves) from a tile set
   if (sheetGround && map.base === 'cave') drawTerrain(g, sheet(ground).img, CAVE_SHEET, (x, y) => (map.grid[y][x] === 'X' || PROP_GROUND[map.grid[y][x]] === 'wall' ? 'wall' : 'floor'), 'floor', MW, MH);
@@ -55,6 +56,7 @@ function renderBackground(mapId, season) {
     else if (t === 'z' || (map.ground === 'z' && (t !== 'T' || map.dry))) drawSand(g, x, y, p);   // v43: the beach's rocks sit on sand
     else drawGrass(g, x, y, p, map.salt);
   }
+  if (!map.base && !map.plan) drawCover(g, mapId, p, season);   // v195: flowers, ferns, pebbles, shells (render/scenery.js)
   for (let y = 0; y < MH; y++) for (let x = 0; x < MW; x++) {
     if (map.base === 'house') { const ha = HOUSE_ART[map.grid[y][x]]; if (ha) ha(g, x, y, map.grid); continue; }
     const t = map.grid[y][x], art = TILE_ART[t];

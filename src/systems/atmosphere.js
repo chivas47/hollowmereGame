@@ -2,7 +2,7 @@
 // Drawn only, never saved. The light of the hour is in render/renderer.js, ambient sound in audio/ambience.js.
 import { G } from '../core/game.js';
 import { visible } from '../render/views.js';
-import { T } from '../core/constants.js';
+import { T, W, H } from '../core/constants.js';
 import { emit } from '../core/events.js';
 import { addLayer, addUpdater } from '../core/registry.js';
 import { today } from '../core/time.js';
@@ -76,6 +76,7 @@ const isWater = (x, y) => MAPS[G.S.map].grid[y]?.[x] === 'O';
 function spawn() {
   const S = G.S, map = MAPS[S.map], R = rng(S.day * 31 + map.salt), tiles = [], water = [], shore = [];
   map.grid.forEach((row, y) => [...row].forEach((t, x) => { if ((t === 'g' || t === 'z') && !S.soil?.[`${x},${y}`] && !S.placed?.[`${x},${y}`]) tiles.push([x, y]); }));
+  const { w, h } = sizeOf(S.map), many = (n) => Math.round(n * Math.max(1, (w * h) / (W * H)));   // v195: more on maps larger than the screen
   const pick = () => tiles[(R() * tiles.length) | 0] || [sizeOf(G.S.map).w / 2, sizeOf(G.S.map).h / 2];   // v157: the middle of the map
   fauna = { key: `${S.map}-${S.day}`, birds: [], flies: [], bugs: [], ducks: [], frogs: [], water, jump: null, nextJump: 2 + R() * 4 };
   // v162: open water (water on three sides or more, so a narrow river counts) for ducks and jumps; grass beside water for frogs
@@ -91,11 +92,11 @@ function spawn() {
   if (shore.length && WILDLIFE.frogs.maps.includes(S.map)) for (let i = 0; i < WILDLIFE.frogs.n; i++) {
     const [x, y] = shore[(R() * shore.length) | 0]; fauna.frogs.push({ x: x * T + 8, y: y * T + 11, hop: 0, next: 2 + R() * 8 });
   }
-  if (WILDLIFE.birds.maps.includes(S.map)) for (let i = 0; i < WILDLIFE.birds.n; i++) {
+  if (WILDLIFE.birds.maps.includes(S.map)) for (let i = 0; i < many(WILDLIFE.birds.n); i++) {
     const [x, y] = pick(); fauna.birds.push({ x: x * T + 8, y: y * T + 10, vx: 0, vy: 0, flee: false, peck: R() * 3 });
   }
-  for (let i = 0; i < WILDLIFE.butterflies.n; i++) { const [x, y] = pick(); fauna.bugs.push({ x: x * T, y: y * T, p: R() * 6, col: ['#f2d14a', '#f2f2f2', '#e8884a', '#9ab8f0'][i % 4] }); }
-  for (let i = 0; i < WILDLIFE.fireflies.n; i++) { const [x, y] = pick(); fauna.flies.push({ x: x * T, y: y * T, p: R() * 6 }); }
+  for (let i = 0; i < many(WILDLIFE.butterflies.n); i++) { const [x, y] = pick(); fauna.bugs.push({ x: x * T, y: y * T, p: R() * 6, col: ['#f2d14a', '#f2f2f2', '#e8884a', '#9ab8f0'][i % 4] }); }
+  for (let i = 0; i < many(WILDLIFE.fireflies.n); i++) { const [x, y] = pick(); fauna.flies.push({ x: x * T, y: y * T, p: R() * 6 }); }
 }
 
 addUpdater((dt) => {

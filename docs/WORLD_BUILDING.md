@@ -49,7 +49,7 @@ A place feels real when:
    the place before the code.
 2. **Find the counterpart by role.** Size of the village, number of neighbours, how far the farm is from the
    shops, what a new area unlocks. Our names and shapes only.
-3. **Data first.** The grid, exits, objects and decor in `data/maps.js`; homes in `data/homes.js`; people in
+3. **Data first.** The grid, exits, objects and decor in `data/maps.js`; bushes, boulders, tree stands and ground cover in `data/scenery.js` (v195, clear of everyone's spots: `tests/scenery.test.mjs`); homes in `data/homes.js`; people in
    `data/npcs.js` and `data/schedules.js`. Logic in `src/systems/` only when a map needs a new rule (a door
    that opens later, a seasonal path). Art for new tiles in `render/tiles.js` and a row in ARCHITECTURE's
    tile table.
