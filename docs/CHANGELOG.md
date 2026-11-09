@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v198: Fruit trees and debris redrawn
+- Fruit trees are redrawn at every stage: a two-leaf sapling, then a canopy of leaf clumps lit from the top left, with a light, mid and deep tone so each clump reads on its own, over a barked trunk that widens at the roots. The bare winter tree has proper branches with snow along them and drifted at its foot. Each tree keeps its own leaf colour.
+- Fruit on a mature tree hangs from a stalk, with a shine on its upper left and a shaded bottom.
+- Field debris is redrawn in the same style: grass tufts with separate blades, weeds with a few yellow flowers, a rounded stone, a leafy twig, a stump with growth rings and furrowed bark (and a smaller alder stump), copper and iron rocks with glinting ore, and a slatted crate. The seasons still shift their colours.
+- Same sheet layout and anchors. trees.png and debris.png are now built by tools/sprites/trees.py and debris.py instead of from the code art. Drawing only: no saves, prices or keys changed.
+
 ## v197: Crops and forage redrawn
 - Every crop stage and all 34 forage finds are redrawn in the style of the new neighbours and animals: three tones of shading, an outline in each part's own darker colour, and more detail. Seeds sit in the soil, sprouts and young plants have proper leaves and a little mound, and a dead crop is a dry stalk. Ripe roots show their shoulders above the soil under a leafy crown; gourds have ribs and a stalk; leafy heads have veins; pod crops hang their pods from a stem.
 - Forage: leeks with roots, a capped mushroom with spots, a ridged clam and cockle, a branching coral, a spined urchin, a coiled shell, a honeycombed morel, a curled fiddlehead, nuts in their husks, prickly holly, flowers with petals and centres, grape and plum with a shine, ear fungus on a log, and the berry bushes share one leafy bush (the frostberry's with snow on top). Each sits on a soft shadow.

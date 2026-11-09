@@ -666,12 +666,17 @@ export function drawSwing(c, s) {
 
 // Fruit trees. stage 0 to 3 while growing, 4 mature; bare in winter outdoors. The canopy reaches a tile up.
 const FRUIT_SPOTS = [[1, -6], [10, -8], [5, 0]];
+// v198: a fruit hanging in the canopy: a 3x3 fruit with a stalk, a shine on its upper left and a shaded bottom.
+function hangFruit(c, x, y, color) {
+  r(c, x + 1, y - 1, 1, 1, '#4e3420'); r(c, x, y, 3, 3, color);
+  r(c, x, y + 2, 3, 1, 'rgba(0,0,0,.22)'); r(c, x + 2, y + 1, 1, 1, 'rgba(0,0,0,.12)'); r(c, x, y, 1, 1, 'rgba(255,255,255,.5)');
+}
 export function drawFruitTree(c, X, Y, fruit, stage, count, bare) {
   const cx = X + 8, trunk = '#7a5a3a', S = TREES_SHEET;
   if (ready(S.sheet)) {   // v82: from the tree sheet tinted to the leaf colour once it has loaded
     const f = bare && stage >= 3 ? S.bare : stage;
     c.drawImage(tinted(S.sheet, S.layers, [['leaf', fruit.leaf], ['ink', null]], S.h), f * S.w, 0, S.w, S.h, X + S.origin[0], Y + S.origin[1], S.w, S.h);
-    if (f === 4) FRUIT_SPOTS.slice(0, count).forEach(([a, b]) => { r(c, X + a, Y + b, 3, 3, fruit.color); r(c, X + a, Y + b, 1, 1, 'rgba(255,255,255,.45)'); });
+    if (f === 4) FRUIT_SPOTS.slice(0, count).forEach(([a, b]) => hangFruit(c, X + a, Y + b, fruit.color));
     return;
   }
   r(c, X + 2, Y + 14, 12, 2, 'rgba(0,0,0,.2)');
