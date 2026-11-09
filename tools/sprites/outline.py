@@ -116,28 +116,7 @@ img = Image.new('RGBA', (16, 48), (0, 0, 0, 0))
 two_colour(img, 0, art['packet'][0], art['packet'][1], 16, 16)
 img.save(f'{OUT}/packet.png', optimize=True)
 # v199: alders.png is drawn by tools/sprites/alders.py, not from the code art.
-# fences.png: 16x18 frames, a column per neighbour mask, bands main and ink, read off the white and black probes as
-# furniture.png is (grey on white: shade; light on black: see-through light, white in ink). Frame edges are not
-# outlined, so rails and stubs join the next post.
-img = Image.new('RGBA', (16 * 16, 18 * 2), (0, 0, 0, 0))
-for n, (m, lit, blk) in enumerate(art['fences']):
-    A, B = grid(lit, 16, 18), grid(blk, 16, 18)
-    px, shine = {}, {}
-    for k, c in A.items():
-        d = B.get(k, (0, 0, 0, 0))
-        px[k] = (c[0], c[0], c[0], 255) if not d[0] else (255, 255, 255, 255)
-        if d[0]: shine[k] = d[0]
-    for (i, j), (L, c) in tidy(px, 16, 18, lambda k, c: 'main').items(): img.putpixel((n * 16 + i, j), c)
-    for (i, j), s in shine.items(): img.putpixel((n * 16 + i, 18 + j), (255, 255, 255, s))
-img.save(f'{OUT}/fences.png', optimize=True)
-# fixtures.png: gates outlined like the debris, then the paths as drawn (they repeat edge to edge).
-img = Image.new('RGBA', (16 * len(art['fixtures']), 16), (0, 0, 0, 0))
-for n, (k, data) in enumerate(art['fixtures']):
-    px = grid(data, 16, 16)
-    out = tidy(px, 16, 16) if k.startswith('gate') else {q: ('ink', c) for q, c in px.items()}
-    for (i, j), (L, c) in out.items(): img.putpixel((n * 16 + i, j), c)
-img.save(f'{OUT}/fixtures.png', optimize=True)
-print('FIXTURES order:', [k for k, _ in art['fixtures']])
+# v205: fences.png and fixtures.png are drawn by tools/sprites/fences.py, not from the code art.
 
 # v92 children.png: 16x16 frames, a column per stage (baby, crawler, toddler), a row per child's colours, outlined.
 img = Image.new('RGBA', (16 * 3, 16 * len(art['children'])), (0, 0, 0, 0))
