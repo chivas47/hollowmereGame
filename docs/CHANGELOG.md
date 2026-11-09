@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v213: Greenhouse glass and the last small sheets redrawn
+- The greenhouse's glass walls have a wooden frame lit on its top and left, glass that deepens from pale to blue toward the foot, a crossbar, two diagonal glints and a sill. Its soil bed is furrowed and its boards have grain, a lit top edge and staggered seams.
+- The seed packet in the hotbar is a paper packet with a crimped top, a picture of the crop in its colours with a green sprout, and a label line.
+- The farm's children are redrawn in the style of the neighbours: the baby in a wooden crib under a blanket, the crawler on all fours, and the toddler with hair, eyes, rosy cheeks, a shirt and little shoes, each with an outline and a shadow.
+- greenhouse.png, packet.png and children.png are now built by tools/sprites/small.py. With this, every sheet the sixth polish sweep flagged is redrawn; wallpapers, floors, glow, bunting, pens and variants are still drawn from the code art. Drawing only: no saves, prices or keys changed.
+
 ## v212: Mine rocks, ore, lava and props redrawn
 - The rocks you break on every mine floor and in the quarry are round boulders lit from the top left with a crack and chips, and each ore shows as glinting flecks in its own colour: copper, iron, gold, umbrite and cinder.
 - Lava is bubbling pools of bright magma between dark crust; the Ember Vent's door is a stone arch glowing red inside; the forge is an anvil with a hot ingot and sparks. Ladders, the cavern door, mine shafts, cave crates and treasure chests, the fallen log, rubble, the sewer grate, the hot spring, the trader's mat, the dry stone basins, the island's lanterns, the toy cart, the book stall and the prize machine are all redrawn in the same style.

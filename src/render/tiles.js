@@ -675,10 +675,16 @@ export function drawGreenhouseFloor(g, x, y, t) {
   r(g, X, Y, T, T, '#a07a4f'); r(g, X, Y + 7, T, 1, '#8a6640'); r(g, X, Y + 15, T, 1, '#8a6640');
   r(g, X + (x % 2 ? 4 : 11), Y, 1, 7, '#8a6640'); r(g, X + (x % 2 ? 9 : 2), Y + 8, 1, 7, '#8a6640');
 }
+// v213: a pane of the greenhouse's glass wall: a wooden frame lit on its top and left, glass shading from pale at the
+// top to deeper blue at the foot, a crossbar, two diagonal glints and a sill. Tiles join along the frame.
 export function drawGlassWall(g, x, y) {
   const X = x * T, Y = y * T;
-  r(g, X, Y, T, T, '#bfe0ec'); r(g, X, Y, T, 1, '#6b5a48'); r(g, X, Y + 15, T, 1, '#6b5a48'); r(g, X, Y, 1, T, '#6b5a48');
-  r(g, X + 3, Y + 3, 3, 1, '#e8f6fb'); r(g, X + 3, Y + 4, 1, 3, '#e8f6fb');
+  r(g, X, Y, T, T, '#a9d4e4'); r(g, X, Y + 1, T, 5, '#cfeaf4'); r(g, X, Y + 6, T, 4, '#bfe0ec'); r(g, X, Y + 11, T, 4, '#96c6d8');
+  for (let i = 0; i < 4; i++) { r(g, X + 3 + i, Y + 8 - i, 1, 1, '#eef9fc'); r(g, X + 9 + i, Y + 13 - i, 1, 1, '#dff2f8'); }
+  r(g, X + 4, Y + 8, 1, 1, '#ffffff');
+  r(g, X, Y + 7, T, 1, '#6b5a48'); r(g, X, Y + 8, T, 1, 'rgba(0,0,0,.12)');
+  r(g, X, Y, T, 1, '#8a7458'); r(g, X, Y, 1, T, '#8a7458'); r(g, X + 1, Y + 1, 1, T - 2, 'rgba(255,255,255,.25)');
+  r(g, X, Y + 14, T, 2, '#5a4a3a'); r(g, X, Y + 14, T, 1, '#7a6650');
 }
 
 // ---- Cave tiles (the mine ignores seasons) ----
