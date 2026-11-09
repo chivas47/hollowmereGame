@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v209: Turned seats match the new furniture
+- Chairs, armchairs and sofas turned to face sideways or away now show proper side and back views in the same style as their fronts: a chair's tall back post over its seat and legs, an armchair's high back, rolled arm and cushion, a sofa's end with its arm, and from behind each seat's panelled back with the seat's edge showing. Still in each piece's own two colours, and mirrored for the other side as before.
+- The views are frames on the furniture sheet (tools/sprites/furniture.py); the code drawing is kept only for the moment before the sheet loads. A test checks every seat has its side and back frames. Drawing only: no saves, prices or keys changed.
+
 ## v208: Monsters redrawn
 - All nine monsters are redrawn with three tones of shading, a darker outline and more detail, still in their own colours (and white when hit): a slime with a shine and two eyes that stretches as it hops; a hollow mite with a split shell, a glint and scuttling legs; a cave bat with ribbed wings, pink eyes and little fangs; a bone walker with a skull, ribs, pelvis and striding legs; a bandaged sand wraith with glowing eyes; a scorch rex with a flame on its back; a magma sprite with a glowing core and red wings; an ember golem of cracked stone with burning eyes and a molten chest; and a hollow serpent of shaded segments with a yellow eye and a flicking tongue.
 - Same sheet layout; shadows, bobbing and swaying are still drawn in code. Drawing only: no saves, prices or keys changed.

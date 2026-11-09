@@ -68,7 +68,8 @@ export const FURN_SHEET = {
   sheet: 'furniture', w: 16, h: 32, origin: [0, -16], layers: ['main', 'second', 'ink'],
   order: ['tv', 'chair', 'armchair', 'sofa', 'stool', 'table', 'roundtable', 'desk', 'endtable', 'tablelamp', 'floorlamp', 'plant',
     'cactus', 'flowers', 'tallplant', 'rug', 'roundrug', 'bookcase', 'dresser', 'clock', 'hearth', 'globe', 'barrel', 'easel', 'sewing',
-    'dyepots', 'mannequin', 'chest'],
+    'dyepots', 'mannequin', 'chest',
+    'chair.side', 'chair.back', 'armchair.side', 'armchair.back', 'sofa.side', 'sofa.back'],   // v209: seats turned (data/furniture.js TURNS)
 };
 
 // v85 terrain-<season>.png: outdoor ground as Wang 2-corner ("dual grid") tile sets, full colour, one sheet per season.

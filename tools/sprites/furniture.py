@@ -1,7 +1,8 @@
 # Builds assets/sprites/furniture.png (v207): python3 tools/sprites/furniture.py assets/sprites/furniture.png [preview.png]
 # Layout (assets/sprites/README.md): furniture by shape, 16x32 frames with the tile in the bottom 16 rows, in the order
 # of FURN_SHEET.order. Bands: main (grey, tinted to the piece's first colour), second (grey, its second colour), ink
-# (fixed colours, drawn as is). Seats' side and back views and the rugs' quarter turn are drawn by render/sprites.js.
+# (fixed colours, drawn as is). v209: after the shapes, the seats' side view (facing right; mirrored in code for the
+# other side) and back view. The rugs' quarter turn is done in code.
 #
 # Letters: M m n the main colour lit, mid and deep (255, 210, 165); S s t the second colour the same; anything else is
 # an ink colour from INK. Every silhouette gets an outline: in its band at grey 95 for tinted parts, a darker version
@@ -434,10 +435,93 @@ ART = {
     '..SMMMMMMMMMMS..',
     '..tnnnnnnnnnnt..',
   ],
+  # v209: seats from the side (facing right; the game mirrors it for the other side) and from behind.
+  'chair.side': [
+    '....ss..........',
+    '....sS..........',
+    '....sS..........',
+    '....sS..........',
+    '....sS..........',
+    '....sS..........',
+    '....sSMMMMMMMm..',
+    '....sMmmmmmmmn..',
+    '....snnnnnnnnn..',
+    '....st......st..',
+    '....st......st..',
+    '....st......st..',
+    '....tt......tt..',
+  ],
+  'chair.back': [
+    '....ssssssss....',
+    '....sSSSSSSs....',
+    '....sStttSSs....',
+    '....sStttSSs....',
+    '....sSSSSSSs....',
+    '....sSSSSSSs....',
+    '...MsSSSSSSsMm..',
+    '...msssssssstn..',
+    '...nnnnnnnnnnn..',
+    '...ss......ss...',
+    '...st......st...',
+    '...st......st...',
+    '...tt......tt...',
+  ],
+  'armchair.side': [
+    '..ss............',
+    '..sSs...........',
+    '..sSs...........',
+    '..sSs...........',
+    '..sSsMMMMMMMMm..',
+    '..sSsMmmmmmmmn..',
+    '..sSMMMMMMMMMMm.',
+    '..sSMmmmmmmmmmn.',
+    '..sSmmmmmmmmmmn.',
+    '..ssnnnnnnnnnnn.',
+    '..tt.........tt.',
+  ],
+  'armchair.back': [
+    '..ssssssssssss..',
+    '..sSSSSSSSSSSs..',
+    '..sSSSSSSSSSSs..',
+    '.MsSStSSSStSSsM.',
+    '.MsSSSSSSSSSSsn.',
+    '.MsSSSSSSSSSSsn.',
+    '.MsSSSSSSSSSSsn.',
+    '.MsSStSSSStSSsn.',
+    '.msSSSSSSSSSSsn.',
+    '.mssssssssssssn.',
+    '.nnnnnnnnnnnnnn.',
+    '..tt........tt..',
+  ],
+  'sofa.side': [
+    '..ss............',
+    '..sSs...........',
+    '..sSs...........',
+    '..sSs......sss..',
+    '..sSsMMMMMMsSSs.',
+    '..sSMMMMMMMsSSs.',
+    '..sSMmmmmmmsSSs.',
+    '..sSmmmmmmmsSSs.',
+    '..sSnnnnnnnsSSs.',
+    '..sssssssssssss.',
+    '..tt.........tt.',
+  ],
+  'sofa.back': [
+    'MMMMMMMMMMMMMMMM',
+    'ssssssssssssssss',
+    'SSSSSSSSSSSSSSSS',
+    'SSSStSSSSSSStSSS',
+    'SSSSSSSSSSSSSSSS',
+    'SSSSSSSSSSSSSSSS',
+    'SSSStSSSSSSStSSS',
+    'SSSSSSSSSSSSSSSS',
+    'ssssssssssssssss',
+    'tt............tt',
+  ],
 }
 ORDER = ['tv', 'chair', 'armchair', 'sofa', 'stool', 'table', 'roundtable', 'desk', 'endtable', 'tablelamp', 'floorlamp', 'plant',
          'cactus', 'flowers', 'tallplant', 'rug', 'roundrug', 'bookcase', 'dresser', 'clock', 'hearth', 'globe', 'barrel', 'easel', 'sewing',
-         'dyepots', 'mannequin', 'chest']
+         'dyepots', 'mannequin', 'chest', 'chair.side', 'chair.back', 'armchair.side', 'armchair.back', 'sofa.side', 'sofa.back']
 FLAT = {'rug', 'roundrug'}
 BOTTOM = {'rug': 29, 'roundrug': 29}
 

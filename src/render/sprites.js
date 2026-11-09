@@ -909,16 +909,22 @@ export function drawFurniture(c, X, Y, def, rot = 0) {
   c.save();
   if (k === 3 || turn === 'mirror') { c.translate(2 * X + T, 0); c.scale(-1, 1); }
   else if (turn === 'flat') { c.translate(X + T / 2, Y + T / 2); c.rotate(Math.PI / 2); c.translate(-X - T / 2, -Y - T / 2); }
-  if (turn === 'seat') SEAT_ART[def.shape][k === 2 ? 1 : 0](c, X, Y, ...def.colors);
+  if (turn === 'seat') { if (!furnitureFrame(c, X, Y, def, `${def.shape}.${k === 2 ? 'back' : 'side'}`)) SEAT_ART[def.shape][k === 2 ? 1 : 0](c, X, Y, ...def.colors); }
   else furnitureFront(c, X, Y, def);
   c.restore();
 }
 function furnitureFront(c, X, Y, def) {
-  const F = FURN_SHEET, i = F.order.indexOf(def.shape), [a, b] = def.colors;
-  if (i < 0 || !ready(F.sheet)) return (FURN_ART[def.shape] || FURN_ART.chest)(c, X, Y, ...def.colors);
-  c.drawImage(tinted(F.sheet, F.layers, [['main', a], ['second', b || a], ['ink', null]], F.h), i * F.w, 0, F.w, F.h, X + F.origin[0], Y + F.origin[1], F.w, F.h);
+  if (!furnitureFrame(c, X, Y, def, def.shape)) (FURN_ART[def.shape] || FURN_ART.chest)(c, X, Y, ...def.colors);
 }
-// [side facing right, back]. Code only: the furniture sheet holds the front views.
+// v209: one frame of the furniture sheet tinted to the piece's colours (key: a shape, or a seat's 'chair.side' and so
+// on); false until the sheet has loaded or when the sheet has no such frame.
+function furnitureFrame(c, X, Y, def, key) {
+  const F = FURN_SHEET, i = F.order.indexOf(key), [a, b] = def.colors;
+  if (i < 0 || !ready(F.sheet)) return false;
+  c.drawImage(tinted(F.sheet, F.layers, [['main', a], ['second', b || a], ['ink', null]], F.h), i * F.w, 0, F.w, F.h, X + F.origin[0], Y + F.origin[1], F.w, F.h);
+  return true;
+}
+// [side facing right, back]. v209: drawn only until the furniture sheet (which now holds these views) has loaded.
 const SEAT_ART = {
   chair: [
     (c, X, Y, a, b) => { r(c, X + 4, Y + 1, 2, 10, b); r(c, X + 4, Y + 8, 9, 3, a); r(c, X + 4, Y + 11, 1, 4, b); r(c, X + 12, Y + 11, 1, 4, b); },
