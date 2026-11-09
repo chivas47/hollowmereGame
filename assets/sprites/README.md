@@ -200,7 +200,7 @@ Lit bombs use the bomb frames of placed.png.
 | person.png | Hollowmere Farm (original placeholder, v77) | same as the game |
 | animals.png | Hollowmere Farm (original, v78; redrawn v196) | same as the game |
 | pets.png, horse.png | Hollowmere Farm (original, v79; redrawn v196) | same as the game |
-| monsters.png | Hollowmere Farm (original placeholder, v80) | same as the game |
+| monsters.png | Hollowmere Farm (original, v80; redrawn v208) | same as the game |
 | crops.png | Hollowmere Farm (original, v81; redrawn v197) | same as the game |
 | forage.png | Hollowmere Farm (original, v82; redrawn v197) | same as the game |
 | trees.png | Hollowmere Farm (original, v82; redrawn v198) | same as the game |
