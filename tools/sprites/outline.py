@@ -29,25 +29,6 @@ def tidy(px, w, h, layer=lambda k, c: 'ink'):
 
 # v206: placed.png is drawn by tools/sprites/placed.py, not from the code art.
 
-# two_colour (used by packet.png): one row per band (main, second, ink). Comparing the white/red
-# probe with the black one: pixels that match are fixed colours (ink); red ones are the second colour, the rest the
-# main; their grey is the shade drawn over them, and light on the black probe is a see-through shine (white in ink).
-FL = {'main': 0, 'second': 1, 'ink': 2}
-def two_colour(img, n, lit, blk, w, h):
-    """Splits a white/red probe and a black probe of one picture into the main, second and ink bands of column n."""
-    A, B = grid(lit, w, h), grid(blk, w, h)
-    px, band, shine = {}, {}, {}
-    for k, c in A.items():
-        d = B.get(k)
-        if c[3] < 255 or d == c: px[k] = c; band[k] = 'ink'; continue
-        if c[0] > c[1] and c[1] == c[2]:   # red: the second colour (light on it from a shine)
-            band[k], v, s = 'second', c[0], c[1]
-        else:
-            band[k], v, s = 'main', c[0], (d[0] if d and d[0] == d[1] == d[2] else 0)
-        px[k] = (v, v, v, 255) if not s else (255, 255, 255, 255)
-        if s: shine[k] = s
-    for (i, j), (L, c) in tidy(px, w, h, lambda k, c: band.get(k, 'ink')).items(): img.putpixel((n * w + i, FL[L] * h + j), c)
-    for (i, j), s in shine.items(): img.putpixel((n * w + i, FL['ink'] * h + j), (255, 255, 255, s))
 # v207: furniture.png is drawn by tools/sprites/furniture.py, not from the code art.
 
 # wallpapers.png and floors.png: 16x16 swatches in one row, catalogue order, as drawn (they repeat edge to edge,
@@ -85,28 +66,12 @@ with open(data, 'w') as f:
 print('BUILDINGS:', len(bs), 'sheet', WIDTH, 'x', height, '->', data)
 
 # v212: props.png is drawn by tools/sprites/props.py, not from the code art.
-# greenhouse.png: soil bed, boards on an even column, boards on an odd column (drawn at x 16 to 32 of its frame).
-img = Image.new('RGBA', (48, 16), (0, 0, 0, 0))
-for n, data in enumerate(art['gh']):
-    w = 32 if n == 2 else 16
-    for (i, j), c in grid(data, w, 16).items():
-        if n < 2 or i >= 16: img.putpixel((n * 16 + i - (16 if n == 2 else 0), j), c)
-img.save(f'{OUT}/greenhouse.png', optimize=True)
+# v213: greenhouse.png, packet.png and children.png are drawn by tools/sprites/small.py, not from the code art.
 
 # v211: tools.png is drawn by tools/sprites/tools.py, not from the code art.
-# packet.png: the seed packet in the three bands (main, second, ink), one 16x16 column.
-img = Image.new('RGBA', (16, 48), (0, 0, 0, 0))
-two_colour(img, 0, art['packet'][0], art['packet'][1], 16, 16)
-img.save(f'{OUT}/packet.png', optimize=True)
 # v199: alders.png is drawn by tools/sprites/alders.py, not from the code art.
 # v205: fences.png and fixtures.png are drawn by tools/sprites/fences.py, not from the code art.
 
-# v92 children.png: 16x16 frames, a column per stage (baby, crawler, toddler), a row per child's colours, outlined.
-img = Image.new('RGBA', (16 * 3, 16 * len(art['children'])), (0, 0, 0, 0))
-for row, frames in enumerate(art['children']):
-    for n, (st, data) in enumerate(frames):
-        for (i, j), (L, c) in tidy(grid(data, 16, 16), 16, 16).items(): img.putpixel((n * 16 + i, row * 16 + j), c)
-img.save(f'{OUT}/children.png', optimize=True)
 
 # v93 glow.png: the lantern glow as drawn (soft light, not outlined). bunting.png: one flag, white, outlined (tinted).
 Image.frombytes('RGBA', (56, 52), bytes(art['glow'])).save(f'{OUT}/glow.png', optimize=True)

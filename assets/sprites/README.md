@@ -214,12 +214,12 @@ Lit bombs use the bomb frames of placed.png.
 | wallpapers.png, floors.png | Hollowmere Farm (original placeholder, v87, from the game's patterns) | same as the game |
 | buildings.png, buildings-winter.png | Hollowmere Farm (original, v88, from the game's code art; redrawn v201 to v203) | same as the game |
 | props.png | Hollowmere Farm (original, v89; redrawn v212) | same as the game |
-| greenhouse.png | Hollowmere Farm (original placeholder, v89, from the game's code art) | same as the game |
+| greenhouse.png | Hollowmere Farm (original, v89; redrawn v213) | same as the game |
 | tools.png | Hollowmere Farm (original, v90; redrawn v211) | same as the game |
-| packet.png | Hollowmere Farm (original placeholder, v90, from the game's code art) | same as the game |
+| packet.png | Hollowmere Farm (original, v90; redrawn v213) | same as the game |
 | alders.png | Hollowmere Farm (original, v91; redrawn v199) | same as the game |
 | fences.png, fixtures.png | Hollowmere Farm (original, v91; redrawn v205) | same as the game |
-| children.png | Hollowmere Farm (original placeholder, v92, from the game's code art) | same as the game |
+| children.png | Hollowmere Farm (original, v92; redrawn v213) | same as the game |
 | glow.png, bunting.png | Hollowmere Farm (original placeholder, v93, from the game's code art) | same as the game |
 | pens.png | Hollowmere Farm (original placeholder, v94, from the game's code art) | same as the game |
 | variants.png | Hollowmere Farm (original placeholder, v95, from the game's code art) | same as the game |

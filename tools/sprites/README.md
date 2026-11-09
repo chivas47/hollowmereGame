@@ -9,6 +9,7 @@ Scripts that build the placeholder sheets in `assets/sprites/` (needs Python 3 w
 | pets.png, horse.png | `python3 tools/sprites/pets.py assets/sprites` (v196: letter grids, outlines worked out) |
 | monsters.png | `python3 tools/sprites/monsters.py assets/sprites/monsters.png [preview.png]` (v208: letter grids, outlines worked out) |
 | crops.png | `python3 tools/sprites/crops.py assets/sprites/crops.png` (v197: letter grids, outlines worked out) |
+| greenhouse.png, packet.png, children.png | `python3 tools/sprites/small.py assets/sprites [preview.png]` (v213: letter grids) |
 | props.png | `python3 tools/sprites/props.py assets/sprites/props.png [preview.png]` (v212: letter grids; a new prop needs its art here and its key in `PROPS_SHEET.order`) |
 | tools.png | `python3 tools/sprites/tools.py assets/sprites/tools.png [preview.png]` (v211: letter grids; handles run through the grip at (4, 12)) |
 | furniture.png | `python3 tools/sprites/furniture.py assets/sprites/furniture.png [preview.png]` (v207: letter grids in the main, second and ink bands; a new shape needs its art here and its name in `FURN_SHEET.order`) |
@@ -20,7 +21,7 @@ Scripts that build the placeholder sheets in `assets/sprites/` (needs Python 3 w
 | debris.png | `python3 tools/sprites/debris.py assets/sprites/debris.png` (v198: letter grids; a new debris kind needs its art here and its name in `DEBRIS_SHEET.order`) |
 | forage.png | `python3 tools/sprites/forage.py assets/sprites/forage.png` (v197: letter grids; a new forage kind needs its art here and its name in `FORAGE_SHEET.order`) |
 | terrain-*.png, soil.png, cave-*.png | `python3 tools/sprites/terrain.py assets/sprites` (run from the repo root: it reads the palettes in `src/data/seasons.js` and the cave colours in `src/render/tiles.js`) |
-| wallpapers.png, floors.png, buildings.png, buildings-winter.png (and src/data/buildings.js), greenhouse.png, packet.png, children.png, glow.png, bunting.png, pens.png, variants.png | serve the repo (`python3 -m http.server 8123`), then `node tools/sprites/dump_code_art.mjs art.json` (Playwright) and `python3 tools/sprites/outline.py art.json assets/sprites` from the repo root |
+| wallpapers.png, floors.png, buildings.png, buildings-winter.png (and src/data/buildings.js), glow.png, bunting.png, pens.png, variants.png | serve the repo (`python3 -m http.server 8123`), then `node tools/sprites/dump_code_art.mjs art.json` (Playwright) and `python3 tools/sprites/outline.py art.json assets/sprites` from the repo root |
 
-These come from the game's own code art (rendered in a browser, then outlined), so they follow any change to `drawFloor`, `drawChild`, `drawGlow`, `drawFlag` or `PEN_ART`. A new variant needs its key added to `VARIANTS_SHEET.order` (the dump fails if a key draws as a different variant). The dump blocks the sheets themselves, so it always captures the code art. A new furniture kind also needs its name added to its sheet's `order` in `src/data/sprites.js`.
+These come from the game's own code art (rendered in a browser, then outlined), so they follow any change to `drawFloor`, `drawGlow`, `drawFlag` or `PEN_ART`. A new variant needs its key added to `VARIANTS_SHEET.order` (the dump fails if a key draws as a different variant). The dump blocks the sheets themselves, so it always captures the code art. A new furniture kind also needs its name added to its sheet's `order` in `src/data/sprites.js`.
 
