@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v205: Fences, gates and paths redrawn
+- Fences have a lit post with a pointed cap and a little grain, two rails each lit on top and shaded underneath with a knot in the grain, nails where they meet the post, a darker outline, and a shadow at the foot of the end posts. They still join up in every direction and take the wood, stone or hardwood colour.
+- Gates have dark capped posts with iron hinges, two rails and a diagonal brace; open, the leaf folds back against its post.
+- The wood path is planks laid three to a tile with staggered seams, grain, nails and a lit top edge; the stone path is flagstones in mortar, each lit on its top left. Both repeat without a seam.
+- fences.png and fixtures.png are now built by tools/sprites/fences.py instead of from the code art. Drawing only: no saves, prices or keys changed.
+
 ## v204: Border trees and ground redrawn
 - The trees that ring every map are redrawn: a crown of leaf clumps lit from the top left in the season's three greens (or autumn's oranges, or the dry scrub's olive) inside a darker outline, over a barked trunk with a root flare and a shadow on the ground. There are three crown shapes, picked by position, so a row of trees is not a row of copies. In winter snow sits on the lit tops of the clumps. The crowns still sway in the wind.
 - Boulders are rounder, lit from the top left, with a crack, chips and a shadow, and snow on top in winter.
