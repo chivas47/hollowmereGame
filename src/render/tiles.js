@@ -202,42 +202,77 @@ function workbench(g, p, o) {
   if (p.snow) r(g, X, Y + 5, 16, 1, SNOW);
 }
 
+// v202: walls of upright planks (barns, sheds, the coop): a lit and a shaded edge on each plank, a top rail under the
+// eaves' shadow and a stone footing.
+function plankWall(g, x, y, w, h, col, step) {
+  step = step || 5;
+  r(g, x, y, w, h, col);
+  for (let i = x; i < x + w; i += step) { r(g, i, y, 1, h, tone(col, 0.72)); r(g, i + 1, y, 1, h, tone(col, 1.1)); }
+  for (let i = x + 3; i < x + w; i += step * 2) r(g, i, y + Math.floor(h / 2), 1, 1, tone(col, 0.6));
+  r(g, x, y, w, 2, tone(col, 0.6)); r(g, x, y + 2, w, 1, tone(col, 0.8));
+  r(g, x, y, 1, h, tone(col, 0.75)); r(g, x + w - 1, y, 1, h, tone(col, 0.55));
+  r(g, x, y + h - 2, w, 2, '#8d877e'); r(g, x, y + h - 1, w, 1, '#6f6a62');
+  for (let i = x + 2; i < x + w - 1; i += 5) r(g, i, y + h - 2, 1, 1, '#6f6a62');
+}
+// A barn-style door: a dark frame, plank leaves with a white X brace and trim.
+function braceDoor(g, x, y, w, h, col, trim) {
+  r(g, x - 1, y - 1, w + 2, h + 1, '#2f241a'); r(g, x, y, w, h, col);
+  for (let i = x + 2; i < x + w; i += 3) r(g, i, y, 1, h, tone(col, 0.75));
+  const mid = x + Math.floor(w / 2);
+  // One X per leaf, drawn as unbroken diagonals from corner to corner.
+  [[x, mid - 1], [mid + 1, x + w - 1]].forEach(([a, b]) => {
+    const lw = b - a, n = Math.max(lw, h - 1);
+    for (let t = 0; t <= n; t++) {
+      const dx = Math.round(t * lw / n), dy = Math.round(t * (h - 1) / n);
+      r(g, a + dx, y + dy, 1, 1, trim); r(g, b - dx, y + dy, 1, 1, trim);
+    }
+  });
+  r(g, x, y, w, 1, trim); r(g, x, y + h - 1, w, 1, trim); r(g, x, y, 1, h, trim); r(g, x + w - 1, y, 1, h, trim); r(g, mid - 1, y, 2, h, trim);
+  r(g, x - 2, y + h, w + 4, 1, '#a8a196');
+}
 function coop(g, p, o) {
   const X = o.x * T, Y = o.y * T;
   r(g, X + 2, Y + 31, 44, 1, 'rgba(0,0,0,.25)');
-  r(g, X + 3, Y + 12, 42, 19, '#b5452f');
-  for (let i = 0; i < 5; i++) r(g, X + 3, Y + 15 + i * 4, 42, 1, '#9a3a27');
-  for (let j = 0; j < 12; j++) r(g, X + 12 - j, Y + j, 24 + 2 * j, 1, j % 3 === 2 ? '#4e3a26' : '#6b5a48');
-  if (p.snow) for (let j = 0; j < 3; j++) r(g, X + 12 - j, Y + j, 24 + 2 * j, 1, SNOW);
-  r(g, X, Y + 11, 48, 2, '#3f3226');
+  plankWall(g, X + 3, Y + 12, 42, 19, '#b5452f', 4);
+  roofGable(g, X + 24, Y, 24, 11, '#6b5a48', p.snow);
   r(g, X + 3, Y + 13, 1, 18, '#f4ead2'); r(g, X + 44, Y + 13, 1, 18, '#f4ead2');
-  r(g, X + 19, Y + 18, 10, 13, '#5c371e'); r(g, X + 19, Y + 18, 10, 1, '#f4ead2'); r(g, X + 23, Y + 18, 1, 13, '#4e331f');
-  r(g, X + 20, Y + 31, 8, 1, '#94673d');
-  [X + 7, X + 34].forEach((wx) => { r(g, wx, Y + 16, 7, 6, '#4e3a26'); r(g, wx + 1, Y + 17, 5, 4, '#e9c46a'); });
+  braceDoor(g, X + 19, Y + 18, 10, 12, '#5c371e', '#f4ead2');
+  r(g, X + 22, Y + 14, 4, 3, '#2f241a'); r(g, X + 23, Y + 15, 2, 2, '#e9c46a');          // a little round vent
+  [X + 7, X + 34].forEach((wx) => windowArt(g, wx, Y + 16, 7, 6, '#f4ead2'));
+  for (let i = 0; i < 4; i++) r(g, X + 12 + i * 2, Y + 30 - i, 2, 1, '#a5753f');         // the hens' ramp
+  r(g, X + 36, Y + 28, 3, 2, '#f4ead2'); r(g, X + 39, Y + 29, 2, 1, '#e9b44c');          // a stray feather and seed
 }
 
 function cave(g, p, o) {
   const X = o.x * T, Y = o.y * T;
+  // A rocky face of stacked boulders, lit from the top left, round a timbered mine mouth.
   r(g, X + 2, Y + 4, 44, 28, '#6f6862'); r(g, X + 6, Y, 36, 4, '#6f6862'); r(g, X, Y + 10, 48, 22, '#6f6862');
-  [[4, 12], [30, 6], [38, 20], [8, 24], [20, 2]].forEach(([a, b]) => r(g, X + a, Y + b, 6, 2, '#857d76'));
+  [[2, 10, 10, 8], [8, 2, 12, 7], [20, 0, 10, 5], [30, 2, 12, 8], [38, 10, 10, 9], [0, 20, 9, 10], [40, 20, 8, 10]].forEach(([a, b, w, hh]) => {
+    r(g, X + a, Y + b, w, hh, '#7d766f'); r(g, X + a, Y + b, w, 1, '#9a928a'); r(g, X + a, Y + b, 1, hh, '#8c847c'); r(g, X + a, Y + b + hh - 1, w, 1, '#57514c');
+  });
   r(g, X + 16, Y + 8, 16, 2, '#120e0c'); r(g, X + 14, Y + 10, 20, 2, '#120e0c'); r(g, X + 12, Y + 12, 24, 20, '#120e0c');
-  r(g, X + 11, Y + 10, 2, 22, '#6b4a2b'); r(g, X + 35, Y + 10, 2, 22, '#6b4a2b'); r(g, X + 10, Y + 9, 28, 2, '#7a5634');
-  if (p.snow) { r(g, X + 6, Y, 36, 2, SNOW); r(g, X + 2, Y + 4, 8, 1, SNOW); r(g, X + 38, Y + 4, 8, 1, SNOW); }
+  r(g, X + 13, Y + 13, 22, 3, '#1f1814');
+  const beam = (x, y, w, hh) => { r(g, x, y, w, hh, '#6b4a2b'); r(g, x, y, 1, hh, '#8a6440'); r(g, x + w - 1, y, 1, hh, '#4e3420'); };
+  beam(X + 11, Y + 10, 2, 22); beam(X + 35, Y + 10, 2, 22);
+  r(g, X + 10, Y + 9, 28, 2, '#7a5634'); r(g, X + 10, Y + 9, 28, 1, '#9a7650');
+  r(g, X + 14, Y + 12, 2, 2, '#e9b44c'); r(g, X + 14, Y + 14, 1, 2, '#3f2f22');                // a lantern
+  r(g, X + 16, Y + 30, 16, 1, '#4e3420'); r(g, X + 18, Y + 28, 1, 3, '#4e3420'); r(g, X + 29, Y + 28, 1, 3, '#4e3420');   // rails
+  if (p.snow) { r(g, X + 6, Y, 36, 2, SNOW); r(g, X + 2, Y + 4, 8, 1, SNOW); r(g, X + 38, Y + 4, 8, 1, SNOW); r(g, X + 10, Y + 8, 28, 1, SNOW); r(g, X, Y + 10, 3, 1, SNOW); r(g, X + 45, Y + 10, 3, 1, SNOW); }
 }
 
 function barn(g, p, o) {
   const X = o.x * T, Y = o.y * T;
   r(g, X + 2, Y + 31, 60, 1, 'rgba(0,0,0,.25)');
-  r(g, X + 3, Y + 12, 58, 19, '#9a3a27');
-  for (let i = 0; i < 6; i++) r(g, X + 3 + i * 10, Y + 12, 1, 19, '#7d2f20');
-  for (let j = 0; j < 12; j++) r(g, X + 18 - j, Y + j, 28 + 2 * j, 1, j % 3 === 2 ? '#3f3226' : '#5a4a3a');
-  if (p.snow) for (let j = 0; j < 3; j++) r(g, X + 18 - j, Y + j, 28 + 2 * j, 1, SNOW);
-  r(g, X + 2, Y + 11, 60, 2, '#3f3226');
-  r(g, X + 24, Y + 3, 16, 7, '#f4ead2'); r(g, X + 25, Y + 4, 14, 5, '#3f3226'); r(g, X + 31, Y + 4, 2, 5, '#f4ead2');
-  r(g, X + 22, Y + 16, 20, 15, '#5c371e'); r(g, X + 22, Y + 16, 20, 1, '#f4ead2'); r(g, X + 22, Y + 16, 1, 15, '#f4ead2'); r(g, X + 41, Y + 16, 1, 15, '#f4ead2');
-  for (let i = 0; i < 20; i++) { r(g, X + 22 + i, Y + 16 + Math.round(i * 0.75), 1, 1, '#f4ead2'); r(g, X + 41 - i, Y + 16 + Math.round(i * 0.75), 1, 1, '#f4ead2'); }
-  r(g, X + 31, Y + 16, 2, 15, '#f4ead2');
-  [X + 7, X + 50].forEach((wx) => { r(g, wx, Y + 17, 7, 6, '#3f3226'); r(g, wx + 1, Y + 18, 5, 4, '#e9c46a'); });
+  plankWall(g, X + 3, Y + 12, 58, 19, '#9a3a27', 5);
+  roofGable(g, X + 32, Y, 28, 11, '#5a4a3a', p.snow);
+  r(g, X + 3, Y + 12, 1, 19, '#f4ead2'); r(g, X + 60, Y + 12, 1, 19, '#f4ead2');
+  // The hayloft door, half open on hay.
+  r(g, X + 25, Y + 2, 14, 8, '#2f241a'); r(g, X + 26, Y + 3, 12, 6, '#f4ead2'); r(g, X + 27, Y + 4, 10, 5, '#3f3226');
+  r(g, X + 27, Y + 6, 10, 3, '#e2c46a'); r(g, X + 28, Y + 5, 3, 1, '#f2dc8a'); r(g, X + 31, Y + 3, 2, 6, '#f4ead2');
+  r(g, X + 31, Y, 2, 2, '#6b5a48'); r(g, X + 32, Y + 1, 1, 2, '#c9c2b4');                 // the pulley
+  braceDoor(g, X + 22, Y + 16, 20, 14, '#5c371e', '#f4ead2');
+  [X + 7, X + 50].forEach((wx) => { windowArt(g, wx, Y + 17, 7, 6, '#f4ead2'); });
+  r(g, X + 5, Y + 27, 6, 3, '#e2c46a'); r(g, X + 5, Y + 27, 6, 1, '#f2dc8a'); r(g, X + 6, Y + 28, 4, 1, '#c9a84a');   // a hay bale
 }
 
 function cottage(g, p, o) {
@@ -275,17 +310,24 @@ function table(g, p, o) {
 }
 
 function greenhouse(g, p, o) {
-  const X = o.x * T, Y = o.y * T;
+  const X = o.x * T, Y = o.y * T, glass = '#bfe0ec', frame = '#5a4a3a';
   r(g, X + 2, Y + 31, 60, 1, 'rgba(0,0,0,.25)');
-  r(g, X + 2, Y + 10, 60, 21, '#bfe0ec');
-  for (let i = 0; i < 6; i++) r(g, X + 2 + i * 12, Y + 10, 1, 21, '#6b5a48');
-  r(g, X + 2, Y + 20, 60, 1, '#6b5a48');
-  for (let j = 0; j < 10; j++) r(g, X + 12 - j, Y + j, 40 + 2 * j, 1, j % 3 === 2 ? '#8fc2d6' : '#d8eef6');
-  for (let j = 0; j < 10; j += 3) r(g, X + 12 - j, Y + j, 40 + 2 * j, 1, '#6b5a48');
-  if (p.snow) for (let j = 0; j < 2; j++) r(g, X + 12 - j, Y + j, 40 + 2 * j, 1, SNOW);
-  r(g, X + 2, Y + 9, 60, 2, '#4e3a26'); r(g, X + 2, Y + 30, 60, 1, '#4e3a26');
-  [[8, 23], [44, 22], [52, 24]].forEach(([a, b]) => { r(g, X + a, Y + b, 3, 6, '#5da34a'); r(g, X + a - 1, Y + b, 5, 2, '#86b86a'); });
-  r(g, X + 18, Y + 18, 12, 13, '#7a4b2a'); r(g, X + 18, Y + 18, 12, 1, '#4e3a26'); r(g, X + 24, Y + 18, 1, 13, '#4e3a26'); r(g, X + 27, Y + 25, 1, 2, '#e9b44c');
+  // Glass walls: panes lighter at the top, a reflection streak per pane, plants showing through.
+  r(g, X + 2, Y + 10, 60, 21, glass); r(g, X + 2, Y + 21, 60, 10, '#a6d2e2');
+  [[6, 23], [10, 22], [40, 22], [46, 24], [52, 23], [56, 22]].forEach(([a, b]) => { r(g, X + a, Y + b, 3, 31 - b - 2, '#4f9440'); r(g, X + a - 1, Y + b, 5, 2, '#86c86a'); r(g, X + a, Y + b - 1, 2, 1, '#e2707a'); });
+  for (let i = 0; i < 5; i++) { const px = X + 3 + i * 12; r(g, px + 2, Y + 12, 1, 4, '#eef8fc'); r(g, px + 3, Y + 12, 1, 2, '#eef8fc'); r(g, px + 4, Y + 23, 1, 3, '#d8eef6'); }
+  for (let i = 0; i < 6; i++) { r(g, X + 2 + i * 12, Y + 10, 2, 21, frame); r(g, X + 2 + i * 12, Y + 10, 1, 21, tone(frame, 1.3)); }
+  r(g, X + 2, Y + 20, 60, 1, frame); r(g, X + 2, Y + 28, 60, 3, '#8d877e'); r(g, X + 2, Y + 30, 60, 1, '#6f6a62');
+  // The glass roof: frames on every third row, lit glass between.
+  for (let j = 0; j < 10; j++) {
+    const x0 = X + 12 - j, w = 40 + 2 * j;
+    r(g, x0, Y + j, w, 1, j % 3 === 0 ? frame : j % 3 === 1 ? '#e2f2f8' : '#a6d2e2');
+    if (j % 3) for (let x = x0 + 4; x < x0 + w; x += 8) r(g, x, Y + j, 1, 1, frame);
+  }
+  r(g, X + 2, Y + 9, 60, 2, '#3f3226');
+  if (p.snow) { for (let j = 0; j < 2; j++) r(g, X + 12 - j, Y + j, 40 + 2 * j, 1, SNOW); r(g, X + 2, Y + 9, 60, 1, SNOW); }
+  doorArt(g, X + 18, Y + 18, 12, 12, '#7a4b2a');
+  r(g, X + 19, Y + 19, 10, 4, '#bfe0ec'); r(g, X + 20, Y + 19, 2, 2, '#eef8fc'); r(g, X + 24, Y + 19, 1, 4, '#5a3a24');
 }
 
 function trough(g, p, o) {
@@ -296,11 +338,14 @@ function trough(g, p, o) {
 function stable(g, p, o) {
   const X = o.x * T, Y = o.y * T;
   r(g, X + 1, Y + 31, 30, 1, 'rgba(0,0,0,.25)');
-  r(g, X + 2, Y + 12, 28, 19, '#8a5a32');
-  for (let i = 0; i < 4; i++) r(g, X + 2 + i * 8, Y + 12, 1, 19, '#6e4626');
-  for (let j = 0; j < 10; j++) r(g, X + 10 - j, Y + 2 + j, 12 + 2 * j, 1, j % 3 === 2 ? '#3f3226' : '#7a4a2a');
-  if (p.snow) for (let j = 0; j < 3; j++) r(g, X + 10 - j, Y + 2 + j, 12 + 2 * j, 1, SNOW);
-  r(g, X + 9, Y + 18, 14, 13, '#3f3226'); r(g, X + 9, Y + 18, 14, 2, '#c9a06a'); r(g, X + 15, Y + 20, 2, 11, '#5c371e');
+  plankWall(g, X + 2, Y + 12, 28, 19, '#8a5a32', 4);
+  roofGable(g, X + 16, Y + 2, 12, 9, '#7a4a2a', p.snow);
+  // A half door: the top open on the dark stall, a horseshoe over it.
+  r(g, X + 8, Y + 17, 16, 14, '#2f241a'); r(g, X + 9, Y + 18, 14, 6, '#1f1812');
+  r(g, X + 10, Y + 22, 12, 1, '#3f2f22'); r(g, X + 12, Y + 19, 8, 1, '#c9a06a'); r(g, X + 13, Y + 20, 6, 2, '#e2c46a');   // a hay rack in the dark stall
+  braceDoor(g, X + 9, Y + 24, 14, 6, '#6e4626', '#c9a06a');
+  r(g, X + 14, Y + 14, 4, 1, '#c9c2b4'); r(g, X + 14, Y + 14, 1, 2, '#c9c2b4'); r(g, X + 17, Y + 14, 1, 2, '#c9c2b4');
+  r(g, X + 3, Y + 26, 4, 4, '#e2c46a'); r(g, X + 3, Y + 26, 4, 1, '#f2dc8a');               // hay
 }
 
 // The pet's water bowl: a tile, so it is drawn with the map (the water in it is drawn by systems/pets.js).
@@ -313,68 +358,101 @@ export function drawBowl(g, x, y) {
 function shed(g, p, o) {
   const X = o.x * T, Y = o.y * T;
   r(g, X + 2, Y + 31, 44, 1, 'rgba(0,0,0,.25)');
-  r(g, X + 3, Y + 12, 42, 19, '#a5753f');
-  for (let i = 0; i < 7; i++) r(g, X + 3 + i * 6, Y + 12, 1, 19, '#8a5a32');
-  for (let j = 0; j < 11; j++) r(g, X + 13 - j, Y + 1 + j, 22 + 2 * j, 1, j % 3 === 2 ? '#3f4850' : '#5f6870');
-  if (p.snow) for (let j = 0; j < 3; j++) r(g, X + 13 - j, Y + 1 + j, 22 + 2 * j, 1, SNOW);
-  r(g, X + 18, Y + 18, 12, 13, '#5c371e'); r(g, X + 18, Y + 18, 12, 2, '#c9a06a'); r(g, X + 27, Y + 25, 1, 2, '#e9c46a');
-  r(g, X + 6, Y + 16, 7, 6, '#3f3226'); r(g, X + 7, Y + 17, 5, 4, '#bfe0ec'); r(g, X + 35, Y + 16, 7, 6, '#3f3226'); r(g, X + 36, Y + 17, 5, 4, '#bfe0ec');
+  plankWall(g, X + 3, Y + 12, 42, 19, '#a5753f', 6);
+  roofGable(g, X + 24, Y + 1, 22, 10, '#5f6870', p.snow);
+  braceDoor(g, X + 18, Y + 18, 12, 12, '#5c371e', '#c9a06a');
+  [X + 6, X + 35].forEach((wx) => windowArt(g, wx, Y + 16, 7, 6, '#d9c6a0'));
+  r(g, X + 40, Y + 22, 1, 8, '#6b4a2b'); r(g, X + 39, Y + 21, 3, 2, '#a9b4bd');             // a spade leaning by the wall
 }
 // v160: the mere's boathouse, 3 x 2: plank walls, a slate roof, wide doors onto the water (shut).
 function boathouse(g, p, o) {
   const X = o.x * T, Y = o.y * T;
   r(g, X + 2, Y + 31, 44, 1, 'rgba(0,0,0,.25)');
-  r(g, X + 3, Y + 12, 42, 19, '#7a5a3a');
-  for (let i = 0; i < 7; i++) r(g, X + 3 + i * 6, Y + 12, 1, 19, '#5c4128');
-  for (let j = 0; j < 11; j++) r(g, X + 13 - j, Y + 1 + j, 22 + 2 * j, 1, j % 3 === 2 ? '#2f3a44' : '#4a5a66');
-  if (p.snow) for (let j = 0; j < 3; j++) r(g, X + 13 - j, Y + 1 + j, 22 + 2 * j, 1, SNOW);
-  r(g, X + 30, Y + 16, 12, 15, '#3f2c1c'); r(g, X + 35, Y + 16, 1, 15, '#2a1d12');   // the boat doors, toward the dock
-  r(g, X + 8, Y + 17, 12, 4, '#3f6b8a'); r(g, X + 9, Y + 18, 10, 2, '#5f8fb5');        // an oar sign
+  plankWall(g, X + 3, Y + 12, 42, 19, '#7a5a3a', 6);
+  roofGable(g, X + 24, Y + 1, 22, 10, '#4a5a66', p.snow);
+  braceDoor(g, X + 30, Y + 16, 12, 14, '#3f2c1c', '#8a6a4a');                               // the boat doors, toward the dock
+  r(g, X + 7, Y + 16, 14, 6, '#2f241a'); r(g, X + 8, Y + 17, 12, 4, '#3f6b8a'); r(g, X + 8, Y + 17, 12, 1, '#5f8fb5');   // the sign
+  r(g, X + 10, Y + 19, 8, 1, '#e8d9b5'); r(g, X + 17, Y + 18, 2, 3, '#e8d9b5');             // an oar on it
+  for (let i = 0; i < 3; i++) r(g, X + 6 + i * 3, Y + 26, 2, 4, i % 2 ? '#c9b48a' : '#e8d9b5');   // a coil of rope
 }
 function mill(g, p, o) {
   const X = o.x * T, Y = o.y * T, a = 0.4;
   r(g, X + 1, Y + 31, 30, 1, 'rgba(0,0,0,.25)');
-  r(g, X + 6, Y + 10, 20, 21, '#d9caa6'); r(g, X + 6, Y + 10, 20, 2, '#b8a888');
-  for (let j = 0; j < 6; j++) r(g, X + 11 - j, Y + 4 + j, 10 + 2 * j, 1, '#8a3a2a');
-  if (p.snow) r(g, X + 8, Y + 6, 16, 2, SNOW);
-  r(g, X + 13, Y + 22, 6, 9, '#6e4626');
-  for (let k = 0; k < 4; k++) {   // sails
-    const ang = a + k * Math.PI / 2;
-    for (let i = 2; i < 13; i++) r(g, X + 16 + Math.round(Math.cos(ang) * i), Y + 9 + Math.round(Math.sin(ang) * i), 2, 2, '#f4ead2');
+  // A tapering stone tower, lit on the left.
+  for (let j = 0; j < 21; j++) {
+    const k = Math.floor(j / 7), x0 = X + 7 - k, w = 18 + 2 * k;
+    r(g, x0, Y + 10 + j, w, 1, '#d9caa6'); r(g, x0, Y + 10 + j, 3, 1, '#ece0c2'); r(g, x0 + w - 3, Y + 10 + j, 3, 1, '#b8a888');
+    if (j % 4 === 3) for (let x = x0 + (j % 8 === 3 ? 1 : 4); x < x0 + w; x += 6) r(g, x, Y + 10 + j, 3, 1, '#c4b694');
   }
-  r(g, X + 15, Y + 8, 3, 3, '#5c371e');
+  roofGable(g, X + 16, Y + 4, 8, 5, '#8a3a2a', p.snow);
+  doorArt(g, X + 13, Y + 22, 6, 8, '#6e4626');
+  windowArt(g, X + 14, Y + 14, 4, 4, '#ece0c2');
+  for (let k = 0; k < 4; k++) {   // sails: a dark spar with one panel of cloth beside it, ribbed every third pixel
+    const ang = a + k * Math.PI / 2, c = Math.cos(ang), sn = Math.sin(ang);
+    for (let i = 2; i < 13; i++) {
+      const x = X + 16 + Math.round(c * i), y = Y + 9 + Math.round(sn * i);
+      if (i > 3) for (let d = 1; d <= 3; d++) r(g, x + Math.round(-sn * d), y + Math.round(c * d), 1, 1, i % 3 === 0 || d === 3 ? '#c9b48a' : '#f4ead2');
+    }
+    for (let i = 2; i < 13; i++) r(g, X + 16 + Math.round(c * i), Y + 9 + Math.round(sn * i), 1, 1, '#6e4626');
+  }
+  r(g, X + 15, Y + 8, 3, 3, '#5c371e'); r(g, X + 15, Y + 8, 1, 1, '#8a5a32');
 }
 function clocktower(g, p, o) {
   const X = o.x * T, Y = o.y * T;
   r(g, X + 3, Y + 31, 26, 1, 'rgba(0,0,0,.25)');
   r(g, X + 8, Y + 4, 16, 27, '#e9c46a'); r(g, X + 8, Y + 4, 3, 27, '#f6dc8a'); r(g, X + 21, Y + 4, 3, 27, '#c9a43a');
-  for (let j = 0; j < 6; j++) r(g, X + 15 - j, Y - 4 + j, 2 + 2 * j, 1, '#b5452f');
-  r(g, X + 10, Y + 8, 12, 12, '#fffbe8'); r(g, X + 10, Y + 8, 12, 1, '#c9a43a'); r(g, X + 15, Y + 10, 2, 5, '#2b211a'); r(g, X + 16, Y + 14, 4, 1, '#2b211a');
-  r(g, X + 13, Y + 24, 6, 7, '#8a5a32');
+  for (let j = Y + 8; j < Y + 29; j += 4) r(g, X + 8, j, 16, 1, '#d6b058');
+  r(g, X + 7, Y + 4, 18, 2, '#c9a43a'); r(g, X + 7, Y + 21, 18, 1, '#c9a43a');
+  r(g, X + 7, Y + 29, 18, 2, '#8d877e'); r(g, X + 7, Y + 30, 18, 1, '#6f6a62');
+  roofGable(g, X + 16, Y - 4, 2, 7, '#b5452f', p.snow);
+  r(g, X + 15, Y - 7, 2, 3, '#c9a43a'); r(g, X + 15, Y - 8, 2, 1, '#f6dc8a');               // the finial
+  // The clock face: a round dial with hour marks and hands.
+  r(g, X + 11, Y + 8, 10, 12, '#3f2f22'); r(g, X + 10, Y + 9, 12, 10, '#3f2f22');
+  r(g, X + 11, Y + 9, 10, 10, '#fffbe8'); r(g, X + 12, Y + 9, 8, 1, '#fff'); 
+  [[16, 10], [16, 17], [12, 13], [20, 13]].forEach(([a, b]) => r(g, X + a - (a === 16 ? 0 : 0), Y + b, 1, 1, '#8a6a3a'));
+  r(g, X + 16, Y + 11, 1, 3, '#2b211a'); r(g, X + 16, Y + 14, 3, 1, '#2b211a');
+  doorArt(g, X + 13, Y + 23, 6, 6, '#8a5a32');
 }
 // v31: the fish pond (stone rim, water) and the slime pen (fence, trough). What lives there is drawn by sprites.js.
 function pond(g, p, o) {
   const X = o.x * T, Y = o.y * T, w = o.w * T, h = o.h * T;
-  r(g, X + 1, Y + 2, w - 2, h - 3, '#8d8a84'); r(g, X + 1, Y + 2, w - 2, 2, '#b5b1a8');
-  r(g, X + 4, Y + 5, w - 8, h - 10, p.snow ? '#bcd4e6' : p.water); r(g, X + 4, Y + 5, w - 8, 2, 'rgba(0,0,0,.15)');
-  for (let i = 0; i < 3; i++) r(g, X + 8 + i * 12, Y + 14 + (i % 2) * 10, 6, 1, p.ripple);
+  // A rim of fitted stones, lit on top, around the water.
+  r(g, X + 1, Y + 2, w - 2, h - 3, '#8d8a84');
+  for (let x = X + 1; x < X + w - 1; x += 6) for (const yy of [Y + 2, Y + h - 5]) { r(g, x, yy, 5, 3, '#a39f97'); r(g, x, yy, 5, 1, '#c2beb4'); r(g, x + 5, yy, 1, 3, '#6f6c66'); }
+  for (let y = Y + 5; y < Y + h - 5; y += 6) for (const xx of [X + 1, X + w - 4]) { r(g, xx, y, 3, 5, '#a39f97'); r(g, xx, y, 3, 1, '#c2beb4'); r(g, xx, y + 5, 3, 1, '#6f6c66'); }
+  const water = p.snow ? '#bcd4e6' : p.water;
+  r(g, X + 4, Y + 5, w - 8, h - 10, water); r(g, X + 4, Y + 5, w - 8, 2, 'rgba(0,0,0,.18)'); r(g, X + 4, Y + 7, 2, h - 12, 'rgba(0,0,0,.1)');
+  for (let i = 0; i < 3; i++) r(g, X + 8 + i * 12, Y + 14 + (i % 2) * 10, 6, 1, p.snow ? '#e6f0f6' : p.ripple);
+  if (!p.snow) { r(g, X + w - 14, Y + h - 14, 5, 3, '#4f9440'); r(g, X + w - 13, Y + h - 15, 3, 1, '#86c86a'); r(g, X + w - 12, Y + h - 14, 1, 1, '#f4ead2'); }   // a lily pad
+  else r(g, X + 6, Y + 8, 8, 1, '#ffffff');
 }
 function slimepen(g, p, o) {
   const X = o.x * T, Y = o.y * T, w = o.w * T, h = o.h * T;
   r(g, X + 1, Y + 3, w - 2, h - 4, p.snow ? '#e6e2d6' : '#7a8f5a');
-  for (let x = X + 1; x < X + w - 1; x += 6) { r(g, x, Y + 2, 2, 6, '#8a5a32'); r(g, x, Y + h - 7, 2, 6, '#8a5a32'); }
-  r(g, X + 1, Y + 4, w - 2, 1, '#a5753f'); r(g, X + 1, Y + h - 5, w - 2, 1, '#a5753f');
-  r(g, X + 1, Y + 2, 2, h - 3, '#8a5a32'); r(g, X + w - 3, Y + 2, 2, h - 3, '#8a5a32');
-  r(g, X + 6, Y + h - 14, 16, 6, '#6e4626'); r(g, X + 7, Y + h - 13, 14, 3, '#5d7a90');   // the trough
+  if (!p.snow) for (let i = 0; i < 14; i++) r(g, X + 6 + (i * 37) % (w - 12), Y + 10 + (i * 23) % (h - 20), 1, 2, i % 2 ? '#8faa6a' : '#647a48');
+  const post = (x, y, hh) => { r(g, x, y, 2, hh, '#8a5a32'); r(g, x, y, 1, hh, '#a5753f'); r(g, x, y, 2, 1, '#c99a5e'); };
+  for (let x = X + 1; x < X + w - 1; x += 6) { post(x, Y + 2, 6); post(x, Y + h - 7, 6); }
+  for (let y = Y + 2; y < Y + h - 3; y += 6) { post(X + 1, y, 6); post(X + w - 3, y, 6); }
+  [Y + 4, Y + h - 5].forEach((yy) => { r(g, X + 1, yy, w - 2, 1, '#a5753f'); r(g, X + 1, yy + 1, w - 2, 1, '#6e4626'); });
+  [X + 1, X + w - 3].forEach((xx) => r(g, xx, Y + 2, 2, h - 3, 'rgba(110,70,38,.6)'));
+  r(g, X + 5, Y + h - 15, 18, 8, '#3f2c1c'); r(g, X + 6, Y + h - 14, 16, 6, '#6e4626'); r(g, X + 7, Y + h - 13, 14, 3, '#5d7a90'); r(g, X + 8, Y + h - 13, 5, 1, '#8fb0c4');   // the trough
 }
 // v32: the helper hut (a round thatched hut) and a waystone (a tall carved stone).
 function helperhut(g, p, o) {
   const X = o.x * T, Y = o.y * T;
   r(g, X + 2, Y + 31, 28, 1, 'rgba(0,0,0,.25)');
-  r(g, X + 5, Y + 16, 22, 15, '#a07a4f'); r(g, X + 5, Y + 16, 22, 2, '#8a6640');
-  for (let j = 0; j < 12; j++) r(g, X + 16 - j - 2, Y + 4 + j, 4 + 2 * j + 4, 1, j % 2 ? '#c9a24a' : '#b8913a');
-  if (p.snow) r(g, X + 10, Y + 5, 12, 3, SNOW);
-  r(g, X + 13, Y + 22, 6, 9, '#3f3226'); r(g, X + 14, Y + 23, 4, 2, '#7fcf6a');
+  // Wattle walls, then a domed thatch in layers, each with straw ends hanging over the next.
+  r(g, X + 5, Y + 16, 22, 15, '#a07a4f');
+  for (let j = Y + 18; j < Y + 29; j += 3) for (let x = X + 5 + ((j / 3) % 2 ? 0 : 2); x < X + 27; x += 4) r(g, x, j, 2, 1, '#8a6640');
+  r(g, X + 5, Y + 16, 22, 2, '#6e5032'); r(g, X + 5, Y + 29, 22, 2, '#8d877e');
+  for (let j = 0; j < 12; j++) {
+    const x0 = X + 14 - j, w = 4 + 2 * j;
+    r(g, x0, Y + 4 + j, w, 1, j % 3 === 2 ? '#a07a2a' : j % 3 === 0 ? '#d9b65a' : '#c9a24a');
+    if (j % 3 === 2) for (let x = x0 + 1; x < x0 + w; x += 2) r(g, x, Y + 5 + j, 1, 1, '#b8913a');
+  }
+  r(g, X + 15, Y + 2, 2, 3, '#8a6640');
+  if (p.snow) { r(g, X + 11, Y + 4, 10, 2, SNOW); r(g, X + 9, Y + 6, 14, 1, SNOW); r(g, X + 8, Y + 9, 2, 1, SNOW); r(g, X + 21, Y + 10, 2, 1, SNOW); }
+  r(g, X + 12, Y + 21, 8, 10, '#2f241a'); r(g, X + 13, Y + 22, 6, 9, '#3f3226'); r(g, X + 14, Y + 23, 4, 2, '#7fcf6a'); r(g, X + 15, Y + 23, 1, 1, '#c6f0b0');
 }
 // v169: the fortune statue, a figure on a plinth with open hands, gilded.
 function statue(g, p, o) {
@@ -386,18 +464,25 @@ function statue(g, p, o) {
   r(g, X + 7, Y + 4, 1, 1, '#fff2c0');
 }
 function waystone(g, p, o) {
-  const X = o.x * T, Y = o.y * T, hollow = o.site === 'wayhollow';
+  const X = o.x * T, Y = o.y * T, hollow = o.site === 'wayhollow', rune = hollow ? '#b98ae0' : '#69aedb', glow = hollow ? '#e6d4fb' : '#cfeaf8';
   r(g, X + 3, Y + 31, 10, 1, 'rgba(0,0,0,.25)');
-  r(g, X + 4, Y + 4, 8, 27, '#8d8a84'); r(g, X + 5, Y + 2, 6, 2, '#8d8a84'); r(g, X + 4, Y + 4, 2, 27, '#b5b1a8');
-  r(g, X + 7, Y + 9, 2, 8, hollow ? '#b98ae0' : '#69aedb'); r(g, X + 6, Y + 12, 4, 2, hollow ? '#b98ae0' : '#69aedb');
-  r(g, X + 3, Y + 28, 10, 3, '#6a6862');
+  r(g, X + 3, Y + 4, 10, 25, '#3f3c38');
+  r(g, X + 4, Y + 4, 8, 25, '#8d8a84'); r(g, X + 5, Y + 2, 6, 2, '#8d8a84'); r(g, X + 4, Y + 3, 8, 1, '#3f3c38');
+  r(g, X + 4, Y + 4, 2, 25, '#b5b1a8'); r(g, X + 10, Y + 4, 2, 25, '#6f6c66'); r(g, X + 5, Y + 2, 2, 2, '#c8c4ba');
+  [[6, 20], [8, 24], [5, 26]].forEach(([a, b]) => r(g, X + a, Y + b, 2, 1, '#77746d'));          // cracks
+  r(g, X + 7, Y + 8, 2, 9, rune); r(g, X + 6, Y + 11, 4, 2, rune); r(g, X + 6, Y + 8, 1, 1, rune); r(g, X + 9, Y + 16, 1, 1, rune); r(g, X + 7, Y + 9, 1, 2, glow);
+  if (!p.snow) { r(g, X + 4, Y + 25, 3, 2, '#5f8a4a'); r(g, X + 10, Y + 23, 2, 2, '#5f8a4a'); }     // moss
+  else r(g, X + 4, Y + 2, 8, 2, SNOW);
+  r(g, X + 2, Y + 28, 12, 3, '#6a6862'); r(g, X + 2, Y + 28, 12, 1, '#8a8780');
 }
 function scaffold(g, p, o) {
   const X = o.x * T, Y = o.y * T, w = o.w * T, h = o.h * T;
-  r(g, X + 2, Y + h - 4, w - 4, 3, '#a5753f');
-  for (let x = 3; x < w - 2; x += 10) r(g, X + x, Y + 6, 2, h - 9, '#8a5a32');
-  r(g, X + 2, Y + 8, w - 4, 2, '#8a5a32'); r(g, X + 2, Y + h / 2, w - 4, 2, '#8a5a32');
-  r(g, X + 6, Y + h - 10, 8, 6, '#9aa3ab'); r(g, X + w - 14, Y + h - 9, 8, 5, '#b08a5a');
+  r(g, X + 2, Y + h - 4, w - 4, 3, '#a5753f'); r(g, X + 2, Y + h - 4, w - 4, 1, '#c99a5e'); r(g, X + 2, Y + h - 2, w - 4, 1, '#6e4626');
+  for (let x = 3; x < w - 2; x += 10) { r(g, X + x, Y + 6, 2, h - 9, '#8a5a32'); r(g, X + x, Y + 6, 1, h - 9, '#a5753f'); }
+  [Y + 8, Y + h / 2].forEach((yy) => { r(g, X + 2, yy, w - 4, 2, '#8a5a32'); r(g, X + 2, yy, w - 4, 1, '#a5753f'); });
+  for (let x = 3; x + 10 < w - 2; x += 10) for (let i = 0; i < 10; i++) r(g, X + x + i, Y + 10 + Math.round(i * (h / 2 - 10) / 10), 1, 1, '#6e4626');   // cross braces
+  r(g, X + 6, Y + h - 10, 8, 6, '#9aa3ab'); r(g, X + 6, Y + h - 10, 8, 1, '#c4ccd2'); r(g, X + 7, Y + h - 8, 6, 1, '#7f8a93');   // stone blocks
+  r(g, X + w - 14, Y + h - 9, 8, 5, '#b08a5a'); r(g, X + w - 14, Y + h - 9, 8, 1, '#d0aa7a'); r(g, X + w - 12, Y + h - 7, 1, 3, '#8a6a3a');   // planks
 }
 
 // v37: the Wardens' Lodge, a log cabin by the Hollow with crossed blades over the door.
