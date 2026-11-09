@@ -1,6 +1,5 @@
 # Turns code art frames (from dump.mjs) into sheets: shades bottom edges and outlines each silhouette.
-# trees.png: 24x32 frames (stages 0-4, bare), bands leaf, ink.
-# debris.png: 16x16 frames in one row. giants.png: 48x48 frames (pod, round, leafy), bands fruit, line, ink (with shine).
+# giants.png: 48x48 frames (pod, round, leafy), bands fruit, line, ink (with shine).
 # placed.png and furniture.png: see below.
 import sys, json
 from PIL import Image
@@ -25,18 +24,8 @@ def tidy(px, w, h, layer=lambda k, c: 'ink'):
 
 # v197: forage.png is drawn by tools/sprites/forage.py, not from the code art.
 
-leafy = lambda k, c: 'leaf' if c[0] == c[1] == c[2] and c[0] >= 200 and c[3] == 255 else 'ink'
-img = Image.new('RGBA', (24 * 6, 32 * 2), (0, 0, 0, 0))
-for n, (s, data) in enumerate(art['trees']):
-    for (i, j), (L, c) in tidy(grid(data, 24, 32), 24, 32, leafy).items():
-        img.putpixel((n * 24 + i, (0 if L == 'leaf' else 1) * 32 + j), c)
-img.save(f'{OUT}/trees.png', optimize=True)
+# v198: trees.png and debris.png are drawn by tools/sprites/trees.py and debris.py, not from the code art.
 
-img = Image.new('RGBA', (16 * len(art['debris']), 16), (0, 0, 0, 0))
-for n, (k, data) in enumerate(art['debris']):
-    for (i, j), (L, c) in tidy(grid(data, 16, 16), 16, 16).items(): img.putpixel((n * 16 + i, j), c)
-img.save(f'{OUT}/debris.png', optimize=True)
-print('DEBRIS order:', [k for k, _ in art['debris']])
 
 # The probe's line is red: those pixels form the line band and are turned white (tinted later) before shading.
 GL = {'fruit': 0, 'line': 1, 'ink': 2}
