@@ -900,9 +900,9 @@ Nothing here is saved or touches the economy.
 | Rain, storm, snow, mist | every open-air map but the Dunes | the day's weather |
 | Lightning and thunder | open-air maps | storms, every 6 to 14 s |
 | Waterfalls | mountain lake (7..8, rows 0 to 2), grove pool (6..7, rows 0 to 3) | always |
-| Birds (4, fly off within 2.5 tiles) | farm, Wilds, village, forest, grove, mountain, beach, town, railway, island | before 7 pm, not in rain, storms or mist |
-| Butterflies (4) | farm, Wilds, forest, grove, mountain, village | spring and summer, sunny, 8 am to 6 pm |
-| Fireflies (10) | farm, Wilds, forest, grove, mountain | summer, from 8 pm, not in rain |
+| Birds (4 a screen's worth of map, so 12 on the 40 x 28 village and mere since v195; fly off within 2.5 tiles) | farm, Wilds, village, forest, grove, mountain, beach, town, railway, island | before 7 pm, not in rain, storms or mist |
+| Butterflies (4 a screen's worth of map, v195) | farm, Wilds, forest, grove, mountain, village | spring and summer, sunny, 8 am to 6 pm |
+| Fireflies (10 a screen's worth of map, v195) | farm, Wilds, forest, grove, mountain | summer, from 8 pm, not in rain |
 | Ambient sound | country, shore, town, cave, wind areas (data/atmosphere.js) | by time and weather |
 | Light | all but caves and houses | violet dawn, golden hour 5 to 6:30 pm, night from 8 pm, darkest at 2 am |
 | Indoor light (v100) | farmhouse, shed, cottages, buildings | rooms dim with the hour (at least half dark after 8 pm) and on wet days; hearths, stoves, lamps, lanterns, candles and the television light the room around them, fires flicker |
@@ -921,6 +921,8 @@ Nothing here is saved or touches the economy.
 | Lamp posts (v105) | village (4), town (3) | 6:30 pm to dawn, light 3.5 tiles |
 | Lantern light (v105) | placed lanterns on any open-air map | after 6:30 pm, light 3 tiles |
 | Footsteps (v109) | under the player: grass, path, sand, stone (quarry, caves, stone paths), wood (indoors, the pier, wood paths), snow (winter outdoors), wet (rain outdoors); hooves on horseback | a step every 15 px walked (about 4 a second), the horse every 20 px; at the Ambience volume; Steps in the menu |
+| Ground cover (v195) | every open-air map but the farm (and the island's plot), data/scenery.js COVER | in patches over 10 to 32% of open ground by map: flowers, clover, tall grass, pebbles (village, town, Wilds, mere, railway); ferns, mushrooms, fallen leaves, mossy stones (forest, grove); heather (mountain); shells, seaweed, driftwood (beach); dry scrub, small cacti, bones (Dunes, dig site); cracks (quarry); tropical blooms (island). By season: autumn turns half the flowers to leaves, winter leaves twigs in the snow. Walkable, drawn only |
+| Scenery props (v195) | village, town, mere, grove, Wilds, forest, railway, mountain (data/scenery.js PROPS) | bushes, mossy boulders, stumps, woodpiles, hay, barrels and crates, flower planters, and small stands of trees on the widest open ground. Solid, never on anyone's spot (tests/scenery.test.mjs); blossom in spring, berries in summer, russet in autumn, snow in winter |
 | Ambience volume (v100) | the menu's Ambience slider, 0 to 100% | Sound off still mutes it |
 
 ## Management tools (v71)

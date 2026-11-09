@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v195: A countryside, not bare grass
+- The open ground between places is no longer plain grass. Every open-air map except the farm grows ground cover in patches that suit it: flowers, clover, tall grass and pebbles in the village, town, Wilds, mere and by the railway; ferns, mushrooms, fallen leaves and mossy stones in Brackenwood and the hidden grove; heather on Cragmoor; shells, seaweed and driftwood on the beach; dry scrub, small cacti and old bones in the Dunes and at the dig site; tropical blooms on the island (not on its farm plot). It changes with the season: half the flowers turn to fallen leaves in autumn, and in winter only twigs poke out of the snow. You walk over all of it.
+- Bushes, mossy boulders, old stumps, woodpiles, hay bales, barrels and crates and flower planters stand where someone would have put them or where they would grow: barrels by the store and the Anvil, hay by Tamsin's pens, planters at the clinic and museum doors, a woodpile by the boathouse. Small stands of trees fill the widest empty stretches of the village, the town's south side, the mere's shores and the grove. Bushes blossom in spring, carry berries in summer, turn russet in autumn and hold snow in winter.
+- Birds, butterflies and fireflies come in proportion to the map's size, so the 40 x 28 village and mere have three times as many as before instead of the same four as a one-screen map.
+- Everything is drawn only: nothing is saved, nothing can be picked up and no prices change. Props are kept off every sign, story, stall, the cat's spots and every place a neighbour walks to (tests/scenery.test.mjs).
+
 ## v194: Shop rows line up
 - In Garrow's boathouse, the old boatman and the arcade cabinets, a long description no longer pushes Buy or Play onto its own line under the item: the button sits at the row's right, as in every other shop. On a phone, rows with two or more buttons still put them under the item when there is no room beside it.
 - No saves, prices or keys changed.
