@@ -39,10 +39,11 @@ ART = {
     '.dgggggggggdd.',
     '..dddddddddd..',
   ]),
-  'weeds': ({'G': '#7dba4c', 'g': '#4f8f3a', 'd': '#36662a', 'Y': '#e9d36a'}, 1, 3, [
-    '.....Y..........',
-    '....YdY...Y.....',
-    '.....g...YdY....',
+  # v215: leafy tips instead of the yellow flowers, so the whole weed is green and the winter wash dulls it all.
+  'weeds': ({'G': '#7dba4c', 'g': '#4f8f3a', 'd': '#36662a'}, 1, 3, [
+    '.....G..........',
+    '....GgG...G.....',
+    '.....g...GgG....',
     '.Gg..g.G..g..Gg.',
     '.gGg.gGg..g.gGg.',
     '..gGgg.g.gggGg..',

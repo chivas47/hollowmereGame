@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v215: No flowers on winter weeds
+- Weeds no longer carry the little yellow flowers they gained in v198: their tips are leafy green instead, so in winter the whole weed dulls with the season rather than blooming on the snow (Nuno's pick: no flowers at any time of year).
+- Drawing only (tools/sprites/debris.py, debris.png): no saves, prices or keys changed.
+
 ## v214: Friendlier children
 - The farm's children are redrawn again after Nuno found the v213 ones looked like monsters: rounder heads, small eyes and rosy cheeks with no mouth, like the neighbours. The baby sleeps in its crib with its eyes closed, the crawler goes on two hands and two knees under a big round head, and the toddler no longer looks as if it is sticking its tongue out.
 - Drawing only (tools/sprites/small.py, children.png): no saves, prices or keys changed.
@@ -87,7 +91,7 @@ Newest first. Version numbers match published versions of the playable page.
 ## v198: Fruit trees and debris redrawn
 - Fruit trees are redrawn at every stage: a two-leaf sapling, then a canopy of leaf clumps lit from the top left, with a light, mid and deep tone so each clump reads on its own, over a barked trunk that widens at the roots. The bare winter tree has proper branches with snow along them and drifted at its foot. Each tree keeps its own leaf colour.
 - Fruit on a mature tree hangs from a stalk, with a shine on its upper left and a shaded bottom.
-- Field debris is redrawn in the same style: grass tufts with separate blades, weeds with a few yellow flowers, a rounded stone, a leafy twig, a stump with growth rings and furrowed bark (and a smaller alder stump), copper and iron rocks with glinting ore, and a slatted crate. The seasons still shift their colours.
+- Field debris is redrawn in the same style: grass tufts with separate blades, weeds with a few yellow flowers (since v215, leafy tips), a rounded stone, a leafy twig, a stump with growth rings and furrowed bark (and a smaller alder stump), copper and iron rocks with glinting ore, and a slatted crate. The seasons still shift their colours.
 - Same sheet layout and anchors. trees.png and debris.png are now built by tools/sprites/trees.py and debris.py instead of from the code art. Drawing only: no saves, prices or keys changed.
 
 ## v197: Crops and forage redrawn
