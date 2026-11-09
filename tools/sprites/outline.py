@@ -131,11 +131,7 @@ img.save(f'{OUT}/tools.png', optimize=True)
 img = Image.new('RGBA', (16, 48), (0, 0, 0, 0))
 two_colour(img, 0, art['packet'][0], art['packet'][1], 16, 16)
 img.save(f'{OUT}/packet.png', optimize=True)
-# v91 alders.png: 32x48 frames in one row (stages 0-4, bare 1-4, the tap), outlined like the debris.
-img = Image.new('RGBA', (32 * len(art['alders']), 48), (0, 0, 0, 0))
-for n, (k, data) in enumerate(art['alders']):
-    for (i, j), (L, c) in tidy(grid(data, 32, 48), 32, 48).items(): img.putpixel((n * 32 + i, j), c)
-img.save(f'{OUT}/alders.png', optimize=True)
+# v199: alders.png is drawn by tools/sprites/alders.py, not from the code art.
 # fences.png: 16x18 frames, a column per neighbour mask, bands main and ink, read off the white and black probes as
 # furniture.png is (grey on white: shade; light on black: see-through light, white in ink). Frame edges are not
 # outlined, so rails and stubs join the next post.

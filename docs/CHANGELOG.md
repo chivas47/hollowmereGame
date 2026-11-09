@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v199: Wild alders redrawn
+- The wild alders, the most common trees on and around the farm, are redrawn to match the new fruit trees: a tall crown of leaf clumps lit from the top left with three tones of green, over a barked trunk that widens at the roots. Saplings grow a small round crown on a thin stem and fill out stage by stage; the fallen cone is a little scaled seed.
+- In autumn the crowns turn russet with the same light and shade, since every leaf pixel is green for the season shift. In winter the bare alders have branching twigs tipped with snow and a drift at the foot of a grown tree.
+- The tree tap is a spout and a banded bucket, still on the trunk's right where the syrup drop shows.
+- Same sheet layout and anchors. alders.png is now built by tools/sprites/alders.py instead of from the code art. Drawing only: no saves, prices or keys changed.
+
 ## v198: Fruit trees and debris redrawn
 - Fruit trees are redrawn at every stage: a two-leaf sapling, then a canopy of leaf clumps lit from the top left, with a light, mid and deep tone so each clump reads on its own, over a barked trunk that widens at the roots. The bare winter tree has proper branches with snow along them and drifted at its foot. Each tree keeps its own leaf colour.
 - Fruit on a mature tree hangs from a stalk, with a shine on its upper left and a shaded bottom.
