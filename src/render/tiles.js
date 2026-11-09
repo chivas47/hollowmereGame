@@ -128,13 +128,43 @@ export function drawPath(g, x, y, p) {
   for (let i = 0; i < 4; i++) r(g, X + 1 + (R() * 13 | 0), Y + 2 + (R() * 11 | 0), 2, 1, p.pathd);
 }
 
+// v204: border and field trees, one tile each: a crown of leaf clumps in rows 0 to 11 (the rows that sway, renderer
+// CROWN) over a barked trunk with a root flare. Each clump is lit from the top left in the palette's three greens
+// (light trl, mid tr, dark trd) inside a darker outline; three crown shapes, picked by position, so a row of trees
+// is not a row of copies. In winter snow sits on the lit tops of the clumps.
+const TREE_CROWNS = [
+  [[8, 4, 4.6], [4.5, 7, 3.6], [11.5, 7, 3.6], [8, 8.2, 3.6]],
+  [[7, 4, 4.2], [10.5, 5, 3.8], [5, 7.5, 3.6], [11, 8.2, 3.4], [8, 8.5, 3.4]],
+  [[8, 3.5, 3.6], [5, 6, 3.6], [11, 6, 3.6], [8, 7.5, 4.2]],
+].map((clumps) => {
+  const g = [];
+  for (let y = 0; y < 12; y++) for (let x = 0; x < 16; x++) {
+    let v = null;
+    for (const [cx, cy, rad] of clumps) {
+      const dx = x + 0.5 - cx, dy = y + 0.5 - cy, d = dx * dx + dy * dy;
+      if (d > rad * rad) continue;
+      const lit = (-dx - dy * 1.2) / rad;
+      v = lit > 0.5 ? 'L' : (lit < -0.55 || (d > (rad - 1) ** 2 && dy > 0.3 * rad)) ? 'k' : 'l';
+    }
+    if (v) g.push([x, y, v]);
+  }
+  const on = new Set(g.map(([x, y]) => x + ',' + y)), edge = [];
+  for (let y = 0; y < 12; y++) for (let x = 0; x < 16; x++) {
+    if (on.has(x + ',' + y)) continue;
+    if ([[1, 0], [-1, 0], [0, 1], [0, -1]].some(([i, j]) => on.has((x + i) + ',' + (y + j)))) edge.push([x, y]);
+  }
+  return { g, edge };
+});
 export function drawTree(g, x, y, p) {
-  const X = x * T, Y = y * T, R = rng(x * 71 + y * 313), dark = R() < 0.5 ? p.trd : p.tr, lite = p.trl;
-  r(g, X + 6, Y + 10, 4, 6, '#6b4a2b'); r(g, X + 6, Y + 10, 1, 6, '#553a21');
-  r(g, X + 1, Y + 2, 14, 10, dark); r(g, X + 3, Y, 10, 2, dark); r(g, X, Y + 4, 16, 5, dark);
-  r(g, X + 3, Y + 2, 4, 3, lite); r(g, X + 9, Y + 5, 3, 2, lite); r(g, X + 5, Y + 7, 2, 2, lite);
-  r(g, X + 1, Y + 11, 14, 1, 'rgba(0,0,0,.25)');
-  if (p.snow) { r(g, X + 3, Y, 10, 2, SNOW); r(g, X + 1, Y + 2, 6, 1, SNOW); r(g, X + 9, Y + 3, 6, 1, SNOW); r(g, X, Y + 4, 4, 1, SNOW); }
+  const X = x * T, Y = y * T, R = rng(x * 71 + y * 313), crown = TREE_CROWNS[Math.floor(R() * 3)], flip = R() < 0.5;
+  const col = { L: p.trl, l: p.tr, k: p.trd }, line = tone(p.trd, 0.55);
+  r(g, X + 2, Y + 13, 12, 2, 'rgba(0,0,0,.18)'); r(g, X + 4, Y + 14, 8, 1, 'rgba(0,0,0,.12)');
+  r(g, X + 6, Y + 9, 4, 6, '#3f2a18'); r(g, X + 7, Y + 9, 2, 6, '#6b4a2b'); r(g, X + 7, Y + 9, 1, 6, '#8a6440');
+  r(g, X + 5, Y + 14, 6, 1, '#3f2a18'); r(g, X + 6, Y + 14, 4, 1, '#6b4a2b'); r(g, X + 8, Y + 12, 1, 1, '#4e3420');
+  for (const [cx, cy] of crown.edge) r(g, X + (flip ? 15 - cx : cx), Y + cy, 1, 1, line);
+  for (const [cx, cy, v] of crown.g) r(g, X + (flip ? 15 - cx : cx), Y + cy, 1, 1, col[v]);
+  r(g, X + 3, Y + 11, 10, 1, 'rgba(0,0,0,.18)');
+  if (p.snow) for (const [cx, cy, v] of crown.g) if (v === 'L' && cy < 8) r(g, X + (flip ? 15 - cx : cx), Y + cy, 1, 1, cy < 3 || (cx + cy) % 3 ? SNOW : '#d6e2ea');
 }
 
 export function drawWater(g, x, y, p) {
@@ -143,10 +173,16 @@ export function drawWater(g, x, y, p) {
   for (let i = 0; i < 2; i++) r(g, X + 2 + (R() * 9 | 0), Y + 3 + (R() * 10 | 0), 4, 1, p.ripple);
 }
 
+// v204: a boulder, lit from the top left, with a crack, a few chips and a shadow on the ground; snow on its top.
 export function drawRock(g, x, y, p) {
   const X = x * T, Y = y * T;
-  r(g, X + 2, Y + 6, 12, 8, '#8d8a85'); r(g, X + 3, Y + 5, 10, 1, '#a5a29c'); r(g, X + 4, Y + 7, 3, 2, '#b4b0aa'); r(g, X + 2, Y + 13, 12, 1, '#6f6c68');
-  if (p.snow) r(g, X + 3, Y + 5, 10, 2, SNOW);
+  r(g, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.22)');
+  r(g, X + 3, Y + 4, 10, 1, '#4a4743'); r(g, X + 2, Y + 5, 12, 9, '#4a4743'); r(g, X + 1, Y + 7, 14, 6, '#4a4743');
+  r(g, X + 3, Y + 5, 10, 8, '#8d8a85'); r(g, X + 2, Y + 7, 12, 5, '#8d8a85');
+  r(g, X + 3, Y + 5, 6, 2, '#b4b0aa'); r(g, X + 2, Y + 7, 3, 2, '#a5a29c'); r(g, X + 4, Y + 5, 2, 1, '#d0ccc4');
+  r(g, X + 10, Y + 9, 4, 3, '#77746e'); r(g, X + 3, Y + 12, 10, 1, '#6f6c68');
+  r(g, X + 8, Y + 6, 1, 2, '#5f5c57'); r(g, X + 9, Y + 8, 1, 2, '#5f5c57'); r(g, X + 6, Y + 10, 1, 1, '#5f5c57');
+  if (p.snow) { r(g, X + 3, Y + 4, 9, 2, SNOW); r(g, X + 2, Y + 6, 4, 1, SNOW); }
 }
 
 function house(g, p, o) {
