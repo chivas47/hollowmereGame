@@ -83,7 +83,7 @@ To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, a
 
 ## furniture.png
 
-448 x 96. Furniture by shape. Frames are 16 x 32 with the tile in the bottom 16 rows, in the order of `FURN_SHEET.order`.
+544 x 96. Furniture by shape. Frames are 16 x 32 with the tile in the bottom 16 rows, in the order of `FURN_SHEET.order`: every shape's front view, then (v209) the seats' side view (facing right; the game mirrors it for the other side) and back view: `chair.side`, `chair.back`, `armchair.side`, `armchair.back`, `sofa.side`, `sofa.back`.
 
 - **Rows (3 bands):** main (tinted to the piece's first colour), second (its second colour), ink (fixed colours and see-through white shine; drawn as is).
 
