@@ -236,7 +236,8 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | 77a | Polish: farm machines and placed objects redrawn | polish | done (chivas47/hollowmereGame#214) | Nuno: next (November 2026), after 76z: placed.png (bombs, chests, signs, sprinklers, machines, silo, lantern) redrawn, built by the new tools/sprites/placed.py. Drawing only. |
 | 77b | Polish: furniture redrawn | polish | done (chivas47/hollowmereGame#215) | Nuno: next, after 77a: furniture.png (28 pieces, tinted to each piece's colours), built by the new tools/sprites/furniture.py. Drawing only. |
 | 77c | Polish: monsters redrawn | polish | done (chivas47/hollowmereGame#216) | Nuno: next (November 2026), after 77b: monsters.png redrawn as letter grids (tools/sprites/monsters.py). Drawing only. |
-| 77d | Polish: turned seats redrawn | polish | in progress (chivas47/hollowmereGame#217) | Nuno: next (November 2026), after 77c: side and back views of chairs, armchairs and sofas as frames on the furniture sheet, used when a seat is turned (render/sprites.js drawFurniture). Drawing only. |
+| 77d | Polish: turned seats redrawn | polish | done (chivas47/hollowmereGame#217) | Nuno: next (November 2026), after 77c: side and back views of chairs, armchairs and sofas as frames on the furniture sheet, used when a seat is turned (render/sprites.js drawFurniture). Drawing only. |
+| 77e | Polish: item icons redrawn | polish | in progress | Nuno: next (November 2026), after 77d: Bag, chest and gift icons (render/itemIcons.js): crops, forage, seeds and kit from their sprite sheets; shaded shapes with outlines for the rest. Drawing only. |
 
 ## Done
 

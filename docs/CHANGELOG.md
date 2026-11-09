@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v210: Item icons redrawn
+- In the Bag, chests and the gift picker, crops and forage now show their own art: the ripe crop in its colours, the forage find as it looks on the ground. Seeds show their packet and kit shows the object itself.
+- Every other item has a shaded shape in its own colour with the same darker outline as the rest of the art: a fish with fins, an eye and a pale belly; an egg with a shine; a glass jar with a lid and label for jams, pickles and roe; a stoppered bottle for wine and juice; a plate of food; a cut gem; an ingot; a ring with a stone; a book with a label; bait in a tin with a worm over the rim; a red and white float for tackle; a fruit with a leaf; and a tied sack for anything else.
+- An icon drawn before its sheet has loaded is drawn again once it has. Drawing only: no saves, prices or keys changed.
+
 ## v209: Turned seats match the new furniture
 - Chairs, armchairs and sofas turned to face sideways or away now show proper side and back views in the same style as their fronts: a chair's tall back post over its seat and legs, an armchair's high back, rolled arm and cushion, a sofa's end with its arm, and from behind each seat's panelled back with the seat's edge showing. Still in each piece's own two colours, and mirrored for the other side as before.
 - The views are frames on the furniture sheet (tools/sprites/furniture.py); the code drawing is kept only for the moment before the sheet loads. A test checks every seat has its side and back frames. Drawing only: no saves, prices or keys changed.
