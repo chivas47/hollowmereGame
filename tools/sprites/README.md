@@ -5,8 +5,8 @@ Scripts that build the placeholder sheets in `assets/sprites/` (needs Python 3 w
 | Sheet | Build |
 | --- | --- |
 | person.png | `python3 tools/sprites/person.py assets/sprites/person.png` (v192: the frames are letter grids in the script; outlines worked out) |
-| animals.png | `python3 tools/sprites/animals.py assets/sprites/animals.png preview.png` |
-| pets.png, horse.png | `python3 tools/sprites/pets.py assets/sprites` |
+| animals.png | `python3 tools/sprites/animals.py assets/sprites/animals.png [preview.png]` (v196: letter grids, outlines worked out) |
+| pets.png, horse.png | `python3 tools/sprites/pets.py assets/sprites` (v196: letter grids, outlines worked out) |
 | monsters.png | `python3 tools/sprites/monsters.py assets/sprites/monsters.png` |
 | crops.png | `python3 tools/sprites/crops.py assets/sprites/crops.png` |
 | terrain-*.png, soil.png, cave-*.png | `python3 tools/sprites/terrain.py assets/sprites` (run from the repo root: it reads the palettes in `src/data/seasons.js` and the cave colours in `src/render/tiles.js`) |

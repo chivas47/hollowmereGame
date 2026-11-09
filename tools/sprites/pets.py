@@ -1,93 +1,161 @@
-# Builds assets/sprites/pets.png (layered, tinted at runtime) and horse.png (colours drawn in).
-# Columns: right stand, right step, left stand, left step (left = right mirrored).
+# Builds assets/sprites/pets.png (layered, tinted at runtime) and horse.png (colours drawn in), v196:
+# python3 tools/sprites/pets.py assets/sprites
+# Columns: right stand, right step, left stand, left step (left = right mirrored). Drawn as letters like
+# tools/sprites/animals.py. Pets: upper case a tinted layer at full tone (255), lower case its shade (190); outlines are
+# worked out in the bordering layer at 105, as on the person sheet. The hat spot (PETS.hat in src/data/sprites.js) is
+# the top of the head: x 10 to 14 from row 7 for the cat and dog, x 13 from row 10 for the turtle.
 import sys
 from PIL import Image
-OUT = sys.argv[1]
-def hexc(h): h = h.lstrip('#'); return tuple(int(h[i:i+2], 16) for i in (0, 2, 4))
-W = (255, 255, 255)
-def dark(c, k): return tuple(int(v * k) for v in c)
 
-def finish(px, S, shadow, tinted):
-    """px: {(i,j): (layer, rgb)}. Shades bottom edges, outlines the silhouette in its neighbour's layer."""
-    out = {}
-    for (i, j), (L, c) in px.items():
-        edge = (i, j + 1) not in px and c != hexc('#2b211a')
-        out[(i, j)] = (L, dark(c, 0.75 if L in tinted else 0.86) if edge else c)
-    for (i, j), (L, c) in px.items():
-        for q in ((i+1, j), (i-1, j), (i, j+1), (i, j-1)):
-            if q not in px and q not in out and 0 <= q[0] < S and 0 <= q[1] < S - 1:
-                out[q] = (L, dark(c, 0.41 if L in tinted else 0.45))
-    for i in range(*shadow): out.setdefault((i, S - 1), ('ink', None))
-    return out
-
-def put(img, out, layer_rows, S, col):
-    for (i, j), (L, c) in out.items():
-        row = layer_rows[L]
-        img.putpixel((col * S + i, row * S + j), (0, 0, 0, 64) if c is None else c + (255,))
+OUT = sys.argv[1] if len(sys.argv) > 1 else 'assets/sprites'
+INK = (43, 33, 26)
+def hexc(h): h = h.lstrip('#'); return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+def dark(c, k=0.42): return tuple(int(v * k + w * 0.12) for v, w in zip(c, (60, 36, 24)))
 
 # ---- pets: 16x16, bands per kind: body, acc, ear (dog only), ink ----
 S = 16
 LAYERS = ['cat.body', 'cat.acc', 'cat.ink', 'dog.body', 'dog.acc', 'dog.ear', 'dog.ink', 'turtle.body', 'turtle.acc', 'turtle.ink']
-def pet(kind, step):
+TINT = {'b': 'body', 'a': 'acc', 'r': 'ear'}
+# Ink letters, drawn as is: E eye, N nose, P a pink nose or tongue, K and k the turtle's skin, W an eye's shine.
+PET_INK = {'E': INK, 'N': (58, 40, 34), 'P': (226, 128, 132), 'K': hexc('#9cba72'), 'k': hexc('#76964f'), 'W': (255, 255, 255)}
+
+PETS = {
+  'cat': (6, [
+    '.........b..b...',
+    '.b.......BBBBb..',
+    'Ba.......BBEBBA.',
+    'B..bBBBBBBBBAAP.',
+    '.BBBBBBBBBBBAA..',
+    '..BBBBBBBBBBA...',
+    '..bbAAAAAbbbA...',
+  ], [[
+    '...B.b...B.b....',
+    '...A.a...A.a....',
+  ], [
+    '..B...b.b...B...',
+    '..B...b.b...B...',
+    '..A...a.a...A...',
+  ]]),
+  'dog': (6, [
+    '.........bBBB...',
+    '........RBBBBB..',
+    'b......RRBBEBAN.',
+    'Bb.....RRBBBAAA.',
+    '.BbBBBBrRBBBAa..',
+    '..BBBBBBBBBBA...',
+    '..bbAAAAAAbbA...',
+  ], [[
+    '...B.b...B.b....',
+    '...A.a...A.a....',
+  ], [
+    '..B...b.b...B...',
+    '..B...b.b...B...',
+    '..A...a.a...A...',
+  ]]),
+  'turtle': (8, [
+    '.....bBBBBb.....',
+    '....BBaBBaBB....',
+    '...BaBBaaBBaB.KK.',
+    '..bBBaBBBBaBBKKEK',
+    'k.bBBBaaaaBBBKKKK',
+    '.kKbbbbbbbbbbKk..',
+  ], [[
+    '...KK......KK...',
+  ], [
+    '..KK........KK..',
+    '..k..........k..',
+  ]]),
+}
+
+def pet_cells(kind, step):
+    y0, top, legs = PETS[kind]
+    lg = legs[step]
+    rows = [(r, 15 - len(lg)) for r in [lg]] + [(top, y0 - step)]
     px = {}
-    def r(x, y, w, h, L, c=W):
-        for i in range(x, x + w):
-            for j in range(y, y + h):
-                if 0 <= i < S and 0 <= j < S: px[(i, j)] = (f'{kind}.{L}', c)
-    x, y = 2, 7 - step
-    if kind == 'turtle':
-        sk = hexc('#8fae6a')
-        r(x+2, y+4, 9, 4, 'body'); r(x+3, y+3, 7, 1, 'body'); r(x+4, y+5, 2, 1, 'acc'); r(x+7, y+4, 2, 1, 'acc'); r(x+5, y+3, 3, 1, 'acc')
-        for lx in (2, 9): r(x+lx + (step if lx == 2 else 0), y+8, 2, 1, 'ink', sk)
-        hx = x + 11; r(hx, y+5, 3, 3, 'ink', sk); r(hx+2, y+6, 1, 1, 'ink', hexc('#2b211a'))
-        r(x+1, y+6, 1, 1, 'ink', sk)
-    else:
-        dog = kind == 'dog'
-        r(x+2, y+4, 9, 4, 'body'); r(x+3, y+7, 6, 1, 'acc')
-        for i, lx in enumerate([3, 5, 8, 10]): r(x+lx, y+8, 1, 2 + (-1 if step and i % 2 else 0), 'body')
-        r(x, y + (3 if dog else 1), 1, 2 if dog else 4, 'body')
-        if not dog: r(x+1, y+1, 1, 1, 'body')
-        hx, hy = x + 8, y
-        r(hx, hy+1, 5, 4, 'body'); r(hx+3, hy+3, 2, 2, 'acc')
-        if dog: r(hx, hy+1, 2, 3, 'ear')
-        else: r(hx, hy, 1, 1, 'body'); r(hx+4, hy, 1, 1, 'body')
-        r(hx+3, hy+2, 1, 1, 'ink', hexc('#2b211a'))
-        r(hx+4, hy+3, 1, 1, 'ink', hexc('#2b211a'))
+    for grid, yy in rows:
+        for j, row in enumerate(grid):
+            for i, ch in enumerate(row):
+                if ch == '.' or i >= S: continue
+                if ch in PET_INK: px[(i, yy + j)] = (f'{kind}.ink', PET_INK[ch] + (255,))
+                else: px[(i, yy + j)] = (f'{kind}.{TINT[ch.lower()]}', 255 if ch.isupper() else 190)
     return px
 
-tintedL = {L for L in LAYERS if not L.endswith('ink')}
+def pet_frame(kind, step):
+    px = pet_cells(kind, step)
+    out = dict(px)
+    for (i, j) in sorted(px, key=lambda k: (k[1], k[0])):
+        L, v = px[(i, j)]
+        if L.endswith('ink') and v[:3] in (INK, PET_INK['W']): continue
+        for q in ((i + 1, j), (i - 1, j), (i, j - 1), (i, j + 1)):
+            if q in out or not (0 <= q[0] < S and 0 <= q[1] < S - 1): continue
+            out[q] = (L, dark(v[:3]) + (255,)) if L.endswith('ink') else (L, 105)
+    for x in range(3, 14):
+        if (x, S - 1) not in out: out[(x, S - 1)] = (f'{kind}.ink', (0, 0, 0, 40 if x in (3, 13) else 64))
+    return out
+
 img = Image.new('RGBA', (S * 4, S * len(LAYERS)), (0, 0, 0, 0))
-rows = {L: i for i, L in enumerate(LAYERS)}
-for kind in ('cat', 'dog', 'turtle'):
+for kind in PETS:
     for step in (0, 1):
-        out = finish(pet(kind, step), S, (3, 14), tintedL)
-        out = {k: (f'{kind}.ink' if L == 'ink' else L, c) for k, (L, c) in out.items()}
-        put(img, out, rows, S, step)
-        put(img, {(S - 1 - i, j): v for (i, j), v in out.items()}, rows, S, 2 + step)
+        f = pet_frame(kind, step)
+        for col, flip in ((step, False), (2 + step, True)):
+            for (i, j), (L, v) in f.items():
+                c = v if isinstance(v, tuple) else (v, v, v, 255)
+                x = S - 1 - i if flip else i
+                img.putpixel((col * S + x, LAYERS.index(L) * S + j), c)
 img.save(f'{OUT}/pets.png', optimize=True)
 
-# ---- horse: 24x24, one row ----
-S = 24
+# ---- horse: 24x24, one row, colours drawn in ----
+H = 24
+HPAL = {'B': '#9a6438', 'b': '#7a4a28', 'v': '#5e3820', 'H': '#b47c4a', 'M': '#3e2a1e', 'm': '#2c1d15',
+        'S': '#7c4a2a', 's': '#5a331d', 'G': '#d9b26a', 'W': '#f1e6d2', 'w': '#cfc2aa', 'K': '#2e2420', 'N': '#6a4026'}
+HORSE_TOP = [
+  '..............M.M...',
+  '.............MMBB...',
+  '............MMBBBB..',
+  '............MBBEBBB.',
+  '...........MMBBBBBBB',
+  '...........MBBBb.NBb',
+  '..........MMBBb.....',
+  '..mM.SSSS.MBBBb.....',
+  '.mMHHSGGSHBBBBb.....',
+  'mM.HHSSSSHHBBBb.....',
+  'm..BBBBsBBBBBBb.....',
+  'm..BBBBBBBBBBBb.....',
+  'm..bBBBBBBBBBbb.....',
+  '...vbbbbbbbbbbv.....',
+]
+def horse_legs(step):
+    h = 5 + step
+    legs = [(4, 2, 'b'), (7, 1, 'v'), (12, 2, 'b'), (15, 1, 'v')] if not step else [(3, 2, 'b'), (8, 1, 'v'), (13, 2, 'b'), (11, 1, 'v')]
+    out = []
+    for j in range(h):
+        row = ['.'] * 20
+        for x, w, c in legs:
+            for i in range(x, x + w): row[i] = 'K' if j == h - 1 else ('W' if j == h - 2 and c == 'b' else c)
+        out.append(''.join(row))
+    return out
+
 def horse(step):
     px = {}
-    def r(x, y, w, h, c):
-        for i in range(x, x + w):
-            for j in range(y, y + h): px[(i, j)] = ('h', hexc(c))
-    x, y, body, dk = 3, 9, '#8a5a32', '#5c371e'
-    r(x+3, y+5, 12, 6, body); r(x+4, y+4, 10, 1, body); r(x+5, y+6, 6, 1, '#9c6a3e')
-    for i, lx in enumerate([4, 6, 12, 14]):
-        h = 3 - (1 if step and i % 2 else 0); r(x+lx, y+11, 1, h, dk); r(x+lx, y+10+h, 1, 1, '#2b211a')
-    r(x+13, y+1, 3, 6, body); r(x+15, y+2, 1, 3, body)                 # neck
-    hx = x + 15
-    r(hx, y-2, 3, 4, body); r(hx+3, y-1, 2, 3, body); r(hx+4, y+1, 1, 1, dk); r(hx+3, y+2, 2, 1, dk)
-    r(hx+1, y-1, 1, 1, '#2b211a'); r(hx, y-3, 1, 1, body)               # eye, ear
-    r(x+12, y-2, 1, 7, dk); r(x+13, y-3, 2, 1, dk)                       # mane
-    r(x+2, y+5, 1, 6, dk); r(x+1, y+9, 1, 2, dk)                         # tail
-    r(x+8, y+4, 4, 2, '#6e4626'); r(x+9, y+6, 2, 1, '#c9b68e')   # saddle
-    return px
-img = Image.new('RGBA', (S * 4, S), (0, 0, 0, 0))
+    lg = horse_legs(step)
+    for grid, yy in ((lg, 23 - len(lg)), (HORSE_TOP, 4 - step)):
+        for j, row in enumerate(grid):
+            for i, ch in enumerate(row):
+                if ch != '.': px[(2 + i, yy + j)] = INK if ch == 'E' else hexc(HPAL[ch])
+    im = Image.new('RGBA', (H, H), (0, 0, 0, 0))
+    for x in range(4, 20): im.putpixel((x, H - 1), (0, 0, 0, 40 if x in (4, 19) else 70))
+    ink = {}
+    for (i, j) in sorted(px, key=lambda k: (k[1], k[0])):
+        if px[(i, j)] == INK: continue
+        for q in ((i + 1, j), (i - 1, j), (i, j - 1), (i, j + 1)):
+            if q in px or q in ink or not (0 <= q[0] < H and 0 <= q[1] < H - 1): continue
+            ink[q] = dark(px[(i, j)])
+    for q, c in list(ink.items()) + list(px.items()): im.putpixel(q, c + (255,))
+    return im
+
+img = Image.new('RGBA', (H * 4, H), (0, 0, 0, 0))
 for step in (0, 1):
-    out = finish(horse(step), S, (4, 21), set())
-    put(img, out, {'h': 0, 'ink': 0}, S, step)
-    put(img, {(S - 1 - i, j): v for (i, j), v in out.items()}, {'h': 0, 'ink': 0}, S, 2 + step)
+    f = horse(step)
+    img.paste(f, (step * H, 0))
+    img.paste(f.transpose(Image.FLIP_LEFT_RIGHT), ((2 + step) * H, 0))
 img.save(f'{OUT}/horse.png', optimize=True)
