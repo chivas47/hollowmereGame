@@ -211,7 +211,7 @@ Lit bombs use the bomb frames of placed.png.
 | soil.png | Hollowmere Farm (original placeholder, v86) | same as the game |
 | cave-*.png | Hollowmere Farm (original placeholder, v87, colours from the cave themes) | same as the game |
 | wallpapers.png, floors.png | Hollowmere Farm (original placeholder, v87, from the game's patterns) | same as the game |
-| buildings.png, buildings-winter.png | Hollowmere Farm (original placeholder, v88, from the game's code art) | same as the game |
+| buildings.png, buildings-winter.png | Hollowmere Farm (original, v88, from the game's code art; redrawn v201 to v203) | same as the game |
 | props.png, greenhouse.png | Hollowmere Farm (original placeholder, v89, from the game's code art) | same as the game |
 | tools.png, packet.png | Hollowmere Farm (original placeholder, v90, from the game's code art) | same as the game |
 | alders.png | Hollowmere Farm (original, v91; redrawn v199) | same as the game |
