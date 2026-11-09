@@ -165,40 +165,65 @@ function house(g, p, o) {
 function bin(g, p, o) {
   const X = o.x * T, Y = o.y * T;
   r(g, X + 1, Y + 15, 14, 1, 'rgba(0,0,0,.25)');
-  r(g, X + 1, Y + 5, 14, 10, '#8a5a32'); r(g, X + 1, Y + 8, 14, 1, '#6e4626'); r(g, X + 1, Y + 11, 14, 1, '#6e4626');
-  r(g, X, Y + 2, 16, 4, '#6e4626'); r(g, X + 1, Y + 2, 14, 1, '#94673d'); r(g, X + 7, Y + 4, 2, 1, '#e9b44c');
-  if (p.snow) r(g, X, Y + 1, 16, 2, SNOW);
+  // A slatted crate with iron corners and a hinged lid, a brass latch and a little ledger of the day's goods.
+  r(g, X, Y + 5, 16, 10, '#3f2a18'); r(g, X + 1, Y + 5, 14, 9, '#8a5a32');
+  for (let j = Y + 7; j < Y + 14; j += 3) { r(g, X + 1, j, 14, 1, '#6e4626'); r(g, X + 1, j + 1, 14, 1, '#a06c3e'); }
+  [X + 1, X + 13].forEach((cx) => { r(g, cx, Y + 5, 2, 9, '#6f747a'); r(g, cx, Y + 5, 1, 9, '#9aa0a6'); });
+  r(g, X, Y + 1, 16, 5, '#3f2a18'); r(g, X + 1, Y + 2, 14, 3, '#6e4626'); r(g, X + 1, Y + 2, 14, 1, '#a5753f');
+  r(g, X + 7, Y + 4, 2, 2, '#e9b44c'); r(g, X + 7, Y + 4, 1, 1, '#fff0a0');
+  r(g, X + 10, Y + 8, 3, 4, '#f4ead2'); r(g, X + 10, Y + 9, 3, 1, '#c9b48a'); r(g, X + 10, Y + 11, 2, 1, '#c9b48a');
+  if (p.snow) { r(g, X, Y, 16, 2, SNOW); r(g, X + 2, Y + 2, 1, 1, SNOW); r(g, X + 12, Y + 2, 1, 1, SNOW); }
 }
 
 function well(g, p, o) {
   const X = o.x * T, Y = o.y * T;
-  r(g, X + 2, Y + 2, 2, 7, '#6b4a2b'); r(g, X + 12, Y + 2, 2, 7, '#6b4a2b');
-  r(g, X, Y, 16, 3, '#a5432f'); r(g, X, Y + 2, 16, 1, '#7d3123'); if (p.snow) r(g, X, Y, 16, 1, SNOW);
-  r(g, X + 8, Y + 3, 1, 4, '#d9c27a'); r(g, X + 7, Y + 6, 3, 2, '#8a5a32');
-  r(g, X + 1, Y + 8, 14, 8, '#8d8a85'); r(g, X + 3, Y + 9, 10, 3, '#3f7fb0'); r(g, X + 4, Y + 9, 4, 1, '#69aedb');
-  [[1, 13], [5, 12], [10, 13], [13, 11], [7, 15]].forEach(([a, b]) => r(g, X + a, Y + b, 3, 1, '#6f6c68'));
+  r(g, X + 1, Y + 15, 14, 1, 'rgba(0,0,0,.25)');
+  // Posts and a little shingled roof, a crank and a bucket on its rope, over a ring of fitted stones.
+  [X + 2, X + 12].forEach((px) => { r(g, px, Y + 2, 2, 7, '#6b4a2b'); r(g, px, Y + 2, 1, 7, '#8a6440'); });
+  r(g, X - 1, Y, 18, 3, '#5e2419'); r(g, X, Y, 16, 2, '#a5432f'); r(g, X + 1, Y, 14, 1, '#c55a44');
+  for (let x = X + 2; x < X + 15; x += 3) r(g, x, Y + 1, 1, 1, '#7d3123');
+  if (p.snow) r(g, X - 1, Y - 1, 18, 2, SNOW);
+  r(g, X + 3, Y + 3, 10, 1, '#5a3a24'); r(g, X + 13, Y + 3, 2, 1, '#8a8f96'); r(g, X + 14, Y + 4, 1, 2, '#8a8f96');
+  r(g, X + 8, Y + 4, 1, 3, '#d9c27a'); r(g, X + 6, Y + 6, 5, 3, '#3f2a18'); r(g, X + 7, Y + 6, 3, 2, '#8a5a32'); r(g, X + 7, Y + 7, 3, 1, '#6f747a');
+  r(g, X + 1, Y + 9, 14, 7, '#6f6c66'); r(g, X + 2, Y + 9, 12, 2, '#2f4a60'); r(g, X + 3, Y + 9, 4, 1, p.snow ? '#e6f0f6' : '#69aedb');
+  for (let j = 0; j < 2; j++) for (let x = X + 1 + (j ? 3 : 0); x < X + 15; x += 5) { const y = Y + 11 + j * 2; r(g, x, y, 4, 2, '#a39f97'); r(g, x, y, 4, 1, '#c2beb4'); }
+  r(g, X + 1, Y + 15, 14, 1, '#57534e');
 }
 
 function shop(g, p, o) {
   const X = o.x * T, Y = o.y * T;
-  r(g, X + 2, Y + 4, 44, 32, '#b08d55'); for (let i = 0; i < 5; i++) r(g, X + 2 + i * 9, Y + 4, 1, 32, '#987745');
-  r(g, X + 12, Y, 24, 8, '#6e4626'); r(g, X + 23, Y + 2, 2, 4, '#86b86a'); r(g, X + 21, Y + 2, 2, 2, '#86b86a'); r(g, X + 25, Y + 3, 2, 2, '#86b86a');
-  for (let i = 0; i < 6; i++) r(g, X + i * 8, Y + 12, 8, 9, i % 2 ? '#f4ead2' : '#c0443a');
-  for (let i = 0; i < 6; i++) r(g, X + i * 8 + 2, Y + 21, 4, 2, i % 2 ? '#f4ead2' : '#c0443a');
-  if (p.snow) r(g, X, Y + 11, 48, 2, SNOW);
-  r(g, X + 2, Y + 34, 44, 14, '#8a5a32'); r(g, X, Y + 32, 48, 3, '#6e4626'); r(g, X + 2, Y + 40, 44, 1, '#6e4626');
+  // The seed stall: plank back wall, a carved sign with a sprout, a striped scalloped awning, crates of produce on a counter.
+  r(g, X + 2, Y + 4, 44, 32, '#b08d55');
+  for (let i = 0; i < 5; i++) { r(g, X + 2 + i * 9, Y + 4, 1, 32, '#987745'); r(g, X + 3 + i * 9, Y + 4, 1, 32, '#c4a46c'); }
+  [X + 1, X + 45].forEach((px) => { r(g, px, Y + 4, 2, 32, '#6e4626'); r(g, px, Y + 4, 1, 32, '#8a5a32'); });
+  r(g, X + 11, Y - 1, 26, 10, '#3f2a18'); r(g, X + 12, Y, 24, 8, '#6e4626'); r(g, X + 12, Y, 24, 1, '#8a5a32'); r(g, X + 12, Y + 7, 24, 1, '#5a3a20');
+  r(g, X + 23, Y + 2, 2, 4, '#86b86a'); r(g, X + 21, Y + 2, 2, 2, '#a6d07a'); r(g, X + 25, Y + 3, 2, 2, '#86b86a'); r(g, X + 23, Y + 6, 2, 1, '#8a5a32');
+  for (let i = 0; i < 6; i++) {
+    const c = i % 2 ? '#f4ead2' : '#c0443a', d = i % 2 ? '#d6ccb4' : '#962f28';
+    r(g, X + i * 8, Y + 11, 8, 10, c); r(g, X + i * 8, Y + 11, 8, 1, i % 2 ? '#fffaf0' : '#d8605a'); r(g, X + i * 8, Y + 18, 8, 3, d);
+    r(g, X + i * 8 + 1, Y + 21, 6, 1, c); r(g, X + i * 8 + 2, Y + 22, 4, 1, c); r(g, X + i * 8 + 3, Y + 23, 2, 1, d);
+  }
+  r(g, X, Y + 10, 48, 1, '#5a3a20');
+  if (p.snow) { r(g, X, Y + 9, 48, 2, SNOW); r(g, X + 11, Y - 2, 26, 2, SNOW); }
+  r(g, X + 2, Y + 34, 44, 14, '#8a5a32'); r(g, X, Y + 32, 48, 3, '#6e4626'); r(g, X, Y + 32, 48, 1, '#a5753f'); r(g, X + 2, Y + 40, 44, 1, '#6e4626');
+  for (let i = X + 5; i < X + 44; i += 8) r(g, i, Y + 35, 1, 13, '#6e4626');
+  r(g, X + 2, Y + 47, 44, 1, '#3f2a18');
   [['#efe6f2', 6], ['#d8484a', 16], ['#7fbf5a', 26], ['#e8862a', 36]].forEach(([c, off]) => {
-    r(g, X + off, Y + 26, 7, 6, '#e2cda0'); r(g, X + off + 1, Y + 27, 5, 3, c); r(g, X + off, Y + 25, 7, 1, '#c9b083');
+    r(g, X + off - 1, Y + 25, 9, 7, '#6e4626'); r(g, X + off, Y + 26, 7, 5, '#e2cda0'); r(g, X + off, Y + 28, 7, 1, '#c9b083');
+    r(g, X + off + 1, Y + 26, 5, 2, c); r(g, X + off + 1, Y + 26, 1, 1, '#ffffff'); r(g, X + off + 3, Y + 25, 1, 1, '#5da34a');
   });
 }
 
 function workbench(g, p, o) {
   const X = o.x * T, Y = o.y * T;
   r(g, X + 1, Y + 15, 14, 1, 'rgba(0,0,0,.25)');
-  r(g, X, Y + 6, 16, 3, '#94673d'); r(g, X, Y + 8, 16, 1, '#6e4626');
-  r(g, X + 1, Y + 9, 2, 6, '#6e4626'); r(g, X + 13, Y + 9, 2, 6, '#6e4626'); r(g, X + 3, Y + 12, 10, 1, '#6e4626');
-  r(g, X + 2, Y + 4, 6, 2, '#a9b4bd'); r(g, X + 8, Y + 4, 2, 2, '#8a5a32');
-  r(g, X + 11, Y + 2, 1, 4, '#8a5a32'); r(g, X + 10, Y + 2, 3, 1, '#7f8a93');
+  r(g, X - 1, Y + 5, 18, 5, '#3f2a18'); r(g, X, Y + 6, 16, 3, '#a5753f'); r(g, X, Y + 6, 16, 1, '#c99a5e'); r(g, X, Y + 8, 16, 1, '#6e4626');
+  [X + 1, X + 13].forEach((lx) => { r(g, lx, Y + 9, 2, 6, '#6e4626'); r(g, lx, Y + 9, 1, 6, '#8a5a32'); });
+  r(g, X + 3, Y + 12, 10, 1, '#6e4626'); r(g, X + 4, Y + 11, 3, 1, '#c9a06a'); r(g, X + 8, Y + 11, 3, 1, '#a9b4bd');   // a shelf with offcuts and a file
+  r(g, X + 1, Y + 4, 7, 2, '#a9b4bd'); r(g, X + 1, Y + 4, 7, 1, '#d6dde3'); r(g, X + 8, Y + 4, 2, 2, '#8a5a32');      // a saw
+  for (let i = 0; i < 3; i++) r(g, X + 2 + i * 2, Y + 6, 1, 1, '#7f8a93');
+  r(g, X + 11, Y + 1, 1, 5, '#8a5a32'); r(g, X + 10, Y + 1, 3, 2, '#7f8a93'); r(g, X + 10, Y + 1, 3, 1, '#a9b4bd');   // a hammer
+  r(g, X + 13, Y + 4, 2, 2, '#e8d9b5');
   if (p.snow) r(g, X, Y + 5, 16, 1, SNOW);
 }
 
@@ -288,25 +313,42 @@ function cottage(g, p, o) {
 function board(g, p, o) {
   const X = o.x * T, Y = o.y * T;
   r(g, X + 4, Y + 15, 24, 1, 'rgba(0,0,0,.25)');
-  r(g, X + 5, Y + 8, 2, 8, '#6b4a2b'); r(g, X + 25, Y + 8, 2, 8, '#6b4a2b');
-  r(g, X + 2, Y, 28, 11, '#8a5a32'); r(g, X + 3, Y + 1, 26, 9, '#b08d55'); r(g, X + 2, Y, 28, 1, '#a5753f');
-  [[5, 2, '#f4ead2'], [12, 3, '#e8d9b5'], [19, 2, '#f4ead2'], [24, 4, '#e8d9b5']].forEach(([a, b, c]) => { r(g, X + a, Y + b, 5, 5, c); r(g, X + a + 2, Y + b, 1, 1, '#d8484a'); });
-  if (p.snow) r(g, X + 2, Y, 28, 1, SNOW);
+  [X + 5, X + 25].forEach((px) => { r(g, px, Y + 8, 2, 8, '#6b4a2b'); r(g, px, Y + 8, 1, 8, '#8a6440'); });
+  r(g, X + 1, Y - 1, 30, 13, '#3f2a18'); r(g, X + 2, Y, 28, 11, '#8a5a32'); r(g, X + 3, Y + 1, 26, 9, '#c4a26a');
+  for (let j = Y + 3; j < Y + 10; j += 3) r(g, X + 3, j, 26, 1, '#b08d55');
+  r(g, X + 2, Y, 28, 1, '#a5753f'); r(g, X + 1, Y - 2, 30, 2, '#6e4626'); r(g, X + 1, Y - 2, 30, 1, '#94673d');   // a little roof
+  [[5, 2, '#f4ead2'], [12, 3, '#e8d9b5'], [19, 2, '#f4ead2'], [24, 4, '#e8d9b5']].forEach(([a, b, c]) => {
+    r(g, X + a, Y + b + 1, 5, 5, 'rgba(0,0,0,.18)'); r(g, X + a, Y + b, 5, 5, c);
+    r(g, X + a + 1, Y + b + 2, 3, 1, '#a89a7a'); r(g, X + a + 1, Y + b + 3, 2, 1, '#a89a7a'); r(g, X + a + 2, Y + b, 1, 1, '#d8484a');
+  });
+  if (p.snow) r(g, X + 1, Y - 3, 30, 2, SNOW);
 }
 
 function fountain(g, p, o) {
-  const X = o.x * T, Y = o.y * T;
-  r(g, X + 1, Y + 6, 30, 24, '#9a958e'); r(g, X + 3, Y + 4, 26, 2, '#b4b0aa'); r(g, X + 1, Y + 29, 30, 2, '#6f6c68');
-  r(g, X + 4, Y + 8, 24, 18, p.snow ? '#cfe3ee' : p.water); r(g, X + 7, Y + 12, 6, 1, p.snow ? '#ffffff' : p.ripple); r(g, X + 18, Y + 20, 6, 1, p.snow ? '#ffffff' : p.ripple);
-  r(g, X + 14, Y + 2, 4, 16, '#b4b0aa'); r(g, X + 12, Y, 8, 3, '#c9c5be');
+  const X = o.x * T, Y = o.y * T, water = p.snow ? '#cfe3ee' : p.water, hi = p.snow ? '#ffffff' : p.ripple;
+  r(g, X + 1, Y + 30, 30, 1, 'rgba(0,0,0,.25)');
+  // A basin of dressed stone with a lit rim, water with ripples, a two-tier column and a spout.
+  r(g, X, Y + 5, 32, 26, '#5f5c57'); r(g, X + 1, Y + 6, 30, 24, '#9a958e');
+  for (let x = X + 1; x < X + 31; x += 6) r(g, x, Y + 24, 1, 6, '#7f7a74');
+  r(g, X + 1, Y + 24, 30, 1, '#7f7a74');
+  r(g, X + 1, Y + 4, 30, 3, '#b4b0aa'); r(g, X + 2, Y + 4, 28, 1, '#d4d0c8'); r(g, X + 1, Y + 29, 30, 2, '#6f6c68');
+  r(g, X + 4, Y + 8, 24, 15, water); r(g, X + 4, Y + 8, 24, 2, 'rgba(0,0,0,.18)');
+  r(g, X + 7, Y + 12, 6, 1, hi); r(g, X + 18, Y + 19, 6, 1, hi); r(g, X + 6, Y + 17, 3, 1, hi); r(g, X + 22, Y + 13, 4, 1, hi);
+  r(g, X + 13, Y + 3, 6, 16, '#6f6c68'); r(g, X + 14, Y + 2, 4, 16, '#b4b0aa'); r(g, X + 14, Y + 2, 1, 16, '#d4d0c8');
+  r(g, X + 11, Y + 9, 10, 2, '#9a958e'); r(g, X + 11, Y + 9, 10, 1, '#c9c5be');
+  r(g, X + 12, Y, 8, 3, '#c9c5be'); r(g, X + 12, Y, 8, 1, '#e4e0d8');
+  if (!p.snow) { r(g, X + 15, Y - 2, 2, 2, '#bfe6f6'); r(g, X + 12, Y + 3, 1, 5, 'rgba(191,230,246,.8)'); r(g, X + 19, Y + 3, 1, 5, 'rgba(191,230,246,.8)'); r(g, X + 10, Y + 11, 1, 6, 'rgba(191,230,246,.7)'); r(g, X + 21, Y + 11, 1, 6, 'rgba(191,230,246,.7)'); }
+  else { r(g, X + 12, Y - 1, 8, 1, SNOW); r(g, X + 1, Y + 3, 30, 1, SNOW); r(g, X + 11, Y + 8, 10, 1, SNOW); }
 }
 
 function table(g, p, o) {
   const X = o.x * T, Y = o.y * T;
   r(g, X + 1, Y + 15, 30, 1, 'rgba(0,0,0,.25)');
-  r(g, X + 3, Y + 9, 2, 6, '#6e4626'); r(g, X + 27, Y + 9, 2, 6, '#6e4626');
-  r(g, X, Y + 5, 32, 5, '#94673d'); r(g, X, Y + 5, 32, 1, '#b08250'); r(g, X, Y + 9, 32, 1, '#6e4626');
-  if (p.snow) r(g, X, Y + 4, 32, 2, SNOW);
+  [X + 3, X + 27].forEach((lx) => { r(g, lx, Y + 9, 2, 6, '#6e4626'); r(g, lx, Y + 9, 1, 6, '#8a5a32'); });
+  r(g, X + 5, Y + 12, 22, 1, '#6e4626');
+  r(g, X - 1, Y + 4, 34, 7, '#3f2a18'); r(g, X, Y + 5, 32, 5, '#94673d'); r(g, X, Y + 5, 32, 1, '#b08250'); r(g, X, Y + 9, 32, 1, '#6e4626');
+  for (let i = X + 8; i < X + 32; i += 8) r(g, i, Y + 5, 1, 4, '#7a5432');
+  if (p.snow) r(g, X - 1, Y + 3, 34, 2, SNOW);
 }
 
 function greenhouse(g, p, o) {
@@ -332,7 +374,11 @@ function greenhouse(g, p, o) {
 
 function trough(g, p, o) {
   const X = o.x * T, Y = o.y * T;
-  r(g, X + 1, Y + 6, 14, 9, '#6e4626'); r(g, X + 2, Y + 7, 12, 4, '#3f7fb0'); r(g, X + 3, Y + 8, 5, 1, '#69aedb'); r(g, X + 1, Y + 14, 14, 1, '#4e331f');
+  r(g, X + 1, Y + 15, 14, 1, 'rgba(0,0,0,.25)');
+  r(g, X, Y + 5, 16, 10, '#3f2a18'); r(g, X + 1, Y + 6, 14, 8, '#6e4626'); r(g, X + 1, Y + 6, 14, 1, '#94673d');
+  r(g, X + 2, Y + 7, 12, 4, p.snow ? '#cfe3ee' : '#3f7fb0'); r(g, X + 3, Y + 8, 5, 1, p.snow ? '#ffffff' : '#69aedb');
+  r(g, X + 1, Y + 11, 14, 1, '#5a3a20'); [X + 4, X + 11].forEach((bx) => r(g, bx, Y + 6, 1, 8, '#6f747a'));
+  r(g, X + 1, Y + 14, 14, 1, '#4e331f');
 }
 
 function stable(g, p, o) {
@@ -456,12 +502,19 @@ function helperhut(g, p, o) {
 }
 // v169: the fortune statue, a figure on a plinth with open hands, gilded.
 function statue(g, p, o) {
-  const X = o.x * T, Y = o.y * T, gold = '#e2b23a', dark = '#a5752a';
+  const X = o.x * T, Y = o.y * T, gold = '#e2b23a', dark = '#a5752a', lite = '#f6d870';
   r(g, X + 2, Y + 31, 12, 1, 'rgba(0,0,0,.25)');
-  r(g, X + 2, Y + 24, 12, 7, '#8d8a84'); r(g, X + 2, Y + 24, 12, 1, '#b5b1a8');
-  r(g, X + 6, Y + 3, 4, 4, gold); r(g, X + 5, Y + 8, 6, 10, gold); r(g, X + 5, Y + 8, 1, 10, dark);
-  r(g, X + 2, Y + 12, 3, 2, gold); r(g, X + 11, Y + 12, 3, 2, gold); r(g, X + 6, Y + 18, 4, 6, dark);
-  r(g, X + 7, Y + 4, 1, 1, '#fff2c0');
+  // A stepped plinth, then a robed figure with open hands, lit from the left.
+  r(g, X + 1, Y + 27, 14, 4, '#6f6c66'); r(g, X + 1, Y + 27, 14, 1, '#a39f97');
+  r(g, X + 2, Y + 23, 12, 4, '#8d8a84'); r(g, X + 2, Y + 23, 12, 1, '#c2beb4'); r(g, X + 12, Y + 23, 2, 4, '#6f6c66');
+  r(g, X + 6, Y + 25, 4, 1, '#c9a43a');
+  r(g, X + 5, Y + 2, 6, 6, '#7a5420'); r(g, X + 6, Y + 3, 4, 4, gold); r(g, X + 6, Y + 3, 1, 3, lite); r(g, X + 9, Y + 4, 1, 3, dark);
+  r(g, X + 4, Y + 7, 8, 17, '#7a5420'); r(g, X + 5, Y + 8, 6, 15, gold); r(g, X + 5, Y + 8, 1, 15, lite); r(g, X + 10, Y + 8, 1, 15, dark);
+  r(g, X + 7, Y + 12, 1, 11, dark); r(g, X + 5, Y + 18, 6, 1, dark);
+  r(g, X + 1, Y + 11, 4, 3, '#7a5420'); r(g, X + 2, Y + 12, 3, 1, gold); r(g, X + 11, Y + 11, 4, 3, '#7a5420'); r(g, X + 11, Y + 12, 3, 1, gold);
+  r(g, X + 2, Y + 11, 1, 1, lite); r(g, X + 13, Y + 11, 1, 1, lite);
+  r(g, X + 7, Y + 4, 1, 1, '#fff2c0'); r(g, X + 6, Y + 9, 1, 2, '#fff2c0');
+  if (p.snow) { r(g, X + 5, Y + 1, 6, 1, SNOW); r(g, X + 1, Y + 10, 4, 1, SNOW); r(g, X + 11, Y + 10, 4, 1, SNOW); r(g, X + 1, Y + 26, 14, 1, SNOW); }
 }
 function waystone(g, p, o) {
   const X = o.x * T, Y = o.y * T, hollow = o.site === 'wayhollow', rune = hollow ? '#b98ae0' : '#69aedb', glow = hollow ? '#e6d4fb' : '#cfeaf8';
@@ -553,8 +606,13 @@ function storefront(g, p, o) {
 function boat(g, p, o) {
   const X = o.x * T, Y = o.y * T;
   r(g, X + 1, Y + 12, 30, 2, 'rgba(0,0,0,.25)');
-  for (let j = 0; j < 5; j++) r(g, X + 2 + j, Y + 6 + j, 28 - 2 * j, 1, j === 0 ? '#c9a06a' : '#8a5a32');
-  r(g, X + 15, Y - 8, 2, 14, '#6e4626'); r(g, X + 17, Y - 7, 9, 9, '#f4ead2'); r(g, X + 17, Y - 7, 9, 1, '#e8d9b5');
+  for (let j = 0; j < 5; j++) r(g, X + 2 + j, Y + 6 + j, 28 - 2 * j, 1, j === 0 ? '#c9a06a' : j === 4 ? '#5a3a20' : j % 2 ? '#8a5a32' : '#7a4e2c');
+  r(g, X + 1, Y + 5, 30, 1, '#3f2a18'); r(g, X + 4, Y + 7, 2, 1, '#e0bc84');
+  r(g, X + 15, Y - 9, 2, 15, '#3f2a18'); r(g, X + 15, Y - 8, 1, 14, '#8a5a32');
+  // A sail, filled with the breeze: shaded toward the mast, a seam across it, a little pennant at the top.
+  for (let j = 0; j < 10; j++) { const w = 9 - Math.floor(j / 3); r(g, X + 17, Y - 8 + j, w, 1, j % 4 === 3 ? '#e8d9b5' : '#f4ead2'); r(g, X + 17, Y - 8 + j, 1, 1, '#d6ccb4'); }
+  r(g, X + 17, Y - 8, 8, 1, '#ffffff'); r(g, X + 17, Y + 2, 7, 1, '#c9b48a');
+  r(g, X + 17, Y - 10, 4, 1, '#c0443a'); r(g, X + 17, Y - 11, 2, 1, '#c0443a');
 }
 // v88: the name of a building's picture on the building sheets: its art and whatever changes how it looks.
 export const buildingKey = (o) => [o.art, o.kind, o.roof, o.site, o.w && o.h ? `${o.w}x${o.h}` : null].filter(Boolean).join('.');

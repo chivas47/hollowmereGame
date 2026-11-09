@@ -229,8 +229,8 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | 76t | Polish: wild alders redrawn | polish | done (chivas47/hollowmereGame#207) | Nuno: next (November 2026), after 76s: the alder sheet (stages, bare stages, the tap) redrawn like the fruit trees. Autumn's season shift still applies. Built by the new tools/sprites/alders.py. Drawing only. |
 | 76u | Polish: giant crops redrawn | polish | done (chivas47/hollowmereGame#208) | Nuno: next (November 2026), after 76t: the giant crop sheet (pod, round, leafy) redrawn in the same style. Same layout and tinting. Built by the new tools/sprites/giants.py. Drawing only. |
 | 76v | Polish: homes and shops redrawn | polish | done (chivas47/hollowmereGame#209) | Nuno: next (November 2026), after 76u: buildings, part one of three. The farmhouse, cottages, storefronts and lodge drawn with shared parts (roofs, walls, windows, doors, chimneys) in render/tiles.js, then the building sheets regenerated. Drawing only. |
-| 76w | Polish: farm buildings redrawn | polish | in progress (chivas47/hollowmereGame#210) | Nuno: next (November 2026). Buildings, part two: coop, barn, shed, stable, greenhouse, mill, slime pen, helper hut, pond, waystones, scaffolds, boathouse, cave, clocktower, using the shared parts from 76v plus plank walls and brace doors. Drawing only. |
-| 76x | Polish: town pieces redrawn | polish | queued | Buildings, part three: the seed stall, well, bin, workbench, board, fountain, table, trough, boat and statue. Drawing only. |
+| 76w | Polish: farm buildings redrawn | polish | done (chivas47/hollowmereGame#210) | Nuno: next (November 2026). Buildings, part two: coop, barn, shed, stable, greenhouse, mill, slime pen, helper hut, pond, waystones, scaffolds, boathouse, cave, clocktower, using the shared parts from 76v plus plank walls and brace doors. Drawing only. |
+| 76x | Polish: town pieces redrawn | polish | in progress | Nuno: next (November 2026). Buildings, part three: the seed stall, well, bin, workbench, board, fountain, table, trough, boat and statue. Drawing only. |
 
 ## Done
 

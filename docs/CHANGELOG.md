@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v203: Town pieces redrawn
+- The seed stall has a carved sign with a sprout, a scalloped striped awning, and lit crates of produce on a slatted counter.
+- The shipping bin is a slatted crate with iron corners, a brass latch and a tally sheet. The well has a little shingled roof, a crank, a bucket on its rope and a ring of fitted stones. The workbench carries a saw, a hammer and a shelf of offcuts.
+- The notice board has a small roof over its pinned notes, each with lines of writing and a shadow. The fountain has a dressed stone basin, a two-tier column and falling water (snow on its ledges in winter). The long table, the trough and the boat have plank detail; the boat's sail is shaded, with a seam and a pennant. The fortune statue stands on a stepped plinth, a robed figure lit from the left.
+- This finishes the buildings (v201 to v203). Same footprints. Drawing only: no saves, prices or keys changed.
+
 ## v202: Farm buildings redrawn
 - The coop, barn, shed, stable, greenhouse, mill, helper hut, fish pond, slime pen, waystones, building scaffolds, the boathouse, the clocktower and the mine mouth are redrawn with the shared parts from v201 (shingled roofs, trimmed windows, panelled doors) plus two new ones: walls of upright planks with lit and shaded edges and a stone footing, and barn doors with a white X brace on each leaf.
 - The barn's hayloft is half open on hay under a pulley; the coop has a vent, a ramp and a stray feather; the stable's half door shows a hay rack in the dark stall under a horseshoe; the greenhouse shows its plants through panes with reflections; the mill is a tapering stone tower with ribbed sails; the helper hut has a layered thatch over wattle walls; the pond has a rim of fitted stones and a lily pad; the slime pen has shaded posts and rails; the waystones have cracks, moss and a glint in their rune; the scaffolds have cross braces; the mine mouth is stacked boulders round its timbers, with a lantern and rails.
