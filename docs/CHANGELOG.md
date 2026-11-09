@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v200: Giant crops redrawn
+- The giant pumpkin and giant melon are a full ribbed gourd: each segment bulges and catches the light from the top left, the ribs run in the crop's line colour, there is a dent where a thick stalk curls up between two leaves, and a shine sits on the upper left.
+- The giant fava bean is a leafy vine hung with four fat pods, each swelling over its beans with a seam down one side.
+- The leafy shape (not used by any giant crop yet) is a cabbage-like head with veins inside frilled outer leaves.
+- Each sits on a soft oval shadow. Same sheet layout and tinting, so every giant keeps its crop's colours. giants.png is now built by tools/sprites/giants.py instead of from the code art. Drawing only: no saves, prices or keys changed.
+
 ## v199: Wild alders redrawn
 - The wild alders, the most common trees on and around the farm, are redrawn to match the new fruit trees: a tall crown of leaf clumps lit from the top left with three tones of green, over a barked trunk that widens at the roots. Saplings grow a small round crown on a thin stem and fill out stage by stage; the fallen cone is a little scaled seed.
 - In autumn the crowns turn russet with the same light and shade, since every leaf pixel is green for the season shift. In winter the bare alders have branching twigs tipped with snow and a drift at the foot of a grown tree.

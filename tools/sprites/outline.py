@@ -1,5 +1,4 @@
 # Turns code art frames (from dump.mjs) into sheets: shades bottom edges and outlines each silhouette.
-# giants.png: 48x48 frames (pod, round, leafy), bands fruit, line, ink (with shine).
 # placed.png and furniture.png: see below.
 import sys, json
 from PIL import Image
@@ -27,22 +26,7 @@ def tidy(px, w, h, layer=lambda k, c: 'ink'):
 # v198: trees.png and debris.png are drawn by tools/sprites/trees.py and debris.py, not from the code art.
 
 
-# The probe's line is red: those pixels form the line band and are turned white (tinted later) before shading.
-GL = {'fruit': 0, 'line': 1, 'ink': 2}
-img = Image.new('RGBA', (48 * 3, 48 * 3), (0, 0, 0, 0))
-for n, (shape, data, dark_probe) in enumerate(art['giants']):
-    px = grid(data, 48, 48)
-    line = {k for k, c in px.items() if c[3] == 255 and c[0] == 255 and c[1] == c[2] < 200}   # red, or red under a shine
-    px = {k: (255, 255, 255, 255) if k in line else c for k, c in px.items()}
-    def giant_layer(k, c):
-        if k in line: return 'line'
-        return 'fruit' if c[3] == 255 and c[0] == c[1] == c[2] and c[0] >= 200 else 'ink'
-    for (i, j), (L, c) in tidy(px, 48, 48, giant_layer).items(): img.putpixel((n * 48 + i, GL[L] * 48 + j), c)
-    # Shine: grey on the black probe where the fruit is, so white with that much alpha in the ink band (drawn last).
-    for (i, j), c in grid(dark_probe, 48, 48).items():
-        if (i, j) in px and giant_layer((i, j), px[(i, j)]) in ('fruit', 'line') and c[0] == c[1] == c[2] and 0 < c[0] < 200:
-            img.putpixel((n * 48 + i, GL['ink'] * 48 + j), (255, 255, 255, c[0]))
-img.save(f'{OUT}/giants.png', optimize=True)
+# v200: giants.png is drawn by tools/sprites/giants.py, not from the code art.
 
 # placed.png: 16x32 frames (the tile at the bottom), one row, in the order printed. Colours drawn in.
 img = Image.new('RGBA', (16 * len(art['placed']), 32), (0, 0, 0, 0))
