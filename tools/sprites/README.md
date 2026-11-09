@@ -7,7 +7,7 @@ Scripts that build the placeholder sheets in `assets/sprites/` (needs Python 3 w
 | person.png | `python3 tools/sprites/person.py assets/sprites/person.png` (v192: the frames are letter grids in the script; outlines worked out) |
 | animals.png | `python3 tools/sprites/animals.py assets/sprites/animals.png [preview.png]` (v196: letter grids, outlines worked out) |
 | pets.png, horse.png | `python3 tools/sprites/pets.py assets/sprites` (v196: letter grids, outlines worked out) |
-| monsters.png | `python3 tools/sprites/monsters.py assets/sprites/monsters.png` |
+| monsters.png | `python3 tools/sprites/monsters.py assets/sprites/monsters.png [preview.png]` (v208: letter grids, outlines worked out) |
 | crops.png | `python3 tools/sprites/crops.py assets/sprites/crops.png` (v197: letter grids, outlines worked out) |
 | furniture.png | `python3 tools/sprites/furniture.py assets/sprites/furniture.png [preview.png]` (v207: letter grids in the main, second and ink bands; a new shape needs its art here and its name in `FURN_SHEET.order`) |
 | placed.png | `python3 tools/sprites/placed.py assets/sprites/placed.png [preview.png]` (v206: letter grids from one palette; a new placed kind needs its art here and its name in `PLACED_SHEET.order`) |

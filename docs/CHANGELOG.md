@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v208: Monsters redrawn
+- All nine monsters are redrawn with three tones of shading, a darker outline and more detail, still in their own colours (and white when hit): a slime with a shine and two eyes that stretches as it hops; a hollow mite with a split shell, a glint and scuttling legs; a cave bat with ribbed wings, pink eyes and little fangs; a bone walker with a skull, ribs, pelvis and striding legs; a bandaged sand wraith with glowing eyes; a scorch rex with a flame on its back; a magma sprite with a glowing core and red wings; an ember golem of cracked stone with burning eyes and a molten chest; and a hollow serpent of shaded segments with a yellow eye and a flicking tongue.
+- Same sheet layout; shadows, bobbing and swaying are still drawn in code. Drawing only: no saves, prices or keys changed.
+
 ## v207: Furniture redrawn
 - All 28 furniture shapes in the catalogue are redrawn, still in each piece's own two colours: seats with a framed back, cushions and turned legs; a sofa in two cushions; tables and desks with a lit top edge, a desk with paper and drawers; lamps with a glowing shade; potted plants, a cactus with a flower, a flowering pot and a little fig tree; rugs with a woven border and a pattern inside; a bookcase of coloured spines on three shelves; a dresser with brass pulls; a tall clock with a face, hands and a pendulum; a stone hearth with a log fire; a globe on a stand; a hooped barrel; an easel with a landscape; a chest with a lock; a sewing machine on its table; three dye pots; a mannequin; and a television with a glint on its screen.
 - Each has a darker outline and a shadow (rugs lie flat, without one). Same layout and tinting. The side and back views of seats are still drawn in code as before. furniture.png is now built by tools/sprites/furniture.py instead of from the code art. Drawing only: no saves, prices or keys changed.
