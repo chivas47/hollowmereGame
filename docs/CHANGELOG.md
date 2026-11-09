@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v204: Border trees and ground redrawn
+- The trees that ring every map are redrawn: a crown of leaf clumps lit from the top left in the season's three greens (or autumn's oranges, or the dry scrub's olive) inside a darker outline, over a barked trunk with a root flare and a shadow on the ground. There are three crown shapes, picked by position, so a row of trees is not a row of copies. In winter snow sits on the lit tops of the clumps. The crowns still sway in the wind.
+- Boulders are rounder, lit from the top left, with a crack, chips and a shadow, and snow on top in winter.
+- The ground tiles have their own textures: grass in tufts of two or three blades with lit tips and soft lighter and darker patches; paths with pebbles and ruts; sand with curved ripples; quarry stone with a wandering crack and chips; water with a slow swell and short waves. Paths, sand and stone have a two-tone edge, and water a lit rim inside its bank. All four seasons.
+- Same tile layout (terrain-*.png from tools/sprites/terrain.py; soil and cave sheets unchanged). Drawing only: no saves, prices or keys changed.
+
 ## v203: Town pieces redrawn
 - The seed stall has a carved sign with a sprout, a scalloped striped awning, and lit crates of produce on a slatted counter.
 - The shipping bin is a slatted crate with iron corners, a brass latch and a tally sheet. The well has a little shingled roof, a crank, a bucket on its rope and a ring of fitted stones. The workbench carries a saw, a hammer and a shelf of offcuts.

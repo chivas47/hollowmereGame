@@ -27,6 +27,7 @@ def colours(p):
     }
 
 def texture(base, marks, seed):
+    """The cave sheets' texture: scattered marks on a flat base."""
     R = random.Random(seed)
     t = [[hexc(base)] * S for _ in range(S)]
     for col, n, w, h in marks:
@@ -34,6 +35,68 @@ def texture(base, marks, seed):
             x, y = R.randrange(S - w + 1), R.randrange(S - h + 1)
             for i in range(w):
                 for j in range(h): t[y + j][x + i] = hexc(col)
+    return t
+
+def mix(c, k):
+    """k under 1 darkens, over 1 lightens toward white."""
+    return tuple(max(0, min(255, round(v + (255 - v) * (k - 1) if k >= 1 else v * k))) for v in c[:3]) + (255,)
+
+# v204: each ground has its own texture. Everything stays inside the tile, so tiles join at any offset.
+def ground(name, base, p, seed):
+    R = random.Random(seed)
+    b = hexc(base)
+    t = [[b] * S for _ in range(S)]
+    def put(x, y, c):
+        if 0 <= x < S and 0 <= y < S: t[y][x] = c
+    # A soft patch of lighter and of darker ground in every tile, so wide areas are not flat.
+    for k in (1.06, 0.93):
+        cx, cy, rad = R.randrange(2, 14), R.randrange(2, 14), R.uniform(2.5, 4.5)
+        for y in range(S):
+            for x in range(S):
+                d = (x - cx) ** 2 + (y - cy) ** 2
+                if d <= rad * rad and ((x * 73856093) ^ (y * 19349663) ^ (seed * 83492791)) % 7 < (6 if d < rad * rad * 0.5 else 3): t[y][x] = mix(b, k)
+    if name == 'grass':
+        gl, gd = hexc(p['gl']), hexc(p['gd'])
+        for _ in range(5):   # tufts: two or three blades, lit tips over a dark root
+            x, y = R.randrange(1, 14), R.randrange(2, 15)
+            put(x, y, gd); put(x, y - 1, gl); put(x + 1, y, gd); put(x + 2, y - 1, gl); put(x + 2, y, gd)
+            if R.random() < 0.5: put(x + 1, y - 2, gl)
+        for _ in range(4): put(R.randrange(S), R.randrange(S), gd)
+        for _ in range(2): put(R.randrange(S), R.randrange(S), mix(gl, 1.15))
+    elif name == 'path':
+        d, l = hexc(p['pathd']), mix(b, 1.18)
+        for _ in range(3):   # pebbles: a lit top over a shadow
+            x, y = R.randrange(1, 14), R.randrange(1, 14)
+            put(x, y, l); put(x + 1, y, l); put(x, y + 1, d); put(x + 1, y + 1, d)
+        for _ in range(5): put(R.randrange(S), R.randrange(S), d)
+        x, y = R.randrange(2, 10), R.randrange(3, 13)   # a rut
+        for i in range(R.randrange(3, 6)): put(x + i, y + (i // 3), mix(b, 0.88))
+    elif name == 'sand':
+        hi, lo = mix(b, 1.12), mix(b, 0.86)
+        for _ in range(3):   # ripples: a lit crest over a shaded trough, gently curved
+            x, y, n = R.randrange(0, 9), R.randrange(2, 14), R.randrange(4, 7)
+            for i in range(n):
+                dy = 1 if 0 < i < n - 1 else 0
+                put(x + i, y - dy, hi); put(x + i, y - dy + 1, lo)
+        for _ in range(3): put(R.randrange(S), R.randrange(S), lo)
+        for _ in range(2): put(R.randrange(S), R.randrange(S), mix(b, 1.2))
+    elif name == 'quarry':
+        dk, lt = mix(b, 0.78), mix(b, 1.14)
+        x, y = R.randrange(1, 8), R.randrange(2, 13)   # a crack that wanders
+        for i in range(R.randrange(5, 9)):
+            put(x, y, dk); x += 1
+            if R.random() < 0.4: y += R.choice((-1, 1))
+        for _ in range(3):   # loose chips
+            x, y = R.randrange(1, 14), R.randrange(1, 14)
+            put(x, y, lt); put(x + 1, y, lt); put(x, y + 1, dk); put(x + 1, y + 1, dk)
+    elif name == 'water':
+        rp, deep = hexc(p['ripple']), mix(b, 0.9)
+        y = (seed * 5) % 12 + 2   # one long slow swell per tile
+        for x in range(R.randrange(0, 6), R.randrange(9, 16)): t[y][x] = deep
+        for _ in range(2):   # a wave: a short lit arc with a brighter cap
+            x, y = R.randrange(1, 11), R.randrange(2, 14)
+            put(x, y, rp); put(x + 1, y - 1, mix(rp, 1.2)); put(x + 2, y - 1, mix(rp, 1.2)); put(x + 3, y, rp)
+        put(R.randrange(S), R.randrange(S), mix(rp, 1.3))
     return t
 
 def region(index):
@@ -55,17 +118,21 @@ for season in ['Spring', 'Summer', 'Autumn', 'Winter']:
     for b, name in enumerate(ORDER):
         base, marks, edge = colours(p)[name]
         for index in range(16):
-            tex = texture(base, marks, index * 31 + b * 7)
+            tex = ground(name, base, p, index * 31 + b * 7)
             inside = region(index)
+            def at(x, y):
+                return inside.get((x, y), inside[(min(max(x, 0), S - 1), min(max(y, 0), S - 1))])
             for (x, y), on in inside.items():
                 X, Y = b * 64 + (index % 4) * S + x, (index // 4) * S + y
                 if on:
-                    border = edge and any(not inside.get((x + i, y + j), inside[(min(max(x + i, 0), S - 1), min(max(y + j, 0), S - 1))]) for i, j in ((1, 0), (-1, 0), (0, 1), (0, -1)))
-                    img.putpixel((X, Y), hexc(edge) if border else tex[y][x])
+                    near = lambda d: any(not at(x + i * d, y + j * d) for i, j in ((1, 0), (-1, 0), (0, 1), (0, -1)))
+                    if edge and near(1): img.putpixel((X, Y), hexc(edge) if name != 'water' else mix(hexc(p['ripple']), 1.15))
+                    elif edge and near(2): img.putpixel((X, Y), mix(hexc(edge), 1.12) if name != 'water' else hexc(p['ripple']))
+                    else: img.putpixel((X, Y), tex[y][x])
                 elif name == 'water' and any(inside.get((x + i, y + j), False) for i, j in ((1, 0), (-1, 0), (0, 1), (0, -1))):
                     img.putpixel((X, Y), (0, 0, 0, 64))   # the bank's shadow just outside the water
         for v in range(4):
-            tex = texture(base, marks, 1000 + v * 13 + b)
+            tex = ground(name, base, p, 1000 + v * 13 + b)
             for x in range(S):
                 for y in range(S): img.putpixel((b * 64 + v * S + x, 64 + y), tex[y][x])
     img.save(f'{OUT}/terrain-{season.lower()}.png', optimize=True)
