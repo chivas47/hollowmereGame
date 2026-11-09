@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v201: Homes and shops redrawn
+- The farmhouse, every neighbour's cottage, all eleven town shops and the mountain lodge share a new, more detailed look: shingled roofs in courses with staggered tabs, a lit ridge and a dark eave; board walls with a shadow under the eaves, corner posts and a stone footing; windows with light trim, two panes of sky with a glint, a sill and (on homes) a flower box; panelled doors with a brass knob on a stone step; and brick chimneys with a cap. Snow sits on the ridge, drips over the first course and lines the eaves in winter.
+- The farmhouse gains a porch hood and a lamp by the door. Shop signs are framed boards; the store's awning, the museum's columns and the theatre's posters are shaded. The lodge has round log walls with cut ends and an antler sign.
+- Two cottages that had no picture on the building sheets (Tamsin's, and Hester and Wilmot's) now have one, so they no longer fall back to the plainer code drawing.
+- Same footprints and doors. The building sheets are still generated from the code art (tools/sprites/dump_code_art.mjs and outline.py); every other generated sheet came out unchanged. Drawing only: no saves, prices or keys changed.
+
 ## v200: Giant crops redrawn
 - The giant pumpkin and giant melon are a full ribbed gourd: each segment bulges and catches the light from the top left, the ribs run in the crop's line colour, there is a dent where a thick stalk curls up between two leaves, and a shine sits on the upper left.
 - The giant fava bean is a leafy vine hung with four fat pods, each swelling over its beans with a seam down one side.

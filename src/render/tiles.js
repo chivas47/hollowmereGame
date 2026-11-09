@@ -11,6 +11,76 @@ import { SCENERY_ART } from './scenery.js';
 
 const SNOW = '#f2f6f8';
 
+// v201: shared building parts, so homes and shops share one look: shingled gable roofs lit from the top left, board
+// walls with a shadow under the eaves and a stone footing, trimmed windows with a sill, panelled doors on a step, and
+// brick chimneys. tone(hex, k): k under 1 darkens, over 1 lightens toward white.
+export function tone(hex, k) {
+  const n = parseInt(hex.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255];
+  return '#' + c.map((v) => Math.max(0, Math.min(255, Math.round(k >= 1 ? v + (255 - v) * (k - 1) : v * k))).toString(16).padStart(2, '0')).join('');
+}
+// A gable roof seen from the front: rows from y, the top row `top` wide centred on cx, one pixel wider each side per
+// row. Shingle courses every 3 rows with staggered tabs, a lit ridge, a dark eave and fascia. snow: drifts on top.
+function roofGable(g, cx, y, top, rows, col, snow) {
+  const lite = tone(col, 1.18), dark = tone(col, 0.78), deep = tone(col, 0.6), edge = tone(col, 0.5);
+  for (let j = 0; j < rows; j++) {
+    const half = top / 2 + j, x0 = Math.round(cx - half), w = Math.round(2 * half);
+    const course = j % 3, c = j === 0 ? lite : course === 2 ? dark : col;
+    r(g, x0, y + j, w, 1, c);
+    if (course === 0 && j) for (let x = x0 + ((j / 3) % 2 ? 2 : 0); x < x0 + w - 1; x += 4) r(g, x, y + j, 1, 2, dark);
+    if (course === 1) r(g, x0 + 1, y + j, Math.max(1, Math.round(w * 0.3)), 1, tone(col, 1.08));
+    r(g, x0, y + j, 1, 1, edge); r(g, x0 + w - 1, y + j, 1, 1, edge);
+  }
+  const half = top / 2 + rows, x0 = Math.round(cx - half), w = Math.round(2 * half);
+  r(g, x0, y + rows, w, 1, deep); r(g, x0 + 1, y + rows + 1, w - 2, 1, edge);
+  if (snow) {
+    for (let j = 0; j < 3; j++) { const hh = top / 2 + j; r(g, Math.round(cx - hh), y + j, Math.round(2 * hh), 1, j === 2 ? '#d6e2ea' : SNOW); }
+    for (let x = Math.round(cx - top / 2 - 2); x < cx + top / 2 + 2; x += 3) r(g, x, y + 3, 1, 1 + (x % 2), SNOW);
+    r(g, x0, y + rows, w, 1, SNOW);
+  }
+}
+// Board walls: lines every 4 rows with a lit board below each, the eave's shadow on top, corner posts, a stone footing.
+function boardWall(g, x, y, w, h, col, line) {
+  r(g, x, y, w, h, col);
+  for (let j = y + 4; j < y + h - 2; j += 4) { r(g, x, j, w, 1, line || tone(col, 0.82)); r(g, x, j + 1, w, 1, tone(col, 1.07)); }
+  r(g, x, y, w, 2, tone(col, 0.7)); r(g, x, y + 2, w, 1, tone(col, 0.85));
+  r(g, x, y, 1, h, tone(col, 0.78)); r(g, x + w - 1, y, 1, h, tone(col, 0.62));
+  r(g, x, y + h - 2, w, 2, '#8d877e'); r(g, x, y + h - 1, w, 1, '#6f6a62');
+  for (let i = x + 2; i < x + w - 1; i += 5) r(g, i, y + h - 2, 1, 1, '#6f6a62');
+}
+// A window: dark outline, light trim, two panes of sky with a glint, a sill under it. box: a flower box below.
+function windowArt(g, x, y, w, h, trim, box) {
+  trim = trim || '#efe6d0';
+  r(g, x - 1, y - 1, w + 2, h + 2, '#3f2f22'); r(g, x, y, w, h, trim);
+  r(g, x + 1, y + 1, w - 2, h - 2, '#5e9cc4'); r(g, x + 1, y + 1, w - 2, Math.ceil((h - 2) / 2), '#8fc8e8');
+  r(g, x + 2, y + 2, 1, 2, '#e4f4fb'); r(g, x + 3, y + 2, 1, 1, '#e4f4fb');
+  r(g, x + Math.floor(w / 2), y + 1, 1, h - 2, trim); r(g, x + 1, y + Math.floor(h / 2), w - 2, 1, trim);
+  r(g, x - 2, y + h, w + 4, 1, tone(trim, 0.92)); r(g, x - 2, y + h + 1, w + 4, 1, 'rgba(0,0,0,.22)');
+  if (box) {
+    r(g, x - 1, y + h + 1, w + 2, 3, '#7a4e2c'); r(g, x - 1, y + h + 1, w + 2, 1, '#9a6a3c');
+    for (let i = 0; i < w + 2; i += 2) r(g, x - 1 + i, y + h, 1, 1, i % 4 ? '#e2707a' : '#f0c850');
+    for (let i = 1; i < w + 2; i += 2) r(g, x - 1 + i, y + h, 1, 1, '#5da34a');
+  }
+}
+// A panelled door in a dark frame, with a brass knob and a stone step.
+function doorArt(g, x, y, w, h, col) {
+  r(g, x - 1, y - 1, w + 2, h + 1, '#3a2a1e'); r(g, x, y, w, h, col);
+  const pw = Math.floor((w - 3) / 2), ph = Math.floor((h - 4) / 2);
+  [[x + 1, y + 1], [x + 2 + pw, y + 1], [x + 1, y + 2 + ph], [x + 2 + pw, y + 2 + ph]].forEach(([a, b]) => {
+    r(g, a, b, pw, ph, tone(col, 0.8)); r(g, a, b, pw, 1, tone(col, 0.65)); r(g, a, b + ph - 1, pw, 1, tone(col, 1.15));
+  });
+  r(g, x + w - 1, y, 1, h, tone(col, 0.7));
+  r(g, x + w - 3, y + Math.floor(h / 2), 1, 2, '#e9b44c'); r(g, x + w - 3, y + Math.floor(h / 2), 1, 1, '#fff0a0');
+  r(g, x - 2, y + h, w + 4, 1, '#a8a196'); r(g, x - 2, y + h - 1, w + 4, 1, '#c4bdb0');
+}
+// A brick chimney with a cap; snow on the cap in winter.
+function chimneyArt(g, x, y, w, h, snow) {
+  r(g, x - 1, y, w + 2, h, '#3f302a'); r(g, x, y, w, h, '#8a6656');
+  for (let j = y + 2; j < y + h; j += 2) { r(g, x, j, w, 1, '#6e5044'); r(g, x + ((j / 2) % 2 ? 1 : w - 2), j - 1, 1, 1, '#6e5044'); }
+  r(g, x, y, 1, h, '#a07868');
+  r(g, x - 1, y - 1, w + 2, 2, '#5a4a44'); r(g, x - 1, y - 1, w + 2, 1, '#7a6a62');
+  if (snow) r(g, x - 1, y - 2, w + 2, 2, SNOW);
+}
+
 export function drawGrass(g, x, y, p, salt) {
   const X = x * T, Y = y * T, R = rng(x * 92837 + y * 1237 + salt);
   r(g, X, Y, T, T, p.g);
@@ -81,18 +151,15 @@ export function drawRock(g, x, y, p) {
 
 function house(g, p, o) {
   const X = o.x * T, Y = o.y * T;
-  r(g, X + 2, Y + 20, 76, 28, '#e2cda0');
-  for (let i = 0; i < 4; i++) r(g, X + 2, Y + 25 + i * 6, 76, 1, '#c9b083');
-  for (let j = 0; j <= 20; j++) { const k = Math.floor(j / 2); r(g, X + 10 - k, Y + 2 + j, 60 + 2 * k, 1, j % 4 === 3 ? '#7d3123' : '#a5432f'); }
-  if (p.snow) for (let j = 0; j <= 4; j++) { const k = Math.floor(j / 2); r(g, X + 10 - k, Y + 2 + j, 60 + 2 * k, 1, SNOW); }
-  r(g, X, Y + 22, 80, 2, '#5e2419');
-  r(g, X + 58, Y - 2, 7, 9, '#7a6e66'); r(g, X + 57, Y - 3, 9, 2, '#5f554e');
-  [X + 8, X + 60].forEach((wx) => {
-    r(g, wx, Y + 29, 12, 10, '#4e3a26'); r(g, wx + 1, Y + 30, 10, 8, '#7fc4e8');
-    r(g, wx + 6, Y + 30, 1, 8, '#4e3a26'); r(g, wx + 1, Y + 34, 10, 1, '#4e3a26'); r(g, wx + 2, Y + 31, 2, 2, '#c6e7f7');
-  });
-  r(g, X + 34, Y + 30, 12, 18, '#7a4b2a'); r(g, X + 34, Y + 30, 12, 1, '#5c371e'); r(g, X + 39, Y + 30, 1, 18, '#5c371e'); r(g, X + 43, Y + 39, 1, 2, '#e9b44c');
-  r(g, X + 32, Y + 47, 16, 1, '#8f7a5a');
+  r(g, X + 1, Y + 47, 78, 1, 'rgba(0,0,0,.25)');
+  boardWall(g, X + 2, Y + 21, 76, 27, '#e8d4a8');
+  chimneyArt(g, X + 58, Y - 2, 7, 9, p.snow);
+  roofGable(g, 40 + X, Y + 2, 60, 19, '#a5432f', p.snow);
+  [X + 8, X + 60].forEach((wx) => windowArt(g, wx, Y + 29, 12, 10, '#f2ead6', true));
+  doorArt(g, X + 34, Y + 30, 12, 17, '#7a4b2a');
+  r(g, X + 31, Y + 27, 18, 2, '#7a4e2c'); r(g, X + 31, Y + 27, 18, 1, '#9a6a3c');   // a little porch hood
+  r(g, X + 22, Y + 33, 2, 3, '#3f2f22'); r(g, X + 21, Y + 36, 4, 1, '#e9b44c');     // a lamp by the door
+  r(g, X + 30, Y + 47, 20, 1, '#8f7a5a');
 }
 
 function bin(g, p, o) {
@@ -176,14 +243,11 @@ function barn(g, p, o) {
 function cottage(g, p, o) {
   const X = o.x * T, Y = o.y * T, roof = o.roof || '#a5432f';
   r(g, X + 2, Y + 31, 44, 1, 'rgba(0,0,0,.25)');
-  r(g, X + 4, Y + 13, 40, 18, '#e2cda0');
-  for (let i = 0; i < 3; i++) r(g, X + 4, Y + 17 + i * 5, 40, 1, '#c9b083');
-  for (let j = 0; j < 12; j++) r(g, X + 12 - j, Y + j, 24 + 2 * j, 1, j % 4 === 3 ? 'rgba(0,0,0,.25)' : roof);
-  r(g, X + 12, Y, 24, 12, roof); for (let j = 3; j < 12; j += 4) r(g, X + 12 - j, Y + j, 24 + 2 * j, 1, 'rgba(0,0,0,.22)');
-  if (p.snow) for (let j = 0; j < 3; j++) r(g, X + 12 - j, Y + j, 24 + 2 * j, 1, SNOW);
-  r(g, X + 34, Y - 3, 5, 7, '#7a6e66');
-  r(g, X + 19, Y + 19, 10, 12, '#7a4b2a'); r(g, X + 19, Y + 19, 10, 1, '#5c371e'); r(g, X + 26, Y + 25, 1, 2, '#e9b44c');
-  [X + 7, X + 33].forEach((wx) => { r(g, wx, Y + 18, 8, 7, '#4e3a26'); r(g, wx + 1, Y + 19, 6, 5, '#7fc4e8'); r(g, wx + 4, Y + 19, 1, 5, '#4e3a26'); });
+  boardWall(g, X + 4, Y + 13, 40, 18, '#e8d4a8');
+  chimneyArt(g, X + 34, Y - 3, 5, 7, p.snow);
+  roofGable(g, X + 24, Y, 24, 12, roof, p.snow);
+  doorArt(g, X + 19, Y + 19, 10, 11, '#7a4b2a');
+  [X + 7, X + 33].forEach((wx) => windowArt(g, wx, Y + 18, 8, 6, '#f2ead6', true));
 }
 
 function board(g, p, o) {
@@ -340,16 +404,22 @@ function scaffold(g, p, o) {
 function lodge(g, p, o) {
   const X = o.x * T, Y = o.y * T;
   r(g, X + 1, Y + 31, 46, 1, 'rgba(0,0,0,.3)');
+  // Log walls: round logs with lit tops and cut ends at the corners.
   r(g, X + 3, Y + 10, 42, 21, '#6e4626');
-  for (let i = 0; i < 5; i++) r(g, X + 3, Y + 12 + i * 4, 42, 1, '#5a3a20');
-  for (let j = 0; j < 10; j++) r(g, X + 14 - j, Y - 4 + j, 20 + 2 * j, 1, j % 3 === 2 ? '#3f2f22' : '#4f3a2a');
-  r(g, X + 14, Y - 6, 20, 2, '#4f3a2a');
-  if (p.snow) for (let j = 0; j < 3; j++) r(g, X + 14 - j, Y - 6 + j, 20 + 2 * j, 1, SNOW);
-  r(g, X + 36, Y - 8, 4, 8, '#5f5a52');
-  r(g, X + 19, Y + 17, 10, 14, '#3f2f22'); r(g, X + 20, Y + 18, 8, 13, '#5c371e'); r(g, X + 26, Y + 24, 1, 2, '#e9b44c');
-  r(g, X + 6, Y + 17, 8, 6, '#2b211a'); r(g, X + 7, Y + 18, 6, 4, '#e9b44c'); r(g, X + 34, Y + 17, 8, 6, '#2b211a'); r(g, X + 35, Y + 18, 6, 4, '#e9b44c');
-  r(g, X + 18, Y + 8, 12, 7, '#a5753f'); r(g, X + 18, Y + 8, 12, 1, '#c99a5e');
-  for (let i = 0; i < 6; i++) { r(g, X + 20 + i, Y + 9 + i, 1, 1, '#d6dde3'); r(g, X + 27 - i, Y + 9 + i, 1, 1, '#d6dde3'); }
+  for (let j = Y + 10; j < Y + 30; j += 3) {
+    r(g, X + 3, j, 42, 1, '#8a5a32'); r(g, X + 3, j + 2, 42, 1, '#4e3018');
+    [X + 2, X + 44].forEach((ex) => { r(g, ex, j, 2, 3, '#c99a5e'); r(g, ex, j + 2, 2, 1, '#8a6a3e'); });
+  }
+  r(g, X + 3, Y + 10, 42, 2, 'rgba(0,0,0,.3)');
+  r(g, X + 2, Y + 29, 44, 2, '#7a746c'); r(g, X + 2, Y + 30, 44, 1, '#5f5a52');
+  chimneyArt(g, X + 36, Y - 8, 4, 8, p.snow);
+  roofGable(g, X + 24, Y - 6, 20, 13, '#4f3a2a', p.snow);
+  doorArt(g, X + 19, Y + 17, 10, 13, '#5c371e');
+  [X + 6, X + 34].forEach((wx) => { windowArt(g, wx, Y + 17, 8, 6, '#c99a5e'); r(g, wx + 1, Y + 18, 6, 2, '#e9c46a'); r(g, wx + 1, Y + 20, 6, 3, '#d9a441'); r(g, wx + 4, Y + 18, 1, 5, '#c99a5e'); });
+  // An antler sign over the door.
+  r(g, X + 17, Y + 8, 14, 7, '#3f2f22'); r(g, X + 18, Y + 9, 12, 5, '#a5753f'); r(g, X + 18, Y + 9, 12, 1, '#c99a5e');
+  for (let i = 0; i < 5; i++) { r(g, X + 20 + i, Y + 13 - i, 1, 1, '#ece4d6'); r(g, X + 27 - i, Y + 13 - i, 1, 1, '#ece4d6'); }
+  r(g, X + 20, Y + 10, 1, 1, '#ece4d6'); r(g, X + 27, Y + 10, 1, 1, '#ece4d6');
 }
 
 // v46: a town shop, 3 by 2 tiles: walls, roof and a sign by kind (store, smithy, carpenter).
@@ -369,27 +439,28 @@ export const FRONT = {
 function storefront(g, p, o) {
   const X = o.x * T, Y = o.y * T, f = FRONT[o.kind];
   r(g, X + 1, Y + 31, 46, 1, 'rgba(0,0,0,.3)');
-  r(g, X + 2, Y + 10, 44, 21, f.wall);
-  for (let i = 0; i < 4; i++) r(g, X + 2, Y + 14 + i * 4, 44, 1, f.line);
-  for (let j = 0; j < 10; j++) r(g, X + 12 - j, Y - 2 + j, 24 + 2 * j, 1, j % 3 === 2 ? 'rgba(0,0,0,.25)' : f.roof);
-  r(g, X + 12, Y - 4, 24, 2, f.roof);
-  if (p.snow) for (let j = 0; j < 3; j++) r(g, X + 12 - j, Y - 4 + j, 24 + 2 * j, 1, SNOW);
-  r(g, X + 19, Y + 18, 10, 13, f.door); r(g, X + 26, Y + 24, 1, 2, '#e9b44c');
-  [X + 5, X + 34].forEach((wx) => { r(g, wx, Y + 17, 9, 7, '#3f2f22'); r(g, wx + 1, Y + 18, 7, 5, '#7fc4e8'); });
-  r(g, X + 16, Y + 11, 16, 6, '#4e3a26'); r(g, X + 17, Y + 12, 14, 4, '#e8d9b5');
+  boardWall(g, X + 2, Y + 10, 44, 21, f.wall, f.line);
+  roofGable(g, X + 24, Y - 4, 24, 12, f.roof, p.snow);
+  doorArt(g, X + 19, Y + 18, 10, 12, f.door);
+  [X + 5, X + 34].forEach((wx) => windowArt(g, wx, Y + 18, 9, 6, tone(f.wall, 1.25)));
+  // The shop sign: a framed board under the eaves.
+  r(g, X + 15, Y + 10, 18, 8, '#2f241a'); r(g, X + 16, Y + 11, 16, 6, '#e8d9b5'); r(g, X + 16, Y + 11, 16, 1, '#f6ecd2'); r(g, X + 16, Y + 16, 16, 1, '#c9b48a');
+  r(g, X + 15, Y + 18, 18, 1, 'rgba(0,0,0,.25)');
   if (o.kind === 'store') { r(g, X + 19, Y + 13, 3, 2, '#7fbf5a'); r(g, X + 23, Y + 13, 3, 2, '#d8484a'); r(g, X + 27, Y + 13, 2, 2, '#e8862a');
-    for (let i = 0; i < 6; i++) r(g, X + 2 + i * 7, Y + 9, 7, 3, i % 2 ? '#f4ead2' : '#c0443a'); }
-  if (o.kind === 'smithy') { r(g, X + 20, Y + 13, 8, 2, '#3f3a36'); r(g, X + 22, Y + 15, 4, 1, '#3f3a36'); r(g, X + 38, Y - 8, 5, 10, '#5f5a52'); r(g, X + 39, Y - 11, 3, 3, 'rgba(200,200,200,.5)'); }
+    for (let i = 0; i < 6; i++) { r(g, X + 2 + i * 7, Y + 9, 7, 3, i % 2 ? '#f4ead2' : '#c0443a'); r(g, X + 2 + i * 7, Y + 12, 7, 1, i % 2 ? '#d6ccb4' : '#962f28'); } }
+  if (o.kind === 'smithy') { r(g, X + 20, Y + 13, 8, 2, '#3f3a36'); r(g, X + 22, Y + 15, 4, 1, '#3f3a36'); chimneyArt(g, X + 38, Y - 8, 5, 10, p.snow); r(g, X + 39, Y - 13, 3, 2, 'rgba(200,200,200,.5)'); r(g, X + 40, Y - 15, 2, 2, 'rgba(200,200,200,.3)'); }
   if (o.kind === 'carpenter') { r(g, X + 19, Y + 13, 9, 2, '#a9b4bd'); for (let i = 0; i < 4; i++) r(g, X + 19 + i * 2, Y + 15, 1, 1, '#7f8a93'); r(g, X + 28, Y + 12, 2, 4, '#8a5a32');
-    r(g, X + 40, Y + 26, 6, 5, '#c9a06a'); r(g, X + 40, Y + 26, 6, 1, '#a07a4a'); }
+    r(g, X + 40, Y + 25, 6, 5, '#c9a06a'); r(g, X + 40, Y + 25, 6, 1, '#e0bc84'); r(g, X + 40, Y + 27, 6, 1, '#a07a4a'); }
   if (o.kind === 'tavern') { r(g, X + 21, Y + 12, 5, 4, '#e9b44c'); r(g, X + 21, Y + 12, 5, 1, '#f4ead2'); r(g, X + 26, Y + 13, 2, 2, '#e9b44c');
-    r(g, X + 3, Y + 26, 2, 4, '#2b211a'); r(g, X + 2, Y + 24, 4, 3, '#e9b44c'); }
-  if (o.kind === 'hall') { r(g, X + 22, Y + 12, 4, 4, '#e9b44c'); r(g, X + 23, Y + 13, 2, 2, '#5c371e'); r(g, X + 23, Y - 10, 2, 8, '#6b5a48'); r(g, X + 25, Y - 10, 5, 3, '#c0443a'); }
+    r(g, X + 3, Y + 26, 2, 4, '#2b211a'); r(g, X + 2, Y + 23, 4, 3, '#e9b44c'); r(g, X + 3, Y + 24, 2, 1, '#fff0a0'); }
+  if (o.kind === 'hall') { r(g, X + 22, Y + 12, 4, 4, '#e9b44c'); r(g, X + 23, Y + 13, 2, 2, '#5c371e'); r(g, X + 23, Y - 10, 2, 8, '#6b5a48'); r(g, X + 25, Y - 10, 5, 3, '#c0443a'); r(g, X + 25, Y - 10, 5, 1, '#e0605a'); }
   if (o.kind === 'oasis') { r(g, X + 19, Y + 13, 3, 2, '#7fbf5a'); r(g, X + 23, Y + 13, 3, 2, '#c0445a'); r(g, X + 27, Y + 13, 2, 2, '#f2d14a'); }
-  if (o.kind === 'casino') { for (let i = 0; i < 5; i++) r(g, X + 18 + i * 3, Y + 13, 2, 2, i % 2 ? '#e9b44c' : '#c0443a'); }
-  if (o.kind === 'museum') { for (let i = 0; i < 4; i++) r(g, X + 3 + i * 13, Y + 10, 3, 21, '#ece6d8'); r(g, X + 21, Y + 12, 6, 4, '#c9a43a'); r(g, X + 23, Y + 13, 2, 2, '#4e3a26'); }
-  if (o.kind === 'ranch') { r(g, X + 20, Y + 13, 8, 2, '#e9c46a'); r(g, X + 22, Y + 12, 4, 1, '#f4ead2'); r(g, X + 38, Y + 26, 7, 5, '#e2c46a'); r(g, X + 38, Y + 28, 7, 1, '#b0943a'); }
-  if (o.kind === 'theatre') { for (let i = 0; i < 7; i++) r(g, X + 17 + i * 2, Y + 12, 1, 1, i % 2 ? '#f4ead2' : '#e9b44c'); r(g, X + 19, Y + 14, 10, 1, '#7a2f3a'); r(g, X + 5, Y + 26, 6, 5, '#e9b44c'); r(g, X + 37, Y + 26, 6, 5, '#e9b44c'); }
+  if (o.kind === 'casino') { for (let i = 0; i < 5; i++) r(g, X + 18 + i * 3, Y + 13, 2, 2, i % 2 ? '#e9b44c' : '#c0443a'); for (let i = 0; i < 7; i++) r(g, X + 4 + i * 6, Y + 11, 1, 1, '#f0c850'); }
+  if (o.kind === 'museum') { for (let i = 0; i < 4; i++) { r(g, X + 3 + i * 13, Y + 10, 3, 19, '#ece6d8'); r(g, X + 3 + i * 13, Y + 10, 1, 19, '#fbf8f0'); r(g, X + 5 + i * 13, Y + 10, 1, 19, '#c4bba8'); r(g, X + 2 + i * 13, Y + 10, 5, 1, '#d6cfbe'); }
+    r(g, X + 21, Y + 12, 6, 4, '#c9a43a'); r(g, X + 23, Y + 13, 2, 2, '#4e3a26'); }
+  if (o.kind === 'ranch') { r(g, X + 20, Y + 13, 8, 2, '#e9c46a'); r(g, X + 22, Y + 12, 4, 1, '#f4ead2'); r(g, X + 38, Y + 25, 7, 5, '#e2c46a'); r(g, X + 38, Y + 27, 7, 1, '#b0943a'); r(g, X + 38, Y + 25, 7, 1, '#f2dc8a'); }
+  if (o.kind === 'theatre') { for (let i = 0; i < 7; i++) r(g, X + 17 + i * 2, Y + 12, 1, 1, i % 2 ? '#f4ead2' : '#e9b44c'); r(g, X + 19, Y + 14, 10, 1, '#7a2f3a');
+    [X + 5, X + 37].forEach((px) => { r(g, px, Y + 25, 6, 5, '#e9b44c'); r(g, px + 1, Y + 26, 4, 3, '#7a2f3a'); r(g, px + 2, Y + 27, 2, 1, '#f4ead2'); }); }
   if (o.kind === 'clinic') { r(g, X + 23, Y + 12, 2, 4, '#4f9a6a'); r(g, X + 22, Y + 13, 4, 2, '#4f9a6a'); }
 }
 
