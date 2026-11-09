@@ -1,5 +1,5 @@
 # Turns code art frames (from dump.mjs) into sheets: shades bottom edges and outlines each silhouette.
-# forage.png: 16x16 frames, 8 a row, in the order printed. trees.png: 24x32 frames (stages 0-4, bare), bands leaf, ink.
+# trees.png: 24x32 frames (stages 0-4, bare), bands leaf, ink.
 # debris.png: 16x16 frames in one row. giants.png: 48x48 frames (pod, round, leafy), bands fruit, line, ink (with shine).
 # placed.png and furniture.png: see below.
 import sys, json
@@ -23,13 +23,7 @@ def tidy(px, w, h, layer=lambda k, c: 'ink'):
                 out[q] = (L, dark(c, 0.41 if L != 'ink' else 0.45) + (255,))
     return out
 
-names = [k for k, _ in art['forage']]
-rows = (len(names) + 7) // 8
-img = Image.new('RGBA', (16 * 8, 16 * rows), (0, 0, 0, 0))
-for n, (k, data) in enumerate(art['forage']):
-    for (i, j), (L, c) in tidy(grid(data, 16, 16), 16, 16).items(): img.putpixel(((n % 8) * 16 + i, (n // 8) * 16 + j), c)
-img.save(f'{OUT}/forage.png', optimize=True)
-print('FORAGE order:', names)
+# v197: forage.png is drawn by tools/sprites/forage.py, not from the code art.
 
 leafy = lambda k, c: 'leaf' if c[0] == c[1] == c[2] and c[0] >= 200 and c[3] == 255 else 'ink'
 img = Image.new('RGBA', (24 * 6, 32 * 2), (0, 0, 0, 0))

@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v197: Crops and forage redrawn
+- Every crop stage and all 34 forage finds are redrawn in the style of the new neighbours and animals: three tones of shading, an outline in each part's own darker colour, and more detail. Seeds sit in the soil, sprouts and young plants have proper leaves and a little mound, and a dead crop is a dry stalk. Ripe roots show their shoulders above the soil under a leafy crown; gourds have ribs and a stalk; leafy heads have veins; pod crops hang their pods from a stem.
+- Forage: leeks with roots, a capped mushroom with spots, a ridged clam and cockle, a branching coral, a spined urchin, a coiled shell, a honeycombed morel, a curled fiddlehead, nuts in their husks, prickly holly, flowers with petals and centres, grape and plum with a shine, ear fungus on a log, and the berry bushes share one leafy bush (the frostberry's with snow on top). Each sits on a soft shadow.
+- Same sheet layout and colours per crop. forage.png is now built by tools/sprites/forage.py instead of from the code art. Drawing only: no saves, prices or keys changed.
+
 ## v196: Farm animals and pets redrawn
 - The nine farm animals, the cat, dog and turtle and the horse are redrawn to match the new neighbours and props: three tones of shading, an outline in each part's own darker colour, and more detail. Chickens get a comb, wattle, wing and tail feathers; ducks a folded wing; rabbits pink inner ears and a cotton tail; the mossback a mossy ridge, a pale belly and a yellow eye; cows patches, a pink muzzle, horns and an udder; goats horns, a beard and a darker back stripe; sheep curly wool and dark legs; pigs ears, a snout and a curled tail; striders a wing and a long neck; the horse a mane, tail, white socks and a stitched saddle.
 - Legs are drawn as near and far pairs that spread as an animal walks, so four-legged animals no longer stand on a solid block, and the body lifts a pixel with each step.
