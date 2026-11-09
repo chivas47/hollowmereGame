@@ -6,7 +6,7 @@ Newest first. Version numbers match published versions of the playable page.
 - The greenhouse's glass walls have a wooden frame lit on its top and left, glass that deepens from pale to blue toward the foot, a crossbar, two diagonal glints and a sill. Its soil bed is furrowed and its boards have grain, a lit top edge and staggered seams.
 - The seed packet in the hotbar is a paper packet with a crimped top, a picture of the crop in its colours with a green sprout, and a label line.
 - The farm's children are redrawn in the style of the neighbours: the baby in a wooden crib under a blanket, the crawler on all fours, and the toddler with hair, eyes, rosy cheeks, a shirt and little shoes, each with an outline and a shadow.
-- greenhouse.png, packet.png and children.png are now built by tools/sprites/small.py. With this, every sprite sheet in the game has been redrawn (v196 to v213). Drawing only: no saves, prices or keys changed.
+- greenhouse.png, packet.png and children.png are now built by tools/sprites/small.py. With this, every sheet the sixth polish sweep flagged is redrawn; wallpapers, floors, glow, bunting, pens and variants are still drawn from the code art. Drawing only: no saves, prices or keys changed.
 
 ## v212: Mine rocks, ore, lava and props redrawn
 - The rocks you break on every mine floor and in the quarry are round boulders lit from the top left with a crack and chips, and each ore shows as glinting flecks in its own colour: copper, iron, gold, umbrite and cinder.
