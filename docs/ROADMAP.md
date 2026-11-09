@@ -223,6 +223,7 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | 76n | Polish: notices that leave dialogs readable | polish | done (chivas47/hollowmereGame#201) | Find 20: on a desktop a long notice covers rows in the middle of an open dialog. Nuno's pick (November 2026). Options: lift notices above the dialog while one is open, or cap a notice to one line with the rest in the journal. |
 | 76o | Polish: shop rows line up | polish | done (chivas47/hollowmereGame#202) | Find 21: Buy sits under the item in the boathouse, boatman and arcade instead of at its right, as everywhere else. |
 | 76p | A countryside, not bare grass | feature | in progress | Nuno's ask (November 2026): parts of the maps feel empty; fill them with nature and things of interest so the world feels alive. Ground cover by biome and season, solid scenery props and tree stands (data/scenery.js), wildlife counts scaled to map size. Drawing only. |
+| 76q | Polish: farm animals and pets redrawn | polish | in progress (chivas47/hollowmereGame#204) | Nuno's ask (November 2026): make the sprites more polished, starting with the animals and pets (Nuno's pick). The animal, pet and horse sheets redrawn in the style of 76k and 76l: three-tone shading, self-coloured outlines, more detail, legs that read as pairs. Same layout and anchors. Built by tools/sprites/animals.py and pets.py. Drawing only. |
 
 ## Done
 

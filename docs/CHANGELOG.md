@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v196: Farm animals and pets redrawn
+- The nine farm animals, the cat, dog and turtle and the horse are redrawn to match the new neighbours and props: three tones of shading, an outline in each part's own darker colour, and more detail. Chickens get a comb, wattle, wing and tail feathers; ducks a folded wing; rabbits pink inner ears and a cotton tail; the mossback a mossy ridge, a pale belly and a yellow eye; cows patches, a pink muzzle, horns and an udder; goats horns, a beard and a darker back stripe; sheep curly wool and dark legs; pigs ears, a snout and a curled tail; striders a wing and a long neck; the horse a mane, tail, white socks and a stitched saddle.
+- Legs are drawn as near and far pairs that spread as an animal walks, so four-legged animals no longer stand on a solid block, and the body lifts a pixel with each step.
+- Same sheet layout, frame sizes and feet positions: pet hats, the horse's rider and every pen and coop are where they were. Built by tools/sprites/animals.py and tools/sprites/pets.py. Drawing only: no saves, prices or keys changed.
+
 ## v195: A countryside, not bare grass
 - The open ground between places is no longer plain grass. Every open-air map except the farm grows ground cover in patches that suit it: flowers, clover, tall grass and pebbles in the village, town, Wilds, mere and by the railway; ferns, mushrooms, fallen leaves and mossy stones in Brackenwood and the hidden grove; heather on Cragmoor; shells, seaweed and driftwood on the beach; dry scrub, small cacti and old bones in the Dunes and at the dig site; tropical blooms on the island (not on its farm plot). It changes with the season: half the flowers turn to fallen leaves in autumn, and in winter only twigs poke out of the snow. You walk over all of it.
 - Bushes, mossy boulders, old stumps, woodpiles, hay bales, barrels and crates and flower planters stand where someone would have put them or where they would grow: barrels by the store and the Anvil, hay by Tamsin's pens, planters at the clinic and museum doors, a woodpile by the boathouse. Small stands of trees fill the widest empty stretches of the village, the town's south side, the mere's shores and the grove. Bushes blossom in spring, carry berries in summer, turn russet in autumn and hold snow in winter.

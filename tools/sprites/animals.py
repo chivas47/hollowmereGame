@@ -1,101 +1,257 @@
-# Builds assets/sprites/animals.png: 24x24 frames, rows = kinds, cols = right stand, right step, left stand, left step.
+# Builds assets/sprites/animals.png (v196): python3 tools/sprites/animals.py assets/sprites/animals.png [preview.png]
+# Layout (assets/sprites/README.md): 24x24 frames, rows = kinds (ANIMALS.rows), columns right stand, right step,
+# left stand, left step (left is right mirrored). Feet at the bottom centre (12, 24); the ground shadow on row 23.
+#
+# Each animal is drawn as letters, facing right: a top (head and body) and legs per step. On the step frame the top
+# rises a pixel and the legs change. Palette letters are per kind, usually upper case the colour, lower case its
+# shade and a third letter the deep shade. E is an eye, drawn as is. Every silhouette gets a one-pixel outline in a
+# darker version of the colour it borders, worked out here (the person sheet's style, tools/sprites/person.py).
 import sys
 from PIL import Image
+
 S = 24
 KINDS = ['chicken', 'duck', 'rabbit', 'mossback', 'cow', 'goat', 'sheep', 'pig', 'strider']
-def hexc(h): h = h.lstrip('#'); return tuple(int(h[i:i+2], 16) for i in (0, 2, 4)) + (255,)
+EYE = '#2b211a'
 
-def art(kind, step):
-    px = {}
-    def r(x, y, w, h, col):
-        for i in range(x, x + w):
-            for j in range(y, y + h):
-                if 0 <= i < S and 0 <= j < S: px[(i, j)] = hexc(col)
-    left = False
-    if kind in ('chicken', 'duck', 'rabbit', 'mossback'):
-        x, y = 8, 15 - step
-        if kind == 'chicken':
-            r(x+1, y+3, 7, 4, '#f6f1e6'); r(x+3, y+4, 3, 2, '#e5ddd0')
-            r(x+2, y+7, 1, 2 - step + step, '#e9b44c'); r(x+5, y+7, 1, 2, '#e9b44c')
-            hx = x + 5
-            r(hx, y, 3, 4, '#f6f1e6'); r(hx+1, y-1, 2, 1, '#d8484a'); r(hx, y-1, 1, 1, '#d8484a')
-            r(hx+3, y+1, 1, 1, '#e9b44c'); r(hx+1, y+3, 1, 1, '#d8484a'); r(hx+1, y+1, 1, 1, '#2b211a')
-            r(x, y+2, 2, 2, '#e5ddd0'); r(x, y+1, 1, 1, '#e5ddd0')
-        elif kind == 'duck':
-            r(x+1, y+4, 7, 4, '#f2efe6'); r(x+2, y+5, 4, 2, '#dcd6c8'); r(x, y+3, 2, 2, '#f2efe6')
-            r(x+2, y+8, 1, 1, '#e9933c'); r(x+5, y+8, 1, 1, '#e9933c'); r(x+1+step, y+8, 2, 1, '#e9933c')
-            hx = x + 5
-            r(hx, y+1, 3, 3, '#f2efe6'); r(hx+3, y+2, 2, 1, '#e9933c'); r(hx+1, y+2, 1, 1, '#2b211a')
-        elif kind == 'rabbit':
-            r(x+1, y+4, 7, 5, '#e9e2d6'); r(x+2, y+7, 5, 1, '#d6cdbf'); r(x, y+5, 2, 2, '#ffffff')
-            hx = x + 5
-            r(hx, y+2, 3, 3, '#e9e2d6'); r(hx, y-1, 1, 3, '#e9e2d6'); r(hx+2, y-1, 1, 3, '#e9e2d6'); r(hx+2, y, 1, 2, '#e8b0b4')
-            r(hx+1, y+3, 1, 1, '#2b211a'); r(hx+3, y+4, 1, 1, '#e8b0b4')
-        else:
-            r(x, y+5, 9, 3, '#5f8a4a'); r(x+2, y+4, 5, 1, '#7fae5c'); r(x+3, y+3, 1, 1, '#a6cf72'); r(x+5, y+3, 1, 1, '#a6cf72')
-            r(x+1, y+8, 1, 1, '#3f5f30'); r(x+7, y+8, 1, 1, '#3f5f30'); r(x+3+step, y+8, 1, 1, '#3f5f30')
-            hx = x + 8
-            r(hx, y+5, 3, 2, '#5f8a4a'); r(hx+2, y+5, 1, 1, '#e9c46a'); r(x-2, y+6, 2, 1, '#5f8a4a')
-        shadow = (x + 1, 7)
-    else:
-        x, y = 5, 13 - step
-        st = lambda i: (-1 if step and i % 2 else 0)
-        if kind in ('cow', 'goat'):
-            cow = kind == 'cow'
-            body, spot, leg = ('#f4ead2', '#4a3b2e', '#d9cfb8') if cow else ('#c9b68e', '#a08a64', '#8f7a55')
-            r(x+2, y+3, 10, 6, body)
-            if cow: r(x+4, y+4, 3, 2, spot); r(x+8, y+6, 3, 2, spot); r(x+3, y+7, 1, 1, spot)
-            else: r(x+3, y+3, 8, 1, spot)
-            for i, lx in enumerate([3, 5, 9, 11]): r(x+lx, y+9, 1, 2 + st(i), leg)
-            hx = x + 11
-            r(hx, y+1, 4, 5, body); r(hx+2, y+4, 2, 2, '#e2a0a0' if cow else body); r(hx+2, y+2, 1, 1, '#2b211a')
-            if cow: r(hx, y, 1, 1, '#e8e0d0'); r(hx+3, y, 1, 1, '#e8e0d0')
-            else: r(hx+1, y-1, 1, 2, '#8f7a55'); r(hx+3, y+6, 1, 2, '#e8e0d0')
-            r(x+1, y+4, 1, 3, spot)
-        elif kind == 'sheep':
-            r(x+2, y+2, 10, 7, '#f1ede4'); r(x+3, y+1, 8, 1, '#f9f7f1'); r(x+2, y+8, 10, 1, '#d9d3c6')
-            r(x+4, y+3, 2, 1, '#ffffff'); r(x+8, y+4, 2, 1, '#ffffff')
-            for i, lx in enumerate([3, 5, 9, 11]): r(x+lx, y+9, 1, 2 + st(i), '#3b3430')
-            hx = x + 11
-            r(hx, y+2, 4, 4, '#3b3430'); r(hx+2, y+3, 1, 1, '#f1ede4'); r(hx, y+1, 2, 1, '#f1ede4')
-        elif kind == 'pig':
-            r(x+2, y+4, 10, 5, '#eab0a8'); r(x+3, y+4, 8, 1, '#f3c6be')
-            for i, lx in enumerate([3, 5, 9, 11]): r(x+lx, y+9, 1, 2 + st(i), '#c98d86')
-            hx = x + 11
-            r(hx, y+3, 4, 4, '#eab0a8'); r(hx+3, y+5, 2, 2, '#d88d86'); r(hx+2, y+4, 1, 1, '#2b211a')
-            r(hx+1, y+2, 2, 1, '#d88d86'); r(x+1, y+4, 1, 1, '#d88d86'); r(x, y+3, 1, 1, '#d88d86')
-        else:
-            r(x+3, y+1, 8, 5, '#4a4038'); r(x+4, y+2, 6, 3, '#6b5d50'); r(x+2, y+1, 3, 2, '#f1ede4')
-            r(x+5, y+6, 1, 5 + st(0), '#d9a46a'); r(x+8, y+6, 1, 5 + st(1), '#d9a46a')
-            nx = x + 11
-            r(nx, y-4, 1, 6, '#e3d6c4'); r(nx, y-6, 2, 2, '#e3d6c4'); r(nx+2, y-5, 1, 1, '#e9933c'); r(nx+1, y-6, 1, 1, '#2b211a')
-        shadow = (x + 1, 13)
-    return px, shadow
+def hexc(h):
+    h = h.lstrip('#')
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
 
-def shade(c, k): return tuple(max(0, int(v * k)) for v in c[:3]) + (255,)
+def quad(near, far, hoof, h=3, back=4, front=13):
+    """Four legs from the side for a 20-wide frame strip: each pair a near leg (2 wide) and a far one (1 wide, behind).
+    On the step frame the pairs spread, and the legs are a pixel longer (the top rises a pixel)."""
+    def rows(n, legs):
+        out = []
+        for j in range(n):
+            row = ['.'] * 20
+            for x, w, c in legs:
+                for i in range(x, x + w): row[i] = hoof if j == n - 1 else c
+            out.append(''.join(row))
+        return out
+    stand = rows(h, [(back, 2, near), (back + 3, 1, far), (front, 2, near), (front + 3, 1, far)])
+    step = rows(h + 1, [(back - 1, 2, near), (back + 4, 1, far), (front + 1, 2, near), (front - 1, 1, far)])
+    return [stand, step]
 
-def render(kind, step):
-    px, (sx, sw) = art(kind, step)
+# kind: (palette, x0, top y0, top rows, legs per step (bottom row 22), shadow (x, w))
+ART = {
+  'chicken': (
+    {'W': '#fffaf0', 'w': '#ebe0cc', 'v': '#cdbb9e', 'R': '#e2463f', 'r': '#a8303a', 'Y': '#f2b84b', 'y': '#c4862a'},
+    5, 11, [
+      '..........RR..',
+      '.........RRrR.',
+      '.........WWWW.',
+      '.w......WWWEWYy',
+      'wWw.....WWWWWy.',
+      'wWWw...wWWWWr..',
+      '.wWWwwwWWWWWR..',
+      '.wWWWWWWWvWWw..',
+      '..wWWvvvvWWw...',
+      '...vwwwwwwwv...',
+    ], [[
+      '......y..y....',
+      '.....YY.YY....',
+    ], [
+      '......y..y....',
+      '......y...y...',
+      '.....YY...YY..',
+    ]], (7, 11)),
+  'duck': (
+    {'W': '#fdfaf2', 'w': '#e4ddcf', 'v': '#c2b8a6', 'O': '#f39b3a', 'o': '#c26c22'},
+    5, 12, [
+      '.........WWW...',
+      '........WWWWW..',
+      '........WWEWOO.',
+      '........wWWWoo.',
+      'w........wWW...',
+      'Ww......wWWw...',
+      'WWwwwwwwWWWW...',
+      'WWWWWWWvvWWWw..',
+      '.wWWWWvvvvWWw..',
+      '..vwwwwwwwwv...',
+    ], [[
+      '.....o...o....',
+      '....OO..OO....',
+    ], [
+      '.....o...o....',
+      '.....o...o....',
+      '....OO....OO..',
+    ]], (6, 12)),
+  'rabbit': (
+    {'W': '#f3ece0', 'w': '#d9cebd', 'v': '#b8aa95', 'P': '#eba7ad', 'p': '#c97f88', 'T': '#ffffff'},
+    5, 10, [
+      '.........ww...',
+      '........wWPw..',
+      '........wWPw..',
+      '.........WPw..',
+      '........wWWWw.',
+      '........WWWEWw',
+      '...wwwwWWWWWWP',
+      '..wWWWWWWWWWw.',
+      '.TTWWWWWWWWw..',
+      '.TTwWWWWWWWw..',
+      '..wvwwwwwwvv..',
+    ], [[
+      '...vvv..vv....',
+    ], [
+      '...vv....vv...',
+      '..vvv.....vv..',
+    ]], (6, 12)),
+  'mossback': (
+    {'G': '#6f9a52', 'g': '#557a3e', 'd': '#3f5c2e', 'M': '#a8d070', 'm': '#86b356', 'Y': '#f0c85a', 'C': '#d9d0a0'},
+    2, 16, [
+      '.........mMm........',
+      '......mMMMmMMMm.....',
+      '.....MMmMMMMmMMm.GG.',
+      'g...gGGGGGGGGGGGGGYG',
+      '.ggGGGGGGGGGGGGGGGGG',
+      '...gCCCCCCCCCCCCggg.',
+    ], [[
+      '.....dd.......dd....',
+    ], [
+      '....dd.........dd...',
+      '....d...........d...',
+    ]], (4, 17)),
+  'cow': (
+    {'W': '#fbf3e0', 'w': '#e3d6bb', 'v': '#c7b799', 'B': '#5a4434', 'b': '#3f2f24', 'P': '#f0aeb0', 'p': '#cf8186',
+     'H': '#efe3c8', 'K': '#3b3029', 'U': '#f3b7b6'},
+    2, 9, [
+      '...............H..H.',
+      '..............wWWWW.',
+      '..............WWWWWW',
+      '..............WBEWWW',
+      '..b.wwwwwwwwwwBBWPPP',
+      '.bBwWWWWBBWWWWWWPPpP',
+      '.b.WBBWWBBBWWWWWwPP.',
+      '...WBBBWWWWWWBWw....',
+      '...WWBWWWWWWBBBw....',
+      '...wWWWWWWWWWBBw....',
+      '...vwwwwUUwwwwwv....',
+    ], quad('w', 'v', 'K'), (4, 17)),
+  'goat': (
+    {'W': '#d8c39a', 'w': '#bba37a', 'v': '#9a8460', 'H': '#7a6a5a', 'h': '#5a4c40', 'P': '#ead9b6', 'K': '#3b3029',
+     'D': '#a88c62'},
+    2, 8, [
+      '..............hH....',
+      '...............hHh..',
+      '..............wWWW..',
+      '..............WWEWW.',
+      '..w...........WWWWPP',
+      '.wW.wwwwwwwwwwWWWPPP',
+      '.wWwWWDDDDDDDWWWWWP.',
+      '...WWWWWWWWWWWWWwPP.',
+      '...WWWWWWWWWWWWw.PP.',
+      '...wWWWWWWWWWWWw..P.',
+      '...vwwwwwwwwwwwv....',
+    ], quad('w', 'v', 'K'), (4, 17)),
+  'sheep': (
+    {'W': '#fbf8f0', 'w': '#e6e0d2', 'v': '#c9c1b0', 'F': '#463c37', 'f': '#2f2825', 'E': '#f7f2e8', 'P': '#e9b4b4'},
+    2, 9, [
+      '....w.ww.ww.w.......',
+      '...wWwWWwWWwWw......',
+      '..wWWWWWWWWWWWwFFF..',
+      '..WWWwWWWWwWWWWFFFF.',
+      '.wWWWWWWwWWWWWWFEFFF',
+      '.WWwWWWWWWWWwWWFFFFF',
+      '.wWWWWwWWWWWWWWfFFPf',
+      '..WWWWWWWWwWWWw.ff..',
+      '..wWWwWWWWWWWWw.....',
+      '..vwwWwwwwwwwwv.....',
+      '...vvvvvvvvvvv......',
+    ], quad('F', 'f', 'f', 2), (3, 17)),
+  'pig': (
+    {'P': '#f2b9ae', 'p': '#d99488', 'v': '#bd786e', 'H': '#fbd3c9', 'N': '#e6898a', 'n': '#b9606a'},
+    2, 10, [
+      '...............pp...',
+      '..............pPPp..',
+      '.....HHHHHHHHHPPPP..',
+      '...HHPPPPPPPPPPPEPPN',
+      '.ppPPPPPPPPPPPPPPPNn',
+      '..pPPPPPPPPPPPPPPPNN',
+      '...PPPPPPPPPPPPPPp..',
+      '...pPPPPPPPPPPPPp...',
+      '...vppppppppppppv...',
+      '....vvvvvvvvvvvv....',
+    ], quad('p', 'v', 'n'), (3, 17)),
+  'strider': (
+    {'D': '#4e433b', 'd': '#3a312b', 'M': '#6e6054', 'W': '#f6f1e6', 'w': '#ddd3c2', 'N': '#e8dccb', 'n': '#c9bba5',
+     'O': '#f09a3c', 'o': '#c26c22', 'L': '#e2ad70', 'l': '#b9844e'},
+    4, 3, [
+      '............NN..',
+      '...........NNEOO',
+      '...........nNN..',
+      '............N...',
+      '...........nN...',
+      '...........nN...',
+      '...........nN...',
+      '...........nN...',
+      '..W.......nNN...',
+      '.WWw...DDDDNn...',
+      'WWWwDDDDMMMMDD..',
+      '.WwDDDMMMMDDDD..',
+      '..wDDDDMMDDDDd..',
+      '....dDDDDDDDd...',
+      '......ddddd.....',
+    ], [[
+      '.......L..L.....',
+      '.......L..L.....',
+      '.......L..L.....',
+      '.......l..l.....',
+      '.......l..l.....',
+      '......ll.ll.....',
+    ], [
+      '.......L..L.....',
+      '.......L..L.....',
+      '......L....L....',
+      '......L....L....',
+      '......l....l....',
+      '......l....l....',
+      '.....ll....ll...',
+    ]], (5, 14)),
+}
+
+def cells(rows, x0, y0, pal):
+    out = {}
+    for j, row in enumerate(rows):
+        for i, ch in enumerate(row):
+            if ch == '.': continue
+            out[(x0 + i, y0 + j)] = hexc(EYE) if ch == 'E' and 'E' not in pal else hexc(pal[ch])
+    return out
+
+def outline(c):
+    """Darker, slightly warm version of the colour an outline pixel borders."""
+    return tuple(int(v * 0.42 + w * 0.12) for v, w in zip(c, (60, 36, 24)))
+
+def frame(kind, step):
+    pal, x0, y0, top, legs, (sx, sw) = ART[kind]
+    lg = legs[step]
+    px = cells(lg, x0, 23 - len(lg), pal)
+    px.update(cells(top, x0, y0 - step, pal))
     im = Image.new('RGBA', (S, S), (0, 0, 0, 0))
-    for i in range(sx, sx + sw): im.putpixel((i, S - 1), (0, 0, 0, 64))
-    # Shade the bottom edge of each colour region, then outline the silhouette with a darkened neighbour.
-    out = dict(px)
-    for (i, j), c in px.items():
-        if (i, j + 1) not in px and c[:3] != (0x2b, 0x21, 0x1a): out[(i, j)] = shade(c, 0.86)
+    for i in range(sx, sx + sw):
+        a = 40 if i in (sx, sx + sw - 1) else 70
+        im.putpixel((i, S - 1), (0, 0, 0, a))
     ink = {}
-    for (i, j), c in px.items():
-        for di, dj in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-            q = (i + di, j + dj)
-            if q not in px and 0 <= q[0] < S and 0 <= q[1] < S - 1 and q not in ink: ink[q] = shade(c, 0.45)
-    for q, c in ink.items(): im.putpixel(q, c)
-    for q, c in out.items(): im.putpixel(q, c)
+    for (i, j) in sorted(px, key=lambda k: (k[1], k[0])):
+        c = px[(i, j)]
+        if c == hexc(EYE): continue
+        for q in ((i + 1, j), (i - 1, j), (i, j - 1), (i, j + 1)):
+            if q in px or q in ink or not (0 <= q[0] < S and 0 <= q[1] < S - 1): continue
+            ink[q] = outline(c)
+    for q, c in ink.items(): im.putpixel(q, c + (255,))
+    for q, c in px.items(): im.putpixel(q, c + (255,))
     return im
 
-sheet = Image.new('RGBA', (S * 4, S * len(KINDS)), (0, 0, 0, 0))
-for row, kind in enumerate(KINDS):
-    for step in (0, 1):
-        f = render(kind, step)
-        sheet.paste(f, (step * S, row * S))
-        sheet.paste(f.transpose(Image.FLIP_LEFT_RIGHT), ((2 + step) * S, row * S))
-sheet.save(sys.argv[1], optimize=True)
-sheet.resize((sheet.width * 6, sheet.height * 6), Image.NEAREST).save(sys.argv[2])
+def build(path, preview=None):
+    sheet = Image.new('RGBA', (S * 4, S * len(KINDS)), (0, 0, 0, 0))
+    for row, kind in enumerate(KINDS):
+        for step in (0, 1):
+            f = frame(kind, step)
+            sheet.paste(f, (step * S, row * S))
+            sheet.paste(f.transpose(Image.FLIP_LEFT_RIGHT), ((2 + step) * S, row * S))
+    sheet.save(path, optimize=True)
+    if preview:
+        bg = Image.new('RGBA', sheet.size, (118, 168, 88, 255)); bg.alpha_composite(sheet)
+        bg.resize((sheet.width * 6, sheet.height * 6), Image.NEAREST).save(preview)
+
+if __name__ == '__main__':
+    build(sys.argv[1] if len(sys.argv) > 1 else 'assets/sprites/animals.png', sys.argv[2] if len(sys.argv) > 2 else None)
