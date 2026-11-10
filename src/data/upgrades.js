@@ -70,15 +70,15 @@ export const COOP = {
   maxChickens: 4,                             // the first coop's room; levels below add more
   footprint: { x: 18, y: 11, w: 3, h: 2 },   // tiles the building covers
   yard: { x0: 14, y0: 13, x1: 21, y1: 14 },  // where chickens wander
-  names: ['Clementine', 'Pip', 'Marlow', 'Fig'],
+  names: ['Clementine', 'Poppy', 'Marlow', 'Fig'],   // v219: Poppy, not Pip (a neighbour)
   levels: [
     { label: 'Coop', room: 4 },
     { label: 'Big coop', room: 8, cost: 10000, needs: { wood: 400, stone: 150 }, desc: 'Room for 8 and ducks.' },
     { label: 'Deluxe coop', room: 12, cost: 20000, needs: { wood: 500, stone: 200 }, desc: 'Room for 12 and rabbits.' },
   ],
   animals: {
-    chicken:  { name: 'Chicken',  cost: 800,  product: 'egg',     every: 1, level: 0, names: ['Clementine', 'Pip', 'Marlow', 'Fig'] },
-    duck:     { name: 'Duck',     cost: 1200, product: 'duckegg', every: 2, level: 1, deluxe: 'feather', names: ['Puddle', 'Wren', 'Barley', 'Teal'] },
+    chicken:  { name: 'Chicken',  cost: 800,  product: 'egg',     every: 1, level: 0, names: ['Clementine', 'Poppy', 'Marlow', 'Fig'] },
+    duck:     { name: 'Duck',     cost: 1200, product: 'duckegg', every: 2, level: 1, deluxe: 'feather', names: ['Puddle', 'Ripple', 'Barley', 'Teal'] },   // v219: Ripple, not Wren (a neighbour)
     rabbit:   { name: 'Rabbit',   cost: 8000, product: 'wool',    every: 4, level: 2, deluxe: 'luckypaw', names: ['Clover', 'Hazel', 'Tansy', 'Bramble'] },
     mossback: { name: 'Mossback', cost: 0,    product: 'mossegg', every: 7, level: 0, hatched: true, names: ['Lichen', 'Fernley', 'Pebble', 'Sedge'] },
   },
@@ -143,7 +143,7 @@ export const BARN = {
     goat:    { name: 'Goat',  cost: 4000,  product: 'goatmilk', every: 1, level: 0, tool: 'pail',   names: ['Pepper', 'Nettle', 'Biscuit', 'Thistle'] },
     sheep:   { name: 'Sheep', cost: 8000,  product: 'wool',     every: 3, level: 2, tool: 'shears', names: ['Woolly', 'Dandelion', 'Cobble', 'Fleece'] },
     pig:     { name: 'Pig',   cost: 16000, product: 'truffle',  every: 1, level: 2, outdoors: true, names: ['Truffle', 'Acorn', 'Rosie', 'Mudlark'] },
-    strider: { name: 'Strider', cost: 0,   product: 'bigegg',   every: 7, level: 0, hatched: true, names: ['Stilts', 'Longshank', 'Plume', 'Rook'] },
+    strider: { name: 'Strider', cost: 0,   product: 'bigegg',   every: 7, level: 0, hatched: true, names: ['Stilts', 'Longshank', 'Plume', 'Wader'] },   // v219: Wader, not Rook (a neighbour)
   },
   tools: { pail: { name: 'Milk pail', cost: 1000, desc: 'Cows and goats give milk only once you have one.' },
     shears: { name: 'Shears', cost: 1000, desc: 'Sheep give wool only once you have a pair.' } },
