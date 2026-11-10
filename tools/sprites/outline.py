@@ -31,13 +31,7 @@ def tidy(px, w, h, layer=lambda k, c: 'ink'):
 
 # v207: furniture.png is drawn by tools/sprites/furniture.py, not from the code art.
 
-# wallpapers.png and floors.png: 16x16 swatches in one row, catalogue order, as drawn (they repeat edge to edge,
-# so they are not outlined). A wallpaper swatch is a whole wall face, its bottom trim included.
-for name in ('walls', 'floors'):
-    img = Image.new('RGBA', (16 * len(art[name]), 16), (0, 0, 0, 0))
-    for n, (k, data) in enumerate(art[name]):
-        for (i, j), c in grid(data, 16, 16).items(): img.putpixel((n * 16 + i, j), c)
-    img.save(f"{OUT}/{'wallpapers' if name == 'walls' else 'floors'}.png", optimize=True)
+# v220: wallpapers.png and floors.png are drawn by tools/sprites/rooms.py, not from the code art.
 
 # buildings.png and buildings-winter.png: every building at full size, packed in rows (the same layout in both), and
 # src/data/buildings.js: where each one is ([x, y, w, h] on the sheets) and where it sits ([dx, dy] from its tile).
@@ -73,24 +67,4 @@ print('BUILDINGS:', len(bs), 'sheet', WIDTH, 'x', height, '->', data)
 # v205: fences.png and fixtures.png are drawn by tools/sprites/fences.py, not from the code art.
 
 
-# v93 glow.png: the lantern glow as drawn (soft light, not outlined). bunting.png: one flag, white, outlined (tinted).
-Image.frombytes('RGBA', (56, 52), bytes(art['glow'])).save(f'{OUT}/glow.png', optimize=True)
-img = Image.new('RGBA', (8, 8), (0, 0, 0, 0))
-for (i, j), (L, c) in tidy(grid(art['flag'], 8, 8), 8, 8).items(): img.putpixel((i, j), c)
-img.save(f'{OUT}/bunting.png', optimize=True)
-
-# v94 pens.png: 32x16 frames, a column per piece (PENS_SHEET.order), outlined; the fish in the main band (row 0,
-# tinted), every other piece in the ink band (row 1).
-img = Image.new('RGBA', (32 * len(art['pens']), 32), (0, 0, 0, 0))
-for n, (k, data) in enumerate(art['pens']):
-    for (i, j), (L, c) in tidy(grid(data, 32, 16), 32, 16).items(): img.putpixel((n * 32 + i, (0 if k == 'fish' else 16) + j), c)
-img.save(f'{OUT}/pens.png', optimize=True)
-print('PENS order:', [k for k, _ in art['pens']])
-
-# v95 variants.png: props that change with the place or season, 16x16 in one row (VARIANTS_SHEET.order), outlined like
-# props.png.
-img = Image.new('RGBA', (16 * len(art['variants']), 16), (0, 0, 0, 0))
-for n, (k, data) in enumerate(art['variants']):
-    for (i, j), (L, c) in tidy(grid(data, 16, 16), 16, 16).items(): img.putpixel((n * 16 + i, j), c)
-img.save(f'{OUT}/variants.png', optimize=True)
-print('VARIANTS order:', [k for k, _ in art['variants']])
+# v220: glow.png, bunting.png, pens.png and variants.png are drawn by tools/sprites/extras.py, not from the code art.

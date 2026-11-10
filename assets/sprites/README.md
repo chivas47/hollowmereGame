@@ -120,7 +120,7 @@ To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, a
 
 ## wallpapers.png, floors.png
 
-192 x 16 each. One 16 x 16 swatch per wallpaper and per floor, in the order of `WALLPAPERS` and `FLOORS` in `src/data/furniture.js`. Each repeats edge to edge. A wallpaper swatch is a whole wall face, its bottom trim included. Adding a wallpaper or floor to the catalogue means adding its swatch at the end.
+192 x 16 each. One 16 x 16 swatch per wallpaper and per floor, in the order of `WALLPAPERS` and `FLOORS` in `src/data/furniture.js`. Each repeats edge to edge. A wallpaper swatch is a whole wall face: the paper on rows 0 to 12, a skirting board on rows 13 to 15. Built by `tools/sprites/rooms.py`, which reads the catalogue from `src/data/furniture.js`: a new wallpaper or floor with one of the existing patterns gets its swatch by running it again.
 
 ## buildings.png, buildings-winter.png
 
@@ -184,14 +184,14 @@ Lit bombs use the bomb frames of placed.png.
 
 ## pens.png
 
-288 x 32. Pond, slime pen and farm cave pieces, 32 x 16 frames, one column per piece in the order of `PENS_SHEET.order`: fish, roe, slime (resting), slime (mid-hop), slime ball, trough water, bat, mushroom log, crate goods. Each piece's spot (where the code places it) is x 4, y 2 of its frame (`PENS_SHEET.anchor`), so keep that corner where it is when redrawing.
+288 x 32. Pond, slime pen and farm cave pieces, 32 x 16 frames, one column per piece in the order of `PENS_SHEET.order`: fish, roe, slime (resting), slime (mid-hop), slime ball, trough water, bat, mushroom log, crate goods. Each piece's spot (where the code places it) is x 4, y 2 of its frame (`PENS_SHEET.anchor`), so keep that corner where it is when redrawing. Built by `tools/sprites/extras.py`, with variants.png, glow.png and bunting.png.
 
 - **Rows (2 bands):** main (the fish only, greyscale, tinted to the fish's colour), ink (every other piece, colours drawn in).
 - Where each piece goes and how it moves is in code.
 
 ## variants.png
 
-272 x 16. Props that change with the place or the season, 16 x 16 over the tile, one row in the order of `VARIANTS_SHEET.order`: shrine door, shrine door in snow, the pedestals for farming, foraging, fishing, mining, combat and ranching, the farm cave mouth (plain, snow), the Smoke Peak mouth (plain, snow), the chime shells small, middle and large, the island altar, the summit's altar chest. Cave mouths and the shrine door fill their whole tile; the rest sit over the tile-set ground.
+272 x 16. Props that change with the place or the season, 16 x 16 over the tile, one row in the order of `VARIANTS_SHEET.order`: shrine door, shrine door in snow, the pedestals for farming, foraging, fishing, mining, combat and ranching, the farm cave mouth (plain, snow), the Smoke Peak mouth (plain, snow), the chime shells small, middle and large, the island altar, the summit's altar chest. The pedestals take their skill's colour from `SHRINE.colors` (src/data/books.js). Cave mouths and the shrine door fill their whole tile; the rest sit over the tile-set ground.
 
 ## Credits
 
@@ -211,7 +211,7 @@ Lit bombs use the bomb frames of placed.png.
 | terrain-*.png | Hollowmere Farm (original, v85, colours from the season palettes; redrawn v204) | same as the game |
 | soil.png | Hollowmere Farm (original placeholder, v86) | same as the game |
 | cave-*.png | Hollowmere Farm (original placeholder, v87, colours from the cave themes) | same as the game |
-| wallpapers.png, floors.png | Hollowmere Farm (original placeholder, v87, from the game's patterns) | same as the game |
+| wallpapers.png, floors.png | Hollowmere Farm (original, v87; redrawn v220) | same as the game |
 | buildings.png, buildings-winter.png | Hollowmere Farm (original, v88, from the game's code art; redrawn v201 to v203) | same as the game |
 | props.png | Hollowmere Farm (original, v89; redrawn v212) | same as the game |
 | greenhouse.png | Hollowmere Farm (original, v89; redrawn v213) | same as the game |
@@ -220,7 +220,7 @@ Lit bombs use the bomb frames of placed.png.
 | alders.png | Hollowmere Farm (original, v91; redrawn v199) | same as the game |
 | fences.png, fixtures.png | Hollowmere Farm (original, v91; redrawn v205) | same as the game |
 | children.png | Hollowmere Farm (original, v92; redrawn v213) | same as the game |
-| glow.png, bunting.png | Hollowmere Farm (original placeholder, v93, from the game's code art) | same as the game |
-| pens.png | Hollowmere Farm (original placeholder, v94, from the game's code art) | same as the game |
-| variants.png | Hollowmere Farm (original placeholder, v95, from the game's code art) | same as the game |
+| glow.png, bunting.png | Hollowmere Farm (original, v93; redrawn v220) | same as the game |
+| pens.png | Hollowmere Farm (original, v94; redrawn v220) | same as the game |
+| variants.png | Hollowmere Farm (original, v95; redrawn v220) | same as the game |
 | ../icons/icon-192.png, icon-512.png | Hollowmere Farm (original, v121: the ripe turnip from the game's crop art on tilled soil, scaled up pixel for pixel) | same as the game |

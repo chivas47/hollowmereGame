@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v220: The last code-art sheets redrawn
+- Wallpapers: a shade under the ceiling and a wooden skirting board on every wall; plaster with a fine speckle, stripes with a pinstripe, small four-petal flowers on the dotted papers, upright boards with nail heads, bricks in offset courses on pale mortar, and fern fronds on the sprig paper.
+- Floors: planks with lit edges, grain and staggered joints; bevelled tiles in grout; a bevelled checker; a basket weave for the straw mat and the herringbone.
+- The fish pond, slime pen and farm cave pieces: a fish with a forked tail and an eye (still tinted to each fish), a cluster of roe, slimes with a shine (both hop frames), slime balls, a wooden trough of water, bats with folded wings, a mushroom log with a cut end, and a basket of fruit for the cave's goods.
+- The shrine door (an arched door in coursed stone with the six skill stones), the six pedestals (a cut gem on a column, in each skill's colour), the farm cave and Smoke Peak mouths (with embers and smoke at the peak), all with snow in winter; the three chime shells as ribbed scallops; the island's mossy altar and the summit's chest.
+- The festival flag as a shaded pennant, and a softer lantern glow that eases out instead of fading in a straight line.
+- Built by tools/sprites/rooms.py (reads the catalogue from src/data/furniture.js) and tools/sprites/extras.py; tools/sprites/outline.py now only makes the building sheets, which came out byte-identical. Same sizes and anchors. Drawing only: no saves, prices or keys changed.
+
 ## v219: Animal names that are not neighbours' names
 - Three default animal names were neighbours' names: a chicken called Pip, a duck called Wren and a strider called Rook. New animals now take Poppy, Ripple and Wader instead, so the journal no longer lists "Pip the chicken" beside Pip the boy.
 - Animals that already have one of the old names keep it: a name is part of the animal, and only animals bought or hatched from now on take the new ones. No saves change.
