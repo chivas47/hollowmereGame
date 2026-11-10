@@ -20,7 +20,7 @@ You take over the overgrown Hollowmere plot. Farm through the seasons, fish and 
 
 ## New game (v21)
 
-A new farm starts on a screen that asks for the farmer's name, the farm's name (shown as "<name> Farm"), a favourite thing, colours for skin, hair, shirt and trousers, short or long hair, and a starting pet: cat, dog or turtle. The pet is saved with the profile and moves in when pets arrive (roadmap item 8). Neighbours at 2 hearts or more have a line that uses the name and the favourite thing. Old saves get the default profile: Farmer of Hollowmere Farm, the original look.
+A new farm starts on a screen that asks for the farmer's name, the farm's name (shown as "<name> Farm"), a favourite thing, colours for skin, hair, shirt and trousers, a hair style (short, long, bun, ponytail, curly, cropped or balding; v222), a beard (none, full, moustache or goatee), glasses, and a starting pet: cat, dog or turtle. The pet is saved with the profile and moves in when pets arrive (roadmap item 8). Neighbours at 2 hearts or more have a line that uses the name and the favourite thing. Old saves get the default profile: Farmer of Hollowmere Farm, the original look.
 
 ## Farm layouts (v22)
 

@@ -6,15 +6,12 @@ Rules (PROJECT_INSTRUCTIONS rule 3): original art or a permissive licence (CC0, 
 
 ## person.png
 
-192 x 128. Frames are 16 x 16, the person's feet at the bottom centre (x 8, y 16).
+Built by `tools/sprites/person.py`, which also writes the layout to `src/data/personSheet.js`. Frames are 16 x 20, the person's feet at the bottom centre (x 8, y 20); the top 4 rows are room for hats.
 
-- **Columns (12):** down, up, left, right, each as stand, step a, step b.
-- **Rows (8 bands of 16 px), in draw order:** skin, shoes, pants, shirt, hair, long (extra hair for long styles), beard, ink.
-- **Tinted bands** are greyscale: white becomes the palette colour, greys become its shades (multiply), so draw base colour white, shade about 190, outline about 105.
-- **ink** is drawn as is: eyes, the shadow, anything that keeps its own colour.
-- Hats are still drawn in code over the frame.
-
-To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, and reload the page.
+- **Columns (12):** down, up, left, right, each as stand, step a, step b (left is right mirrored). On the step frames the head and body sit a pixel lower.
+- **Rows:** one 20 px band per part and colour layer, named `<part>|<layer>` in the order of `PERSON.layers`. Parts: `body` (head, hands, shirt, trousers, shoes), `outfit:<k>`, `hair:<k>` (and `hair:<k>@hat`, trimmed to sit under a hat), `beard:<k>`, `extra:<k>`, `hat:<k>`. Layers: skin, shoes, pants, shirt, acc, hair, beard (tinted to the hair), hat, band, ink.
+- **Tinted bands** are greyscale: white becomes the palette colour, greys its shades (multiply): 255 the colour, 205 its shade, 160 its deep shade, 105 the outline. **ink** is drawn as is: eyes, cheeks, shines, buttons, the shadow.
+- `src/data/people.js` decides which bands a look draws (`personLayers`). To add a style, draw it in person.py's tables, run it, and label it in people.js; `tools/sprites/people_lineup.mjs` draws every neighbour to check.
 
 ## animals.png
 
@@ -199,7 +196,7 @@ Lit bombs use the bomb frames of placed.png.
 
 | File | Author | Licence |
 | --- | --- | --- |
-| person.png | Hollowmere Farm (original placeholder, v77) | same as the game |
+| person.png | Hollowmere Farm (original, v77; rebuilt part by part v222) | same as the game |
 | animals.png | Hollowmere Farm (original, v78; redrawn v196) | same as the game |
 | pets.png, horse.png | Hollowmere Farm (original, v79; redrawn v196) | same as the game |
 | monsters.png | Hollowmere Farm (original, v80; redrawn v208) | same as the game |

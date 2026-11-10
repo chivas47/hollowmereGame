@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v222: Characters rebuilt part by part
+- The farmer and every neighbour are redrawn with more detail: ears, a collar at the neck, three shades in every colour, hair with strands and a shine, and a one-pixel bob of the head and body when walking.
+- People are now put together from parts: a body, then an outfit, a hair style, a beard, glasses and a hat, each drawn once and tinted to the person's colours. Seven hair styles (short, long, bun, ponytail, curly, cropped, balding), three beards (full, moustache, goatee), four outfits (dress, long coat, overalls, apron) and glasses. The six hat shapes are drawn on the sheet too, sitting properly over each hair style.
+- Neighbours dress for their work: aprons on the shopkeeper, the smith, the tavern keeper, the beekeeper and the painter; overalls on the carpenter, the miner, the boatwright, the stonemason and the line mender; long coats on the doctor, the warden, the curator, the boathouse keeper, the station keeper and the lamplighter; dresses on the teacher, the weaver and the retired teacher; glasses on the doctor, the teacher, the tinkerer, the curator, the retired teacher and the clockmaker. Their colours are unchanged.
+- The new game screen offers every hair style, a beard and glasses.
+- For changing the art: tools/sprites/person.py draws every part and writes the sheet's layout to src/data/personSheet.js; src/data/people.js names the styles. A new style is drawn once there, labelled once here, and is then available to every look. tools/sprites/people_lineup.mjs draws every neighbour in the four directions to check the result.
+- Old saves: a farmer with long hair keeps long hair, a beard stays a full beard. New save data: the profile's look may now hold hairStyle, beard and glasses (only set from the new game screen).
+
 ## v221: Tilled soil and cave ground redrawn
 - Tilled soil: ridges with a lit crest and a furrow in shadow, clods, and a raised bank round each patch. Watered soil is darker, with wet glints in the furrows.
 - Cave floors: faint patches, pebbles lit on top and hairline cracks, plus each theme's own touch: ripples in the sandy caverns, cracks glowing in the vents and the Smoke Peak, damp moss in the sewer.

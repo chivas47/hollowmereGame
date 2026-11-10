@@ -8,7 +8,7 @@ export const NPCS = [
     id: 'ines', name: 'Ines', role: 'Beekeeper from past the east road', seed: 1,
     loves: ['pumpkin', 'honey'], likes: ['turnip', 'berry', 'melon', 'carp', 'egg', 'jar_berry'], dislikes: ['quartz', 'coal'], hates: ['pepper'],
     birthday: { season: 'Spring', d: 20 },
-    pal: { hat: null, hair: '#d9a441', shirt: '#e2a33a', pants: '#7a5a2e', skin: '#e8b88f', long: true },
+    pal: { hat: null, hair: '#d9a441', shirt: '#e2a33a', pants: '#7a5a2e', skin: '#e8b88f', long: true, hairStyle: 'bun', outfit: 'apron' },
     path: [[14, 4], [14, 9], [19, 9], [19, 4], [10, 4]],
     lines: [
       ["Oh, you're the one who took over the old Hollowmere plot. Mind the bees, they're shy.", 'My hives are past the east road. The clover has been good this year.'],
@@ -22,7 +22,7 @@ export const NPCS = [
     id: 'bram', name: 'Bram', role: 'Retired carpenter, built your shipping bin', seed: 0,
     loves: ['radish', 'hardwood'], likes: ['pumpkin', 'mushroom', 'frostroot', 'trout', 'pike', 'iron'], dislikes: ['syrup', 'sugar'], hates: ['honey'],
     birthday: { season: 'Autumn', d: 6 },
-    pal: { hat: '#6b5a48', band: '#4a3d30', hair: '#cfcac2', shirt: '#5d7a4a', pants: '#3f3a33', skin: '#d9a37e', beard: true },
+    pal: { hat: '#6b5a48', band: '#4a3d30', hair: '#cfcac2', shirt: '#5d7a4a', pants: '#3f3a33', skin: '#d9a37e', beard: true, outfit: 'overalls' },
     path: [[6, 4], [6, 11], [11, 11], [11, 6], [16, 6], [16, 4]],
     lines: [
       ["Built that shipping bin myself, thirty years back. Still holds, doesn't it?", "Hmph. Another young farmer. We'll see if you last the season."],
@@ -50,7 +50,7 @@ export const NPCS = [
     id: 'tavi', name: 'Tavi', role: 'Young mapmaker charting the valley paths', seed: 3,
     loves: ['rosehip', 'trailbun'], likes: ['sorrel', 'fava', 'celeriac', 'melon', 'copper', 'egg'], dislikes: ['cheese', 'butter'], hates: ['mayo'],
     birthday: { season: 'Winter', d: 17 },
-    pal: { hat: null, hair: '#a5432f', shirt: '#c9b68e', pants: '#5c4a3a', skin: '#f0c8a0', long: true },
+    pal: { hat: null, hair: '#a5432f', shirt: '#c9b68e', pants: '#5c4a3a', skin: '#f0c8a0', long: true, hairStyle: 'ponytail' },
     path: [[2, 4], [2, 8], [8, 8], [8, 12], [13, 12], [13, 4]],
     lines: [
       ["Don't mind me, I'm pacing out your fence line. The old map says it's crooked.", 'Every path in this valley is drawn wrong somewhere. I am fixing them one by one.'],
@@ -66,7 +66,7 @@ export const NPCS = [
     id: 'wren', name: 'Wren Fenn', role: "Keeps Fenn's Provisions in town", seed: 4,
     loves: ['jar_tomato', 'wine_fig'], likes: ['tomato', 'corn', 'egg', 'flour', 'lettuce'], dislikes: ['quartz', 'slices'], hates: ['frostroot'],
     birthday: { season: 'Spring', d: 4 },
-    pal: { hat: null, hair: '#7a3b22', shirt: '#c0443a', pants: '#3f4a5a', skin: '#e0b48a', long: true },
+    pal: { hat: null, hair: '#7a3b22', shirt: '#c0443a', pants: '#3f4a5a', skin: '#e0b48a', long: true, outfit: 'apron' },
     lines: [
       ['Seeds are in the bins by the door. Mind the turnips, they roll.', 'If it grows in this valley, I sell the seed for it. Mostly.'],
       ['You buy more seed than anyone since the old farmer. I like you already.', 'Shut on Wednesdays. Even a shop needs a day to breathe.', 'Morning, {name}. The {fav} seed came in fresh.'],
@@ -78,7 +78,7 @@ export const NPCS = [
     id: 'corvin', name: 'Corvin', role: 'The smith at the Anvil', seed: 5,
     loves: ['goldbar', 'pizza'], likes: ['ironbar', 'copperbar', 'coal', 'umbritebar', 'emberquartz'], dislikes: ['salad', 'lettuce'], hates: ['jar_berry'],
     birthday: { season: 'Summer', d: 26 },
-    pal: { hat: null, hair: '#2b2a2e', shirt: '#5a5f66', pants: '#3a2f28', skin: '#a8714f', beard: true },
+    pal: { hat: null, hair: '#2b2a2e', shirt: '#5a5f66', pants: '#3a2f28', skin: '#a8714f', beard: true, hairStyle: 'crop', outfit: 'apron', acc: '#6e4626' },
     lines: [
       ['Bring me bars, not ore. I can smelt, but I would rather hammer.', 'The forge is hot. Do not touch anything that glows.'],
       ['Your tools come back to me less bent these days. You are learning.', 'Cracked a geode this morning. Nothing in it. Story of my life.', '{name}. Good steel, that hoe of yours.'],
@@ -90,7 +90,7 @@ export const NPCS = [
     id: 'hob', name: 'Hob', role: 'Runs the Lantern tavern', seed: 6,
     loves: ['wine_persimmon', 'trout'], likes: ['corn', 'wheat', 'pepper', 'pike', 'cheese'], dislikes: ['coral', 'urchin'], hates: ['mushroom'],
     birthday: { season: 'Autumn', d: 15 },
-    pal: { hat: null, hair: '#5a3a22', shirt: '#f4ead2', pants: '#3a2f28', skin: '#c99a74', beard: true },
+    pal: { hat: null, hair: '#5a3a22', shirt: '#f4ead2', pants: '#3a2f28', skin: '#c99a74', beard: true, hairStyle: 'bald', outfit: 'apron', acc: '#7a5a3a' },
     lines: [
       ['Kitchen opens at noon. Before that, I am a man with a mop.', 'The Lantern has stood here longer than the town. That is what I tell people.'],
       ['Your spot at the bar is free whenever you want it.', 'I tried a new stew today. Corvin ate three bowls. That is a review.', 'Evening, {name}. Something warm?'],
@@ -102,7 +102,7 @@ export const NPCS = [
     id: 'maren', name: 'Doctor Maren', role: 'Runs the clinic in town', seed: 7,
     loves: ['tidestone', 'thymetea'], likes: ['carrot', 'lettuce', 'salad', 'trout', 'pear'], dislikes: ['sugar', 'biscuit'], hates: ['embereel'],
     birthday: { season: 'Winter', d: 3 },
-    pal: { hat: null, hair: '#2b2a2e', shirt: '#e8eef2', pants: '#5a6a7a', skin: '#e0b48a', long: true },
+    pal: { hat: null, hair: '#2b2a2e', shirt: '#e8eef2', pants: '#5a6a7a', skin: '#e0b48a', long: true, hairStyle: 'bun', outfit: 'coat', glasses: true },
     lines: [
       ['Clinic hours are nine to three. Emergencies, whenever you faint.', 'Wear sturdy boots in the Hollow. I am tired of sprained ankles.'],
       ['You look rested. That is rarer than you would think in a farming town.', 'I sorted the herb drawer today. It was very satisfying.', 'Hello, {name}. Eating properly?'],
@@ -114,7 +114,7 @@ export const NPCS = [
     id: 'hale', name: 'Warden Hale', role: "Keeps the Wardens' Lodge by the Hollow", seed: 8,
     loves: ['umbritebar', 'skillet'], likes: ['iron', 'gold', 'pike', 'emberquartz', 'quarrysnack'], dislikes: ['crocus', 'narcissus'], hates: ['pancakes'],
     birthday: { season: 'Spring', d: 27 },
-    pal: { hat: null, hair: '#8d939a', shirt: '#4f6b3a', pants: '#3f3226', shoes: '#2b211a', skin: '#c99a74', beard: true },
+    pal: { hat: null, hair: '#8d939a', shirt: '#4f6b3a', pants: '#3f3226', shoes: '#2b211a', skin: '#c99a74', beard: true, outfit: 'coat' },
     lines: [
       ['Keep your blade sharp and your lantern full. The Hollow does not forgive.', 'I have been down further than most. Not as far as I would like.'],
       ['You fight like someone who has been taught. Or someone who learns fast.', 'Slimes again on the upper floors. They breed like rabbits.', '{name}. Still breathing. Good.'],
@@ -140,7 +140,7 @@ export const NPCS = [
     id: 'pell', name: 'Pell', role: 'Teaches the valley children in the town hall', seed: 10,
     loves: ['bk_stars', 'persimmon'], likes: ['pear', 'plum', 'biscuit', 'thymetea', 'violet'], dislikes: ['coal', 'gel'], hates: ['oldboot', 'smoked_carp'],
     birthday: { season: 'Autumn', d: 24 },
-    pal: { hat: null, hair: '#3f2f22', shirt: '#5f8fb5', pants: '#4a4a5a', skin: '#e8b88f', long: true },
+    pal: { hat: null, hair: '#3f2f22', shirt: '#5f8fb5', pants: '#4a4a5a', skin: '#e8b88f', long: true, glasses: true, outfit: 'dress' },
     lines: [
       ['Lessons in the morning, marking in the evening. The rest is gardening.', 'If you see a child in your field, send them back to me. Kindly.'],
       ['The children wrote stories about your farm. One has a dragon in it.', 'I read a book a week. It is the only vice I can afford.', 'Good day, {name}. Learn anything today?'],
@@ -164,7 +164,7 @@ export const NPCS = [
     id: 'nell', name: 'Nell', role: 'Retired miner who keeps a garden by the south lane', seed: 12,
     loves: ['jar_pumpkin', 'heartstone'], likes: ['carrot', 'beet', 'cheese', 'quartz', 'tidestone'], dislikes: ['pizza', 'triplebrew'], hates: ['mayo'],
     birthday: { season: 'Summer', d: 14 },
-    pal: { hat: '#a07a4a', band: '#6b4a2b', hair: '#e8e4dc', shirt: '#7a8a5a', pants: '#4a3a2a', skin: '#d9a37e', long: true },
+    pal: { hat: '#a07a4a', band: '#6b4a2b', hair: '#e8e4dc', shirt: '#7a8a5a', pants: '#4a3a2a', skin: '#d9a37e', long: true, outfit: 'overalls' },
     lines: [
       ['Forty years down the Hollow. Now I dig in softer dirt.', 'Mind the beets, they are just coming up.'],
       ['You remind me of myself at your age. Stubborn, early riser.', 'I found my first heartstone on floor 52. Gave it to my husband. He cried.', 'Morning, {name}. Hands dirty yet?'],
@@ -176,7 +176,7 @@ export const NPCS = [
     id: 'rook', name: 'Rook', role: 'Boatwright who works on the beach', seed: 13,
     loves: ['bluefin', 'wine_nectarine'], likes: ['hardwood', 'wood', 'pilchard', 'sprat', 'coral'], dislikes: ['lettuce', 'frostkale'], hates: ['glass'],
     birthday: { season: 'Spring', d: 12 },
-    pal: { hat: null, hair: '#2b2018', shirt: '#4a6a7a', pants: '#3a3a3a', skin: '#b5835a', beard: true },
+    pal: { hat: null, hair: '#2b2018', shirt: '#4a6a7a', pants: '#3a3a3a', skin: '#b5835a', beard: true, outfit: 'overalls' },
     lines: [
       ['That hull will float by summer. Or I will.', 'The sea takes what it wants. You learn to build around that.'],
       ['You have steady hands. Ever thought about boats?', 'Odile and I argue about knots. She is usually right.', '{name}. Fair wind today.'],
@@ -188,7 +188,7 @@ export const NPCS = [
     id: 'esme', name: 'Esme', role: 'Painter who sketches in the forest', seed: 14,
     loves: ['wine_pear', 'violet'], likes: ['morel', 'chanterelle', 'narcissus', 'crocus', 'dandelion'], dislikes: ['coal', 'goldbar'], hates: ['smoked_minnow'],
     birthday: { season: 'Autumn', d: 2 },
-    pal: { hat: null, hair: '#c98a3a', shirt: '#8a5a8a', pants: '#3f4a3a', skin: '#f0c8a0', long: true },
+    pal: { hat: null, hair: '#c98a3a', shirt: '#8a5a8a', pants: '#3f4a3a', skin: '#f0c8a0', long: true, hairStyle: 'curly', outfit: 'apron', acc: '#e8e0d0' },
     lines: [
       ['Hold still. No, really, the light on you is perfect.', 'The forest is a different colour every hour. I can never keep up.'],
       ['I painted your farm from the hill. You are a small blue dot in it.', 'Lio plays while I paint sometimes. It helps.', 'Hello, {name}. Seen anything beautiful today?'],
@@ -200,7 +200,7 @@ export const NPCS = [
     id: 'kit', name: 'Kit', role: 'Teenage tinkerer, always building something', seed: 15,
     loves: ['emberquartz', 'pizza'], likes: ['copperbar', 'ironbar', 'quartz', 'biscuit', 'cinder'], dislikes: ['salad', 'pottage'], hates: ['frostkale'],
     birthday: { season: 'Winter', d: 8 },
-    pal: { hat: null, hair: '#2b2a2e', shirt: '#c98a3a', pants: '#3f4a5a', skin: '#c99a74' },
+    pal: { hat: null, hair: '#2b2a2e', shirt: '#c98a3a', pants: '#3f4a5a', skin: '#c99a74', glasses: true },
     lines: [
       ['Do not touch that. It is either a clock or a bomb. I forget which.', 'Corvin lets me use the scrap pile. Best place in town.'],
       ['I am building a machine that waters plants. You might need one, actually.', 'Juno says my letters are mostly diagrams. They are.', 'Oh, hey {name}! Want to see something?'],
@@ -213,7 +213,7 @@ export const NPCS = [
     id: 'garrow', name: 'Garrow', role: 'Keeps the boathouse on the mere; sells bait and tackle', seed: 17,
     loves: ['frostpike', 'sturgeon'], likes: ['netstew', 'bread', 'thymetea', 'hardwood', 'lakebass'], dislikes: ['salad', 'pizza'], hates: ['glass'],
     birthday: { season: 'Spring', d: 16 },
-    pal: { hat: '#3f4a5a', band: '#2b2f36', hair: '#cfcac2', shirt: '#4a5a66', pants: '#2b2f36', skin: '#c99a74', beard: true },
+    pal: { hat: '#3f4a5a', band: '#2b2f36', hair: '#cfcac2', shirt: '#4a5a66', pants: '#2b2f36', skin: '#c99a74', beard: true, outfit: 'coat' },
     lines: [
       ['I rowed folk across this water for thirty years. Then they built the lane round it.', 'Bait is by the door. Tackle behind me. Mind the step.'],
       ['The pike come up in the cold. Everyone else goes home; that is when I fish.', 'Rook builds a good hull. I will not tell him that.', 'Morning, {name}. The mere is flat today.'],
@@ -225,7 +225,7 @@ export const NPCS = [
     id: 'ysolde', name: 'Ysolde', role: 'Weaves baskets and mats from the mere\'s reeds', seed: 18,
     loves: ['cloth', 'honeycake'], likes: ['fiber', 'honey', 'thymetea', 'bread'], dislikes: ['crayfish', 'bait'], hates: ['mayo'],
     birthday: { season: 'Summer', d: 22 },
-    pal: { hat: null, hair: '#b5452f', shirt: '#a0a45a', pants: '#5a5048', skin: '#e0ac7e', long: true },
+    pal: { hat: null, hair: '#b5452f', shirt: '#a0a45a', pants: '#5a5048', skin: '#e0ac7e', long: true, hairStyle: 'bun', outfit: 'dress' },
     lines: [
       ['The best reeds in the valley grow on the north shore. Cut them at dawn, before they dry.', 'Ferran is asleep. He was up before the birds again.'],
       ['Nell has a basket of mine for every vegetable she grows. She keeps asking for more.', 'Esme mixes the colours, I weave them. We never agree on green.', 'Hello, {name}. Mind the bundles.'],
@@ -250,7 +250,7 @@ export const NPCS = [
     id: 'tamsin', name: 'Tamsin', role: 'Runs the Ranch Supply in town; raises cattle on the east road', seed: 20,
     loves: ['cheese', 'truffle'], likes: ['cowmilk', 'wool', 'bigegg', 'thymetea', 'bread'], dislikes: ['seaglass', 'salad'], hates: ['truffleoil'],
     birthday: { season: 'Spring', d: 23 },
-    pal: { skin: '#c99272', hair: '#b5452f', shirt: '#5d7a4a', pants: '#3f3a33', hat: '#a5753f', band: '#6e4626', long: true },
+    pal: { skin: '#c99272', hair: '#b5452f', shirt: '#5d7a4a', pants: '#3f3a33', hat: '#a5753f', band: '#6e4626', long: true, hairStyle: 'ponytail' },
     lines: [
       ['My mother kept cows on this road for forty years. Now I do. They have not noticed the difference.', 'Hay by the sack, feed by the bag, animals to order. Mind the straw.'],
       ['Ines brings honey, I bring wool. Neither of us has ever paid the other a coin.', 'Bram built my barn before I was born. He still knocks on the beams when he passes.', 'Morning, {name}. The cows were up before you.'],
@@ -262,7 +262,7 @@ export const NPCS = [
     id: 'aurel', name: 'Aurel', role: 'Stonemason mending the old wing and the valley\'s bridges', seed: 21,
     loves: ['ambergem', 'netstew'], likes: ['stone', 'copperbar', 'ironbar', 'bread', 'quartz'], dislikes: ['honeycake', 'seaglass'], hates: ['glass'],
     birthday: { season: 'Summer', d: 17 },
-    pal: { hat: '#8d8a84', band: '#5a5048', hair: '#3a2a1e', shirt: '#8a6a4a', pants: '#4a4038', skin: '#b07a52', beard: true },
+    pal: { hat: '#8d8a84', band: '#5a5048', hair: '#3a2a1e', shirt: '#8a6a4a', pants: '#4a4038', skin: '#b07a52', beard: true, outfit: 'overalls' },
     lines: [
       ['The town paid me to mend the old wing. I keep finding more of it to mend.', 'Stone is honest. If it is going to crack, it tells you first.'],
       ['Corvin and I eat lunch together and do not talk. It is the best part of my day.', 'Pip wants to be a mason. Last week he wanted to be a cat.', 'Morning, {name}. Watch the loose step by the bridge; I have not got to it yet.'],
@@ -274,7 +274,7 @@ export const NPCS = [
     id: 'bryn', name: 'Bryn', role: 'Nurse at the clinic, Doctor Maren\'s right hand', seed: 22,
     loves: ['tonic', 'mistlily'], likes: ['thymetea', 'pear', 'honey', 'glademint'], dislikes: ['netstew', 'truffleoil'], hates: ['frostkale'],
     birthday: { season: 'Autumn', d: 19 },
-    pal: { hat: null, hair: '#d9a441', shirt: '#7a9ab0', pants: '#4a5a6a', skin: '#e0ac7e', long: true },
+    pal: { hat: null, hair: '#d9a441', shirt: '#7a9ab0', pants: '#4a5a6a', skin: '#e0ac7e', long: true, hairStyle: 'ponytail' },
     lines: [
       ['Doctor Maren wrote to my school asking for help. I think she meant for a season.', 'If you are going to faint in the mine, faint near the ladder.'],
       ['Pip is at school till two. After that he is wherever the cat is.', 'Esme is painting me for the clinic wall. I asked her to leave out the tired.', 'Hello, {name}. Have you been sleeping? You look like you have not.'],
@@ -299,7 +299,7 @@ export const NPCS = [
     id: 'aldous', name: 'Aldous', role: 'Curator of the Hollowmere Museum', seed: 24,
     loves: ['coilfossil', 'fernfossil'], likes: ['ambergem', 'geode', 'thymetea', 'bonewhistle', 'quartz'], dislikes: ['salad', 'pizza'], hates: ['seaglass'],
     birthday: { season: 'Autumn', d: 9 },
-    pal: { skin: '#e2b896', hair: '#d9d4cc', shirt: '#5a4a6a', pants: '#3f3226', beard: true },
+    pal: { skin: '#e2b896', hair: '#d9d4cc', shirt: '#5a4a6a', pants: '#3f3226', beard: true, hairStyle: 'bald', outfit: 'coat', glasses: true },
     lines: [
       ['I came to the valley for one fossil. Forty years later I have a museum and still only one good fossil.', 'Anything you dig up, bring it here. Even if it looks like a stone. Especially then.'],
       ['Hale says the Hollow is old. I say it is young. We have been having this argument since before Hale had a beard.', 'Tavi maps where things were found. I label where they are now. Between us we know where everything went.', 'Ah, {name}. Have you found something?'],
@@ -311,7 +311,7 @@ export const NPCS = [
     id: 'hester', name: 'Hester', role: 'Retired teacher who keeps the village almanac', seed: 25,
     loves: ['jar_rosehip', 'honeycake'], likes: ['thymetea', 'honey', 'bread', 'pear'], dislikes: ['netstew', 'bait'], hates: ['frostkale'],
     birthday: { season: 'Spring', d: 7 },
-    pal: { hat: null, hair: '#e8e4dc', shirt: '#9a5a6a', pants: '#4a4038', skin: '#e0ac7e', long: true },
+    pal: { hat: null, hair: '#e8e4dc', shirt: '#9a5a6a', pants: '#4a4038', skin: '#e0ac7e', long: true, hairStyle: 'bun', outfit: 'dress', glasses: true },
     lines: [
       ['I taught every child in this valley for forty years. Pell was the last, and the best. Do not tell the others.', 'The almanac says it rained on this day eleven years running. Then it did not. I wrote that down too.'],
       ['Wilmot winds the town hall clock every Sunday. He says it would stop without him. I think it would stop to spite him.', 'The roses are older than most of the village. So am I.', 'Good morning, {name}. You look like someone who has been up since dawn. Good.'],
@@ -323,7 +323,7 @@ export const NPCS = [
     id: 'wilmot', name: 'Wilmot', role: 'Retired clockmaker; still winds the town hall clock', seed: 26,
     loves: ['goldbar', 'ambergem'], likes: ['copperbar', 'ironbar', 'thymetea', 'netstew'], dislikes: ['honeycake', 'salad'], hates: ['glass'],
     birthday: { season: 'Winter', d: 6 },
-    pal: { hat: '#5a5048', band: '#3a3028', hair: '#cfcac2', shirt: '#6a7a5a', pants: '#3f3a33', skin: '#c99a74', beard: true },
+    pal: { hat: '#5a5048', band: '#3a3028', hair: '#cfcac2', shirt: '#6a7a5a', pants: '#3f3a33', skin: '#c99a74', beard: true, glasses: true },
     lines: [
       ['I came to mend the town hall clock. Fifty-one years ago. It still needs winding on Sundays, so I am still here.', 'A clock is just patience you can hear.'],
       ['Corvin makes a good spring. Not as good as mine were. But good.', 'Hester writes down the weather. I write down the time. Between us nothing goes unrecorded.', 'Morning, {name}. You are four minutes early. Or I am four minutes slow.'],
@@ -348,7 +348,7 @@ export const NPCS = [
     id: 'sabine', name: 'Sabine', role: 'Keeps the railway halt', seed: 28,
     loves: ['netstew', 'honeycake'], likes: ['thymetea', 'bread', 'mistlily'], dislikes: ['seaglass', 'bait'], hates: ['frostkale'],
     birthday: { season: 'Spring', d: 18 },
-    pal: { hat: '#3a4a6a', band: '#c9a35a', hair: '#7a6a5a', shirt: '#3a4a6a', pants: '#2b2f36', skin: '#e0ac7e', long: true },
+    pal: { hat: '#3a4a6a', band: '#c9a35a', hair: '#7a6a5a', shirt: '#3a4a6a', pants: '#2b2f36', skin: '#e0ac7e', long: true, outfit: 'coat' },
     lines: [
       ['The goods train comes about once a week. Nobody believed me for years.', 'Mind the platform edge. Not because of the trains. It is just a long way down for a short step.'],
       ['Juno brings the post through here. We have the best gossip in the valley and nobody to tell it to but each other.', 'My father kept this halt before me. He waved at every train. I do too.', 'Good morning, {name}. Listen for the whistle. Things fall off the back.'],
@@ -360,7 +360,7 @@ export const NPCS = [
     id: 'emmet', name: 'Emmet', role: 'Mends the railway line; Sabine\'s son', seed: 29,
     loves: ['goldbar', 'ironbar'], likes: ['copperbar', 'quartz', 'thymetea', 'lakebass'], dislikes: ['honeycake', 'mistlily'], hates: ['glass'],
     birthday: { season: 'Summer', d: 6 },
-    pal: { hat: '#5a4a3a', band: '#3a3028', hair: '#3a2a1e', shirt: '#7a5a3a', pants: '#3f4a5a', skin: '#e0ac7e' },
+    pal: { hat: '#5a4a3a', band: '#3a3028', hair: '#3a2a1e', shirt: '#7a5a3a', pants: '#3f4a5a', skin: '#e0ac7e', outfit: 'overalls' },
     lines: [
       ['I keep the line in good order for the goods train. One day I will be on it.', 'Kit and I are building a cart that runs on the rails. Do not tell my mother.'],
       ['Corvin sells me bolts. He looks at me like I am going to do something stupid with them. He is usually right.', 'The tunnel at the east end goes somewhere. I have been in thirty paces. Next spring I will go further.', 'Oi, {name}. Seen a train?'],
@@ -374,7 +374,7 @@ export const NPCS = [
     id: 'lamp', name: 'The Lamplighter', role: 'Trades in the sewer after dark', seed: 16, noQuests: true, noFestival: true,
     loves: ['pumpkin', 'gutterpike'], likes: ['cinder', 'mushroom', 'geode', 'frostgeode', 'magmageode', 'crookcarp'], dislikes: ['sugar', 'honey'], hates: ['sunfin'],
     birthday: { season: 'Winter', d: 1 },
-    pal: { hat: null, hair: '#2b2a2e', shirt: '#3a3550', pants: '#2b2a2e', shoes: '#1a1a1a', skin: '#8a8aa8', long: true },
+    pal: { hat: null, hair: '#2b2a2e', shirt: '#3a3550', pants: '#2b2a2e', shoes: '#1a1a1a', skin: '#8a8aa8', long: true, outfit: 'coat' },
     lines: [
       ['Few come down here. Fewer stay to talk.', 'The lamps above are for people. The ones down here are for me.'],
       ['You come back. Most do not. I have noticed.', 'The water in the channel is very old. Older than the town.', 'Good evening, {name}.'],
