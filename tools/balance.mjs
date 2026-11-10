@@ -50,6 +50,7 @@ const STRATEGIES = {
     // inside it and the farm keeps room for buildings. The bot picks the first free spot from the bottom right.
     'lodge:saber', 'lodge:cutlass',   // v37: the lodge's weapons, skipped if the bot has not been deep enough
     'loom', 'mill', 'helperhut',   // the hut's 100 fiber come slowly from weeds
+    'seedmaker',   // v216: learnt at Farming 9; until then the list goes on past it (GOAL later)
     // v168 (roadmap 75l): the late-game sinks, Stardew's obelisks and gold clock: two waystones, then the clock tower.
     'wayvillage', 'statue', 'wayhollow', 'clocktower'],   // v169: the fortune statue before the quartz-hungry waystone
   crops: ['furnace', 'can', 'sprinkler', 'sprinkler', 'sprinkler', 'sprinkler', 'house', 'hoe', ...Array(9).fill('sprinkler2'), 'greenhouse', ...ORCHARD, ...Array(14).fill('sprinkler2'), 'rod', 'can', 'house', 'lamps'],
@@ -121,14 +122,14 @@ const { cook, eat, kitchen } = await load('systems/cooking.js');
 // The bot's professions (v34): the selling and yield picks, Stardew's usual money route.
 const PICKS = { farming: ['tiller', 'artisan'], ranching: ['rancher', 'coopkeeper'], foraging: ['forester', 'lumberjack'], mining: ['miner', 'blacksmith'], fishing: ['fisher', 'angler'], combat: ['fighter', 'brute'] };
 const { HOMES, homeOf, level, noRoom, buyLivestock, orderLevel, buyTool } = await load('systems/livestock.js');
-const { craft } = await load('systems/crafting.js');
+const { craft, learnt } = await load('systems/crafting.js');
 const { startLayout } = await load('systems/layouts.js');
 const { patPet, fillBowl } = await load('systems/pets.js');
 const { orderStable } = await load('systems/stable.js');
 const { STABLE, COAL_COST, MATERIAL_COST } = await load('data/upgrades.js');
 const BAR_ORE = { copperbar: 'copper', ironbar: 'iron' };
 const { pickUp } = await load('systems/placeables.js');
-const { accepted, loadMachine, collectMachine } = await load('systems/artisan.js');
+const { accepted, loadMachine, collectMachine, takes } = await load('systems/artisan.js');
 const { canDeliver, deliver } = await load('systems/quests.js');
 const { openBox, pullPrize } = await load('systems/market.js');   // v69
 const { ordersOpen, orderItems, takeOrder, handIn } = await load('systems/orders.js');
@@ -253,10 +254,12 @@ function simulate(runSeed) {
   for (const k of Object.keys(TREES)) GOAL[k] = { shop: 'store', cost: () => TREES[k].cost, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply(k, 1)) };
   // v37: weapons from the Wardens' Lodge; skipped when the bot has not reached the floor that sells them.
   for (const o of LODGE_SHOP) GOAL[`lodge:${o.key}`] = { cost: () => o.cost, needs: () => ({}), ok: () => !owns(o.key) && S().mineDeepest >= o.floor, buy: () => track('weapons', () => buyGear(o.key)) };
-  for (const k of Object.keys(RECIPES)) GOAL[k] = { cost: () => RECIPES[k].cost, needs: () => RECIPES[k].needs, ok: () => true, buy: () => track('crafting', () => craft(k)) };
+  for (const k of Object.keys(RECIPES)) GOAL[k] = { cost: () => RECIPES[k].cost, needs: () => RECIPES[k].needs, ok: () => true, later: () => !learnt(RECIPES[k]) || (RECIPES[k].needs.goldbar && !(S().bag.goldbar >= RECIPES[k].needs.goldbar)), buy: () => track('crafting', () => craft(k)) };   // v216 later: a recipe a skill has not taught yet, or (the bot never digs for gold) one whose gold bar it does not hold yet
 
+  // v216: the goal the bot is working towards: the first one not stepping aside for a skill it has not learnt.
+  const nextGoal = () => goals.find((k) => !GOAL[k].later?.());
   const missingMats = () => {
-    const g = goals[0] && GOAL[goals[0]];
+    const key = nextGoal(), g = key && GOAL[key];
     if (!g || !g.ok()) return {};
     // Bars the bot does not have yet become the 5 ore and 1 coal each takes at the furnace.
     const raw = {};
@@ -274,27 +277,30 @@ function simulate(runSeed) {
   }
   // Wood and stone: bought from Bram when the gold is there with the purchase itself still affordable.
   function getMaterials() {
-    const m = missingMats(), s = S(), g = GOAL[goals[0]];
+    const m = missingMats(), s = S(), g = GOAL[nextGoal()];
     for (const k of Object.keys(MATERIAL_COST)) {
       const need = m[k] || 0, cost = MATERIAL_COST[k] * need;
       if (need && g && s.gold > cost + (g.cost() || 0) + 500 && goShop('carpenter')) track('materials', () => buyMaterial(k, need));
     }
   }
   function purchases(reserve) {
-    while (goals.length) {
-      const key = goals[0], g = GOAL[key];
-      if (!g.ok()) { goals.shift(); continue; }
+    let i = 0;
+    while (i < goals.length) {
+      const key = goals[i], g = GOAL[key];
+      if (g.later?.()) { i++; continue; }   // v216: a recipe a skill has not taught yet stays on the list; the rest goes on
+      if (!g.ok()) { goals.splice(i, 1); continue; }
       if (g.wait?.()) return;
       // A full farm: no spot left for this building, so the list moves on before any material is gathered for it.
-      if (g.site && !siteExists(key)) { log.skipped.push({ goal: key, day: S().day }); goals.shift(); continue; }
+      if (g.site && !siteExists(key)) { log.skipped.push({ goal: key, day: S().day }); goals.splice(i, 1); continue; }
       if (!affordable(g.cost() + reserve, g.needs()) || (g.shop && !goShop(g.shop))) return;
       if (!g.buy()) {   // a spot that looked clearable but is not (a placed machine in the way): skipped too
-        if (g.noSite) { log.skipped.push({ goal: key, day: S().day }); goals.shift(); continue; }
+        if (g.noSite) { log.skipped.push({ goal: key, day: S().day }); goals.splice(i, 1); continue; }
         return;
       }
       log.purchases.push({ goal: key, day: S().day });
-      goals.shift();
+      goals.splice(i, 1);
     }
+    if (goals.length) return;
     if (log.goalsDone === null) log.goalsDone = S().day;
   }
 
@@ -451,8 +457,14 @@ function simulate(runSeed) {
         if (p.item) break;
         // The kiln only burns wood the next purchase can spare, and only while coal is short.
         if (p.kind === 'loom' && !missingMats().cloth) break;   // cloth is only woven for a purchase, from fiber (wool sells)
-        if (p.kind === 'kiln') { const m = missingMats(), goalWood = GOAL[goals[0]]?.needs?.()?.wood || 0; if (!m.coal || s.bag.wood - 10 < goalWood) break; }
-        const options = accepted(x, y).filter((it) => s.bag[it] > (reserved[it] || 0) && !(p.kind === 'loom' && it === 'wool')).sort((a, b) => ITEMS[b].sell - ITEMS[a].sell);
+        if (p.kind === 'kiln') { const m = missingMats(), goalWood = GOAL[nextGoal()]?.needs?.()?.wood || 0; if (!m.coal || s.bag.wood - 10 < goalWood) break; }
+        // v216: a crop goes into the seed maker only when two of its seeds are worth more than the crop sells for, it is
+        // in season, and the bot is short of its seeds (fewer than 10): seeds it will plant, not a pile of them.
+        const worthSeeding = (it) => p.kind !== 'seedmaker' || (CROPS[it].seed * 2 > ITEMS[it].sell && CROPS[it].seasons.includes(today().season) && (s.seeds[it] || 0) < 10);
+        // v216: a load also leaves what it takes besides the item (the smoker's and furnace's coal) for the next purchase.
+        const goalNeeds = GOAL[nextGoal()]?.needs?.() || {};
+        const spares = (it) => Object.entries(takes(p.kind, it)).every(([k, n]) => k === it || s.bag[k] - n >= (goalNeeds[k] || 0));
+        const options = accepted(x, y).filter((it) => s.bag[it] > (reserved[it] || 0) && !(p.kind === 'loom' && it === 'wool') && worthSeeding(it) && spares(it)).sort((a, b) => ITEMS[b].sell - ITEMS[a].sell);
         if (!options.length || !loadMachine(x, y, options[0])) break;
       }
       spend(TIME.pet);
@@ -745,14 +757,14 @@ function simulate(runSeed) {
   // v60: the town hall's old wing. Bundle items are kept back from shipping and given on a walk to the hall while it
   // is open; materials only when the next purchase can spare them. Vault bundles are paid from spare gold.
   function restoreTrip() {
-    const s = S(), goalNeeds = GOAL[goals[0]]?.needs?.() || {};
+    const s = S(), goalNeeds = GOAL[nextGoal()]?.needs?.() || {};
     if (s.time >= HALL.close) return;
     const gifts = [];
     for (const key of Object.keys(BUNDLES)) {
       if (bundleDone(key)) continue;
       for (const [k, n] of Object.entries(stillNeeds(key))) if ((s.bag[k] || 0) - (ITEMS[k]?.material ? goalNeeds[k] || 0 : 0) >= (ITEMS[k]?.material ? n : 1)) gifts.push([key, k]);
     }
-    const vault = Object.values(BUNDLES).filter((b) => b.gold && !bundleDone(b.key) && s.gold > b.gold * 4 + (GOAL[goals[0]]?.cost?.() || 0));
+    const vault = Object.values(BUNDLES).filter((b) => b.gold && !bundleDone(b.key) && s.gold > b.gold * 4 + (GOAL[nextGoal()]?.cost?.() || 0));
     if (!gifts.length && !vault.length) return;
     if (tripDay !== s.day) { tripDay = s.day; spend(TIME.travel * 2); }
     if (s.time < HALL.open) s.time = HALL.open;
@@ -766,7 +778,7 @@ function simulate(runSeed) {
     if (s.challenge.active) for (const it of challengeItems(s.challenge.active.key)) out[it] = s.bag[it];   // v62: and for Sable
     for (const key of Object.keys(BUNDLES)) if (!bundleDone(key)) for (const [k, n] of Object.entries(stillNeeds(key))) if (!ITEMS[k]?.material) out[k] = Math.max(out[k] || 0, n);
     s.quests.forEach((q) => { out[q.item] = (out[q.item] || 0) + q.n; });
-    for (const [k, n] of Object.entries(GOAL[goals[0]]?.needs?.() || {})) if (k in CROPS) out[k] = (out[k] || 0) + n;
+    for (const [k, n] of Object.entries(GOAL[nextGoal()]?.needs?.() || {})) if (k in CROPS) out[k] = (out[k] || 0) + n;
     for (const k of GEODES) if (s.bag[k]) out[k] = s.bag[k];   // v46: kept for the smithy's morning trip
     if (s.bag.friedegg) out.friedegg = s.bag.friedegg;   // pan eggs are kept to eat, not shipped   // crops the next purchase needs (the helper hut's gleamfruit)
     const n = nextFestival();

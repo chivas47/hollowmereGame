@@ -1,6 +1,6 @@
 // Things you craft and place on the farm. Crafting costs materials and gold (Bram supplies the fittings).
 // kind: 'tree' a fruit tree sapling (data/trees.js), 'sprinkler' waters soil every morning, 'machine' turns an item into an artisan good, 'decor' just looks nice.
-import { PRODUCE } from './crops.js';
+import { PRODUCE, CROPS } from './crops.js';
 import { FORAGE } from './forage.js';
 import { JAR_PREFIX } from './artisan.js';
 import { TREES, FRUIT } from './trees.js';
@@ -60,6 +60,7 @@ export const PLACEABLES = {
   // v31: presses 100 gel into a slime egg; the incubator hatches it for the slime pen.
   slimepress: { name: 'Slime press',      short: 'Sl. press', kind: 'machine' },
   recycler:   { name: 'Recycler',         short: 'Recycler',  kind: 'machine' },   // v41
+  seedmaker:  { name: 'Seed maker',       short: 'Seed mkr',  kind: 'machine' },   // v216
   crabpot:    { name: 'Crab pot',         short: 'Crab pot',  kind: 'pot' },       // v42: placed on pond water (systems/pots.js)
   // v32: used from the kit anywhere, it takes you home (systems/helpers.js) and is used up.
   homecharm:  { name: 'Home charm',       short: 'Charm',     kind: 'charm' },
@@ -144,6 +145,8 @@ export const RECIPES = {
   crabpot:   { cost: 0, needs: { wood: 40, ironbar: 3 }, desc: 'Set it on the Wilds pond and bait it: each morning a crayfish, a snail, a winkle or some trash.' },
   // Stardew's recycling machine: 25 wood, 25 stone, 1 iron bar.
   recycler:  { cost: 0, needs: { wood: 25, stone: 25, ironbar: 1 }, desc: 'Turns trash from the pond into wood, coal, fiber, quartz, stone or ore overnight.' },
+  // v216. Stardew's seed maker: 25 wood, 10 coal, 1 gold bar, learnt at Farming 9.
+  seedmaker: { cost: 0, needs: { wood: 25, coal: 10, goldbar: 1 }, skill: ['farming', 9], desc: 'Turns a crop the seed stall sells into 1 to 3 of its seeds while you wait, sometimes with a few mixed seeds.' },
   // v71. Stardew: chest 50 wood; big chest 120 wood, 2 copper bars; wood sign 25 wood; farm computer 10 dwarf gadgets,
   // a battery pack, 10 refined quartz (ours: 2 iron bars for the gadgets, a storm cell for the battery, quartz for the quartz).
   chest:      { cost: 0, needs: { wood: 50 }, desc: 'Holds 36 kinds of item out of your bag, safe from gifts, orders, machines and the bin. Place it on the farm, in the shed or in the house.' },
@@ -185,7 +188,20 @@ export const MACHINES = {
   // v28. hatch: egg -> animal kind. Collecting moves the animal into the coop or barn (systems/livestock.js).
   slimepress: { accepts: (k) => k === 'gel', takes: () => ({ gel: 100 }), product: () => 'slimeegg', nights: 1, hint: '100 slime gel' },
   incubator:  { accepts: (k) => k in HATCH, hatch: HATCH, product: (k) => k, nights: (k) => HATCH_NIGHTS[k], hint: 'an egg' },
+  // v216: seeds go to the seed pouch, not the bag (systems/artisan.js); product is "seed:<crop>".
+  seedmaker:  { accepts: (k) => seedStock(k), product: (k) => `seed:${k}`, seeds: true, nights: 0, hint: 'a crop the seed stall sells' },
 };
+
+// v216, the seed maker (Stardew's: 1 to 3 seeds of the crop put in, and now and then mixed seeds as well; the mixed
+// seeds' chance is ours, Stardew's ancient seeds have no counterpart). Only crops the seed stall stocks: not the
+// Oasis's ruby stalk, crafted fiber seeds or seed packets (Nuno, November 2026).
+export const SEED_MAKER = { min: 1, max: 3, mixedChance: 0.1, mixedMin: 1, mixedMax: 5 };
+export const seedStock = (k) => !!CROPS[k] && !CROPS[k].packet && !CROPS[k].crafted && !CROPS[k].shop;
+// What one crop makes, from two rolls in [0, 1): { seeds, mixed }.
+export function seedYield(r1, r2, r3 = r2) {
+  const M = SEED_MAKER;
+  return { seeds: M.min + Math.floor(r1 * (M.max - M.min + 1)), mixed: r2 < M.mixedChance ? M.mixedMin + Math.floor(r3 * (M.mixedMax - M.mixedMin + 1)) : 0 };
+}
 
 // Tiles a sprinkler at (x, y) waters.
 export function sprinklerTiles(def, x, y) {

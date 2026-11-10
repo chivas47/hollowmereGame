@@ -2,7 +2,8 @@
 import { G } from '../core/game.js';
 import { on, changed, notify } from '../core/events.js';
 import { ITEMS } from '../data/items.js';
-import { MACHINES } from '../data/crafting.js';
+import { MACHINES, seedYield } from '../data/crafting.js';
+import { CROPS } from '../data/crops.js';
 import { placeKey } from './world.js';
 import { today } from '../core/time.js';
 import { adopt, animalDef, homeOf } from './livestock.js';
@@ -38,6 +39,13 @@ export function loadMachine(x, y, item) {
   p.nights = nightsFor(p.kind, item);
   if (MACHINES[p.kind].hatch && has('breeder')) p.nights = Math.ceil(p.nights / 2);   // v34: breeder
   if (MACHINES[p.kind].repeat) p.copy = item;
+  if (MACHINES[p.kind].seeds) {   // v216: the seed maker rolls its yield now, so the dialog can say what is waiting
+    const y = seedYield(Math.random(), Math.random(), Math.random());
+    p.n = y.seeds; p.mixed = y.mixed;
+    notify(`${y.seeds} ${CROPS[item].name.toLowerCase()} seed${y.seeds === 1 ? '' : 's'}${y.mixed ? ` and ${y.mixed} mixed seeds` : ''} ready.`);
+    changed();
+    return true;
+  }
   if (MACHINES[p.kind].hatch) notify(`The ${ITEMS[item].name.toLowerCase()} hatches in ${p.nights} nights.`);
   else notify(p.nights ? `${ITEMS[p.item].name} will be ready in ${p.nights} night${p.nights === 1 ? '' : 's'}.` : `${ITEMS[p.item].name} is ready.`);
   changed();
@@ -62,6 +70,15 @@ export function collectMachine(x, y) {
     notify(`${name} the ${animalDef(hatch).name.toLowerCase()} hatched and moved into the ${homeOf(hatch)}.`);
     changed();
     return hatch;
+  }
+  if (item.startsWith('seed:')) {   // v216: the seed maker's seeds go to the seed pouch
+    const crop = item.slice(5), n = p.n || 1, mixed = p.mixed || 0;
+    G.S.seeds[crop] = (G.S.seeds[crop] || 0) + n;
+    if (mixed) G.S.seeds.mixed = (G.S.seeds.mixed || 0) + mixed;
+    p.item = null; p.nights = 0; delete p.n; delete p.mixed;
+    notify(`Collected ${n} ${CROPS[crop].name.toLowerCase()} seed${n === 1 ? '' : 's'}${mixed ? ` and ${mixed} mixed seeds` : ''}.`);
+    changed();
+    return item;
   }
   G.S.bag[item]++;
   p.item = null; p.nights = 0;

@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v216: The seed maker
+- A new machine, the seed maker, learnt at Farming 9 and crafted from 25 wood, 10 coal and 1 gold bar (Stardew's seed maker). Put in a crop the seed stall sells and it makes 1 to 3 of its seeds at once; one time in ten it adds 1 to 5 mixed seeds as well. The seeds go straight into your seed pouch. Only crops the stall stocks go in: not the Oasis's ruby stalk, fiber seeds or seed packets (Nuno's pick).
+- Worth it for crops whose seeds cost more than the crop sells for (sweet corn, lingonberries, snap peas, gleamfruit), or to keep planting when the stall is shut or the season's seeds are out of stock.
+- The balance bot crafts one once it has learnt it and holds a gold bar, and feeds it only in-season crops whose seeds are worth more than the crop, while it holds fewer than 10 of them. Its other machines now leave the coal its next purchase needs, so the bot no longer burns all its coal in the smoker and furnace.
+- New save data: none (the machine keeps its count of seeds while it waits, like any placed machine).
+
 ## v215: No flowers on winter weeds
 - Weeds no longer carry the little yellow flowers they gained in v198: their tips are leafy green instead, so in winter the whole weed dulls with the season rather than blooming on the snow (Nuno's pick: no flowers at any time of year).
 - Drawing only (tools/sprites/debris.py, debris.png): no saves, prices or keys changed.
