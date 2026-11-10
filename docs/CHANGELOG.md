@@ -2,6 +2,15 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v227: Weapon specials
+- Each kind of weapon has a special move, as in Stardew, used with X (rebindable in Controls), a right click, the controller's B or the new Special button on touch screens (shown while the weapon is in hand):
+  - Sword: Block. For a moment, a monster that touches you is thrown back and you take no harm, with a short safe spell after. Ready again after 1.5 seconds.
+  - Dagger: Quick stab. Four fast stabs straight ahead. Every 3 seconds.
+  - Club: Ground slam. A short leap, then a slam that hurts every monster around you and leaves them dazed for a second. Every 6 seconds.
+- The weapon slot shows a bar while the special cools down. The first time you hold your weapon in the Hollow, a note says how to use it.
+- Specials count crits, rings, professions, enchantments and forging like any other hit. The second farmer does not have them yet.
+- New save data: none. The new key is a new control; old key settings keep theirs.
+
 ## v226: Trees no longer cover the Hollow's mouth
 - The mine entrance in Ashgrove Wilds stands against the map's north edge, and the border trees along that edge were drawn over the top of its rock face. Tree crowns are drawn above buildings so that buildings can stand behind trees; now a tree on a tile that a building's picture covers whole is left out. The three trees behind the mine mouth are the only ones on any map this removes.
 - Drawing only: no saves, prices or keys changed.

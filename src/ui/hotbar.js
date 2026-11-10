@@ -9,6 +9,8 @@ import { onSheet } from '../render/sheets.js';
 import { cycleSeed, ensureUsefulSeed, announce } from '../systems/seeds.js';
 import { cycleKit, ensureUsefulKit, announceKit } from '../systems/placeables.js';
 import { keyName } from '../core/controls.js';
+import { addUpdater } from '../core/registry.js';
+import { specialWait, specialOf } from '../systems/specials.js';
 import { $ } from './dom.js';
 
 let drawnSeed = null, drawnKit = null;   // what the seed and kit slot icons show
@@ -56,6 +58,18 @@ function label(kind) {
   if (kind === 'kit') { const k = selFor('kit'); return k ? `${PLACEABLES[k].short} ${G.S.kit[k]}` : 'Place'; }
   return TOOL_NAMES[kind][0];
 }
+
+// v227: the weapon slot's bar empties as its special cools down; the Special button shows with the weapon in hand.
+let shownWait = -1;
+addUpdater(() => {
+  const w = specialWait(), k = w > 0 ? Math.ceil((w / specialOf().cooldown) * 20) / 20 : 0;
+  if (k === shownWait) return;
+  shownWait = k;
+  const b = $(`#slot${HOTBAR.indexOf('sword')}`);
+  if (b) { b.style.setProperty('--cd', k); b.classList.toggle('cooling', k > 0); }
+  const sp = $('#special'); if (sp) sp.classList.toggle('cooling', k > 0);
+});
+on('state:changed', () => { const sp = $('#special'); if (sp) sp.hidden = HOTBAR[G.S.slot] !== 'sword'; });
 
 // v119: a rebound key shows in its slot's corner and label.
 on('controls:changed', () => {

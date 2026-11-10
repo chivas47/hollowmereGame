@@ -400,6 +400,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `crafted` | {key, n, kit} | crafting.js (v74) | animation (the crafted pose) |
 | `watered` | {map, x, y} | farming.js, the can on a planted tile (v123) | animation (the crop perks up and drips) |
 | `monster:slain` | {kind, x, y, map} | monsters.js | guild (goal counts), treasure (blast ring) |
+| `player:blocked` | {x, y} | monsters.js, health.js (v227: a hit turned by the sword's block) | specials (spark and sound) |
 | `mine:faint` | none | health.js | mine.js (carry out) |
 | `gather` | {skill, xp, item?, n?} | farming, giants, clearing, forage, fishing, mine, monsters, coop, barn, books | skills.js (XP, bonus item), books.js (mastery XP, book finds) |
 | `skill:level` | {skill, level} | skills.js | professions (offer a choice, combat health) |

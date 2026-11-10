@@ -33,6 +33,7 @@ import './systems/mine.js';
 import './systems/health.js';
 import './systems/gear.js';
 import './systems/monsters.js';
+import './systems/specials.js';   // v227: weapon specials
 import './systems/placeables.js';
 import './systems/crafting.js';
 import './systems/sprinklers.js';

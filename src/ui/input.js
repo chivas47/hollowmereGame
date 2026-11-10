@@ -18,6 +18,7 @@ import { whistle } from '../systems/stable.js';
 import { cancelSiting } from '../systems/sites.js';
 import { turnFacing } from '../systems/house.js';
 import { undo } from '../systems/undo.js';
+import { special } from '../systems/specials.js';
 import { actionOf } from '../core/controls.js';
 import { $, $$ } from './dom.js';
 
@@ -33,6 +34,7 @@ const PRESS = {
   hud: () => cycleHud(),   // v112: full, minimal or hidden HUD
   turn: () => turnFacing(),   // v99: turn the furniture you face
   undo: () => undo(),   // v99
+  special: () => special(),   // v227: the weapon's special move
 };
 HOTBAR.forEach((k, i) => { PRESS[`slot${i + 1}`] = () => selectSlot(i); });
 // v126: an action by name, for the controller too (ui/gamepad.js).
@@ -88,9 +90,14 @@ export function initInput(canvas) {
   ['pointerup', 'pointerleave', 'pointercancel'].forEach((ev) => use.addEventListener(ev, () => { G.useHeld = false; }));
   use.addEventListener('keydown', (e) => { if (e.code === 'Enter') act(); });
   use.addEventListener('contextmenu', (e) => e.preventDefault());
+  const sp = $('#special');   // v227: shown while the weapon is in hand (ui/hotbar.js)
+  sp?.addEventListener('pointerdown', (e) => { e.preventDefault(); special(); });
+  sp?.addEventListener('contextmenu', (e) => e.preventDefault());
 
+  canvas.addEventListener('contextmenu', (e) => e.preventDefault());   // v227: right click is the weapon special
   canvas.addEventListener('pointerdown', (e) => {
     if (G.paused) return;
+    if (e.button === 2) { special(); return; }
     const rc = canvas.getBoundingClientRect();
     const at = toWorld((e.clientX - rc.left) / rc.width, (e.clientY - rc.top) / rc.height);   // v139: through your half's camera
     if (at.v.who !== 'you') return;   // the second farmer's half: theirs is the controller

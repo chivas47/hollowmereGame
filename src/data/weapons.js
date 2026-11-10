@@ -6,6 +6,17 @@ export const WEAPON_KINDS = {
   dagger: { cooldown: 0.16, reach: 13, knock: 90 },
   club:   { cooldown: 0.6,  reach: 18, knock: 260 },
 };
+// v227: each weapon kind's special move (systems/specials.js), Stardew's: the sword blocks (its cooldown 1.5 s), the
+// dagger stabs fast (3 s), the club leaps and slams the ground around you (6 s).
+// sword: block, seconds it holds; after, seconds you cannot be hurt once it turns a hit; knock, how hard it throws back.
+// dagger: stabs, how many; every, seconds between them; mult, each stab's share of the weapon's damage; reach in px.
+// club: windup, seconds in the air; radius in px; mult of the weapon's damage; stun, seconds the monsters stand dazed.
+export const SPECIALS = {
+  sword:  { name: 'Block',        cooldown: 1.5, block: 0.6, after: 0.5, knock: 220 },
+  dagger: { name: 'Quick stab',   cooldown: 3,   stabs: 4, every: 0.08, mult: 0.6, reach: 18 },
+  club:   { name: 'Ground slam',  cooldown: 6,   windup: 0.35, radius: 40, mult: 1, stun: 1 },
+};
+
 export const WEAPONS = {
   oldblade:   { name: 'Old blade',        kind: 'sword',  damage: 3 },    // rusty sword, the one you start with
   shortsword: { name: 'Steel shortsword', kind: 'sword',  damage: 5 },    // steel smallsword 4-8

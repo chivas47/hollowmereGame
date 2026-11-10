@@ -7,7 +7,7 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
 import { MAPS, sizeOf } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
-import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL } from '../data/weapons.js';
+import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS } from '../data/weapons.js';
 import { CAVERN } from '../data/cavern.js';
 import { VENT } from '../data/forge.js';
 import { PEAK } from '../data/nuts.js';
@@ -96,7 +96,8 @@ addUpdater((dt) => {
       m.kx *= 0.85; m.ky *= 0.85;
       if (Math.abs(m.kx) < 1) m.kx = 0; if (Math.abs(m.ky) < 1) m.ky = 0;
     }
-    if (d < TOUCH && !(m.kind === 'slime' && wearing('slimeward'))) (f === G.P2 ? hurtPartner : hurtPlayer)(m.dmg, m.x, m.y);   // v36: the slime ward; v143: whoever it reached
+    if (d < TOUCH && f === G.S && G.block > 0) blocked(m, f);   // v227: the sword's block
+    else if (d < TOUCH && !(m.kind === 'slime' && wearing('slimeward'))) (f === G.P2 ? hurtPartner : hurtPlayer)(m.dmg, m.x, m.y);   // v36: the slime ward; v143: whoever it reached
     if (G.S.map !== slimeMap) return;   // fainting moved us out
   }
 });
@@ -159,18 +160,38 @@ function strike() {
   if (st.slam) { ring(px, py + 4, 'rgba(255,241,184,.9)', SLAM_RADIUS, 0.35); burst(px, py + 4, IMPACT.stone, 10, { speed: 60, up: 40, size: 2, life: 0.45, shrink: true }); }
   if (G.S.map !== slimeMap) return;
   const cx = st.spin ? G.S.x : px, cy = st.spin ? G.S.y - 4 : py, reach = st.spin ? wk.reach + 6 : st.slam ? SLAM_RADIUS : wk.reach * reachK;
+  const hits = strikeArea(cx, cy, reach, st.mult, st.knock || 1, st.spin || st.slam ? null : [dx, dy]);
+  if (hits) holdSwing(HIT_STOP);
+}
+
+// v227: every monster within reach of (cx, cy) takes a hit of the weapon's damage times mult, with crits, rings,
+// professions and enchantments as a swing has them. dir: the push [dx, dy], or null to push outward from the centre.
+// stun: seconds it stands frozen after (the club's slam). Returns how many were hit. The weapon specials use it.
+export function strikeArea(cx, cy, reach, mult, knock = 1, dir = null, stun = 0) {
+  if (G.S.map !== slimeMap) return 0;
+  const wk = weaponKind(), fb = forgeBonus();
   let hits = 0;
   for (const m of [...slimes]) {
     const ox = m.x - cx, oy = m.y - 4 - cy, d = Math.hypot(ox, oy);
     if (d > reach) continue;
     const critChance = (has('scout') ? 0.1 : 0) + (wearing('tidering') ? 0.1 : 0) + fb.crit;
     const crit = Math.random() < critChance ? (has('desperado') ? 3 : 2) * (wearing('mossring') ? 1.5 : 1) * fb.critPower : 1;   // v34 scout, desperado; v36 rings; v39 forge
-    const kn = wk.knock * fb.knock * (st.knock || 1), [ux, uy] = st.spin || st.slam ? [ox / (d || 1), oy / (d || 1)] : [dx, dy];   // spins and slams push outward
+    const kn = wk.knock * fb.knock * knock, [ux, uy] = dir || [ox / (d || 1), oy / (d || 1)];   // spins and slams push outward
     if (motion.hitstop) m.frozen = Math.max(m.frozen || 0, HIT_STOP);   // v125: hit-stop can be turned off
-    hitMonster(m, damageOf() * crit * versus(m.kind) * st.mult, ux * kn, uy * kn, crit > 1);
+    if (stun) m.frozen = Math.max(m.frozen || 0, stun);
+    hitMonster(m, damageOf() * crit * versus(m.kind) * mult, ux * kn, uy * kn, crit > 1);
     hits++;
   }
-  if (hits) holdSwing(HIT_STOP);
+  return hits;
+}
+
+// v227: a monster that touches you while you block (the sword's special) is thrown back instead of hurting you.
+function blocked(m, f) {
+  const dx = m.x - f.x, dy = m.y - f.y, d = Math.hypot(dx, dy) || 1, kn = SPECIALS.sword.knock;
+  m.kx = (dx / d) * kn; m.ky = (dy / d) * kn;
+  if (motion.hitstop) m.frozen = Math.max(m.frozen || 0, HIT_STOP);
+  G.hurtT = Math.max(G.hurtT, SPECIALS.sword.after);
+  emit('player:blocked', { x: m.x, y: m.y });
 }
 addInteraction(58, ({ item }) => {
   if (item !== 'sword') return false;

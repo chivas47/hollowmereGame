@@ -6,6 +6,6 @@ export const PAD_BUTTONS = {
   8: 'journal', 9: 'menu', 10: 'friends', 11: 'whistle', 12: 'up', 13: 'down', 14: 'left', 15: 'right',
 };
 // What each is called on screen (Xbox-style names; other pads put the same buttons in the same places).
-export const PAD_LABELS = { use: 'A', back: 'B', bag: 'X', craft: 'Y', prev: 'LB', next: 'RB', seeds: 'LT', turn: 'RT', journal: 'View', menu: 'Menu', friends: 'L3', whistle: 'R3' };
+export const PAD_LABELS = { use: 'A', back: 'B', special: 'B', bag: 'X', craft: 'Y', prev: 'LB', next: 'RB', seeds: 'LT', turn: 'RT', journal: 'View', menu: 'Menu', friends: 'L3', whistle: 'R3' };
 // dead: how far the stick must lean to count; held directions in menus repeat after `delay` s, every `every` s.
 export const PAD = { dead: 0.4, delay: 0.35, every: 0.12 };
