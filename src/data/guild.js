@@ -37,7 +37,14 @@ export const GOALS = {
   rex:      { n: 50,   reward: 'crestedhelm', label: 'scorch rex' },
   // v39. Stardew: 150 magma sprites (a phone for Marlon); ours gives a trinket.
   sprite:   { n: 150,  reward: 'magpie',    label: 'magma sprites' },
+  // v230: v228's chargers, one goal a zone; kinds: every kind that counts toward it. Stardew: 150 void spirits
+  // (shadow brutes among them: the savage ring), 30 duggies (the hard hat); the vent's is ours, for the sword block.
+  hollowchargers: { n: 150, kinds: ['beetle', 'boar', 'ram', 'gloomhound'], reward: 'savagering', label: 'chargers in the Hollow' },
+  sandchargers:   { n: 60,  kinds: ['scuttler', 'bull'], reward: 'hornhelm', label: 'chargers in the Sunken Cavern' },
+  ventchargers:   { n: 60,  kinds: ['hound', 'magmaram'], reward: 'bracering', label: 'chargers in the Ember Vent' },
 };
+// v230: the savage ring's burst of speed after a defeat: seconds, and food-buff speed points (data/cooking.js BUFF).
+export const SAVAGE = { time: 3, speed: 2 };
 
 // Bombs: radius in tiles (Stardew's 3, 5 and 7, fitted to our smaller floors), damage to monsters; you take half.
 export const BOMBS = {

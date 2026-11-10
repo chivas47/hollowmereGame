@@ -27,7 +27,8 @@ export function buyGear(key) {
   return true;
 }
 
-export const slain = (kind) => G.S.slain[kind] || 0;
+// A goal's count: its kind's defeats, or (v230) the sum over the kinds it lists.
+export const slain = (goal) => (GOALS[goal]?.kinds || [goal]).reduce((n, k) => n + (G.S.slain[k] || 0), 0);
 export const goalDone = (kind) => slain(kind) >= GOALS[kind].n;
 
 export function claimGoal(kind) {
@@ -42,8 +43,9 @@ export function claimGoal(kind) {
 on('monster:slain', ({ kind }) => {
   const S = G.S;
   S.slain[kind] = (S.slain[kind] || 0) + 1;
-  const g = GOALS[kind];
-  if (g && S.slain[kind] === g.n) notify(`You have defeated ${g.n} ${g.label}! ${LODGE.keeper} has a reward for you at the lodge.`);
+  for (const [k, g] of Object.entries(GOALS)) {   // v230: a goal may count several kinds
+    if ((g.kinds || [k]).includes(kind) && slain(k) === g.n) notify(`You have defeated ${g.n} ${g.label}! ${LODGE.keeper} has a reward for you at the lodge.`);
+  }
 });
 
 // v37: wild weeds and forage written before the lodge stood may sit under it; they go.
