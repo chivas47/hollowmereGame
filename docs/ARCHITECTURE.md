@@ -8,7 +8,8 @@ Plain ES modules, no build step. `index.html` loads `styles.css` and `src/main.j
 index.html            layout: HUD, canvas, basket, hotbar, touch pad, debug panel, modal
 styles.css            single dark "farmhouse at dusk" theme, tokens on :root
 manifest.webmanifest  v121: name, colours and icons (assets/icons/) for installing the game
-sw.js                 v121: service worker: network first (no-cache for the game's files), every answer kept, the copy used offline; registered by ui/offline.js
+sw.js                 v121: service worker: network first (no-cache for the game's files), every answer kept, the copy used offline; registered by ui/offline.js (v233: not on itch.io)
+assets/fonts/         v233: Pixelify Sans (OFL.txt), the UI font, shipped with the game instead of loaded from Google Fonts
 src/
   main.js             boot: imports every system and UI module, runs the frame loop
   core/
@@ -17,6 +18,7 @@ src/
     state.js          newState(), merge(saved), load(), save({ night }) (localStorage), restoreMorning(), exportSave(), importSave(text); v127: currentSlot(), slotInfo(n), useSlot(n)
     migrations.js     v118: MIGRATIONS (ordered save upgrades), SAVE_VERSION, migrate(s, saved); merge() runs it
     events.js         on(event, fn), emit(event, data), changed(), notify(msg)
+    host.js           v233: isItchHost(hostname, referrer), onItch (false in Node)
     controls.js       v119: key bindings per browser: actionOf(code), keyName(action) for messages, bind(), resetControls()
     motion.js         v125: motion settings per browser: particles, shake, hit-stop, cosmetic speed; setMotion()
     pad.js            v126: the controller's pure parts: stickDirs(), nextInDirection() (menu focus); tested
@@ -232,7 +234,8 @@ src/
     menu.js           the pause menu (Esc or the Menu button): settings, save files, debug tools, controls (v96)
     dom.js toast.js modal.js (openModal(html, actions, {wide}); v141: over the owner's half in two-player, no pause; v144: one dialog each, #modal yours and #modal2 farmer two's, G.dialog.{you,p2}; dom.js $ and $$ search only the acting farmer's box (G.partnerActing); listeners on #mbody/#mact serve both; clicks, input and change in #modal2 run through asThem) hud.js hudPrefs.js goal.js prompt.js hotbar.js dialogs.js
     workshop.js mine.js input.js (keys go through core/controls.js actionOf; v126: runAction(), escape() for the pad too) debugPanel.js
-    offline.js        v121: registers sw.js and hands it the files the first visit loaded
+    offline.js        v121: registers sw.js and hands it the files the first visit loaded (v233: not on itch.io)
+    itchNotice.js     v233: on itch.io, one dismissible notice that saves live in this browser, with Export save now
     slots.js          v127: the menu's Farms dialog (three save slots)
     reckoning.js      v128: the reckoning dialog after the morning report (waits for report:closed)
     motion.js         v125: the menu's Particles, Shake, Hit-stop and Motion speed buttons
@@ -242,6 +245,7 @@ src/
 tools/
   bundle.py           CODEBASE.md for a Claude Project
   balance.mjs         headless balance simulator (Node 22+); imports src/systems/* directly
+  release.mjs         v233: dist/hollowmere-itch.zip for itch.io: only the game's files, index.html at the root, itch's limits checked
   check_interiors.mjs v97: checks every cottage (v98: and building) floor plan (size, rectangles, wall pieces on a wall face, every tile and piece reachable from the door, the owner's spot); run by CI
   sprites/          v82: scripts that build the placeholder sheets in assets/sprites/ (see its README.md)
 tests/                v117: unit tests, node --test 'tests/*.test.mjs' (run by CI)

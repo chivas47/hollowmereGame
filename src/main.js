@@ -140,6 +140,7 @@ import './ui/social.js';
 import './ui/menu.js';   // v96: the pause menu
 import './ui/controls.js';   // v119: changing keys
 import './ui/offline.js';   // v121: install and play offline
+import './ui/itchNotice.js';   // v233: on itch.io, saves live in this browser
 import './ui/arrival.js';   // v122: the arrival scene
 import './ui/motion.js';   // v125: motion settings
 import './ui/gamepad.js';   // v126: controller support
