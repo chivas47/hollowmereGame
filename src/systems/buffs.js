@@ -4,11 +4,12 @@
 // effects only count until the clock passes `until`.
 import { G } from '../core/game.js';
 import { BUFF } from '../data/cooking.js';
+import { SAVAGE } from '../data/guild.js';   // v230: the savage ring
 
 export function buff(key) {
   const S = G.S;
   return [S.buff, S.drink, S.blessing].reduce((sum, b) => sum + (b && S.time < b.until ? b[key] || 0 : 0), 0);
 }
 export const luck = () => (G.S.luck || 0) + buff('luck') * BUFF.luck;
-export const speedMult = () => (1 + buff('speed') * BUFF.speed) * (G.S.read?.includes('pw_tailwind') ? 1.05 : 1);   // v40: Tailwind Treatise
+export const speedMult = () => (1 + (buff('speed') + (G.savageT > 0 ? SAVAGE.speed : 0)) * BUFF.speed) * (G.S.read?.includes('pw_tailwind') ? 1.05 : 1);   // v40: Tailwind Treatise; v230: the savage ring
 export const attackMult = () => 1 + buff('attack') * BUFF.attack;

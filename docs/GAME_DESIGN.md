@@ -1203,6 +1203,7 @@ Stardew's Skull Cavern by role, reached from the Hollow instead of a desert (the
 - Gold rocks also appear on Hollow floors 80 and deeper (8% of rocks; Stardew's gold from floor 80).
 - Watering can: Gold can 85 water, 10,000g and 5 gold bars; Umbrite can 100 water, 25,000g and 5 umbrite bars (Stardew's gold and iridium cans).
 - Lodge goals: 100 sand wraiths (Desert veil hat; Stardew 100 mummies), 50 scorch rex (Crested helm; Stardew 50 pepper rex).
+- v230 lodge goals for the chargers, one a zone, each counting all its chargers: 150 in the Hollow (burrow beetles, tusk boars, stone rams, gloom hounds) for the savage ring (after each defeat you move faster for 3 s: 2 speed-buff points, +30%; Stardew's savage ring, from its 150 void spirits); 60 in the Sunken Cavern (dune scuttlers, sand bulls) for the horned helm (a hat; Stardew's hard hat from 30 duggies); 60 in the Ember Vent (cinder hounds, magma rams) for the brace ring (the sword's block lasts twice as long, 1.2 s; ours).
 - Dune blade: sword, 32 damage (Stardew's obsidian edge, 30 to 45).
 
 ### The Ember Vent, the forge and trinkets (v39)

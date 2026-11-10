@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v230: Lodge goals for the chargers
+- Warden Hale has three new slaying goals, one for each zone's chargers, counting every charger of that zone:
+  - 150 in the Hollow (burrow beetles, tusk boars, stone rams, gloom hounds): the savage ring. After each monster you defeat, you move faster for 3 seconds.
+  - 60 in the Sunken Cavern (dune scuttlers, sand bulls): the horned helm, a hat.
+  - 60 in the Ember Vent (cinder hounds, magma rams): the brace ring. Your sword holds a block twice as long.
+- Chargers defeated before this update count already: the lodge reads the tally kept since v228.
+- New save data: none.
+
 ## v229: The fountain's plaza and farmer two's look
 - The village fountain no longer shows two patches of grass at its top corners: its tiles draw the plaza's path ground (polish 77m).
 - The second farmer's look picker offers the hair styles, beards and glasses the new game screen has, as well as the shirt and hair colours (polish 77n). Farmer two's look is kept with the farm as before; one picked before keeps its short hair.

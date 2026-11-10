@@ -11,7 +11,7 @@ import { addUpdater } from '../core/registry.js';
 import { HOTBAR } from '../data/hotbar.js';
 import { SPECIALS } from '../data/weapons.js';
 import { IMPACT, HIT_STOP } from '../data/animation.js';
-import { weapon } from './gear.js';
+import { weapon, wearing } from './gear.js';
 import { strikeArea } from './monsters.js';
 import { playAnim, shake, ring, burst, holdSwing } from './animation.js';
 import { mover } from './world.js';
@@ -33,7 +33,7 @@ export function special() {
     slamT = sp.windup;
     playAnim('sword', { gate: false, dur: sp.windup + 0.15, from: -1.6, to: 0.4, strike: 0.9, root: sp.windup, weapon: 'club', trail: false, reach: 12 });
   } else {
-    G.block = sp.block;
+    G.block = sp.block * (wearing('bracering') ? 2 : 1);   // v230: the brace ring
     playAnim('sword', { gate: false, dur: sp.block, from: -0.2, to: -0.2, strike: 1, root: sp.block * 0.5, weapon: 'sword', trail: false, reach: 10 });
     ring(G.S.x, G.S.y - 6, 'rgba(220,236,255,.9)', 12, sp.block);
   }

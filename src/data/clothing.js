@@ -40,6 +40,7 @@ export const CLOTHES = {
   islandhat: { name: 'Palm-leaf hat',    slot: 'hat', color: '#7fae5a', band: '#c9a06a', style: 'straw', found: true },   // v66: the island trader, 10 tide nuts
   dealerhat: { name: 'Dealer\'s hat',    slot: 'hat', color: '#5a3a5a', band: '#c9a43a', style: 'bucket', found: true },   // v64: the casino, 8,000 coins
   sablemask: { name: 'Sable\'s mask',     slot: 'hat', color: '#3a3f4a', band: '#c9b083', style: 'beanie', found: true },   // v62: Sable's shop, 25 moonstones
+  hornhelm:  { name: 'Horned helm',      slot: 'hat', color: '#c9a36a', band: '#f4ead2', style: 'beanie', found: true },   // v230: the lodge's reward for 60 cavern chargers
   bonemask:  { name: 'Bone helm',        slot: 'hat', color: '#e8e0d0', band: '#2b211a', style: 'beanie', found: true },   // v37: the lodge's reward for 50 bone walkers
   // v225: accessories, one at a time: scarves and satchels, sewn like the rest and dyeable
   beetscarf:  { name: 'Beet scarf',        slot: 'accessory', kind: 'scarf', color: '#a03050', from: 'beet' },

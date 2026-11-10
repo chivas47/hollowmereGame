@@ -8,6 +8,7 @@ import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
 import { MAPS, sizeOf } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
 import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS, CHARGE } from '../data/weapons.js';
+import { SAVAGE } from '../data/guild.js';
 import { CAVERN } from '../data/cavern.js';
 import { VENT } from '../data/forge.js';
 import { PEAK } from '../data/nuts.js';
@@ -141,6 +142,7 @@ addUpdater((dt) => {
 // swing is buffered. The last step is the finisher: a spin (sword), a lunging stab (dagger) or a slam (club).
 let cooldown = 0, since = 99, combo = 0, buffered = false;
 addUpdater((dt) => {
+  if (G.savageT > 0) G.savageT = Math.max(0, G.savageT - dt);   // v230: the savage ring's burst wears off
   if (cooldown > 0) {
     cooldown -= dt;
     if (cooldown <= 0 && buffered) { buffered = false; if (!G.paused && HOTBAR[G.S.slot] === 'sword') strike(); }
@@ -160,6 +162,7 @@ function defeat(m) {
   const pool = DROP_POOL(m.floor || 1, m.zone);
   if (pool.length && Math.random() < RARE_DROP * times * (G.S.read.includes('pw_bestiary') ? 2 : 1)) giveFind(pool[Math.floor(Math.random() * pool.length)], `The ${d.name.toLowerCase()} dropped`);
   if (wearing('leechring')) G.S.hp = Math.min(G.S.maxHp, G.S.hp + 2);
+  if (wearing('savagering')) G.savageT = SAVAGE.time;   // v230
   if (weaponEnchant() === 'vampiric') G.S.hp = Math.min(G.S.maxHp, G.S.hp + 3);   // v39
   if (weaponEnchant() === 'haymaker' && Math.random() < 0.3) { const k = HAY[Math.floor(Math.random() * HAY.length)]; G.S.bag[k] = (G.S.bag[k] || 0) + 1; }
   emit('gather', { skill: 'combat', xp: d.xp });
