@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v233: Ready for itch.io
+- On itch.io, once your farm has started, a notice says the farm is saved in this browser only and suggests exporting a copy now and then (Menu, then Export save). Got it or Export save now dismisses it for good in that browser.
+- The game's font ships with the game instead of loading from Google Fonts: no outside request, and the right font offline from the first visit.
+- On itch.io the game does not install its offline worker; itch serves the files.
+- For publishing: `node tools/release.mjs` writes `dist/hollowmere-itch.zip` with only the game's files, ready to upload as an HTML game.
+- New save data: none. Settings: one more per browser, whether the itch.io notice was dismissed.
+
 ## v232: Farmer two's cooldown bar
 - While the second farmer's weapon special cools down, a small bar under their feet empties until it is ready again (yours stays on the weapon slot). It shows on the map on screen only.
 - New save data: none.

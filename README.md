@@ -18,6 +18,16 @@ Push this folder to a repo, then Settings → Pages → Deploy from branch → `
 
 Once the page has loaded online, it installs from the browser (the install button in the address bar, or Add to Home Screen on a phone) and plays offline: `sw.js` keeps every file it serves and answers from that copy when there is no connection. Online it always checks the server first, so a new version shows on the next load.
 
+## Publish on itch.io
+
+```
+node tools/release.mjs
+```
+
+writes `dist/hollowmere-itch.zip`: index.html at the root and only the game's files (no docs, tests or tools), checked against itch's limits (1,000 files, 500 MB). On itch.io: Create new project, Kind of project **HTML**, upload the zip and tick **This file will be played in the browser**. Set the viewport and turn on the fullscreen button, leave the page in Draft and play it there in Chrome and Safari before publishing. Upload a new zip for each update.
+
+On itch the farm is saved in the browser storage of itch's player, apart from the GitHub Pages copy. The game tells players once and points them to Export save.
+
 ## Working on it with a Claude Project
 
 1. Create a project and paste the part of `docs/PROJECT_INSTRUCTIONS.md` below the line into its instructions.
