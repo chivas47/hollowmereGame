@@ -2,7 +2,8 @@
 // the piece that item belongs to (CLOTHES[k].from). Cloth is woven there from 5 fiber (Stardew weaves
 // it from wool; sheep come later). Shirts and trousers can be dyed at the dye pots with any item that
 // has a colour. Shoes give defense (Stardew's boots: 1 to 4): each point takes 1 off a hit, to a minimum of 1.
-// slot: shirt, pants, hat or shoes. color: the piece's own colour. style: hat shape (render/sprites.js drawPerson).
+// slot: shirt, pants, hat or shoes. color: the piece's own colour. style: hat shape (render/sprites.js drawPerson);
+// v224: on a shirt, an outfit (data/people.js OUTFITS) worn over the look's own shirt in the piece's colour.
 export const CLOTH = { item: 'cloth', fiber: 5 };
 export const CLOTH_ITEMS = { cloth: { name: 'Cloth', sell: 470, material: true } };   // Stardew's cloth sells for 470g; ours is a material, never shipped
 
@@ -16,6 +17,7 @@ export const CLOTHES = {
   frostknit: { name: 'Frost knit',       slot: 'shirt', color: '#bfe0f2', from: 'icemoss' },
   blouse:    { name: 'Rose blouse',      slot: 'shirt', color: '#c8352f', from: 'rosehip' },
   vest:      { name: 'Honey vest',       slot: 'shirt', color: '#e9c46a', from: 'melon' },
+  cardigan:  { name: 'Wool cardigan',    slot: 'shirt', color: '#a5753f', style: 'cardigan', from: 'wool' },   // v224: over your own shirt
   // Trousers
   canvas:    { name: 'Canvas trousers',  slot: 'pants', color: '#8a7a5a', from: 'wood' },
   denim:     { name: 'Blue work trousers', slot: 'pants', color: '#2f3f5a', from: 'cucumber' },

@@ -5,10 +5,11 @@
 #   body         head, hands, the plain shirt, trousers and shoes (always drawn)
 #   body:child   a child's body (v223): the same head, CHILD_DY rows lower, on a short body; the head's parts (hair,
 #                glasses, hat) are the adult ones drawn CHILD_DY lower (PERSON.bodies), so every style fits a child
-#   outfit:<k>   drawn over the body: a dress, a coat, overalls, an apron
+#   outfit:<k>   drawn over the body: a dress, a coat, overalls, an apron, a cardigan (v224, in the acc colour)
+#   gear:<k>     carried over the body and outfit (v224): a satchel on a strap, in the bag colour
 #   hair:<k>     hair styles (hair:<k>@hat is the same style trimmed to sit under a hat)
 #   beard:<k>    beards, in the hair colour
-#   extra:<k>    small extras (glasses)
+#   extra:<k>    small extras over the head and neck: glasses, a scarf (v224, in the scarf colour)
 #   hat:<k>      hats (data/clothing.js style), crown in the hat colour, band in the band colour
 # A look (data/people.js lookOf) names one style per part; render/sprites.js draws the bands of those parts in this
 # order, each tinted to its colour. To add a style: draw it in the right PARTS table below, run this script, and give
@@ -16,14 +17,14 @@
 #
 # Layout: frames 16 wide and 20 tall, columns down, up, left, right (stand, step a, step b; left is right mirrored).
 # One 20 px band per part and colour layer, named "<part>|<layer>" (layers: skin, shoes, pants, shirt, hair, beard,
-# hat, band, acc, ink). Tinted layers are grey: 255 the colour, 205 its shade, 160 its deep shade, 105 the outline;
+# hat, band, acc, scarf, bag, ink). Tinted layers are grey: 255 the colour, 205 its shade, 160 its deep shade, 105 the outline;
 # ink is drawn as is. Fixed points the code relies on, from the feet at (8, 20): the down eyes at x 6 and 9 and the
 # side eye at x 10 (5 facing left) on rows 9 and 10 (drawBlink), the hand near (12, 15) facing right (doings.js).
 #
 # Art is drawn in person space, 16x16 with the feet at (8, 16) as before; TOP rows of headroom above it hold hats.
 # Letters: upper case the colour, lower case its shade, the third letter its deep shade:
 #   S s z skin   F f shoes   P p q pants   C c k shirt   H h j hair (beard: B b)   A a n hat   N m hat band
-#   X x acc (aprons)   ink: E eye, R cheek, G shine, Y brass, O spectacle frame, W glint, U button, D a soft shadow
+#   X x acc (aprons, cardigans)   V v w scarf   L l g bag   ink: E eye, R cheek, G shine, Y brass, O spectacle frame, W glint, U button, D a soft shadow
 # Walking, the head and body bob down a pixel on the step frames.
 import json, sys
 from PIL import Image
@@ -34,11 +35,12 @@ TONE = {'S': ('skin', 255), 's': ('skin', 205), 'z': ('skin', 160), 'F': ('shoes
         'P': ('pants', 255), 'p': ('pants', 205), 'q': ('pants', 160), 'C': ('shirt', 255), 'c': ('shirt', 205),
         'k': ('shirt', 160), 'H': ('hair', 255), 'h': ('hair', 205), 'j': ('hair', 155), 'B': ('beard', 255),
         'b': ('beard', 200), 'A': ('hat', 255), 'a': ('hat', 205), 'n': ('hat', 150), 'N': ('band', 255),
-        'm': ('band', 190), 'X': ('acc', 255), 'x': ('acc', 210)}
+        'm': ('band', 190), 'X': ('acc', 255), 'x': ('acc', 210), 'V': ('scarf', 255), 'v': ('scarf', 205),
+        'w': ('scarf', 160), 'L': ('bag', 255), 'l': ('bag', 200), 'g': ('bag', 150)}
 INK = {'E': (43, 33, 26, 255), 'R': (226, 112, 104, 90), 'G': (255, 255, 255, 90), 'Y': (233, 196, 106, 255),
        'O': (176, 146, 96, 255), 'W': (255, 255, 255, 150), 'U': (58, 47, 40, 170), 'D': (0, 0, 0, 45)}
 UNDER = {'E': 'skin', 'R': 'skin'}   # ink that sits on a tinted pixel (the eye and cheek are on the face)
-LAYER_ORDER = ['skin', 'shoes', 'pants', 'shirt', 'acc', 'hair', 'beard', 'hat', 'band', 'ink']
+LAYER_ORDER = ['skin', 'shoes', 'pants', 'shirt', 'acc', 'scarf', 'bag', 'hair', 'beard', 'hat', 'band', 'ink']
 SHADOW = (0, 0, 0, 64)
 
 # ---------------- the body: one drawing per view and step, rows 2 to 14 of person space ----------------
@@ -231,6 +233,17 @@ OUTFIT = {
     'up': ([['....p......p....', '.....p....p.....', '....qPPPPPPq....']] * 3, 9),
     'right': ([['.........p......', '........pY......', '......pPPP......']] * 3, 9),
   },
+  'cardigan': {   # v224: an open knitted cardigan over the shirt, to the hips, the shirt showing down the front
+    'down': ([['...xXX....XXx...', '...xXXX..XXXx...', '...SxXX..XXxS...', '....xXx..xXx....'],
+              ['...xXX....XXx...', '...SXXX..XXXx...', '....xXX..XXxS...', '....xXx..xXx....'],
+              ['...xXX....XXx...', '...xXXX..XXXS...', '...SxXX..XXx....', '....xXx..xXx....']], 9),
+    'up': ([['...xXXXXXXXXx...', '...xXXXxxXXXx...', '...SxXXXXXXxS...', '....xXXXXXXx....'],
+            ['...xXXXXXXXXx...', '...xXXXxxXXXS...', '...SxXXXXXXx....', '....xXXXXXXx....'],
+            ['...xXXXXXXXXx...', '...SXXXxxXXXx...', '....xXXXXXXxS...', '....xXXXXXXx....']], 9),
+    'right': ([['.....xXXXXC.....', '.....xXXxXC.....', '.....xxxxSC.....', '.....xXXXx......'],
+               ['.....xXXXXC.....', '.....xXXXxXc....', '.....xxxxx.S....', '.....xXXXx......'],
+               ['.....xXXXXC.....', '....xXxXXXC.....', '....Sxxxxx......', '.....xXXXx......']], 9),
+  },
   'apron': {   # a work apron in the acc colour (data/people.js APRON unless the look names one)
     'down': ([['.....x....x.....', '.....xXXXXx.....', '.....XXXXXX.....', '.....xXXXXx.....', '......xxxx......']] * 3, 9),
     'up': ([['......x..x......', '.......xx.......', '.....xx..xx.....']] * 3, 9),
@@ -290,6 +303,18 @@ HAIR = {
     'right': (['....HHH.........', '....HH..........', '....hH..........', '.....h..........'], 4),
   },
 }
+# v224: things carried over the body (not drawn on a child's body)
+GEAR = {
+  'bag': {   # a satchel on a strap over one shoulder, a brass clasp
+    'down': (['.....l..........', '......ll........', '........lll.....', '...........LLLl.', '...........LYLg.',
+              '...........gggg.'], 9),
+    'up': (['..........l.....', '........ll......', '.....lll........', '.lLLL...........', '.gLYL...........',
+            '.gggg...........'], 9),
+    'right': (['.......l........', '......l.........', '.....l..........', '...LLLl.........', '...LYLg.........',
+               '...ggg..........'], 9),
+  },
+}
+
 HAT_LINE = 4   # under a hat, only hair from this person-space row down shows (hair:<k>@hat)
 
 BEARD = {
@@ -311,6 +336,11 @@ BEARD = {
 }
 
 EXTRA = {
+  'scarf': {   # v224: wound round the neck, one end hanging, a fringe
+    'down': (['....wVVVVVVw....', '.........Vv.....', '.........Vv.....', '.........vw.....'], 9),
+    'up': (['....wVVVVVVw....', '......Vv........', '......vw........'], 9),
+    'right': (['.....wVVVVw.....', '........Vv......', '........vw......'], 9),
+  },
   'glasses': {
     'down': (['.....O.OO.O.....', '.....OWO.WO.....'], 5),
     'up': (['...O........O...'], 5),
@@ -403,7 +433,7 @@ def frame(part, view, step, base):
         kind, _, name = part.partition(':')
         hat = name.endswith('@hat')
         name = name.replace('@hat', '')
-        table = {'outfit': OUTFIT, 'hair': HAIR, 'beard': BEARD, 'extra': EXTRA, 'hat': HAT}[kind][name]
+        table = {'outfit': OUTFIT, 'gear': GEAR, 'hair': HAIR, 'beard': BEARD, 'extra': EXTRA, 'hat': HAT}[kind][name]
         rows, y = art(table, view, step)
         tint, ink = cells(rows, y)
         if hat: tint = {q: v for q, v in tint.items() if q[1] >= TOP + HAT_LINE}; ink = {q: v for q, v in ink.items() if q[1] >= TOP + HAT_LINE}
@@ -422,7 +452,7 @@ def frame(part, view, step, base):
     return out
 
 def parts():
-    ps = ['body', 'body:child'] + [f'outfit:{k}' for k in OUTFIT]
+    ps = ['body', 'body:child'] + [f'outfit:{k}' for k in OUTFIT] + [f'gear:{k}' for k in GEAR]
     for k in HAIR: ps += [f'hair:{k}', f'hair:{k}@hat']
     ps += [f'beard:{k}' for k in BEARD] + [f'extra:{k}' for k in EXTRA] + [f'hat:{k}' for k in HAT]
     return ps
@@ -442,7 +472,7 @@ def build(path, js, preview=None):
         for f, px in frames[band].items():
             for (x, y), c in px.items(): img.putpixel((f * W + x, n * H + y), c)
     img.save(path, optimize=True)
-    styles = {k: list(t) for k, t in (('outfit', OUTFIT), ('hair', HAIR), ('beard', BEARD), ('extra', EXTRA), ('hat', HAT))}
+    styles = {k: list(t) for k, t in (('outfit', OUTFIT), ('gear', GEAR), ('hair', HAIR), ('beard', BEARD), ('extra', EXTRA), ('hat', HAT))}
     with open(js, 'w') as f:
         f.write('// Generated by tools/sprites/person.py (do not edit by hand): the layout of assets/sprites/person.png.\n')
         f.write('// Frames w x h, the feet at -origin; columns: dirs x steps (stand, step a, step b). One band of h px per\n')

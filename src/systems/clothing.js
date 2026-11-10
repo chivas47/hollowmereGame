@@ -23,7 +23,9 @@ export const defense = () => (CLOTHES[G.S.outfit?.shoes]?.def || 0) + buff('defe
 // The palette drawPerson() uses for someone in this outfit.
 export function outfitPal(profile, outfit = {}) {
   const pal = playerPal(profile), hat = CLOTHES[outfit.hat];
-  if (CLOTHES[outfit.shirt]) pal.shirt = pieceColor(outfit.shirt);
+  const shirt = CLOTHES[outfit.shirt];
+  if (shirt?.style) Object.assign(pal, { outfit: shirt.style, acc: pieceColor(outfit.shirt) });   // v224: a cardigan over your shirt
+  else if (shirt) pal.shirt = pieceColor(outfit.shirt);
   if (CLOTHES[outfit.pants]) pal.pants = pieceColor(outfit.pants);
   if (CLOTHES[outfit.shoes]) pal.shoes = pieceColor(outfit.shoes);
   if (outfit.hat === null) { pal.hat = null; }

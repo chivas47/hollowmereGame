@@ -2,6 +2,15 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v224: Scarves, satchels and cardigans
+- Three new clothing parts on the person sheet, each in its own colour: a scarf wound round the neck with one end hanging, a satchel on a strap over one shoulder with a brass clasp, and an open cardigan over the shirt, the shirt showing down the front.
+- Neighbours who suit them wear them: the mail carrier's mail bag and scarf, the mapmaker's and the tinkerer's satchels, the hermit's foraging bag and scarf, scarves on the fiddler and the station keeper, and a cardigan on the retired clockmaker.
+- A new shirt at the sewing machine: the wool cardigan (cloth and wool), worn open over the shirt you chose on the new game screen, and dyeable like the other shirts.
+- Children can wear scarves; satchels are for grown-ups.
+- For changing the art: scarves are `extra:scarf`, satchels `gear:bag` and cardigans `outfit:cardigan` in tools/sprites/person.py; a look sets `scarf` and `bag` to a colour and `outfit: 'cardigan'` with `acc` for its colour (src/data/people.js).
+- Scarves and satchels are not wearable by the farmer yet: that needs a new wardrobe slot.
+- New save data: none.
+
 ## v223: A child's body
 - Pip, the village's child, was the adult figure shrunk to three quarters size, with a grown-up's small head for the body. Children now have their own body: the same head on a short body, so the head is about two thirds of their height, with short arms, shorts and small shoes, in all four directions and both walking steps.
 - Hair styles, glasses and hats are the grown-ups' ones drawn lower on the child, so every style fits a child without drawing it again. Children wear no beards or outfits. Their heads stay steady while they walk.

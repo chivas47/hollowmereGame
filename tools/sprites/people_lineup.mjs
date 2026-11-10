@@ -22,7 +22,7 @@ const png = await p.evaluate(async (walk) => {
   const kid = { small: true, skin: '#c99a74', shirt: '#5f8fb5', pants: '#3f4a5a' };
   const kids = [['kid long', { ...kid, hair: '#2b211a', hairStyle: 'long' }], ['kid cap', { ...kid, hair: '#b5452f', hat: '#c8352f', hatStyle: 'cap' }],
     ['kid curly', { ...kid, skin: '#9a6640', hair: '#2b211a', hairStyle: 'curly', glasses: true }], ['kid bun', { ...kid, skin: '#f0c8a0', hair: '#d9a441', hairStyle: 'bun', shirt: '#e2a33a' }]];
-  const people = [['you', playerPal(DEFAULT_PROFILE)], ...NPCS.map((n) => [n.name.split(' ')[0], n.pal]), ...kids];
+  const people = [['you', playerPal(DEFAULT_PROFILE)], ['cardigan', { ...playerPal(DEFAULT_PROFILE), outfit: 'cardigan', acc: '#a5753f' }], ...NPCS.map((n) => [n.name.split(' ')[0], n.pal]), ...kids];
   const per = 8, cellW = 4 * 18 + 6, cellH = 34, scale = 4;
   const cv = document.createElement('canvas');
   cv.width = per * cellW * scale; cv.height = Math.ceil(people.length / per) * cellH * scale;
