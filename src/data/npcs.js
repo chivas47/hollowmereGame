@@ -50,7 +50,7 @@ export const NPCS = [
     id: 'tavi', name: 'Tavi', role: 'Young mapmaker charting the valley paths', seed: 3,
     loves: ['rosehip', 'trailbun'], likes: ['sorrel', 'fava', 'celeriac', 'melon', 'copper', 'egg'], dislikes: ['cheese', 'butter'], hates: ['mayo'],
     birthday: { season: 'Winter', d: 17 },
-    pal: { hat: null, hair: '#a5432f', shirt: '#c9b68e', pants: '#5c4a3a', skin: '#f0c8a0', long: true, hairStyle: 'ponytail' },
+    pal: { hat: null, hair: '#a5432f', shirt: '#c9b68e', pants: '#5c4a3a', skin: '#f0c8a0', long: true, hairStyle: 'ponytail', bag: '#6e4626' },
     path: [[2, 4], [2, 8], [8, 8], [8, 12], [13, 12], [13, 4]],
     lines: [
       ["Don't mind me, I'm pacing out your fence line. The old map says it's crooked.", 'Every path in this valley is drawn wrong somewhere. I am fixing them one by one.'],
@@ -126,7 +126,7 @@ export const NPCS = [
     id: 'lio', name: 'Lio', role: 'Young fiddler who plays in the square', seed: 9,
     loves: ['honeycake', 'frosttear'], likes: ['plum', 'pear', 'biscuit', 'glademint', 'berry'], dislikes: ['coal', 'clam'], hates: ['frostkale'],
     birthday: { season: 'Summer', d: 2 },
-    pal: { hat: '#3f5f6e', band: '#2b4352', hair: '#d9a441', shirt: '#7a4a8a', pants: '#3f3a33', skin: '#f0c8a0' },
+    pal: { hat: '#3f5f6e', band: '#2b4352', hair: '#d9a441', shirt: '#7a4a8a', pants: '#3f3a33', skin: '#f0c8a0', scarf: '#c9a35a' },
     lines: [
       ['Want a song? I only know four. Well, three and a half.', 'The fountain makes good echoes. Better than my room, anyway.'],
       ['I wrote a tune about your farm. It goes da-da-dum. Still working on it.', 'Hob lets me play at the Lantern on busy nights. Sometimes people even listen.', 'Hi, {name}! Listen to this one.'],
@@ -152,7 +152,7 @@ export const NPCS = [
     id: 'juno', name: 'Juno', role: 'Carries the mail over the valley roads', seed: 11,
     loves: ['triplebrew', 'trailbun'], likes: ['thymetea', 'egg', 'pancakes', 'fig', 'hazelnut'], dislikes: ['stone', 'clam'], hates: ['wetpaper'],
     birthday: { season: 'Winter', d: 22 },
-    pal: { hat: '#3f5f6e', band: '#c0443a', hair: '#a5432f', shirt: '#3f5f6e', pants: '#3f3a33', skin: '#f0c8a0' },
+    pal: { hat: '#3f5f6e', band: '#c0443a', hair: '#a5432f', shirt: '#3f5f6e', pants: '#3f3a33', skin: '#f0c8a0', scarf: '#e9c46a', bag: '#8a5a32' },
     lines: [
       ['Mail in the morning, mail at night. The roads never end, I swear.', 'If your mailbox flag is up, it is me. Or the wind. Mostly me.'],
       ['I always save your letters for the end of the round. Nice way to finish.', 'Corvin gets more letters than you would think. Do not ask me who from.', 'Hey, {name}! Anything to send?'],
@@ -200,7 +200,7 @@ export const NPCS = [
     id: 'kit', name: 'Kit', role: 'Teenage tinkerer, always building something', seed: 15,
     loves: ['emberquartz', 'pizza'], likes: ['copperbar', 'ironbar', 'quartz', 'biscuit', 'cinder'], dislikes: ['salad', 'pottage'], hates: ['frostkale'],
     birthday: { season: 'Winter', d: 8 },
-    pal: { hat: null, hair: '#2b2a2e', shirt: '#c98a3a', pants: '#3f4a5a', skin: '#c99a74', glasses: true },
+    pal: { hat: null, hair: '#2b2a2e', shirt: '#c98a3a', pants: '#3f4a5a', skin: '#c99a74', glasses: true, bag: '#5a4a3a' },
     lines: [
       ['Do not touch that. It is either a clock or a bomb. I forget which.', 'Corvin lets me use the scrap pile. Best place in town.'],
       ['I am building a machine that waters plants. You might need one, actually.', 'Juno says my letters are mostly diagrams. They are.', 'Oh, hey {name}! Want to see something?'],
@@ -323,7 +323,7 @@ export const NPCS = [
     id: 'wilmot', name: 'Wilmot', role: 'Retired clockmaker; still winds the town hall clock', seed: 26,
     loves: ['goldbar', 'ambergem'], likes: ['copperbar', 'ironbar', 'thymetea', 'netstew'], dislikes: ['honeycake', 'salad'], hates: ['glass'],
     birthday: { season: 'Winter', d: 6 },
-    pal: { hat: '#5a5048', band: '#3a3028', hair: '#cfcac2', shirt: '#6a7a5a', pants: '#3f3a33', skin: '#c99a74', beard: true, glasses: true },
+    pal: { hat: '#5a5048', band: '#3a3028', hair: '#cfcac2', shirt: '#6a7a5a', pants: '#3f3a33', skin: '#c99a74', beard: true, glasses: true, outfit: 'cardigan', acc: '#8a6a4a' },
     lines: [
       ['I came to mend the town hall clock. Fifty-one years ago. It still needs winding on Sundays, so I am still here.', 'A clock is just patience you can hear.'],
       ['Corvin makes a good spring. Not as good as mine were. But good.', 'Hester writes down the weather. I write down the time. Between us nothing goes unrecorded.', 'Morning, {name}. You are four minutes early. Or I am four minutes slow.'],
@@ -336,7 +336,7 @@ export const NPCS = [
     id: 'thorne', name: 'Thorne', role: 'A hermit on Cragmoor; forages and carves', seed: 27,
     loves: ['morel', 'wildplum'], likes: ['hardwood', 'thymetea', 'berry', 'glademint'], dislikes: ['salad', 'honeycake'], hates: ['pizza'],
     birthday: { season: 'Winter', d: 19 },
-    pal: { hat: '#4a4038', band: '#2b2f36', hair: '#8a8478', shirt: '#5a6a3a', pants: '#3f3a33', skin: '#b07a52', beard: true },
+    pal: { hat: '#4a4038', band: '#2b2f36', hair: '#8a8478', shirt: '#5a6a3a', pants: '#3f3a33', skin: '#b07a52', beard: true, bag: '#6b5a48', scarf: '#7a6a4a' },
     lines: [
       ['I came up the mountain one bad winter. The next spring I did not see a reason to go down.', 'You are standing on a morel patch. Please do not.'],
       ['Hale and I sit by the lodge fire on Wednesdays. We have said perhaps a hundred words to each other in ten years. All good ones.', 'Esme painted my hut. She gave it a better roof than it has.', '{name}. The mountain is quiet today. Keep it that way.'],
@@ -348,7 +348,7 @@ export const NPCS = [
     id: 'sabine', name: 'Sabine', role: 'Keeps the railway halt', seed: 28,
     loves: ['netstew', 'honeycake'], likes: ['thymetea', 'bread', 'mistlily'], dislikes: ['seaglass', 'bait'], hates: ['frostkale'],
     birthday: { season: 'Spring', d: 18 },
-    pal: { hat: '#3a4a6a', band: '#c9a35a', hair: '#7a6a5a', shirt: '#3a4a6a', pants: '#2b2f36', skin: '#e0ac7e', long: true, outfit: 'coat' },
+    pal: { hat: '#3a4a6a', band: '#c9a35a', hair: '#7a6a5a', shirt: '#3a4a6a', pants: '#2b2f36', skin: '#e0ac7e', long: true, outfit: 'coat', scarf: '#c9a35a' },
     lines: [
       ['The goods train comes about once a week. Nobody believed me for years.', 'Mind the platform edge. Not because of the trains. It is just a long way down for a short step.'],
       ['Juno brings the post through here. We have the best gossip in the valley and nobody to tell it to but each other.', 'My father kept this halt before me. He waved at every train. I do too.', 'Good morning, {name}. Listen for the whistle. Things fall off the back.'],

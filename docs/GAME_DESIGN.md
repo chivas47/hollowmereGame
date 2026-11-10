@@ -67,7 +67,7 @@ Tailoring as in Stardew: at the sewing machine one cloth plus one item makes the
 
 | Slot | Pieces (item that makes it) |
 |---|---|
-| Shirts | Linen shirt (cloth), berry smock (sunberry), harvest jumper (pumpkin), fern-green shirt (wild leek), sailor shirt (carp), frost knit (ice moss), rose blouse (rosehip), honey vest (melon) |
+| Shirts | Linen shirt (cloth), berry smock (sunberry), harvest jumper (pumpkin), fern-green shirt (wild leek), sailor shirt (carp), frost knit (ice moss), rose blouse (rosehip), honey vest (melon), wool cardigan (wool; v224, worn open over your own shirt, dyeable) |
 | Trousers | Canvas (wood), blue work (cucumber), moss (wild thyme), rust (iron ore), cream (egg) |
 | Hats | Straw hat (you start with it), red cap (radish), Hollow beanie (Hollow cap), sorrel garland (wood sorrel), gel top hat (slime gel), bucket hat (snap pea), ranger hat (hardwood), angler hat (trout) |
 | Shoes (defense) | Rope sandals 1 (fiber), work boots 2 (copper ore), field boots 3 (stone), iron-toe boots 4 (storm cell) |
