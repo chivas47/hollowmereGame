@@ -7,7 +7,7 @@ import { today, dayEnd } from '../core/time.js';
 import { MAPS, sizeOf } from '../data/maps.js';
 import { PAL, DRY_TREES } from '../data/seasons.js';
 import { LIGHT, NIGHT_FROM } from '../data/atmosphere.js';
-import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, drawQuarry, drawSand, drawBowl, drawHouseTile, drawTerrain, drawFlowers, drawBuilding, drawProp, HOUSE_ART, CAVE_ART, PROP_ART, PROP_GROUND } from './tiles.js';
+import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, drawQuarry, drawSand, drawBowl, drawHouseTile, drawTerrain, drawFlowers, drawBuilding, drawProp, coveredTiles, HOUSE_ART, CAVE_ART, PROP_ART, PROP_GROUND } from './tiles.js';
 import { facing, tileAt } from '../systems/world.js';
 import { WALLPAPERS, FLOORS } from '../data/furniture.js';
 import { TERRAIN_SHEET, CAVE_SHEET } from '../data/sprites.js';
@@ -57,10 +57,12 @@ function renderBackground(mapId, season) {
     else drawGrass(g, x, y, p, map.salt);
   }
   if (!map.base && !map.plan) drawCover(g, mapId, p, season);   // v195: flowers, ferns, pebbles, shells (render/scenery.js)
+  const under = new Set((map.objects || []).flatMap(coveredTiles));   // v226: no tree crowns over a building's picture
   for (let y = 0; y < MH; y++) for (let x = 0; x < MW; x++) {
     if (map.base === 'house') { const ha = HOUSE_ART[map.grid[y][x]]; if (ha) ha(g, x, y, map.grid); continue; }
     const t = map.grid[y][x], art = TILE_ART[t];
     if (sheetGround && PROP_ART[t]) drawProp(g, t, x, y, p);   // v89: the prop alone, its ground is in the tile set
+    else if (art === drawTree && under.has(`${x},${y}`)) continue;   // v226: the building stands in front of it
     else if (art === drawTree) {   // v183: the trunk foot drawn straight onto the ground through a clip; copying it back
       art(k, x, y, p);             // from the crowns canvas after each tree stalled the canvas, 258 times in town (polish 76d)
       g.save(); g.beginPath(); g.rect(x * T, y * T + CROWN, T, T - CROWN); g.clip(); art(g, x, y, p); g.restore();
