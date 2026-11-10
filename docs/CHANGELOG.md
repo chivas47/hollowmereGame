@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v219: Animal names that are not neighbours' names
+- Three default animal names were neighbours' names: a chicken called Pip, a duck called Wren and a strider called Rook. New animals now take Poppy, Ripple and Wader instead, so the journal no longer lists "Pip the chicken" beside Pip the boy.
+- Animals that already have one of the old names keep it: a name is part of the animal, and only animals bought or hatched from now on take the new ones. No saves change.
+- A test checks that no default animal name is any neighbour's first name, so a new neighbour cannot bring the clash back unnoticed.
+
 ## v218: Overnight surprises
 - Now and then something happens on the farm in the night, told in the morning report; at most one a night, and none of them bad (Nuno's pick): a crop fairy ripens a patch of growing crops (1% of nights, not in winter); a meteorite lands, to break with the pickaxe for umbrite, stone and geodes (1%); a stone owl turns up in front of the farmhouse (0.5%); or an odd stone figure appears in the field (0.8%). The owl and the figure are decorations to keep, move or pick up.
 - Each farm's nights have their own fixed sequence, so reloading a save does not roll the night again.
