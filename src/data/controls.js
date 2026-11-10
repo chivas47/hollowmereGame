@@ -10,6 +10,7 @@ export const CONTROLS = [
   { id: 'use', label: 'Use the tool, talk, open doors (hold to lift the fishing bar)', keys: ['Space', 'KeyE'] },
   ...HOTBAR.map((kind, i) => ({ id: `slot${i + 1}`, label: `Hotbar slot ${i + 1}`, keys: [`Digit${i + 1}`] })),
   { id: 'seeds', label: 'Pick seeds, again to switch seed type', keys: ['KeyQ'] },
+  { id: 'special', label: 'Weapon special: block, quick stab or ground slam (also right click)', keys: ['KeyX'] },   // v227
   { id: 'bag', label: 'Bag', keys: ['KeyI'] },
   { id: 'craft', label: 'Crafting', keys: ['KeyC'] },
   { id: 'journal', label: 'Journal', keys: ['KeyJ'] },

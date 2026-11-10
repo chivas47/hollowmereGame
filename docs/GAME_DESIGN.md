@@ -618,6 +618,15 @@ Slot 5 (no hotbar change) swings the weapon chosen in the bag. Damage is Stardew
 | Club | swing, slam | x1.5 damage, a 26 px shockwave around the impact, x1.6 knockback outward | 0.3 s |
 
   Stardew has no combo chain. The finisher's multiplier and recovery are set so a full combo deals the same damage per second as plain swings did (sword 3.33, dagger 6.25, club 1.67 times weapon damage a second), keeping Stardew's weapon scale; the gain is reach and crowd control.
+- v227 weapon specials (data/weapons.js SPECIALS, systems/specials.js), Stardew's three, on X (rebindable), right click, the pad's B or the Special button (touch, shown with the weapon in hand). The weapon slot's bar shows the cooldown.
+
+  | Kind | Special | What it does | Cooldown |
+  |---|---|---|---|
+  | Sword | Block | 0.6 s: a monster that touches you is thrown back (220 knockback) and you cannot be hurt for 0.5 s after; any other hit is turned too | 1.5 s |
+  | Dagger | Quick stab | 4 stabs 0.08 s apart straight ahead, each 0.6 of the weapon's damage (2.4 times in all), 18 px reach | 3 s |
+  | Club | Ground slam | after a 0.35 s leap, the weapon's damage to every monster within 40 px, pushed outward and dazed for 1 s | 6 s |
+
+  Cooldowns are Stardew's (sword 1.5 s, dagger 3 s, club 6 s). Specials hit with crits, rings, professions, enchantments and forging like any swing. Farmer two has none yet.
 - Monsters (count grows to 10 a floor): slime (floor 1+, gel 60%), Hollow mite (3+, crawls, fiber 30%), cave bat (12+, flies, coal 20%), bone walker (30+, iron ore 30%), Hollow serpent (50+, flies, violet stone 5%). Combat XP 3, 2, 6, 15, 20. Any kill: 1% chance of a weapon or ring from the floor's pool.
 - Rings (two worn; Stardew's ruby, topaz, aquamarine, jade, vampire, slime charmer, burglar's and glow rings): Ember +10% damage, Stone +1 defense, Tide +10% critical chance, Moss criticals x1.5, Leech +2 health a kill, Slime ward (slimes do no harm), Thief's (double drops), Glow (40% more light). Floors 15, 35, 45 and 65 give one; the rest drop.
 - Boots found on floors 30, 60 and 80: Tunnel boots (3), Ember boots (4), Deepstone boots (5 defense).

@@ -16,6 +16,7 @@ const INVULNERABLE = 1, KNOCKBACK = 10;
 
 export function hurtPlayer(dmg, fromX, fromY) {
   if (G.hurtT > 0 || G.paused || G.dialog.you) return;   // v141: no harm while your dialog is open
+  if (G.block > 0) { G.hurtT = INVULNERABLE / 2; emit('player:blocked', { x: fromX, y: fromY }); return; }   // v227: the sword's block turns any hit
   const S = G.S;
   S.hp = Math.max(0, S.hp - taken(dmg));
   G.hurtT = INVULNERABLE;

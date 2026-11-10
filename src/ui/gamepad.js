@@ -47,7 +47,7 @@ function press(name, box) {
     return;
   }
   if (name === 'use') { act(); return; }
-  if (name === 'back') { if (G.siting) escape(); return; }   // B stops placing a building; otherwise it does nothing in play
+  if (name === 'back') { if (G.siting) escape(); else runAction('special'); return; }   // B stops placing a building; otherwise (v227) the weapon special
   if (name === 'menu') { openMenu(); return; }
   if (name === 'prev' || name === 'next') { const n = HOTBAR.length; selectSlot((G.S.slot + (name === 'next' ? 1 : n - 1)) % n); return; }
   runAction(name);
