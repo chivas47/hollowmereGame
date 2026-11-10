@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v217: Garden pots
+- A new craft, the garden pot (10 stone and 10 wood), known from the start (Nuno's pick; Stardew teaches it when the greenhouse is repaired). It holds one crop. Place it on the farm, in the greenhouse, or indoors in the farmhouse, the shed or the attic.
+- Indoors a pot's crop grows in any season, so a summer melon or an autumn lingonberry can grow in the farmhouse in winter. Outdoors it keeps to its crop's seasons, rain waters it, and it withers when the season turns, like the fields.
+- Face a pot with seeds to plant, with the can to water it (it grows only on days it was watered) and with a fertilizer selected in the kit to mix it in. Face it once the crop is ripe to pick it. Its dialog says what is growing, how many days are left and whether it has been watered; it can be picked up once it is empty.
+- The balance bot crafts four pots after its shed, keeps them in the shed and grows its best indoor crop in them through the winter.
+- New save data: none beyond the pot's own state (crop, watered, fertilizer), kept in its placed object.
+
 ## v216: The seed maker
 - A new machine, the seed maker, learnt at Farming 9 and crafted from 25 wood, 10 coal and 1 gold bar (Stardew's seed maker). Put in a crop the seed stall sells and it makes 1 to 3 of its seeds at once; one time in ten it adds 1 to 5 mixed seeds as well. The seeds go straight into your seed pouch. Only crops the stall stocks go in: not the Oasis's ruby stalk, fiber seeds or seed packets (Nuno's pick).
 - Worth it for crops whose seeds cost more than the crop sells for (sweet corn, lingonberries, snap peas, gleamfruit), or to keep planting when the stall is shut or the season's seeds are out of stock.

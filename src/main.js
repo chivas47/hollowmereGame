@@ -14,6 +14,7 @@ import './systems/clock.js';
 import './systems/effects.js';
 import './systems/animation.js';   // v74: action poses, combos, pickups, particles, screen shake
 import './systems/farming.js';
+import './systems/gardenpots.js';   // v217
 import './systems/seeds.js';
 import './systems/forage.js';
 import './systems/buildings.js';
