@@ -5,7 +5,7 @@ import { TURNS, TURN_STEPS } from '../data/furniture.js';
 import { FLUTTER } from '../data/animation.js';
 import { r, blink } from './pixel.js';
 import { ready, tinted, frame, sheet, recoloured } from './sheets.js';
-import { personLayers, lookOf, LONG_HAIR } from '../data/people.js';
+import { personParts, lookOf, LONG_HAIR } from '../data/people.js';
 import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET, DEBRIS_SHEET, GIANTS_SHEET, PLACED_SHEET, FURN_SHEET, SOIL_SHEET, ALDERS_SHEET, FENCES_SHEET, FIXTURES_SHEET, CHILDREN_SHEET, GLOW_SHEET, BUNTING_SHEET, PENS_SHEET } from '../data/sprites.js';
 
 const FERT_DOT = { booster: '#c9b68e', booster2: '#e9b44c', booster3: '#b98ae0', tonic: '#86b86a', tonic2: '#5fd36a', mulch: '#a0805a', mulch2: '#7a5a3a' };
@@ -182,11 +182,15 @@ function childArt(c, x, y, stage, i) {
 }
 
 // v77: from the person sheet (assets/sprites/person.png) tinted to p once it has loaded, else drawn in code below.
-// v222: part by part (data/people.js personLayers): body, outfit, hair, beard, extras and hat, each band tinted.
+// v222: part by part (data/people.js personParts): body, outfit, hair, beard, extras and hat, each band tinted.
+// v223: the head's parts drawn on their own, lower on a child's body (and without the walking bob there).
 function sheetPerson(c, px, py, dir, moving, walkT, p) {
-  const P = PERSON, layers = personLayers(p);
-  const f = (P.dirs[dir] ?? 0) * P.steps + (moving ? 1 + Math.floor(walkT * 8) % 2 : 0);
-  c.drawImage(tinted(P.sheet, P.layers, layers, P.h), f * P.w, 0, P.w, P.h, Math.round(px) + P.origin[0], Math.round(py) + P.origin[1], P.w, P.h);
+  const P = PERSON, parts = personParts(p), step = moving ? 1 + Math.floor(walkT * 8) % 2 : 0;
+  const f = (P.dirs[dir] ?? 0) * P.steps + step, X = Math.round(px) + P.origin[0], Y = Math.round(py) + P.origin[1];
+  const draw = (layers, dy) => c.drawImage(tinted(P.sheet, P.layers, layers, P.h), f * P.w, 0, P.w, P.h, X, Y + dy, P.w, P.h);
+  if (!parts.dy) return draw([...parts.body, ...parts.head], 0);
+  draw(parts.body, 0);
+  draw(parts.head, parts.dy - (step && !parts.bob ? 1 : 0));
 }
 
 // v123: wind in the hair and clothes. wind is the lean where they stand (systems/wind.js, about 0 to 1, + is
@@ -194,7 +198,7 @@ function sheetPerson(c, px, py, dir, moving, walkT, p) {
 // flaps, faster in stronger wind.
 function flutter(c, px, py, p, wind) {
   if (Math.abs(wind) < FLUTTER.from) return;
-  const s = wind > 0 ? 1 : -1, x = Math.round(px), y = Math.round(py);
+  const s = wind > 0 ? 1 : -1, x = Math.round(px), y = Math.round(py) + (ready(PERSON.sheet) ? PERSON.bodies[lookOf(p).body].dy : 0);
   const on = Math.floor(performance.now() / 1000 * FLUTTER.rate * (0.6 + Math.abs(wind))) % 2, side = s > 0 ? x + 4 : x - 5;
   r(c, side, y - 12 + on, 1, 1, p.hair);
   if (LONG_HAIR.includes(lookOf(p).hair)) r(c, side, y - 9 + on, 1, 2, p.hair);
@@ -202,7 +206,7 @@ function flutter(c, px, py, p, wind) {
 }
 
 export function drawPerson(c, px, py, dir, moving, walkT, p, wind = 0) {
-  if (p.small) {   // v166: a child (Pip), three quarters size, standing on the same spot
+  if (p.small && !ready(PERSON.sheet)) {   // v166: a child (Pip), three quarters size, until the sheet (v223: with its child's body) loads
     c.save(); c.translate(px, py); c.scale(0.75, 0.75); c.translate(-px, -py);
     drawPerson(c, px, py, dir, moving, walkT, { ...p, small: false }, wind); c.restore(); return;
   }
@@ -237,7 +241,7 @@ export function drawPerson(c, px, py, dir, moving, walkT, p, wind = 0) {
 
 // v115: closed eyes, drawn in skin over a standing person's eyes (the sheet and the code art put them on the same row).
 export function drawBlink(c, px, py, dir, p) {
-  const x = Math.round(px), y = Math.round(py) - 11, sheet = ready(PERSON.sheet);
+  const sheet = ready(PERSON.sheet), x = Math.round(px), y = Math.round(py) - 11 + (sheet ? PERSON.bodies[lookOf(p).body].dy : 0);   // v223: a child's eyes are lower
   if (dir === 'down') { if (sheet) { r(c, x - 2, y, 1, 2, p.skin); r(c, x + 1, y, 1, 2, p.skin); } else { r(c, x - 2, y, 1, 1, p.skin); r(c, x + 1, y, 1, 1, p.skin); } }
   else if (dir === 'left') r(c, sheet ? x - 3 : x - 2, y, 1, sheet ? 2 : 1, p.skin);
   else if (dir === 'right') r(c, sheet ? x + 2 : x + 1, y, 1, sheet ? 2 : 1, p.skin);

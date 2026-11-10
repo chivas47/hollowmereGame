@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v223: A child's body
+- Pip, the village's child, was the adult figure shrunk to three quarters size, with a grown-up's small head for the body. Children now have their own body: the same head on a short body, so the head is about two thirds of their height, with short arms, shorts and small shoes, in all four directions and both walking steps.
+- Hair styles, glasses and hats are the grown-ups' ones drawn lower on the child, so every style fits a child without drawing it again. Children wear no beards or outfits. Their heads stay steady while they walk.
+- Blinking and hair in the wind follow the child's lower head.
+- For changing the art: the child's body is `CHILD` in tools/sprites/person.py and its offset is `PERSON.bodies` in the generated src/data/personSheet.js; any look with `small: true` uses it. tools/sprites/people_lineup.mjs now also draws four sample children.
+- Drawing only: no saves, prices or keys changed.
+
 ## v222: Characters rebuilt part by part
 - The farmer and every neighbour are redrawn with more detail: ears, a collar at the neck, three shades in every colour, hair with strands and a shine, and a one-pixel bob of the head and body when walking.
 - People are now put together from parts: a body, then an outfit, a hair style, a beard, glasses and a hat, each drawn once and tinted to the person's colours. Seven hair styles (short, long, bun, ponytail, curly, cropped, balding), three beards (full, moustache, goatee), four outfits (dress, long coat, overalls, apron) and glasses. The six hat shapes are drawn on the sheet too, sitting properly over each hair style.
