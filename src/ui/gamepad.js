@@ -9,6 +9,7 @@ import { PAD_BUTTONS, PAD } from '../data/gamepad.js';
 import { HOTBAR } from '../data/hotbar.js';
 import { act } from '../systems/interact.js';
 import { runAction, escape } from './input.js';
+import { special } from '../systems/specials.js';
 import { selectSlot } from './hotbar.js';
 import { closeModal, dialogOf } from './modal.js';
 import { menuOpen, openMenu } from './menu.js';
@@ -75,6 +76,7 @@ function partner(pad, box) {
   }
   if (press('use')) { if (G.P2) partnerUse(); else join(); }
   if (press('back')) leave();
+  if (press('bag')) special('p2');   // v231: X, their weapon special
   if (press('prev')) partnerSlot(-1);
   if (press('next')) partnerSlot(1);
   partnerKeys({ up: !!down.up, down: !!down.down, left: !!down.left, right: !!down.right });

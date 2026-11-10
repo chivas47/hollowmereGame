@@ -60,7 +60,7 @@ export function join() {
   if (onPhone()) { notify(PARTNER.phone.note); return; }
   const P = G.S.partner, at = backTo(P.at);
   G.P2 = { ...(at || { map: G.S.map, ...besideYou(), dir: G.S.dir }), moving: false, walkT: 0, keys: {}, slot: P.slot || 0, anim: null };
-  notify(`${P.name} joins you. Press B on their controller to leave.`);
+  notify(`${P.name} joins you. X on their controller is their weapon special; B leaves.`);   // v231
   if (!P.picked) { P.picked = true; placeBed(); asPartner(() => emit('ui:partnerLook')); }   // v142: their look, in their half
   changed();   // their energy bar
 }

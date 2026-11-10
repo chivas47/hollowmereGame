@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v231: Farmer two's weapon specials
+- The second farmer has the weapon specials too: X on their controller blocks with a sword, stabs fast with a dagger or slams the ground with a club, from where they stand. B still leaves.
+- Each of you has your own cooldown, and a block guards only the one who made it.
+- The note when farmer two joins now names their X as well as their B.
+- New save data: none.
+
 ## v230: Lodge goals for the chargers
 - Warden Hale has three new slaying goals, one for each zone's chargers, counting every charger of that zone:
   - 150 in the Hollow (burrow beetles, tusk boars, stone rams, gloom hounds): the savage ring. After each monster you defeat, you move faster for 3 seconds.

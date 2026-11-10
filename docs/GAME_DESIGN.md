@@ -626,7 +626,7 @@ Slot 5 (no hotbar change) swings the weapon chosen in the bag. Damage is Stardew
   | Dagger | Quick stab | 4 stabs 0.08 s apart straight ahead, each 0.6 of the weapon's damage (2.4 times in all), 18 px reach | 3 s |
   | Club | Ground slam | after a 0.35 s leap, the weapon's damage to every monster within 40 px, pushed outward and dazed for 1 s | 6 s |
 
-  Cooldowns are Stardew's (sword 1.5 s, dagger 3 s, club 6 s). Specials hit with crits, rings, professions, enchantments and forging like any swing. Farmer two has none yet.
+  Cooldowns are Stardew's (sword 1.5 s, dagger 3 s, club 6 s). Specials hit with crits, rings, professions, enchantments and forging like any swing. v231: farmer two has them too, on their controller's X (B still leaves), with their own cooldown; their block guards them.
 - Monsters (count grows to 10 a floor): slime (floor 1+, gel 60%), Hollow mite (3+, crawls, fiber 30%), cave bat (12+, flies, coal 20%), bone walker (30+, iron ore 30%), Hollow serpent (50+, flies, violet stone 5%). Combat XP 3, 2, 6, 15, 20. Any kill: 1% chance of a weapon or ring from the floor's pool.
 - v228 chargers (data/weapons.js CHARGE, systems/monsters.js chargeTurn). Within 72 px and rested, a charger stops and winds up (it flashes and shakes: the tell), aiming at you until it goes; then it rushes in a straight line, hurting 1.5 times as much on contact; then it stands winded, open to hits. One that runs into a wall or a rock, or into your sword's block, stands dazed (stars over it) for longer. Between charges it walks after you and rests 2 s. Two rush twice in a row, the second wind-up shorter.
 
