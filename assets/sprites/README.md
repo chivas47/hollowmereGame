@@ -110,13 +110,15 @@ To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, a
 
 - **Blocks (2):** dry, then watered. Every tilled tile gets dry soil on its corners; watered tiles get the watered block over it, so the two blend.
 - Fertiliser dots are drawn in code.
+- Built by `tools/sprites/terrain.py` with the terrain sheets: ridges every 4 rows so tiles join at any offset, a raised bank round the edge.
 
 ## cave-rock.png, cave-sand.png, cave-ember.png, cave-sewer.png, cave-peak.png
 
 128 x 80 each, full colour, one per cave theme (rock is the plain mines and the farm cave). The terrain layout with two blocks:
 
 - **floor** (left): the base; only its full tiles are used (tile 15 and row 4).
-- **wall** (right): the 16 corner tiles laid over the floor on `X` tiles, plus four full tiles. Draw a rock face on edges that face down.
+- **wall** (right): the 16 corner tiles laid over the floor on `X` tiles, plus four full tiles. Draw a rock face on edges that face down; the pixels under a face carry its see-through shadow onto the floor.
+- Built by `tools/sprites/terrain.py` from `CAVE_COLS` in `src/render/tiles.js`, with each theme's own touch on the floor (sand ripples, ember and peak glowing cracks, sewer moss).
 
 ## wallpapers.png, floors.png
 
@@ -209,8 +211,8 @@ Lit bombs use the bomb frames of placed.png.
 | placed.png | Hollowmere Farm (original, v84; redrawn v206) | same as the game |
 | furniture.png | Hollowmere Farm (original, v84; redrawn v207) | same as the game |
 | terrain-*.png | Hollowmere Farm (original, v85, colours from the season palettes; redrawn v204) | same as the game |
-| soil.png | Hollowmere Farm (original placeholder, v86) | same as the game |
-| cave-*.png | Hollowmere Farm (original placeholder, v87, colours from the cave themes) | same as the game |
+| soil.png | Hollowmere Farm (original, v86; redrawn v221) | same as the game |
+| cave-*.png | Hollowmere Farm (original, v87, colours from the cave themes; redrawn v221) | same as the game |
 | wallpapers.png, floors.png | Hollowmere Farm (original, v87; redrawn v220) | same as the game |
 | buildings.png, buildings-winter.png | Hollowmere Farm (original, v88, from the game's code art; redrawn v201 to v203) | same as the game |
 | props.png | Hollowmere Farm (original, v89; redrawn v212) | same as the game |

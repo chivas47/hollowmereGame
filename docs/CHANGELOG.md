@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v221: Tilled soil and cave ground redrawn
+- Tilled soil: ridges with a lit crest and a furrow in shadow, clods, and a raised bank round each patch. Watered soil is darker, with wet glints in the furrows.
+- Cave floors: faint patches, pebbles lit on top and hairline cracks, plus each theme's own touch: ripples in the sandy caverns, cracks glowing in the vents and the Smoke Peak, damp moss in the sewer.
+- Cave walls: a lumpy top with a lit rim, and a rock face with a lit lip and strata on edges that face down, casting a shadow on the floor.
+- Built by tools/sprites/terrain.py like the seasonal terrain, whose sheets came out byte-identical. With this, no sheet is a placeholder any more. Drawing only: no saves, prices or keys changed.
+
 ## v220: The last code-art sheets redrawn
 - Wallpapers: a shade under the ceiling and a wooden skirting board on every wall; plaster with a fine speckle, stripes with a pinstripe, small four-petal flowers on the dotted papers, upright boards with nail heads, bricks in offset courses on pale mortar, and fern fronds on the sprig paper.
 - Floors: planks with lit edges, grain and staggered joints; bevelled tiles in grout; a bevelled checker; a basket weave for the straw mat and the herringbone.
