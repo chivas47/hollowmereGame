@@ -2,7 +2,7 @@
 import { G } from '../core/game.js';
 import { on, emit } from '../core/events.js';
 import { ITEMS } from '../data/items.js';
-import { CLOTHES, CLOTH, SLOTS } from '../data/clothing.js';
+import { CLOTHES, CLOTH, SLOTS, DYEABLE } from '../data/clothing.js';
 import { weaveCloth, tailor, dye, dyeOf, dressMannequin, pieceColor, wear } from '../systems/clothing.js';
 import { pickUp } from '../systems/placeables.js';
 import { turnFurniture, canTurn } from '../systems/house.js';
@@ -28,11 +28,11 @@ function sewing() {
 
 function dyePots() {
   const S = G.S;
-  const pieces = Object.keys(S.wardrobe).filter((k) => ['shirt', 'pants'].includes(CLOTHES[k]?.slot));
+  const pieces = Object.keys(S.wardrobe).filter((k) => DYEABLE.includes(CLOTHES[k]?.slot));
   let html = '<h2>Dye pots</h2>';
   if (!dyeing) {
-    html += pieces.length ? `<p class="role">Pick a shirt or trousers to dye.</p>${pieces.map((k) => `<div class="shoprow"><div class="furnrow">${chip(pieceColor(k))}<div><b>${CLOTHES[k].name}</b></div></div><div class="btns"><button data-dye-piece="${k}">Dye</button></div></div>`).join('')}`
-      : '<p class="role">You have no shirts or trousers to dye yet. Sew some first.</p>';
+    html += pieces.length ? `<p class="role">Pick a shirt, trousers or an accessory to dye.</p>${pieces.map((k) => `<div class="shoprow"><div class="furnrow">${chip(pieceColor(k))}<div><b>${CLOTHES[k].name}</b></div></div><div class="btns"><button data-dye-piece="${k}">Dye</button></div></div>`).join('')}`
+      : '<p class="role">You have nothing to dye yet: shirts, trousers and accessories take dye. Sew some first.</p>';
   } else {
     const items = Object.keys(S.bag).filter((k) => S.bag[k] > 0 && dyeOf(k));
     html += `<p class="role">Dye the ${CLOTHES[dyeing].name.toLowerCase()} with one of these (it is used up):</p>`;
@@ -56,7 +56,7 @@ export function wardrobeHtml() {
   return Object.entries(SLOTS).map(([slot, label]) => {
     const own = Object.keys(S.wardrobe).filter((k) => CLOTHES[k]?.slot === slot), cur = S.outfit[slot];
     const btns = own.map((k) => `<button data-outfit="${slot}:${k}" ${cur === k ? 'aria-pressed="true"' : ''}>${CLOTHES[k].name}</button>`).join('');
-    const off = `<button data-outfit="${slot}:" ${!cur ? 'aria-pressed="true"' : ''}>${slot === 'hat' ? 'No hat' : slot === 'shoes' ? 'Barefoot' : 'Your own'}</button>`;
+    const off = `<button data-outfit="${slot}:" ${!cur ? 'aria-pressed="true"' : ''}>${slot === 'hat' ? 'No hat' : slot === 'shoes' ? 'Barefoot' : slot === 'accessory' ? 'None' : 'Your own'}</button>`;
     return `<div class="pick"><span>${label}</span>${btns}${own.length ? off : '<i class="role">None yet</i>'}</div>`;
   }).join('');
 }

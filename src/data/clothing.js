@@ -4,6 +4,7 @@
 // has a colour. Shoes give defense (Stardew's boots: 1 to 4): each point takes 1 off a hit, to a minimum of 1.
 // slot: shirt, pants, hat or shoes. color: the piece's own colour. style: hat shape (render/sprites.js drawPerson);
 // v224: on a shirt, an outfit (data/people.js OUTFITS) worn over the look's own shirt in the piece's colour.
+// v225: accessories (slot accessory): kind is the look field the piece fills in its colour (scarf or bag, data/people.js).
 export const CLOTH = { item: 'cloth', fiber: 5 };
 export const CLOTH_ITEMS = { cloth: { name: 'Cloth', sell: 470, material: true } };   // Stardew's cloth sells for 470g; ours is a material, never shipped
 
@@ -40,6 +41,12 @@ export const CLOTHES = {
   dealerhat: { name: 'Dealer\'s hat',    slot: 'hat', color: '#5a3a5a', band: '#c9a43a', style: 'bucket', found: true },   // v64: the casino, 8,000 coins
   sablemask: { name: 'Sable\'s mask',     slot: 'hat', color: '#3a3f4a', band: '#c9b083', style: 'beanie', found: true },   // v62: Sable's shop, 25 moonstones
   bonemask:  { name: 'Bone helm',        slot: 'hat', color: '#e8e0d0', band: '#2b211a', style: 'beanie', found: true },   // v37: the lodge's reward for 50 bone walkers
+  // v225: accessories, one at a time: scarves and satchels, sewn like the rest and dyeable
+  beetscarf:  { name: 'Beet scarf',        slot: 'accessory', kind: 'scarf', color: '#a03050', from: 'beet' },
+  emberscarf: { name: 'Ember scarf',       slot: 'accessory', kind: 'scarf', color: '#c8452f', from: 'pepper' },
+  frostscarf: { name: 'Frost scarf',       slot: 'accessory', kind: 'scarf', color: '#9fc8e0', from: 'frostkale' },
+  satchel:    { name: 'Canvas satchel',    slot: 'accessory', kind: 'bag', color: '#c9b68e', from: 'wheat' },
+  creel:      { name: 'Angler\'s satchel', slot: 'accessory', kind: 'bag', color: '#6e5a3a', from: 'pike' },
   // Shoes (defense)
   sandals:   { name: 'Rope sandals',     slot: 'shoes', color: '#c9b68e', def: 1, from: 'fiber' },
   boots:     { name: 'Work boots',       slot: 'shoes', color: '#5c371e', def: 2, from: 'copper' },
@@ -50,4 +57,5 @@ export const CLOTHES = {
   emberboots:  { name: 'Ember boots',    slot: 'shoes', color: '#a5432f', def: 4, found: true },
   deepboots:   { name: 'Deepstone boots', slot: 'shoes', color: '#3f4850', def: 5, found: true },
 };
-export const SLOTS = { shirt: 'Shirt', pants: 'Trousers', hat: 'Hat', shoes: 'Shoes' };
+export const SLOTS = { shirt: 'Shirt', pants: 'Trousers', hat: 'Hat', shoes: 'Shoes', accessory: 'Accessory' };   // v225: accessory
+export const DYEABLE = ['shirt', 'pants', 'accessory'];   // the slots the dye pots take
