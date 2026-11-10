@@ -8,7 +8,7 @@ import sys
 from PIL import Image
 
 S = 16
-ORDER = ['grass', 'weeds', 'stone', 'twig', 'stump', 'copperrock', 'ironrock', 'crate', 'alderstump']
+ORDER = ['grass', 'weeds', 'stone', 'twig', 'stump', 'copperrock', 'ironrock', 'crate', 'alderstump', 'meteorite']
 
 ROCK = [
   '.....SSSSS....',
@@ -105,6 +105,21 @@ ART = {
     'FBBCcFFCCCcF',
     'FBbCcFFCCCcF',
     'ffffffffffff',
+  ]),
+  # v218: a meteorite: a dark pitted rock, scorched, with glints of ore and a faint glow in its cracks.
+  'meteorite': ({'S': '#6a6470', 's': '#4a4450', 'H': '#8a8494', 'r': '#2e2a34', 'O': '#b98ae0', 'o': '#7a4fb0', 'F': '#f08a3a'}, 1, 2, [
+    '....ssSSSSs...',
+    '..sSSHHSSSSs..',
+    '.sSHHSsSSOSSs.',
+    '.SSHSSSSSSosS.',
+    'sSSSsrSSSSSSss',
+    'sSOSSrFrSSSSss',
+    'sSoSSSrSSOSSss',
+    'sSSSSSSSSoSsss',
+    '.sSSsSSSSSSsr.',
+    '.ssSSSSOSSssr.',
+    '..sssSSosssr..',
+    '...rrrrrrrr...',
   ]),
   'alderstump': ({**STUMP_WOOD, 'B': '#7a5a3a', 'b': '#5a3e26'}, 3, 6, [
     '..rRRRRr..',

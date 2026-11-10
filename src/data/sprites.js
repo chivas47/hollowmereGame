@@ -50,7 +50,7 @@ export const FORAGE_SHEET = {
 export const TREES_SHEET = { sheet: 'trees', w: 24, h: 32, origin: [-4, -16], layers: ['leaf', 'ink'], bare: 5 };
 
 // v83 debris.png: 16x16 frames over the tile, one row, in this order (colours drawn in).
-export const DEBRIS_SHEET = { sheet: 'debris', size: 16, order: ['grass', 'weeds', 'stone', 'twig', 'stump', 'copperrock', 'ironrock', 'crate', 'alderstump'] };
+export const DEBRIS_SHEET = { sheet: 'debris', size: 16, order: ['grass', 'weeds', 'stone', 'twig', 'stump', 'copperrock', 'ironrock', 'crate', 'alderstump', 'meteorite'] };
 // v83 giants.png: giant crops, 48x48 frames over their 3x3 tiles, a column per shape. Bands: fruit (tinted to the
 // crop's colour), line (its line colour), ink (stems, leaves, shadow).
 export const GIANTS_SHEET = { sheet: 'giants', size: 48, layers: ['fruit', 'line', 'ink'], cols: { pod: 0, round: 1, leafy: 2 } };
@@ -62,7 +62,7 @@ export const PLACED_SHEET = {
   sheet: 'placed', w: 16, h: 32, origin: [0, -16],
   order: ['emberbomb', 'blastbomb', 'greatbomb', 'slimepress', 'chest', 'bigchest', 'sign', 'farmcomputer', 'minibin', 'sprinkler',
     'sprinkler2', 'sprinkler3', 'crock', 'churn', 'vat', 'brewbarrel', 'eggpress', 'loom', 'oilpress', 'beebox', 'gemcopier', 'dryer',
-    'mushroomlog', 'incubator', 'silo', 'smoker', 'furnace', 'kiln', 'lightningrod', 'lantern', 'seedmaker', 'gardenpot'],
+    'mushroomlog', 'incubator', 'silo', 'smoker', 'furnace', 'kiln', 'lightningrod', 'lantern', 'seedmaker', 'gardenpot', 'stoneowl', 'oddfigure'],
 };
 export const FURN_SHEET = {
   sheet: 'furniture', w: 16, h: 32, origin: [0, -16], layers: ['main', 'second', 'ink'],

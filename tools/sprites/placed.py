@@ -392,6 +392,37 @@ ART = {
     '....nmmmmmmn....',
     '....NNNNNNNN....',
   ],
+  # v218: a stone owl and an odd stone figure, left on the farm by overnight surprises.
+  'stoneowl': [
+    '....nMn..nMn....',
+    '....nMMmmMMn....',
+    '...nMSSMMSSMn...',
+    '...MSZYMMYZSm...',
+    '...MMMMyyMMMm...',
+    '...nMMMMMMMmn...',
+    '...MSMmMMmMMm...',
+    '...MSmMMMMmMm...',
+    '...nMMmMMmMmn...',
+    '....nMMMMMMn....',
+    '...nnmmmmmmnn...',
+    '..nmMMMMMMMMmn..',
+    '..nnnnnnnnnnnn..',
+  ],
+  'oddfigure': [
+    '......nMMn......',
+    '.....nSMMmn.....',
+    '.....MmMmMm.....',
+    '.....nMMMmn.....',
+    '......nmmn......',
+    '....nMMMMMMn....',
+    '...nMSMMMMMmn...',
+    '...MS.MMMM.Mm...',
+    '...n..MPPM..n...',
+    '......MMMm......',
+    '.....nMMMMn.....',
+    '.....MMm.MMm....',
+    '....nmmmnmmmn...',
+  ],
   # v217: a terracotta garden pot, soil at its rim; the crop in it is drawn in code above (systems/gardenpots.js).
   'gardenpot': [
     '...rRRRRRRRRr...',
@@ -438,7 +469,7 @@ ART = {
 }
 ORDER = ['emberbomb', 'blastbomb', 'greatbomb', 'slimepress', 'chest', 'bigchest', 'sign', 'farmcomputer', 'minibin', 'sprinkler',
          'sprinkler2', 'sprinkler3', 'crock', 'churn', 'vat', 'brewbarrel', 'eggpress', 'loom', 'oilpress', 'beebox', 'gemcopier', 'dryer',
-         'mushroomlog', 'incubator', 'silo', 'smoker', 'furnace', 'kiln', 'lightningrod', 'lantern', 'seedmaker', 'gardenpot']
+         'mushroomlog', 'incubator', 'silo', 'smoker', 'furnace', 'kiln', 'lightningrod', 'lantern', 'seedmaker', 'gardenpot', 'stoneowl', 'oddfigure']
 BOTTOM = 29   # each object's last row; its outline is on row 30 and its shadow on row 31
 
 def hexc(h): h = h.lstrip('#'); return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))

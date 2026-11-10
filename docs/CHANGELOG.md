@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v218: Overnight surprises
+- Now and then something happens on the farm in the night, told in the morning report; at most one a night, and none of them bad (Nuno's pick): a crop fairy ripens a patch of growing crops (1% of nights, not in winter); a meteorite lands, to break with the pickaxe for umbrite, stone and geodes (1%); a stone owl turns up in front of the farmhouse (0.5%); or an odd stone figure appears in the field (0.8%). The owl and the figure are decorations to keep, move or pick up.
+- Each farm's nights have their own fixed sequence, so reloading a save does not roll the night again.
+- The balance bot breaks meteorites with its other farm rocks and moves owls and figures into its kit, out of the way of its field.
+- New save data: none (the meteorite is farm debris, the owl and the figure placed objects).
+
 ## v217: Garden pots
 - A new craft, the garden pot (10 stone and 10 wood), known from the start (Nuno's pick; Stardew teaches it when the greenhouse is repaired). It holds one crop. Place it on the farm, in the greenhouse, or indoors in the farmhouse, the shed or the attic.
 - Indoors a pot's crop grows in any season, so a summer melon or an autumn lingonberry can grow in the farmhouse in winter. Outdoors it keeps to its crop's seasons, rain waters it, and it withers when the season turns, like the fields.

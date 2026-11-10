@@ -690,6 +690,17 @@ At level 5 pick one of two; at level 10 pick one of the two that follow it. Star
 
 Original where Stardew's mechanic does not exist here: Bountiful, Quickgrow, Seedsaver, Nurturer, Hatcher (the farming and ranching split), Blacksmith (bars are not shipped), Excavator (no artifacts), Pondkeeper, Steady hand, Roemaster and Netter (no crab pots or treasure), Acrobat (no special moves). Selling bonuses apply when shipping, not in contests.
 
+### Overnight surprises (v218)
+
+At most one a night, rolled each morning in this order; none are bad (Nuno's pick). Chances follow Stardew's random night events (its witch is left out). Each farm's nights have their own fixed sequence, from the farm's name and the day, so reloading a save cannot roll a night again.
+
+| Surprise | Chance a night | What happens | Stardew |
+|---|---|---|---|
+| Crop fairy | 1% | Every growing crop in a 3 x 3 patch of the farm ripens at once (not in winter) | Crop fairy, 1% |
+| Meteorite | 1% | A meteorite lands on free farm ground: 12 pickaxe swings for 6 umbrite, 6 stone, 2 geodes, 25 mining XP | Meteorite (6 iridium ore, 6 stone, 2 geodes), 1% |
+| Stone owl | 0.5% | A stone owl sits in front of the farmhouse, a decoration to keep or move | Stone owl, about 0.5% |
+| Odd stone figure | 0.8% | An odd stone figure stands somewhere on the farm, a decoration to keep or move | Strange capsule, about 0.8% |
+
 ### Village and quest board
 
 - West exit of the farm (path row, left edge) leads to Hollowmere Village: eight cottages (v76: each can be entered), a quest board, a fountain and the festival table.
