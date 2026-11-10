@@ -7,12 +7,12 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
 import { MAPS, sizeOf } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
-import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS } from '../data/weapons.js';
+import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS, CHARGE } from '../data/weapons.js';
 import { CAVERN } from '../data/cavern.js';
 import { VENT } from '../data/forge.js';
 import { PEAK } from '../data/nuts.js';
 import { ITEMS } from '../data/items.js';
-import { drawSlime, drawMonster } from '../render/sprites.js';
+import { drawSlime, drawMonster, drawDazed } from '../render/sprites.js';
 import { moveBox, occupied, mover } from './world.js';
 import { hurtPlayer, hurtPartner } from './health.js';
 import { has } from './professions.js';
@@ -69,6 +69,38 @@ function step(m, vx, vy, dist) {
   const ny = m.y + vy * dist; if (inside(m.x, ny)) m.y = ny; else m.ty = m.y;
 }
 
+// v228 (roadmap 80b): a charger's turn (data/weapons.js CHARGE). m.cs is its state: undefined while it walks after
+// you, then windup (standing still, the tell), charge (a straight rush along m.cdx, m.cdy), and recover (winded) or
+// dazed (it hit a wall or your block), each for m.ct seconds. m.cn counts the rushes left; m.rest the walk between.
+// Returns true when it has moved itself this frame.
+export function chargeTurn(m, d, dx, dy, dt) {
+  const k = MONSTERS[m.kind];
+  if (!m.cs) {
+    m.rest = Math.max(0, (m.rest || 0) - dt);
+    if (d < k.range && m.rest <= 0) { m.cs = 'windup'; m.ct = k.windup; m.cn = k.times; }
+    if (dx) m.face = dx < 0;
+    return false;   // walks after you as a walker does
+  }
+  m.ct -= dt;
+  if (m.cs === 'windup') {
+    if (d > 1) { m.cdx = dx / d; m.cdy = dy / d; m.face = dx < 0; }   // it aims where you are until it goes
+    if (m.ct <= 0) { m.cs = 'charge'; m.ct = k.time; emit('monster:charge', { x: m.x, y: m.y }); }
+    return true;
+  }
+  if (m.cs === 'charge') {
+    const hit = moveBox(m, m.cdx * k.rush * dt, m.cdy * k.rush * dt, BOX);
+    if (hit.x || hit.y) { daze(m, k.stun); emit('monster:bump', { x: m.x, y: m.y }); return true; }
+    if (m.ct <= 0) {
+      if (--m.cn > 0) { m.cs = 'windup'; m.ct = k.windup * 0.6; }   // the next rush comes quicker
+      else { m.cs = 'recover'; m.ct = k.recover; }
+    }
+    return true;
+  }
+  if (m.ct <= 0) { m.cs = undefined; m.rest = CHARGE.rest; }   // recover or dazed: back to walking
+  return true;
+}
+const daze = (m, t) => { m.cs = 'dazed'; m.ct = t; m.cn = 0; };
+
 // v140: monsters chase the nearer farmer on their map. v143: and hurt either of you.
 const here = () => [G.S, G.P2].filter((f) => f && (f.map ?? G.S.map) === slimeMap);
 addUpdater((dt) => {
@@ -89,7 +121,8 @@ addUpdater((dt) => {
       else { vx = wx / wd; vy = wy / wd; }
     }
     const move = MONSTERS[m.kind || 'slime'].move;
-    if (move === 'hop') { if (active) step(m, vx, vy, m.speed * 1.6 * dt); }
+    if (move === 'charge' && chargeTurn(m, d, dx, dy, dt)) { /* v228: the charger moved itself */ }
+    else if (move === 'hop') { if (active) step(m, vx, vy, m.speed * 1.6 * dt); }
     else step(m, vx + (move === 'fly' ? Math.sin(m.hop * 5) * 0.6 : 0), vy + (move === 'fly' ? Math.cos(m.hop * 4) * 0.6 : 0), m.speed * dt);
     if (m.kx || m.ky) {
       step(m, Math.sign(m.kx), 0, Math.abs(m.kx) * dt); step(m, 0, Math.sign(m.ky), Math.abs(m.ky) * dt);
@@ -97,7 +130,7 @@ addUpdater((dt) => {
       if (Math.abs(m.kx) < 1) m.kx = 0; if (Math.abs(m.ky) < 1) m.ky = 0;
     }
     if (d < TOUCH && f === G.S && G.block > 0) blocked(m, f);   // v227: the sword's block
-    else if (d < TOUCH && !(m.kind === 'slime' && wearing('slimeward'))) (f === G.P2 ? hurtPartner : hurtPlayer)(m.dmg, m.x, m.y);   // v36: the slime ward; v143: whoever it reached
+    else if (d < TOUCH && !(m.kind === 'slime' && wearing('slimeward'))) (f === G.P2 ? hurtPartner : hurtPlayer)(m.dmg * (m.cs === 'charge' ? CHARGE.hit : 1), m.x, m.y);   // v36: the slime ward; v143: whoever it reached; v228: a charge hits harder
     if (G.S.map !== slimeMap) return;   // fainting moved us out
   }
 });
@@ -191,6 +224,7 @@ function blocked(m, f) {
   m.kx = (dx / d) * kn; m.ky = (dy / d) * kn;
   if (motion.hitstop) m.frozen = Math.max(m.frozen || 0, HIT_STOP);
   G.hurtT = Math.max(G.hurtT, SPECIALS.sword.after);
+  if (m.cs === 'charge') daze(m, MONSTERS[m.kind].stun);   // v228: a blocked charge leaves it dazed
   emit('player:blocked', { x: m.x, y: m.y });
 }
 addInteraction(58, ({ item }) => {
@@ -201,5 +235,18 @@ addInteraction(58, ({ item }) => {
 });
 
 addEntities(() => (G.S.map !== slimeMap ? [] : slimes.map((m) => ({
-  y: m.y, draw: (c) => (!m.kind || m.kind === 'slime' ? drawSlime(c, m.x, m.y, m.color, m.hurt > 0, m.hop % HOP < HOP_ACTIVE ? (m.hop % HOP) / HOP_ACTIVE : 0) : drawMonster(c, m.x, m.y, m.kind, m.color, m.hurt > 0, m.hop)),
+  y: m.y, draw: (c) => (!m.kind || m.kind === 'slime' ? drawSlime(c, m.x, m.y, m.color, m.hurt > 0, m.hop % HOP < HOP_ACTIVE ? (m.hop % HOP) / HOP_ACTIVE : 0)
+    : m.cs ? drawCharger(c, m) : drawMonster(c, m.x, m.y, m.kind, m.color, m.hurt > 0, m.hop, !!m.face)),
 }))));
+
+// v228: a charger mid-turn. Winding up it flashes and shakes (the tell); rushing it runs fast; winded or dazed it
+// stands still, dazed with stars over it.
+function drawCharger(c, m) {
+  const flash = m.cs === 'windup' && Math.floor(m.ct * 14) % 2 === 0, shake = m.cs === 'windup' ? (Math.floor(m.ct * 30) % 2 ? 1 : -1) : 0;
+  const t = m.cs === 'charge' ? m.hop * 2.5 : m.cs === 'windup' ? m.hop : 0;
+  drawMonster(c, m.x + shake, m.y, m.kind, m.color, m.hurt > 0 || flash, t, !!m.face);
+  if (m.cs === 'dazed') drawDazed(c, m.x, m.y - 14, m.hop);
+}
+// v228: a charger setting off kicks up dust; one that runs into a wall shakes the ground.
+on('monster:charge', ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 2, IMPACT.stone, 5, { speed: 30, up: 15, size: 1, life: 0.35, shrink: true }); });
+on('monster:bump', ({ x, y }) => { if (G.S.map !== slimeMap) return; burst(x, y - 4, IMPACT.stone, 10, { speed: 60, up: 35, size: 2, life: 0.45, shrink: true }); shake(1.5, 0.12); emit('sfx', 'pick'); });

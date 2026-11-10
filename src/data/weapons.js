@@ -47,6 +47,24 @@ export const MONSTERS = {
   golem:    { name: 'Ember golem',  from: 0, ventOnly: true, move: 'walk', hp: (f) => 60 + Math.floor(f / 2), dmg: (f) => 28 + Math.floor(f / 5), speed: () => 14, xp: 45, drop: ['cinder', 0.8], color: '#5a3a30' },
   serpent:  { name: 'Hollow serpent', from: 50, cavern: true, vent: true, move: 'fly', hp: (f) => 20 + Math.floor(f / 2), dmg: (f) => 15 + f, speed: () => 44, xp: 20, drop: ['violet', 0.05], color: '#5f8a4a' },
 };
+// v228 (roadmap 80b): chargers (move 'charge', systems/monsters.js). Within `range` px and rested, a charger stops
+// and winds up (it flashes and shakes: the tell) for `windup` s, then rushes the way you were at `rush` px/s for
+// `time` s, hurting CHARGE.hit times as much on contact, `times` rushes in a row. Then it stands winded for
+// `recover` s, open to hits; one that hits a wall, or is blocked by the sword, stands dazed for `stun` s. Between
+// charges it walks after you at `speed(f)` and rests CHARGE.rest s. Stats sit beside the walkers of the same floors.
+export const CHARGE = { range: 72, hit: 1.5, rest: 2, stun: 1.6 };
+const charger = (o) => ({ move: 'charge', range: CHARGE.range, times: 1, stun: CHARGE.stun, ...o });
+Object.assign(MONSTERS, {
+  beetle:     { name: 'Burrow beetle', from: 6, ...charger({ windup: 0.5, rush: 110, time: 0.4, recover: 0.8 }), hp: (f) => 4 + Math.floor(f / 4), dmg: (f) => 5 + Math.floor(f / 2), speed: () => 16, xp: 4, drop: ['copper', 0.2], color: '#5a4a6a' },
+  boar:       { name: 'Tusk boar', from: 15, ...charger({ windup: 0.6, rush: 140, time: 0.6, recover: 0.9 }), hp: (f) => 8 + Math.floor(f / 3), dmg: (f) => 8 + f, speed: () => 18, xp: 8, drop: ['coal', 0.25], color: '#7a5a3a' },
+  ram:        { name: 'Stone ram', from: 35, ...charger({ windup: 0.7, rush: 150, time: 0.7, recover: 0.9, stun: 2 }), hp: (f) => 18 + Math.floor(f / 3), dmg: (f) => 12 + f, speed: () => 16, xp: 16, drop: ['iron', 0.3], color: '#9a928a' },
+  gloomhound: { name: 'Gloom hound', from: 60, ...charger({ windup: 0.45, rush: 160, time: 0.45, recover: 0.9, times: 2 }), hp: (f) => 26 + Math.floor(f / 2), dmg: (f) => 14 + f, speed: () => 24, xp: 22, drop: ['gold', 0.2], color: '#3a3550' },
+  scuttler:   { name: 'Dune scuttler', from: 0, cavernOnly: true, ...charger({ windup: 0.35, rush: 150, time: 0.35, recover: 0.6 }), hp: (f) => 20 + Math.floor(f / 4), dmg: (f) => 16 + Math.floor(f / 4), speed: () => 20, xp: 20, drop: ['copper', 0.4], color: '#c9a36a' },
+  bull:       { name: 'Sand bull', from: 0, cavernOnly: true, ...charger({ windup: 0.8, rush: 170, time: 0.9, recover: 1.1 }), hp: (f) => 40 + Math.floor(f / 3), dmg: (f) => 22 + Math.floor(f / 4), speed: () => 16, xp: 32, drop: ['iron', 0.3], color: '#a5753f' },
+  hound:      { name: 'Cinder hound', from: 0, ventOnly: true, ...charger({ windup: 0.4, rush: 170, time: 0.5, recover: 0.8, times: 2 }), hp: (f) => 28 + Math.floor(f / 4), dmg: (f) => 22 + Math.floor(f / 5), speed: () => 26, xp: 34, drop: ['cinder', 0.4], color: '#5a2a22' },
+  magmaram:   { name: 'Magma ram', from: 0, ventOnly: true, ...charger({ windup: 0.8, rush: 150, time: 0.8, recover: 1, stun: 2.2 }), hp: (f) => 70 + Math.floor(f / 2), dmg: (f) => 30 + Math.floor(f / 5), speed: () => 14, xp: 48, drop: ['cinder', 0.8], color: '#4a3430' },
+});
+
 export const MONSTER_COUNT = (f) => Math.min(10, 2 + Math.floor(f / 2));
 // Each kill: a small chance of a weapon or ring from the floor's pool (Stardew: monsters rarely drop rings and weapons).
 export const RARE_DROP = 0.01;

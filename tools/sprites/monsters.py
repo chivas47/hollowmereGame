@@ -13,10 +13,11 @@ from PIL import Image
 S = 24
 LAYERS = ['mite.body', 'mite.ink', 'bat.body', 'bat.ink', 'skeleton.body', 'skeleton.ink', 'wraith.body', 'wraith.ink',
           'rex.body', 'rex.ink', 'sprite.body', 'sprite.glow', 'sprite.ink', 'golem.body', 'golem.glow', 'golem.ink',
-          'serpent.body', 'serpent.ink', 'slime.body', 'slime.ink']
+          'serpent.body', 'serpent.ink', 'slime.body', 'slime.ink',
+          'beetle.body', 'beetle.ink', 'boar.body', 'boar.ink', 'ram.body', 'ram.glow', 'ram.ink', 'hound.body', 'hound.glow', 'hound.ink']   # v228
 TONE = {'B': ('body', 255), 'b': ('body', 205), 'c': ('body', 160), 'G': ('glow', 255), 'g': ('glow', 200)}
 INK = {'Z': '#1c1712', 'Y': '#f0cc6a', 'P': '#e2707a', 'O': '#e9862a', 'F': '#ffe08a', 'R': '#c8352f', 'r': '#8a2a22',
-       'E': '#f4ead2', 'K': '#2b211a'}
+       'E': '#f4ead2', 'K': '#2b211a', 'H': '#d9c9a0', 'h': '#9a8a6a'}   # v228: H h a ram's horn
 SHINE = (255, 255, 255, 130)
 
 # kind: (x0, bottom row, [frame a rows, frame b rows])
@@ -225,6 +226,90 @@ ART = {
     '.BBBBBBBBbb.',
     '..bbbbbbbc..',
   ]]),
+  # v228 (roadmap 80b): the chargers' four shapes, facing right (code mirrors them), each shared by two kinds tinted
+  # differently (MONSTERS.kinds[kind].shape in src/data/sprites.js). Frame b moves the legs.
+  'beetle': (5, 23, [[
+    '.....bBBBBb....',
+    '...bBBWWBBBbKK.',
+    '..bBBBBBBcBBBbK',
+    '.bBBBBBBBcBBBBY',
+    '.bbBBBBBBcBBBbb',
+    '..cccccccccccc.',
+    '..K..K..K..K...',
+  ], [
+    '.....bBBBBb....',
+    '...bBBWWBBBbKK.',
+    '..bBBBBBBcBBBbK',
+    '.bBBBBBBBcBBBBY',
+    '.bbBBBBBBcBBBbb',
+    '..cccccccccccc.',
+    '...K..K..K..K..',
+  ]]),
+  'boar': (3, 23, [[
+    '......bbbbbb.......',
+    '....bBBBBBBBbb.bb..',
+    '..bbBWWBBBBBBBbBBb.',
+    '.bBBBBBBBBBBBBBBZBb',
+    'bBBBBBBBBBBBBBBBBPP',
+    'bBBBBBBBBBBBBBBBbE.',
+    '.cBBBBBBBBBBBBBcc..',
+    '..cccccccccccccc...',
+    '..KK..KK....KK.KK..',
+  ], [
+    '......bbbbbb.......',
+    '....bBBBBBBBbb.bb..',
+    '..bbBWWBBBBBBBbBBb.',
+    '.bBBBBBBBBBBBBBBZBb',
+    'bBBBBBBBBBBBBBBBBPP',
+    'bBBBBBBBBBBBBBBBbE.',
+    '.cBBBBBBBBBBBBBcc..',
+    '..cccccccccccccc...',
+    '...KK..KK..KK..KK..',
+  ]]),
+  'ram': (3, 23, [[
+    '............hHHh...',
+    '...bbbbbb..hHhhHh..',
+    '.bbBWWBBBbbHhBbhH..',
+    'bBBBBBBBBBBBhBZBh..',
+    'bBGBBBGBBBBBBBBBbE.',
+    'bBBBBGBBBGBBBBBBb..',
+    'bBBGBBBBBBBGBBBbb..',
+    '.cBBBBBBBBBBBBcc...',
+    '..cccccccccccccc...',
+    '..KK..KK....KK.KK..',
+  ], [
+    '............hHHh...',
+    '...bbbbbb..hHhhHh..',
+    '.bbBWWBBBbbHhBbhH..',
+    'bBBBBBBBBBBBhBZBh..',
+    'bBGBBBGBBBBBBBBBbE.',
+    'bBBBBGBBBGBBBBBBb..',
+    'bBBGBBBBBBBGBBBbb..',
+    '.cBBBBBBBBBBBBcc...',
+    '..cccccccccccccc...',
+    '...KK..KK..KK..KK..',
+  ]]),
+  'hound': (3, 23, [[
+    '.............bb....',
+    '............bBBb...',
+    'b...........bBBBBb.',
+    'bb.bbbbbbbbbBBZBBBP',
+    '.bBBGGGGGGBBBBBbbb.',
+    '..BBWWBBBBBBBBb....',
+    '..bBBBBBBBBBBBc....',
+    '..cc.cc....cc.cc...',
+    '..K..K......K..K...',
+  ], [
+    '.............bb....',
+    '............bBBb...',
+    '.b..........bBBBBb.',
+    '.bb.bbbbbbbbBBZBBBP',
+    '..bBGGGGGGBBBBBbbb.',
+    '..BBWWBBBBBBBBb....',
+    '..bBBBBBBBBBBBc....',
+    '...cc.cc..cc.cc....',
+    '...K..K....K..K....',
+  ]]),
 }
 
 def serpent(f):
@@ -261,7 +346,7 @@ def build(path, preview=None):
     row = {L: i for i, L in enumerate(LAYERS)}
     def put(kind, layer, f, x, y, c):
         img.putpixel((f * S + x, row[f'{kind}.{layer}'] * S + y), c)
-    for kind in ['mite', 'bat', 'skeleton', 'wraith', 'rex', 'sprite', 'golem', 'serpent', 'slime']:
+    for kind in ['mite', 'bat', 'skeleton', 'wraith', 'rex', 'sprite', 'golem', 'serpent', 'slime', 'beetle', 'boar', 'ram', 'hound']:
         for f in (0, 1):
             cs = {q: ch for q, ch in cells(kind, f).items() if 0 <= q[0] < S and 0 <= q[1] < S}
             for (i, j), ch in sorted(cs.items(), key=lambda kv: (kv[0][1], kv[0][0])):
@@ -279,9 +364,9 @@ def build(path, preview=None):
     img.save(path, optimize=True)
     if preview:
         cols = {'slime': '#7fcf6a', 'mite': '#6b4a2b', 'bat': '#4a3b5a', 'skeleton': '#e8e0d0', 'wraith': '#d9c39a', 'rex': '#c8352f',
-                'sprite': '#e9862a', 'golem': '#5a3a30', 'serpent': '#5f8a4a'}
-        glows = {'sprite': '#ffd98a', 'golem': '#e9862a'}
-        out = Image.new('RGBA', (S * 2 * 9 + 9, S), (58, 52, 48, 255))
+                'sprite': '#e9862a', 'golem': '#5a3a30', 'serpent': '#5f8a4a', 'beetle': '#5a4a6a', 'boar': '#7a5a3a', 'ram': '#9a928a', 'hound': '#5a2a22'}
+        glows = {'sprite': '#ffd98a', 'golem': '#e9862a', 'ram': '#6f6862', 'hound': '#e9862a'}
+        out = Image.new('RGBA', (S * 2 * len(cols) + len(cols), S), (58, 52, 48, 255))
         def band(L, f, col):
             b = img.crop((f * S, row[L] * S, f * S + S, row[L] * S + S))
             if col:
