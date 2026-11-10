@@ -20,6 +20,13 @@ import { DISHES } from '../data/cooking.js';
 import { fortune } from '../systems/cooking.js';
 import { buyHat, hearts as petHearts } from '../systems/pets.js';
 
+// v218: the night's surprise (systems/surprises.js).
+const SURPRISE_LINES = {
+  fairy: (x) => `A soft light drifted over the field in the night. ${x.crops === 1 ? 'A crop is' : `${x.crops} crops are`} suddenly ripe.`,
+  meteorite: () => 'Something fell from the sky in the night and landed on the farm with a thud: a meteorite. Break it with the pickaxe.',
+  owl: () => 'An owl hooted outside the window in the night. In the morning a stone owl sits by the house.',
+  figure: () => 'In the night a low hum came from the field. Out there now stands an odd stone figure, warm to the touch.',
+};
 const WEATHER_LINES = {
   rain: 'It is raining. The farm is watered for you today.',
   storm: 'A storm is rolling in: rain all day, lightning tonight. The farm is watered.',
@@ -188,6 +195,7 @@ on('day:report', (r) => {
   if (r.wishfruit) html += '<p class="gift">Something special turned up for you: a wishfruit. Eat it from the bag.</p>';
   if (r.artisan) html += `<p class="gift">${plural(r.artisan, 'machine')} finished overnight.</p>`;
   if (r.fruit) html += `<p class="gift">Your fruit trees grew ${plural(r.fruit, 'fruit')}.</p>`;
+  if (r.surprise) html += `<p class="gift">${SURPRISE_LINES[r.surprise.key](r.surprise)}</p>`;   // v218
   if (r.giants) html += `<p class="gift">Something huge happened in the field overnight: ${plural(r.giants, 'giant crop')}!</p>`;
   if (r.petGift) html += `<p class="gift">${esc(r.petGift.name)} left something by the water bowl: ${r.petGift.item}.</p>`;
   if (r.weather && r.weather !== 'sun') html += `<p class="gift">${WEATHER_LINES[r.weather]}</p>`;

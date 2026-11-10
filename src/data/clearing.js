@@ -25,6 +25,9 @@ export const DEBRIS = {
   crate:      { name: 'Supply crate', tools: ['axe', 'pick', 'hoe', 'sword'], hp: 1, drops: {} },
   // v28: grass tufts are walkable (walk: true), spread, feed grazing animals and give hay when cut if there is a silo.
   grass:      { name: 'Grass', tools: ['sword', 'hoe', 'axe', 'pick'], hp: 1, drops: {}, walk: true },
+  // v218: a meteorite from an overnight surprise (Stardew's: 6 iridium ore, 6 stone and 2 geodes, gold pickaxe;
+  // umbrite is our top ore, and many swings stand in for the pickaxe tier).
+  meteorite:  { name: 'Meteorite', tools: ['pick'], hp: 12, drops: { umbrite: [6, 6], stone: [6, 6], geode: [2, 2] } },
 };
 
 // Stardew: grass spreads to free neighbours, cutting it gives hay half the time with a silo; animals eat it outside.

@@ -158,7 +158,7 @@ function drop(drops) {
   return got;
 }
 const XP = { weeds: ['foraging', 1], stone: ['mining', 1], twig: ['foraging', 1], stump: ['foraging', 25], alder: ['foraging', 12], alderstump: ['foraging', 2],
-  copperrock: ['mining', 5], ironrock: ['mining', 10], crate: ['foraging', 2], grass: ['foraging', 0] };
+  copperrock: ['mining', 5], ironrock: ['mining', 10], crate: ['foraging', 2], grass: ['foraging', 0], meteorite: ['mining', 25] };   // v218
 
 // Priority 62: above the sword (58) and the well (60), so any tool aimed at debris reaches it.
 addInteraction(62, ({ tx, ty, mapId, item }) => {

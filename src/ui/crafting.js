@@ -51,7 +51,7 @@ function placedDialog() {
   } else if (p.kind === 'silo') {
     html += `<p>Cutting grass gives hay half the time while a silo stands on the farm. Hay in the loft: <b>${G.S.hay}</b>.</p>`;
   } else if (def.kind === 'decor') {
-    html += '<p>It glows softly once the sun goes down.</p>';
+    html += `<p>${def.blurb || 'It looks nice here.'}</p>`;   // v218: each decoration says its own
   } else if (def.kind === 'planter') {   // v217: a garden pot (systems/gardenpots.js)
     const c = p.crop, left = potDaysLeft(p), inside = POT_INDOORS.has(G.S.map);
     if (!c) html += `<p>Empty. ${potHint()} ${inside ? 'Indoors it grows in any season.' : 'Outdoors it keeps to the season and rain waters it.'}</p>`;

@@ -16,7 +16,10 @@ export const PLACEABLES = {
   crock:      { name: 'Brine crock',      short: 'Crock',     kind: 'machine' },
   churn:      { name: 'Butter churn',     short: 'Churn',     kind: 'machine' },
   vat:        { name: 'Cheese vat',       short: 'Vat',       kind: 'machine' },
-  lantern:    { name: 'Frost lantern',    short: 'Lantern',   kind: 'decor' },
+  lantern:    { name: 'Frost lantern',    short: 'Lantern',   kind: 'decor', blurb: 'It glows softly once the sun goes down.' },
+  // v218: left on the farm by overnight surprises (systems/surprises.js); not crafted, kept and moved like decor.
+  stoneowl:   { name: 'Stone owl',        short: 'Owl',       kind: 'decor', blurb: 'An owl carved from grey stone, left by the house one night. Nobody knows who made it.' },
+  oddfigure:  { name: 'Odd stone figure', short: 'Figure',    kind: 'decor', blurb: 'A small, smooth figure of a stone you cannot place. It is warm to the touch, even in winter.' },
   // Fertilizers go on tilled soil (kind 'fertilizer'). quality: booster level, speed: share of growth
   // time saved, retain: chance the soil stays watered overnight. Boosters and tonics go on before planting.
   booster:    { name: 'Soil booster',        short: 'Booster',   kind: 'fertilizer', quality: 1 },

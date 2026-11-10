@@ -125,6 +125,7 @@ const PICKS = { farming: ['tiller', 'artisan'], ranching: ['rancher', 'coopkeepe
 const { HOMES, homeOf, level, noRoom, buyLivestock, orderLevel, buyTool } = await load('systems/livestock.js');
 const { craft, learnt } = await load('systems/crafting.js');
 const { isPot, potDaysLeft } = await load('systems/gardenpots.js');   // v217
+await load('systems/surprises.js');   // v218: overnight surprises (a fairy, a meteorite, an owl, a figure)
 const { startLayout } = await load('systems/layouts.js');
 const { patPet, fillBowl } = await load('systems/pets.js');
 const { orderStable } = await load('systems/stable.js');
@@ -594,9 +595,11 @@ function simulate(runSeed) {
   // Farm layouts: break quarry rocks and crates, pick forage in the farm's wood.
   function layoutChores() {
     const s = S();
+    // v218: an owl or a figure left by a night's surprise goes into the kit, out of the way of the field.
+    for (const [k, p] of Object.entries(s.placed)) if (p.kind === 'stoneowl' || p.kind === 'oddfigure') { const { map, x, y } = parsePlaceKey(k); pickUp(x, y, map, true); }
     for (const f of [...(s.farmForage || [])]) { use('farm', f.x, f.y, 'hoe'); spend(TIME.forage); }
     for (const [k, d] of Object.entries(s.debris || {})) {
-      if (!['copperrock', 'ironrock', 'crate'].includes(d.kind)) continue;   // quarry ore and beach crates
+      if (!['copperrock', 'ironrock', 'crate', 'meteorite'].includes(d.kind)) continue;   // quarry ore and beach crates; v218: a meteorite
       if (s.energy < 30 || late()) return;
       clear('farm', ...k.split(',').map(Number));
     }
