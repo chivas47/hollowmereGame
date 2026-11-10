@@ -61,6 +61,7 @@ export const PLACEABLES = {
   slimepress: { name: 'Slime press',      short: 'Sl. press', kind: 'machine' },
   recycler:   { name: 'Recycler',         short: 'Recycler',  kind: 'machine' },   // v41
   seedmaker:  { name: 'Seed maker',       short: 'Seed mkr',  kind: 'machine' },   // v216
+  gardenpot:  { name: 'Garden pot',       short: 'Pot',       kind: 'planter' },   // v217 (systems/gardenpots.js)
   crabpot:    { name: 'Crab pot',         short: 'Crab pot',  kind: 'pot' },       // v42: placed on pond water (systems/pots.js)
   // v32: used from the kit anywhere, it takes you home (systems/helpers.js) and is used up.
   homecharm:  { name: 'Home charm',       short: 'Charm',     kind: 'charm' },
@@ -145,6 +146,9 @@ export const RECIPES = {
   crabpot:   { cost: 0, needs: { wood: 40, ironbar: 3 }, desc: 'Set it on the Wilds pond and bait it: each morning a crayfish, a snail, a winkle or some trash.' },
   // Stardew's recycling machine: 25 wood, 25 stone, 1 iron bar.
   recycler:  { cost: 0, needs: { wood: 25, stone: 25, ironbar: 1 }, desc: 'Turns trash from the pond into wood, coal, fiber, quartz, stone or ore overnight.' },
+  // v217. Stardew's garden pot: 1 clay, 10 hardwood, 1 stone; we have no clay or hardwood to spare, so 10 stone and
+  // 10 wood. Known from the start (Nuno, November 2026; Stardew teaches it when the greenhouse is repaired).
+  gardenpot: { cost: 0, needs: { stone: 10, wood: 10 }, desc: 'Holds one crop, indoors or out. Indoors it grows in any season; water it like soil.' },
   // v216. Stardew's seed maker: 25 wood, 10 coal, 1 gold bar, learnt at Farming 9.
   seedmaker: { cost: 0, needs: { wood: 25, coal: 10, goldbar: 1 }, skill: ['farming', 9], desc: 'Turns a crop the seed stall sells into 1 to 3 of its seeds while you wait, sometimes with a few mixed seeds.' },
   // v71. Stardew: chest 50 wood; big chest 120 wood, 2 copper bars; wood sign 25 wood; farm computer 10 dwarf gadgets,
@@ -217,3 +221,7 @@ export function sprinklerTiles(def, x, y) {
 // Sold at the seed stall all year (Stardew scale: grass starter 100g, basic 100g, quality 150g; saplings at their tree's price).
 export const SUPPLIES = { grassstarter: 100, booster: 100, booster2: 150, tonic: 100, tonic2: 150, mulch: 100, mulch2: 150,
   ...Object.fromEntries(Object.entries(TREES).map(([k, t]) => [k, t.cost])) };
+
+// v217, garden pots (systems/gardenpots.js): where a pot's crop ignores the season (indoors, the greenhouse, the
+// island); anywhere else it keeps to its crop's seasons and withers when the season turns, like field crops.
+export const POT_INDOORS = new Set(['house', 'shed', 'attic', 'greenhouse', 'island']);

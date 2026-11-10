@@ -49,6 +49,7 @@ const STRATEGIES = {
     // v30: the mill needs cloth, so a loom comes first. v63: the shed comes right after the greenhouse, so machines go
     // inside it and the farm keeps room for buildings. The bot picks the first free spot from the bottom right.
     'lodge:saber', 'lodge:cutlass',   // v37: the lodge's weapons, skipped if the bot has not been deep enough
+    'gardenpot', 'gardenpot', 'gardenpot', 'gardenpot',   // v217: winter crops in the shed (cheap: stone and wood)
     'loom', 'mill', 'helperhut',   // the hut's 100 fiber come slowly from weeds
     'seedmaker',   // v216: learnt at Farming 9; until then the list goes on past it (GOAL later)
     // v168 (roadmap 75l): the late-game sinks, Stardew's obelisks and gold clock: two waystones, then the clock tower.
@@ -123,6 +124,7 @@ const { cook, eat, kitchen } = await load('systems/cooking.js');
 const PICKS = { farming: ['tiller', 'artisan'], ranching: ['rancher', 'coopkeeper'], foraging: ['forester', 'lumberjack'], mining: ['miner', 'blacksmith'], fishing: ['fisher', 'angler'], combat: ['fighter', 'brute'] };
 const { HOMES, homeOf, level, noRoom, buyLivestock, orderLevel, buyTool } = await load('systems/livestock.js');
 const { craft, learnt } = await load('systems/crafting.js');
+const { isPot, potDaysLeft } = await load('systems/gardenpots.js');   // v217
 const { startLayout } = await load('systems/layouts.js');
 const { patPet, fillBowl } = await load('systems/pets.js');
 const { orderStable } = await load('systems/stable.js');
@@ -367,7 +369,7 @@ function simulate(runSeed) {
     // v63: once the shed stands, machines go inside it (lightning rods and the silo stay out), so the farm keeps
     // its room for buildings. Before that, the corner and then the spare tiles.
     const shed = S().built.shed === true;
-    for (const kind of [...Object.keys(MACHINES), 'silo']) {
+    for (const kind of [...Object.keys(MACHINES), 'silo', 'gardenpot']) {   // v217: garden pots too
       if (shed && kind !== 'lightningrod' && kind !== 'silo') {
         for (const [x, y] of SHED_SLOTS) {
           if (s.kit[kind] <= 0) break;
@@ -488,6 +490,23 @@ function simulate(runSeed) {
       : (k) => !CROPS[k].packet && !CROPS[k].shop && CROPS[k].seasons.includes(d.season) && CROPS[k].days <= left;   // v64: not the Oasis's seeds
     const span = map === 'greenhouse' ? 28 : left;
     return Object.keys(CROPS).filter(ok).sort((a, b) => perDay(b, span) - perDay(a, span))[0] || null;
+  }
+  // v217: garden pots: pick what is ripe, plant the best crop for an indoor bed (the seeds the bot holds, or ones
+  // the stall sells today), water the rest from the can. Pots stand in the shed, so a trip there once a day.
+  function tendPots() {
+    const s = S(), pots = Object.entries(s.placed).filter(([, p]) => isPot(p));
+    if (!pots.length) return;
+    spend(TIME.travel);
+    for (const [k, p] of pots) {
+      const { map, x, y } = parsePlaceKey(k);
+      if (p.crop && (p.crop.dead || potDaysLeft(p) === 0)) use(map, x, y, 'hoe');   // picks a ripe crop or clears a dead one
+      if (!p.crop) {
+        const crop = bestCrop('greenhouse');
+        if (crop && (s.seeds[crop] > 0 || (CROPS[crop].seasons.includes(today().season) && goShop('store') && track('seeds', () => buy(crop, 1))))) { s.seedSel = crop; use(map, x, y, 'seeds'); }
+      }
+      if (p.crop && !p.crop.dead && !p.w && s.water > 0 && s.energy >= 2) use(map, x, y, 'can');
+      spend(TIME.tile);
+    }
   }
   // v60: a crop an open bundle still needs, in season, not in the bag and not already growing: one tile of it.
   function bundleCrop(map) {
@@ -820,6 +839,7 @@ function simulate(runSeed) {
     placeKit();
     farm('farm', false);
     if (greenhouseBuilt()) { spend(TIME.travel); farm('greenhouse', false); }
+    tendPots();
     village();
     restoreTrip();
     challenges();

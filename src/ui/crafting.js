@@ -2,7 +2,8 @@
 import { G } from '../core/game.js';
 import { on } from '../core/events.js';
 import { ITEMS } from '../data/items.js';
-import { RECIPES, PLACEABLES, MACHINES, sprinklerTiles } from '../data/crafting.js';
+import { RECIPES, PLACEABLES, MACHINES, sprinklerTiles, POT_INDOORS } from '../data/crafting.js';
+import { potDaysLeft, potHint } from '../systems/gardenpots.js';
 import { craft, craftable, learnt } from '../systems/crafting.js';
 import { SKILLS } from '../data/skills.js';
 import { CROPS } from '../data/crops.js';
@@ -51,6 +52,12 @@ function placedDialog() {
     html += `<p>Cutting grass gives hay half the time while a silo stands on the farm. Hay in the loft: <b>${G.S.hay}</b>.</p>`;
   } else if (def.kind === 'decor') {
     html += '<p>It glows softly once the sun goes down.</p>';
+  } else if (def.kind === 'planter') {   // v217: a garden pot (systems/gardenpots.js)
+    const c = p.crop, left = potDaysLeft(p), inside = POT_INDOORS.has(G.S.map);
+    if (!c) html += `<p>Empty. ${potHint()} ${inside ? 'Indoors it grows in any season.' : 'Outdoors it keeps to the season and rain waters it.'}</p>`;
+    else if (c.dead) html += '<p>The crop withered when the season turned. Face the pot to clear it.</p>';
+    else html += `<p>${CROPS[c.type].name}: ${left ? `ripe in ${left} day${left === 1 ? '' : 's'}` : 'ripe, face the pot to pick it'}. ${p.w ? 'Watered today.' : 'Needs water today.'}${p.fert ? ` ${PLACEABLES[p.fert].name} in the soil.` : ''}</p>`;
+    if (c && !c.dead) html += '<p>Pick it up once the pot is empty.</p>';
   } else {
     const m = MACHINES[p.kind];
     if (m.auto && !p.item) html += `<p>Makes ${ITEMS[m.auto.item].name.toLowerCase()} every ${m.auto.every} nights${m.auto.winter === false ? ', outside winter' : ''}. Next in ${p.timer ?? m.auto.every} night${(p.timer ?? m.auto.every) === 1 ? '' : 's'}.</p>`;
@@ -71,7 +78,7 @@ function placedDialog() {
   if (!p.item) html += '<p class="role" style="margin-top:12px">Picking it up puts it back in your kit.</p>';
   const actions = [];
   if (canTurn(at.x, at.y)) actions.push(['Turn', () => { turnFurniture(at.x, at.y); }]);
-  if (!p.item) actions.push(['Pick up', () => { if (pickUp(at.x, at.y)) closeModal(); }]);
+  if (!p.item && !(p.crop && !p.crop.dead)) actions.push(['Pick up', () => { if (pickUp(at.x, at.y)) closeModal(); }]);
   actions.push(['Close', closeModal, true]);
   openModal(html, actions);
 }

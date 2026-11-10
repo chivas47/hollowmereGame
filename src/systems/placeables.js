@@ -66,7 +66,7 @@ export function placedAt(tx, ty) { return canPlaceOn(G.S.map) ? G.S.placed[place
 // Returns a crafted object to the kit. Used by the pick-up button in its dialog, and by undo (v99) on any map.
 export function pickUp(tx, ty, mapId = G.S.map, quiet = false) {
   const key = placeKey(mapId, tx, ty), p = G.S.placed[key], grid = MAPS[mapId].grid;
-  if (!p || p.item) return false;
+  if (!p || p.item || (p.crop && !p.crop.dead)) return false;   // v217: a garden pot with a living crop stays put
   G.S.kit[p.kind]++;
   emit('picked', p);   // v71: storage.js sends what a chest held to the lost and found
   delete G.S.placed[key];
@@ -102,8 +102,8 @@ addInteraction(55, ({ tx, ty, tile, mapId, item }) => {
   if (INDOORS.has(mapId)) {   // furniture in the house; furniture, machines and decorations in the shed
     if (tile !== 'h') return false;
     if (!owned(S.kitSel)) { announceKit(); return true; }
-    const fits = ['furniture', 'chest', 'sign', 'computer'].includes(def.kind) || (mapId === 'shed' && ['machine', 'decor', 'bin'].includes(def.kind));
-    if (!fits) { notify(mapId === 'shed' ? 'Machines, chests, decorations and furniture go in the shed.' : 'That belongs outdoors.'); return true; }
+    const fits = ['furniture', 'chest', 'sign', 'computer', 'planter'].includes(def.kind) || (mapId === 'shed' && ['machine', 'decor', 'bin'].includes(def.kind));   // v217: garden pots indoors too
+    if (!fits) { notify(mapId === 'shed' ? 'Machines, chests, decorations, furniture and garden pots go in the shed.' : 'That belongs outdoors.'); return true; }
     if (S.placed[key]) { notify('Something is already there.'); return true; }
     if (MAPS[mapId].keepClear.includes(`${tx},${ty}`)) { notify('Keep the doorway clear.'); return true; }
     S.kit[S.kitSel]--;

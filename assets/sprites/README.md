@@ -79,7 +79,7 @@ To replace the art, keep the size and layout, edit in Aseprite or LibreSprite, a
 
 ## placed.png
 
-496 x 32. Crafted objects. Frames are 16 x 32 with the object's tile in the bottom 16 rows, one row, in the order of `PLACED_SHEET.order`. Colours are drawn in. Blinks, the incubator's egg and the working and ready marks are drawn in code.
+512 x 32. Crafted objects. Frames are 16 x 32 with the object's tile in the bottom 16 rows, one row, in the order of `PLACED_SHEET.order`. Colours are drawn in. Blinks, the incubator's egg and the working and ready marks are drawn in code.
 
 ## furniture.png
 
