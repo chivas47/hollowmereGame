@@ -34,6 +34,7 @@ const taken = (dmg) => Math.max(1, Math.round(dmg * (has('acrobat') ? 0.75 : 1))
 export function hurtPartner(dmg, fromX, fromY) {
   const p = G.P2, P = G.S.partner;
   if (!p || p.hurtT > 0 || G.paused || G.dialog.p2) return;
+  if (p.block > 0) { p.hurtT = INVULNERABLE / 2; emit('player:blocked', { x: fromX, y: fromY, who: 'p2' }); return; }   // v231: their block
   P.hp = Math.max(0, P.hp - taken(dmg));
   p.hurtT = INVULNERABLE;
   emit('sfx', 'hurt');

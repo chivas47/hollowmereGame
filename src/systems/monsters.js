@@ -130,7 +130,7 @@ addUpdater((dt) => {
       m.kx *= 0.85; m.ky *= 0.85;
       if (Math.abs(m.kx) < 1) m.kx = 0; if (Math.abs(m.ky) < 1) m.ky = 0;
     }
-    if (d < TOUCH && f === G.S && G.block > 0) blocked(m, f);   // v227: the sword's block
+    if (d < TOUCH && (f === G.S ? G.block : f.block) > 0) blocked(m, f);   // v227: the sword's block (v231: either farmer's)
     else if (d < TOUCH && !(m.kind === 'slime' && wearing('slimeward'))) (f === G.P2 ? hurtPartner : hurtPlayer)(m.dmg * (m.cs === 'charge' ? CHARGE.hit : 1), m.x, m.y);   // v36: the slime ward; v143: whoever it reached; v228: a charge hits harder
     if (G.S.map !== slimeMap) return;   // fainting moved us out
   }
@@ -226,9 +226,9 @@ function blocked(m, f) {
   const dx = m.x - f.x, dy = m.y - f.y, d = Math.hypot(dx, dy) || 1, kn = SPECIALS.sword.knock;
   m.kx = (dx / d) * kn; m.ky = (dy / d) * kn;
   if (motion.hitstop) m.frozen = Math.max(m.frozen || 0, HIT_STOP);
-  G.hurtT = Math.max(G.hurtT, SPECIALS.sword.after);
+  if (f === G.S) G.hurtT = Math.max(G.hurtT, SPECIALS.sword.after); else f.hurtT = Math.max(f.hurtT || 0, SPECIALS.sword.after);   // v231
   if (m.cs === 'charge') daze(m, MONSTERS[m.kind].stun);   // v228: a blocked charge leaves it dazed
-  emit('player:blocked', { x: m.x, y: m.y });
+  emit('player:blocked', { x: m.x, y: m.y, who: f === G.S ? 'you' : 'p2' });
 }
 addInteraction(58, ({ item }) => {
   if (item !== 'sword') return false;
