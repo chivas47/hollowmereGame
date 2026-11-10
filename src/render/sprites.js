@@ -608,6 +608,13 @@ function sheetMonster(c, px, py, kind, color, hurt, f, lift, flip = false) {
   return true;
 }
 
+// v232: a cooldown bar under a farmer's feet (farmer two's weapon special), k from 1 (just used) to 0 (ready).
+export function drawCooldownBar(c, px, py, k) {
+  const w = 12, x = Math.round(px) - w / 2, y = Math.round(py) + 2;
+  r(c, x - 1, y - 1, w + 2, 4, 'rgba(28,23,18,.75)');
+  r(c, x, y, Math.max(1, Math.round(w * Math.min(1, k))), 2, '#e9c46a');
+}
+
 // v228: two little stars circling over a dazed monster.
 export function drawDazed(c, px, py, t) {
   for (let i = 0; i < 2; i++) {

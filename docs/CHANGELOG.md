@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v232: Farmer two's cooldown bar
+- While the second farmer's weapon special cools down, a small bar under their feet empties until it is ready again (yours stays on the weapon slot). It shows on the map on screen only.
+- New save data: none.
+
 ## v231: Farmer two's weapon specials
 - The second farmer has the weapon specials too: X on their controller blocks with a sword, stabs fast with a dagger or slams the ground with a club, from where they stand. B still leaves.
 - Each of you has your own cooldown, and a block guards only the one who made it.
