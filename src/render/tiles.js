@@ -652,6 +652,15 @@ function boat(g, p, o) {
 }
 // v88: the name of a building's picture on the building sheets: its art and whatever changes how it looks.
 export const buildingKey = (o) => [o.art, o.kind, o.roof, o.site, o.w && o.h ? `${o.w}x${o.h}` : null].filter(Boolean).join('.');
+// v226: the tiles a building's picture covers whole ("x,y"). A tree on one of them is not drawn: tree crowns are a layer
+// over the buildings (render/renderer.js), so the border tree behind the Hollow's mouth in the Wilds hid its top.
+export function coveredTiles(o) {
+  const b = BUILDINGS[buildingKey(o)];
+  if (!b) return [];
+  const [, , w, h, dx, dy] = b, x0 = o.x * T + dx, y0 = o.y * T + dy, out = [];
+  for (let ty = Math.ceil(y0 / T); (ty + 1) * T <= y0 + h; ty++) for (let tx = Math.ceil(x0 / T); (tx + 1) * T <= x0 + w; tx++) out.push(`${tx},${ty}`);
+  return out;
+}
 
 // v88: a building from the building sheets (winter's in winter) once they have loaded, else drawn in code.
 export function drawBuilding(g, p, o) {

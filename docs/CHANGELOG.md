@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v226: Trees no longer cover the Hollow's mouth
+- The mine entrance in Ashgrove Wilds stands against the map's north edge, and the border trees along that edge were drawn over the top of its rock face. Tree crowns are drawn above buildings so that buildings can stand behind trees; now a tree on a tile that a building's picture covers whole is left out. The three trees behind the mine mouth are the only ones on any map this removes.
+- Drawing only: no saves, prices or keys changed.
+
 ## v225: The accessory slot
 - The wardrobe has a fifth slot, Accessory, for one scarf or satchel at a time, worn over the rest of the outfit and drawn in the piece's colour.
 - Five new pieces at the sewing machine, each one cloth and one item like the rest: the beet scarf (beet), the ember scarf (pepper), the frost scarf (frostkale), the canvas satchel (wheat) and the angler's satchel (pike).
