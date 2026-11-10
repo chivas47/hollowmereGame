@@ -71,8 +71,9 @@ Tailoring as in Stardew: at the sewing machine one cloth plus one item makes the
 | Trousers | Canvas (wood), blue work (cucumber), moss (wild thyme), rust (iron ore), cream (egg) |
 | Hats | Straw hat (you start with it), red cap (radish), Hollow beanie (Hollow cap), sorrel garland (wood sorrel), gel top hat (slime gel), bucket hat (snap pea), ranger hat (hardwood), angler hat (trout) |
 | Shoes (defense) | Rope sandals 1 (fiber), work boots 2 (copper ore), field boots 3 (stone), iron-toe boots 4 (storm cell) |
+| Accessory (v225, one at a time) | Beet scarf (beet), ember scarf (pepper), frost scarf (frostkale), canvas satchel (wheat), angler's satchel (pike) |
 
-Defense: each point takes 1 off a hit, to a minimum of 1 (Stardew's boots give 1 to 4). Dye pots recolour a shirt or trousers with any crop, fruit or fish, used up. A mannequin wears a copy of your outfit. Stations come from the farmhouse catalogue: sewing machine 2,500g, dye pots 1,000g, mannequin 2,000g (Stardew has no price for these: you use Emily's for free, so they are priced as mid-range furniture).
+Defense: each point takes 1 off a hit, to a minimum of 1 (Stardew's boots give 1 to 4). Dye pots recolour a shirt, trousers or an accessory (v225) with any crop, fruit or fish, used up. A mannequin wears a copy of your outfit. Stations come from the farmhouse catalogue: sewing machine 2,500g, dye pots 1,000g, mannequin 2,000g (Stardew has no price for these: you use Emily's for free, so they are priced as mid-range furniture).
 
 ## Farm buildings: placing (v30)
 

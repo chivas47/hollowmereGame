@@ -7,7 +7,7 @@ import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addEntities } from '../core/registry.js';
 import { ITEMS } from '../data/items.js';
-import { CLOTHES, CLOTH } from '../data/clothing.js';
+import { CLOTHES, CLOTH, DYEABLE } from '../data/clothing.js';
 import { FURNITURE } from '../data/furniture.js';
 import { playerPal } from '../data/profile.js';
 import { drawPerson } from '../render/sprites.js';
@@ -28,6 +28,8 @@ export function outfitPal(profile, outfit = {}) {
   else if (shirt) pal.shirt = pieceColor(outfit.shirt);
   if (CLOTHES[outfit.pants]) pal.pants = pieceColor(outfit.pants);
   if (CLOTHES[outfit.shoes]) pal.shoes = pieceColor(outfit.shoes);
+  const acc = CLOTHES[outfit.accessory];
+  if (acc?.kind) pal[acc.kind] = pieceColor(outfit.accessory);   // v225: a scarf or a satchel
   if (outfit.hat === null) { pal.hat = null; }
   else if (hat) Object.assign(pal, { hat: hat.color, band: hat.band || hat.color, hatStyle: hat.style });
   return pal;
@@ -36,7 +38,7 @@ export function outfitPal(profile, outfit = {}) {
 on('game:loaded', () => {
   const S = G.S;
   S.wardrobe ||= { straw: true };
-  S.outfit = { shirt: null, pants: null, hat: 'straw', shoes: null, ...(S.outfit || {}) };
+  S.outfit = { shirt: null, pants: null, hat: 'straw', shoes: null, accessory: null, ...(S.outfit || {}) };   // v225: accessory
   S.dyes ||= {};
 });
 
@@ -69,7 +71,7 @@ export function wear(slot, k) {
 
 export function dye(k, item) {
   const S = G.S, c = dyeOf(item);
-  if (!S.wardrobe[k] || !['shirt', 'pants'].includes(CLOTHES[k].slot) || !c || !(S.bag[item] > 0)) return false;
+  if (!S.wardrobe[k] || !DYEABLE.includes(CLOTHES[k].slot) || !c || !(S.bag[item] > 0)) return false;
   S.bag[item]--; S.dyes[k] = c;
   notify(`Dyed the ${CLOTHES[k].name.toLowerCase()} the colour of ${ITEMS[item].name.toLowerCase()}.`);
   changed();

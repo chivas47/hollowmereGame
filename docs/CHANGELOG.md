@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v225: The accessory slot
+- The wardrobe has a fifth slot, Accessory, for one scarf or satchel at a time, worn over the rest of the outfit and drawn in the piece's colour.
+- Five new pieces at the sewing machine, each one cloth and one item like the rest: the beet scarf (beet), the ember scarf (pepper), the frost scarf (frostkale), the canvas satchel (wheat) and the angler's satchel (pike).
+- The dye pots take accessories as well as shirts and trousers. Mannequins copy the accessory with the rest of the outfit.
+- New save data: the outfit's accessory (empty in old saves, which keep the rest of their outfit).
+
 ## v224: Scarves, satchels and cardigans
 - Three new clothing parts on the person sheet, each in its own colour: a scarf wound round the neck with one end hanging, a satchel on a strap over one shoulder with a brass clasp, and an open cardigan over the shirt, the shirt showing down the front.
 - Neighbours who suit them wear them: the mail carrier's mail bag and scarf, the mapmaker's and the tinkerer's satchels, the hermit's foraging bag and scarf, scarves on the fiddler and the station keeper, and a cardigan on the retired clockmaker.
