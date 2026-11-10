@@ -57,3 +57,18 @@ test('their quick stab lands in front of them, not of you', () => {
   assert.equal(far.hp, 1000, 'nothing by you was');
   assert.deepEqual({ x: G.S.x, y: G.S.y }, you, 'you were put back where you stood');
 });
+
+// v232 (roadmap 80e): their cooldown shows as a bar under their feet, only while it runs, only on the map on screen.
+test('a cooldown bar shows under them while their special cools down', async () => {
+  const { collectEntities } = await import('../src/core/registry.js');
+  const bars = () => collectEntities().filter((e) => e.y === G.P2.y + 0.5).length;
+  G.S.weapon = 'oldblade';
+  assert.equal(bars(), 0, 'none while ready');
+  special('p2');
+  assert.equal(bars(), 1);
+  G.P2.map = 'wilds';
+  assert.equal(bars(), 0, 'not drawn on a map you are not on');
+  G.P2.map = 'farm';
+  tick(SPECIALS.sword.cooldown + 0.05);
+  assert.equal(bars(), 0, 'gone once ready');
+});

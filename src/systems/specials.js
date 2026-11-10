@@ -9,7 +9,8 @@
 import { G } from '../core/game.js';
 import { DIRS } from '../core/constants.js';
 import { on, emit, notify } from '../core/events.js';
-import { addUpdater } from '../core/registry.js';
+import { addUpdater, addEntities } from '../core/registry.js';
+import { drawCooldownBar } from '../render/sprites.js';
 import { HOTBAR } from '../data/hotbar.js';
 import { SPECIALS } from '../data/weapons.js';
 import { IMPACT, HIT_STOP } from '../data/animation.js';
@@ -80,6 +81,14 @@ addUpdater((dt) => {
     }
     if (st.slamT > 0) { st.slamT -= dt; if (st.slamT <= 0) run(who, () => slam(SPECIALS.club)); }
   }
+});
+
+// v232 (roadmap 80e): farmer two has no hotbar on screen, so their cooldown shows as a small bar under their feet,
+// emptying as it runs down (yours is the bar on the weapon slot, ui/hotbar.js).
+addEntities(() => {
+  const p = G.P2, w = state.p2.cooldown;
+  if (!p || w <= 0 || p.map !== G.S.map) return [];
+  return [{ y: p.y + 0.5, draw: (c) => drawCooldownBar(c, p.x, p.y, w / specialOf().cooldown) }];
 });
 
 // A turned hit: a spark between the farmer and what hit them.
