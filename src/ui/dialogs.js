@@ -9,6 +9,7 @@ import { CROPS } from '../data/crops.js';
 import { ITEMS } from '../data/items.js';
 import { bedtime } from '../systems/partner.js';   // v142: with farmer two in, you may wait for them in bed
 import { LOOKS } from '../data/profile.js';
+import { HAIR_STYLES, BEARDS, lookOf } from '../data/people.js';
 import { buy, canBuy, inSeason, buySupply, canBuySupply } from '../systems/economy.js';
 import { SUPPLIES, PLACEABLES } from '../data/crafting.js';
 import { BAIT_PRICE } from '../data/angling.js';
@@ -65,14 +66,23 @@ on('ui:sleep', () => {
 });
 
 // v142: the first time farmer two joins on a farm they pick a shirt and hair (opened as them, in their half).
+// v229 (polish 77n): and a hair style, a beard and glasses, as on the new game screen (data/people.js).
 on('ui:partnerLook', () => {
   const P = G.S.partner, row = (part, label) => `<div class="pick"><span>${label}</span>${LOOKS[part].map((v) =>
     `<button class="swatch" aria-pressed="${P.look[part] === v}" data-plook="${part}" data-v="${v}" style="background:${v}" aria-label="${label} ${v}"></button>`).join('')}</div>`;
-  openModal(`<h2>${esc(P.name)}</h2><p>Pick a shirt and hair for the second farmer. It is kept with this farm.</p>${row('shirt', 'Shirt')}${row('hair', 'Hair')}`,
+  const L = lookOf(P.look), styles = (field, label, options, now) => `<div class="pick"><span>${label}</span>${Object.entries(options).map(([k, n]) =>
+    `<button aria-pressed="${now === k}" data-plook="${field}" data-v="${k}">${n}</button>`).join('')}</div>`;
+  openModal(`<h2>${esc(P.name)}</h2><p>Pick a look for the second farmer. It is kept with this farm.</p>${row('shirt', 'Shirt')}${row('hair', 'Hair')}
+    ${styles('hairStyle', 'Hair style', HAIR_STYLES, L.hair)}${styles('beard', 'Beard', { '': 'None', ...BEARDS }, L.beard || '')}${styles('glasses', 'Glasses', { '': 'No', yes: 'Yes' }, L.extras.includes('glasses') ? 'yes' : '')}`,
     [['Done', closeModal, true]]);
   $$('[data-plook]').forEach((b) => b.addEventListener('click', () => {
-    P.look[b.dataset.plook] = b.dataset.v;
-    $$(`[data-plook="${b.dataset.plook}"]`).forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+    const field = b.dataset.plook, v = b.dataset.v;
+    if (field === 'hairStyle') Object.assign(P.look, { hairStyle: v, long: v === 'long' });   // long kept for older code
+    else if (field === 'beard') P.look.beard = v || false;
+    else if (field === 'glasses') P.look.glasses = v === 'yes';
+    else P.look[field] = v;
+    $$(`[data-plook="${field}"]`).forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+    changed();
   }));
 });
 
