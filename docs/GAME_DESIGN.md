@@ -534,6 +534,7 @@ v101: once you can make more than one, the menu adds ×5 and All (as many as you
 | Dryer | 0 | 30 wood, 1 copper bar, 20 stone | 5 fruit -> dried fruit (7.5 x + 25g); 5 mushrooms -> dried mushrooms |
 | Mushroom log | 0 | 15 wood, 10 fiber | A mushroom every 4 nights, not in winter |
 | Fish smoker | 0 | 20 wood, 1 iron bar | Fish + 1 coal -> smoked fish (2 x), ready at once |
+| Seed maker (v216, Farming 9) | 0 | 25 wood, 10 coal, 1 gold bar | A crop the seed stall sells -> 1 to 3 of its seeds (10% of the time also 1 to 5 mixed seeds), ready at once; seeds go to the seed pouch. Not the Oasis's ruby stalk, fiber seeds or seed packets |
 
 - Crafted objects go to the kit (slot 7). Placed on untilled farm grass only; not on the coop or barn footprint. They are solid. Picking one up returns it to the kit (machines only when empty).
 - Sprinklers also water their tiles the moment they are placed.

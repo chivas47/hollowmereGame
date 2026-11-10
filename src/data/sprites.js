@@ -62,7 +62,7 @@ export const PLACED_SHEET = {
   sheet: 'placed', w: 16, h: 32, origin: [0, -16],
   order: ['emberbomb', 'blastbomb', 'greatbomb', 'slimepress', 'chest', 'bigchest', 'sign', 'farmcomputer', 'minibin', 'sprinkler',
     'sprinkler2', 'sprinkler3', 'crock', 'churn', 'vat', 'brewbarrel', 'eggpress', 'loom', 'oilpress', 'beebox', 'gemcopier', 'dryer',
-    'mushroomlog', 'incubator', 'silo', 'smoker', 'furnace', 'kiln', 'lightningrod', 'lantern'],
+    'mushroomlog', 'incubator', 'silo', 'smoker', 'furnace', 'kiln', 'lightningrod', 'lantern', 'seedmaker'],
 };
 export const FURN_SHEET = {
   sheet: 'furniture', w: 16, h: 32, origin: [0, -16], layers: ['main', 'second', 'ink'],

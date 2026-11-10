@@ -392,6 +392,22 @@ ART = {
     '....nmmmmmmn....',
     '....NNNNNNNN....',
   ],
+  # v216: a wooden hopper on legs with an iron crank, a glass window full of seeds and a sack catching them.
+  'seedmaker': [
+    '..vvvvvvvvvvvv..',
+    '..vHHHHHHHHHHv..',
+    '...vWWWWWWWWv...',
+    '....vWWWWWWv....',
+    '...nmmmmmmmmn.S.',
+    '...WHAAAAAWWwmm.',
+    '...WHAyEyAWWw.m.',
+    '...WWAEyEAWWw...',
+    '...WWWWWWWWWw...',
+    '...vvvvvvvvvv...',
+    '...v.EEEEe..v...',
+    '...v.EyEye..v...',
+    '...V.eeeee..V...',
+  ],
   'lantern': [
     '.....KKKKKK.....',
     '....KKKKKKKK....',
@@ -411,7 +427,7 @@ ART = {
 }
 ORDER = ['emberbomb', 'blastbomb', 'greatbomb', 'slimepress', 'chest', 'bigchest', 'sign', 'farmcomputer', 'minibin', 'sprinkler',
          'sprinkler2', 'sprinkler3', 'crock', 'churn', 'vat', 'brewbarrel', 'eggpress', 'loom', 'oilpress', 'beebox', 'gemcopier', 'dryer',
-         'mushroomlog', 'incubator', 'silo', 'smoker', 'furnace', 'kiln', 'lightningrod', 'lantern']
+         'mushroomlog', 'incubator', 'silo', 'smoker', 'furnace', 'kiln', 'lightningrod', 'lantern', 'seedmaker']
 BOTTOM = 29   # each object's last row; its outline is on row 30 and its shadow on row 31
 
 def hexc(h): h = h.lstrip('#'); return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
@@ -443,8 +459,8 @@ def build(path, preview=None):
     img.save(path, optimize=True)
     if preview:
         bg = Image.new('RGBA', img.size, (118, 168, 88, 255)); bg.alpha_composite(img)
-        out = Image.new('RGBA', (W * 15, H * 2))
-        for i in range(len(ORDER)): out.paste(bg.crop((i * W, 0, i * W + W, H)), ((i % 15) * W, (i // 15) * H))
+        out = Image.new('RGBA', (W * 16, H * 2))
+        for i in range(len(ORDER)): out.paste(bg.crop((i * W, 0, i * W + W, H)), ((i % 16) * W, (i // 16) * H))
         out.resize((out.width * 5, out.height * 5), Image.NEAREST).save(preview)
 
 if __name__ == '__main__':
