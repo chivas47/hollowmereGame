@@ -5,6 +5,7 @@ import { TURNS, TURN_STEPS } from '../data/furniture.js';
 import { FLUTTER } from '../data/animation.js';
 import { r, blink } from './pixel.js';
 import { ready, tinted, frame, sheet, recoloured } from './sheets.js';
+import { personLayers, lookOf, LONG_HAIR } from '../data/people.js';
 import { PERSON, ANIMALS, PETS, HORSE, MONSTERS, CROPS_SHEET, FORAGE_SHEET, TREES_SHEET, DEBRIS_SHEET, GIANTS_SHEET, PLACED_SHEET, FURN_SHEET, SOIL_SHEET, ALDERS_SHEET, FENCES_SHEET, FIXTURES_SHEET, CHILDREN_SHEET, GLOW_SHEET, BUNTING_SHEET, PENS_SHEET } from '../data/sprites.js';
 
 const FERT_DOT = { booster: '#c9b68e', booster2: '#e9b44c', booster3: '#b98ae0', tonic: '#86b86a', tonic2: '#5fd36a', mulch: '#a0805a', mulch2: '#7a5a3a' };
@@ -181,14 +182,11 @@ function childArt(c, x, y, stage, i) {
 }
 
 // v77: from the person sheet (assets/sprites/person.png) tinted to p once it has loaded, else drawn in code below.
+// v222: part by part (data/people.js personLayers): body, outfit, hair, beard, extras and hat, each band tinted.
 function sheetPerson(c, px, py, dir, moving, walkT, p) {
-  const P = PERSON, eye = '#2b211a', hair = p.hair;
-  const layers = [['skin', p.skin], ['shoes', p.shoes || eye], ['pants', p.pants], ['shirt', p.shirt], ['hair', hair]];
-  if (p.long) layers.push(['long', hair]);
-  if (p.beard) layers.push(['beard', hair]);
-  layers.push(['ink', null]);
+  const P = PERSON, layers = personLayers(p);
   const f = (P.dirs[dir] ?? 0) * P.steps + (moving ? 1 + Math.floor(walkT * 8) % 2 : 0);
-  frame(c, tinted(P.sheet, P.layers, layers, P.size), f, P.size, Math.round(px) + P.origin[0], Math.round(py) + P.origin[1]);
+  c.drawImage(tinted(P.sheet, P.layers, layers, P.h), f * P.w, 0, P.w, P.h, Math.round(px) + P.origin[0], Math.round(py) + P.origin[1], P.w, P.h);
 }
 
 // v123: wind in the hair and clothes. wind is the lean where they stand (systems/wind.js, about 0 to 1, + is
@@ -199,7 +197,7 @@ function flutter(c, px, py, p, wind) {
   const s = wind > 0 ? 1 : -1, x = Math.round(px), y = Math.round(py);
   const on = Math.floor(performance.now() / 1000 * FLUTTER.rate * (0.6 + Math.abs(wind))) % 2, side = s > 0 ? x + 4 : x - 5;
   r(c, side, y - 12 + on, 1, 1, p.hair);
-  if (p.long) r(c, side, y - 9 + on, 1, 2, p.hair);
+  if (LONG_HAIR.includes(lookOf(p).hair)) r(c, side, y - 9 + on, 1, 2, p.hair);
   if (on) r(c, side + s, y - 6, 1, 1, p.shirt);
 }
 
@@ -210,9 +208,8 @@ export function drawPerson(c, px, py, dir, moving, walkT, p, wind = 0) {
   }
   const x = Math.round(px) - 5, y = Math.round(py) - 15, st = moving ? Math.floor(walkT * 8) % 2 : 0, eye = '#2b211a';
   if (ready(PERSON.sheet)) {
-    sheetPerson(c, px, py, dir, moving, walkT, p);
+    sheetPerson(c, px, py, dir, moving, walkT, p);   // v222: hats are on the sheet too
     flutter(c, px, py, p, wind);
-    if (p.hat) (HATS[p.hatStyle] || HATS.straw)(c, x, y, p.hat, p.band || p.hat, p.hair);
     return;
   }
   r(c, x + 1, y + 14, 8, 2, 'rgba(0,0,0,.25)');

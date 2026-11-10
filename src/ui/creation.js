@@ -6,6 +6,7 @@ import { save } from '../core/state.js';
 import { LOOKS, PETS, NAME_MAX, DEFAULT_PROFILE, playerPal } from '../data/profile.js';
 import { LAYOUTS } from '../data/layouts.js';
 import { PET_LOOKS, PET_NAMES } from '../data/pets.js';
+import { HAIR_STYLES, BEARDS, lookOf } from '../data/people.js';
 import { drawPerson, drawPet } from '../render/sprites.js';
 import { onSheet } from '../render/sheets.js';
 import { startLayout } from '../systems/layouts.js';
@@ -28,7 +29,10 @@ onSheet(() => { if (draft) preview(); });   // v77: redraw once the person (v79:
 
 function pressed() {
   $$('[data-look]').forEach((b) => b.setAttribute('aria-pressed', String(draft.look[b.dataset.look] === b.dataset.v)));
-  $$('[data-hair-style]').forEach((b) => b.setAttribute('aria-pressed', String(draft.look.long === (b.dataset.hairStyle === 'long'))));
+  const L = lookOf(draft.look);
+  $$('[data-hair-style]').forEach((b) => b.setAttribute('aria-pressed', String(L.hair === b.dataset.hairStyle)));
+  $$('[data-beard]').forEach((b) => b.setAttribute('aria-pressed', String((L.beard || '') === b.dataset.beard)));
+  $$('[data-glasses]').forEach((b) => b.setAttribute('aria-pressed', String(!!draft.look.glasses === (b.dataset.glasses === 'yes'))));
   $$('[data-pet]').forEach((b) => b.setAttribute('aria-pressed', String(draft.pet === b.dataset.pet)));
   $$('[data-pet-look]').forEach((b, i) => { const [body] = PET_LOOKS[draft.pet][i]; b.style.background = body; b.setAttribute('aria-pressed', String(draft.petLook === i)); });
   $$('[data-layout]').forEach((b) => b.setAttribute('aria-pressed', String(farmKind === b.dataset.layout)));
@@ -71,7 +75,9 @@ export function openCreation() {
       </div>
     </div>
     ${swatches('skin', 'Skin')}${swatches('hair', 'Hair')}
-    <div class="pick"><span>Hair style</span><button data-hair-style="short">Short</button><button data-hair-style="long">Long</button></div>
+    <div class="pick"><span>Hair style</span>${Object.entries(HAIR_STYLES).map(([k, n]) => `<button data-hair-style="${k}">${n}</button>`).join('')}</div>
+    <div class="pick"><span>Beard</span><button data-beard="">None</button>${Object.entries(BEARDS).map(([k, n]) => `<button data-beard="${k}">${n}</button>`).join('')}</div>
+    <div class="pick"><span>Glasses</span><button data-glasses="no">No</button><button data-glasses="yes">Yes</button></div>
     ${swatches('shirt', 'Shirt')}${swatches('pants', 'Trousers')}
     <div class="pick"><span>Starting pet</span>${Object.entries(PETS).map(([k, n]) => `<button data-pet="${k}">${n}</button>`).join('')}</div>
     <div class="pick"><span>Pet look</span><canvas id="cPetPreview" width="16" height="16"></canvas>${[0, 1, 2].map((i) => `<button class="swatch" data-pet-look="${i}" aria-label="Look ${i + 1}"></button>`).join('')}
@@ -90,7 +96,9 @@ $('#mbody').addEventListener('click', (e) => {
   if (!draft || !$('#cPreview')) return;
   const look = e.target.closest('[data-look]'), style = e.target.closest('[data-hair-style]'), pet = e.target.closest('[data-pet]'), lay = e.target.closest('[data-layout]');
   if (look) draft.look[look.dataset.look] = look.dataset.v;
-  else if (style) draft.look.long = style.dataset.hairStyle === 'long';
+  else if (style) { draft.look.hairStyle = style.dataset.hairStyle; draft.look.long = style.dataset.hairStyle === 'long'; }   // v222: long kept for older code
+  else if (e.target.closest('[data-beard]')) draft.look.beard = e.target.closest('[data-beard]').dataset.beard || false;
+  else if (e.target.closest('[data-glasses]')) draft.look.glasses = e.target.closest('[data-glasses]').dataset.glasses === 'yes';
   else if (pet) draft.pet = pet.dataset.pet;
   else if (e.target.closest('[data-pet-look]')) draft.petLook = +e.target.closest('[data-pet-look]').dataset.petLook;
   else if (lay) farmKind = lay.dataset.layout;
