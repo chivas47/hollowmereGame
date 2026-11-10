@@ -3,6 +3,8 @@
 #
 # A person is built from PARTS, each drawn once here and each its own set of bands on the sheet:
 #   body         head, hands, the plain shirt, trousers and shoes (always drawn)
+#   body:child   a child's body (v223): the same head, CHILD_DY rows lower, on a short body; the head's parts (hair,
+#                glasses, hat) are the adult ones drawn CHILD_DY lower (PERSON.bodies), so every style fits a child
 #   outfit:<k>   drawn over the body: a dress, a coat, overalls, an apron
 #   hair:<k>     hair styles (hair:<k>@hat is the same style trimmed to sit under a hat)
 #   beard:<k>    beards, in the hair colour
@@ -144,6 +146,63 @@ LEGS['up'] = [[r.replace('qq', 'pp') for r in step] for step in LEGS['down']]
 
 def body(d, step):
     return {'rows': HEAD[d] + TORSO[d][step] + LEGS[d][step], 'y': 2}
+
+# v223: a child (Pip): the adult head on a body of four rows (shoulders, hands, shorts, shoes), so the head is about
+# two thirds of the height. It does not bob, and nothing but the head's parts is drawn over it (no beards or outfits).
+CHILD_DY = 2
+CHILD = {
+  'down': [[
+    '....cCCkkCCc....',
+    '....SCCCCCCS....',
+    '.....pPqqPp.....',
+    '.....fF..Ff.....',
+  ], [
+    '....cCCkkCCc....',
+    '....cCCCCCCS....',
+    '.....pP..fF.....',
+    '.....fF.........',
+  ], [
+    '....cCCkkCCc....',
+    '....SCCCCCCc....',
+    '.....Ff..Pp.....',
+    '.........Ff.....',
+  ]],
+  'up': [[
+    '....cCCCCCCc....',
+    '....SCCkkCCS....',
+    '.....pPppPp.....',
+    '.....fF..Ff.....',
+  ], [
+    '....cCCCCCCc....',
+    '....cCCkkCCS....',
+    '.....pP..fF.....',
+    '.....fF.........',
+  ], [
+    '....cCCCCCCc....',
+    '....SCCkkCCc....',
+    '.....Ff..Pp.....',
+    '.........Ff.....',
+  ]],
+  'right': [[
+    '......kCCc......',
+    '......kcSc......',
+    '......pPPq......',
+    '......fFFf......',
+  ], [
+    '......kCCc......',
+    '......kCcS......',
+    '.....pP..q......',
+    '....fF...fF.....',
+  ], [
+    '......kCCc......',
+    '.....Skccc......',
+    '......pPPq......',
+    '.....fFfFf......',
+  ]],
+}
+
+def child(d, step):
+    return {'rows': HEAD[d] + CHILD[d][step], 'y': 2 + CHILD_DY}
 
 # ---------------- outfits, over the body (rows from y) ----------------
 OUTFIT = {
@@ -337,8 +396,8 @@ def art(table, view, step):
 
 def frame(part, view, step, base):
     """{layer: {(x, y): tone or rgba}} for one part in one frame. base: the body's pixels, for overlay outlines."""
-    if part == 'body':
-        b = body('right' if view == 'left' else view, step)
+    if part in ('body', 'body:child'):
+        b = (body if part == 'body' else child)('right' if view == 'left' else view, step)
         tint, ink = cells(b['rows'], b['y'])
     else:
         kind, _, name = part.partition(':')
@@ -348,9 +407,9 @@ def frame(part, view, step, base):
         rows, y = art(table, view, step)
         tint, ink = cells(rows, y)
         if hat: tint = {q: v for q, v in tint.items() if q[1] >= TOP + HAT_LINE}; ink = {q: v for q, v in ink.items() if q[1] >= TOP + HAT_LINE}
-    tint, ink = bob(tint, step), bob(ink, step)
+    if part != 'body:child': tint, ink = bob(tint, step), bob(ink, step)
     if view == 'left': tint, ink = mirror(tint), mirror(ink)
-    if part == 'body':
+    if part in ('body', 'body:child'):
         tint.update({q: v for q, v in ring(tint, set(tint)).items()})
         for x in range(4, 12):
             if (x, H - 1) not in tint: ink[(x, H - 1)] = SHADOW
@@ -363,7 +422,7 @@ def frame(part, view, step, base):
     return out
 
 def parts():
-    ps = ['body'] + [f'outfit:{k}' for k in OUTFIT]
+    ps = ['body', 'body:child'] + [f'outfit:{k}' for k in OUTFIT]
     for k in HAIR: ps += [f'hair:{k}', f'hair:{k}@hat']
     ps += [f'beard:{k}' for k in BEARD] + [f'extra:{k}' for k in EXTRA] + [f'hat:{k}' for k in HAT]
     return ps
@@ -375,7 +434,7 @@ def build(path, js, preview=None):
             base = frame('body', view, step, {})
             solid = {q for layer in base.values() for q in layer} - set(base.get('ink', {}))
             for part in parts():
-                f = base if part == 'body' else frame(part, view, step, solid)
+                f = base if part == 'body' else frame(part, view, step, {} if part == 'body:child' else solid)
                 for layer, px in f.items(): frames.setdefault(f'{part}|{layer}', {})[(v * 3 + step)] = px
     bands = sorted(frames, key=lambda b: (parts().index(b.split('|')[0]), LAYER_ORDER.index(b.split('|')[1])))
     img = Image.new('RGBA', (W * 12, H * len(bands)), (0, 0, 0, 0))
@@ -390,7 +449,10 @@ def build(path, js, preview=None):
         f.write('// "<part>|<layer>" in `layers` order; styles: what each part can be (labels in data/people.js).\n')
         f.write('export const PERSON = ' + json.dumps({
             'sheet': 'person', 'w': W, 'h': H, 'origin': [-8, -H], 'dirs': {'down': 0, 'up': 1, 'left': 2, 'right': 3},
-            'steps': 3, 'hatLine': HAT_LINE, 'styles': styles, 'layers': bands}, indent=None) + ';\n')
+            'steps': 3, 'hatLine': HAT_LINE, 'styles': styles,
+            # per body: dy, how much lower the head's parts are drawn; bob, whether they bob on the step frames
+            'bodies': {'adult': {'dy': 0, 'bob': True}, 'child': {'dy': CHILD_DY, 'bob': False}},
+            'layers': bands}, indent=None) + ';\n')
     print(len(bands), 'bands,', img.width, 'x', img.height)
     if preview: make_preview(img, bands, preview)
 

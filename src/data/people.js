@@ -5,6 +5,7 @@
 //   outfit     an OUTFITS key over the shirt and trousers, or none
 //   hat, hatStyle  the hat's colour and its shape (data/clothing.js style); no hat colour, no hat
 //   glasses    true for spectacles
+//   small      a child (v223): a child's body; hair, glasses and hat as anyone's, no beard or outfit
 // To add a style: draw it in tools/sprites/person.py, run it, and label it here.
 import { PERSON } from './personSheet.js';
 
@@ -18,26 +19,37 @@ const known = (part, k) => (PERSON.styles[part].includes(k) ? k : null);
 
 // The parts a look wears, each a style the sheet has (unknown styles fall back to none, or short hair).
 export function lookOf(p) {
+  const child = !!p.small;
   return {
+    body: child ? 'child' : 'adult',
     hair: known('hair', p.hairStyle || (p.long ? 'long' : 'short')) || 'short',
-    beard: known('beard', p.beard === true ? 'full' : p.beard || ''),
-    outfit: known('outfit', p.outfit || ''),
+    beard: child ? null : known('beard', p.beard === true ? 'full' : p.beard || ''),
+    outfit: child ? null : known('outfit', p.outfit || ''),
     extra: p.glasses ? 'glasses' : null,
     hat: p.hat ? known('hat', p.hatStyle || 'straw') || 'straw' : null,
   };
 }
 
-// The sheet's bands for a look, in drawing order, each with the colour it is tinted to (null: drawn as is).
-export function personLayers(p) {
-  const L = lookOf(p);
+// The sheet's bands for a look in drawing order, each with the colour it is tinted to (null: drawn as is), in two
+// groups: the body (and outfit), and the head's parts (hair, beard, glasses, hat), which a child's body draws dy px
+// lower (PERSON.bodies). bob: whether the head's parts keep the sheet's walking bob (a child's body does not bob).
+export function personParts(p) {
+  const L = lookOf(p), B = PERSON.bodies[L.body];
   const col = { skin: p.skin, shoes: p.shoes || '#2b211a', pants: p.pants, shirt: p.shirt, hair: p.hair, beard: p.hair,
     hat: p.hat, band: p.band || p.hat, acc: p.acc || APRON, ink: null };
-  const parts = ['body', L.outfit && `outfit:${L.outfit}`, `hair:${L.hair}${L.hat ? '@hat' : ''}`, L.beard && `beard:${L.beard}`,
-    L.extra && `extra:${L.extra}`, L.hat && `hat:${L.hat}`].filter(Boolean);
-  const out = [];
-  for (const part of parts) for (const band of PERSON.layers) {
-    const [pt, layer] = band.split('|');
-    if (pt === part) out.push([band, col[layer]]);
-  }
-  return out;
+  const bands = (parts) => {
+    const out = [];
+    for (const part of parts.filter(Boolean)) for (const band of PERSON.layers) {
+      const [pt, layer] = band.split('|');
+      if (pt === part) out.push([band, col[layer]]);
+    }
+    return out;
+  };
+  return {
+    body: bands([L.body === 'child' ? 'body:child' : 'body', L.outfit && `outfit:${L.outfit}`]),
+    head: bands([`hair:${L.hair}${L.hat ? '@hat' : ''}`, L.beard && `beard:${L.beard}`, L.extra && `extra:${L.extra}`, L.hat && `hat:${L.hat}`]),
+    dy: B.dy, bob: B.bob,
+  };
 }
+// Every band a look draws, body first (for tests and tools).
+export const personLayers = (p) => { const P = personParts(p); return [...P.body, ...P.head]; };

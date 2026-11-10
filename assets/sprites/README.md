@@ -9,7 +9,7 @@ Rules (PROJECT_INSTRUCTIONS rule 3): original art or a permissive licence (CC0, 
 Built by `tools/sprites/person.py`, which also writes the layout to `src/data/personSheet.js`. Frames are 16 x 20, the person's feet at the bottom centre (x 8, y 20); the top 4 rows are room for hats.
 
 - **Columns (12):** down, up, left, right, each as stand, step a, step b (left is right mirrored). On the step frames the head and body sit a pixel lower.
-- **Rows:** one 20 px band per part and colour layer, named `<part>|<layer>` in the order of `PERSON.layers`. Parts: `body` (head, hands, shirt, trousers, shoes), `outfit:<k>`, `hair:<k>` (and `hair:<k>@hat`, trimmed to sit under a hat), `beard:<k>`, `extra:<k>`, `hat:<k>`. Layers: skin, shoes, pants, shirt, acc, hair, beard (tinted to the hair), hat, band, ink.
+- **Rows:** one 20 px band per part and colour layer, named `<part>|<layer>` in the order of `PERSON.layers`. Parts: `body` (head, hands, shirt, trousers, shoes), `body:child` (v223: the same head two rows lower on a short body; the head's parts are drawn lower over it, `PERSON.bodies`), `outfit:<k>`, `hair:<k>` (and `hair:<k>@hat`, trimmed to sit under a hat), `beard:<k>`, `extra:<k>`, `hat:<k>`. Layers: skin, shoes, pants, shirt, acc, hair, beard (tinted to the hair), hat, band, ink.
 - **Tinted bands** are greyscale: white becomes the palette colour, greys its shades (multiply): 255 the colour, 205 its shade, 160 its deep shade, 105 the outline. **ink** is drawn as is: eyes, cheeks, shines, buttons, the shadow.
 - `src/data/people.js` decides which bands a look draws (`personLayers`). To add a style, draw it in person.py's tables, run it, and label it in people.js; `tools/sprites/people_lineup.mjs` draws every neighbour to check.
 
