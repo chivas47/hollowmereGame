@@ -628,6 +628,20 @@ Slot 5 (no hotbar change) swings the weapon chosen in the bag. Damage is Stardew
 
   Cooldowns are Stardew's (sword 1.5 s, dagger 3 s, club 6 s). Specials hit with crits, rings, professions, enchantments and forging like any swing. Farmer two has none yet.
 - Monsters (count grows to 10 a floor): slime (floor 1+, gel 60%), Hollow mite (3+, crawls, fiber 30%), cave bat (12+, flies, coal 20%), bone walker (30+, iron ore 30%), Hollow serpent (50+, flies, violet stone 5%). Combat XP 3, 2, 6, 15, 20. Any kill: 1% chance of a weapon or ring from the floor's pool.
+- v228 chargers (data/weapons.js CHARGE, systems/monsters.js chargeTurn). Within 72 px and rested, a charger stops and winds up (it flashes and shakes: the tell), aiming at you until it goes; then it rushes in a straight line, hurting 1.5 times as much on contact; then it stands winded, open to hits. One that runs into a wall or a rock, or into your sword's block, stands dazed (stars over it) for longer. Between charges it walks after you and rests 2 s. Two rush twice in a row, the second wind-up shorter.
+
+  | Charger | Where | Health | Damage | Wind-up, rush, length | Winded / dazed | XP | Drop |
+  |---|---|---|---|---|---|---|---|
+  | Burrow beetle | Hollow 6+ | 4 + floor/4 | 5 + floor/2 | 0.5 s, 110 px/s, 0.4 s | 0.8 / 1.6 s | 4 | copper ore 20% |
+  | Tusk boar | Hollow 15+ | 8 + floor/3 | 8 + floor | 0.6 s, 140, 0.6 s | 0.9 / 1.6 s | 8 | coal 25% |
+  | Stone ram | Hollow 35+ | 18 + floor/3 | 12 + floor | 0.7 s, 150, 0.7 s | 0.9 / 2 s | 16 | iron ore 30% |
+  | Gloom hound | Hollow 60+ | 26 + floor/2 | 14 + floor | 0.45 s, 160, 0.45 s, twice | 0.9 / 1.6 s | 22 | gold ore 20% |
+  | Dune scuttler | Sunken Cavern | 20 + floor/4 | 16 + floor/4 | 0.35 s, 150, 0.35 s | 0.6 / 1.6 s | 20 | copper ore 40% |
+  | Sand bull | Sunken Cavern | 40 + floor/3 | 22 + floor/4 | 0.8 s, 170, 0.9 s | 1.1 / 1.6 s | 32 | iron ore 30% |
+  | Cinder hound | Ember Vent, Smoke Peak | 28 + floor/4 | 22 + floor/5 | 0.4 s, 170, 0.5 s, twice | 0.8 / 1.6 s | 34 | cinder 40% |
+  | Magma ram | Ember Vent, Smoke Peak | 70 + floor/2 | 30 + floor/5 | 0.8 s, 150, 0.8 s | 1 / 2.2 s | 48 | cinder 80% |
+
+  Health, damage and XP sit beside the walkers that share their floors (the bone walker at 30+, the sand wraith, the ember golem), as Stardew's chargers do beside its other monsters of a level (shadow brutes beside shadow shamans). Each floor's monster count is unchanged: chargers share it with the others.
 - Rings (two worn; Stardew's ruby, topaz, aquamarine, jade, vampire, slime charmer, burglar's and glow rings): Ember +10% damage, Stone +1 defense, Tide +10% critical chance, Moss criticals x1.5, Leech +2 health a kill, Slime ward (slimes do no harm), Thief's (double drops), Glow (40% more light). Floors 15, 35, 45 and 65 give one; the rest drop.
 - Boots found on floors 30, 60 and 80: Tunnel boots (3), Ember boots (4), Deepstone boots (5 defense).
 - v37: floor finds wait in a treasure chest on their floor (old saves keep the finds they took).

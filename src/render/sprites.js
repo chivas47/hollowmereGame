@@ -594,23 +594,40 @@ export function drawFlag(c, x, y, col) {
 // v36: the Hollow's other monsters. t: a running clock for wing beats and legs.
 // v80: from the monster sheet tinted to color once it has loaded (false until then: callers draw in code).
 // f: the frame (0 or 1), lift: px above the kind's rest height.
-function sheetMonster(c, px, py, kind, color, hurt, f, lift) {
+function sheetMonster(c, px, py, kind, color, hurt, f, lift, flip = false) {
   const M = MONSTERS, k = M.kinds[kind];
   if (!k || !ready(M.sheet)) return false;
-  const x = Math.round(px), base = Math.round(py), [sx, sw, sa] = k.shadow;
+  const x = Math.round(px), base = Math.round(py), [sx, sw, sa] = k.shadow, shape = k.shape || kind;   // v228: kinds sharing a shape
   r(c, x + sx, base - 1, sw, 1, `rgba(0,0,0,${sa})`);
-  const layers = [[`${kind}.body`, hurt ? '#ffffff' : color]];
-  if (k.glow) layers.push([`${kind}.glow`, hurt ? '#ffffff' : k.glow]);
-  layers.push([`${kind}.ink`, null]);
-  frame(c, tinted(M.sheet, M.layers, layers, M.size), f, M.size, x + M.origin[0], base + M.origin[1] - lift);
+  const layers = [[`${shape}.body`, hurt ? '#ffffff' : color]];
+  if (k.glow) layers.push([`${shape}.glow`, hurt ? '#ffffff' : k.glow]);
+  layers.push([`${shape}.ink`, null]);
+  const src = tinted(M.sheet, M.layers, layers, M.size);
+  if (!flip) frame(c, src, f, M.size, x + M.origin[0], base + M.origin[1] - lift);
+  else { c.save(); c.translate(x * 2, 0); c.scale(-1, 1); frame(c, src, f, M.size, x + M.origin[0], base + M.origin[1] - lift); c.restore(); }   // v228: facing left
   return true;
 }
 
-export function drawMonster(c, px, py, kind, color, hurt, t) {
+// v228: two little stars circling over a dazed monster.
+export function drawDazed(c, px, py, t) {
+  for (let i = 0; i < 2; i++) {
+    const a = t * 6 + i * Math.PI, x = Math.round(px + Math.cos(a) * 5), y = Math.round(py + Math.sin(a) * 2);
+    r(c, x, y - 1, 1, 3, '#ffe08a'); r(c, x - 1, y, 3, 1, '#ffe08a');
+  }
+}
+
+// v228: flip faces it left (chargers face the way they go).
+export function drawMonster(c, px, py, kind, color, hurt, t, flip = false) {
   const k = MONSTERS.kinds[kind] || {};
   if (sheetMonster(c, px + (k.sway ? Math.round(Math.sin(t * k.sway)) : 0), py, kind, color, hurt, Math.floor(t * 8) % 2,
-    k.bob ? -Math.round(Math.sin(t * k.bob) * 2) : 0)) return;
+    k.bob ? -Math.round(Math.sin(t * k.bob) * 2) : 0, flip)) return;
   const x = Math.round(px), base = Math.round(py), col = hurt ? '#ffffff' : color, f = Math.floor(t * 8) % 2;
+  if (k.shape) {   // v228: a charger before the sheet loads: a low body, a head the way it faces
+    const s = flip ? -1 : 1;
+    r(c, x - 7, base - 1, 14, 1, 'rgba(0,0,0,.35)'); r(c, x - 6, base - 8, 12, 6, col); r(c, x + (s > 0 ? 4 : -8), base - 9, 4, 5, col);
+    r(c, x + (s > 0 ? 6 : -7), base - 8, 1, 1, '#2b211a'); r(c, x - 5 + f, base - 2, 2, 2, '#2b211a'); r(c, x + 3 - f, base - 2, 2, 2, '#2b211a');
+    return;
+  }
   if (kind === 'mite') {
     r(c, x - 5, base - 1, 10, 1, 'rgba(0,0,0,.35)'); r(c, x - 4, base - 6, 8, 5, col); r(c, x - 3, base - 7, 6, 1, col);
     [-4, -1, 2].forEach((lx, i) => r(c, x + lx, base - 1 - ((i + f) % 2), 2, 1, '#2b211a')); r(c, x + 2, base - 5, 1, 1, '#e9c46a');

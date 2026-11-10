@@ -110,12 +110,18 @@ export const MONSTERS = {
   sheet: 'monsters', size: 24, origin: [-12, -24],
   layers: ['mite.body', 'mite.ink', 'bat.body', 'bat.ink', 'skeleton.body', 'skeleton.ink', 'wraith.body', 'wraith.ink',
     'rex.body', 'rex.ink', 'sprite.body', 'sprite.glow', 'sprite.ink', 'golem.body', 'golem.glow', 'golem.ink',
-    'serpent.body', 'serpent.ink', 'slime.body', 'slime.ink'],
+    'serpent.body', 'serpent.ink', 'slime.body', 'slime.ink',
+    'beetle.body', 'beetle.ink', 'boar.body', 'boar.ink', 'ram.body', 'ram.glow', 'ram.ink', 'hound.body', 'hound.glow', 'hound.ink'],
   kinds: {
     mite: { shadow: [-5, 10, 0.35] }, bat: { shadow: [-3, 6, 0.25], bob: 6 }, skeleton: { shadow: [-4, 8, 0.35] },
     wraith: { shadow: [-4, 8, 0.35], sway: 3 }, rex: { shadow: [-4, 8, 0.25], bob: 5 },
     sprite: { shadow: [-3, 6, 0.25], bob: 7, glow: '#ffd98a' }, golem: { shadow: [-6, 12, 0.35], glow: '#e9862a' },
     serpent: { shadow: [-4, 8, 0.25], bob: 3 }, slime: { shadow: [-4, 9, 0.35] },
+    // v228: the chargers, four shapes drawn once (shape) and tinted per kind; they face the way they go.
+    beetle: { shape: 'beetle', shadow: [-6, 12, 0.35] }, scuttler: { shape: 'beetle', shadow: [-6, 12, 0.35] },
+    boar: { shape: 'boar', shadow: [-8, 16, 0.35] }, bull: { shape: 'boar', shadow: [-8, 16, 0.35] },
+    ram: { shape: 'ram', shadow: [-8, 16, 0.35], glow: '#6f6862' }, magmaram: { shape: 'ram', shadow: [-8, 16, 0.35], glow: '#e9862a' },
+    gloomhound: { shape: 'hound', shadow: [-8, 16, 0.3], glow: '#8a6ad0' }, hound: { shape: 'hound', shadow: [-8, 16, 0.3], glow: '#e9862a' },
   },
 };
 

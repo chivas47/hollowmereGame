@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v228: Chargers
+- Eight new monsters that charge. In range, a charger stops, flashes and shakes as it winds up, then rushes at where you stood in a straight line, hitting half again as hard as a touch. After the rush it stands winded, open to hits. One that runs into a wall or a rock, or into your sword's block, stands dazed with stars over its head for longer.
+- In the Hollow: the burrow beetle (floor 6 down), the tusk boar (15), the stone ram (35) and the gloom hound (60), which rushes twice. In the Sunken Cavern: the dune scuttler (quick and short) and the sand bull (slow to start, long rush). In the Ember Vent and up the Smoke Peak: the cinder hound (twice) and the magma ram.
+- They drop copper, coal, iron and gold ore and cinder, and give combat XP alongside the other monsters of their floors. Each floor still has the same number of monsters.
+- Chargers face the way they are going. Each of the four new shapes (beetle, boar, ram, hound) is drawn once and tinted for its two kinds.
+- New save data: none.
+
 ## v227: Weapon specials
 - Each kind of weapon has a special move, as in Stardew, used with X (rebindable in Controls), a right click, the controller's B or the new Special button on touch screens (shown while the weapon is in hand):
   - Sword: Block. For a moment, a monster that touches you is thrown back and you take no harm, with a short safe spell after. Ready again after 1.5 seconds.
