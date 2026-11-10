@@ -51,7 +51,7 @@ function renderBackground(mapId, season) {
     if (sheetGround) continue;
     if (map.base === 'cave') drawCaveFloor(g, x, y, p);
     else if (map.base === 'greenhouse' && t !== 'E') drawGreenhouseFloor(g, x, y, t);
-    else if (t === 'P' || t === 'E') drawPath(g, x, y, p);
+    else if (t === 'P' || t === 'E' || t === 'F') drawPath(g, x, y, p);   // v229: the fountain stands on the plaza
     else if (t === 'q' || (map.ground === 'q' && t !== 'T')) drawQuarry(g, x, y, p);   // v44: the quarry's rocks sit on stone
     else if (t === 'z' || (map.ground === 'z' && (t !== 'T' || map.dry))) drawSand(g, x, y, p);   // v43: the beach's rocks sit on sand
     else drawGrass(g, x, y, p, map.salt);
@@ -84,7 +84,7 @@ function renderBackground(mapId, season) {
 
 // v85: the terrain each outdoor tile shows on the terrain sheet (the same choice as the code art above).
 function groundOf(map, t) {
-  if (t === 'P' || t === 'E') return 'path';
+  if (t === 'P' || t === 'E' || t === 'F') return 'path';   // v229: the village fountain stands on the plaza's path
   if (t === 'O') return 'water';
   if (t === 'q' || (map.ground === 'q' && t !== 'T')) return 'quarry';
   if (t === 'z' || (map.ground === 'z' && (t !== 'T' || map.dry)) || PROP_GROUND[t] === 'sand') return 'sand';   // v181: dry maps' trees stand on sand

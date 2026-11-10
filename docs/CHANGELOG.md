@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v229: The fountain's plaza and farmer two's look
+- The village fountain no longer shows two patches of grass at its top corners: its tiles draw the plaza's path ground (polish 77m).
+- The second farmer's look picker offers the hair styles, beards and glasses the new game screen has, as well as the shirt and hair colours (polish 77n). Farmer two's look is kept with the farm as before; one picked before keeps its short hair.
+- New save data: farmer two's look may now hold a hair style, a beard and glasses.
+
 ## v228: Chargers
 - Eight new monsters that charge. In range, a charger stops, flashes and shakes as it winds up, then rushes at where you stood in a straight line, hitting half again as hard as a touch. After the rush it stands winded, open to hits. One that runs into a wall or a rock, or into your sword's block, stands dazed with stars over its head for longer.
 - In the Hollow: the burrow beetle (floor 6 down), the tusk boar (15), the stone ram (35) and the gloom hound (60), which rushes twice. In the Sunken Cavern: the dune scuttler (quick and short) and the sand bull (slow to start, long rush). In the Ember Vent and up the Smoke Peak: the cinder hound (twice) and the magma ram.
