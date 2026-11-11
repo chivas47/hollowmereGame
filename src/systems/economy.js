@@ -7,7 +7,6 @@ import { ITEMS } from '../data/items.js';
 import { SUPPLIES, PLACEABLES } from '../data/crafting.js';
 import { counts, addItem, unitValue, valueOf } from './quality.js';
 import { priceMult } from './professions.js';
-import { pinned } from './bag.js';
 import { fmtGold } from '../core/format.js';
 
 export const inSeason = (crop) => CROPS[crop].seasons.includes(today().season);
@@ -39,12 +38,13 @@ export function buySupply(k, n) {
 export const shippable = (k) => !!ITEMS[k] && !ITEMS[k].material;
 export const shipPrice = (k, t) => Math.floor(unitValue(k, t) * priceMult(k));
 
-// Every stack you could ship: { k, t, n, unit, pinned }, quality from plain up.
+// Every stack you could ship: { k, t, n, unit, pinned }, quality from plain up. pinned: in the Bag (G.S.bagFav,
+// systems/bag.js), read here rather than imported so module and event-handler order stay as they were.
 export function shipStacks() {
   const out = [];
   for (const k of Object.keys(G.S.bag)) {
     if (!(G.S.bag[k] > 0) || !shippable(k)) continue;
-    counts(k).forEach((n, t) => { if (n > 0) out.push({ k, t, n, unit: shipPrice(k, t), pinned: pinned(k) }); });
+    counts(k).forEach((n, t) => { if (n > 0) out.push({ k, t, n, unit: shipPrice(k, t), pinned: G.S.bagFav.includes(k) }); });
   }
   return out;
 }
@@ -59,6 +59,9 @@ function take(k, t, n) {
 // night (Stardew's rule: only the last thing put in). Returns { count, value }.
 export function shipItems(picks, { quiet = false } = {}) {
   let count = 0, value = 0;
+  // Quality counts left behind for items no longer carried go, as the old ship-everything did: something that
+  // took the last ones without counts() would otherwise lend their quality to the next ones picked up.
+  for (const k of Object.keys(G.S.qbag)) if (!(G.S.bag[k] > 0)) delete G.S.qbag[k];
   for (const p of picks) {
     if (!shippable(p.k)) continue;
     const n = Math.min(Math.floor(p.n) || 0, counts(p.k)[p.t] || 0);

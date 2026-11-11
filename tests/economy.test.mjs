@@ -97,3 +97,13 @@ test('old saves load without a last stack; a broken one is dropped', () => {
   assert.equal(merge({ ...newState(), binLast: { k: 'nope', t: 0, n: 1, value: 5 } }).binLast, null);
   assert.deepEqual(merge({ ...newState(), binLast: { k: 'turnip', t: 1, n: 2, value: 86 } }).binLast, { k: 'turnip', t: 1, n: 2, value: 86 });
 });
+
+test('shipping clears quality left behind by items no longer carried', () => {
+  freshFarm({ gold: 0, bin: 0 });
+  addItem('melon', 2, 2);
+  G.S.bag.melon = 0;             // taken without counts(): the prime count is left behind
+  addItem('turnip', 1);
+  shipItems([{ k: 'turnip', t: 0, n: 1 }]);
+  addItem('melon', 1);
+  assert.equal(shipStacks().find((s) => s.k === 'melon').t, 0, 'the new melon is plain');
+});
