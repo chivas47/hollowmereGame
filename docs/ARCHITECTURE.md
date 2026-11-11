@@ -236,6 +236,7 @@ src/
     dom.js toast.js modal.js (openModal(html, actions, {wide}); wide 'xl' the Bag's 960 px card (v235); v141: over the owner's half in two-player, no pause; v144: one dialog each, #modal yours and #modal2 farmer two's, G.dialog.{you,p2}; dom.js $ and $$ search only the acting farmer's box (G.partnerActing); listeners on #mbody/#mact serve both; clicks, input and change in #modal2 run through asThem) hud.js hudPrefs.js goal.js prompt.js hotbar.js dialogs.js
     workshop.js mine.js input.js (keys go through core/controls.js actionOf; v126: runAction(), escape() for the pad too) debugPanel.js
     offline.js        v121: registers sw.js and hands it the files the first visit loaded (v233: not on itch.io)
+    debugPanel.js     v237: on itch.io (core/host.js onItch) the Debug tools button and panel are removed and ` does nothing
     itchNotice.js     v233: on itch.io, one dismissible notice that saves live in this browser, with Export save now
     slots.js          v127: the menu's Farms dialog (three save slots)
     reckoning.js      v128: the reckoning dialog after the morning report (waits for report:closed)
