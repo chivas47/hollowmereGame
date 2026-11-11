@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v235: The Bag keeps your place
+- With a controller or keyboard, picking an item, a kind, Pin, Compare or Eat in the Bag keeps the focus where you were (Compare moves it on to the item, ready to pick the second one) instead of jumping to Close.
+- Opening the Bag starts with no search, every kind and no comparison; using an item inside it (Eat, Wear, Read, Open) no longer ends a comparison or clears the search.
+- On a wide screen the Bag is wider and the picked item's detail (or the comparison) sits in a column beside the grid. On a phone it stays at the bottom of the Bag, just above Close, and the cell you picked stays in view above it instead of scrolling away.
+- On touch screens a tapped button no longer keeps a hover border, which looked like a second pick in the Bag.
+- New save data: none.
+
 ## v234: Fish, not Ash
 - Text in panels and dialogs no longer joins "fi" and "fl": the game's font drew them as one shape that read as a capital A, so "fish" showed as "Ash" and "first" as "Arst". Canvas text (floating numbers) was not affected.
 - New save data: none.

@@ -861,6 +861,8 @@ The Bag (I) is the inventory screen. No prices or numbers change; there is no li
 | Tools and seeds | tool tiers, every seed with its season, every material with its count |
 | Fish log | kinds caught |
 
+v235: the picked item's detail sits beside the grid on a wide screen and at the bottom of the Bag on a narrow one, so it is always in view. The focus stays on what you pressed. Each opening starts with no search, every kind and no comparison.
+
 | Detail | From |
 |---|---|
 | Line about the item | its own data: season and days for crops and seeds, season and difficulty for fish, the machine for artisan goods, energy and buff for dishes, the item's own text for rings, trinkets, books and tackle |

@@ -178,18 +178,49 @@ function itemsTab() {
     <div class="btns bagcats">${cats}</div>
     <p class="role">${all.length} kinds carried. Worth ${fmtGold(worth)} if shipped. Drag an item onto Pinned to pin it${chest ? ', or onto the chest to put it away' : ''}.</p>
     <div class="bagdrops"><div class="bagzone" data-drop="pins">Pinned</div>${chest ? '<div class="bagzone" data-drop="chest">Chest you face</div>' : ''}</div>
-    <div id="bagItems" data-drop="bag">${itemsGrid()}</div>
-    ${sel && cmp && sel !== cmp ? compare(cmp, sel) : sel ? detail(sel) : '<p class="role">Pick an item to read about it.</p>'}
-    ${V.cmp && (!sel || sel === cmp) ? '<p class="role">Pick a second item to compare.</p>' : ''}`;
+    <div class="bagmain"><div id="bagItems" data-drop="bag">${itemsGrid()}</div>
+    <div class="bagside">${sel && cmp && sel !== cmp ? compare(cmp, sel) : sel ? detail(sel) : '<p class="role">Pick an item to read about it.</p>'}
+    ${V.cmp && (!sel || sel === cmp) ? '<p class="role">Pick a second item to compare.</p>' : ''}</div></div>`;
+}
+
+// v235 (polish 77p): every press redraws the Bag, so the focus goes back to what was pressed (or what took its
+// place), not to Close: a controller or keyboard player keeps their place.
+function focusKey() {
+  const a = document.activeElement;
+  if (!a || a === document.body || !$('#mbody').contains(a)) return null;
+  if (a.id) return [`#${a.id}`];
+  const d = [...a.attributes].find((x) => x.name.startsWith('data-') && x.name !== 'data-drag');
+  if (!d) return null;
+  const at = `[${d.name}="${CSS.escape(d.value)}"]`;
+  if (d.name === 'data-cmp') return [`[data-bagitem="${CSS.escape(d.value)}"]`, at];   // compare: on to the second item
+  return [at];
+}
+function refocus(keys) {
+  if (!keys) return;
+  const box = $('#mbody');
+  const el = [...keys, '[data-bagitem].sel', '[data-bagtab].primary'].map((q) => box.querySelector(q)).find((x) => x && !x.disabled);
+  el?.focus({ preventScroll: true });
+}
+
+// v235: on a narrow screen the detail is held at the bottom, just above Close; the dialog's scroll padding leaves
+// room for it, so a picked cell (or one a controller moves to) scrolls into view above it, not under it.
+function placeSide() {
+  const card = $('#modal .card'), side = $('#mbody .bagside'), main = $('#mbody .bagmain');
+  card.style.scrollPaddingBottom = '';
+  if (!side || getComputedStyle(main).display === 'grid') return;
+  const b = Math.max(0, $('#mact').offsetHeight - 16);   // .actions sticks at bottom:-16px
+  side.style.bottom = `${b}px`;
+  card.style.scrollPaddingBottom = `${b + parseFloat(getComputedStyle(card).paddingBottom) + side.offsetHeight + 8}px`;   // sticky offsets count from inside the padding
 }
 
 function bag() {
   const pr = G.S.profile;
   const who = pr ? `<p class="role">${esc(pr.name)} of ${esc(pr.farm)} Farm. Favourite thing: ${esc(pr.favourite)}. Pet: ${PETS[pr.pet].toLowerCase()}, waiting to move in.</p>` : '';
   const tabs = Object.entries(TABS).map(([k, n]) => `<button data-bagtab="${k}" ${V.tab === k ? 'class="primary" aria-pressed="true"' : 'aria-pressed="false"'}>${n}</button>`).join('');
-  const sc = $('#modal .card').scrollTop, same = !$('#modal').hidden && $('#mbody .bagtabs');
-  openModal(`<h2>Bag</h2>${who}<div class="btns bagtabs">${tabs}</div>${V.tab === 'items' ? itemsTab() : otherTab(V.tab)}`, [['Close', closeModal, true]], { wide: true });
-  if (same) $('#modal .card').scrollTop = sc;   // re-drawing after a click keeps your place
+  const sc = $('#modal .card').scrollTop, same = bagOpen(), keys = same && focusKey();
+  openModal(`<h2>Bag</h2>${who}<div class="btns bagtabs">${tabs}</div>${V.tab === 'items' ? itemsTab() : otherTab(V.tab)}`, [['Close', closeModal, true]], { wide: 'xl' });
+  if (same) { $('#modal .card').scrollTop = sc; refocus(keys); }   // re-drawing after a click keeps your place
+  placeSide();
   onDrop(bagDrop);
 }
 function bagDrop(id, from, to) {
@@ -198,7 +229,10 @@ function bagDrop(id, from, to) {
   else if (to === 'chest' && !stash(id)) return;
   bag();
 }
-on('ui:inventory', () => { V.cmp = null; bag(); });
+const bagOpen = () => !$('#modal').hidden && !!$('#mbody .bagtabs');
+// Opening the Bag starts with no search, every kind and no comparison (v235); an action inside it (Eat, Wear)
+// re-draws it through the same event and keeps them.
+on('ui:inventory', () => { if (!bagOpen()) Object.assign(V, { cmp: null, q: '', cat: 'all' }); bag(); });
 
 // Typing in the search box re-draws only the items, so the box keeps its focus.
 $('#mbody').addEventListener('input', (e) => {
@@ -213,7 +247,7 @@ $('#mbody').addEventListener('change', (e) => {
 $('#mbody').addEventListener('click', (e) => {
   const t = e.target.closest('[data-bagtab]'); if (t) { V.tab = t.dataset.bagtab; bag(); return; }
   const it = e.target.closest('[data-bagitem]');
-  if (it) { V.sel = V.sel === it.dataset.bagitem && !V.cmp ? null : it.dataset.bagitem; bag(); $('#mbody .bagdetail')?.scrollIntoView({ block: 'nearest' }); return; }
+  if (it) { V.sel = V.sel === it.dataset.bagitem && !V.cmp ? null : it.dataset.bagitem; bag(); $(`#mbody [data-bagitem="${CSS.escape(it.dataset.bagitem)}"]`)?.scrollIntoView({ block: 'nearest' }); return; }   // v235: the detail is in view beside or under the grid; the cell stays in view
   const c = e.target.closest('[data-bagcat]'); if (c) { V.cat = c.dataset.bagcat; bag(); return; }
   const v = e.target.closest('[data-bagview]'); if (v) { G.S.bagView.view = v.dataset.bagview; bag(); return; }
   const p = e.target.closest('[data-pin]'); if (p) { togglePin(p.dataset.pin); bag(); return; }
