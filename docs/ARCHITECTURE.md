@@ -9,7 +9,7 @@ index.html            layout: HUD, canvas, basket, hotbar, touch pad, debug pane
 styles.css            single dark "farmhouse at dusk" theme, tokens on :root
 manifest.webmanifest  v121: name, colours and icons (assets/icons/) for installing the game
 sw.js                 v121: service worker: network first (no-cache for the game's files), every answer kept, the copy used offline; registered by ui/offline.js (v233: not on itch.io)
-assets/fonts/         v233: Pixelify Sans (OFL.txt), the UI font, shipped with the game instead of loaded from Google Fonts
+assets/fonts/         v233: Pixelify Sans (OFL.txt), the UI font, shipped with the game instead of loaded from Google Fonts; v234: ligatures off (styles.css), its "fi" and "fl" read as "A"
 src/
   main.js             boot: imports every system and UI module, runs the frame loop
   core/

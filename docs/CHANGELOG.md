@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v234: Fish, not Ash
+- Text in panels and dialogs no longer joins "fi" and "fl": the game's font drew them as one shape that read as a capital A, so "fish" showed as "Ash" and "first" as "Arst". Canvas text (floating numbers) was not affected.
+- New save data: none.
+
 ## v233: Ready for itch.io
 - On itch.io, once your farm has started, a notice says the farm is saved in this browser only and suggests exporting a copy now and then (Menu, then Export save). Got it or Export save now dismisses it for good in that browser.
 - The game's font ships with the game instead of loading from Google Fonts: no outside request, and the right font offline from the first visit.
