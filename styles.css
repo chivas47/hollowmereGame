@@ -232,6 +232,18 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
 .bagzone.dropover{border-color:var(--harvest);background:rgba(233,180,76,.12)}
 .baggrid.bagzone{padding:6px}
 .bagdetail{border-top:2px solid var(--seam);margin-top:8px;padding-top:10px}
+/* v236: the shipping bin's picker, a row per stack: icon, name and price, then − count + All */
+.shiplist{display:flex;flex-direction:column;gap:4px;margin:8px 0}
+.shiprow{position:relative;display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:10px;align-items:center;padding:4px 6px;border:2px solid transparent;border-radius:8px}
+.shiprow img{image-rendering:pixelated}
+.shiprow .star{position:absolute;left:4px;top:4px;display:flex;gap:2px}
+.shiprow .star span{width:6px;height:6px;background:var(--q);box-shadow:0 0 0 1px #000}
+.shiprow>div:first-of-type{display:flex;flex-direction:column;min-width:0}
+.shiprow.picked{border-color:var(--harvest);background:rgba(233,180,76,.08)}
+.shipcount{display:flex;align-items:center;gap:4px}
+.shipcount b{min-width:2.2em;text-align:center}
+.card .shipcount button{min-width:40px;padding:6px 8px}
+@container (max-width:520px){ .shiprow{grid-template-columns:32px minmax(0,1fr)} .shipcount{grid-column:1 / -1;justify-content:flex-end} }
 /* v235 (polish 77p): the picked item's detail stays in view. Wide: a column beside the grid, held at the top while
    the grid scrolls. Narrow: held at the bottom of the dialog, the grid scrolling above it. */
 .bagside{position:sticky;bottom:0;background:var(--bark);max-height:calc(38vh / var(--text,1));max-height:calc(38dvh / var(--text,1));overflow:auto;overscroll-behavior:contain;box-shadow:0 -10px 12px -8px rgba(0,0,0,.6)}

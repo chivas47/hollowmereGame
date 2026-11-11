@@ -5,7 +5,9 @@ import { today } from '../core/time.js';
 import { CROPS } from '../data/crops.js';
 import { ITEMS } from '../data/items.js';
 import { SUPPLIES, PLACEABLES } from '../data/crafting.js';
-import { valueOf, clearQuality } from './quality.js';
+import { counts, addItem, unitValue, valueOf } from './quality.js';
+import { priceMult } from './professions.js';
+import { pinned } from './bag.js';
 import { fmtGold } from '../core/format.js';
 
 export const inSeason = (crop) => CROPS[crop].seasons.includes(today().season);
@@ -32,22 +34,61 @@ export function buySupply(k, n) {
   return true;
 }
 
-export function ship() {
-  const S = G.S;
-  let value = 0, count = 0, kept = 0;
-  for (const k in S.bag) {
-    if (ITEMS[k].material) { kept += S.bag[k]; continue; }   // ore and stone stay for upgrades
-    value += valueOf(k); count += S.bag[k]; S.bag[k] = 0; clearQuality(k);
+// v236: the bin opens a picker (ui/shipbin.js). Each stack is an item at one quality; what it fetches is the
+// quality price and the selling professions, as before. Materials (ore, stone, gear) are never shipped.
+export const shippable = (k) => !!ITEMS[k] && !ITEMS[k].material;
+export const shipPrice = (k, t) => Math.floor(unitValue(k, t) * priceMult(k));
+
+// Every stack you could ship: { k, t, n, unit, pinned }, quality from plain up.
+export function shipStacks() {
+  const out = [];
+  for (const k of Object.keys(G.S.bag)) {
+    if (!(G.S.bag[k] > 0) || !shippable(k)) continue;
+    counts(k).forEach((n, t) => { if (n > 0) out.push({ k, t, n, unit: shipPrice(k, t), pinned: pinned(k) }); });
   }
-  if (!count) {
-    notify(kept ? 'Ore and stone stay in your bag for upgrades. Nothing else to ship.'
-      : S.bin ? `The bin holds ${fmtGold(S.bin)} of goods. It pays out tonight.` : 'Your basket is empty. Harvest or forage something first.');
-    return;
+  return out;
+}
+
+// Removes n of item k at quality t from the bag.
+function take(k, t, n) {
+  G.S.bag[k] -= n;
+  if (t > 0) G.S.qbag[k][t - 1] -= n;
+}
+
+// Puts the picked stacks in the bin ([{ k, t, n }]). The last one is remembered, so it can come back out before
+// night (Stardew's rule: only the last thing put in). Returns { count, value }.
+export function shipItems(picks, { quiet = false } = {}) {
+  let count = 0, value = 0;
+  for (const p of picks) {
+    if (!shippable(p.k)) continue;
+    const n = Math.min(Math.floor(p.n) || 0, counts(p.k)[p.t] || 0);
+    if (n <= 0) continue;
+    const v = n * shipPrice(p.k, p.t);
+    take(p.k, p.t, n);
+    count += n; value += v;
+    G.S.binLast = { k: p.k, t: p.t, n, value: v };
   }
-  S.bin += value;
+  if (!count) return { count, value };
+  G.S.bin += value;
   emit('sfx', 'coin');
-  notify(`Shipped ${count} item${count > 1 ? 's' : ''} for ${fmtGold(value)}. Paid while you sleep.`);
+  if (!quiet) notify(`Shipped ${count} item${count > 1 ? 's' : ''} for ${fmtGold(value)}. Paid while you sleep.`);
   changed();
+  return { count, value };
+}
+
+// Ship all: every stack but the items pinned in the Bag (they can still be shipped one by one).
+export const shipAll = (opts) => shipItems(shipStacks().filter((s) => !s.pinned), opts);
+export const ship = shipAll;   // the simulator's name (tools/balance.mjs)
+
+// The last stack put in comes back to the bag, and its gold leaves the bin.
+export function takeBack() {
+  const L = G.S.binLast;
+  if (!L || !ITEMS[L.k]) return false;
+  addItem(L.k, L.n, L.t);
+  G.S.bin = Math.max(0, G.S.bin - L.value);
+  G.S.binLast = null;
+  changed();
+  return true;
 }
 
 on('day:end', (report) => {
@@ -55,4 +96,5 @@ on('day:end', (report) => {
   G.S.earned = (G.S.earned || 0) + G.S.bin;   // v32: everything shipped, ever (the farm cave opens at 25,000g)
   G.S.gold += G.S.bin;
   G.S.bin = 0;
+  G.S.binLast = null;   // v236: shipped is final once paid
 });

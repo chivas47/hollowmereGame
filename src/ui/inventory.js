@@ -33,7 +33,7 @@ import { DISHES } from '../data/cooking.js';
 import { bagList, bagEntries, pinned, togglePin, describe, usedIn, needsOf, shippable, prices, facedChest, stash } from '../systems/bag.js';
 import { iconURL } from '../render/itemIcons.js';
 import { onDrop } from './drag.js';
-import { $ } from './dom.js';
+import { $, pressedKey, refocusIn } from './dom.js';
 import { keyName } from '../core/controls.js';
 import { fmtGold } from '../core/format.js';
 
@@ -184,23 +184,13 @@ function itemsTab() {
 }
 
 // v235 (polish 77p): every press redraws the Bag, so the focus goes back to what was pressed (or what took its
-// place), not to Close: a controller or keyboard player keeps their place.
+// place), not to Close: a controller or keyboard player keeps their place (ui/dom.js).
 function focusKey() {
-  const a = document.activeElement;
-  if (!a || a === document.body || !$('#mbody').contains(a)) return null;
-  if (a.id) return [`#${a.id}`];
-  const d = [...a.attributes].find((x) => x.name.startsWith('data-') && x.name !== 'data-drag');
-  if (!d) return null;
-  const at = `[${d.name}="${CSS.escape(d.value)}"]`;
-  if (d.name === 'data-cmp') return [`[data-bagitem="${CSS.escape(d.value)}"]`, at];   // compare: on to the second item
-  return [at];
+  const keys = pressedKey();
+  const cmp = keys?.[0].match(/^\[data-cmp="(.*)"\]$/);
+  return cmp ? [`[data-bagitem="${cmp[1]}"]`, ...keys] : keys;   // compare: on to the second item
 }
-function refocus(keys) {
-  if (!keys) return;
-  const box = $('#mbody');
-  const el = [...keys, '[data-bagitem].sel', '[data-bagtab].primary'].map((q) => box.querySelector(q)).find((x) => x && !x.disabled);
-  el?.focus({ preventScroll: true });
-}
+const refocus = (keys) => refocusIn(keys, ['[data-bagitem].sel', '[data-bagtab].primary']);
 
 // v235: on a narrow screen the detail is held at the bottom, just above Close; the dialog's scroll padding leaves
 // room for it, so a picked cell (or one a controller moves to) scrolls into view above it, not under it.

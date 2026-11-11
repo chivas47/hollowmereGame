@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v236: Choose what to ship
+- The shipping bin (and every mini bin) opens a picker instead of shipping everything at once. Each item shows once per quality with how many you carry and what one fetches; − , + and All set how many to ship, then Ship selected.
+- Ship all ships everything except the items pinned in the Bag, so food, gifts and books you pin stay with you.
+- The last stack you put in can be taken back, with its gold, until the bin pays out overnight.
+- Prices and what can be shipped are unchanged. The prompt reads "Open the shipping bin".
+- New save data: the last stack put in the bin today (binLast). Older saves start without one.
+
 ## v235: The Bag keeps your place
 - With a controller or keyboard, picking an item, a kind, Pin, Compare or Eat in the Bag keeps the focus where you were (Compare moves it on to the item, ready to pick the second one) instead of jumping to Close.
 - Opening the Bag starts with no search, every kind and no comparison; using an item inside it (Eat, Wear, Read, Open) no longer ends a comparison or clears the search.
