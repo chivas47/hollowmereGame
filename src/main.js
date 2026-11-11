@@ -156,6 +156,7 @@ import './ui/market.js';
 import './ui/theatre.js';
 import './ui/journal.js';   // v114: the journal's Quests, Story, Map and People tabs
 import './ui/storage.js';   // v71
+import './ui/shipbin.js';   // v236: the shipping bin's picker
 import './ui/arcade.js';
 import './ui/carts.js';   // v108: the cart line
 import { buildHotbar } from './ui/hotbar.js';

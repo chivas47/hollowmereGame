@@ -129,7 +129,7 @@ src/
     train.js          v179: the goods train on the railway (trainOn(day), seeded; drops by the line in G.S.trainDrops, Use picks one up)
     ponds.js          the fish pond (stock, breed, roe, requests) and the slime pen (trough, slime balls, addSlime)
     buildings.js      door (sleep), stall (shop), bin and mini bins (ship), well/pond refill
-    economy.js        ship(), buy(), overnight payout; materials are never shipped
+    economy.js        buy(), overnight payout; v236: the bin's stacks (shipStacks), shipItems, shipAll (not pinned items; ship() for the simulator), takeBack of the last stack (G.S.binLast); materials are never shipped
     npcs.js           schedules across farm and village (v146: rain days; v149: follow() for `with` blocks; v151: homeNow(id), walking a friend home), talk (v146: RAIN_LINES from data/npcs.js), gifts, hearts, 3-heart rewards, heart scenes
     crowd.js          v145: crowdPlan(kind, ids, day, hours), a festival's blocks for everyone (seeded by the day), stationsFor(), rolesFor(); npcs.js uses it
     news.js           v153: G.S.news (today: museumAt, spouseAt, quests, skills; yesterday: shipped, donated, won, wed, helped, skills), recordDay(), wonFestival(), yesterday(); listens to quest:done, skill:level, day:end
@@ -224,6 +224,7 @@ src/
     journal.js        v114: the journal's first tabs: Quests (main, optional, completed, Track), Story (steps, the story so far, discoveries), Map (found places, landmarks, markers, pins), People
     arrival.js        v122: the arrival scene, once, after the new game screen
     storage.js        chest, sign, farm computer and lost and found dialogs (ui:chest, ui:sign, ui:computer, ui:lostfound); journal tabs calendar and animals via addJournalTab() in ui/museum.js (v71; quests and map moved to ui/journal.js in v114); the chest as two icon grids, click or drag to move (v113)
+    shipbin.js        the shipping bin's picker (ui:bin): a count per stack, Ship selected, Ship all, Take back (v236)
     inventory.js      the Bag (I, ui:inventory): tabs Items, Gear, Skills, Wardrobe, Tools and seeds, Fish log; the Items grid or list, search, kinds, sort, pins, detail, compare (v113)
     drag.js           v113: drag and drop inside the dialog: data-drag items onto data-drop zones, onDrop(fn) set by the open dialog; touch drags after a short hold
     theatre.js        the picture house dialog: guest, snack, the showing (ui:theatre) (v70)
@@ -287,7 +288,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 73 | traditions.js | Facing the wishing stone Ӂ in the village (today's blessing) (v110) |
 | 67 | traditions.js | Facing the sea on the beach during the Lantern Float, before your lantern is out (sets it; above casting at 65) (v110) |
 | 73 | storage.js | Facing a chest, sign or farm computer (its own dialog, ahead of placed objects at 72) (v71) |
-| 73 | buildings.js | Facing a mini shipping bin (ships; axe or pickaxe takes it up) |
+| 73 | buildings.js | Facing a mini shipping bin (opens the bin's picker, ui:bin; axe or pickaxe takes it up) |
 | 72 | pets.js | The water bowl b (the can fills it) |
 | 72 | mill.js | Mill m, shed s (enter), clock tower k |
 | 72 | ponds.js | Fish pond u, slime pen j (the can fills its trough) |
@@ -324,7 +325,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 71 | village.js | Fountain F, cottage V away from its front (where the door is) |
 | 71 | mail.js | The mailbox on the farmhouse front (farm H tile at 5,3) |
 | 71 | cooking.js | Farmhouse stove o (cook) and counters n (fridge) |
-| 70 | buildings.js, house.js | Bin B; farm door D (enter), bed Z, lectern l, kitchen and cellar fittings |
+| 70 | buildings.js, house.js | Bin B (the picker, ui:bin, v236); farm door D (enter), bed Z, lectern l, kitchen and cellar fittings |
 | 66 | mine.js | Pickaxe on mine rocks |
 | 65 | fishing.js | Rod on water O (cast) |
 | 60 | buildings.js | Well W or pond O (refill can) |

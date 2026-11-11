@@ -8,7 +8,7 @@ You take over the overgrown Hollowmere plot. Farm through the seasons, fish and 
 
 1. Morning: wake at 6:00 with full energy and health. Sprinklers water their tiles.
 2. Day: till, plant, water; forage, fish or mine; tend animals; fill machines; talk to and gift neighbours; take requests from the village quest board.
-3. Ship crops, forage, fish, animal products and artisan goods in the bin (ore and stone are kept).
+3. Ship crops, forage, fish, animal products and artisan goods in the bin (ore and stone are kept). v236: the bin opens a picker; ship what you choose, or Ship all.
 4. Night: sleep in the farmhouse. Watered crops grow, the bin pays out, petted animals produce, machines work.
 5. Spend gold and materials at the town's shops (v46: the general store, the smithy and Bram's carpentry), the crafting menu, the barn and festival stalls.
 
@@ -85,7 +85,7 @@ Bram's Carpentry moves any building for free: back on the farm, choose the spot 
 | Mill | 2,500 | 150 wood, 50 stone, 4 cloth | 2 by 2 | Wheat becomes flour (50g), beets sugar (50g), overnight | Mill: same |
 | Clock tower | 10,000,000 | none | 2 by 2 | Weeds, stones and twigs stop creeping onto the farm | Gold clock |
 
-- Mini shipping bin (crafted, 30 wood and 1 copper bar): ships the basket from anywhere on the farm or in the shed. Stardew's is a quest reward with no recipe, so the price is ours.
+- Mini shipping bin (crafted, 30 wood and 1 copper bar): opens the same picker as the big bin from anywhere on the farm or in the shed. Stardew's is a quest reward with no recipe, so the price is ours.
 - One shed per farm, and no big shed yet.
 
 ### Fish pond and slime pen (v31)
@@ -847,6 +847,19 @@ HUD size: 100% to 140%, never smaller (HUD text stays 16 px or larger). Full, mi
 Phones held upright (v132): the field takes only its own height under the meters, the hotbar sits right under it, and the pad and Use button sit at the bottom of the screen by your thumbs. A long place name is cut short before it reaches the gold. Under 600 px wide the menu buttons drop their key hints.
 
 v120: Text size, 100% to 150%, scales dialogs, the menu and the bag (the HUD has its own size); a card still fits the window and scrolls. Contrast puts solid black behind the objective, the Use prompt, messages and the basket line, with cream edges on the meters, buttons and hotbar slots. Signals no longer rest on colour alone: quality in the bag and chests shows as 1 to 3 pips (fine, prime, heirloom) in the tier's colour, a low meter is striped as well as red, and ripe crops and forage glint with a small cross instead of a single dot. The objective and the Use prompt now sit under open dialogs instead of over them.
+
+## The shipping bin (v236)
+
+Facing the bin, or a mini bin, opens a picker (Stardew's bin menu, Nuno's design, November 2026). Each stack is an item at one quality, with how many you carry and what one fetches (quality price and the selling professions, unchanged). Prices, payout time and what can be shipped do not change.
+
+| Control | Does |
+|---|---|
+| − / + / All | how many of that stack to ship |
+| Ship selected | puts the picked counts in the bin |
+| Ship all | every stack except items pinned in the Bag (a pinned item still ships when picked) |
+| Take back | the last stack put in comes back to the bag with its quality, and its gold leaves the bin, until the bin pays out overnight (Stardew's rule: the last item only) |
+
+Materials (ore, stone, bars, gear) never show. Before v236 one press shipped everything else, dishes and books included.
 
 ## The Bag (v113)
 

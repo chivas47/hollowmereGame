@@ -27,6 +27,7 @@ export function newState() {
     seeds: Object.fromEntries(Object.keys(CROPS).map((k) => [k, STARTING_SEEDS[k] || 0])),
     bag: Object.fromEntries(Object.keys(ITEMS).map((k) => [k, 0])),
     bin: 0,
+    binLast: null,   // v236: the last stack put in the bin today, { k, t, n, value }; it can come back out until night
     journal: { story: {}, log: [], seen: [], pins: [], track: null, markers: true },   // v114: story steps done, finished quests, places found, map pins, tracked objective (systems/journal.js)
     firstWeek: { arrived: false, done: {}, over: false },   // v122: the arrival scene and the first week's goals (systems/firstweek.js)
     reckoning: { done: 0, points: 0, lamps: 0, pending: false, again: 0, lid: false },   // v128: Bram's reckoning (systems/reckoning.js)
@@ -130,6 +131,8 @@ export function merge(saved) {
   const s = Object.assign(fresh, saved);
   s.seeds = Object.assign(newState().seeds, saved.seeds || {});
   s.bag = Object.assign(newState().bag, saved.bag || {});
+  const bl = saved.binLast;   // v236
+  s.binLast = bl && ITEMS[bl.k] && bl.n > 0 && bl.t >= 0 && bl.t <= 3 ? { k: bl.k, t: bl.t, n: bl.n, value: bl.value || 0 } : null;
   s.npcs = Object.assign(newState().npcs, saved.npcs || {});
   for (const st of Object.values(s.npcs)) if (!st.known || typeof st.known !== 'object') st.known = {};   // v48: gift tastes learned
   if (!MAPS[s.map]) s.map = 'farm';

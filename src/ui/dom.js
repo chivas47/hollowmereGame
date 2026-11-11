@@ -12,3 +12,18 @@ export const $ = (s) => { for (const e of document.querySelectorAll(scoped(s))) 
 export const $$ = (s) => [...document.querySelectorAll(scoped(s))].filter(visible);
 // Escapes player-typed text (names) before it goes into innerHTML.
 export const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
+// v235: a dialog re-drawn after a press puts the focus back on what was pressed (by its id or first data-
+// attribute), else on the first fallback found, so a controller or keyboard player keeps their place.
+export function pressedKey() {
+  const a = document.activeElement;
+  if (!a || a === document.body || !$('#mbody')?.contains(a)) return null;
+  if (a.id) return [`#${a.id}`];
+  const d = [...a.attributes].find((x) => x.name.startsWith('data-') && x.name !== 'data-drag');
+  return d ? [`[${d.name}="${CSS.escape(d.value)}"]`] : null;
+}
+export function refocusIn(keys, fallbacks = []) {
+  if (!keys) return;
+  const box = $('#mbody');
+  [...keys, ...fallbacks].map((q) => box.querySelector(q)).find((x) => x && !x.disabled)?.focus({ preventScroll: true });
+}
