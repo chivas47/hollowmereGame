@@ -182,6 +182,7 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
 .modal.half{inset:auto;padding:8px}.modal.half .card{max-width:100%;max-height:100%}   /* v141: a dialog over one farmer's half (ui/modal.js) */
 .card{background:var(--panel);background-color:var(--bark);border:3px solid var(--frame);border-radius:12px;box-shadow:var(--frame-shadow),0 16px 40px rgba(0,0,0,.55);padding:18px 18px 16px;max-width:480px;width:100%;max-height:90vh;max-height:90dvh;overflow:auto;overscroll-behavior:contain;animation:pop .16s ease-out}
 .card.wide{max-width:640px}
+.card.xl{max-width:960px}   /* v235: the Bag, detail beside the grid */
 @keyframes pop{from{opacity:0;transform:scale(.96)}}
 @media (prefers-reduced-motion:reduce){.card,.toast,.meter.low{animation:none}.meter i,.toast{transition:none}}
 .cardhead{display:flex;justify-content:space-between;align-items:center;gap:12px}
@@ -202,7 +203,7 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
 .giftrow b img{width:32px;height:32px;vertical-align:middle;image-rendering:pixelated;margin-right:4px}   /* v188: the gift picker */
 .btns{display:flex;gap:6px;flex-wrap:wrap}
 .card button{background:var(--plank);border:2px solid var(--seam);border-radius:6px;color:var(--cream);font-size:18px;padding:6px 12px;min-height:40px;cursor:pointer}
-.card button:hover:not(:disabled){border-color:var(--frame-hi)}
+@media (hover:hover){.card button:hover:not(:disabled){border-color:var(--frame-hi)}}   /* v235: no hover border left under a finger after a tap */
 .card button.primary{background:var(--harvest);color:var(--soil);border-color:#b8862b;font-weight:600;box-shadow:0 3px 0 #8a6420}
 .card button:disabled{opacity:.45;cursor:not-allowed}
 .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap;position:sticky;bottom:-16px;padding:10px 0 4px;background:var(--bark)}
@@ -231,6 +232,14 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
 .bagzone.dropover{border-color:var(--harvest);background:rgba(233,180,76,.12)}
 .baggrid.bagzone{padding:6px}
 .bagdetail{border-top:2px solid var(--seam);margin-top:8px;padding-top:10px}
+/* v235 (polish 77p): the picked item's detail stays in view. Wide: a column beside the grid, held at the top while
+   the grid scrolls. Narrow: held at the bottom of the dialog, the grid scrolling above it. */
+.bagside{position:sticky;bottom:0;background:var(--bark);max-height:calc(38vh / var(--text,1));max-height:calc(38dvh / var(--text,1));overflow:auto;overscroll-behavior:contain;box-shadow:0 -10px 12px -8px rgba(0,0,0,.6)}
+@container (min-width:800px){
+  .bagmain{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}
+  .bagside{top:0;bottom:auto;max-height:calc(76vh / var(--text,1));max-height:calc(76dvh / var(--text,1));box-shadow:none}
+  .bagside .bagdetail{border-top:0;margin-top:4px;padding-top:0}
+}
 .baghead{display:flex;gap:12px;align-items:center;margin-bottom:8px}
 .baghead img{width:48px;height:48px}
 .baghead div{display:flex;flex-direction:column}

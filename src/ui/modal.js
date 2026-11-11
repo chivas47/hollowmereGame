@@ -21,10 +21,13 @@ function cover(m, who) {
   Object.assign(m.style, { left: `${r.left + (who === 'p2' ? w : 0)}px`, top: `${r.top}px`, width: `${w}px`, height: `${r.height}px` });
 }
 
-// actions: [[label, onClick, isPrimary], ...]; wide: the wider card (v113: the Bag and chests)
+// actions: [[label, onClick, isPrimary], ...]; wide: the wider card (v113: the Bag and chests); 'xl' the widest
+// (v235: the Bag, so its detail fits beside the grid)
 export function openModal(html, actions, { wide = false } = {}) {
   const who = acting(), m = box(who);
-  m.querySelector('.card').classList.toggle('wide', wide);
+  m.querySelector('.card').classList.toggle('wide', !!wide);
+  m.querySelector('.card').classList.toggle('xl', wide === 'xl');
+  m.querySelector('.card').style.scrollPaddingBottom = '';   // the Bag sets it for its detail (ui/inventory.js)
   m.querySelector('#mbody').innerHTML = html;
   const bar = m.querySelector('#mact'); bar.innerHTML = '';
   actions.forEach(([label, fn, primary]) => {
