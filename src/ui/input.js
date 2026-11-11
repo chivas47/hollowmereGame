@@ -112,6 +112,6 @@ export function initInput(canvas) {
   $('#undoBtn').addEventListener('click', () => { closeMenu(); undo(); });   // v99: for touch screens
   $('#reset').addEventListener('click', closeMenu);
   $('#reset').addEventListener('click', confirmReset);
-  $('#debugToggle').addEventListener('click', toggleDebug);
+  $('#debugToggle')?.addEventListener('click', toggleDebug);   // v237: not there on itch.io
   document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
 }

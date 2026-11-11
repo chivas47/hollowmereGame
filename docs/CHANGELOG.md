@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v237: No debug tools on itch.io
+- On itch.io the menu has no Debug tools button and the ` key does nothing, so players cannot skip days or add gold by accident. Played anywhere else, the debug tools are unchanged.
+- The shipping bin again clears quality left behind for items you no longer carry each time you ship, as shipping everything did before v236; without it, newly picked-up items could count as a better quality than they were.
+- New save data: none.
+
 ## v236: Choose what to ship
 - The shipping bin (and every mini bin) opens a picker instead of shipping everything at once. Each item shows once per quality with how many you carry and what one fetches; − , + and All set how many to ship, then Ship selected.
 - Ship all ships everything except the items pinned in the Bag, so food, gifts and books you pin stay with you.
