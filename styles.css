@@ -19,6 +19,8 @@
 html,body{height:100%}
 body{margin:0;background:radial-gradient(ellipse at top,#2a2118,var(--soil) 70%) fixed var(--soil);color:var(--cream);font-family:var(--display);font-size:18px;line-height:1.35;overflow:hidden}
 button{font:inherit;color:inherit}
+/* v234: Pixelify Sans joins "fi" and "fl" into a glyph that reads as a capital A ("Ash" for fish); no ligatures anywhere. */
+*{font-variant-ligatures:none}
 button:focus-visible,input:focus-visible{outline:3px solid var(--water);outline-offset:2px}
 kbd{font:inherit;font-size:16px;line-height:1;padding:2px 5px;border-radius:4px;background:var(--soil);border:1px solid var(--seam);border-bottom-width:3px;color:var(--straw)}
 
