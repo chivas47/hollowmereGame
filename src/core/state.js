@@ -102,6 +102,7 @@ export function newState() {
     spouse: null, wedding: null, roommate: false,      // v52: your spouse's villager id, a wedding { id, day } to come; v53: a roommate
     secretFriend: null,                              // v57: { year, id } for the Longnight Feast
     restore: { given: {}, bundles: {}, rooms: {}, rival: false, done: false },   // v60: systems/restoration.js
+    quarryBridge: false,                                // v238: the bridge to the quarry is mended (systems/quarry.js)
     orders: { week: -1, offer: [], active: null, done: 0 },   // v61: systems/orders.js
     casino: { coins: 0, bought: [] }, desertTraded: 0,   // v64: systems/desert.js
     challenge: { gems: 0, week: -1, offer: [], active: null, done: 0, bought: [] },   // v62: systems/challenges.js

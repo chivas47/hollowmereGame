@@ -27,11 +27,12 @@ const WAYS = [
   { from: 'island', stand: [11, 13], to: 'beach', land: [6, 11], why: 'the boat home (systems/island.js)' },
   { from: 'island', stand: [22, 10], to: 'digsite', land: [1, 10], why: 'the bridge (systems/nuts.js)' },
   { from: 'digsite', stand: [1, 10], to: 'island', land: [22, 10], why: 'the bridge back (systems/nuts.js)' },
+  { from: 'mountain', stand: [22, 7], to: 'quarry', land: [1, 7], why: 'the quarry bridge, once mended (systems/quarry.js)' },   // v238
   { from: 'town', stand: [21, 8], to: 'desert', land: [2, 8], why: 'the coach (systems/desert.js)' },
   { from: 'desert', stand: [2, 8], to: 'town', land: [21, 8], why: 'the coach home (systems/desert.js)' },
 ];
 // Solid tiles that open in play (cleared, cut or unlocked), so a walk may pass them.
-const GATES = new Set(['}', '|', 'Ŧ']);
+const GATES = new Set(['}', '|', 'Ŧ', 'ǂ']);
 // Maps whose way out is set when you go in (systems/venues.js, systems/sites.js), or that have none on purpose.
 const SET_ON_ENTRY = (id) => id.startsWith('inside_') || id === 'shed';
 

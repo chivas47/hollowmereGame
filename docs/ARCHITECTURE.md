@@ -114,7 +114,7 @@ src/
     buffs.js          buff() and luck() for the systems that read them (kept import-free of cooking.js)
     gear.js           weapons owned and in use, rings worn, giveFind(), forge bonuses (forgeBonus), trinkets worn
     areas.js          the beach, the forest and the mountain: their daily forage (G.S.areaForage)
-    quarry.js         the quarry's daily rocks (G.S.quarryRocks) and breaking them
+    quarry.js         the quarry's daily rocks (G.S.quarryRocks) and breaking them; v238: its bridge (G.S.quarryBridge)
     hidden.js         the grove, railway and sewer gates (G.S.gates), grove stumps (G.S.groveStumps), the hot spring, the sewer trader (G.S.trader)
     pots.js           crab pots on the Wilds pond (G.S.pots), the gold pan and its shimmer spot (G.S.shimmer)
     books.js          reading books (G.S.read), mastery XP and perks (G.S.mastery), the shrine door and pedestals
@@ -332,6 +332,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 60 | buildings.js | Well W or pond O (refill can) |
 | 62 | clearing.js | Any tool aimed at farm debris or an alder |
 | 62 | shortcuts.js | Any tool aimed at the fallen trunk on a shortcut (the axe chops, others read the hint) (v106) |
+| 62 | quarry.js | Anything aimed at the broken quarry bridge on the mountain (reads what mends it) (v238) |
 | 61 | forage.js | Any tool aimed at a weed in the Wilds (fiber) |
 | 59 | giants.js | Any tool aimed at a giant crop (chop with hoe, pickaxe or sword) |
 | 58 | monsters.js | The weapon in slot 5 (claims every press while held) |
@@ -443,6 +444,7 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | E | exit to another map (paired with an `exits` entry) | no |
 | T | tree | yes |
 | q | quarry floor (farm layouts) | no |
+| ǂ | the broken bridge to the quarry (mountain 22,7; path once mended, systems/quarry.js) | yes |
 | h, I, . | farmhouse floor, wall, nothing (houseGrid in data/maps.js) | no, yes, yes |
 | Z, l, n, o, x, v | farmhouse bed, catalogue lectern, counter, stove, crib, cask | yes |
 | b | pet water bowl (farm, 6,5) | yes |

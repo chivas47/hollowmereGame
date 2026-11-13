@@ -153,7 +153,7 @@ const { finishReel, stepReel, buyBait } = await load('systems/fishing.js');
 const { buyBoathouse, boathouseOpen } = await load('systems/mere.js');   // v161: Garrow's counter
 const { placePot, usePot, panAt } = await load('systems/pots.js');
 const { pickAreaForage } = await load('systems/areas.js');
-const { hitQuarryRock } = await load('systems/quarry.js');
+const { hitQuarryRock, bridgeOpen } = await load('systems/quarry.js');
 const { chopStump } = await load('systems/hidden.js');
 const { openToday } = await load('systems/town.js');
 const { readLetter } = await load('systems/mail.js');
@@ -671,9 +671,10 @@ function simulate(runSeed) {
 
   // Mines until the next purchase has its materials or energy runs out. Every rock gives stone.
   const oreNeeds = () => { const n = missingMats(); delete n.wood; return n; };
-  // v44: the quarry's rocks are nearer than the Hollow: break the ones holding a needed ore first.
+  // v44: the quarry's rocks are nearer than the Hollow (v238: once the bridge is mended; no gold there now): break the ones holding a needed ore first.
   function quarry(need) {
-    const s = S(), want = { c: 'copper', i: 'iron', '%': 'gold' };
+    const s = S(), want = { c: 'copper', i: 'iron' };
+    if (!bridgeOpen(s)) return;   // v238: the bridge waits for the workroom
     const rocks = Object.entries(s.quarryRocks || {}).filter(([, r]) => need[want[r.t]]);
     if (!rocks.length) return;
     spend(TIME.travel * 2);

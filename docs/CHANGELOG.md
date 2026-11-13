@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v238: The Hollow feeds the farm
+- The quarry east of the mountain lake starts behind a broken bridge. The morning after the town hall's workroom is restored (its bundles, or bought from Ashgrove Trading Co. for 25,000g), a crew has mended it. Facing the gap says what will mend it.
+- Quarry rocks are stone, copper and iron only. Gold ore now comes from the Hollow's deep floors, the Sunken Cavern, the vent, the peak and the gold pan, so gold bars (the seed maker, gold-tier tools) come from going down.
+- Farms from before v238 keep the quarry open: their bridge starts mended.
+- New save data: whether the quarry bridge is mended (quarryBridge).
+
 ## v237: No debug tools on itch.io
 - On itch.io the menu has no Debug tools button and the ` key does nothing, so players cannot skip days or add gold by accident. Played anywhere else, the debug tools are unchanged.
 - The shipping bin again clears quality left behind for items you no longer carry each time you ship, as shipping everything did before v236; without it, newly picked-up items could count as a better quality than they were.
