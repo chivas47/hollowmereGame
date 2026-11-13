@@ -48,6 +48,9 @@ export const MIGRATIONS = [
     if (t && !SOLID.has(t)) return;
     s.x = to[0] * T + 8; s.y = to[1] * T + 12;
   } },
+  // v5 (v238, roadmap 82): the quarry now waits behind a broken bridge that the workroom mends. Every farm from
+  // before already had the quarry, so its bridge starts mended.
+  { v: 5, run(s) { s.quarryBridge = true; } },
 ];
 
 export const SAVE_VERSION = MIGRATIONS[MIGRATIONS.length - 1].v;
