@@ -143,6 +143,7 @@ const { BUNDLES, stillNeeds, bundleDone, donate, payVault } = await load('system
 const { HALL } = await load('data/family.js');
 const { festivalToday, festivalOpen, contestItems, enterContest, nextFestival, grangeItems, grangeKind, judgeGrange } = await load('systems/festivals.js');
 const { MINE, enterMine, leaveMine, checkpoints } = await load('systems/mine.js');
+const { slimes, hitMonster, damageOf } = await load('systems/monsters.js');   // roadmap 83c: gel for a pond ask
 const { skillLevel } = await load('systems/skills.js');
 const { bombs, throwBomb, openChest, crackGeode, GEODES } = await load('systems/treasure.js');
 const { buyGear, owns } = await load('systems/guild.js');
@@ -703,6 +704,20 @@ function simulate(runSeed) {
     return !Object.keys(need).length;
   }
 
+  // Roadmap 83c: what the pond's ask still lacks. Gel has no source but slimes, and the bot never fought, so a pond
+  // that asked for 20 gel stayed at 5 fish for good. Now it clears the Hollow's first floors, a hit a swing, until it
+  // has the gel (combat takes no energy; each swing costs a rock's time).
+  const pondShort = () => { const s = S(), a = s.pond?.ask || {}; return Object.fromEntries(Object.entries(a).map(([k, n]) => [k, n - (s.bag[k] || 0)]).filter(([, n]) => n > 0)); };
+  function slimeHunt() {
+    if (!pondShort().gel || late()) return;
+    spend(TIME.travel * 2);
+    for (let f = 1, guard = 0; pondShort().gel && !late() && guard < 40; guard++, f = f % 5 + 1) {
+      enterMine(f);
+      for (const m of [...slimes]) while (slimes.includes(m) && !late()) { hitMonster(m, damageOf()); spend(TIME.rock); }
+    }
+    leaveMine();
+  }
+
   // v37: a bomb from a chest goes where it breaks the most rocks; the bot stands at the ladder up meanwhile.
   function bombFloor() {
     const s = S(), kind = ['greatbomb', 'blastbomb', 'emberbomb'].find((k) => s.kit[k] > 0);
@@ -812,6 +827,7 @@ function simulate(runSeed) {
     s.quests.forEach((q) => { out[q.item] = (out[q.item] || 0) + q.n; });
     for (const [k, n] of Object.entries(GOAL[nextGoal()]?.needs?.() || {})) if (k in CROPS) out[k] = (out[k] || 0) + n;
     for (const k of GEODES) if (s.bag[k]) out[k] = s.bag[k];   // v46: kept for the smithy's morning trip
+    for (const [k, n] of Object.entries(s.pond?.ask || {})) out[k] = Math.max(out[k] || 0, n);   // roadmap 83c: kept for the pond
     if (s.bag.friedegg) out.friedegg = s.bag.friedegg;   // pan eggs are kept to eat, not shipped   // crops the next purchase needs (the helper hut's gleamfruit)
     const n = nextFestival();
     if (n && n.inDays <= 7 && n.f.kind === 'contest') {
@@ -869,6 +885,7 @@ function simulate(runSeed) {
     }
     plantCones();
     if (Object.keys(missingMats()).filter((k) => !['wood', 'fiber', 'cloth'].includes(k) && !(k in CROPS)).length && !late()) mine();   // saving up for something that needs ore: mine first (not for fiber, cloth or a crop)
+    if (s.built.pond === true) slimeHunt();   // roadmap 83c
     if (!late()) farm('farm', true);
     if (!late() && greenhouseBuilt()) farm('greenhouse', true);
     // v35: with a kitchen, eggs become pan eggs (50 energy each) eaten when energy runs low, for more fishing.
