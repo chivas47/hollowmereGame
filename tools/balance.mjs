@@ -782,6 +782,15 @@ function simulate(runSeed) {
   function restoreTrip() {
     const s = S(), goalNeeds = GOAL[nextGoal()]?.needs?.() || {};
     if (s.time >= HALL.close) return;
+    // Roadmap 83b: wood and stone a bundle asks for are bought from Bram when the gold is spare (as for the vault), since the
+    // next purchase keeps eating the wood the bot chops and the workroom, and with it the quarry bridge, never finished.
+    for (const key of Object.keys(BUNDLES)) {
+      if (bundleDone(key)) continue;
+      for (const [k, n] of Object.entries(stillNeeds(key))) {
+        const short = n - ((s.bag[k] || 0) - (goalNeeds[k] || 0)), cost = (MATERIAL_COST[k] || 0) * short;
+        if (short > 0 && cost && s.gold > cost * 4 + (GOAL[nextGoal()]?.cost?.() || 0) && goShop('carpenter')) track('materials', () => buyMaterial(k, short));
+      }
+    }
     const gifts = [];
     for (const key of Object.keys(BUNDLES)) {
       if (bundleDone(key)) continue;
