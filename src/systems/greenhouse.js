@@ -1,6 +1,7 @@
 // Greenhouse: ordered at Bram's workbench, built overnight north of the path.
 // Facing it on the farm walks you inside, to its own map where beds grow any crop in any season.
 import { G } from '../core/game.js';
+import { playCutscene } from './cutscene.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction } from '../core/registry.js';
 import { GREENHOUSE } from '../data/upgrades.js';
@@ -20,6 +21,7 @@ on('day:start', (report) => {
     G.S.built.greenhouse = true;
     report.built = report.built ? `${report.built} and greenhouse` : 'greenhouse';
     placeGreenhouse();
+    playCutscene('greenhouse');   // v244 (84e): Bram hands it over by the door
   }
 });
 

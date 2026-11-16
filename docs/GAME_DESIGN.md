@@ -126,13 +126,16 @@ Stardew counterparts by role: keg (wine 3 x fruit, juice 2.25 x vegetable), mayo
 
 ## Cutscenes (v240, roadmap 84)
 
-Short scenes played on the map for important moments (Stardew plays its events the same way; the scenes are ours). Bars slide in, the camera moves on its own, neighbours walk and speak, a title card can mark the moment, and the clock stops. Use or a tap shows the rest of a line, then goes on; holding Use or Esc, or a finger on the screen, for a second skips the rest (Nuno: always skippable, even the first time). Each plays once; a scene ends with you back where you stood. Saves from before a scene's moment never see it (Nuno: old saves mark what they passed as seen).
+Short scenes played on the map for important moments (Stardew plays its events the same way; the scenes are ours). Bars slide in, the camera moves on its own, neighbours walk and speak, a title card can mark the moment, and the clock stops. Use or a tap shows the rest of a line, then goes on; holding Use or Esc, or a finger on the screen, for a second skips the rest (Nuno: always skippable, even the first time). Each plays once; a scene ends with you back where you stood. Saves from before a scene's moment never see it (Nuno: old saves mark what they passed as seen; v244: a farm with farming XP has had its first harvest). Notices that come during a scene wait for its end (v244).
 
 | Scene | When | Where |
 |---|---|---|
 | The opening | A new farm, after the new game screen (v241; replaces v122's arrival pages) | The village's east road, then the farm; Bram. Ends at the farmhouse door, watched or skipped |
 | The wedding | The morning of the wedding, three days after the proposal (v242; not for a roommate) | The village square: Bram leads it, your spouse beside you, nine neighbours round the fountain (one who is your spouse stands with you instead) |
 | The old wing restored | The last room of the old wing is done (v243): bundles, or bought from Ashgrove (a shorter scene of their own) | The town hall; Aurel, Bram and neighbours, then the coach stop |
+| The first harvest | The first crop picked from soil, a pot or a giant crop (v244) | Wherever you stand; the narrator names the crop |
+| Floor 100 | The first time you reach floor 100 of the Hollow (v244) | The mine; Nell's chalk mark, the end of the old maps |
+| The greenhouse | The morning it is rebuilt (v244) | Its door, wherever it stands; Bram |
 | The bridge is mended | The morning after the workroom is restored (v240) | The mountain path; Bram |
 
 ## Controls

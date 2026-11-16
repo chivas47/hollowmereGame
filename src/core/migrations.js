@@ -51,6 +51,14 @@ export const MIGRATIONS = [
   // v5 (v238, roadmap 82): the quarry now waits behind a broken bridge that the workroom mends. Every farm from
   // before already had the quarry, so its bridge starts mended.
   { v: 5, run(s) { s.quarryBridge = true; } },
+  // v6 (v244, roadmap 84e): firsts already passed are not played: a farm with farming XP has harvested, and one with
+  // the greenhouse or past floor 100 has those behind it (those two play only as they happen anyway).
+  { v: 6, run(s) {
+    s.cutscenes ||= {};
+    if (s.skills?.farming > 0) s.cutscenes.harvest ||= s.day;
+    if (s.built?.greenhouse === true) s.cutscenes.greenhouse ||= s.day;
+    if ((s.mineDeepest || 0) >= 100) s.cutscenes.hollow100 ||= s.day;
+  } },
 ];
 
 export const SAVE_VERSION = MIGRATIONS[MIGRATIONS.length - 1].v;
