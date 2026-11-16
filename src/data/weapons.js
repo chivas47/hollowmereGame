@@ -83,6 +83,7 @@ export const RINGS = {
   blastring: { name: 'Blast ring',  sell: 1000, desc: 'Monsters you defeat burst, hurting monsters and breaking rocks around them.' },   // v37: napalm ring
   savagering: { name: 'Savage ring', sell: 1000, desc: 'After each monster you defeat, you move faster for 3 seconds.' },   // v230: Stardew's savage ring, the lodge's reward for 150 Hollow chargers
   bracering:  { name: 'Brace ring',  sell: 750,  desc: 'Your sword holds a block twice as long.' },   // v230: the lodge's reward for 60 vent chargers
+  umbriteband: { name: 'Umbrite band', sell: 1000, counts: ['emberring', 'glowring'], desc: 'Works as an ember ring and a glow ring at once.' },   // v251 (85b): Stardew's iridium band; counts: the rings it stands for
 };
 export const RING_ITEMS = Object.fromEntries(Object.entries(RINGS).map(([k, r]) => [k, { name: r.name, sell: r.sell, material: true, ring: true }]));
 

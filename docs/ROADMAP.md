@@ -287,8 +287,8 @@ Nuno asked for more creature variety, better drops, a glossary and more creature
 
 | Item | What | Kind | Status | Notes |
 |---|---|---|---|---|
-| 85a | Loot tables | feature | in progress (chivas47/hollowmereGame#267) | `data/loot.js`: 2 to 4 drops per kind instead of one; new materials chitin, leatherwing, bone shard, wisp silk, sunmote, gloommote at Stardew's bug meat, bat wing, bone fragment and essence prices. Nuno: all six. |
-| 85b | Loot sinks | feature | queued | Recipes that spend the new drops: bait, bone meal, a warp charm, two dishes, essences as a forge reroll, a ring. |
+| 85a | Loot tables | feature | done (chivas47/hollowmereGame#267) | `data/loot.js`: 2 to 4 drops per kind instead of one; new materials chitin, leatherwing, bone shard, wisp silk, sunmote, gloommote at Stardew's bug meat, bat wing, bone fragment and essence prices. Nuno: all six. |
+| 85b | Loot sinks | feature | in progress (chivas47/hollowmereGame#268) | Built as Stardew's own recipes now that we have its monster materials: bait and wild bait take chitin, the lightning rod leatherwing, the great bomb gold ore and both motes; bone meal (bone shards to soil boosters), the crawler steak (combat 1) and the umbrite band (combat 9). Serpents also drop sunmotes. The sketch's warp charm, forge reroll and wisp silk ring were dropped: no Stardew counterpart uses those materials that way; wisp silk waits for 85f. |
 | 85c | The Bestiary | feature | queued | A Creatures journal tab: seen/defeated, where, how it fights, drops revealed as found, goal progress. `S.bestiary` save field seeded from `S.slain`. |
 | 85d | Behaviours: mimic, burrow, swarm | feature | queued | With pebble crab, burrow mole, soot puffs, lava lurker, dust devil, ash swarm. |
 | 85e | Behaviours: shoot, split | feature | queued | Projectiles you dodge or block. With Hollow, sand and crag spitters, moss and ember slimes. |
@@ -296,7 +296,7 @@ Nuno asked for more creature variety, better drops, a glossary and more creature
 | 85g | Slaying goals for the new kinds | feature | queued | One goal per behaviour group, Stardew-sized counts, a ring, hat or weapon each. |
 | 85h | Busy floors | feature | queued | Stardew's infested floors: about 1 floor in 15 is a themed swarm; the ladder appears once cleared. |
 | 85i | Elites | feature | queued | Nuno: opt-in only. A challenge brazier at the Hollow (Stardew's Shrine of Challenge) makes the dungeons dangerous: elites with a glow, 3x health, sure essence, 5x rare roll. |
-| 85j | Seasonal creatures | feature | needs decision | Nuno: add them. One kind a season at night (bramble sprite, firefly moth, gourd lurker, frost wisp). Open: Wilds and wild farm only, or every farm. |
+| 85j | Seasonal creatures | feature | queued | Nuno: add them. One kind a season at night (bramble sprite, firefly moth, gourd lurker, frost wisp). Nuno (November 2026): in the Wilds and on every farm at night. |
 
 ## Done
 

@@ -145,7 +145,7 @@ glow layer). The Bestiary marks elites met.
 
 Nuno: add them. Stardew has no counterpart (only the wilderness farm's night monsters), so numbers scale from the
 Hollow's first floors and the wild farm's slimes. Proposal, one kind a season, at night (after 8 pm) in the
-Wilds and on the wild farm only, so other farms and the village stay safe:
+Wilds and on every farm (Nuno's answer):
 
 | Season | Creature | Behaviour | Loot |
 |---|---|---|---|
@@ -154,8 +154,4 @@ Wilds and on the wild farm only, so other farms and the village stay safe:
 | Autumn | **Gourd lurker** | mimic (a pumpkin) | chitin 30%, mixed seeds 10% |
 | Winter | **Frost wisp** | phase | wisp silk 10%, gloommote 5% |
 
-Each counts toward a seasonal slaying goal (85g) and has a Bestiary card. Needs Nuno's yes on where they live.
-
-## Open question for Nuno
-
-85j: seasonal creatures in the Wilds and on the wild farm only, or on every farm at night?
+Each counts toward a seasonal slaying goal (85g) and has a Bestiary card. Nuno (November 2026): in the Wilds and on every farm at night, not only the wild farm.

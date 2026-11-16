@@ -1,7 +1,7 @@
 // Cooking (v35). Dishes follow Stardew's by role: sell price, energy (health is 45% of it), buffs and their sources.
 // Our own names and our ingredients. from: 'start' (known from day 1), 'tv' (the cooking show, in this order),
 // 'npc:<id>:<hearts>' (a neighbour sends it), { tavern: price } (sold at the tavern; at the seed stall before v47),
-// or 'clinic' (bought ready-made at the clinic, never cooked).
+// or 'clinic' (bought ready-made at the clinic, never cooked); v251: 'skill:<skill>:<level>' (learnt the morning after reaching it).
 // buff: { skill levels farming/fishing/mining/foraging, speed, defense, luck, attack, maxEnergy }, mins: how long.
 // drink: a drink buff, kept apart from the food buff (Stardew keeps one of each).
 export const DISHES = {
@@ -28,6 +28,8 @@ export const DISHES = {
   fieldlunch: { name: 'Field lunch',        needs: { omelet: 1, turnip: 1 }, sell: 150, energy: 200, from: 'npc:bram:3', buff: { farming: 3 }, mins: 660 },   // farmer's lunch
   quarrysnack:{ name: 'Quarry snack',       needs: { carrot: 1, sugar: 1, cowmilk: 1 }, sell: 200, energy: 125, from: 'npc:bram:7', buff: { mining: 3 }, mins: 470 },   // miner's treat
   netstew:    { name: 'Net mender stew',    needs: { minnow: 2, hashbrown: 1 }, sell: 220, energy: 150, from: 'npc:odile:3', buff: { fishing: 3 }, mins: 470 },   // dish o' the sea
+  // v251 (85b). Stardew's bug steak: 10 bug meat, learnt at combat 1, sells 50g, 50 energy. Ours from chitin.
+  crawlersteak: { name: 'Crawler steak', needs: { chitin: 10 }, sell: 50, energy: 50, from: 'skill:combat:1' },
   wrapfish:   { name: 'Wrapped fish',       needs: { rudd: 1, bread: 1, mayo: 1 }, sell: 500, energy: 165, from: 'npc:odile:7', buff: { fishing: 2 }, mins: 470 },   // fish taco
   trailbun:   { name: 'Trail bun',          needs: { bread: 1, carrot: 1, squash: 1 }, sell: 180, energy: 125, from: 'npc:tavi:3', buff: { foraging: 3 }, mins: 470 },   // survival burger
   feast:      { name: "Wanderer's feast",   needs: { frostkale: 1, lingon: 1, broccoli: 1 }, sell: 220, energy: 160, from: 'npc:tavi:7', buff: { maxEnergy: 40, speed: 1 }, mins: 180 },   // super meal

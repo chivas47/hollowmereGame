@@ -104,7 +104,8 @@ const { DEBRIS } = await load('data/clearing.js');
 const { freeTile, grassTile } = await load('systems/clearing.js');
 const { cutWildWeed } = await load('systems/forage.js');
 const { WEATHER_ITEMS } = await load('data/weather.js');
-const { LOOT_ITEMS } = await load('data/loot.js');   // roadmap 85a: monster materials, an income line of their own
+const { LOOT_ITEMS, LOOT } = await load('data/loot.js');   // roadmap 85a: monster materials, an income line of their own
+const { MONSTERS } = await load('data/weapons.js');
 const { act } = await load('systems/interact.js');
 const { sleep } = await load('systems/days.js');
 const { placePlayer, tileAt, tileOf, soilOf, placeKey, parsePlaceKey } = await load('systems/world.js');
@@ -675,7 +676,7 @@ function simulate(runSeed) {
   }
 
   // Mines until the next purchase has its materials or energy runs out. Every rock gives stone.
-  const oreNeeds = () => { const n = missingMats(); delete n.wood; return n; };
+  const oreNeeds = () => { const n = missingMats(); delete n.wood; for (const k of Object.keys(LOOT_ITEMS)) delete n[k]; return n; };   // 85b: loot is hunted, not mined
   // v44: the quarry's rocks are nearer than the Hollow (v238: once the bridge is mended; no gold there now): break the ones holding a needed ore first.
   function quarry(need) {
     const s = S(), want = { c: 'copper', i: 'iron' };
@@ -712,11 +713,23 @@ function simulate(runSeed) {
   // that asked for 20 gel stayed at 5 fish for good. Now it clears the Hollow's first floors, a hit a swing, until it
   // has the gel (combat takes no energy; each swing costs a rock's time).
   const pondShort = () => { const s = S(), a = s.pond?.ask || {}; return Object.fromEntries(Object.entries(a).map(([k, n]) => [k, n - (s.bag[k] || 0)]).filter(([, n]) => n > 0)); };
+  // Roadmap 85b: monster loot the next goal needs (leatherwing for the lightning rod) comes the same way: the bot
+  // clears the shallowest Hollow floors where a kind that drops it lives (going down to them first, a travel's time a
+  // floor, as its mining trips do).
+  const lootNeeds = () => {
+    const m = missingMats(), out = Object.fromEntries(Object.entries(m).filter(([k]) => k in LOOT_ITEMS));
+    if (pondShort().gel) out.gel = pondShort().gel;
+    return out;
+  };
+  const lootFloors = (item) => Object.keys(MONSTERS).filter((k) => !MONSTERS[k].cavernOnly && !MONSTERS[k].ventOnly && (LOOT[k] || []).some(([it]) => it === item))
+    .map((k) => Math.max(1, MONSTERS[k].from));
   function slimeHunt() {
-    if (!pondShort().gel || late()) return;
-    spend(TIME.travel * 2);
-    for (let f = 1, guard = 0; pondShort().gel && !late() && guard < 40; guard++, f = f % 5 + 1) {
-      enterMine(f);
+    const item = Object.keys(lootNeeds())[0], fs = item && lootFloors(item);
+    if (!fs?.length || late()) return;
+    const lo = Math.min(...fs), deepest = S().mineDeepest || 0, span = Math.max(1, Math.min(5, deepest - lo + 1));
+    spend(TIME.travel * (2 + Math.max(0, lo - deepest)));
+    for (let i = 0; lootNeeds()[item] && !late() && i < 40; i++) {
+      enterMine(lo + (i % span));
       for (const m of [...slimes]) while (slimes.includes(m) && !late()) { hitMonster(m, damageOf()); spend(TIME.rock); }
     }
     leaveMine();
@@ -832,6 +845,7 @@ function simulate(runSeed) {
     for (const [k, n] of Object.entries(GOAL[nextGoal()]?.needs?.() || {})) if (k in CROPS) out[k] = (out[k] || 0) + n;
     for (const k of GEODES) if (s.bag[k]) out[k] = s.bag[k];   // v46: kept for the smithy's morning trip
     for (const [k, n] of Object.entries(s.pond?.ask || {})) out[k] = Math.max(out[k] || 0, n);   // roadmap 83c: kept for the pond
+    for (const [k, n] of Object.entries(GOAL[nextGoal()]?.needs?.() || {})) if (k in LOOT_ITEMS) out[k] = Math.max(out[k] || 0, n);   // 85b: kept for the goal
     if (s.bag.friedegg) out.friedegg = s.bag.friedegg;   // pan eggs are kept to eat, not shipped   // crops the next purchase needs (the helper hut's gleamfruit)
     const n = nextFestival();
     if (n && n.inDays <= 7 && n.f.kind === 'contest') {
@@ -888,8 +902,8 @@ function simulate(runSeed) {
       if (needFiber() && s.wildWeeds.length) { spend(TIME.travel); for (const w of [...s.wildWeeds]) { cutWildWeed(w.x, w.y); spend(TIME.tile); } }
     }
     plantCones();
-    if (Object.keys(missingMats()).filter((k) => !['wood', 'fiber', 'cloth'].includes(k) && !(k in CROPS)).length && !late()) mine();   // saving up for something that needs ore: mine first (not for fiber, cloth or a crop)
-    if (s.built.pond === true) slimeHunt();   // roadmap 83c
+    if (Object.keys(missingMats()).filter((k) => !['wood', 'fiber', 'cloth'].includes(k) && !(k in CROPS) && !(k in LOOT_ITEMS)).length && !late()) mine();   // saving up for something that needs ore: mine first (not for fiber, cloth or a crop)
+    slimeHunt();   // roadmap 83c: gel for the pond; 85b: monster loot for the next goal
     if (!late()) farm('farm', true);
     if (!late() && greenhouseBuilt()) farm('greenhouse', true);
     // v35: with a kitchen, eggs become pan eggs (50 energy each) eaten when energy runs low, for more fishing.

@@ -17,6 +17,8 @@ import { recalcStats } from './upgrades.js';
 import { addItem } from './quality.js';
 import { hearts } from './npcs.js';
 import { buff } from './buffs.js';
+import { skillLevel } from './skills.js';
+import { SKILLS } from '../data/skills.js';
 export { buff, luck, speedMult, attackMult } from './buffs.js';
 
 export const knows = (k) => G.S.recipes.includes(k);
@@ -78,6 +80,11 @@ on('day:start', (report) => {
   S.luck = Math.round((LUCK.min + Math.random() * (LUCK.max - LUCK.min)) * 1000) / 1000;
   report.luck = S.luck;
   for (const [k, d] of Object.entries(DISHES)) {   // neighbours' recipes
+    if (typeof d.from === 'string' && d.from.startsWith('skill:') && !knows(k)) {   // v251: learnt at a skill level (the crawler steak)
+      const [, sk, lv] = d.from.split(':');
+      if (skillLevel(sk) >= +lv) { S.recipes.push(k); (report.recipes ||= []).push(`${SKILLS[sk].name} ${lv}: ${d.name}`); }
+      continue;
+    }
     if (typeof d.from !== 'string' || !d.from.startsWith('npc:') || knows(k)) continue;
     const [, id, h] = d.from.split(':'), st = S.npcs[id];
     if (st && hearts(st) >= +h) { S.recipes.push(k); (report.recipes ||= []).push(`${NPCS.find((n) => n.id === id).name}: ${d.name}`); }

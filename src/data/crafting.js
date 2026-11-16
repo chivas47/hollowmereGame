@@ -100,8 +100,8 @@ export const RECIPES = {
   gate:       { cost: 0, needs: { wood: 10 },    desc: 'Opens and closes when you face it. Fits in a fence line.' },
   woodpath:   { cost: 0, needs: { wood: 5 },     makes: 5, desc: 'Five tiles of wooden path. Weeds and stones never grow on paths.' },
   stonepath:  { cost: 0, needs: { stone: 5 },    makes: 5, desc: 'Five tiles of stone path. Weeds and stones never grow on paths.' },
-  // Stardew: 1 iron bar, 1 refined quartz, 5 bat wings. Ours (stone and bars for what we lack): stone for the quartz, a copper bar for the wings.
-  lightningrod: { cost: 0, needs: { ironbar: 1, copperbar: 1, stone: 10 }, desc: 'Catches a lightning strike in a storm and keeps it as a storm cell (500g).' },
+  // Stardew: 1 iron bar, 1 refined quartz, 5 bat wings. Ours: stone for the quartz; v251 (85b): leatherwing for the wings (a copper bar before).
+  lightningrod: { cost: 0, needs: { ironbar: 1, leatherwing: 5, stone: 10 }, desc: 'Catches a lightning strike in a storm and keeps it as a storm cell (500g).' },
   // Stardew: furnace 20 copper ore + 25 stone; charcoal kiln 20 wood + 2 copper bars.
   furnace:    { cost: 0, needs: { copper: 20, stone: 25 }, desc: 'Smelts 5 ore and 1 coal into a bar while you wait.' },
   kiln:       { cost: 0, needs: { wood: 20, copperbar: 2 }, desc: 'Burns 10 wood into 1 coal while you wait.' },
@@ -131,20 +131,26 @@ export const RECIPES = {
   fiberseed:  { cost: 0, needs: { wood: 5, stone: 1 }, seeds: { mixed: 1 }, seed: true, desc: 'One packet of fiber seeds: grows anywhere outdoors in any season, without water, into 4 to 7 fiber in 7 days.' },
   homecharm:  { cost: 0, needs: { hardwood: 1, honey: 1, fiber: 20 }, desc: 'Use it from the kit anywhere to go straight home. Used up.' },
   // v37. Stardew's cherry bomb (4 copper ore, 1 coal, mining 1), bomb (4 iron ore, 1 coal, mining 6) and mega bomb
-  // (4 gold ore, solar and void essence, mining 8; an iron bar and gel stand in). skill: [skill, level] to learn it.
+  // (4 gold ore, solar and void essence, mining 8; v251 (85b): sunmote and gloommote, an iron bar and gel before). skill: [skill, level] to learn it.
   emberbomb:  { cost: 0, needs: { copper: 4, coal: 1 }, skill: ['mining', 1], desc: 'Throw it from the kit in the Hollow: after a moment it breaks every rock within 2 tiles and hurts monsters (and you) nearby.' },
   blastbomb:  { cost: 0, needs: { iron: 4, coal: 1 }, skill: ['mining', 6], desc: 'A bigger bomb: breaks rocks within 3 tiles.' },
-  greatbomb:  { cost: 0, needs: { ironbar: 1, coal: 2, gel: 10 }, skill: ['mining', 8], desc: 'The biggest bomb: breaks rocks within 4 tiles.' },
+  greatbomb:  { cost: 0, needs: { gold: 4, sunmote: 1, gloommote: 1 }, skill: ['mining', 8], desc: 'The biggest bomb: breaks rocks within 4 tiles.' },
   // v41: fishing. item: makes bag items, not kit objects. Stardew: bait 1 bug meat (5); wild bait 10 fiber, 5 slime,
   // 5 bug meat (5); spinner 2 iron bars; cork bobber 10 wood, 5 hardwood, 10 slime; trap bobber 1 copper bar, 10 sap;
-  // treasure hunter 2 gold bars; lead bobber (Willy's). Gel stands in for bug meat and sap.
-  bait:      { cost: 0, needs: { gel: 1 }, makes: 5, item: true, desc: 'Five bait. With the ashwood rod or better, fish bite in half the time.' },
-  wildbait:  { cost: 0, needs: { fiber: 10, gel: 5 }, makes: 5, item: true, desc: 'Five wild bait: sooner bites, and a quarter of catches come in pairs.' },
+  // treasure hunter 2 gold bars; lead bobber (Willy's). Gel stands in for sap; v251 (85b): chitin is the bug meat (gel before).
+  bait:      { cost: 0, needs: { chitin: 1 }, makes: 5, item: true, desc: 'Five bait. With the ashwood rod or better, fish bite in half the time.' },
+  wildbait:  { cost: 0, needs: { fiber: 10, gel: 5, chitin: 5 }, makes: 5, item: true, desc: 'Five wild bait: sooner bites, and a quarter of catches come in pairs.' },
   spinner:   { cost: 0, needs: { ironbar: 2 }, item: true, desc: 'Tackle for the ironwood rod: fish bite a quarter sooner. Lasts 20 catches.' },
   corkbob:   { cost: 0, needs: { wood: 10, hardwood: 5, gel: 10 }, item: true, desc: 'Tackle: a quarter bigger catch bar. Lasts 20 catches.' },
   trapbob:   { cost: 0, needs: { copperbar: 1, gel: 10 }, item: true, desc: 'Tackle: the meter drains a third slower. Lasts 20 catches.' },
   leadbob:   { cost: 0, needs: { ironbar: 1, stone: 10 }, item: true, desc: 'Tackle: your bar stops bouncing at the bottom. Lasts 20 catches.' },
   treasurer: { cost: 0, needs: { goldbar: 2 }, item: true, desc: 'Tackle: more treasure, and its meter never drains. Lasts 20 catches.' },
+  // v251 (85b). Stardew's bone mill grinds 5 bone fragments into 5 to 10 basic fertilizer; ours is a recipe at its low end.
+  // name: shown instead of the product's; out: the kit object it makes (a soil booster), not one of its own.
+  bonemeal:  { cost: 0, needs: { boneshard: 5 }, makes: 5, out: 'booster', name: 'Bone meal', desc: 'Grind 5 bone shards into 5 soil boosters.' },
+  // v251 (85b). Stardew's iridium band (5 iridium bars, 50 solar and 50 void essence, combat 9): a ring that is
+  // the ember ring and the glow ring in one (Stardew's: glow, magnet and ruby rings).
+  umbriteband: { cost: 0, needs: { umbritebar: 5, sunmote: 50, gloommote: 50 }, item: true, skill: ['combat', 9], desc: 'A ring that works as an ember ring and a glow ring at once: weapons hit 10% harder and the Hollow is brighter.' },
   // v42. Stardew's crab pot: 40 wood, 3 iron bars.
   crabpot:   { cost: 0, needs: { wood: 40, ironbar: 3 }, desc: 'Set it on the Wilds pond and bait it: each morning a crayfish, a snail, a winkle or some trash.' },
   // Stardew's recycling machine: 25 wood, 25 stone, 1 iron bar.

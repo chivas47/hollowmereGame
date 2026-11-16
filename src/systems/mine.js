@@ -15,6 +15,7 @@ import { has } from './professions.js';
 import { luck } from './buffs.js';
 import { GEODE_CHANCE, geodeFor } from '../data/guild.js';
 import { CAVERN, HOLLOW_GOLD } from '../data/cavern.js';
+import { RINGS } from '../data/weapons.js';
 import { VENT } from '../data/forge.js';
 import { tier } from '../data/upgrades.js';
 import { PEAK } from '../data/nuts.js';
@@ -191,7 +192,7 @@ addInteraction(66, ({ tx, ty, tile, item, mapId }) => {
 addLayer(95, (c) => {
   if (G.S.map !== 'mine') return;
   const px = (G.view || G.S).x, py = (G.view || G.S).y - 6;   // v139: around the farmer this view follows
-  const glow = G.S.rings?.includes('glowring') ? 1.4 : 1;   // v36: the glow ring
+  const glow = G.S.rings?.some((r) => r === 'glowring' || RINGS[r]?.counts?.includes('glowring')) ? 1.4 : 1;   // v36: the glow ring (v251: or the umbrite band)
   const grad = c.createRadialGradient(px, py, 18 * glow, px, py, 120 * glow);
   grad.addColorStop(0, 'rgba(6,5,10,0)');
   grad.addColorStop(1, 'rgba(6,5,10,.88)');

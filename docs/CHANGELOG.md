@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v251: Uses for monster loot
+- Recipes that had stand-ins for monster parts now take the real thing: bait is 1 chitin for 5 (was 1 gel), wild bait adds 5 chitin, the lightning rod takes 5 leatherwing instead of a copper bar, and the great bomb is 4 gold ore, a sunmote and a gloommote (was an iron bar, 2 coal and 10 gel).
+- Bone meal: grind 5 bone shards into 5 soil boosters at the crafting menu.
+- Crawler steak: 10 chitin, 50 energy. You learn it the morning after reaching combat level 1.
+- Umbrite band: a ring crafted at combat 9 from 5 umbrite bars, 50 sunmotes and 50 gloommotes. It counts as an ember ring and a glow ring at once.
+- Hollow serpents now also drop sunmotes (10%), so the Hollow has every mote.
+- New save data: none.
+
 ## v250: Loot tables
 - Every monster now drops from a table of its own: two or three things, each rolled on its own, instead of one item. Bats drop leatherwing, mites and beetles chitin, bone walkers bone shards, the deep and fiery kinds sunmotes and gloommotes, the sand wraith a rare wisp silk; most still drop the ore of their floors now and then.
 - Six new materials: chitin (8g), leatherwing (15g), bone shard (12g), wisp silk (40g), sunmote (40g) and gloommote (50g), at Stardew's prices for bug meat, bat wing, bone fragment and the essences. They sell from the bin and sit in the Bag's Materials tab. Their crafting and cooking uses come next (roadmap 85b).
