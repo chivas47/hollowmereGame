@@ -279,6 +279,7 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | 84g | Cutscenes: heart scenes (Esme, Rook, Pell) | feature | done (chivas47/hollowmereGame#262) | Their 12 scenes staged (data/scenes.js HEART_STAGES and HEART_STAGED). |
 | 84h | Cutscenes: heart scenes (Juno, Corvin) | feature | done (chivas47/hollowmereGame#263) | Their 8 scenes staged; then every heart scene plays out and the page can go. |
 | 84i | Cutscenes: wedding vows | feature | done (chivas47/hollowmereGame#264) | Nuno (November 2026): each of the eight candidates says their own vow at the wedding, drawn from their heart scenes, instead of one line for all. |
+| 77r | Polish: a finer ravine and bridge | polish | in progress | Nuno (November 2026): fix the bridge and cliff art, more detail, more finish. Redrawn in render/tiles.js (drawRavine, drawBridge, drawBrokenBridge); nothing else changes. |
 
 ## Done
 
