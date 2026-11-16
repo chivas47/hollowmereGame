@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v254: Lurkers, dust devils and ash swarms
+- Lava lurkers in the Ember Vent and Smoke Peak move under the floor as a glowing ripple, then come up out of the lava to bite. Hit them while they are up.
+- Dust devils whirl through the Sunken Cavern in packs of four or five; ash swarms do the same in the Ember Vent and Smoke Peak.
+- Each has its own drops and a Bestiary card. Lurkers drop cinder shards and sunmotes.
+- New save data: none.
+
 ## v253: Mimics, burrowers and swarms
 - Pebble crabs (Hollow floors 1 to 40) sit among the rocks looking like one. Step beside one or hit it to wake it; the first hit only cracks its shell.
 - Burrow moles (floors 8 to 35) move under the floor as a mound you cannot hit. When the mound shakes, the mole comes up for a moment: hit it before it digs down again.

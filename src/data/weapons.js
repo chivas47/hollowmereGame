@@ -78,6 +78,11 @@ Object.assign(MONSTERS, {
   crab:  { name: 'Pebble crab', from: 1, to: 40, move: 'mimic', hp: (f) => 6 + Math.floor(f / 3), dmg: (f) => 5 + Math.floor(f / 2), speed: () => 16, xp: 4, color: '#8a7a6a' },
   mole:  { name: 'Burrow mole', from: 8, to: 35, move: 'burrow', hp: (f) => 5 + Math.floor(f / 4), dmg: (f) => 6 + Math.floor(f / 2), speed: () => 34, xp: 5, color: '#6a5040' },
   puff:  { name: 'Soot puffs', from: 40, to: 80, move: 'swarm', pack: [4, 5], hp: (f) => 2 + Math.floor(f / 10), dmg: (f) => 4 + Math.floor(f / 5), speed: () => 42, xp: 3, color: '#3d3833' },
+  // v254 (85d2): the same three ways in the deep dungeons. Stats beside their dungeon's other kinds (the magma
+  // sprite and ember golem in the Vent, the sand wraith in the Cavern). Stardew: lava lurks, dust sprites deeper down.
+  lurker:    { name: 'Lava lurker', from: 0, ventOnly: true, move: 'burrow', hp: (f) => 40 + Math.floor(f / 4), dmg: (f) => 26 + Math.floor(f / 5), speed: () => 40, xp: 40, color: '#a8352a' },
+  dustdevil: { name: 'Dust devils', from: 0, cavernOnly: true, move: 'swarm', pack: [4, 5], hp: (f) => 8 + Math.floor(f / 10), dmg: (f) => 10 + Math.floor(f / 10), speed: () => 46, xp: 8, color: '#c9a36a' },
+  ashswarm:  { name: 'Ash swarm', from: 0, ventOnly: true, move: 'swarm', pack: [4, 5], hp: (f) => 12 + Math.floor(f / 10), dmg: (f) => 14 + Math.floor(f / 8), speed: () => 46, xp: 10, color: '#6a5a58' },
 });
 
 export const MONSTER_COUNT = (f) => Math.min(10, 2 + Math.floor(f / 2));

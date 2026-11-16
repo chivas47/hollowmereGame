@@ -718,6 +718,15 @@ Three new ways to fight (data/weapons.js MIMIC, BURROW; systems/monsters.js), St
 - Mimic: sits among the rocks looking like one (grey, still, harmless). Stepping within 20 px or hitting it wakes it; the first hit only cracks its shell (no damage), the rest land as usual. Stardew's rock crab wants the pickaxe; ours takes any hit.
 - Burrow: under the floor it is a mound that slides after you beneath the rocks, and nothing touches either way. Within 14 px, or after 4 s of chasing, the mound shakes for 0.5 s (the tell), then it is up for 1.6 s, hurting and hittable, then digs down for 2.5 s before it can rise again.
 - Swarm: a pack fills one of the floor's spawn slots, so a floor of puffs holds more bodies than usual. Quick (42 px/s) and weaving; a club or a sword's spin catches several.
+- v254 (85d2): the same three ways in the deep dungeons, with stats beside each dungeon's other kinds:
+
+  | Kind | Where | Way | Health | Damage | XP | Loot | Stardew counterpart |
+  |---|---|---|---|---|---|---|---|
+  | Lava lurker | Ember Vent, Smoke Peak | burrow (a lava ripple under the floor) | 40 + floor/4 | 26 + floor/5 | 40 | cinder 50%, sunmote 15% | lava lurk |
+  | Dust devils | Sunken Cavern | swarm, packs of 4 or 5 | 8 + floor/10 | 10 + floor/10 | 8 each | stone 30% (1-2), copper ore 10% | dust sprites, deeper |
+  | Ash swarm | Ember Vent, Smoke Peak | swarm, packs of 4 or 5 | 12 + floor/10 | 14 + floor/8 | 10 each | cinder 20%, sunmote 3% | dust sprites, deeper |
+
+  Dust devils and the ash swarm are the soot puff's shape in their own colours; the lava lurker has its own picture.
 
 ### The Bestiary (v252, roadmap 85c)
 

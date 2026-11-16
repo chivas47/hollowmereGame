@@ -102,3 +102,32 @@ test('soot puffs weave toward you', () => {
   tick(0.5);
   assert.ok(m.x < x0);
 });
+
+// Roadmap 85d2: the same three ways in the deep dungeons.
+test('the deep dungeons get a burrower and two swarms of their own', () => {
+  assert.equal(MONSTERS.lurker.move, 'burrow');
+  assert.ok(MONSTERS.lurker.ventOnly);
+  assert.equal(MONSTERS.dustdevil.move, 'swarm');
+  assert.ok(MONSTERS.dustdevil.cavernOnly);
+  assert.equal(MONSTERS.ashswarm.move, 'swarm');
+  assert.ok(MONSTERS.ashswarm.ventOnly);
+  assert.ok(SHEET.layers.includes('lurker.body') && SHEET.kinds.lurker);
+  for (const k of ['dustdevil', 'ashswarm']) assert.equal(SHEET.kinds[k].shape, 'puff', `${k} is drawn as a puff`);
+  freshFarm();
+  const kinds = (zone) => { const out = new Set(); for (let i = 1; i <= 9; i++) { enterMine(i, zone); slimes.forEach((m) => out.add(m.kind)); } return out; };
+  const cavern = kinds('cavern'), vent = kinds('vent');
+  assert.ok(cavern.has('dustdevil') && !cavern.has('lurker') && !cavern.has('ashswarm'));
+  assert.ok(vent.has('lurker') && vent.has('ashswarm') && !vent.has('dustdevil'));
+  const hollow = kinds('hollow');
+  for (const k of ['lurker', 'dustdevil', 'ashswarm']) assert.ok(!hollow.has(k), `no ${k} in the Hollow`);
+  leaveMine();
+});
+
+test('a lava lurker burrows like a mole', () => {
+  const m = one('lurker', 60), hp = m.hp;
+  hitMonster(m, 5);
+  assert.equal(m.hp, hp);
+  m.x = G.S.x + 4;
+  tick(BURROW.tell + 0.05);
+  assert.equal(m.bs, 'up');
+});
