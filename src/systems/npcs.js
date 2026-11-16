@@ -143,6 +143,11 @@ function travel(n, map, tile, step, dt) {
 }
 
 // v154: another neighbour standing still on this one's tile (so a walker does not stop on top of them).
+// v262: someone else pausing on n's tile (a pause at a stop on a round).
+function pausedWith(n) {
+  const t = tileOf(n.x, n.y);
+  return NPCRT.some((m) => m !== n && m.visible && m.wait > 0 && m.map === n.map && (({ tx, ty }) => tx === t.tx && ty === t.ty)(tileOf(m.x, m.y)));
+}
 function standingOn(n) {
   const t = tileOf(n.x, n.y);
   return NPCRT.some((m) => m !== n && m.visible && !m.moving && m.map === n.map && (({ tx, ty }) => tx === t.tx && ty === t.ty)(tileOf(m.x, m.y)));
@@ -173,9 +178,9 @@ addUpdater((dt) => {
     n.block = b;   // v145: for systems/chatter.js (a festival place's mood)
     if (n.snap) settle(n, t <= START ? null : b);
     if (n.goal !== keyOf(b)) Object.assign(n, { goal: keyOf(b), wi: 0, wait: 0 });
-    // v262: a pause at a stop on a round ends as soon as someone else stands on the same tile (two who reached it at
-    // the same moment both found it free and would otherwise pause on top of each other; the first one updated walks on).
-    if (n.wait > 0 && standingOn(n)) n.wait = 0;
+    // v262: two who reached a stop on their round at the same moment both found it free and paused on top of each
+    // other: the first one updated walks on. Only another pause counts, not someone passing through the tile.
+    if (n.wait > 0 && pausedWith(n)) n.wait = 0;
     if (n.wait > 0) { n.wait -= dt; n.moving = false; continue; }
     const h = homeOf(n), house = houseOf(n);
     if (!b) {   // home: indoors where there is an inside, else in at the door and out of sight
