@@ -287,7 +287,7 @@ Nuno asked for more creature variety, better drops, a glossary and more creature
 
 | Item | What | Kind | Status | Notes |
 |---|---|---|---|---|
-| 85a | Loot tables | feature | in progress (chivas47/hollowmereGame#267) | `data/loot.js`: 2 to 4 drops per kind instead of one; new materials chitin, leatherwing, bone shard, wisp silk, sunmote, gloommote at Stardew's bug meat, bat wing, bone fragment and essence prices. Nuno: all six. |
+| 85a | Loot tables | feature | done (chivas47/hollowmereGame#267) | `data/loot.js`: 2 to 4 drops per kind instead of one; new materials chitin, leatherwing, bone shard, wisp silk, sunmote, gloommote at Stardew's bug meat, bat wing, bone fragment and essence prices. Nuno: all six. |
 | 85b | Loot sinks | feature | queued | Recipes that spend the new drops: bait, bone meal, a warp charm, two dishes, essences as a forge reroll, a ring. |
 | 85c | The Bestiary | feature | queued | A Creatures journal tab: seen/defeated, where, how it fights, drops revealed as found, goal progress. `S.bestiary` save field seeded from `S.slain`. |
 | 85d | Behaviours: mimic, burrow, swarm | feature | queued | With pebble crab, burrow mole, soot puffs, lava lurker, dust devil, ash swarm. |
