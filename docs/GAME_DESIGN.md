@@ -728,6 +728,18 @@ Three new ways to fight (data/weapons.js MIMIC, BURROW; systems/monsters.js), St
 
   Dust devils and the ash swarm are the soot puff's shape in their own colours; the lava lurker has its own picture.
 
+### Spitters (v255, roadmap 85e1)
+
+Shooters (data/weapons.js SHOOT, systems/monsters.js shootTurn), Stardew's shooting mages and squid kids by role. A spitter keeps 48 to 96 px from you, backing off when you close in. Every 2.4 s it glows for 0.45 s (the tell), then spits a glob at you: 95 px/s, gone after 2 s or at the first wall or rock, hurting as the spitter's own damage. Step aside, or block with the sword: a blocked glob goes back the way it came and hits the first monster it reaches for three quarters of its damage.
+
+| Kind | Where | Health | Damage | XP | Loot |
+|---|---|---|---|---|---|
+| Hollow spitter | Hollow from floor 70 | 18 + floor/3 | 12 + floor/2 | 18 | sunmote 20%, gold ore 10% |
+| Sand spitter | Sunken Cavern | 26 + floor/4 | 16 + floor/5 | 26 | sunmote 25%, gold ore 15% |
+| Crag spitter | Ember Vent, Smoke Peak | 32 + floor/4 | 20 + floor/5 | 32 | sunmote 30%, gloommote 15% |
+
+One shape, tinted per kind; its mouth glows the colour of its globs. The roadmap sketch put the crag spitter on Smoke Peak alone; it lives in the Vent too, as every Vent kind does, rather than adding a peak-only flag.
+
 ### The Bestiary (v252, roadmap 85c)
 
 The journal's Creatures tab. A kind counts as met once it is on the map you are on, or falls. Each met kind has a card: its picture, where it lives, a line on how it fights (by the way it moves: hop, crawl, fly, walk, charge), how many you have defeated, its lodge goal's progress and reward, and its loot table, each item named once that kind has dropped it for you ("?" until then). Kinds not met show "???", and the tab's first line counts how many are left. Stardew has no bestiary; its monster eradication goals at the guild are the nearest thing, and the card shows those.

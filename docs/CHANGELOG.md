@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v255: Spitters
+- Spitters keep their distance and spit globs at you: the Hollow spitter from floor 70, the sand spitter in the Sunken Cavern and the crag spitter in the Ember Vent and Smoke Peak.
+- A spitter's mouth glows just before it spits. Step aside, or block with the sword to send the glob back at it.
+- Globs stop at walls and rocks, so a rock between you is cover.
+- Each has its own drops and a Bestiary card.
+- New save data: none.
+
 ## v254: Lurkers, dust devils and ash swarms
 - Lava lurkers in the Ember Vent and Smoke Peak move under the floor as a glowing ripple, then come up out of the lava to bite. Hit them while they are up.
 - Dust devils whirl through the Sunken Cavern in packs of four or five; ash swarms do the same in the Ember Vent and Smoke Peak.

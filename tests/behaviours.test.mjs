@@ -5,9 +5,11 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { G } from '../src/core/game.js';
 import { runUpdaters } from '../src/core/registry.js';
-import { MONSTERS, MIMIC, BURROW } from '../src/data/weapons.js';
+import { MONSTERS, MIMIC, BURROW, SHOOT } from '../src/data/weapons.js';
+import { MAPS, SOLID } from '../src/data/maps.js';
+import { T } from '../src/core/constants.js';
 import { MONSTERS as SHEET } from '../src/data/sprites.js';
-import { slimes, spawnSlimes, hitMonster, untouchable } from '../src/systems/monsters.js';
+import { slimes, spawnSlimes, hitMonster, untouchable, shots } from '../src/systems/monsters.js';
 import '../src/systems/bestiary.js';
 import { enterMine, leaveMine } from '../src/systems/mine.js';
 import { placePlayer } from '../src/systems/world.js';
@@ -130,4 +132,71 @@ test('a lava lurker burrows like a mole', () => {
   m.x = G.S.x + 4;
   tick(BURROW.tell + 0.05);
   assert.equal(m.bs, 'up');
+});
+
+// Roadmap 85e1: shooters.
+test('three spitters, one in each dungeon, drawn from one tinted shape', () => {
+  assert.equal(MONSTERS.spitter.move, 'shoot');
+  assert.ok(MONSTERS.spitter.from >= 70 && !MONSTERS.spitter.cavernOnly && !MONSTERS.spitter.ventOnly);
+  assert.ok(MONSTERS.sandspitter.cavernOnly);
+  assert.ok(MONSTERS.cragspitter.ventOnly);
+  for (const k of ['spitter', 'sandspitter', 'cragspitter']) {
+    assert.equal(SHEET.kinds[k].shape, 'spitter');
+    assert.equal(SHEET.kinds[k].glow, MONSTERS[k].glow, `${k}'s mouth is the colour of its globs`);
+  }
+  assert.ok(SHEET.layers.includes('spitter.glow'));
+});
+
+function spitter(gap) {
+  const m = one('spitter', gap);
+  shots.length = 0;
+  G.S.hp = G.S.maxHp = 1000; G.block = 0;
+  m.st = SHOOT.every;
+  return m;
+}
+
+test('a spitter backs off when you come close and keeps its distance', () => {
+  const m = spitter(20), x0 = m.x;
+  tick(0.3);
+  assert.ok(m.x > x0, 'it backs away');
+  const far = spitter(SHOOT.far + 4), x1 = far.x;
+  tick(0.3);
+  assert.ok(far.x < x1, 'and closes in from too far');
+});
+
+test('it glows, then spits a glob that hurts you', () => {
+  const m = spitter(70);
+  m.st = 0.01;
+  tick(0.05);
+  assert.equal(m.aim, true, 'the tell');
+  assert.equal(shots.length, 0);
+  tick(SHOOT.tell);
+  assert.equal(shots.length, 1);
+  assert.ok(shots[0].vx < 0, 'aimed at you');
+  tick(1);
+  assert.equal(shots.length, 0);
+  assert.ok(G.S.hp < 1000, 'it hit');
+});
+
+test('the sword\'s block sends a glob back into the spitter', () => {
+  const m = spitter(70), hp = m.hp;
+  m.st = 99;
+  shots.push({ x: G.S.x + 20, y: G.S.y - 6, vx: -SHOOT.speed, vy: 0, t: SHOOT.life, dmg: 10, color: '#fff', back: false });
+  G.block = 5;
+  tick(0.4);
+  G.block = 0;
+  assert.equal(G.S.hp, 1000, 'no harm through the block');
+  tick(1);
+  assert.ok(m.hp < hp, 'its own glob hit it');
+});
+
+test('a glob stops at a wall', () => {
+  freshFarm();
+  const g = MAPS.farm.grid;
+  let wall = null;
+  for (let y = 2; y < g.length - 2 && !wall; y++) for (let x = 2; x < g[0].length - 2; x++) if (SOLID.has(g[y][x]) && !SOLID.has(g[y][x - 1])) { wall = [x, y]; break; }
+  one('spitter', 300); shots.length = 0;
+  shots.push({ x: (wall[0] - 1) * T + 8, y: wall[1] * T + 8, vx: SHOOT.speed, vy: 0, t: SHOOT.life, dmg: 10, color: '#fff', back: false });
+  tick(0.3);
+  assert.equal(shots.length, 0);
 });

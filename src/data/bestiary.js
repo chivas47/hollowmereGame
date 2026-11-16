@@ -12,6 +12,7 @@ export const HOW = {
   mimic: 'Sits among the rocks looking like one. Step beside it or hit it to wake it; the first hit only cracks its shell.',
   burrow: 'Moves under the floor as a mound you cannot hit. When the mound shakes it comes up: hit it before it digs down again.',
   swarm: 'Comes in a pack, weak but quick. A club or a sword\'s spin catches several at once.',
+  shoot: 'Keeps its distance and spits a glob at you after a short glow. Step aside, or block with the sword to send it back.',
 };
 
 // Where a kind turns up, in words: the same rules as the spawns in systems/monsters.js.

@@ -113,7 +113,8 @@ export const MONSTERS = {
     'serpent.body', 'serpent.ink', 'slime.body', 'slime.ink',
     'beetle.body', 'beetle.ink', 'boar.body', 'boar.ink', 'ram.body', 'ram.glow', 'ram.ink', 'hound.body', 'hound.glow', 'hound.ink',
     'crab.body', 'crab.ink', 'crabrock.body', 'crabrock.ink', 'mole.body', 'mole.ink', 'puff.body', 'puff.ink',   // v253 (85d1)
-    'lurker.body', 'lurker.ink'],   // v254 (85d2)
+    'lurker.body', 'lurker.ink',   // v254 (85d2)
+    'spitter.body', 'spitter.glow', 'spitter.ink'],   // v255 (85e1)
   kinds: {
     mite: { shadow: [-5, 10, 0.35] }, bat: { shadow: [-3, 6, 0.25], bob: 6 }, skeleton: { shadow: [-4, 8, 0.35] },
     wraith: { shadow: [-4, 8, 0.35], sway: 3 }, rex: { shadow: [-4, 8, 0.25], bob: 5 },
@@ -128,6 +129,9 @@ export const MONSTERS = {
     crab: { shadow: [-6, 12, 0.35] }, crabrock: { shadow: [-6, 12, 0.35] }, mole: { shadow: [-6, 12, 0.35] }, puff: { shadow: [-2, 4, 0.25], bob: 7 },
     // v254 (85d2): the lava lurker up out of its pool; dust devils and the ash swarm are the soot puff's shape, tinted.
     lurker: { shadow: [-6, 12, 0.3] }, dustdevil: { shape: 'puff', shadow: [-2, 4, 0.25], bob: 7 }, ashswarm: { shape: 'puff', shadow: [-2, 4, 0.25], bob: 7 },
+    // v255 (85e1): the spitters, one shape tinted per kind; the glow (its mouth) is the colour of its globs.
+    spitter: { shape: 'spitter', shadow: [-6, 12, 0.35], glow: '#b07ae0' }, sandspitter: { shape: 'spitter', shadow: [-6, 12, 0.35], glow: '#e9c46a' },
+    cragspitter: { shape: 'spitter', shadow: [-6, 12, 0.35], glow: '#e9862a' },
   },
 };
 

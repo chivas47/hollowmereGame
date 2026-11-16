@@ -85,6 +85,17 @@ Object.assign(MONSTERS, {
   ashswarm:  { name: 'Ash swarm', from: 0, ventOnly: true, move: 'swarm', pack: [4, 5], hp: (f) => 12 + Math.floor(f / 10), dmg: (f) => 14 + Math.floor(f / 8), speed: () => 46, xp: 10, color: '#6a5a58' },
 });
 
+// v255 (roadmap 85e1): shooters (Stardew's shooting mages and squid kids). A shooter keeps between SHOOT.near and
+// SHOOT.far px from you; every SHOOT.every s it glows for SHOOT.tell s (the tell), then spits a glob at you at
+// SHOOT.speed px/s that lasts SHOOT.life s and stops at walls and rocks. A glob hurts as the shooter's own damage. The
+// sword's block sends it back, and a glob sent back hits monsters for SHOOT.back times its damage. glow: the glob's colour.
+export const SHOOT = { near: 48, far: 96, every: 2.4, tell: 0.45, speed: 95, life: 2, hit: 7, back: 0.75 };
+Object.assign(MONSTERS, {
+  spitter:     { name: 'Hollow spitter', from: 70, move: 'shoot', hp: (f) => 18 + Math.floor(f / 3), dmg: (f) => 12 + Math.floor(f / 2), speed: () => 20, xp: 18, color: '#5a4a6a', glow: '#b07ae0' },
+  sandspitter: { name: 'Sand spitter', from: 0, cavernOnly: true, move: 'shoot', hp: (f) => 26 + Math.floor(f / 4), dmg: (f) => 16 + Math.floor(f / 5), speed: () => 22, xp: 26, color: '#b08a5a', glow: '#e9c46a' },
+  cragspitter: { name: 'Crag spitter', from: 0, ventOnly: true, move: 'shoot', hp: (f) => 32 + Math.floor(f / 4), dmg: (f) => 20 + Math.floor(f / 5), speed: () => 22, xp: 32, color: '#4a3a36', glow: '#e9862a' },
+});
+
 export const MONSTER_COUNT = (f) => Math.min(10, 2 + Math.floor(f / 2));
 // Each kill: a small chance of a weapon or ring from the floor's pool (Stardew: monsters rarely drop rings and weapons).
 export const RARE_DROP = 0.01;

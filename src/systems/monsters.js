@@ -5,16 +5,16 @@ import { G } from '../core/game.js';
 import { T, DIRS } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
-import { MAPS, sizeOf } from '../data/maps.js';
+import { MAPS, SOLID, sizeOf } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
-import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS, CHARGE, MIMIC, BURROW } from '../data/weapons.js';
+import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS, CHARGE, MIMIC, BURROW, SHOOT } from '../data/weapons.js';
 import { SAVAGE } from '../data/guild.js';
 import { CAVERN } from '../data/cavern.js';
 import { VENT } from '../data/forge.js';
 import { PEAK } from '../data/nuts.js';
 import { ITEMS } from '../data/items.js';
 import { rollLoot } from '../data/loot.js';
-import { drawSlime, drawMonster, drawDazed, drawMound } from '../render/sprites.js';
+import { drawSlime, drawMonster, drawDazed, drawMound, drawShot } from '../render/sprites.js';
 import { moveBox, occupied, mover } from './world.js';
 import { hurtPlayer, hurtPartner } from './health.js';
 import { has } from './professions.js';
@@ -37,6 +37,7 @@ function make(kind, floor, px, py, R) {
     hp: d.hp(floor), dmg: d.dmg(floor), speed: d.speed(floor), color: d.color || SLIME.colors[floor > 10 ? 2 : floor > 5 ? 1 : 0] };
   if (d.move === 'mimic') m.hidden = true;                          // v253: a rock until woken
   if (d.move === 'burrow') { m.bs = 'under'; m.bt = BURROW.under; }  // v253: under the floor
+  if (d.move === 'shoot') m.st = SHOOT.every * (0.5 + R() * 0.5);    // v255: staggered first shots
   return m;
 }
 
@@ -128,6 +129,51 @@ function underStep(m, vx, vy, dist) {
   if (nx > T + 8 && nx < (s.w - 1) * T - 8) m.x = nx;
   if (ny > T + 8 && ny < (s.h - 1) * T - 4) m.y = ny;
 }
+// v255 (roadmap 85e1): a shooter's turn (data/weapons.js SHOOT). Within reach it keeps its distance, backing off
+// when you come close; m.st counts down to the next shot, m.aim marks the glow before it (the tell). Returns the way
+// to move, or null to wander as usual.
+export const shots = [];   // globs in flight: {x, y, vx, vy, t, dmg, color, back}
+function shootTurn(m, d, dx, dy, dt, f) {
+  if (d >= AGGRO) return null;
+  m.face = dx < 0;
+  m.st -= dt;
+  if (m.aim) {
+    if (m.st <= 0) {
+      const ox = f.x - m.x, oy = f.y - 6 - (m.y - 8), od = Math.hypot(ox, oy) || 1;
+      shots.push({ x: m.x, y: m.y - 8, vx: (ox / od) * SHOOT.speed, vy: (oy / od) * SHOOT.speed, t: SHOOT.life, dmg: m.dmg, color: MONSTERS[m.kind].glow || '#e9862a', back: false });
+      m.aim = false; m.st = SHOOT.every;
+      emit('monster:spit', { x: m.x, y: m.y });
+    }
+    return [0, 0];
+  }
+  if (m.st <= 0) { m.aim = true; m.st = SHOOT.tell; return [0, 0]; }
+  if (d < SHOOT.near) return [-dx / d, -dy / d];
+  if (d > SHOOT.far) return [dx / d, dy / d];
+  return [0, 0];
+}
+// Globs fly straight, stop at walls and rocks, hurt the farmer they reach, or go back the way they came off a block.
+addUpdater((dt) => {
+  if (!shots.length) return;
+  const g = MAPS[slimeMap]?.grid, farmers = here();
+  for (const s of [...shots]) {
+    s.x += s.vx * dt; s.y += s.vy * dt; s.t -= dt;
+    const tile = g?.[Math.floor(s.y / T)]?.[Math.floor(s.x / T)];
+    if (s.t <= 0 || !tile || SOLID.has(tile)) { shots.splice(shots.indexOf(s), 1); continue; }
+    if (s.back) {
+      const m = slimes.find((o) => Math.hypot(o.x - s.x, o.y - 6 - s.y) < SHOOT.hit + 2 && !untouchable(o));
+      if (m) { shots.splice(shots.indexOf(s), 1); hitMonster(m, s.dmg * SHOOT.back, Math.sign(s.vx) * 60, Math.sign(s.vy) * 60); }
+      continue;
+    }
+    const f = farmers.find((o) => Math.hypot(o.x - s.x, o.y - 6 - s.y) < SHOOT.hit);
+    if (!f) continue;
+    if ((f === G.S ? G.block : f.block) > 0) {   // the sword's block sends it back
+      s.vx = -s.vx; s.vy = -s.vy; s.back = true; s.t = SHOOT.life;
+      emit('player:blocked', { x: s.x, y: s.y, who: f === G.S ? 'you' : 'p2' });
+    } else { shots.splice(shots.indexOf(s), 1); (f === G.P2 ? hurtPartner : hurtPlayer)(s.dmg, s.x, s.y); }
+  }
+});
+for (const ev of ['mine:floor', 'map:changed', 'day:start']) on(ev, () => { shots.length = 0; });
+
 // v253: whether a monster is out of reach for now: a mimic still asleep is not, a burrower under the floor is.
 export const untouchable = (m) => m.bs === 'under' || m.bs === 'rise';
 // v253: brings a burrower up at once (the balance bot, which does not wait out the clock, and tests).
@@ -161,6 +207,7 @@ addUpdater((dt) => {
     if (move === 'burrow') { /* up: it stands its ground */ }
     else if (move === 'charge' && chargeTurn(m, d, dx, dy, dt)) { /* v228: the charger moved itself */ }
     else if (move === 'hop') { if (active) step(m, vx, vy, m.speed * 1.6 * dt); }
+    else if (move === 'shoot') { const v = shootTurn(m, d, dx, dy, dt, f); if (v) step(m, v[0], v[1], m.speed * dt); else step(m, vx, vy, m.speed * dt); }   // v255
     else if (move === 'swarm') step(m, vx + Math.sin(m.hop * 7) * 0.8, vy + Math.cos(m.hop * 6) * 0.8, m.speed * dt);   // v253: weaving
     else step(m, vx + (move === 'fly' ? Math.sin(m.hop * 5) * 0.6 : 0), vy + (move === 'fly' ? Math.cos(m.hop * 4) * 0.6 : 0), m.speed * dt);
     if (m.kx || m.ky) {
@@ -293,8 +340,8 @@ addEntities(() => (G.S.map !== slimeMap ? [] : slimes.map((m) => ({
     : m.cs ? drawCharger(c, m)
     : m.hidden ? drawMonster(c, m.x, m.y, 'crabrock', ROCK_GREY, false, 0)   // v253: a mimic asleep looks like a rock
     : m.bs && m.bs !== 'up' ? drawMound(c, m.x + (m.bs === 'rise' ? (Math.floor(m.bt * 30) % 2 ? 1 : -1) : 0), m.y, m.hop, m.kind === 'lurker' ? 'lava' : 'earth')   // v253: a burrower's mound (shaking: the tell); v254: a lava ripple
-    : drawMonster(c, m.x, m.y, m.kind, m.color, m.hurt > 0, m.hop, !!m.face)),
-}))));
+    : drawMonster(c, m.x, m.y, m.kind, m.color, m.hurt > 0 || (m.aim && Math.floor(m.st * 14) % 2 === 0), m.hop, !!m.face)),   // v255: a spitter flashes before it spits
+})).concat(shots.map((s) => ({ y: s.y + 8, draw: (c) => drawShot(c, s.x, s.y, s.color) })))));
 const ROCK_GREY = '#8a8580';   // the colour of the Hollow's plain rocks
 
 // v228: a charger mid-turn. Winding up it flashes and shakes (the tell); rushing it runs fast; winded or dazed it
@@ -308,6 +355,7 @@ function drawCharger(c, m) {
 // v253: a mimic waking or cracked, a burrower coming up or going down: a puff of grit.
 for (const ev of ['monster:wake', 'monster:crack', 'monster:surface']) on(ev, ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 3, IMPACT.stone, 6, { speed: 35, up: 25, size: 1, life: 0.35, shrink: true }); });
 on('monster:crack', () => emit('sfx', 'pick'));
+on('monster:spit', ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 8, IMPACT.stone, 3, { speed: 20, up: 10, size: 1, life: 0.25, shrink: true }); });
 // v228: a charger setting off kicks up dust; one that runs into a wall shakes the ground.
 on('monster:charge', ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 2, IMPACT.stone, 5, { speed: 30, up: 15, size: 1, life: 0.35, shrink: true }); });
 on('monster:bump', ({ x, y }) => { if (G.S.map !== slimeMap) return; burst(x, y - 4, IMPACT.stone, 10, { speed: 60, up: 35, size: 2, life: 0.45, shrink: true }); shake(1.5, 0.12); emit('sfx', 'pick'); });
