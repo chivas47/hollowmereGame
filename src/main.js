@@ -72,6 +72,7 @@ import './systems/forge.js';
 import './systems/books.js';
 import './systems/pots.js';
 import './systems/areas.js';
+import './systems/cutscene.js';   // v240 (roadmap 84a): cutscenes
 import './systems/quarry.js';
 import './systems/hidden.js';
 import './systems/stalls.js';   // v165: the Saturday stalls
@@ -142,6 +143,7 @@ import './ui/controls.js';   // v119: changing keys
 import './ui/offline.js';   // v121: install and play offline
 import './ui/itchNotice.js';   // v233: on itch.io, saves live in this browser
 import './ui/arrival.js';   // v122: the arrival scene
+import './ui/cutscene.js';   // v240: cutscenes' bars, lines, titles and fades
 import './ui/motion.js';   // v125: motion settings
 import './ui/gamepad.js';   // v126: controller support
 import './ui/slots.js';   // v127: save slots

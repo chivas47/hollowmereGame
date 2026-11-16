@@ -124,6 +124,14 @@ Upgrades, buildings and recipes that took ore now take bars, at Stardew's 5 ore 
 
 Stardew counterparts by role: keg (wine 3 x fruit, juice 2.25 x vegetable), mayonnaise machine, loom, oil maker, bee house, tapper, crystalarium, dehydrator, mushroom log and fish smoker. Ratios and night counts follow them; recipes swap hardwood and refined materials for wood, stone and bars at a similar effort. Gems: Hollow quartz 25g (2% of rocks), violet stone 100g (0.7%), Stardew's quartz and amethyst scale.
 
+## Cutscenes (v240, roadmap 84)
+
+Short scenes played on the map for important moments (Stardew plays its events the same way; the scenes are ours). Bars slide in, the camera moves on its own, neighbours walk and speak, a title card can mark the moment, and the clock stops. Use or a tap shows the rest of a line, then goes on; holding Use or Esc, or a finger on the screen, for a second skips the rest (Nuno: always skippable, even the first time). Each plays once; a scene ends with you back where you stood. Saves from before a scene's moment never see it (Nuno: old saves mark what they passed as seen).
+
+| Scene | When | Where |
+|---|---|---|
+| The bridge is mended | The morning after the workroom is restored (v240) | The mountain path; Bram |
+
 ## Controls
 
 - v129: with a second controller, press A on it to bring in a second farmer (their own look) on the same screen. They walk with the stick, go where you go when you change map, and leave with B or when their controller disconnects. Dialogs and the menu stay the first player's.

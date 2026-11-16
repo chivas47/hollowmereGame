@@ -139,7 +139,8 @@ function drawWorld(c) {
   c.drawImage(background(), 0, 0);
   drawLayers(c, 0, 49);
   const f = facingOf(G.view || G.S), t = tileAt(f.tx, f.ty);
-  if (t && !['T', 'X', 'w', 'I', '.'].includes(t)) { c.strokeStyle = 'rgba(255,246,214,.6)'; c.lineWidth = 1; c.strokeRect(f.tx * T + 0.5, f.ty * T + 0.5, T - 1, T - 1); }
+  if (t && !G.cut && !['T', 'X', 'w', 'I', '.'].includes(t))   // v240: no facing outline in a cutscene
+    { c.strokeStyle = 'rgba(255,246,214,.6)'; c.lineWidth = 1; c.strokeRect(f.tx * T + 0.5, f.ty * T + 0.5, T - 1, T - 1); }
   collectEntities().sort((a, b) => a.y - b.y).forEach((e) => e.draw(c));
   drawLayers(c, 50, 999);
   if (MAPS[G.S.map].base !== 'cave' && MAPS[G.S.map].base !== 'house') tint(c);

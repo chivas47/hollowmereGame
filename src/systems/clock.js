@@ -7,6 +7,7 @@ import { addUpdater } from '../core/registry.js';
 import { sleep } from './days.js';
 
 addUpdater((dt) => {
+  if (G.cut) return;   // v240: time stands still in a cutscene
   G.clockAcc += dt;
   if (G.clockAcc < TICK) return;
   G.clockAcc -= TICK;

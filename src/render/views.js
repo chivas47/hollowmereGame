@@ -17,14 +17,15 @@ export function camera(x, view, world) {
 }
 
 function viewOf(who, farmer, x0, w) {
-  const s = sizeOf(farmer.map || G.S.map), cam = camera(farmer.x, w, s.w * T), camY = camera(farmer.y, SCREEN_H, s.h * T);
+  const at = (who === 'you' && G.cut?.cam) || farmer;   // v240: a cutscene holds the camera (systems/cutscene.js)
+  const s = sizeOf(farmer.map || G.S.map), cam = camera(at.x, w, s.w * T), camY = camera(at.y, SCREEN_H, s.h * T);
   return { who, farmer, x0, w, h: SCREEN_H, cam, camY };
 }
 
 // The views on screen: { who: 'you' | 'p2', farmer, x0 (left edge on screen), w, h, cam and camY (the world point
 // at the view's top left) }.
 export function views() {
-  if (!G.P2) return [viewOf('you', G.S, 0, SCREEN_W)];
+  if (!G.P2 || G.cut) return [viewOf('you', G.S, 0, SCREEN_W)];   // v240: a cutscene fills the screen
   const w = SCREEN_W / 2;
   return [viewOf('you', G.S, 0, w), viewOf('p2', G.P2, w, w)];
 }

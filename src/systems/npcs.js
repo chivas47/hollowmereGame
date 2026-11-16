@@ -346,7 +346,7 @@ export const lookOf = (def) => ({ ...def.pal, ...(OUTFITS[def.id]?.[today().seas
 // v115: neighbours standing still blink, each on their own beat (from their place in the list, so nothing is saved).
 const blinks = (n, i) => !n.moving && (performance.now() / 1000 + i * 1.37) % (MOTION.blink[0] + (i % 5) * 0.6) < MOTION.blinkFor;
 
-addEntities(() => NPCRT.filter((n) => n.visible && n.map === G.S.map).map((n) => ({
+addEntities(() => NPCRT.filter((n) => n.visible && n.map === G.S.map && !G.cut?.actors[n.id]).map((n) => ({   // v240: not while they act in a cutscene
   y: n.y,
   draw: (c) => {
     const look = lookOf(n.def), e = emoteOf(n.id), g = gestureOffset(e), x = n.x + g.x, y = n.y + g.y;

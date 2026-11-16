@@ -42,6 +42,7 @@ export const runAction = (a) => PRESS[a]?.();
 
 // What Esc does: close a dialog, then the menu, stop placing a building, else open the menu (also the pad's B).
 export function escape() {
+  if (G.cut) return;   // v240: Esc held skips a cutscene (below); a tap does nothing
   if (dialogOf('you')) closeModal();   // v141: farmer two's dialog is theirs to close (B)
   else if (menuOpen()) closeMenu();
   else if (G.siting) cancelSiting();
@@ -54,6 +55,11 @@ const theirs = (e) => !!document.getElementById('modal2')?.contains(e.target);
 export function initInput(canvas) {
   for (const ev of ['keydown', 'keyup']) addEventListener(ev, (e) => { if (theirs(e) && ['Space', 'Enter'].includes(e.code)) e.preventDefault(); }, true);
   addEventListener('keydown', (e) => {
+    if (G.cut && !G.paused) {   // v240: in a cutscene only Use (on, or held to skip) and Esc (held to skip) count
+      if (e.code === 'Escape') G.skipHeld = true;
+      else if (actionOf(e.code) === 'use') { e.preventDefault(); G.useHeld = true; if (!e.repeat) act(); }
+      return;
+    }
     if (e.code === 'Escape') { escape(); return; }
     if (dialogOf('you') || menuOpen()) return;   // v141: farmer two's dialog leaves your keys to you
     if (e.code === 'Backquote') { toggleDebug(); return; }
@@ -72,11 +78,12 @@ export function initInput(canvas) {
     if (!e.repeat) runAction(a);
   });
   addEventListener('keyup', (e) => {
+    if (e.code === 'Escape') G.skipHeld = false;
     const a = actionOf(e.code);
     if (MOVES.includes(a)) G.keys[a] = false;
     if (a === 'use') G.useHeld = false;
   });
-  addEventListener('blur', () => { G.keys = {}; G.useHeld = false; });
+  addEventListener('blur', () => { G.keys = {}; G.useHeld = false; G.skipHeld = false; });
 
   $$('[data-dir]').forEach((b) => {
     const d = b.dataset.dir;

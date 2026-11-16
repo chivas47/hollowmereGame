@@ -50,6 +50,7 @@ src/
     market.js         CART, BOOKSELLER, MACHINE, PRIZES, MYSTERY, the ticket and box items (v69)
     storage.js        CHEST_ROOM, SIGN_LENGTH, WORLD (the journal's map grid), WORLD_PARENT (v71)
     journal.js        v114: STORY (the main line: each step's name, hint and map), LANDMARKS per world map place, PIN_MAX, PIN_LENGTH, LOG_MAX
+    cutscenes.js      v240: CUTSCENE (skip hold, typing and walk speeds), CUTSCENES (each scene: where it plays, its steps)
     firstweek.js      v122: ARRIVAL (the opening scene's pages), FIRST_WEEK (a goal a day: name, hint, map, done(S))
     reckoning.js      v128: RECKONING (day, the gem to ask again, the reward, lamp thresholds, porch spots), RECKON_POINTS (Stardew's 21), RECKON_LINES
     partner.js        v129: PARTNER (the second farmer's name, speed, look, where they stand beside you); v130: what only you can do (yours)
@@ -179,6 +180,7 @@ src/
     stalls.js         Saturday stalls on the town green (stallsOpen, sellerOf weekly rotation, buyStall at twice sell; raises ʂ once funded) (v165)
     traditions.js     the wishing stone (solid Ӂ in the village at load, bless() sets G.S.blessing, read by buffs.js) and the Lantern Float on the beach (setLantern(), floatLights() for nightlights.js; npcs.js walks neighbours there) (v110, G.S.traditions)
     signs.js          signposts and notices outdoors: solid Ş tiles set on open ground at load, Use reads them (v107)
+    cutscene.js       v240: plays a scene (G.cut): playCutscene(id, { replay, then }), advance(), finish(), seen(id); stops the clock, you and farmer two, holds the camera (render/views.js), draws its actors; G.S.cutscenes[id] = the day seen
     shortcuts.js      fallen trunks across shortcuts, cut with the copper axe; then trunk tiles turn to path and the maps get exits (v106, G.S.shortcuts)
     nightlights.js    outdoorLights(): lit windows (v151: a cottage only while homeNow(owner), ownerOf()), lamp posts and lanterns after dusk (renderer.js cuts them out of the dark); lit glass and lamp posts (v105, drawn only)
     falling.js        seasonal motion: petals, fluff, leaves, snow clumps from tree crowns, drifting with wind.js (v104, drawn only)
@@ -223,6 +225,7 @@ src/
     museum.js         the museum's donations (ui:museum) and the journal (J, ui:journal): collections, notes, achievements, completion (v68); addJournalTab(key, label, render, front), redrawJournal() (v114)
     journal.js        v114: the journal's first tabs: Quests (main, optional, completed, Track), Story (steps, the story so far, discoveries), Map (found places, landmarks, markers, pins), People
     arrival.js        v122: the arrival scene, once, after the new game screen
+    cutscene.js       v240: a cutscene's bars, fade, title card, spoken line and skip hint over the field; a tap goes on, a finger held skips
     storage.js        chest, sign, farm computer and lost and found dialogs (ui:chest, ui:sign, ui:computer, ui:lostfound); journal tabs calendar and animals via addJournalTab() in ui/museum.js (v71; quests and map moved to ui/journal.js in v114); the chest as two icon grids, click or drag to move (v113)
     shipbin.js        the shipping bin's picker (ui:bin): a count per stack, Ship selected, Ship all, Take back (v236)
     inventory.js      the Bag (I, ui:inventory): tabs Items, Gear, Skills, Wardrobe, Tools and seeds, Fish log; the Items grid or list, search, kinds, sort, pins, detail, compare (v113)
@@ -383,6 +386,8 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 
 | Event | Payload | Emitted by | Typical listener |
 |---|---|---|---|
+| `cutscene:start` / `cutscene:end` | scene id | systems/cutscene.js | ui/cutscene.js; tools/balance.mjs ends each at once |
+| `cutscene:frame` | none | systems/cutscene.js, every frame of a scene | ui/cutscene.js |
 | `state:changed` | none | everywhere via `changed()` | HUD, hotbar |
 | `toast` | message | `notify()` | ui/toast.js (v133: held on a new farm until the arrival scene is done; v176: in two-player, over the half of whoever caused it, #toast or #toast2; v193: inside the top of that farmer's open dialog card) |
 | `hud:prefs` | none | ui/hudPrefs.js (v120: also text size and contrast) | ui/goal.js, ui/prompt.js (v112) |

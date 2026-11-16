@@ -26,6 +26,7 @@ const SIDE = { left: 'down', right: 'down', up: 'left', down: 'right' };   // th
 
 addUpdater((dt) => {
   rest(dt);
+  if (G.cut) return;   // v240: a cutscene moves you (systems/cutscene.js)
   if (G.lock || rooted()) { G.moving = false; M.ease = 0; return; }   // v74: tool wind-ups hold you in place
   const S = G.S, k = G.keys;
   const dx = (k.right ? 1 : 0) - (k.left ? 1 : 0);

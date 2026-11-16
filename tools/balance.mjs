@@ -82,6 +82,9 @@ for (const s of SYSTEMS) await load(`systems/${s}.js`);
 const { G } = await load('core/game.js');
 const { emit } = await load('core/events.js');
 const { runUpdaters } = await load('core/registry.js');
+// v240: the bot watches no cutscenes: each ends as it starts (in one, Use only moves the scene on).
+const { finish: endCutscene } = await load('systems/cutscene.js');
+(await load('core/events.js')).on('cutscene:start', () => endCutscene());
 const { newState } = await load('core/state.js');
 const { dateParts, today } = await load('core/time.js');
 const { DIRS } = await load('core/constants.js');
