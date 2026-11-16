@@ -131,6 +131,7 @@ Short scenes played on the map for important moments (Stardew plays its events t
 | Scene | When | Where |
 |---|---|---|
 | The opening | A new farm, after the new game screen (v241; replaces v122's arrival pages) | The village's east road, then the farm; Bram. Ends at the farmhouse door, watched or skipped |
+| The wedding | The morning of the wedding, three days after the proposal (v242; not for a roommate) | The village square: Bram leads it, your spouse beside you, nine neighbours round the fountain (one who is your spouse stands with you instead) |
 | The bridge is mended | The morning after the workroom is restored (v240) | The mountain path; Bram |
 
 ## Controls

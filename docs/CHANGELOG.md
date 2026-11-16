@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v242: The wedding
+- Your wedding day now plays out in the village square: the neighbours gather round the fountain, Bram stands up for the two of you, you both say the words, and the square cheers. Any of the eight candidates can be the one waiting for you.
+- A roommate moving in keeps its own quiet message; there is no ceremony.
+- Weddings already past are not replayed.
+- New save data: none.
+
 ## v241: The opening
 - A new farm now opens with a scene instead of three pages of text: a title card with your farm's name, the letter that left you the plot, the carrier's cart dropping you at the end of the village's east road, and Bram meeting you by the shipping bin on the farm. It ends with you at the farmhouse door.
 - Skip it like any scene (hold Use or Esc); you still start at the door, and the first week's goals begin as before.

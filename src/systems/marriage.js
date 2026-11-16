@@ -1,6 +1,7 @@
 // Marriage (v52): the old boatman who sells the pendant on the beach in the rain, the wedding three days after a
 // yes (G.S.wedding = { id, day }), and the spouse's morning chores. G.S.spouse is the spouse's villager id.
 import { G } from '../core/game.js';
+import { playCutscene } from './cutscene.js';
 import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addEntities } from '../core/registry.js';
@@ -41,7 +42,9 @@ on('day:start', () => {
   const st = S.npcs[w.id];
   st.married = true; st.dating = !w.roommate;
   if (w.roommate) emit('ui:message', { title: 'A new roommate', text: `${nameOf(w.id)} arrives at dusk with a single trunk and a lantern, and takes the quiet corner of the farmhouse. "Thank you," he says. "For the light."` });
-  else emit('ui:message', { title: 'Your wedding', text: `The whole valley gathers in the square. ${nameOf(w.id)} is waiting under an arch of flowers, and when you say the words, the square cheers. ${nameOf(w.id)} moves into the farmhouse today.` });
+  else if (!playCutscene('wedding', { replay: true, cast: { spouse: w.id } })) {   // v242 (84c): played in the square
+    emit('ui:message', { title: 'Your wedding', text: `The whole valley gathers in the square. ${nameOf(w.id)} is waiting under an arch of flowers, and when you say the words, the square cheers. ${nameOf(w.id)} moves into the farmhouse today.` });
+  }
   changed();
 });
 

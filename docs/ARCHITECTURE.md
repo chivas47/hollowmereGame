@@ -180,7 +180,7 @@ src/
     stalls.js         Saturday stalls on the town green (stallsOpen, sellerOf weekly rotation, buyStall at twice sell; raises ʂ once funded) (v165)
     traditions.js     the wishing stone (solid Ӂ in the village at load, bless() sets G.S.blessing, read by buffs.js) and the Lantern Float on the beach (setLantern(), floatLights() for nightlights.js; npcs.js walks neighbours there) (v110, G.S.traditions)
     signs.js          signposts and notices outdoors: solid Ş tiles set on open ground at load, Use reads them (v107)
-    cutscene.js       v240: plays a scene (G.cut): playCutscene(id, { replay, then }), advance(), finish(), seen(id); stops the clock, you and farmer two, holds the camera (render/views.js), draws its actors; G.S.cutscenes[id] = the day seen
+    cutscene.js       v240: plays a scene (G.cut): playCutscene(id, { replay, then, cast }) (v242: cast fills roles, '$spouse'), advance(), finish(), seen(id); stops the clock, you and farmer two, holds the camera (render/views.js), draws its actors; G.S.cutscenes[id] = the day seen
     shortcuts.js      fallen trunks across shortcuts, cut with the copper axe; then trunk tiles turn to path and the maps get exits (v106, G.S.shortcuts)
     nightlights.js    outdoorLights(): lit windows (v151: a cottage only while homeNow(owner), ownerOf()), lamp posts and lanterns after dusk (renderer.js cuts them out of the dark); lit glass and lamp posts (v105, drawn only)
     falling.js        seasonal motion: petals, fluff, leaves, snow clumps from tree crowns, drifting with wind.js (v104, drawn only)
