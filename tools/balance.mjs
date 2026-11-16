@@ -148,7 +148,7 @@ const { BUNDLES, stillNeeds, bundleDone, donate, payVault } = await load('system
 const { HALL } = await load('data/family.js');
 const { festivalToday, festivalOpen, contestItems, enterContest, nextFestival, grangeItems, grangeKind, judgeGrange } = await load('systems/festivals.js');
 const { MINE, enterMine, leaveMine, checkpoints } = await load('systems/mine.js');
-const { slimes, hitMonster, damageOf } = await load('systems/monsters.js');   // roadmap 83c: gel for a pond ask
+const { slimes, hitMonster, damageOf, surface } = await load('systems/monsters.js');   // roadmap 83c: gel for a pond ask; 85d1: surface
 const { skillLevel } = await load('systems/skills.js');
 const { bombs, throwBomb, openChest, crackGeode, GEODES } = await load('systems/treasure.js');
 const { buyGear, owns } = await load('systems/guild.js');
@@ -730,7 +730,10 @@ function simulate(runSeed) {
     spend(TIME.travel * (2 + Math.max(0, lo - deepest)));
     for (let i = 0; lootNeeds()[item] && !late() && i < 40; i++) {
       enterMine(lo + (i % span));
-      for (const m of [...slimes]) while (slimes.includes(m) && !late()) { hitMonster(m, damageOf()); spend(TIME.rock); }
+      for (const m of [...slimes]) {
+        if (m.bs) { surface(m); spend(TIME.rock); }   // 85d1: waits for a burrower to come up
+        while (slimes.includes(m) && !late()) { hitMonster(m, damageOf()); spend(TIME.rock); }
+      }
     }
     leaveMine();
   }

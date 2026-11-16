@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v253: Mimics, burrowers and swarms
+- Pebble crabs (Hollow floors 1 to 40) sit among the rocks looking like one. Step beside one or hit it to wake it; the first hit only cracks its shell.
+- Burrow moles (floors 8 to 35) move under the floor as a mound you cannot hit. When the mound shakes, the mole comes up for a moment: hit it before it digs down again.
+- Soot puffs (floors 40 to 80) come in packs of four or five, weak and quick.
+- Each has its own drops and a Bestiary card.
+- New save data: none.
+
 ## v252: The Bestiary
 - A new Creatures tab in the journal: a card for every kind of creature in the Hollow, the Sunken Cavern and the Ember Vent, with its picture, where it lives, how to fight it, how many you have defeated and its lodge goal.
 - Drops fill in as you find them: each card lists what that creature can drop, with "?" for what it has not dropped for you yet.

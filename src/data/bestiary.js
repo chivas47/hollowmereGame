@@ -9,12 +9,15 @@ export const HOW = {
   fly: 'Flies over walls and rocks and weaves as it comes. Wait for it to close in, then swing.',
   walk: 'Walks straight at you and hits hard. Keep moving and strike when it reaches you.',
   charge: 'Winds up and flashes before it charges. Step aside, then hit it while it stands winded.',
+  mimic: 'Sits among the rocks looking like one. Step beside it or hit it to wake it; the first hit only cracks its shell.',
+  burrow: 'Moves under the floor as a mound you cannot hit. When the mound shakes it comes up: hit it before it digs down again.',
+  swarm: 'Comes in a pack, weak but quick. A club or a sword\'s spin catches several at once.',
 };
 
 // Where a kind turns up, in words: the same rules as the spawns in systems/monsters.js.
 export function whereLives(kind) {
   const d = MONSTERS[kind], out = [];
-  if (!d.cavernOnly && !d.ventOnly) out.push(d.from > 1 ? `the Hollow from floor ${d.from}` : 'the Hollow');
+  if (!d.cavernOnly && !d.ventOnly) out.push(d.to ? `the Hollow, floors ${d.from} to ${d.to}` : d.from > 1 ? `the Hollow from floor ${d.from}` : 'the Hollow');   // v253: to
   if (d.cavern || d.cavernOnly) out.push('the Sunken Cavern');
   if (d.vent || d.ventOnly) out.push('the Ember Vent', 'Smoke Peak');
   if (kind === 'slime') out.push('the wild farm after dark');

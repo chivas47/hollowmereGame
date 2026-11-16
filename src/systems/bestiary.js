@@ -3,7 +3,7 @@
 import { G } from '../core/game.js';
 import { on } from '../core/events.js';
 import { addUpdater } from '../core/registry.js';
-import { slimes, monstersOn } from './monsters.js';
+import { slimes, monstersOn, untouchable } from './monsters.js';
 
 export function meet(kind) {
   const B = G.S.bestiary;
@@ -12,7 +12,7 @@ export function meet(kind) {
 
 addUpdater(() => {
   if (!G.S?.bestiary || !slimes.length || monstersOn() !== G.S.map) return;
-  for (const m of slimes) meet(m.kind || 'slime');
+  for (const m of slimes) if (!m.hidden && !untouchable(m)) meet(m.kind || 'slime');   // v253: not a mimic asleep or a burrower under the floor
 });
 
 on('monster:slain', ({ kind, drops }) => {
