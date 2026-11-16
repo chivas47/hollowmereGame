@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v243: The old wing restored
+- Finishing the last room of the town hall's old wing now plays a scene: the neighbours gather in front of the hall, Aurel the stonemason hands it over and points you to the plaque, and the camera goes to the coach stop as word spreads that the coach road and the harbour are open again.
+- On the Ashgrove route their crew finishes it instead, and Aurel is cooler about it.
+- The notice follows the scene as before. Farms that restored the wing already do not see it.
+- New save data: none.
+
 ## v242: The wedding
 - Your wedding day now plays out in the village square: the neighbours gather round the fountain, Bram stands up for the two of you, you both say the words, and the square cheers. Any of the eight candidates can be the one waiting for you.
 - A roommate moving in keeps its own quiet message; there is no ceremony.

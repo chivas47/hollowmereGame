@@ -4,6 +4,7 @@ import { G } from '../core/game.js';
 import { emit, changed, notify } from '../core/events.js';
 import { ROOMS, ROOM_GOLD, RIVAL } from '../data/restoration.js';
 import { ITEMS } from '../data/items.js';
+import { playCutscene } from './cutscene.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { fmtGold } from '../core/format.js';
 
@@ -39,7 +40,9 @@ function checkRoom(roomKey) {
 function checkAll() {
   if (restored() || !ROOMS.every((r) => roomDone(r.key))) return;
   R().done = true;
-  notify('The old wing is whole again. Word comes that the coach road and the harbour will reopen.');
+  // v243 (84d): a cutscene in front of the hall, then the notice.
+  const told = () => notify('The old wing is whole again. Word comes that the coach road and the harbour will reopen.');
+  if (!playCutscene(R().rival ? 'wingRival' : 'wing', { then: told })) told();
 }
 
 function finish(key) {
