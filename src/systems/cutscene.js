@@ -26,16 +26,18 @@ export const playing = () => !!G.cut;
 // then(): called when it ends or is skipped.
 // v242: cast fills a scene's roles ({ spouse: 'ines' }): '$spouse' as an id or who, {spouse} in text (their name).
 // v244: vars fills plain words in text ({ crop: 'Turnip' } for {crop}).
-export function playCutscene(id, { replay = false, then, cast = {}, vars = {} } = {}) {
-  if (!CUTSCENES[id] || (!replay && seen(id)) || queue.some((q) => q.id === id) || G.cut?.id === id) return false;
-  queue.push({ id, then, cast, vars });
+// v245: script plays a scene built on the spot (a heart scene) under the id; choose(i) answers a choice step with
+// { who, text } (or nothing) to say next.
+export function playCutscene(id, { replay = false, then, cast = {}, vars = {}, script = null, choose = null } = {}) {
+  if (!(script || CUTSCENES[id]) || (!replay && seen(id)) || queue.some((q) => q.id === id) || G.cut?.id === id) return false;
+  queue.push({ id, then, cast, vars, script, choose });
   return true;
 }
 
-function begin({ id, then, cast, vars }) {
-  const sc = CUTSCENES[id], S = G.S, at = val(sc.at);
+function begin({ id, then, cast, vars, script, choose }) {
+  const sc = script || CUTSCENES[id], S = G.S, at = val(sc.at);
   G.cut = {
-    id, then, cast, vars, i: -1, t: 0, step: null, skipT: 0,
+    id, sc, then, cast, vars, choose, choice: null, chosen: false, keysWas: {}, i: -1, t: 0, step: null, skipT: 0,
     back: { map: S.map, x: S.x, y: S.y, dir: S.dir },
     actors: {}, cam: null, pan: null, fade: 0, fadeTo: null, bars: false, line: null, title: null, walkers: [],
   };
@@ -48,7 +50,7 @@ function begin({ id, then, cast, vars }) {
 export function finish() {
   const c = G.cut;
   if (!c) return;
-  const sc = CUTSCENES[c.id];
+  const sc = c.sc;
   G.cut = null; G.moving = false;
   const from = G.S.map;
   const end = val(sc.end);
@@ -71,7 +73,7 @@ const text = (s) => s.replace(/\{name\}/g, G.S.profile?.name || 'Farmer').replac
 
 // Starts the next step. Steps that take no time run straight on.
 function next() {
-  const c = G.cut, steps = CUTSCENES[c.id].steps;
+  const c = G.cut, steps = c.sc.steps;
   for (;;) {
     c.i++; c.t = 0;
     const s = steps[c.i];
@@ -106,6 +108,7 @@ function run(raw) {
     case 'say': c.line = { who: who(s.who) || null, text: text(s.text), shown: 0 }; return true;
     case 'title': c.title = { text: text(s.text), sub: s.sub ? text(s.sub) : '' }; return true;
     case 'wait': return true;
+    case 'choice': c.choice = { options: s.options, sel: 0, t: 0 }; return true;   // v245: waits for pick()
     case 'goto': {   // v241: the scene moves on to another map
       const from = G.S.map;
       c.actors = {}; c.walkers = []; c.cam = null; c.pan = null;
@@ -135,10 +138,36 @@ function stepWalker(w, dt) {
 export function advance() {
   const c = G.cut;
   if (!c) return;
+  if (c.choice) { if (c.choice.t >= CUTSCENE.choiceGuard) pick(c.choice.sel); return; }   // v245: Use picks the option shown as chosen, once it has been up a moment
   if (c.line) {
     if (c.line.shown < c.line.text.length) { c.line.shown = c.line.text.length; return; }
     c.line = null; next();
   } else if (c.title) { c.title = null; next(); }
+}
+
+// v245: picks option i of the choice on screen; the scene's choose(i) gives the line said in answer.
+export function pick(i) {
+  const c = G.cut;
+  if (!c?.choice || !c.choice.options[i]) return;
+  c.choice = null; c.chosen = true;
+  const r = c.choose?.(i);
+  if (r?.text) { c.step = { do: 'say' }; c.t = 0; c.line = { who: r.who || null, text: text(r.text), shown: 0 }; }
+  else next();
+}
+
+// v245: a key press moves between the options (ui/input.js; a quick tap can come and go between frames).
+export function moveChoice(d) {
+  const ch = G.cut?.choice;
+  if (ch) ch.sel = (ch.sel + d + ch.options.length) % ch.options.length;
+}
+
+// v245: holding to skip runs on to a choice not yet made (a choice is never skipped), else to the end.
+function skip() {
+  const c = G.cut, steps = c.sc.steps, k = c.chosen ? -1 : steps.findIndex((s, j) => j >= c.i && s.do === 'choice');
+  if (k < 0) { finish(); return; }
+  if (c.choice) return;
+  Object.assign(c, { line: null, title: null, pan: null, fadeTo: null, fade: 0, walkers: [] });
+  c.i = k - 1; next();
 }
 
 // Pure: the camera's point between from and to at time t of secs (eased in and out).
@@ -151,8 +180,14 @@ export function update(dt) {
   const c = G.cut;
   if (!c) { if (queue.length && !G.paused) begin(queue.shift()); return; }
   // Skipping: Use held (keyboard, controller, the Use button) or Esc / a finger held (G.skipHeld).
-  c.skipT = G.useHeld || G.skipHeld ? c.skipT + dt : 0;
-  if (c.skipT >= CUTSCENE.skipHold) { G.skipHeld = false; G.useHeld = false; finish(); return; }
+  c.skipT = (G.useHeld || G.skipHeld) && !c.choice ? c.skipT + dt : 0;
+  if (c.skipT >= CUTSCENE.skipHold) { G.skipHeld = false; G.useHeld = false; c.skipT = 0; skip(); if (!G.cut) return; }
+  if (c.choice) c.choice.t += dt;
+  if (c.choice) {   // v245: up and down (keys, pad) move between the options
+    const n = c.choice.options.length;
+    for (const [k, d] of [['up', -1], ['left', -1], ['down', 1], ['right', 1]]) if (G.keys[k] && !c.keysWas[k]) c.choice.sel = (c.choice.sel + d + n) % n;
+  }
+  c.keysWas = { ...G.keys };
   c.t += dt;
   c.walkers = c.walkers.filter((w) => !stepWalker(w, dt));
   const s = c.step;

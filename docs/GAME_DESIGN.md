@@ -442,7 +442,7 @@ Family (v53, data/family.js; Stardew's rules): married (not a roommate) with 10+
 
 The roommate (v53): the Lamplighter, the sewer trader, is now a villager (no quests, no festivals; Winter 1 birthday) who stands by his counter after dark. At 10 hearts he sells a shadow lantern (200,000g; Stardew's void ghost pendant from Krobus). Give it to him and he moves into the farmhouse in three days: he lives and helps like a spouse, reaches 14 hearts, but there is no romance and no children.
 
-Heart scenes (data/scenes.js): the first talk after reaching 4 and 8 hearts plays a scene with two choices. The warmer choice gives 60 points at 4 hearts and 80 at 8; the other gives 25 and 50. Scenes: Ines, a swarm in the hedge and the honey ledger; Bram, the bin hinge and the old porch plans; Odile, mending nets at dawn and the boat south; Tavi, a runaway map page and the finished map.
+Heart scenes (data/scenes.js): the first talk after reaching 4 and 8 hearts plays a scene with two choices. The warmer choice gives 60 points at 4 hearts and 80 at 8; the other gives 25 and 50. Scenes: Ines, a swarm in the hedge and the honey ledger; Bram, the bin hinge and the old porch plans; Odile, mending nets at dawn and the boat south; Tavi, a runaway map page and the finished map. v245 (roadmap 84f): for Ines, Bram, Odile and Tavi they play out on the map (systems/heartScenes.js): where the words set them (data/scenes.js HEART_STAGES), else at their front door; the same lines, choices and points; skipping stops at the choice, and Use answers only once the choice has been up half a second.
 
 ### The town and its shops (v46)
 

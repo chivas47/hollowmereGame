@@ -6,6 +6,7 @@ import { notify, emit } from '../core/events.js';
 import { save } from '../core/state.js';
 import { HOTBAR, SEED_SLOT } from '../data/hotbar.js';
 import { act } from '../systems/interact.js';
+import { moveChoice } from '../systems/cutscene.js';
 import { playerTile } from '../systems/world.js';
 import { closeModal, dialogOf } from './modal.js';
 import { selectSlot } from './hotbar.js';
@@ -57,6 +58,7 @@ export function initInput(canvas) {
   addEventListener('keydown', (e) => {
     if (G.cut && !G.paused) {   // v240: in a cutscene only Use (on, or held to skip) and Esc (held to skip) count
       if (e.code === 'Escape') G.skipHeld = true;
+      else if (MOVES.includes(actionOf(e.code))) { e.preventDefault(); if (!e.repeat) moveChoice(['up', 'left'].includes(actionOf(e.code)) ? -1 : 1); }   // v245: pick in a choice (the pad goes through G.keys)
       else if (actionOf(e.code) === 'use') { e.preventDefault(); G.useHeld = true; if (!e.repeat) act(); }
       return;
     }

@@ -6,7 +6,7 @@ import { on } from '../core/events.js';
 import { keyName } from '../core/controls.js';
 import { NPCS } from '../data/npcs.js';
 import { CUTSCENE } from '../data/cutscenes.js';
-import { advance } from '../systems/cutscene.js';
+import { advance, pick } from '../systems/cutscene.js';
 import { $, esc } from './dom.js';
 
 let el = null, last = '';
@@ -18,9 +18,15 @@ function build() {
   el.innerHTML = '<div class="cut-fade"></div><div class="cut-bar top"></div><div class="cut-bar bottom"></div>'
     + '<div class="cut-title" hidden><h2></h2><p></p></div>'
     + '<div class="cut-line" hidden><b></b><span></span></div>'
+    + '<div class="cut-choice" role="group" aria-label="Choose" hidden></div>'   // v245: a heart scene's choice
     + '<div class="cut-skip"><i></i><span></span></div>';
   $('.screen').appendChild(el);
-  el.addEventListener('pointerdown', (e) => { e.preventDefault(); G.skipHeld = true; advance(); });
+  el.addEventListener('pointerdown', (e) => {
+    const b = e.target.closest('.cut-choice button');
+    if (b) { e.preventDefault(); pick(Number(b.dataset.i)); return; }   // v245: a tap on an option picks it
+    if (G.cut?.choice) return;   // a tap beside the options does nothing
+    e.preventDefault(); G.skipHeld = true; advance();
+  });
   ['pointerup', 'pointerleave', 'pointercancel'].forEach((ev) => el.addEventListener(ev, () => { G.skipHeld = false; }));
   el.addEventListener('contextmenu', (e) => e.preventDefault());
 }
@@ -49,9 +55,17 @@ function render() {
       line.querySelector('span').innerHTML = `${esc(c.line.text.slice(0, Math.floor(c.line.shown)))}<em>${esc(c.line.text.slice(Math.floor(c.line.shown)))}</em>`;
     }
   }
+  const box = el.querySelector('.cut-choice'), ch = c.choice;
+  box.hidden = !ch;
+  if (ch) {
+    const key = ch.options.join('|');
+    if (box.dataset.key !== key) { box.dataset.key = key; box.innerHTML = ch.options.map((o, i) => `<button type="button" data-i="${i}">${esc(o)}</button>`).join(''); }
+    box.querySelectorAll('button').forEach((b, i) => b.classList.toggle('sel', i === ch.sel));
+  } else box.dataset.key = '';
   const skip = el.querySelector('.cut-skip');
   skip.querySelector('i').style.width = `${Math.min(100, (c.skipT / CUTSCENE.skipHold) * 100)}%`;
-  skip.querySelector('span').textContent = touch() ? 'Tap: next   Hold: skip' : `${keyName('use')}: next   Hold ${keyName('use')} or Esc: skip`;
+  skip.querySelector('span').textContent = ch ? (touch() ? 'Tap an answer' : `${keyName('up')} ${keyName('down')}: choose   ${keyName('use')}: answer`)
+    : touch() ? 'Tap: next   Hold: skip' : `${keyName('use')}: next   Hold ${keyName('use')} or Esc: skip`;
 }
 
 on('cutscene:start', render);

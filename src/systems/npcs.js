@@ -17,7 +17,7 @@ import { crowdPlan } from './crowd.js';
 import { floatOn } from '../data/traditions.js';
 import { buff } from './buffs.js';
 import { HOMES, homeMap, SPOUSE_HOME } from '../data/homes.js';
-import { SCENES, SCENE_HEARTS } from '../data/scenes.js';
+import { SCENES, SCENE_HEARTS, HEART_STAGED } from '../data/scenes.js';
 import { GIFT_POINTS, BIRTHDAY_MULT, UNIVERSAL } from '../data/gifts.js';
 import { CANDIDATES, HEART_CAP, BOUQUET, JEALOUSY, DATE_LINES, PENDANT, WEDDING_DAYS, SPOUSE_CAP, SPOUSE_LINES } from '../data/romance.js';
 import { drawPerson, drawBubble, drawBlink, drawEmote } from '../render/sprites.js';
@@ -233,7 +233,7 @@ export function startTalk(n) {
     extra = applyReward(n); changed();
   }
   const h = hearts(st), scene = pendingScene(n);
-  if (scene) { emit('ui:scene', { npc: n, ...scene, extra }); return; }
+  if (scene) { emit(HEART_STAGED.includes(n.id) && HOMES[n.id]?.door ? 'heart:stage' : 'ui:scene', { npc: n, ...scene, extra }); return; }   // v245: staged at their door
   const lines = st.married ? SPOUSE_LINES[d.id] : st.dating && DATE_LINES[d.id] ? DATE_LINES[d.id] : d.lines[h >= 5 ? 2 : h >= 2 ? 1 : 0];   // v51: partners talk like partners; v52: and spouses like spouses
   // v146 the weather, v152 what is going on (systems/topics.js); partners and spouses keep their own words
   const topic = !st.married && !st.dating && topicFor(d, { day: G.S.day, date: today(), weather: G.S.weather, tomorrow: festivalOn(dateParts(G.S.day + 1)), npcs: NPCS, news: yesterday() });
