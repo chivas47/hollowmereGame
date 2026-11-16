@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v263: Rocks block swings
+- Your sword, dagger or club no longer hits a creature that walks if a rock or wall stands between you, just as it cannot reach you through one.
+- Bats, serpents, wisps, storm wings and burrowers that have come up can still be hit over rocks. Bombs still reach behind them.
+- New save data: none.
+
 ## v262: Neighbours keep walking past a busy stop
 - A neighbour on a round who reaches a corner where someone is already pausing now keeps walking straight on, instead of stopping on top of them for a moment. Kit and Tamsin, who share a round in the village, no longer bump into each other at the corners.
 - New save data: none.

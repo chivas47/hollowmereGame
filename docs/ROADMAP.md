@@ -306,6 +306,17 @@ Nuno asked for more creature variety, better drops, a glossary and more creature
 |---|---|---|---|---|
 | 86 | Neighbours passing a busy stop keep walking | fix | done (chivas47/hollowmereGame#279) | Nuno: next (November 2026). tests/week.test.mjs failed now and then (once in CI on chivas47/hollowmereGame#274, once locally; seeds 14 and 16 of 30 reproduce it). Neighbours who share a round (Kit and Tamsin) reach a corner where the other is pausing and walk on, but counted as stopped for that one tick; over a day those ticks added up past the test's minute. One reaching a taken stop now counts as moving. |
 
+## Creature polish (November 2026)
+
+Nuno (November 2026): a polish sweep of all the creatures, detailed sprites, detailed attack effects, and no hitting walkers through rocks. His answers: burrowers stay unhittable underground; sprites stay 24 x 24 with 4 frames.
+
+| Item | What | Kind | Status | Notes |
+|---|---|---|---|---|
+| 87a | Rocks block hits on walkers | feature | in progress | Swings and weapon specials do not reach a creature that walks if a rock or wall stands between you; flyers, phasers, flying swarms and burrowers that are up can be hit over rocks. Bombs unchanged. |
+| 87b | Creature sweep | polish | queued | A sweep mode that screenshots every kind standing, telling, hit and falling; finds logged in docs/POLISH.md. |
+| 87c | Detailed creature sprites | polish | queued | Every shape on monsters.png redrawn with richer shading and 4 frames (walk or fly cycle, a tell or attack frame), in about three batches. Same 24 x 24 size and anchors. |
+| 87d | Detailed attack effects | polish | queued | Weapon trails, hit sparks by what you hit (gel, bone, ember, chitin), death bursts, glob trails and splashes, charge dust, burrow spray. |
+
 ## Done
 
 | Item | PR |
