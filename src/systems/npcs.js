@@ -189,7 +189,12 @@ addUpdater((dt) => {
     if (b.stay && n.wi > last) { n.moving = false; continue; }   // standing at their place
     if (travel(n, b.map, b.path[Math.min(n.wi, last)], step, dt)) {
       if (b.stay) { n.wi++; if (n.wi > last) n.dir = b.face || 'down'; }
-      else { n.wi = (n.wi + 1) % b.path.length; n.wait = standingOn(n) ? 0 : 2 + Math.random() * 3; }   // v154: someone already stands here: walk on
+      else {   // v154: someone already stands here: walk on (v262: still moving, passing through, not stopped on them)
+        n.wi = (n.wi + 1) % b.path.length;
+        const taken = standingOn(n);
+        n.wait = taken ? 0 : 2 + Math.random() * 3;
+        if (taken) n.moving = true;
+      }
     }
   }
 });

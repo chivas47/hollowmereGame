@@ -15,7 +15,20 @@ const DT = 0.125, MINUTES = 0.25;   // a real eighth of a second is a quarter of
 const DAYS = [[2, 'sun'], [3, 'sun'], [4, 'rain'], [5, 'sun'], [6, 'storm'], [7, 'sun'], [8, 'sun'], [9, 'sun'], [13, 'sun'], [24, 'sun'], [25, 'snow']];
 const MOMENT = 1;   // game minutes two may share a tile standing (one passing through the other's spot)
 
+// v262 (roadmap 86): Math.random is seeded for the week, so the test checks the same week every run. Seed 14 (of the
+// sweep that found it) is a week where Kit and Tamsin, who share a round, kept passing each other's pausing spot.
+function seeded(s) {
+  let x = s | 0;
+  return () => { x = (x + 0x6D2B79F5) | 0; let t = Math.imul(x ^ (x >>> 15), 1 | x); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+
 test('a week of neighbours: on open ground, never on top of each other, and always where they meant to be', () => {
+  const real = Math.random;
+  Math.random = seeded(14 * 7919);
+  try { week(); } finally { Math.random = real; }
+});
+
+function week() {
   freshFarm(); emit('game:loaded');
   const solid = [], stacked = new Map(), missed = [];
   for (const [day, weather] of DAYS) {
@@ -46,4 +59,4 @@ test('a week of neighbours: on open ground, never on top of each other, and alwa
   assert.deepEqual(solid.slice(0, 5), [], 'on something solid');
   assert.deepEqual([...stacked].filter(([, m]) => m > MOMENT).map(([k, m]) => `${k} for ${m} min`), [], 'standing on top of each other');
   assert.deepEqual(missed, [], 'never got there');
-});
+}

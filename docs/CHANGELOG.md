@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v262: Neighbours keep walking past a busy stop
+- A neighbour on a round who reaches a corner where someone is already pausing now keeps walking straight on, instead of stopping on top of them for a moment. Kit and Tamsin, who share a round in the village, no longer bump into each other at the corners.
+- New save data: none.
+
 ## v261: Seasonal night creatures
 - After 8 pm a few of the season's creatures come out on your farm (any layout) and in the Wilds: bramble sprites in spring, firefly moths in summer, gourd lurkers in autumn (they sleep as pumpkins) and frost wisps in winter.
 - A notice warns you the first night each kind appears. On the wild farm they join its slimes.

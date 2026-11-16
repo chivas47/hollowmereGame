@@ -298,7 +298,13 @@ Nuno asked for more creature variety, better drops, a glossary and more creature
 | 85g | Slaying goals for the new kinds | feature | done (chivas47/hollowmereGame#275) | One goal per behaviour group, Stardew-sized counts, a ring, hat or weapon each. |
 | 85h | Busy floors | feature | done (chivas47/hollowmereGame#276) | Stardew's infested floors: about 1 floor in 15 is a themed swarm; the ladder appears once cleared. |
 | 85i | Elites | feature | done (chivas47/hollowmereGame#277) | Nuno: opt-in only. A challenge brazier at the Hollow (Stardew's Shrine of Challenge) makes the dungeons dangerous: elites with a glow, 3x health, sure essence, 5x rare roll. |
-| 85j | Seasonal creatures | feature | in progress (chivas47/hollowmereGame#278) | Nuno: add them. One kind a season at night (bramble sprite, firefly moth, gourd lurker, frost wisp). Nuno (November 2026): in the Wilds and on every farm at night. |
+| 85j | Seasonal creatures | feature | done (chivas47/hollowmereGame#278) | Nuno: add them. One kind a season at night (bramble sprite, firefly moth, gourd lurker, frost wisp). Nuno (November 2026): in the Wilds and on every farm at night. |
+
+## Fixes (November 2026)
+
+| Item | What | Kind | Status | Notes |
+|---|---|---|---|---|
+| 86 | Neighbours passing a busy stop keep walking | fix | in progress (chivas47/hollowmereGame#279) | Nuno: next (November 2026). tests/week.test.mjs failed now and then (once in CI on chivas47/hollowmereGame#274, once locally; seeds 14 and 16 of 30 reproduce it). Neighbours who share a round (Kit and Tamsin) reach a corner where the other is pausing and walk on, but counted as stopped for that one tick; over a day those ticks added up past the test's minute. One reaching a taken stop now counts as moving. |
 
 ## Done
 
