@@ -53,6 +53,11 @@ export const LOOT = {
   shellback:   [['chitin', 0.6, 2, 3], ['umbrite', 0.05, 1, 1]],
   cragshell:   [['chitin', 0.6, 2, 3], ['umbrite', 0.08, 1, 1]],
   stormwing:   [['leatherwing', 0.5, 1, 1], ['gloommote', 0.1, 1, 1]],
+  // v261 (85j): the seasonal night creatures
+  bramble:     [['fiber', 0.4, 1, 1], ['wood', 0.1, 1, 2]],
+  moth:        [['leatherwing', 0.3, 1, 1], ['sunmote', 0.05, 1, 1]],
+  gourd:       [['chitin', 0.3, 1, 1], ['pumpkin', 0.1, 1, 1]],
+  frostwisp:   [['wispsilk', 0.1, 1, 1], ['gloommote', 0.05, 1, 1]],
 };
 
 // One defeat's drops: { item: count }. rand() in [0, 1); times multiplies every count (the thief's ring).

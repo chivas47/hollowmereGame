@@ -297,8 +297,8 @@ Nuno asked for more creature variety, better drops, a glossary and more creature
 | 85f | Behaviours: phase, armored | feature | done (chivas47/hollowmereGame#274) | With lantern wisp, tomb shade, shellbacks, storm wing. Nuno: swords do a quarter damage to armored kinds. |
 | 85g | Slaying goals for the new kinds | feature | done (chivas47/hollowmereGame#275) | One goal per behaviour group, Stardew-sized counts, a ring, hat or weapon each. |
 | 85h | Busy floors | feature | done (chivas47/hollowmereGame#276) | Stardew's infested floors: about 1 floor in 15 is a themed swarm; the ladder appears once cleared. |
-| 85i | Elites | feature | in progress (chivas47/hollowmereGame#277) | Nuno: opt-in only. A challenge brazier at the Hollow (Stardew's Shrine of Challenge) makes the dungeons dangerous: elites with a glow, 3x health, sure essence, 5x rare roll. |
-| 85j | Seasonal creatures | feature | queued | Nuno: add them. One kind a season at night (bramble sprite, firefly moth, gourd lurker, frost wisp). Nuno (November 2026): in the Wilds and on every farm at night. |
+| 85i | Elites | feature | done (chivas47/hollowmereGame#277) | Nuno: opt-in only. A challenge brazier at the Hollow (Stardew's Shrine of Challenge) makes the dungeons dangerous: elites with a glow, 3x health, sure essence, 5x rare roll. |
+| 85j | Seasonal creatures | feature | in progress (chivas47/hollowmereGame#278) | Nuno: add them. One kind a season at night (bramble sprite, firefly moth, gourd lurker, frost wisp). Nuno (November 2026): in the Wilds and on every farm at night. |
 
 ## Done
 

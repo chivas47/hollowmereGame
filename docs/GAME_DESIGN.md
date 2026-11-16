@@ -796,6 +796,19 @@ Stardew's Shrine of Challenge by role, opt-in only (Nuno). The brazier is a row 
 
 Cold, nothing changes. Saved as `G.S.brazier` (false in old saves). The farm's night slimes are never affected.
 
+### Seasonal night creatures (v261, roadmap 85j)
+
+From 8 pm, once a night on each map, the season's creature comes out on the farm you are on (any layout, Nuno's call) and in the Wilds: 2 or 3 bodies on a farm, 3 or 4 in the Wilds. On the wild farm they join its slimes. They never appear in the dungeons (`surfaceOnly`). Stardew has no counterpart beyond the wilderness farm's night monsters, so their stats sit beside the Hollow's first floors. The first night a kind appears, a notice warns you.
+
+| Season | Kind | Way | Health | Damage | XP | Loot |
+|---|---|---|---|---|---|---|
+| Spring | Bramble sprites | swarm | 4 | 5 | 3 | fiber 40%, wood 10% (1-2) |
+| Summer | Firefly moth | fly | 6 | 6 | 4 | leatherwing 30%, sunmote 5% |
+| Autumn | Gourd lurker | mimic (asleep as a pumpkin) | 10 | 6 | 5 | chitin 30%, pumpkin 10% |
+| Winter | Frost wisp | phase | 8 | 7 | 6 | wisp silk 10%, gloommote 5% |
+
+They are drawn from shapes already on the sheet (puff, bat, crab, wisp) in their own colours. The lodge's goal: 50 night creatures, any season, for the Leech ring.
+
 ### The Bestiary (v252, roadmap 85c)
 
 The journal's Creatures tab. A kind counts as met once it is on the map you are on, or falls. Each met kind has a card: its picture, where it lives, a line on how it fights (by the way it moves: hop, crawl, fly, walk, charge), how many you have defeated, its lodge goal's progress and reward, and its loot table, each item named once that kind has dropped it for you ("?" until then). Kinds not met show "???", and the tab's first line counts how many are left. Stardew has no bestiary; its monster eradication goals at the guild are the nearest thing, and the card shows those.

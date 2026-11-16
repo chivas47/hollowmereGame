@@ -29,7 +29,7 @@ test('the stand-ins are gone: Stardew\'s monster materials, refitted to ours', (
 });
 
 test('every monster material has a use, and each one the Hollow alone can supply', () => {
-  const hollow = Object.keys(MONSTERS).filter((k) => !MONSTERS[k].cavernOnly && !MONSTERS[k].ventOnly);
+  const hollow = Object.keys(MONSTERS).filter((k) => !MONSTERS[k].cavernOnly && !MONSTERS[k].ventOnly && !MONSTERS[k].surfaceOnly);
   for (const it of Object.keys(LOOT_ITEMS)) {
     const used = Object.values(RECIPES).some((rc) => rc.needs[it]) || Object.values(DISHES).some((d) => d.needs[it]) || Object.values(CLOTHES).some((c) => c.from === it);   // v257: wisp silk is tailored
     assert.ok(used, `${it} has a use`);

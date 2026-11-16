@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v261: Seasonal night creatures
+- After 8 pm a few of the season's creatures come out on your farm (any layout) and in the Wilds: bramble sprites in spring, firefly moths in summer, gourd lurkers in autumn (they sleep as pumpkins) and frost wisps in winter.
+- A notice warns you the first night each kind appears. On the wild farm they join its slimes.
+- Each has its own drops and a Bestiary card; 50 of them earn the Leech ring at the lodge.
+- New save data: none.
+
 ## v260: The challenge brazier
 - Warden Hale's lodge has a challenge brazier. Light it to make the Hollow, the Sunken Cavern, the Ember Vent and Smoke Peak harder: every creature is a quarter tougher, and about one in ten is a gold-ringed elite.
 - Elites have three times the health, give three times the XP, always drop a sunmote or gloommote, and are five times as likely to drop a weapon or ring.

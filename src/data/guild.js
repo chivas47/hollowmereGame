@@ -51,6 +51,8 @@ export const GOALS = {
   splitters: { n: 200, kinds: ['mossslime', 'emberslime'], reward: 'mossring', label: 'moss and ember slimes (pieces count)' },
   phasers:   { n: 100, kinds: ['wisp', 'shade'], reward: 'glowring', label: 'lantern wisps and tomb shades' },
   armored:   { n: 60,  kinds: ['shellback', 'cragshell'], reward: 'shellring', label: 'shellbacks' },
+  // v261 (85j): the seasonal night creatures, all four seasons together.
+  nightfolk: { n: 50,  kinds: ['bramble', 'moth', 'gourd', 'frostwisp'], reward: 'leechring', label: 'creatures of the night (any season)' },
 };
 // v230: the savage ring's burst of speed after a defeat: seconds, and food-buff speed points (data/cooking.js BUFF).
 export const SAVAGE = { time: 3, speed: 2 };

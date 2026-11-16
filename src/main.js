@@ -69,6 +69,7 @@ import './systems/clothing.js';
 import './systems/treasure.js';
 import './systems/guild.js';
 import './systems/bestiary.js';   // 85c: kinds met and their drops
+import './systems/nightfolk.js';   // 85j: seasonal night creatures
 import './systems/forge.js';
 import './systems/books.js';
 import './systems/pots.js';

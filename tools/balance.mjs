@@ -725,7 +725,7 @@ function simulate(runSeed) {
     if (pondShort().gel) out.gel = pondShort().gel;
     return out;
   };
-  const lootFloors = (item) => Object.keys(MONSTERS).filter((k) => !MONSTERS[k].cavernOnly && !MONSTERS[k].ventOnly && (LOOT[k] || []).some(([it]) => it === item))
+  const lootFloors = (item) => Object.keys(MONSTERS).filter((k) => !MONSTERS[k].cavernOnly && !MONSTERS[k].ventOnly && !MONSTERS[k].surfaceOnly && (LOOT[k] || []).some(([it]) => it === item))
     .map((k) => Math.max(1, MONSTERS[k].from));
   function slimeHunt() {
     const item = Object.keys(lootNeeds())[0], fs = item && lootFloors(item);

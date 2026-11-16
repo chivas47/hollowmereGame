@@ -88,7 +88,7 @@ addUpdater(() => {
   const s = perks().slimes, S = G.S;
   if (!s || S.map !== 'farm' || S.time < s.from || slimeNight === S.day) return;
   slimeNight = S.day;
-  spawnSlimes('farm', s.min + Math.floor(Math.random() * (s.max - s.min + 1)));
+  spawnSlimes('farm', s.min + Math.floor(Math.random() * (s.max - s.min + 1)), 'slime', true);   // v261: beside the night creatures, whichever comes first
   notify('Something is moving in the brush. Slimes!');
 });
 on('game:reset', () => { slimeNight = 0; });
