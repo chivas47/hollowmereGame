@@ -59,6 +59,11 @@ export const MIGRATIONS = [
     if (s.built?.greenhouse === true) s.cutscenes.greenhouse ||= s.day;
     if ((s.mineDeepest || 0) >= 100) s.cutscenes.hollow100 ||= s.day;
   } },
+  // v7 (v252, roadmap 85c): the Bestiary starts with every kind the farm has already defeated as met. What they
+  // dropped was never kept, so those rows stay "?" until a kind drops them again.
+  { v: 7, run(s) {
+    for (const [k, n] of Object.entries(s.slain || {})) if (n > 0 && !s.bestiary.seen.includes(k)) s.bestiary.seen.push(k);
+  } },
 ];
 
 export const SAVE_VERSION = MIGRATIONS[MIGRATIONS.length - 1].v;

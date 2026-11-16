@@ -68,6 +68,7 @@ src/
     cavern.js         CAVERN (the Sunken Cavern's door, strength, ores, shafts, chests), HOLLOW_GOLD (v38)
     guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
     loot.js           v250 (roadmap 85a): LOOT tables per monster kind, LOOT_ITEMS (the six monster materials), rollLoot(), lootPerDefeat()
+    bestiary.js       v252 (roadmap 85c): HOW each way of moving fights, whereLives(kind), BESTIARY_ORDER
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item, underSky()
     atmosphere.js     LIGHT keyframes, WATERFALLS, WILDLIFE, AMBIENCE by area (v72); indoor LIGHTS, HOUSE_WINDOWS, CRACKLE_RANGE (v100); WATER (v102); WIND, CLOTHESLINES (v103); SEASONAL, SEASONAL_MAX (v104); STEPS, STEP_EVERY, HOOF_EVERY (v109); NIGHT_LIGHTS (v105)
     vignettes.js      v111: VIGNETTES, the small stories outdoors per map (tile, art key, text, words by season), VIGNETTE (the tile)
@@ -123,6 +124,7 @@ src/
     forge.js          the forge: forgeGem(), enchantWeapon(), enchantTool(); trinket effects underground
     treasure.js       bombs (throw, fuse, explode()), Hollow treasure chests (floor finds and rare loot), geode cracking
     guild.js          the Wardens' Lodge in the Wilds: shop, slaying goals (G.S.slain, G.S.goalsClaimed), its keeper
+    bestiary.js       v252 (roadmap 85c): G.S.bestiary: kinds met (on your map or defeated) and what each has dropped
     professions.js    professions: has(id) for the systems that apply one, priceMult() for selling, choosing, combat health
     helpers.js        helper hut harvests, waystones, the home charm, the farm cave (opening, choice, daily crate)
     statue.js         v169: the fortune statue: a loved gift on a neighbour's birthday morning (G.S.statue), Use takes it
@@ -226,6 +228,7 @@ src/
     desert.js         the coach, the Oasis, the desert trader and the casino (ui:coach, ui:oasis, ui:dtrader, ui:casino, v64)
     museum.js         the museum's donations (ui:museum) and the journal (J, ui:journal): collections, notes, achievements, completion (v68); addJournalTab(key, label, render, front), redrawJournal() (v114)
     journal.js        v114: the journal's first tabs: Quests (main, optional, completed, Track), Story (steps, the story so far, discoveries), Map (found places, landmarks, markers, pins), People
+    bestiary.js       v252 (roadmap 85c): the journal's Creatures tab, one card a kind
     arrival.js        v122: the arrival scene, once, after the new game screen; v241: plays the opening cutscene, then the first-week tip
     cutscene.js       v240: a cutscene's bars, fade, title card, spoken line and skip hint over the field; a tap goes on, a finger held skips
     storage.js        chest, sign, farm computer and lost and found dialogs (ui:chest, ui:sign, ui:computer, ui:lostfound); journal tabs calendar and animals via addJournalTab() in ui/museum.js (v71; quests and map moved to ui/journal.js in v114); the chest as two icon grids, click or drag to move (v113)
@@ -414,7 +417,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `monster:hit` | {x, y, dmg, crit, kx, ky} | monsters.js hitMonster() (v74) | animation (damage number, sparks) |
 | `crafted` | {key, n, kit} | crafting.js (v74) | animation (the crafted pose) |
 | `watered` | {map, x, y} | farming.js, the can on a planted tile (v123) | animation (the crop perks up and drips) |
-| `monster:slain` | {kind, x, y, map} | monsters.js | guild (goal counts), treasure (blast ring) |
+| `monster:slain` | {kind, x, y, map, drops} (v252: drops, {item: n}) | monsters.js | guild (goal counts), treasure (blast ring), bestiary (kinds met, drops) |
 | `monster:charge`, `monster:bump` | {x, y} | monsters.js (v228: a charger sets off; one runs into a wall) | monsters.js (dust, a shake) |
 | `player:blocked` | {x, y, who} | monsters.js, health.js (v227: a hit turned by the sword's block) | specials (spark and sound) |
 | `mine:faint` | none | health.js | mine.js (carry out) |

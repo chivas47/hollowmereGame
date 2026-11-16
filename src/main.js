@@ -68,6 +68,7 @@ import './systems/undo.js';
 import './systems/clothing.js';
 import './systems/treasure.js';
 import './systems/guild.js';
+import './systems/bestiary.js';   // 85c: kinds met and their drops
 import './systems/forge.js';
 import './systems/books.js';
 import './systems/pots.js';
@@ -134,6 +135,7 @@ import './ui/house.js';
 import './ui/hints.js';
 import './ui/clothing.js';
 import './ui/guild.js';
+import './ui/bestiary.js';   // 85c: the journal's Creatures tab
 import './ui/forge.js';
 import './ui/books.js';
 import './ui/trader.js';

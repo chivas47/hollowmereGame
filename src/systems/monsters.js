@@ -169,7 +169,7 @@ function defeat(m) {
   if (weaponEnchant() === 'vampiric') G.S.hp = Math.min(G.S.maxHp, G.S.hp + 3);   // v39
   if (weaponEnchant() === 'haymaker' && Math.random() < 0.3) { const k = HAY[Math.floor(Math.random() * HAY.length)]; G.S.bag[k] = (G.S.bag[k] || 0) + 1; }
   emit('gather', { skill: 'combat', xp: d.xp });
-  emit('monster:slain', { kind: m.kind || 'slime', x: m.x, y: m.y, map: slimeMap });   // v37: the lodge's goals, the blast ring
+  emit('monster:slain', { kind: m.kind || 'slime', x: m.x, y: m.y, map: slimeMap, drops: got });   // 85c: drops for the Bestiary   // v37: the lodge's goals, the blast ring
   changed();
 }
 // v37: hurts a monster (bombs and the blast ring use it too); knock: [kx, ky] push. v74: crit marks a critical hit
