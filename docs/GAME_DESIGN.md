@@ -132,6 +132,7 @@ Short scenes played on the map for important moments (Stardew plays its events t
 |---|---|---|
 | The opening | A new farm, after the new game screen (v241; replaces v122's arrival pages) | The village's east road, then the farm; Bram. Ends at the farmhouse door, watched or skipped |
 | The wedding | The morning of the wedding, three days after the proposal (v242; not for a roommate) | The village square: Bram leads it, your spouse beside you, nine neighbours round the fountain (one who is your spouse stands with you instead) |
+| The old wing restored | The last room of the old wing is done (v243): bundles, or bought from Ashgrove (a shorter scene of their own) | The town hall; Aurel, Bram and neighbours, then the coach stop |
 | The bridge is mended | The morning after the workroom is restored (v240) | The mountain path; Bram |
 
 ## Controls

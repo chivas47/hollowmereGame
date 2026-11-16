@@ -195,3 +195,28 @@ test('a roommate moving in has no wedding scene', async () => {
   assert.equal(G.cut, null);
   assert.equal(G.S.roommate, true);
 });
+
+test('restoring the last room of the old wing plays its scene, Ashgrove its own, then the notice', async () => {
+  const { ROOMS } = await import('../src/data/restoration.js');
+  const { buyRoom, donate, stillNeeds } = await import('../src/systems/restoration.js');
+  const toasts = []; on('toast', (m) => toasts.push(m));
+  const last = ROOMS.at(-1).key === 'vault' ? ROOMS.find((r) => r.key === 'crafts') : ROOMS.at(-1);
+  for (const rival of [false, true]) {
+    freshFarm({ map: 'farm', gold: 1e6, profile: { name: 'Rowan', farm: 'Fernhill' } });
+    emit('game:reset'); toasts.length = 0;
+    for (const r of ROOMS) if (r.key !== last.key) G.S.restore.rooms[r.key] = true;
+    if (rival) { G.S.restore.rival = true; assert.ok(buyRoom(last.key)); }
+    else {   // the bundles route: every bundle in the room but one done, then the last item handed in
+      const [b, ...rest] = last.bundles;
+      for (const o of rest) G.S.restore.bundles[o.key] = true;
+      for (const [k, n] of Object.entries(stillNeeds(b.key))) { G.S.bag[k] = (G.S.bag[k] || 0) + n; donate(b.key, k); }
+    }
+    assert.equal(G.S.restore.done, true);
+    update(0);
+    assert.equal(G.cut?.id, rival ? 'wingRival' : 'wing');
+    assert.equal(G.S.map, 'town');
+    G.useHeld = true; for (let i = 0; i < 40 && G.cut; i++) update(0.05); G.useHeld = false;
+    assert.equal(G.S.map, 'farm');
+    assert.ok(toasts.some((m) => /whole again/.test(m)), `${rival}: ${JSON.stringify(toasts)}`);
+  }
+});

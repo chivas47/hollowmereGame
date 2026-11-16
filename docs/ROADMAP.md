@@ -273,7 +273,7 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | 84a | Cutscenes: the engine | feature | done (chivas47/hollowmereGame#256) | Nuno (November 2026): make the game more engaging with cutscenes. Scenes on the map: bars, camera pans, neighbours walking, lines, fades, title cards; hold Use or Esc to skip, always (Nuno); seen once, saved; old saves mark passed moments seen (Nuno). First scene: the quarry bridge mended. |
 | 84b | Cutscenes: the opening | feature | done (chivas47/hollowmereGame#257) | Nuno: journey to the farm. A letter, the coach to the village edge, a neighbour walks you to the overgrown farm, a pan over the plot, control at the door. Replaces the arrival pages (v122). |
 | 84c | Cutscenes: the wedding | feature | done (chivas47/hollowmereGame#258) | Nuno: a ceremony in the village square with the neighbours watching. |
-| 84d | Cutscenes: the old wing restored | feature | next | Nuno: the town hall's rooms coming back to life, and the coach road and harbour reopening. |
+| 84d | Cutscenes: the old wing restored | feature | in progress | Nuno: the town hall's rooms coming back to life, and the coach road and harbour reopening. |
 | 84e | Cutscenes: firsts | feature | queued | Nuno: first harvest, reaching the Hollow's bottom, the greenhouse rebuilt (the bridge is in 84a). |
 | 84f | Cutscenes: heart scenes played out | feature | queued | Nuno: the heart scenes (data/scenes.js, about 30) staged on the map with movement instead of text boxes; likely split by neighbour. |
 
