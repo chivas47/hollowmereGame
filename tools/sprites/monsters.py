@@ -16,7 +16,8 @@ LAYERS = ['mite.body', 'mite.ink', 'bat.body', 'bat.ink', 'skeleton.body', 'skel
           'serpent.body', 'serpent.ink', 'slime.body', 'slime.ink',
           'beetle.body', 'beetle.ink', 'boar.body', 'boar.ink', 'ram.body', 'ram.glow', 'ram.ink', 'hound.body', 'hound.glow', 'hound.ink',   # v228
           'crab.body', 'crab.ink', 'crabrock.body', 'crabrock.ink', 'mole.body', 'mole.ink', 'puff.body', 'puff.ink',   # v253 (85d1)
-          'lurker.body', 'lurker.ink']   # v254 (85d2)
+          'lurker.body', 'lurker.ink',   # v254 (85d2)
+          'spitter.body', 'spitter.glow', 'spitter.ink']   # v255 (85e1)
 TONE = {'B': ('body', 255), 'b': ('body', 205), 'c': ('body', 160), 'G': ('glow', 255), 'g': ('glow', 200)}
 INK = {'Z': '#1c1712', 'Y': '#f0cc6a', 'P': '#e2707a', 'O': '#e9862a', 'F': '#ffe08a', 'R': '#c8352f', 'r': '#8a2a22',
        'E': '#f4ead2', 'K': '#2b211a', 'H': '#d9c9a0', 'h': '#9a8a6a',   # v228: H h a ram's horn
@@ -414,6 +415,32 @@ ART['lurker'] = (5, 23, [[
     'OOFFFOOOOFFFOO',
   ]])
 
+# v255 (85e1): the spitter, a squat hooded thing; its mouth is the glow (tinted to each kind's glob colour), shut
+# then wide open.
+ART['spitter'] = (5, 23, [[
+    '.....bBBb.....',
+    '...bBBBBBBb...',
+    '..bBWBBBBBBb..',
+    '..bBBZBBZBBb..',
+    '.bBBBBBBBBBBb.',
+    '.bBBBBGGBBBBb.',
+    '.bBBBBGGBBBBb.',
+    '..bBBBBBBBBb..',
+    '..bbBbBBbBbb..',
+    '..c.c.cc.c.c..',
+  ], [
+    '..............',
+    '.....bBBb.....',
+    '...bBBBBBBb...',
+    '..bBWBBBBBBb..',
+    '.bBBBZBBZBBBb.',
+    '.bBBBGGGGBBBb.',
+    '.bBBBGggGBBBb.',
+    '.bBBBBGGBBBBb.',
+    '..bbBbBBbBbb..',
+    '..c.c.cc.c.c..',
+  ]])
+
 def serpent(f):
     """A chain of round segments along a wave (the head last, so it sits on top), lit from the top left."""
     cells = {}
@@ -448,7 +475,7 @@ def build(path, preview=None):
     row = {L: i for i, L in enumerate(LAYERS)}
     def put(kind, layer, f, x, y, c):
         img.putpixel((f * S + x, row[f'{kind}.{layer}'] * S + y), c)
-    for kind in ['mite', 'bat', 'skeleton', 'wraith', 'rex', 'sprite', 'golem', 'serpent', 'slime', 'beetle', 'boar', 'ram', 'hound', 'crab', 'crabrock', 'mole', 'puff', 'lurker']:
+    for kind in ['mite', 'bat', 'skeleton', 'wraith', 'rex', 'sprite', 'golem', 'serpent', 'slime', 'beetle', 'boar', 'ram', 'hound', 'crab', 'crabrock', 'mole', 'puff', 'lurker', 'spitter']:
         for f in (0, 1):
             cs = {q: ch for q, ch in cells(kind, f).items() if 0 <= q[0] < S and 0 <= q[1] < S}
             for (i, j), ch in sorted(cs.items(), key=lambda kv: (kv[0][1], kv[0][0])):
@@ -467,8 +494,8 @@ def build(path, preview=None):
     if preview:
         cols = {'slime': '#7fcf6a', 'mite': '#6b4a2b', 'bat': '#4a3b5a', 'skeleton': '#e8e0d0', 'wraith': '#d9c39a', 'rex': '#c8352f',
                 'sprite': '#e9862a', 'golem': '#5a3a30', 'serpent': '#5f8a4a', 'beetle': '#5a4a6a', 'boar': '#7a5a3a', 'ram': '#9a928a', 'hound': '#5a2a22',
-                'crab': '#8a7a6a', 'crabrock': '#8a8580', 'mole': '#6a5040', 'puff': '#3d3833', 'lurker': '#a8352a'}
-        glows = {'sprite': '#ffd98a', 'golem': '#e9862a', 'ram': '#6f6862', 'hound': '#e9862a'}
+                'crab': '#8a7a6a', 'crabrock': '#8a8580', 'mole': '#6a5040', 'puff': '#3d3833', 'lurker': '#a8352a', 'spitter': '#5a4a6a'}
+        glows = {'sprite': '#ffd98a', 'golem': '#e9862a', 'ram': '#6f6862', 'hound': '#e9862a', 'spitter': '#b07ae0'}
         out = Image.new('RGBA', (S * 2 * len(cols) + len(cols), S), (58, 52, 48, 255))
         def band(L, f, col):
             b = img.crop((f * S, row[L] * S, f * S + S, row[L] * S + S))

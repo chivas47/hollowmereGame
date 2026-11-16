@@ -40,6 +40,10 @@ export const LOOT = {
   lurker:     [['cinder', 0.5, 1, 1], ['sunmote', 0.15, 1, 1]],
   dustdevil:  [['stone', 0.3, 1, 2], ['copper', 0.1, 1, 1]],
   ashswarm:   [['cinder', 0.2, 1, 1], ['sunmote', 0.03, 1, 1]],
+  // v255 (85e1)
+  spitter:     [['sunmote', 0.2, 1, 1], ['gold', 0.1, 1, 1]],
+  sandspitter: [['sunmote', 0.25, 1, 1], ['gold', 0.15, 1, 1]],
+  cragspitter: [['sunmote', 0.3, 1, 1], ['gloommote', 0.15, 1, 1]],
 };
 
 // One defeat's drops: { item: count }. rand() in [0, 1); times multiplies every count (the thief's ring).

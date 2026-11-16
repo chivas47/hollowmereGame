@@ -633,13 +633,19 @@ export function drawMound(c, px, py, t, look = 'earth') {
   r(c, x - 4 + f * 6, base - 7 - f, 1, 1, mid); r(c, x + 2 - f * 5, base - 8 + f, 1, 1, look === 'lava' ? hi : lo);
 }
 
+// v255 (85e1): a spitter's glob in flight: a small glowing ball with a bright core.
+export function drawShot(c, px, py, color) {
+  const x = Math.round(px), y = Math.round(py);
+  r(c, x - 2, y - 1, 4, 2, color); r(c, x - 1, y - 2, 2, 4, color); r(c, x - 1, y - 1, 1, 1, '#ffffff');
+}
+
 // v228: flip faces it left (chargers face the way they go).
 export function drawMonster(c, px, py, kind, color, hurt, t, flip = false) {
   const k = MONSTERS.kinds[kind] || {};
   if (sheetMonster(c, px + (k.sway ? Math.round(Math.sin(t * k.sway)) : 0), py, kind, color, hurt, Math.floor(t * 8) % 2,
     k.bob ? -Math.round(Math.sin(t * k.bob) * 2) : 0, flip)) return;
   const x = Math.round(px), base = Math.round(py), col = hurt ? '#ffffff' : color, f = Math.floor(t * 8) % 2;
-  if (k.shape === 'puff') kind = 'puff';   // v254: dust devils and the ash swarm draw as a puff
+  if (k.shape === 'puff' || k.shape === 'spitter') kind = k.shape;   // v254: dust devils and the ash swarm draw as a puff; v255: spitters
   else if (k.shape) {   // v228: a charger before the sheet loads: a low body, a head the way it faces
     const s = flip ? -1 : 1;
     r(c, x - 7, base - 1, 14, 1, 'rgba(0,0,0,.35)'); r(c, x - 6, base - 8, 12, 6, col); r(c, x + (s > 0 ? 4 : -8), base - 9, 4, 5, col);
@@ -658,6 +664,11 @@ export function drawMonster(c, px, py, kind, color, hurt, t, flip = false) {
   if (kind === 'mole') {   // v253: a burrow mole up out of its hole
     r(c, x - 6, base - 1, 12, 1, 'rgba(0,0,0,.35)'); r(c, x - 5, base - 3, 10, 2, '#5a4632'); r(c, x - 4, base - 11, 8, 8, col);
     r(c, x - 2, base - 9, 1, 1, '#2b211a'); r(c, x + 1, base - 9, 1, 1, '#2b211a'); r(c, x - 1, base - 7, 2, 1, '#e2707a'); r(c, x - 6, base - 6 + f, 2, 2, '#e8d0b0'); r(c, x + 4, base - 6 + (1 - f), 2, 2, '#e8d0b0');
+    return;
+  }
+  if (kind === 'spitter') {   // v255: a hooded spitter with a glowing mouth
+    r(c, x - 6, base - 1, 12, 1, 'rgba(0,0,0,.35)'); r(c, x - 5, base - 12, 10, 10, col); r(c, x - 3, base - 14, 6, 2, col);
+    r(c, x - 2, base - 10, 1, 1, '#1c1712'); r(c, x + 1, base - 10, 1, 1, '#1c1712'); r(c, x - 1, base - 7 - f, 2, 2 + f, hurt ? '#ffffff' : k.glow || '#e9862a');
     return;
   }
   if (kind === 'lurker') {   // v254: a lava lurker, a red head up out of a glowing pool

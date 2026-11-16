@@ -420,6 +420,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `monster:slain` | {kind, x, y, map, drops} (v252: drops, {item: n}) | monsters.js | guild (goal counts), treasure (blast ring), bestiary (kinds met, drops) |
 | `monster:charge`, `monster:bump` | {x, y} | monsters.js (v228: a charger sets off; one runs into a wall) | monsters.js (dust, a shake) |
 | `monster:wake`, `monster:crack`, `monster:surface` | {x, y} | monsters.js (v253: a mimic wakes or its shell cracks; a burrower comes up or goes down) | monsters.js (grit, a sound) |
+| `monster:spit` | {x, y} | monsters.js (v255: a spitter lets fly; its glob joins `shots`) | monsters.js (a puff at its mouth) |
 | `player:blocked` | {x, y, who} | monsters.js, health.js (v227: a hit turned by the sword's block) | specials (spark and sound) |
 | `mine:faint` | none | health.js | mine.js (carry out) |
 | `gather` | {skill, xp, item?, n?} | farming, giants, clearing, forage, fishing, mine, monsters, coop, barn, books | skills.js (XP, bonus item), books.js (mastery XP, book finds) |
