@@ -173,38 +173,121 @@ export function drawWater(g, x, y, p) {
   for (let i = 0; i < 2; i++) r(g, X + 2 + (R() * 9 | 0), Y + 3 + (R() * 10 | 0), 4, 1, p.ripple);
 }
 
-// Polish 77q: the ravine down the mountain's east edge (data/bridge.js): rock lips on both sides, dark walls, a thread
-// of water far below. The bridge over it, broken (a snapped rope, two planks hanging from the posts) or mended.
-const RAVINE = { lip: '#8a8070', wall: '#5d5247', deep: '#2b2420', mid: '#3d342d', stream: '#3e6478', glint: '#7fa7ba' };
+// Polish 77q: the ravine down the mountain's east edge (data/bridge.js), and the bridge over it, broken or mended.
+// v249 (polish 77r): redrawn in detail. Across a tile, west to east: grass and moss hanging over a sunlit rock lip, the
+// west wall lit from the top left with rock layers, its shadow, the stream far below, the east wall in shade, the east
+// lip. Layers, streaks and glints follow the map row (not the tile), so the ravine reads as one cut down the mountain.
+const RV = {
+  lipHi: '#b2a794', lip: '#968b78', lipLo: '#7a6f5e', under: '#3b322b',
+  litHi: '#8a7e6c', lit: '#75695a', litLo: '#62574a', layer: '#54493e',
+  shade: '#4c4239', shadeLo: '#3f362f', deep: '#241e1a', deep2: '#2e2621',
+  water: '#36586b', waterLo: '#2b4757', foam: '#9cc3d4', glint: '#d8eef6',
+  moss: '#5f7a3a', mossHi: '#7d9a4a', stone: '#6a6158', stoneHi: '#8c8378', fern: '#4f6e34',
+};
+const lane = (g, X, Y, x, w, c) => r(g, X + x, Y, w, T, c);
 export function drawRavine(g, x, y, p) {
-  const X = x * T, Y = y * T, R = rng(x * 31 + y * 7);
-  r(g, X, Y, T, T, RAVINE.deep);
-  r(g, X, Y, 4, T, RAVINE.wall); r(g, X + 12, Y, 4, T, RAVINE.wall);
-  r(g, X + 4, Y, 2, T, RAVINE.mid); r(g, X + 10, Y, 2, T, RAVINE.mid);
-  r(g, X + 7, Y, 2, T, RAVINE.stream); r(g, X + 7, Y + (R() * 12 | 0), 1, 2, RAVINE.glint);
-  r(g, X, Y, 2, T, RAVINE.lip); r(g, X + 14, Y, 2, T, RAVINE.lip);
-  for (let i = 0; i < 3; i++) { r(g, X + 2, Y + (R() * 15 | 0), 1, 1, RAVINE.lip); r(g, X + 13, Y + (R() * 15 | 0), 1, 1, RAVINE.lip); }
-  if (p.snow) { r(g, X, Y, 2, T, SNOW); r(g, X + 14, Y, 2, T, SNOW); }
+  const X = x * T, Y = y * T, R = rng(x * 31 + y * 7 + 3), ay = (k) => y * T + k;
+  // the depth: lit west wall, its shadow, the bed, the shaded east wall
+  lane(g, X, Y, 2, 3, RV.lit); lane(g, X, Y, 2, 1, RV.litHi); lane(g, X, Y, 5, 1, RV.litLo); lane(g, X, Y, 6, 1, RV.shadeLo);
+  lane(g, X, Y, 7, 3, RV.deep); lane(g, X, Y, 10, 1, RV.deep2);
+  lane(g, X, Y, 11, 1, RV.shadeLo); lane(g, X, Y, 12, 2, RV.shade);
+  // rock layers: a darker seam every few rows, offset wall to wall, unbroken from tile to tile
+  for (let k = 0; k < T; k++) {
+    const a = ay(k);
+    if (a % 6 === 0) { r(g, X + 2, Y + k, 3, 1, RV.layer); r(g, X + 3, Y + k + 1 > Y + T - 1 ? Y + k : Y + k + 1, 1, 1, RV.litHi); }
+    if ((a + 3) % 7 === 0) r(g, X + 12, Y + k, 2, 1, RV.shadeLo);
+    if (a % 11 === 4) r(g, X + 5, Y + k, 1, 2, RV.layer);
+  }
+  // the stream: two tones, flowing streaks of foam, a glint or two
+  lane(g, X, Y, 7, 3, RV.waterLo); lane(g, X, Y, 8, 1, RV.water);
+  for (let k = 0; k < T; k++) {
+    const a = ay(k);
+    if (a % 9 === 2) r(g, X + 7, Y + k, 1, 2, RV.foam);
+    if (a % 13 === 7) r(g, X + 9, Y + k, 1, 1, RV.foam);
+    if (a % 17 === 11) r(g, X + 8, Y + k, 1, 1, RV.glint);
+  }
+  // the shaded east wall: a crack or two, lit edges catching a little light, a wet drip line
+  for (let n = 0; n < 2; n++) { const k = R() * 13 | 0; r(g, X + 12, Y + k, 1, 2, RV.shadeLo); r(g, X + 13, Y + k + 2, 1, 1, RV.litLo); }
+  if (R() < 0.5) { const k = R() * 10 | 0; r(g, X + 11, Y + k, 1, 4, RV.waterLo); }
+  // stones on the bed, at the water's edge
+  if (R() < 0.6) { const k = 2 + (R() * 11 | 0); r(g, X + 6, Y + k, 2, 2, RV.stone); r(g, X + 6, Y + k, 1, 1, RV.stoneHi); }
+  if (R() < 0.4) { const k = 2 + (R() * 11 | 0); r(g, X + 10, Y + k, 1, 2, RV.stone); }
+  // the lips: rock with a lit top edge on the west, a shadow line where the drop begins
+  lane(g, X, Y, 0, 2, RV.lip); lane(g, X, Y, 0, 1, RV.lipHi); lane(g, X, Y, 2, 1, RV.under);
+  lane(g, X, Y, 14, 2, RV.lipLo); lane(g, X, Y, 15, 1, RV.lip); lane(g, X, Y, 13, 1, RV.under);
+  for (let k = 0; k < T; k++) {
+    const a = ay(k);
+    if (a % 5 === 1) r(g, X + 1, Y + k, 1, 1, RV.lipLo);   // chips in the lip
+    if (a % 4 === 2) r(g, X + 14, Y + k, 1, 1, RV.lip);
+  }
+  // grass and moss hanging over both lips, a fern on the lit wall
+  const grass = p.snow ? null : p.gd || RV.moss, grassHi = p.snow ? null : p.g || RV.mossHi;
+  for (let k = 0; k < T; k++) {
+    const a = ay(k);
+    if (grass && a % 7 < 3) r(g, X, Y + k, 1, 1, a % 7 === 1 ? grassHi : grass);
+    if (grass && (a + 4) % 9 < 3) r(g, X + 15, Y + k, 1, 1, grass);
+    if (a % 10 === 3) { r(g, X + 1, Y + k, 2, 1, RV.moss); r(g, X + 2, Y + k + (k < T - 1 ? 1 : 0), 1, 1, RV.mossHi); }
+  }
+  if (!p.snow && R() < 0.5) { const k = 3 + (R() * 9 | 0); r(g, X + 3, Y + k, 1, 3, RV.fern); r(g, X + 2, Y + k + 1, 1, 1, RV.fern); r(g, X + 4, Y + k + 2, 1, 1, RV.fern); }
+  if (p.snow) {   // snow on the lips and on the ledges of the layers
+    lane(g, X, Y, 0, 2, SNOW); lane(g, X, Y, 14, 1, '#dfe7ea'); lane(g, X, Y, 15, 1, SNOW);
+    for (let k = 0; k < T; k++) if (ay(k) % 6 === 0) r(g, X + 2, Y + k, 2, 1, '#e8eef1');
+  }
 }
-const PLANK = ['#8c6a44', '#7a5a38'], POST = '#553a21', ROPE = '#c9a86a';
-function bridgePosts(g, X, Y) { for (const px of [0, 14]) { r(g, X + px, Y + 2, 2, 3, POST); r(g, X + px, Y + 12, 2, 3, POST); } }
+
+const WOOD = { hi: '#b08657', mid: '#9a7248', lo: '#80603b', dark: '#5d4329', grain: '#6e5233', nail: '#2f2418', beam: '#6a4c2e', beamLo: '#4e3820' };
+const ROPE = { hi: '#ddc48e', mid: '#c2a46a', lo: '#987d4c', knot: '#7e653c' };
+// A rail post: a squared timber with a lit cap and a shadow on the ground.
+function post(g, X, Y, h = 4) {
+  r(g, X + 1, Y + h, 2, 1, 'rgba(0,0,0,.35)');
+  r(g, X, Y, 2, h, WOOD.dark); r(g, X, Y, 1, h, WOOD.beam); r(g, X, Y, 2, 1, WOOD.hi);
+}
+// A rope rail from x0 to x1 at row y, sagging a pixel in the middle, knotted at both ends.
+function rail(g, X, Y, x0, x1, y, snow) {
+  const mid0 = x0 + Math.floor((x1 - x0) / 3), mid1 = x1 - Math.floor((x1 - x0) / 3);
+  for (let x = x0; x <= x1; x++) { const sag = x >= mid0 && x <= mid1 ? 1 : 0; r(g, X + x, Y + y + sag, 1, 1, (x % 2) ? ROPE.mid : ROPE.hi); r(g, X + x, Y + y + sag + 1, 1, 1, ROPE.lo); }
+  r(g, X + x0, Y + y, 1, 2, ROPE.knot); r(g, X + x1, Y + y, 1, 2, ROPE.knot);
+  if (snow) for (let x = x0 + 1; x < x1; x += 2) r(g, X + x, Y + y - 1 + (x >= mid0 && x <= mid1 ? 1 : 0), 1, 1, SNOW);
+}
 export function drawBridge(g, x, y, p) {
   const X = x * T, Y = y * T;
   drawRavine(g, x, y, p);
-  r(g, X, Y + 13, T, 1, 'rgba(0,0,0,.35)');
-  for (let i = 0; i < 8; i++) r(g, X + i * 2, Y + 4, 2, 9, PLANK[i % 2]);
-  r(g, X, Y + 3, T, 1, ROPE); r(g, X, Y + 12, T, 1, ROPE);
-  bridgePosts(g, X, Y);
-  if (p.snow) r(g, X + 2, Y + 4, 12, 1, SNOW);
+  r(g, X + 2, Y + 13, 12, 2, 'rgba(0,0,0,.4)');   // the deck's shadow on the ravine below
+  // side beams the boards rest on
+  r(g, X, Y + 4, T, 1, WOOD.beam); r(g, X, Y + 12, T, 1, WOOD.beamLo);
+  // the boards: ten across, two pixels wide, each its own tone, a grain line and a nail at each end
+  for (let i = 0; i < 8; i++) {
+    const bx = X + i * 2, tone = [WOOD.mid, WOOD.hi, WOOD.lo, WOOD.mid, WOOD.hi, WOOD.mid, WOOD.lo, WOOD.hi][i];
+    r(g, bx, Y + 5, 2, 7, tone); r(g, bx + 1, Y + 5, 1, 7, WOOD.lo);
+    r(g, bx, Y + 7 + (i % 3), 1, 2, WOOD.grain);
+    r(g, bx, Y + 5, 1, 1, WOOD.nail); r(g, bx, Y + 11, 1, 1, WOOD.nail);
+  }
+  r(g, X, Y + 5, T, 1, 'rgba(255,240,210,.18)');   // light along the north edge
+  // posts at the four corners and the rope rails between them
+  post(g, X, Y + 1); post(g, X + 14, Y + 1); post(g, X, Y + 12, 3); post(g, X + 14, Y + 12, 3);
+  rail(g, X, Y, 1, 14, 2, p.snow); rail(g, X, Y, 1, 14, 13, false);
+  if (p.snow) { r(g, X + 1, Y + 5, 14, 1, SNOW); r(g, X + 3, Y + 6, 3, 1, '#e8eef1'); r(g, X + 9, Y + 6, 4, 1, '#e8eef1'); }
 }
 export function drawBrokenBridge(g, x, y, p) {
   const X = x * T, Y = y * T;
   drawRavine(g, x, y, p);
-  r(g, X + 2, Y + 6, 2, 8, PLANK[0]); r(g, X + 4, Y + 8, 2, 7, PLANK[1]);   // planks hanging from the west post
-  r(g, X + 12, Y + 7, 2, 6, PLANK[1]);                                       // one from the east
-  r(g, X, Y + 3, 5, 1, ROPE); r(g, X + 5, Y + 4, 2, 1, ROPE); r(g, X + 7, Y + 6, 1, 3, ROPE);   // the snapped rope, dangling
-  r(g, X + 12, Y + 12, 4, 1, ROPE); r(g, X + 11, Y + 13, 1, 2, ROPE);
-  bridgePosts(g, X, Y);
+  // the side beams snapped short at both ends
+  r(g, X, Y + 4, 4, 1, WOOD.beam); r(g, X + 3, Y + 5, 1, 1, WOOD.beam); r(g, X + 12, Y + 12, 4, 1, WOOD.beamLo);
+  // west: two boards still nailed on, a third hanging, its end splintered
+  r(g, X, Y + 5, 2, 7, WOOD.mid); r(g, X + 1, Y + 5, 1, 7, WOOD.lo); r(g, X, Y + 5, 1, 1, WOOD.nail);
+  r(g, X + 2, Y + 6, 2, 6, WOOD.lo); r(g, X + 3, Y + 7, 1, 6, WOOD.dark);
+  r(g, X + 4, Y + 8, 1, 5, WOOD.lo); r(g, X + 5, Y + 10, 1, 4, WOOD.dark); r(g, X + 4, Y + 13, 1, 1, WOOD.hi); r(g, X + 5, Y + 14, 1, 1, WOOD.hi);
+  // east: one board hanging from the far beam
+  r(g, X + 14, Y + 6, 2, 6, WOOD.mid); r(g, X + 15, Y + 6, 1, 6, WOOD.lo); r(g, X + 14, Y + 11, 1, 1, WOOD.nail);
+  r(g, X + 12, Y + 8, 2, 4, WOOD.lo); r(g, X + 12, Y + 12, 1, 1, WOOD.hi);
+  // a board fallen across the stream far below
+  r(g, X + 6, Y + 3, 1, 1, WOOD.dark); r(g, X + 7, Y + 4, 2, 1, WOOD.lo); r(g, X + 9, Y + 5, 1, 1, WOOD.dark); r(g, X + 7, Y + 5, 2, 1, 'rgba(0,0,0,.35)');
+  // the posts stand; the rails hang snapped, frayed at the ends
+  post(g, X, Y + 1); post(g, X + 14, Y + 1); post(g, X, Y + 12, 3); post(g, X + 14, Y + 12, 3);
+  r(g, X + 1, Y + 2, 4, 1, ROPE.hi); r(g, X + 5, Y + 3, 1, 1, ROPE.mid); r(g, X + 5, Y + 4, 1, 2, ROPE.lo); r(g, X + 4, Y + 6, 1, 1, ROPE.lo); r(g, X + 6, Y + 6, 1, 1, ROPE.lo);   // frayed end
+  r(g, X + 11, Y + 13, 4, 1, ROPE.hi); r(g, X + 10, Y + 14, 1, 1, ROPE.lo); r(g, X + 11, Y + 15, 1, 1, ROPE.lo);
+  r(g, X + 13, Y + 2, 2, 1, ROPE.mid); r(g, X + 12, Y + 3, 1, 2, ROPE.lo);
+  if (p.snow) { r(g, X, Y + 5, 2, 1, SNOW); r(g, X + 14, Y + 6, 2, 1, SNOW); }
 }
 
 // v204: a boulder, lit from the top left, with a crack, a few chips and a shadow on the ground; snow on its top.

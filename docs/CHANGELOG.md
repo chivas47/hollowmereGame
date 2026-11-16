@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v249: A finer ravine and bridge
+- The ravine down the mountain's east edge is redrawn in detail: grass and moss hanging over sunlit rock lips, the west wall lit with rock layers and a fern or two, the east wall in shade with cracks and a wet drip line, and a stream at the bottom with flowing foam, glints and stones. The layers run on from tile to tile, so it reads as one cut down the mountain.
+- The mended bridge is a proper plank bridge: separate boards with grain and nail heads on two side beams, knotted rope rails that sag a little between capped posts, and a shadow on the water below. The broken one hangs in pieces: boards still nailed at each end, splintered ends, frayed rope, a plank fallen into the stream.
+- Snow sits on the lips, the rock ledges, the deck and the rails in winter.
+- New save data: none.
+
 ## v248: Wedding vows
 - At the wedding each of the eight candidates now says their own vow, drawn from their heart scenes: Ines's honey ledger, Odile's knots, Tavi's maps, Esme's paintings, Rook's boat with your name on it, Pell's lessons, Juno's round and Corvin's ring.
 - New save data: none.
