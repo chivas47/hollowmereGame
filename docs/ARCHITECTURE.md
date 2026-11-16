@@ -408,7 +408,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `season:changed` | {from, to, report} | days.js | farming (wither), trees (drop fruit), renderer |
 | `day:start` | report | days.js | forage, npcs, coop (build), health, fishing, monsters, trees (age, fruit), giants (merge), clearing (creep, alder growth), weather (rain waters soil) |
 | `day:report` | report | days.js | ui/dialogs.js morning summary |
-| `mine:floor` | {floor, rng, zone, eff} | mine.js | monsters (spawn), treasure (chest) |
+| `mine:floor` | {floor, rng, zone, eff, busy} (v259: busy) | mine.js | monsters (spawn), treasure (chest) |
 | `geode:cracked` | {kind} | treasure.js | museum.js (artifact chance, v68) |
 | `quest:done` | quest | quests.js | market.js (a prize ticket, v69), journal.js (the log, v114) |
 | `order:done` | order key | orders.js | market.js (a prize ticket, v69), journal.js (the log, v114) |
@@ -423,6 +423,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `monster:spit` | {x, y} | monsters.js (v255: a spitter lets fly; its glob joins `shots`) | monsters.js (a puff at its mouth) |
 | `monster:split` | {x, y} | monsters.js (v256: a big splitter falls into pieces) | monsters.js (a burst) |
 | `monster:clang` | {x, y} | monsters.js (v257: a blade's hit on an armored monster) | monsters.js (sparks, a sound) |
+| `mine:cleared` | none | monsters.js (v259: the last creature on a busy floor fell) | mine.js (the ladder opens) |
 | `player:blocked` | {x, y, who} | monsters.js, health.js (v227: a hit turned by the sword's block) | specials (spark and sound) |
 | `mine:faint` | none | health.js | mine.js (carry out) |
 | `gather` | {skill, xp, item?, n?} | farming, giants, clearing, forage, fishing, mine, monsters, coop, barn, books | skills.js (XP, bonus item), books.js (mastery XP, book finds) |
