@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v241: The opening
+- A new farm now opens with a scene instead of three pages of text: a title card with your farm's name, the letter that left you the plot, the carrier's cart dropping you at the end of the village's east road, and Bram meeting you by the shipping bin on the farm. It ends with you at the farmhouse door.
+- Skip it like any scene (hold Use or Esc); you still start at the door, and the first week's goals begin as before.
+- Farms already under way never see it.
+- New save data: none.
+
 ## v240: Cutscenes
 - Important moments can now play as short scenes on the map: black bars slide in, the camera moves on its own, neighbours walk and speak, and a title card marks the moment. The clock stops while one plays.
 - Use (or a tap) shows the rest of a line, then goes on. Hold Use or Esc (or keep a finger on the screen) for a second to skip the rest.

@@ -18,6 +18,8 @@
 //                                            Use shows the rest of the line, then goes on
 //   { do: 'title', text, sub, secs }         a title card over the scene
 //   { do: 'wait', secs }
+//   { do: 'goto', map, x, y, dir }           v241: you go to another map (the actors leave, the camera follows you)
+// A scene with end: { map, x, y, dir } leaves you there, watched or skipped; without one you go back to where you stood.
 export const CUTSCENE = {
   skipHold: 1,      // seconds Use or Esc is held to skip a scene
   typeRate: 45,     // letters a second as a line types out
@@ -26,6 +28,45 @@ export const CUTSCENE = {
 };
 
 export const CUTSCENES = {
+  // v241 (roadmap 84b): the opening, after the new game screen (ui/arrival.js). The carrier's cart drops you at the
+  // end of the village's east road, and Bram meets you on the farm by the shipping bin he built. It ends with you
+  // at the farmhouse door, in control.
+  opening: {
+    name: 'Arriving at Hollowmere',
+    end: { map: 'farm', x: 3, y: 4, dir: 'down' },
+    at: { map: 'village', x: 29, y: 8, dir: 'right' },
+    steps: [
+      { do: 'fade', to: 1, secs: 0 },
+      { do: 'bars', on: true },
+      { do: 'title', text: '{farm} Farm', sub: 'Spring, year one', secs: 2.6 },
+      { do: 'say', who: null, text: 'A letter came at the end of winter. A great-aunt you met once had kept a plot below the village of Hollowmere, and she left it to you.' },
+      { do: 'say', who: null, text: 'Everything you own fits in one trunk. The carrier said he would take you as far as the road goes.' },
+      { do: 'cam', x: 18, y: 9 },
+      { do: 'fade', to: 0, secs: 1.4 },
+      { do: 'walk', id: 'you', path: [[37, 8]], wait: false },
+      { do: 'pan', x: 33, y: 8, secs: 3.4 },
+      { do: 'say', who: null, text: 'The cart stops where the road gives out. Past a gate that leans more than it stands, the old plot waits under a season of weeds.' },
+      { do: 'walk', id: 'you', path: [[38, 8]] },
+      { do: 'fade', to: 1, secs: 0.8 },
+      { do: 'goto', map: 'farm', x: 0, y: 4, dir: 'right' },
+      { do: 'actor', id: 'bram', x: 8, y: 4, dir: 'up' },
+      { do: 'fade', to: 0, secs: 0.9 },
+      { do: 'walk', id: 'you', path: [[6, 4]] },
+      { do: 'face', id: 'bram', dir: 'left' },
+      { do: 'say', who: 'bram', text: 'So you\'re {name}. Bram. I built that shipping bin, back when this place still grew things.' },
+      { do: 'face', id: 'bram', dir: 'up' },
+      { do: 'wait', secs: 0.5 },
+      { do: 'face', id: 'bram', dir: 'left' },
+      { do: 'say', who: 'bram', text: 'The soil\'s good under all that. Clear a patch below the path, get those turnips in and keep them watered. Anything you put in the bin, I collect at night, and the money\'s yours by morning.' },
+      { do: 'say', who: 'bram', text: 'The village is west of the house, and folk there will want to meet you. The Wilds are east, if you\'ve a mind to forage.' },
+      { do: 'walk', id: 'bram', path: [[7, 4]] },
+      { do: 'say', who: 'bram', text: 'Here, the key. Get some sleep before two, or you\'ll drop where you stand. Welcome to Hollowmere.' },
+      { do: 'walk', id: 'bram', path: [[8, 4], [12, 4], [12, 6]], wait: false },
+      { do: 'walk', id: 'you', path: [[3, 4]] },
+      { do: 'face', id: 'you', dir: 'down' },
+      { do: 'title', text: 'Welcome to {farm} Farm', sub: '', secs: 2 },
+    ],
+  },
   // v240: the morning after the old wing's workroom is restored (systems/quarry.js), the crew is just finishing.
   bridge: {
     name: 'The bridge is mended',

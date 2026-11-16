@@ -1,7 +1,7 @@
 // v240 (roadmap 84a): plays a scene from data/cutscenes.js. While one plays (G.cut), the clock stops, you cannot
 // walk or use tools, the camera follows the script and the neighbours in it are actors drawn here (their own
 // selves are hidden: systems/npcs.js). Use advances a line; holding Use or Esc for CUTSCENE.skipHold skips the rest.
-// When a scene ends you are put back where you stood (unless it says stay), the scene is marked seen in
+// When a scene ends you are put back where you stood (or at its end, v241), the scene is marked seen in
 // G.S.cutscenes and 'cutscene:end' is emitted. ui/cutscene.js draws the bars, lines, titles and fades.
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
@@ -45,11 +45,10 @@ export function finish() {
   if (!c) return;
   const sc = CUTSCENES[c.id];
   G.cut = null; G.moving = false;
-  if (!sc.stay) {
-    const { map, x, y, dir } = c.back;
-    if (G.S.map !== map) { G.S.map = map; emit('map:changed', map); }
-    Object.assign(G.S, { x, y, dir });
-  }
+  const from = G.S.map;
+  if (sc.end) placePlayer(sc.end.map, sc.end.x, sc.end.y, sc.end.dir);   // v241: where the scene leaves you, even skipped
+  else Object.assign(G.S, c.back);
+  if (G.S.map !== from) emit('map:changed', G.S.map);
   G.S.cutscenes[c.id] = G.S.day;
   emit('cutscene:end', c.id);
   emit('world:changed'); changed();
@@ -90,6 +89,13 @@ function run(s) {
     case 'say': c.line = { who: s.who || null, text: text(s.text), shown: 0 }; return true;
     case 'title': c.title = { text: text(s.text), sub: s.sub ? text(s.sub) : '' }; return true;
     case 'wait': return true;
+    case 'goto': {   // v241: the scene moves on to another map
+      const from = G.S.map;
+      c.actors = {}; c.walkers = []; c.cam = null; c.pan = null;
+      placePlayer(s.map, s.x, s.y, s.dir || G.S.dir);
+      if (s.map !== from) emit('map:changed', s.map);
+      changed(); return false;
+    }
     default: return false;
   }
 }
