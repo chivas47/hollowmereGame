@@ -359,7 +359,7 @@ Five fish per season. Bite odds are weighted toward easy fish (weight 6 minus di
 
 - Pickaxe costs 2 energy per hit. Stone takes 1 hit, copper 2, iron 3. Iron appears from floor 6.
 - One rock per floor hides the ladder down. Checkpoints at floor 1 and every fifth floor reached.
-- Slimes: health 3 + floor/3, damage 6 + floor, count up to 8. Sword does 3 damage. Gel drops 60% (5g). Ore sells for little (stone 2g, copper 5g, iron 10g) but the bin keeps it for upgrades anyway.
+- Slimes: health 3 + floor/3, damage 6 + floor, count up to 8. Sword does 3 damage. Gel drops 75%, 1 or 2 (5g; v250, was 60%). Ore sells for little (stone 2g, copper 5g, iron 10g) but the bin keeps it for upgrades anyway.
 - Player health 100, lost only in the mine, refilled by sleep. Fainting costs 15% of gold (max 500g) and leaves you at the entrance with half health.
 
 ### Neighbours
@@ -641,19 +641,51 @@ Slot 5 (no hotbar change) swings the weapon chosen in the bag. Damage is Stardew
   | Club | Ground slam | after a 0.35 s leap, the weapon's damage to every monster within 40 px, pushed outward and dazed for 1 s | 6 s |
 
   Cooldowns are Stardew's (sword 1.5 s, dagger 3 s, club 6 s). Specials hit with crits, rings, professions, enchantments and forging like any swing. v231: farmer two has them too, on their controller's X (B still leaves), with their own cooldown, shown as a small bar under their feet (v232); their block guards them.
-- Monsters (count grows to 10 a floor): slime (floor 1+, gel 60%), Hollow mite (3+, crawls, fiber 30%), cave bat (12+, flies, coal 20%), bone walker (30+, iron ore 30%), Hollow serpent (50+, flies, violet stone 5%). Combat XP 3, 2, 6, 15, 20. Any kill: 1% chance of a weapon or ring from the floor's pool.
+- Monsters (count grows to 10 a floor): slime (floor 1+), Hollow mite (3+, crawls), cave bat (12+, flies), bone walker (30+), Hollow serpent (50+, flies). Combat XP 3, 2, 6, 15, 20. Any kill: 1% chance of a weapon or ring from the floor's pool.
+- v250 loot tables (roadmap 85a, data/loot.js). Every monster rolls each row of its table on its own at each defeat; the thief's ring doubles the counts. Stardew by role: its monsters drop materials of their own (bug meat, bat wing, bone fragment, solar and void essence) and sometimes the ore of their floors.
+
+  | Material | Sell | Stardew counterpart |
+  |---|---|---|
+  | Chitin | 8g | bug meat (8g) |
+  | Leatherwing | 15g | bat wing (15g) |
+  | Bone shard | 12g | bone fragment (12g) |
+  | Wisp silk | 40g | rare ghost drop, priced as an essence |
+  | Sunmote | 40g | solar essence (40g) |
+  | Gloommote | 50g | void essence (50g) |
+
+  | Monster | Loot (chance, count) |
+  |---|---|
+  | Slime | gel 75% (1-2), copper ore 5% |
+  | Hollow mite | chitin 50%, fiber 20% |
+  | Burrow beetle | chitin 40%, copper ore 20% |
+  | Cave bat | leatherwing 50%, coal 15% |
+  | Tusk boar | coal 25%, bone shard 20% |
+  | Bone walker | bone shard 60% (1-2), iron ore 20% |
+  | Stone ram | iron ore 30%, stone 50% (2-3) |
+  | Hollow serpent | gloommote 10%, violet stone 5% |
+  | Gloom hound | gloommote 15%, gold ore 20% |
+  | Sand wraith | bone shard 40%, cloth 10%, wisp silk 5% |
+  | Scorch rex | sunmote 25%, coal 40% |
+  | Dune scuttler | chitin 40%, copper ore 40% |
+  | Sand bull | bone shard 30%, iron ore 30% |
+  | Magma sprite | cinder 50%, sunmote 10% |
+  | Ember golem | cinder 80% (1-2), gold ore 10% |
+  | Cinder hound | cinder 40%, gloommote 10% |
+  | Magma ram | cinder 80%, umbrite ore 3% |
+
+  The materials sell from the bin and sit in the Bag's Materials tab; their crafting and cooking uses come in roadmap 85b. Chitin, leatherwing and bone shards are universally disliked as gifts, like gel and ore.
 - v228 chargers (data/weapons.js CHARGE, systems/monsters.js chargeTurn). Within 72 px and rested, a charger stops and winds up (it flashes and shakes: the tell), aiming at you until it goes; then it rushes in a straight line, hurting 1.5 times as much on contact; then it stands winded, open to hits. One that runs into a wall or a rock, or into your sword's block, stands dazed (stars over it) for longer. Between charges it walks after you and rests 2 s. Two rush twice in a row, the second wind-up shorter.
 
-  | Charger | Where | Health | Damage | Wind-up, rush, length | Winded / dazed | XP | Drop |
-  |---|---|---|---|---|---|---|---|
-  | Burrow beetle | Hollow 6+ | 4 + floor/4 | 5 + floor/2 | 0.5 s, 110 px/s, 0.4 s | 0.8 / 1.6 s | 4 | copper ore 20% |
-  | Tusk boar | Hollow 15+ | 8 + floor/3 | 8 + floor | 0.6 s, 140, 0.6 s | 0.9 / 1.6 s | 8 | coal 25% |
-  | Stone ram | Hollow 35+ | 18 + floor/3 | 12 + floor | 0.7 s, 150, 0.7 s | 0.9 / 2 s | 16 | iron ore 30% |
-  | Gloom hound | Hollow 60+ | 26 + floor/2 | 14 + floor | 0.45 s, 160, 0.45 s, twice | 0.9 / 1.6 s | 22 | gold ore 20% |
-  | Dune scuttler | Sunken Cavern | 20 + floor/4 | 16 + floor/4 | 0.35 s, 150, 0.35 s | 0.6 / 1.6 s | 20 | copper ore 40% |
-  | Sand bull | Sunken Cavern | 40 + floor/3 | 22 + floor/4 | 0.8 s, 170, 0.9 s | 1.1 / 1.6 s | 32 | iron ore 30% |
-  | Cinder hound | Ember Vent, Smoke Peak | 28 + floor/4 | 22 + floor/5 | 0.4 s, 170, 0.5 s, twice | 0.8 / 1.6 s | 34 | cinder 40% |
-  | Magma ram | Ember Vent, Smoke Peak | 70 + floor/2 | 30 + floor/5 | 0.8 s, 150, 0.8 s | 1 / 2.2 s | 48 | cinder 80% |
+  | Charger | Where | Health | Damage | Wind-up, rush, length | Winded / dazed | XP |
+  |---|---|---|---|---|---|---|
+  | Burrow beetle | Hollow 6+ | 4 + floor/4 | 5 + floor/2 | 0.5 s, 110 px/s, 0.4 s | 0.8 / 1.6 s | 4 |
+  | Tusk boar | Hollow 15+ | 8 + floor/3 | 8 + floor | 0.6 s, 140, 0.6 s | 0.9 / 1.6 s | 8 |
+  | Stone ram | Hollow 35+ | 18 + floor/3 | 12 + floor | 0.7 s, 150, 0.7 s | 0.9 / 2 s | 16 |
+  | Gloom hound | Hollow 60+ | 26 + floor/2 | 14 + floor | 0.45 s, 160, 0.45 s, twice | 0.9 / 1.6 s | 22 |
+  | Dune scuttler | Sunken Cavern | 20 + floor/4 | 16 + floor/4 | 0.35 s, 150, 0.35 s | 0.6 / 1.6 s | 20 |
+  | Sand bull | Sunken Cavern | 40 + floor/3 | 22 + floor/4 | 0.8 s, 170, 0.9 s | 1.1 / 1.6 s | 32 |
+  | Cinder hound | Ember Vent, Smoke Peak | 28 + floor/4 | 22 + floor/5 | 0.4 s, 170, 0.5 s, twice | 0.8 / 1.6 s | 34 |
+  | Magma ram | Ember Vent, Smoke Peak | 70 + floor/2 | 30 + floor/5 | 0.8 s, 150, 0.8 s | 1 / 2.2 s | 48 |
 
   Health, damage and XP sit beside the walkers that share their floors (the bone walker at 30+, the sand wraith, the ember golem), as Stardew's chargers do beside its other monsters of a level (shadow brutes beside shadow shamans). Each floor's monster count is unchanged: chargers share it with the others.
 - Rings (two worn; Stardew's ruby, topaz, aquamarine, jade, vampire, slime charmer, burglar's and glow rings): Ember +10% damage, Stone +1 defense, Tide +10% critical chance, Moss criticals x1.5, Leech +2 health a kill, Slime ward (slimes do no harm), Thief's (double drops), Glow (40% more light). Floors 15, 35, 45 and 65 give one; the rest drop.

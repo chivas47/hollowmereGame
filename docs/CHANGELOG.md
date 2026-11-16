@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v250: Loot tables
+- Every monster now drops from a table of its own: two or three things, each rolled on its own, instead of one item. Bats drop leatherwing, mites and beetles chitin, bone walkers bone shards, the deep and fiery kinds sunmotes and gloommotes, the sand wraith a rare wisp silk; most still drop the ore of their floors now and then.
+- Six new materials: chitin (8g), leatherwing (15g), bone shard (12g), wisp silk (40g), sunmote (40g) and gloommote (50g), at Stardew's prices for bug meat, bat wing, bone fragment and the essences. They sell from the bin and sit in the Bag's Materials tab. Their crafting and cooking uses come next (roadmap 85b).
+- Slimes drop gel 75% of the time, 1 or 2 (was 60%, 1). The thief's ring still doubles every drop.
+- A defeat lists everything it dropped in one notice.
+- New save data: none.
+
 ## v249: A finer ravine and bridge
 - The ravine down the mountain's east edge is redrawn in detail: grass and moss hanging over sunlit rock lips, the west wall lit with rock layers and a fern or two, the east wall in shade with cracks and a wet drip line, and a stream at the bottom with flowing foam, glints and stones. The layers run on from tile to tile, so it reads as one cut down the mountain.
 - The mended bridge is a proper plank bridge: separate boards with grain and nail heads on two side beams, knotted rope rails that sag a little between capped posts, and a shadow on the water below. The broken one hangs in pieces: boards still nailed at each end, splintered ends, frayed rope, a plank fallen into the stream.

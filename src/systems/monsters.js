@@ -13,6 +13,7 @@ import { CAVERN } from '../data/cavern.js';
 import { VENT } from '../data/forge.js';
 import { PEAK } from '../data/nuts.js';
 import { ITEMS } from '../data/items.js';
+import { rollLoot } from '../data/loot.js';
 import { drawSlime, drawMonster, drawDazed } from '../render/sprites.js';
 import { moveBox, occupied, mover } from './world.js';
 import { hurtPlayer, hurtPartner } from './health.js';
@@ -158,7 +159,9 @@ const HAY = ['fiber', 'cloth', 'coal'];
 function defeat(m) {
   slimes.splice(slimes.indexOf(m), 1);
   const d = MONSTERS[m.kind || 'slime'], times = wearing('thiefring') ? 2 : 1;
-  if (d.drop && Math.random() < d.drop[1]) { G.S.bag[d.drop[0]] = (G.S.bag[d.drop[0]] || 0) + times; notify(`+${times} ${ITEMS[d.drop[0]].name}`); }
+  const got = rollLoot(m.kind || 'slime', Math.random, times);   // 85a: each kind's loot table
+  for (const [k, n] of Object.entries(got)) G.S.bag[k] = (G.S.bag[k] || 0) + n;
+  if (Object.keys(got).length) notify(Object.entries(got).map(([k, n]) => `+${n} ${ITEMS[k].name}`).join(', '));
   const pool = DROP_POOL(m.floor || 1, m.zone);
   if (pool.length && Math.random() < RARE_DROP * times * (G.S.read.includes('pw_bestiary') ? 2 : 1)) giveFind(pool[Math.floor(Math.random() * pool.length)], `The ${d.name.toLowerCase()} dropped`);
   if (wearing('leechring')) G.S.hp = Math.min(G.S.maxHp, G.S.hp + 2);

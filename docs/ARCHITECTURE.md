@@ -67,6 +67,7 @@ src/
     hidden.js         GATES (grove log, railway rubble, sewer key), GROVE stumps, SPRING, TRADER stock (v45)
     cavern.js         CAVERN (the Sunken Cavern's door, strength, ores, shafts, chests), HOLLOW_GOLD (v38)
     guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
+    loot.js           v250 (roadmap 85a): LOOT tables per monster kind, LOOT_ITEMS (the six monster materials), rollLoot(), lootPerDefeat()
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item, underSky()
     atmosphere.js     LIGHT keyframes, WATERFALLS, WILDLIFE, AMBIENCE by area (v72); indoor LIGHTS, HOUSE_WINDOWS, CRACKLE_RANGE (v100); WATER (v102); WIND, CLOTHESLINES (v103); SEASONAL, SEASONAL_MAX (v104); STEPS, STEP_EVERY, HOOF_EVERY (v109); NIGHT_LIGHTS (v105)
     vignettes.js      v111: VIGNETTES, the small stories outdoors per map (tile, art key, text, words by season), VIGNETTE (the tile)
