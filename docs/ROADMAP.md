@@ -295,7 +295,7 @@ Nuno asked for more creature variety, better drops, a glossary and more creature
 | 85e1 | Behaviours: shoot | feature | done (chivas47/hollowmereGame#272) | Split from 85e like 85d. Spitters that keep their distance and spit globs you dodge or block back: Hollow spitter (70+), sand spitter (Cavern), crag spitter (Vent and Peak). |
 | 85e2 | Behaviours: split | feature | done (chivas47/hollowmereGame#273) | Big slimes that split in two: moss slime (Hollow), ember slime (Vent). |
 | 85f | Behaviours: phase, armored | feature | done (chivas47/hollowmereGame#274) | With lantern wisp, tomb shade, shellbacks, storm wing. Nuno: swords do a quarter damage to armored kinds. |
-| 85g | Slaying goals for the new kinds | feature | in progress | One goal per behaviour group, Stardew-sized counts, a ring, hat or weapon each. |
+| 85g | Slaying goals for the new kinds | feature | in progress (chivas47/hollowmereGame#275) | One goal per behaviour group, Stardew-sized counts, a ring, hat or weapon each. |
 | 85h | Busy floors | feature | queued | Stardew's infested floors: about 1 floor in 15 is a themed swarm; the ladder appears once cleared. |
 | 85i | Elites | feature | queued | Nuno: opt-in only. A challenge brazier at the Hollow (Stardew's Shrine of Challenge) makes the dungeons dangerous: elites with a glow, 3x health, sure essence, 5x rare roll. |
 | 85j | Seasonal creatures | feature | queued | Nuno: add them. One kind a season at night (bramble sprite, firefly moth, gourd lurker, frost wisp). Nuno (November 2026): in the Wilds and on every farm at night. |
