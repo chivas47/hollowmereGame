@@ -104,6 +104,7 @@ const { DEBRIS } = await load('data/clearing.js');
 const { freeTile, grassTile } = await load('systems/clearing.js');
 const { cutWildWeed } = await load('systems/forage.js');
 const { WEATHER_ITEMS } = await load('data/weather.js');
+const { LOOT_ITEMS } = await load('data/loot.js');   // roadmap 85a: monster materials, an income line of their own
 const { act } = await load('systems/interact.js');
 const { sleep } = await load('systems/days.js');
 const { placePlayer, tileAt, tileOf, soilOf, placeKey, parsePlaceKey } = await load('systems/world.js');
@@ -846,7 +847,7 @@ function simulate(runSeed) {
     for (const [k, n] of Object.entries(reserved)) { held[k] = Math.min(n, s.bag[k]); s.bag[k] -= held[k]; }
     for (const [k, n] of Object.entries(s.bag)) {
       if (!n || ITEMS[k].material) continue;
-      const src = ITEMS[k].dish ? 'cooking' : k.startsWith('roe_') ? 'fish pond' : k.startsWith('aged_') ? 'artisan goods' : k in CROPS ? 'crops' : k in FORAGE ? 'forage' : k in FRUIT ? 'fruit' : k in WEATHER_ITEMS ? 'storm cells' : k in FISH ? 'fish' : k in PRODUCTS ? 'animal products' : k in ARTISAN ? 'artisan goods' : 'mining';
+      const src = ITEMS[k].dish ? 'cooking' : k.startsWith('roe_') ? 'fish pond' : k.startsWith('aged_') ? 'artisan goods' : k in CROPS ? 'crops' : k in FORAGE ? 'forage' : k in FRUIT ? 'fruit' : k in WEATHER_ITEMS ? 'storm cells' : k in LOOT_ITEMS ? 'monster loot' : k in FISH ? 'fish' : k in PRODUCTS ? 'animal products' : k in ARTISAN ? 'artisan goods' : 'mining';
       add(log.income, src, valueOf(k));
     }
     ship();

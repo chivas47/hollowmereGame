@@ -14,6 +14,6 @@ export const TIER_NAMES = { loved: 'Loves', liked: 'Likes', neutral: 'Neutral', 
 export const UNIVERSAL = {
   loved: ['starstone', 'gildedgourd'],   // v56: the maze's gilded gourd (Stardew's golden pumpkin)
   liked: [...Object.keys(MINERALS).filter((k) => MINERALS[k].gem && k !== 'starstone'), ...Object.keys(ARTISAN).filter((k) => !['oil', 'flour', 'sugar'].includes(k)), ...Object.keys(FRUIT)],
-  disliked: ['stone', 'copper', 'iron', 'gold', 'umbrite', 'coal', 'cinder', 'wood', 'hardwood', 'fiber', 'gel'],
+  disliked: ['stone', 'copper', 'iron', 'gold', 'umbrite', 'coal', 'cinder', 'wood', 'hardwood', 'fiber', 'gel', 'chitin', 'leatherwing', 'boneshard'],   // 85a: raw monster parts
   hated: Object.keys(TRASH),
 };

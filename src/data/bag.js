@@ -12,6 +12,7 @@ import { PONDS_ITEMS, AGED_ROE } from './ponds.js';
 import { DISHES, WISH_ITEMS } from './cooking.js';
 import { ARTIFACTS } from './museum.js';
 import { ITEMS } from './items.js';
+import { LOOT_ITEMS } from './loot.js';
 
 // Category tabs in order, with the icon's fallback colour for items that have none of their own.
 export const BAG_KINDS = {
@@ -34,7 +35,7 @@ const FLAG_KIND = (it) => (it.ring || it.trinket || it.book || it.bait || it.tac
 const TABLE_KIND = Object.fromEntries([
   ...from(PRODUCE, 'crop'), ...from(FRUIT, 'crop'), ...from(FORAGE, 'forage'), ...from(FISH, 'fish'), ...from(PRODUCTS, 'animal'),
   ...from(ARTISAN, 'artisan'), ...from(PONDS_ITEMS, 'artisan'), ...from(AGED_ROE, 'artisan'), ...from(DISHES, 'food'), ...from(WISH_ITEMS, 'food'),
-  ...from(MINERALS, 'mineral'), ...from(ARTIFACTS, 'mineral'), ...from(WOODS, 'material'),
+  ...from(MINERALS, 'mineral'), ...from(ARTIFACTS, 'mineral'), ...from(WOODS, 'material'), ...from(LOOT_ITEMS, 'material'),
 ]);
 export const ITEM_KIND = Object.fromEntries(Object.entries(ITEMS).map(([k, it]) =>
   [k, FLAG_KIND(it) || (it.material && !['animal', 'food'].includes(TABLE_KIND[k]) ? 'material' : TABLE_KIND[k] || 'other')]));
@@ -53,6 +54,7 @@ export const ICON_COLOURS = {
   gel: '#6fd08a', quartz: '#e8e8f0', violet: '#9b6bd0', ambergem: '#e9a23b', frosttear: '#9fd8f0', emberquartz: '#e2584a', tidestone: '#4fb0a8',
   heartstone: '#e2707a', starstone: '#f4ead2', geode: '#9a8f80', frostgeode: '#a9c4d6', magmageode: '#a5503a',
   egg: '#f4ead2', duckegg: '#d8e6c0', mossegg: '#86b86a', bigegg: '#efe0c0', cowmilk: '#f4f4f0', goatmilk: '#ece8dc', feather: '#e8e0d0', wool: '#efe6d6',
+  chitin: '#8a6a3a', leatherwing: '#5a4a6a', boneshard: '#e8e0d0', wispsilk: '#cfe6f0', sunmote: '#f2c94c', gloommote: '#4a3a6a',   // 85a
   luckypaw: '#c98c42', truffle: '#5c4030', stormcell: '#69aedb', bouquet: '#e2707a', pendant: '#7fc8c0', gildedgourd: '#e9b44c',
 };
 

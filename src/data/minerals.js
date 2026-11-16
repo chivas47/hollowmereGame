@@ -52,5 +52,4 @@ export const SLIME = {
   speed: (floor) => 18 + Math.min(20, floor * 2),
   count: (floor) => Math.min(8, 2 + Math.floor(floor / 2)),
   colors: ['#7fbf5a', '#5fa8d3', '#a070c8'],
-  drop: 'gel', dropChance: 0.6,
 };

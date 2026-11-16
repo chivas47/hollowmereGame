@@ -10,6 +10,7 @@ import { HOTBAR } from '../src/data/hotbar.js';
 import { MONSTERS, CHARGE } from '../src/data/weapons.js';
 import { MONSTERS as SHEET } from '../src/data/sprites.js';
 import { ITEMS } from '../src/data/items.js';
+import { LOOT } from '../src/data/loot.js';
 import { slimes, spawnSlimes } from '../src/systems/monsters.js';
 import { special, resetSpecials } from '../src/systems/specials.js';
 import { placePlayer } from '../src/systems/world.js';
@@ -40,7 +41,7 @@ test('eight chargers, two to four per zone, each drawn and dropping a real item'
     const s = SHEET.kinds[k];
     assert.ok(s?.shape && SHEET.layers.includes(`${s.shape}.body`), `${k} is on the sheet`);
     if (SHEET.layers.includes(`${s.shape}.glow`)) assert.ok(s.glow, `${k} tints its shape's glow`);
-    assert.ok(ITEMS[MONSTERS[k].drop[0]], `${k} drops an item`);
+    assert.ok(LOOT[k]?.length && LOOT[k].every(([it]) => ITEMS[it]), `${k} drops real items`);
   }
 });
 
