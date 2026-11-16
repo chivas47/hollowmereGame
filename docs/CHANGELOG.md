@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v247: Heart scenes played out (Juno, Corvin)
+- Juno's and Corvin's heart scenes now play out on the map: Juno with her spilled mailbag on the village square, at her door, knocking at your door after dark and on your porch step; Corvin at the Anvil, at the quiet end of the town's east lane and at home with the two rings.
+- Every neighbour's heart scenes now play out on the map. Same lines, choices and points as before.
+- New save data: none.
+
 ## v246: Heart scenes played out (Esme, Rook, Pell)
 - Esme's, Rook's and Pell's heart scenes now play out on the map too: Esme at her canvas in the forest, posing you on a stump in the clearing, in her cottage and on your porch; Rook at his boat shop, launching at the beach's waterline, out past the pier at sunset and by your barn (your porch if you have none); Pell in front of the town hall's schoolroom and, for the last one, in your farmhouse.
 - Same lines, choices and points as before.
