@@ -13,6 +13,7 @@ import { useEnergy } from './world.js';
 import { swingAt } from './effects.js';
 import { has } from './professions.js';
 import { roomDone } from './restoration.js';
+import { playCutscene } from './cutscene.js';
 import { BRIDGE_TILE, MENDED_TILE, QUARRY_BRIDGE as B } from '../data/bridge.js';
 
 // v238: stone, copper and iron only (was 8% gold); the old shares kept their ratio.
@@ -57,7 +58,8 @@ export function mendBridge(S = G.S) {
 }
 on('game:loaded', applyBridge);
 on('game:reset', applyBridge);
-on('day:start', () => { if (mendBridge()) { applyBridge(); notify(B.done); changed(); } });
+// v240: the morning it is mended, a cutscene shows the crew finishing (data/cutscenes.js); the notice follows it.
+on('day:start', () => { if (mendBridge()) { applyBridge(); changed(); if (!playCutscene('bridge', { then: () => notify(B.done) })) notify(B.done); } });
 // Facing the broken bridge, with anything: what would mend it. Priority 62, beside the shortcut trunks.
 addInteraction(62, ({ tx, ty, mapId }) => {
   if (mapId !== B.map || tx !== B.x || ty !== B.y || bridgeOpen()) return false;

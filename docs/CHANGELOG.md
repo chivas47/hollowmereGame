@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v240: Cutscenes
+- Important moments can now play as short scenes on the map: black bars slide in, the camera moves on its own, neighbours walk and speak, and a title card marks the moment. The clock stops while one plays.
+- Use (or a tap) shows the rest of a line, then goes on. Hold Use or Esc (or keep a finger on the screen) for a second to skip the rest.
+- The first one: the morning the quarry bridge is mended, Bram is finishing the last plank. Saves that already have the bridge do not see it.
+- More scenes follow: the opening, the wedding, the old wing restored, firsts on the farm, and the heart scenes played out (roadmap 84b to 84f).
+- New save data: which scenes you have seen (cutscenes). Older saves start with none.
+
 ## v239: A ravine for the quarry bridge
 - The broken bridge to the quarry was a dark square on the mountain path. A ravine with a stream at the bottom now runs down the mountain's east edge, and the bridge across it shows snapped ropes and hanging planks until it is mended, then a plank bridge with rope rails. Snow lies on its edges in winter.
 - The signpost to the quarry moved one tile west, off the ravine.

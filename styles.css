@@ -361,3 +361,21 @@ button.wm{font:inherit;text-align:left;cursor:pointer;min-height:44px;padding:4p
 #special.cooling{opacity:.5}
 #special[hidden]{display:none}
 @media (hover:hover) and (pointer:fine){#special{display:none}}
+
+/* v240 (roadmap 84a): cutscenes (ui/cutscene.js): bars, fade, title card, the spoken line, how to go on or skip */
+.cut{position:absolute;inset:0;z-index:20;line-height:1.35;user-select:none;-webkit-user-select:none;touch-action:none;overflow:hidden}
+.cut-fade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+.cut-bar{position:absolute;left:0;right:0;height:11%;background:#000;transition:transform .4s ease}
+.cut-bar.top{top:0;transform:translateY(-100%)}
+.cut-bar.bottom{bottom:0;transform:translateY(100%)}
+.cut.bars .cut-bar{transform:none}
+.cut-title{position:absolute;left:0;right:0;top:36%;text-align:center;color:var(--cream);text-shadow:0 2px 0 #000,0 0 12px rgba(0,0,0,.8);pointer-events:none}
+.cut-title h2{margin:0;font-size:clamp(20px,4.2cqw,34px);color:var(--harvest)}
+.cut-title p{margin:6px 0 0;font-size:clamp(16px,2.2cqw,20px)}
+.cut-line{position:absolute;left:4%;right:4%;bottom:13%;background:rgba(28,23,18,.92);border:2px solid var(--seam);border-radius:8px;padding:8px 12px;font-size:clamp(16px,2.1cqw,20px);color:var(--cream);pointer-events:none}
+.cut-line b{display:block;color:var(--harvest);font-weight:600;margin-bottom:2px}
+.cut-line.narrator span{font-style:italic;color:var(--straw)}
+.cut-line em{visibility:hidden;font-style:inherit}
+.cut-skip{position:absolute;right:8px;bottom:2%;font-size:16px;color:rgba(255,246,214,.75);white-space:pre;pointer-events:none;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.cut-skip i{display:block;height:3px;width:0;background:var(--harvest);border-radius:2px;align-self:stretch}
+body.in-cut .goal,body.in-cut .prompt{visibility:hidden}

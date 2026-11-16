@@ -102,6 +102,7 @@ export function newState() {
     spouse: null, wedding: null, roommate: false,      // v52: your spouse's villager id, a wedding { id, day } to come; v53: a roommate
     secretFriend: null,                              // v57: { year, id } for the Longnight Feast
     restore: { given: {}, bundles: {}, rooms: {}, rival: false, done: false },   // v60: systems/restoration.js
+    cutscenes: {},                                      // v240: cutscene id -> the day it was seen (systems/cutscene.js)
     quarryBridge: false,                                // v238: the bridge to the quarry is mended (systems/quarry.js)
     orders: { week: -1, offer: [], active: null, done: 0 },   // v61: systems/orders.js
     casino: { coins: 0, bought: [] }, desertTraded: 0,   // v64: systems/desert.js
@@ -190,6 +191,7 @@ export function merge(saved) {
   s.challenge = { gems: sc.gems || 0, week: sc.week ?? -1, offer: [...(sc.offer || [])], active: sc.active ? { ...sc.active } : null, done: sc.done || 0, bought: [...(sc.bought || [])] };
   const so = saved.orders || {};   // v61
   s.orders = { week: so.week ?? -1, offer: [...(so.offer || [])], active: so.active ? { ...so.active } : null, done: so.done || 0 };
+  s.cutscenes = saved.cutscenes && typeof saved.cutscenes === 'object' ? { ...saved.cutscenes } : {};   // v240
   const rs = saved.restore || {};   // v60
   s.restore = { given: { ...(rs.given || {}) }, bundles: { ...(rs.bundles || {}) }, rooms: { ...(rs.rooms || {}) }, rival: !!rs.rival, done: !!rs.done };
   s.trader = { day: saved.trader?.day || 0, bought: { ...(saved.trader?.bought || {}) }, once: [...(saved.trader?.once || [])] };

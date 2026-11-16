@@ -161,7 +161,7 @@ export function partnerUse() {
 addUpdater((dt) => {
   if (G.bed.you && ['up', 'down', 'left', 'right'].some((d) => G.keys[d])) G.bed.you = false;   // v142: walking gets you up
   const p = G.P2;
-  if (!p) return;
+  if (!p || G.cut) return;   // v240: farmer two waits out a cutscene
   if (G.bed.p2 && ['up', 'down', 'left', 'right'].some((d) => p.keys[d])) G.bed.p2 = false;
   keep();
   if (p.anim) p.anim = stepAnim(p.anim, dt, p);
