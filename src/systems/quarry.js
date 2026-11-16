@@ -3,10 +3,8 @@
 // with geodes now and then. v238: gold ore left the quarry (it comes from the Hollow's deep floors), and the quarry
 // waits behind a broken bridge on the mountain path until the old wing's workroom is restored (data/bridge.js).
 import { G } from '../core/game.js';
-import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addInteraction, addEntities } from '../core/registry.js';
-import { today } from '../core/time.js';
+import { addInteraction } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
 import { ITEMS } from '../data/items.js';
 import { ROCKS, COAL_FROM_STONE } from '../data/minerals.js';
@@ -15,8 +13,7 @@ import { useEnergy } from './world.js';
 import { swingAt } from './effects.js';
 import { has } from './professions.js';
 import { roomDone } from './restoration.js';
-import { BRIDGE_TILE, QUARRY_BRIDGE as B } from '../data/bridge.js';
-import { r as px } from '../render/pixel.js';
+import { BRIDGE_TILE, MENDED_TILE, QUARRY_BRIDGE as B } from '../data/bridge.js';
 
 // v238: stone, copper and iron only (was 8% gold); the old shares kept their ratio.
 export const QUARRY = { rocks: 16, mix: [['r', 0.54], ['c', 0.27], ['i', 0.19]], geode: 0.04, energy: 2 };
@@ -47,7 +44,7 @@ on('game:loaded', () => { if (!G.S.quarryRocks || !Object.keys(G.S.quarryRocks).
 export const bridgeOpen = (S = G.S) => !!S.quarryBridge;
 function applyBridge() {
   const open = bridgeOpen();
-  MAPS[B.map].grid[B.y][B.x] = open ? 'P' : BRIDGE_TILE;
+  MAPS[B.map].grid[B.y][B.x] = open ? MENDED_TILE : BRIDGE_TILE;   // drawn by render/tiles.js
   if (open) MAPS[B.map].exits[B.exit.at] = { to: B.exit.to, x: B.exit.x, y: B.exit.y, dir: B.exit.dir };
   else delete MAPS[B.map].exits[B.exit.at];
   emit('world:changed');
@@ -67,18 +64,6 @@ addInteraction(62, ({ tx, ty, mapId }) => {
   notify(roomDone(B.room) ? 'A crew has started on the bridge. It should be mended by morning.' : B.hint);
   return true;
 });
-// The broken bridge: a dark gap with two loose planks and a snapped rail.
-addEntities(() => (G.S.map !== B.map || bridgeOpen() ? [] : [{
-  y: B.y * T + 15,
-  draw: (c) => {
-    const X = B.x * T, Y = B.y * T;
-    px(c, X, Y + 2, 16, 13, '#2b2420'); px(c, X, Y + 2, 16, 2, '#4a3d33');
-    px(c, X, Y + 5, 5, 3, '#7a5a38'); px(c, X + 11, Y + 9, 5, 3, '#7a5a38');
-    px(c, X + 2, Y + 11, 6, 2, '#5d4329');
-    px(c, X, Y + 1, 4, 1, '#8c6a44'); px(c, X + 13, Y + 1, 3, 1, '#8c6a44');
-    if (today().season === 'Winter') px(c, X, Y + 1, 16, 1, '#f2f6f8');
-  },
-}]));
 
 export function hitQuarryRock(x, y) {
   const S = G.S, k = `${x},${y}`, r = S.quarryRocks[k];

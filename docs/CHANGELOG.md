@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v239: A ravine for the quarry bridge
+- The broken bridge to the quarry was a dark square on the mountain path. A ravine with a stream at the bottom now runs down the mountain's east edge, and the bridge across it shows snapped ropes and hanging planks until it is mended, then a plank bridge with rope rails. Snow lies on its edges in winter.
+- The signpost to the quarry moved one tile west, off the ravine.
+- New save data: none.
+
 ## v238: The Hollow feeds the farm
 - The quarry east of the mountain lake starts behind a broken bridge. The morning after the town hall's workroom is restored (its bundles, or bought from Ashgrove Trading Co. for 25,000g), a crew has mended it. Facing the gap says what will mend it.
 - Quarry rocks are stone, copper and iron only. Gold ore now comes from the Hollow's deep floors, the Sunken Cavern, the vent, the peak and the gold pan, so gold bars (the seed maker, gold-tier tools) come from going down.

@@ -7,7 +7,7 @@ import { today, dayEnd } from '../core/time.js';
 import { MAPS, sizeOf } from '../data/maps.js';
 import { PAL, DRY_TREES } from '../data/seasons.js';
 import { LIGHT, NIGHT_FROM } from '../data/atmosphere.js';
-import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, drawQuarry, drawSand, drawBowl, drawHouseTile, drawTerrain, drawFlowers, drawBuilding, drawProp, coveredTiles, HOUSE_ART, CAVE_ART, PROP_ART, PROP_GROUND } from './tiles.js';
+import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, drawQuarry, drawSand, drawBowl, drawRavine, drawBridge, drawBrokenBridge, drawHouseTile, drawTerrain, drawFlowers, drawBuilding, drawProp, coveredTiles, HOUSE_ART, CAVE_ART, PROP_ART, PROP_GROUND } from './tiles.js';
 import { facing, tileAt } from '../systems/world.js';
 import { WALLPAPERS, FLOORS } from '../data/furniture.js';
 import { TERRAIN_SHEET, CAVE_SHEET } from '../data/sprites.js';
@@ -26,7 +26,7 @@ on('game:reset', () => { cache = {}; });
 on('world:changed', () => { cache = {}; });
 onSheet(() => { cache = {}; });   // v85: redraw the background once a sheet arrives (ground, cave, wallpaper, floors)
 
-const TILE_ART = { b: drawBowl, O: drawWater, T: drawTree, R: drawRock, w: drawGlassWall, ...CAVE_ART };
+const TILE_ART = { b: drawBowl, O: drawWater, T: drawTree, R: drawRock, w: drawGlassWall, 'ǀ': drawRavine, 'ǂ': drawBrokenBridge, 'ǃ': drawBridge, ...CAVE_ART };   // 77q: the quarry ravine and bridge
 
 // v103: a map's tree tiles keep only their trunk foot in the background; their crowns go to a canvas of their own
 // drawn every frame below, leaning in the wind (systems/wind.js).

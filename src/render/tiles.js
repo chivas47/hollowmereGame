@@ -173,6 +173,40 @@ export function drawWater(g, x, y, p) {
   for (let i = 0; i < 2; i++) r(g, X + 2 + (R() * 9 | 0), Y + 3 + (R() * 10 | 0), 4, 1, p.ripple);
 }
 
+// Polish 77q: the ravine down the mountain's east edge (data/bridge.js): rock lips on both sides, dark walls, a thread
+// of water far below. The bridge over it, broken (a snapped rope, two planks hanging from the posts) or mended.
+const RAVINE = { lip: '#8a8070', wall: '#5d5247', deep: '#2b2420', mid: '#3d342d', stream: '#3e6478', glint: '#7fa7ba' };
+export function drawRavine(g, x, y, p) {
+  const X = x * T, Y = y * T, R = rng(x * 31 + y * 7);
+  r(g, X, Y, T, T, RAVINE.deep);
+  r(g, X, Y, 4, T, RAVINE.wall); r(g, X + 12, Y, 4, T, RAVINE.wall);
+  r(g, X + 4, Y, 2, T, RAVINE.mid); r(g, X + 10, Y, 2, T, RAVINE.mid);
+  r(g, X + 7, Y, 2, T, RAVINE.stream); r(g, X + 7, Y + (R() * 12 | 0), 1, 2, RAVINE.glint);
+  r(g, X, Y, 2, T, RAVINE.lip); r(g, X + 14, Y, 2, T, RAVINE.lip);
+  for (let i = 0; i < 3; i++) { r(g, X + 2, Y + (R() * 15 | 0), 1, 1, RAVINE.lip); r(g, X + 13, Y + (R() * 15 | 0), 1, 1, RAVINE.lip); }
+  if (p.snow) { r(g, X, Y, 2, T, SNOW); r(g, X + 14, Y, 2, T, SNOW); }
+}
+const PLANK = ['#8c6a44', '#7a5a38'], POST = '#553a21', ROPE = '#c9a86a';
+function bridgePosts(g, X, Y) { for (const px of [0, 14]) { r(g, X + px, Y + 2, 2, 3, POST); r(g, X + px, Y + 12, 2, 3, POST); } }
+export function drawBridge(g, x, y, p) {
+  const X = x * T, Y = y * T;
+  drawRavine(g, x, y, p);
+  r(g, X, Y + 13, T, 1, 'rgba(0,0,0,.35)');
+  for (let i = 0; i < 8; i++) r(g, X + i * 2, Y + 4, 2, 9, PLANK[i % 2]);
+  r(g, X, Y + 3, T, 1, ROPE); r(g, X, Y + 12, T, 1, ROPE);
+  bridgePosts(g, X, Y);
+  if (p.snow) r(g, X + 2, Y + 4, 12, 1, SNOW);
+}
+export function drawBrokenBridge(g, x, y, p) {
+  const X = x * T, Y = y * T;
+  drawRavine(g, x, y, p);
+  r(g, X + 2, Y + 6, 2, 8, PLANK[0]); r(g, X + 4, Y + 8, 2, 7, PLANK[1]);   // planks hanging from the west post
+  r(g, X + 12, Y + 7, 2, 6, PLANK[1]);                                       // one from the east
+  r(g, X, Y + 3, 5, 1, ROPE); r(g, X + 5, Y + 4, 2, 1, ROPE); r(g, X + 7, Y + 6, 1, 3, ROPE);   // the snapped rope, dangling
+  r(g, X + 12, Y + 12, 4, 1, ROPE); r(g, X + 11, Y + 13, 1, 2, ROPE);
+  bridgePosts(g, X, Y);
+}
+
 // v204: a boulder, lit from the top left, with a crack, a few chips and a shadow on the ground; snow on its top.
 export function drawRock(g, x, y, p) {
   const X = x * T, Y = y * T;
