@@ -23,6 +23,9 @@
 // v242: a scene can have roles, filled when it is played (cast: { spouse: 'ines' }): '$spouse' stands in for an id
 // or who, and {spouse} in text for their name. A guest who is cast in a role is not added a second time.
 // A scene with end: { map, x, y, dir } leaves you there, watched or skipped; without one you go back to where you stood.
+// v244: the greenhouse's top-left tile, moved or not (systems/sites.js keeps G.S.sites; it starts at 9,1).
+const greenhouseAt = (S) => S.sites?.greenhouse || { x: 9, y: 1 };
+
 export const CUTSCENE = {
   skipHold: 1,      // seconds Use or Esc is held to skip a scene
   typeRate: 45,     // letters a second as a line types out
@@ -161,6 +164,48 @@ export const CUTSCENES = {
       { do: 'pan', x: 21, y: 8, secs: 2.4 },
       { do: 'title', text: 'The old wing is finished', sub: 'The coach road and the harbour reopen', secs: 3 },
       { do: 'fade', to: 1, secs: 1 },
+    ],
+  },
+  // v244 (roadmap 84e): firsts. The first crop you pick, wherever you are: no one walks on, the field stays as it is.
+  harvest: {
+    name: 'The first harvest',
+    steps: [
+      { do: 'bars', on: true },
+      { do: 'wait', secs: 0.5 },
+      { do: 'say', who: null, text: 'You hold it up to the light: a {crop}, earth still on it. The first thing {farm} Farm has grown in years.' },
+      { do: 'title', text: 'The first harvest', sub: '{farm} Farm', secs: 2.4 },
+    ],
+  },
+  // The Hollow's floor 100 (systems/mine.js), the first time you reach it. Nell, the retired miner, chalked the old
+  // maps this far and no further.
+  hollow100: {
+    name: 'The bottom of the old maps',
+    steps: [
+      { do: 'bars', on: true },
+      { do: 'wait', secs: 0.6 },
+      { do: 'say', who: null, text: 'Floor one hundred. On the wall by the ladder, a faded chalk mark: an N in a circle, and a line under it.' },
+      { do: 'say', who: null, text: 'Nell\'s mark. The old miners\' maps end here. Everything below this is yours to chart.' },
+      { do: 'title', text: 'Floor 100', sub: 'The bottom of the old maps', secs: 2.6 },
+    ],
+  },
+  // The morning the greenhouse is rebuilt (systems/greenhouse.js), by its door wherever it stands on the farm. Bram's
+  // carpentry built it. Its door is below the second of its four columns (GREENHOUSE.footprint 4 x 2).
+  greenhouse: {
+    name: 'The greenhouse',
+    at: (S) => { const g = greenhouseAt(S); return { map: 'farm', x: g.x + 1, y: g.y + 3, dir: 'up' }; },
+    steps: [
+      { do: 'fade', to: 1, secs: 0 },
+      { do: 'bars', on: true },
+      { do: 'cam', x: (S) => greenhouseAt(S).x + 1.5, y: (S) => greenhouseAt(S).y + 1 },
+      { do: 'actor', id: 'bram', x: (S) => greenhouseAt(S).x + 2, y: (S) => greenhouseAt(S).y + 2, dir: 'left' },
+      { do: 'fade', to: 0, secs: 1 },
+      { do: 'say', who: null, text: 'Overnight the old greenhouse has new glass in every pane. The morning light goes straight through it.' },
+      { do: 'walk', id: 'you', path: [[(S) => greenhouseAt(S).x + 1, (S) => greenhouseAt(S).y + 2]] },
+      { do: 'face', id: 'you', dir: 'right' },
+      { do: 'say', who: 'bram', text: 'Glass all the way round, and a stove for the cold months. Whatever you plant in there will not know what season it is.' },
+      { do: 'say', who: 'bram', text: 'Do not let it go to weeds again. I am too old to reglaze it twice.' },
+      { do: 'title', text: 'The greenhouse', sub: 'Any crop, any season', secs: 2.6 },
+      { do: 'fade', to: 1, secs: 0.8 },
     ],
   },
   // v240: the morning after the old wing's workroom is restored (systems/quarry.js), the crew is just finishing.

@@ -27,8 +27,11 @@ test('every scene is well formed: known steps, neighbours that exist, tiles on t
   const kinds = new Set(['fade', 'bars', 'cam', 'pan', 'follow', 'actor', 'remove', 'walk', 'face', 'say', 'title', 'wait', 'goto', 'emote']);
   const { EMOTES } = await import('../src/data/emotes.js');
   for (const [id, sc] of Object.entries(CUTSCENES)) {
-    let map = MAPS[sc.at?.map];
-    assert.ok(map, `${id}: a map to play on`);
+    const S0 = newState(), val = (v) => (typeof v === 'function' ? v(S0) : v);   // v244: worked out from a save
+    const at = val(sc.at);
+    let map = at ? MAPS[at.map] : null;   // v244: no at: it plays where you are (no actors or paths then)
+    if (at) assert.ok(map, `${id}: a map to play on`);
+    else assert.ok(!sc.steps.some((s) => s.do === 'actor' || (s.do === 'walk' && s.id !== 'you')), `${id}: no map, so no actors`);
     for (const s of sc.steps) {
       if (s.do === 'goto') { map = MAPS[s.map]; assert.ok(map, `${id}: goto ${s.map}`); continue; }
       assert.ok(kinds.has(s.do), `${id}: ${s.do}`);
@@ -36,7 +39,8 @@ test('every scene is well formed: known steps, neighbours that exist, tiles on t
       for (const who of [s.who, ['actor', 'walk', 'face', 'emote'].includes(s.do) ? s.id : null]) {
         if (who && who !== 'you' && !who.startsWith('$')) assert.ok(NPCS.some((n) => n.id === who), `${id}: ${who}`);
       }
-      for (const [x, y] of [...(s.path || []), ...(s.do === 'actor' ? [[s.x, s.y]] : [])]) {
+      for (const [x, y] of [...(s.path || []), ...(s.do === 'actor' ? [[s.x, s.y]] : [])].map(([x, y]) => [val(x), val(y)])) {
+        if (!map) continue;
         const t = map.grid[Math.floor(y)]?.[Math.floor(x)];
         assert.ok(t && !SOLID.has(t), `${id}: ${s.do} at ${x},${y} stands on open ground`);
       }
@@ -219,4 +223,66 @@ test('restoring the last room of the old wing plays its scene, Ashgrove its own,
     assert.equal(G.S.map, 'farm');
     assert.ok(toasts.some((m) => /whole again/.test(m)), `${rival}: ${JSON.stringify(toasts)}`);
   }
+});
+
+test('the first crop picked plays the first harvest, naming it, and never again', () => {
+  freshFarm({ map: 'farm', x: 120, y: 140, profile: { name: 'Rowan', farm: 'Fernhill' } });
+  emit('game:reset');
+  emit('gather', { skill: 'farming', item: 'turnip', n: 1, xp: 3 });
+  update(0);
+  assert.equal(G.cut?.id, 'harvest');
+  runFor(5);
+  assert.match(G.cut.line.text, /a turnip, earth still on it\. The first thing Fernhill Farm/);
+  assert.equal(G.S.map, 'farm', 'played where you stand');
+  G.useHeld = true; for (let i = 0; i < 40 && G.cut; i++) update(0.05); G.useHeld = false;
+  assert.deepEqual([G.S.x, G.S.y], [120, 140]);
+  emit('gather', { skill: 'farming', item: 'turnip', n: 1, xp: 3 });
+  update(0);
+  assert.equal(G.cut, null, 'once only');
+  emit('gather', { skill: 'foraging', item: 'leek', n: 1, xp: 3 });
+  update(0);
+  assert.equal(G.cut, null);
+});
+
+test('floor 100 of the Hollow plays once; other floors and zones do not', () => {
+  freshFarm({ map: 'mine' });
+  emit('game:reset');
+  emit('mine:floor', { floor: 99, zone: 'hollow' }); update(0); assert.equal(G.cut, null);
+  emit('mine:floor', { floor: 100, zone: 'cavern' }); update(0); assert.equal(G.cut, null);
+  emit('mine:floor', { floor: 100, zone: 'hollow' }); update(0);
+  assert.equal(G.cut?.id, 'hollow100');
+  G.useHeld = true; for (let i = 0; i < 40 && G.cut; i++) update(0.05); G.useHeld = false;
+  emit('mine:floor', { floor: 100, zone: 'hollow' }); update(0);
+  assert.equal(G.cut, null);
+});
+
+test('the greenhouse morning plays by its door, wherever it was moved', async () => {
+  await import('../src/systems/greenhouse.js');
+  for (const at of [null, { x: 14, y: 9 }]) {
+    freshFarm({ map: 'house' });
+    emit('game:reset');
+    if (at) G.S.sites.greenhouse = at;
+    G.S.built.greenhouse = 'pending';
+    emit('day:start', {});
+    update(0);
+    assert.equal(G.cut?.id, 'greenhouse');
+    const g = at || { x: 9, y: 1 };
+    assert.deepEqual([G.S.map, Math.floor(G.S.x / 16), Math.floor(G.S.y / 16)], ['farm', g.x + 1, g.y + 3]);
+    assert.equal(G.cut.actors.bram.x, (g.x + 2) * 16 + 8);
+    runFor(10); advance(); advance();
+    runFor(10);
+    assert.equal(Math.floor(G.S.y / 16), g.y + 2, 'you walk up to the door');
+    G.useHeld = true; for (let i = 0; i < 40 && G.cut; i++) update(0.05); G.useHeld = false;
+    assert.equal(G.S.map, 'house');
+  }
+});
+
+test('old saves count the firsts they have passed as seen', () => {
+  const old = JSON.parse(JSON.stringify(newState()));
+  delete old.cutscenes; old.v = 5;
+  old.skills.farming = 40; old.built.greenhouse = true; old.mineDeepest = 120;
+  const s = merge(old);
+  assert.ok(s.cutscenes.harvest && s.cutscenes.greenhouse && s.cutscenes.hollow100);
+  const fresh = JSON.parse(JSON.stringify(newState())); fresh.v = 5; delete fresh.cutscenes;
+  assert.deepEqual(merge(fresh).cutscenes, {}, 'a new farm has all its firsts ahead');
 });

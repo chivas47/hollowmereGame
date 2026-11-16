@@ -9,6 +9,8 @@ import { on, emit, changed } from '../core/events.js';
 import { addUpdater, addEntities } from '../core/registry.js';
 import { CUTSCENE, CUTSCENES } from '../data/cutscenes.js';
 import { NPCS } from '../data/npcs.js';
+import { CROPS } from '../data/crops.js';
+import { ITEMS } from '../data/items.js';
 import { drawPerson, drawEmote } from '../render/sprites.js';
 import { emote, emoteOf, gestureOffset } from './emotes.js';
 import { lookOf } from './npcs.js';
@@ -23,21 +25,22 @@ export const playing = () => !!G.cut;
 // Asks for a scene. It starts when nothing else is open; a scene already seen plays again only with replay.
 // then(): called when it ends or is skipped.
 // v242: cast fills a scene's roles ({ spouse: 'ines' }): '$spouse' as an id or who, {spouse} in text (their name).
-export function playCutscene(id, { replay = false, then, cast = {} } = {}) {
+// v244: vars fills plain words in text ({ crop: 'Turnip' } for {crop}).
+export function playCutscene(id, { replay = false, then, cast = {}, vars = {} } = {}) {
   if (!CUTSCENES[id] || (!replay && seen(id)) || queue.some((q) => q.id === id) || G.cut?.id === id) return false;
-  queue.push({ id, then, cast });
+  queue.push({ id, then, cast, vars });
   return true;
 }
 
-function begin({ id, then, cast }) {
-  const sc = CUTSCENES[id], S = G.S;
+function begin({ id, then, cast, vars }) {
+  const sc = CUTSCENES[id], S = G.S, at = val(sc.at);
   G.cut = {
-    id, then, cast, i: -1, t: 0, step: null, skipT: 0,
+    id, then, cast, vars, i: -1, t: 0, step: null, skipT: 0,
     back: { map: S.map, x: S.x, y: S.y, dir: S.dir },
     actors: {}, cam: null, pan: null, fade: 0, fadeTo: null, bars: false, line: null, title: null, walkers: [],
   };
   G.keys = {}; G.moving = false;
-  if (sc.at) { placePlayer(sc.at.map, sc.at.x, sc.at.y, sc.at.dir); if (sc.at.map !== G.cut.back.map) emit('map:changed', sc.at.map); }
+  if (at) { placePlayer(at.map, at.x, at.y, at.dir); if (at.map !== G.cut.back.map) emit('map:changed', at.map); }
   emit('cutscene:start', id); changed();   // the HUD's place name follows you to the scene
   if (G.cut) next();   // a listener may have ended it already (the balance bot skips every scene)
 }
@@ -48,7 +51,8 @@ export function finish() {
   const sc = CUTSCENES[c.id];
   G.cut = null; G.moving = false;
   const from = G.S.map;
-  if (sc.end) placePlayer(sc.end.map, sc.end.x, sc.end.y, sc.end.dir);   // v241: where the scene leaves you, even skipped
+  const end = val(sc.end);
+  if (end) placePlayer(end.map, end.x, end.y, end.dir);   // v241: where the scene leaves you, even skipped
   else Object.assign(G.S, c.back);
   if (G.S.map !== from) emit('map:changed', G.S.map);
   G.S.cutscenes[c.id] = G.S.day;
@@ -57,11 +61,13 @@ export function finish() {
   c.then?.();
 }
 
+// v244: a value in a scene can be worked out from the save when it plays (S) => ..., e.g. where a building stands.
+const val = (v) => (typeof v === 'function' ? v(G.S) : v);
 const nameOfNpc = (id) => NPCS.find((n) => n.id === id)?.name || id;
 // A role ('$spouse') to the neighbour cast in it; any other id as it is.
 const who = (id) => (typeof id === 'string' && id.startsWith('$') ? G.cut?.cast?.[id.slice(1)] : id);
 const text = (s) => s.replace(/\{name\}/g, G.S.profile?.name || 'Farmer').replace(/\{farm\}/g, G.S.profile?.farm || 'Hollowmere')
-  .replace(/\{(\w+)\}/g, (m, role) => (G.cut?.cast?.[role] ? nameOfNpc(G.cut.cast[role]) : m));
+  .replace(/\{(\w+)\}/g, (m, role) => (G.cut?.cast?.[role] ? nameOfNpc(G.cut.cast[role]) : G.cut?.vars?.[role] ?? m));
 
 // Starts the next step. Steps that take no time run straight on.
 function next() {
@@ -76,8 +82,8 @@ function next() {
 }
 
 // Sets a step going; true when it takes time (the updater finishes it).
-function run(s) {
-  const c = G.cut;
+function run(raw) {
+  const c = G.cut, s = Object.fromEntries(Object.entries(raw).map(([k, v]) => [k, k === 'do' ? v : val(v)]));   // v244
   switch (s.do) {
     case 'fade': if (!s.secs) { c.fade = s.to; return false; } c.fadeTo = { from: c.fade, to: s.to, secs: s.secs }; return true;
     case 'bars': c.bars = s.on !== false; return false;
@@ -93,7 +99,7 @@ function run(s) {
     case 'remove': delete c.actors[who(s.id)]; return false;
     case 'face': { const a = s.id === 'you' ? G.S : c.actors[who(s.id)]; if (a) a.dir = s.dir; return false; }
     case 'walk': {
-      const w = { id: who(s.id), path: s.path.map(([x, y]) => ({ x: px(x), y: py(y) })) };
+      const w = { id: who(s.id), path: s.path.map(([x, y]) => ({ x: px(val(x)), y: py(val(y)) })) };
       c.walkers.push(w);
       return s.wait !== false;
     }
@@ -174,6 +180,14 @@ addEntities(() => (G.cut ? Object.values(G.cut.actors).map((a) => {
     if (e) drawEmote(c, a.x + g.x, a.y + g.y, e.kind, e.k, look);
   } };
 }) : []));
+
+// v244 (roadmap 84e): firsts. The first crop picked from soil or a pot (a farming gather of a crop), anywhere.
+on('gather', (g) => {
+  if (g?.skill !== 'farming' || !CROPS[g.item] || seen('harvest') || G.cut) return;
+  playCutscene('harvest', { vars: { crop: (ITEMS[g.item]?.name || g.item).toLowerCase() } });
+});
+// The Hollow's floor 100, the first time (systems/mine.js emits mine:floor after it saves the deepest floor).
+on('mine:floor', ({ floor, zone }) => { if (zone === 'hollow' && floor === 100) playCutscene('hollow100'); });
 
 // A new game or a loaded save starts with no scene running.
 on('game:reset', () => { G.cut = null; queue.length = 0; });

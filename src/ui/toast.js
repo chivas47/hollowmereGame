@@ -25,7 +25,7 @@ function retire(t) {
 }
 
 const held = new Set();
-const settling = () => !G.S?.profile || !G.S.firstWeek?.arrived;
+const settling = () => !G.S?.profile || !G.S.firstWeek?.arrived || !!G.cut;   // v244: and while a cutscene plays (shown when it ends)
 
 export const toastBox = () => (G.P2 && G.partnerActing ? 'toast2' : 'toast');
 function show(msg, id = toastBox()) {

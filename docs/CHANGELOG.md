@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v244: Firsts
+- Three new short scenes: your first harvest (where you stand, naming the crop), reaching floor 100 of the Hollow (Nell's old chalk mark, where the miners' maps end), and the morning the greenhouse is rebuilt (Bram hands it over by its door, wherever you moved it).
+- Notices that arrive during a scene now wait until it ends, instead of showing under the lines.
+- Farms that already have these behind them do not see them.
+- New save data: none (old saves mark the firsts they passed as seen).
+
 ## v243: The old wing restored
 - Finishing the last room of the town hall's old wing now plays a scene: the neighbours gather in front of the hall, Aurel the stonemason hands it over and points you to the plaque, and the camera goes to the coach stop as word spreads that the coach road and the harbour are open again.
 - On the Ashgrove route their crew finishes it instead, and Aurel is cooler about it.
