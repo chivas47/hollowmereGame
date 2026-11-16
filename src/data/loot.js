@@ -22,7 +22,7 @@ export const LOOT = {
   boar:       [['coal', 0.25, 1, 1], ['boneshard', 0.2, 1, 1]],
   skeleton:   [['boneshard', 0.6, 1, 2], ['iron', 0.2, 1, 1]],
   ram:        [['iron', 0.3, 1, 1], ['stone', 0.5, 2, 3]],
-  serpent:    [['gloommote', 0.1, 1, 1], ['violet', 0.05, 1, 1]],
+  serpent:    [['gloommote', 0.1, 1, 1], ['sunmote', 0.1, 1, 1], ['violet', 0.05, 1, 1]],   // v251: sunmote too, so the Hollow has one (Stardew: solar essence from its mines' ghosts)
   gloomhound: [['gloommote', 0.15, 1, 1], ['gold', 0.2, 1, 1]],
   wraith:     [['boneshard', 0.4, 1, 1], ['cloth', 0.1, 1, 1], ['wispsilk', 0.05, 1, 1]],
   rex:        [['sunmote', 0.25, 1, 1], ['coal', 0.4, 1, 1]],

@@ -100,7 +100,7 @@ export function describe(id) {
 // What an item goes into: crafting recipes, dishes and tool upgrades, with how many each needs.
 export function usedIn(k) {
   const out = [];
-  for (const [r, rec] of Object.entries(RECIPES)) if (rec.needs?.[k]) out.push({ name: PLACEABLES[r]?.name || r, n: rec.needs[k], where: 'Crafting' });
+  for (const [r, rec] of Object.entries(RECIPES)) if (rec.needs?.[k]) out.push({ name: rec.name || PLACEABLES[r]?.name || ITEMS[r]?.name || r, n: rec.needs[k], where: 'Crafting' });
   for (const d of Object.values(DISHES)) if (d.needs?.[k]) out.push({ name: d.name, n: d.needs[k], where: 'Cooking' });
   for (const u of Object.values(UPGRADES)) for (const t of u.tiers) if (t.needs?.[k]) out.push({ name: t.label, n: t.needs[k], where: 'Upgrade' });
   return out;

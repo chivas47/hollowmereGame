@@ -35,7 +35,8 @@ export function craft(key, times = 1) {
   if (rc.item) {   // v41: bait and tackle go to the bag
     S.bag[key] = (S.bag[key] || 0) + n;
     emit('crafted', { key, n, kit: false });   // v74: the crafted pose (systems/animation.js)
-    notify(`Crafted ${n > 1 ? `${n} ` : 'a '}${ITEMS[key].name.toLowerCase()}. Fix it to the rod from the bag (${keyName('bag')}).`);
+    notify(ITEMS[key].ring ? `Crafted the ${ITEMS[key].name.toLowerCase()}. Wear it from the bag (${keyName('bag')}).`   // v251: the umbrite band
+      : `Crafted ${n > 1 ? `${n} ` : 'a '}${ITEMS[key].name.toLowerCase()}. Fix it to the rod from the bag (${keyName('bag')}).`);
     changed();
     return t;
   }
@@ -45,10 +46,11 @@ export function craft(key, times = 1) {
     changed();
     return t;
   }
-  S.kit[key] += n;
-  emit('crafted', { key, n, kit: true });
-  if (S.kit[S.kitSel] <= 0) S.kitSel = key;
-  notify(`Crafted ${n > 1 ? `${n} x ` : 'a '}${PLACEABLES[key].name}. Select slot 7 to place it.`);
+  const out = rc.out || key;   // v251: bone meal makes soil boosters
+  S.kit[out] += n;
+  emit('crafted', { key: out, n, kit: true });
+  if (S.kit[S.kitSel] <= 0) S.kitSel = out;
+  notify(`Crafted ${n > 1 ? `${n} x ` : 'a '}${PLACEABLES[out].name}. Select slot 7 to place it.`);
   changed();
   return t;
 }

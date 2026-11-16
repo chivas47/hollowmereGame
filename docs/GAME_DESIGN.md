@@ -241,7 +241,7 @@ Stardew's bobber bar by role: after a bite, hold Use to lift your bar (it falls 
 - Bar height: 28 of 120, + half the rod's and enchantment's old zone bonus, + 1.5 per fishing level, x1.3 steady hand, x1.25 cork bobber.
 - Treasure (15%, doubled by the treasure hunter): keep it in the bar to fill its meter; one roll of bait, coal, ore, geodes, quartz, tidestone, the fishing book, wild bait or the tide ring.
 - Trash (8% of bites, caught at once): driftwood, sodden letter, broken glass, old boot. Recycler (25 wood, 25 stone, 1 iron bar; Stardew's): driftwood to wood or coal, letter to fiber or cloth, glass to quartz, boot to stone, coal or iron ore.
-- Bait (Stardew: 1 bug meat for 5; ours 1 gel for 5) halves the wait, needs the ashwood rod. Wild bait (10 fiber, 5 gel for 5): wait x0.75, 25% double catches.
+- Bait (Stardew: 1 bug meat for 5; ours 1 chitin for 5 since v251, 1 gel before) halves the wait, needs the ashwood rod. Wild bait (10 fiber, 5 gel, 5 chitin for 5; Stardew's 10 fiber, 5 slime, 5 bug meat): wait x0.75, 25% double catches.
 - Ironwood rod (Stardew's iridium rod, 7,500g) takes tackle, 20 catches each: spinner (2 iron bars; bites 25% sooner), cork bobber (10 wood, 5 hardwood, 10 gel; bar +25%), trap bobber (1 copper bar, 10 gel; drain x0.67), lead bobber (1 iron bar, 10 stone; no bounce), treasure hunter (2 gold bars).
 - Bobber styles: six colours, a new one every 25 fish.
 
@@ -536,7 +536,7 @@ v101: once you can make more than one, the menu adds ×5 and All (as many as you
 | Gate | 0 | 10 wood | Face it to open or close; walkable when open |
 | Wood path x5 | 0 | 5 wood | Walkable floor; nothing creeps onto it |
 | Stone path x5 | 0 | 5 stone | As wood path |
-| Lightning rod | 0 | 1 iron bar, 1 copper bar, 10 stone |
+| Lightning rod | 0 | 1 iron bar, 5 leatherwing, 10 stone (v251; Stardew's 5 bat wings, a copper bar before) |
 | Furnace | 0 | 20 copper ore, 25 stone | 5 ore + 1 coal -> a bar, ready at once |
 | Charcoal kiln | 0 | 20 wood, 2 copper bars | 10 wood -> 1 coal, ready at once | Catches a storm's lightning as a storm cell (500g) |
 | Brew barrel | 0 | 30 wood, 1 copper bar, 1 iron bar | Fruit -> wine (3 x fruit) in 7 nights; vegetable -> juice (2.25 x) in 4 |
@@ -662,7 +662,7 @@ Slot 5 (no hotbar change) swings the weapon chosen in the bag. Damage is Stardew
   | Tusk boar | coal 25%, bone shard 20% |
   | Bone walker | bone shard 60% (1-2), iron ore 20% |
   | Stone ram | iron ore 30%, stone 50% (2-3) |
-  | Hollow serpent | gloommote 10%, violet stone 5% |
+  | Hollow serpent | gloommote 10%, sunmote 10% (v251), violet stone 5% |
   | Gloom hound | gloommote 15%, gold ore 20% |
   | Sand wraith | bone shard 40%, cloth 10%, wisp silk 5% |
   | Scorch rex | sunmote 25%, coal 40% |
@@ -673,7 +673,20 @@ Slot 5 (no hotbar change) swings the weapon chosen in the bag. Damage is Stardew
   | Cinder hound | cinder 40%, gloommote 10% |
   | Magma ram | cinder 80%, umbrite ore 3% |
 
-  The materials sell from the bin and sit in the Bag's Materials tab; their crafting and cooking uses come in roadmap 85b. Chitin, leatherwing and bone shards are universally disliked as gifts, like gel and ore.
+  The materials sell from the bin and sit in the Bag's Materials tab.
+- v251 uses for monster loot (roadmap 85b), Stardew's recipes now that we have its monster materials:
+
+  | Recipe | Needs | Makes | Stardew counterpart |
+  |---|---|---|---|
+  | Bait | 1 chitin | 5 bait | 1 bug meat |
+  | Wild bait | 10 fiber, 5 gel, 5 chitin | 5 wild bait | 10 fiber, 5 slime, 5 bug meat |
+  | Lightning rod | 1 iron bar, 5 leatherwing, 10 stone | the rod | 1 iron bar, 1 refined quartz, 5 bat wings |
+  | Great bomb | 4 gold ore, 1 sunmote, 1 gloommote (mining 8) | a bomb | mega bomb |
+  | Bone meal | 5 bone shards | 5 soil boosters | bone mill (5 bone fragments, 5 to 10 basic fertilizer) |
+  | Crawler steak (cooking, learnt the morning after combat 1) | 10 chitin | 50g, 50 energy | bug steak |
+  | Umbrite band (combat 9) | 5 umbrite bars, 50 sunmote, 50 gloommote | a ring: the ember and glow rings at once (1,000g) | iridium band |
+
+  Wisp silk has no use yet; it comes with the lantern wisp (85f). Chitin, leatherwing and bone shards are universally disliked as gifts, like gel and ore.
 - v228 chargers (data/weapons.js CHARGE, systems/monsters.js chargeTurn). Within 72 px and rested, a charger stops and winds up (it flashes and shakes: the tell), aiming at you until it goes; then it rushes in a straight line, hurting 1.5 times as much on contact; then it stands winded, open to hits. One that runs into a wall or a rock, or into your sword's block, stands dazed (stars over it) for longer. Between charges it walks after you and rests 2 s. Two rush twice in a row, the second wind-up shorter.
 
   | Charger | Where | Health | Damage | Wind-up, rush, length | Winded / dazed | XP |
@@ -722,7 +735,7 @@ The lodge (Stardew's adventurers' guild) stands in the Wilds east of the Hollow.
 |---|---|---|---|---|---|
 | Ember bomb | 4 copper ore, 1 coal | mining 1 | 2 tiles | 15 | cherry bomb (radius 3) |
 | Blast bomb | 4 iron ore, 1 coal | mining 6 | 3 tiles | 30 | bomb (radius 5) |
-| Great bomb | 1 iron bar, 2 coal, 10 gel | mining 8 | 4 tiles | 60 | mega bomb (radius 7; bar and gel for gold ore and essences) |
+| Great bomb | 4 gold ore, 1 sunmote, 1 gloommote (v251; 1 iron bar, 2 coal, 10 gel before) | mining 8 | 4 tiles | 60 | mega bomb (radius 7; 4 gold ore, solar and void essence) |
 
 - Rocks a bomb breaks give their drops and mining XP, with no energy spent.
 - Treasure chests: the floor-find floors, plus a 3% chance on any other floor from 10: 2 to 4 geodes, bars, 5 to 10 coal, 2 to 4 bombs or a gem, by depth.
@@ -736,6 +749,7 @@ Cooking needs the kitchen (the first farmhouse upgrade): face the stove. A kitch
 | Source | Recipes |
 |---|---|
 | Known from the start | Pan egg (egg; 35g, 50 energy) |
+| Combat level 1 (v251) | Crawler steak (10 chitin; 50g, 50 energy; Stardew's bug steak) |
 | TV cooking show (every 7th day; a rerun 3 days later) | Farm omelette, Spring greens bowl, Crisp turnip cakes (farming +1), Griddle cakes (foraging +2), Hearth bread, Oven fish, Garden medley, Flatbread supper, Pumpkin pottage (defense +2, luck +2), Honeyed carrots, Sugar biscuit, Brook soup (fishing +1), Ember eel (luck +1, speed +1), Thyme tea (drink: speed +1), Cheesy broccoli, Harvest stuffing (defense +2), Fortune plate (luck +3) |
 | Neighbours (3 and 7 hearts) | Ines: Honey cake, Root cellar bake (foraging +2, defense +2). Bram: Field lunch (farming +3), Quarry snack (mining +3). Odile: Net mender stew (fishing +3), Wrapped fish (fishing +2). Tavi: Trail bun (foraging +3), Wanderer's feast (max energy +40, speed +1) |
 | The tavern (the seed stall before v47) | Corn flatcake 100g, Raw slices 150g, Skillet caps 250g (attack +2), Triple thyme brew 5,000g (drink: speed +1, longer) |

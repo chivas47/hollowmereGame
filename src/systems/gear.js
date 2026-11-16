@@ -10,7 +10,8 @@ import { keyName } from '../core/controls.js';
 
 export const weapon = () => WEAPONS[G.S.weapon] || WEAPONS.oldblade;
 export const weaponKind = () => WEAPON_KINDS[weapon().kind];
-export const wearing = (id) => G.S.rings.includes(id);
+// v251: a ring with counts (the umbrite band) is worn as each ring it stands for too.
+export const wearing = (id) => G.S.rings.some((r) => r === id || RINGS[r]?.counts?.includes(id));
 
 // Gives a weapon, ring or pair of boots; says what it was. Returns false if it was a weapon or boots you have.
 export function giveFind(key, how = 'You found') {
