@@ -173,6 +173,9 @@ addUpdater((dt) => {
     n.block = b;   // v145: for systems/chatter.js (a festival place's mood)
     if (n.snap) settle(n, t <= START ? null : b);
     if (n.goal !== keyOf(b)) Object.assign(n, { goal: keyOf(b), wi: 0, wait: 0 });
+    // v262: a pause at a stop on a round ends as soon as someone else stands on the same tile (two who reached it at
+    // the same moment both found it free and would otherwise pause on top of each other; the first one updated walks on).
+    if (n.wait > 0 && standingOn(n)) n.wait = 0;
     if (n.wait > 0) { n.wait -= dt; n.moving = false; continue; }
     const h = homeOf(n), house = houseOf(n);
     if (!b) {   // home: indoors where there is an inside, else in at the door and out of sight

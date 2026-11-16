@@ -300,6 +300,12 @@ Nuno asked for more creature variety, better drops, a glossary and more creature
 | 85i | Elites | feature | done (chivas47/hollowmereGame#277) | Nuno: opt-in only. A challenge brazier at the Hollow (Stardew's Shrine of Challenge) makes the dungeons dangerous: elites with a glow, 3x health, sure essence, 5x rare roll. |
 | 85j | Seasonal creatures | feature | done (chivas47/hollowmereGame#278) | Nuno: add them. One kind a season at night (bramble sprite, firefly moth, gourd lurker, frost wisp). Nuno (November 2026): in the Wilds and on every farm at night. |
 
+## Fixes (November 2026)
+
+| Item | What | Kind | Status | Notes |
+|---|---|---|---|---|
+| 86 | Neighbours never pause on top of each other | fix | in progress | Nuno: next (November 2026). tests/week.test.mjs failed now and then (once in CI on chivas47/hollowmereGame#274, once locally): two neighbours reaching a stop on their round at the same moment both found it free and paused on it together. A pause now ends as soon as someone else stands on the tile. |
+
 ## Done
 
 | Item | PR |
