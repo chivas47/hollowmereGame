@@ -45,6 +45,6 @@ test('the Bestiary is saved, and an old save meets every kind it has defeated', 
   const s = merge({ day: 40, gold: 0, v: 6, slain: { slime: 30, bat: 2, mite: 0 } });
   assert.deepEqual(s.bestiary.seen.sort(), ['bat', 'slime']);
   assert.deepEqual(s.bestiary.drops, {});
-  const again = merge(JSON.parse(JSON.stringify({ ...s, bestiary: { seen: ['bat'], drops: { bat: ['leatherwing'] } } })));
-  assert.deepEqual(again.bestiary, { seen: ['bat'], drops: { bat: ['leatherwing'] } });
+  const again = merge(JSON.parse(JSON.stringify({ ...s, bestiary: { seen: ['bat'], drops: { bat: ['leatherwing'] }, elites: ['bat'] } })));
+  assert.deepEqual(again.bestiary, { seen: ['bat'], drops: { bat: ['leatherwing'] }, elites: ['bat'] });   // v260: elites
 });

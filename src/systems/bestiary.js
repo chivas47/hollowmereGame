@@ -15,10 +15,11 @@ addUpdater(() => {
   for (const m of slimes) if (!m.hidden && !untouchable(m)) meet(m.kind || 'slime');   // v253: not a mimic asleep or a burrower under the floor
 });
 
-on('monster:slain', ({ kind, drops }) => {
+on('monster:slain', ({ kind, drops, elite }) => {
   const B = G.S.bestiary;
   if (!B) return;
   meet(kind);
+  if (elite && !(B.elites ||= []).includes(kind)) B.elites.push(kind);   // v260: an elite defeated
   const got = (B.drops[kind] ||= []);
   for (const item of Object.keys(drops || {})) if (!got.includes(item)) got.push(item);
 });

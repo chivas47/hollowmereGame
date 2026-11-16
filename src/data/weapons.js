@@ -126,6 +126,11 @@ export const MONSTER_COUNT = (f) => Math.min(10, 2 + Math.floor(f / 2));
 // (the lift's stops) is busy with chance `chance`: `mult` times the usual count, up to `max` bodies, all of one kind
 // from the floor's own, and no rock hides the ladder; it opens once every creature on the floor is down.
 export const BUSY = { from: 10, chance: 1 / 15, mult: 2.5, max: 18 };
+// v260 (roadmap 85i): the challenge brazier at the Wardens' Lodge (Stardew's Shrine of Challenge by role; Nuno: opt-in
+// only). While it burns (G.S.brazier) every monster in the Hollow, Sunken Cavern, Ember Vent and Smoke Peak has
+// `tougher` times its health and damage, and one in `chance` is an elite: `hp` times its health, `dmg` times its
+// damage and `xp` times its XP, a sure sunmote or gloommote, and its rare-drop roll `rare` times as likely.
+export const ELITE = { chance: 0.1, tougher: 1.25, hp: 3, dmg: 1.5, xp: 3, rare: 5, essences: ['sunmote', 'gloommote'] };
 // Each kill: a small chance of a weapon or ring from the floor's pool (Stardew: monsters rarely drop rings and weapons).
 export const RARE_DROP = 0.01;
 
