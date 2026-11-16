@@ -132,6 +132,8 @@ export const MONSTERS = {
     // v255 (85e1): the spitters, one shape tinted per kind; the glow (its mouth) is the colour of its globs.
     spitter: { shape: 'spitter', shadow: [-6, 12, 0.35], glow: '#b07ae0' }, sandspitter: { shape: 'spitter', shadow: [-6, 12, 0.35], glow: '#e9c46a' },
     cragspitter: { shape: 'spitter', shadow: [-6, 12, 0.35], glow: '#e9862a' },
+    // v256 (85e2): splitting slimes are the slime's bands in their own colours (drawn bigger while whole).
+    mossslime: { shape: 'slime', shadow: [-4, 9, 0.35] }, emberslime: { shape: 'slime', shadow: [-4, 9, 0.35] },
   },
 };
 

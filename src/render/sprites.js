@@ -645,6 +645,7 @@ export function drawMonster(c, px, py, kind, color, hurt, t, flip = false) {
   if (sheetMonster(c, px + (k.sway ? Math.round(Math.sin(t * k.sway)) : 0), py, kind, color, hurt, Math.floor(t * 8) % 2,
     k.bob ? -Math.round(Math.sin(t * k.bob) * 2) : 0, flip)) return;
   const x = Math.round(px), base = Math.round(py), col = hurt ? '#ffffff' : color, f = Math.floor(t * 8) % 2;
+  if (k.shape === 'slime') return drawSlime(c, px, py, color, hurt, 0);   // v256: splitting slimes
   if (k.shape === 'puff' || k.shape === 'spitter') kind = k.shape;   // v254: dust devils and the ash swarm draw as a puff; v255: spitters
   else if (k.shape) {   // v228: a charger before the sheet loads: a low body, a head the way it faces
     const s = flip ? -1 : 1;

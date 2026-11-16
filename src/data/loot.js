@@ -44,6 +44,9 @@ export const LOOT = {
   spitter:     [['sunmote', 0.2, 1, 1], ['gold', 0.1, 1, 1]],
   sandspitter: [['sunmote', 0.25, 1, 1], ['gold', 0.15, 1, 1]],
   cragspitter: [['sunmote', 0.3, 1, 1], ['gloommote', 0.15, 1, 1]],
+  // v256 (85e2): rolled by the big one and by each piece it splits into
+  mossslime:   [['gel', 0.8, 1, 3], ['fiber', 0.25, 1, 1]],
+  emberslime:  [['gel', 0.6, 1, 2], ['cinder', 0.3, 1, 1]],
 };
 
 // One defeat's drops: { item: count }. rand() in [0, 1); times multiplies every count (the thief's ring).

@@ -740,6 +740,17 @@ Shooters (data/weapons.js SHOOT, systems/monsters.js shootTurn), Stardew's shoot
 
 One shape, tinted per kind; its mouth glows the colour of its globs. The roadmap sketch put the crag spitter on Smoke Peak alone; it lives in the Vent too, as every Vent kind does, rather than adding a peak-only flag.
 
+### Splitting slimes (v256, roadmap 85e2)
+
+Stardew's big slimes by role (data/weapons.js SPLIT). A big one hops like a slime and is drawn half again as big. When it falls it splits into 2 small ones of its kind with 40% of its health and half its XP each, which do not split again. Every piece rolls its own loot and counts toward the lodge and the Bestiary.
+
+| Kind | Where | Health (whole) | Damage | XP (whole / piece) | Loot (each) |
+|---|---|---|---|---|---|
+| Moss slime | Hollow floors 20 to 60 | 14 + floor/2 | 8 + floor/2 | 8 / 4 | gel 80% (1-3), fiber 25% |
+| Ember slime | Ember Vent, Smoke Peak | 50 + floor/4 | 24 + floor/5 | 30 / 15 | gel 60% (1-2), cinder 30% |
+
+They use the slime's bands in their own colours. The sketch gave the moss slime mixed seeds; those are seed packets, not items, so it drops fiber.
+
 ### The Bestiary (v252, roadmap 85c)
 
 The journal's Creatures tab. A kind counts as met once it is on the map you are on, or falls. Each met kind has a card: its picture, where it lives, a line on how it fights (by the way it moves: hop, crawl, fly, walk, charge), how many you have defeated, its lodge goal's progress and reward, and its loot table, each item named once that kind has dropped it for you ("?" until then). Kinds not met show "???", and the tab's first line counts how many are left. Stardew has no bestiary; its monster eradication goals at the guild are the nearest thing, and the card shows those.

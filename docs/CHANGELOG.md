@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v256: Splitting slimes
+- Moss slimes (Hollow floors 20 to 60) and ember slimes (Ember Vent and Smoke Peak) are big slimes that split into two small ones when they fall. The small ones do not split again.
+- Every piece drops its own loot: a moss slime and its two pieces can give a good handful of gel.
+- Each has a Bestiary card.
+- New save data: none.
+
 ## v255: Spitters
 - Spitters keep their distance and spit globs at you: the Hollow spitter from floor 70, the sand spitter in the Sunken Cavern and the crag spitter in the Ember Vent and Smoke Peak.
 - A spitter's mouth glows just before it spits. Step aside, or block with the sword to send the glob back at it.
