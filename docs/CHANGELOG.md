@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v248: Wedding vows
+- At the wedding each of the eight candidates now says their own vow, drawn from their heart scenes: Ines's honey ledger, Odile's knots, Tavi's maps, Esme's paintings, Rook's boat with your name on it, Pell's lessons, Juno's round and Corvin's ring.
+- New save data: none.
+
 ## v247: Heart scenes played out (Juno, Corvin)
 - Juno's and Corvin's heart scenes now play out on the map: Juno with her spilled mailbag on the village square, at her door, knocking at your door after dark and on your porch step; Corvin at the Anvil, at the quiet end of the town's east lane and at home with the two rings.
 - Every neighbour's heart scenes now play out on the map. Same lines, choices and points as before.
