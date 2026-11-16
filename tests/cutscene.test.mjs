@@ -334,20 +334,13 @@ test('heart scenes of staged neighbours play at their door: lines, a choice that
   says.forEach((s, i) => assert.equal(s.who, SCENES.ines[8].text[i].startsWith('"') ? 'ines' : null));
 });
 
-test('neighbours not yet staged keep the heart scene page', async () => {
+test('every neighbour with heart scenes plays them on the map (v247: the page is only a fallback)', async () => {
   const { HEART_STAGED, SCENES } = await import('../src/data/scenes.js');
-  const npcs = await import('../src/systems/npcs.js');
-  const id = Object.keys(SCENES).find((k) => !HEART_STAGED.includes(k));
-  if (!id) return;
-  freshFarm({ map: 'farm' });
-  emit('game:reset');
-  const pages = []; on('ui:scene', (e) => pages.push(e));
-  const at = Object.keys(SCENES[id]).map(Number).sort((a, b) => a - b).find((h) => !SCENES[id][h].dating && !SCENES[id][h].married);
-  G.S.npcs[id].pts = at * 100 + 10; G.S.npcs[id].talked = G.S.day;
-  npcs.startTalk(npcs.NPCRT.find((x) => x.id === id));
-  update(0);
-  assert.equal(G.cut, null);
-  assert.equal(pages.length, 1);
+  const { HOMES } = await import('../src/data/homes.js');
+  for (const id of Object.keys(SCENES)) {
+    assert.ok(HEART_STAGED.includes(id), `${id} is staged`);
+    assert.ok(HOMES[id]?.door, `${id} has a door to fall back on`);
+  }
 });
 
 test('Use pressed the moment a choice appears does not answer it', async () => {

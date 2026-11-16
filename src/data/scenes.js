@@ -3,7 +3,7 @@
 export const SCENE_HEARTS = [2, 4, 6, 8, 10, 14];
 // v245 (roadmap 84f): neighbours whose heart scenes play out on the map at their front door (systems/heartScenes.js);
 // the rest still open as a page (ui/dialogs.js). Grows a few neighbours a release.
-export const HEART_STAGED = ['ines', 'bram', 'odile', 'tavi', 'esme', 'rook', 'pell'];   // v246: Esme, Rook and Pell
+export const HEART_STAGED = ['ines', 'bram', 'odile', 'tavi', 'esme', 'rook', 'pell', 'juno', 'corvin'];   // v246: Esme, Rook, Pell; v247: Juno, Corvin (all of them)
 // Where a scene plays when its words put it somewhere else than their door: the map, where they stand [x, y, facing],
 // where you walk from and to, and which way you face then. Without one: their front door (systems/heartScenes.js).
 export const HEART_STAGES = {
@@ -46,6 +46,16 @@ export const HEART_STAGES = {
     6: { map: 'town', npc: [10, 3, 'down'], from: [10, 6], to: [10, 4], face: 'up' },
     10: { map: 'town', npc: [10, 3, 'down'], from: [10, 6], to: [10, 4], face: 'up' },
     14: { map: 'house', npc: [12, 6, 'down'], from: [12, 10], to: [12, 7], face: 'up' },
+  },
+  // v247 (roadmap 84h)
+  juno: {
+    2: { map: 'village', npc: [13, 6, 'down'], from: [13, 10], to: [13, 7], face: 'up' },     // the mailbag spilled on the square's steps
+    10: { map: 'farm', npc: [3, 4, 'right'], from: [7, 4], to: [4, 4], face: 'left' },         // a knock on your door after dark
+    14: { map: 'farm', npc: [4, 4, 'right'], from: [7, 4], to: [5, 4], face: 'left' },         // the porch step
+  },
+  corvin: {   // 2 and 6 at the Anvil (his door)
+    10: { map: 'town', npc: [37, 5, 'down'], from: [37, 8], to: [37, 6], face: 'up' },        // the quiet end of the lane
+    14: { map: 'farm', npc: [4, 4, 'right'], from: [7, 4], to: [5, 4], face: 'left' },        // two rings, at home
   },
 };   // v51: 2, 6 and 10 for the marriage candidates (10 only while dating)
 
