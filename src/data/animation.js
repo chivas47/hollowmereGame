@@ -58,6 +58,32 @@ export const CRAFTED = { dur: 1.0 };
 export const PLACE = { dur: 0.25 };
 
 // Particle colours by impact kind.
+// v264 (roadmap 87d): what each creature is made of, for its hit chips and its death burst (systems/animation.js).
+// gel takes the creature's own colour. Unlisted kinds use 'fur'.
+export const MATERIAL = {
+  slime: 'gel', mossslime: 'gel', emberslime: 'gel', spitter: 'gel', sandspitter: 'gel', cragspitter: 'gel',
+  skeleton: 'bone', wraith: 'bone',
+  sprite: 'ember', golem: 'ember', hound: 'ember', magmaram: 'ember', lurker: 'ember', rex: 'ember',
+  mite: 'chitin', beetle: 'chitin', crab: 'chitin', scuttler: 'chitin', shellback: 'chitin', cragshell: 'chitin', gourd: 'chitin',
+  puff: 'smoke', dustdevil: 'sand', ashswarm: 'smoke',
+  wisp: 'spirit', shade: 'spirit', frostwisp: 'spirit',
+  ram: 'stone', serpent: 'scale', bramble: 'leaf', moth: 'dust',
+};
+export const MATERIALS = {
+  gel:    { cols: null, up: 40, gravity: 180 },
+  bone:   { cols: ['#f4ead2', '#d8d0c0', '#a59c88'], up: 50, gravity: 200 },
+  ember:  { cols: ['#ffd98a', '#e9862a', '#c8352f'], up: 60, gravity: -30 },
+  chitin: { cols: ['#8a6a3a', '#5a4a2a', '#c9a36a'], up: 45, gravity: 200 },
+  smoke:  { cols: ['#6a625a', '#8a8278', '#3d3833'], up: 20, gravity: -40 },
+  sand:   { cols: ['#d9c39a', '#c9a36a', '#a5753f'], up: 25, gravity: 60 },
+  spirit: { cols: ['#cfe6f0', '#ffffff', '#9fd8f0'], up: 30, gravity: -60 },
+  stone:  { cols: ['#9a928a', '#c9c2b8', '#6f6a64'], up: 45, gravity: 200 },
+  scale:  { cols: ['#5f8a4a', '#86b86a', '#3d5a2a'], up: 40, gravity: 180 },
+  leaf:   { cols: ['#6a8a3a', '#8fb35a', '#4a6a2a'], up: 35, gravity: 90 },
+  dust:   { cols: ['#f2e6a8', '#e9d27a', '#fff8d0'], up: 30, gravity: -20 },
+  fur:    { cols: ['#7a5a3a', '#5a4030', '#a58a6a'], up: 35, gravity: 150 },
+};
+
 export const IMPACT = {
   dirt:  ['#8a5a32', '#a5753f', '#6e4626'],
   stone: ['#9a928a', '#c9c2b8', '#6f6a64'],

@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v264: Attack effects
+- A charger winding up now pulses red and paws the ground, and a spitter's mouth glows before it spits, so a warning no longer looks like the white flash of a hit.
+- Hits throw chips of what the creature is made of (gel in its own colour, bone, embers, chitin, smoke, sand, spirit motes, stone, scales, leaves, fur) with a flash where the blade lands.
+- Each creature bursts in its own material when it falls, instead of the same grey ring for all.
+- Charges leave a dust trail, globs leave a trail and splash where they land, and burrowers throw up a spray of earth (lava for the lurker) when they surface.
+- New save data: none.
+
 ## v263: Rocks block swings
 - Your sword, dagger or club no longer hits a creature that walks if a rock or wall stands between you, just as it cannot reach you through one.
 - Bats, serpents, wisps, storm wings and burrowers that have come up can still be hit over rocks. Bombs still reach behind them.

@@ -813,6 +813,10 @@ They are drawn from shapes already on the sheet (puff, bat, crab, wisp) in their
 
 A swing or weapon special (systems/monsters.js strikeArea) reaches a creature only if no solid tile (a rock, a wall, a tree) lies on the line from you to it, traced in 4 px steps. Creatures that pass over rocks can still be hit over them: flyers, phasers, the storm wing, and burrowers that are up (Nuno). Burrowers under the floor stay unhittable. Bombs and the blast ring are not swings and still reach behind rocks.
 
+### Attack effects (v264, roadmap 87d)
+
+Effects only, no rule changes (polish finds 37 to 39). Each kind has a material (data/animation.js MATERIAL; unlisted kinds are fur): gel (the creature's own colour), bone, ember, chitin, smoke, sand, spirit, stone, scale, leaf, dust, fur. A hit throws a few chips of it the way the blow pushed, with a white flash at the point of contact; a defeat bursts in it. Embers, smoke, spirit motes and dust rise; the rest fall. Tells no longer flash white: a charger winding up pulses red and paws the ground, a spitter takes its glob colour with a ring gathering at its mouth. Charges trail dust, globs trail and splash, burrowers surfacing throw up earth (the lava lurker, lava).
+
 ### The Bestiary (v252, roadmap 85c)
 
 The journal's Creatures tab. A kind counts as met once it is on the map you are on, or falls. Each met kind has a card: its picture, where it lives, a line on how it fights (by the way it moves: hop, crawl, fly, walk, charge), how many you have defeated, its lodge goal's progress and reward, and its loot table, each item named once that kind has dropped it for you ("?" until then). Kinds not met show "???", and the tab's first line counts how many are left. Stardew has no bestiary; its monster eradication goals at the guild are the nearest thing, and the card shows those.
