@@ -116,7 +116,7 @@ const { buyRenovation } = await load('systems/house.js');
 const { orderBarn, buyAnimal, buyHay, collectMilk, herd } = await load('systems/barn.js');
 const { SITES, findSite, siteAt, noFit } = await load('systems/sites.js');
 const { millIn, millCollect } = await load('systems/mill.js');
-const { stockPond, collectRoe, giveAsk, canGive } = await load('systems/ponds.js');
+const { stockPond, collectRoe, giveAsk, canGive, takeFish } = await load('systems/ponds.js');
 const { collectHut, chooseCave, collectCave } = await load('systems/helpers.js');
 const { pending, choose } = await load('systems/professions.js');
 const { cook, eat, kitchen } = await load('systems/cooking.js');
@@ -896,7 +896,12 @@ function simulate(runSeed) {
     if (s.built.mill === true) { millCollect(); if (s.bag.wheat > (reserves().wheat || 0)) millIn('wheat', s.bag.wheat - (reserves().wheat || 0)); spend(TIME.chore); }
     // The fish pond (v31): stock it with the best fish caught today, collect roe, bring what it asks for.
     if (s.built.pond === true) {
-      if (!s.pond.fish) { const best = Object.keys(FISH).filter((k) => s.bag[k] > 0).sort((a, b) => FISH[b].sell - FISH[a].sell)[0]; if (best) stockPond(best); }
+      // Roadmap 83d: the most valuable fish the bot catches regularly (3 or more so far), never a legendary, and it waits
+      // until it holds one. It stocked the best fish in its bag that day, so pond income rode on a lucky 900g catch.
+      // A regular fish worth twice the pond's empties it and restocks, as a player would once better fish come in.
+      const best = Object.keys(FISH).filter((k) => s.bag[k] > 0 && !FISH[k].legendary && (s.fishLog[k] || 0) >= 3).sort((a, b) => FISH[b].sell - FISH[a].sell)[0];
+      if (best && s.pond.fish && FISH[best].sell >= 2 * FISH[s.pond.fish].sell) { collectRoe(); while (s.pond.fish) takeFish(); }
+      if (best && !s.pond.fish) stockPond(best);
       collectRoe(); if (canGive()) giveAsk();
       spend(TIME.chore);
     }
