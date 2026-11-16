@@ -139,6 +139,9 @@ export const MONSTERS = {
     wisp: { shape: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#ffe08a' }, shade: { shape: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#b07ae0' },
     shellback: { shape: 'shell', shadow: [-7, 14, 0.35] }, cragshell: { shape: 'shell', shadow: [-7, 14, 0.35] },
     stormwing: { shape: 'bat', shadow: [-3, 6, 0.25], bob: 6 },
+    // v261 (85j): the seasonal creatures, drawn from shapes already on the sheet.
+    bramble: { shape: 'puff', shadow: [-2, 4, 0.25], bob: 7 }, moth: { shape: 'bat', shadow: [-3, 6, 0.2], bob: 6 },
+    gourd: { shape: 'crab', shadow: [-6, 12, 0.35] }, frostwisp: { shape: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#9fd8f0' },
   },
 };
 

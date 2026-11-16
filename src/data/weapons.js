@@ -121,6 +121,18 @@ Object.assign(MONSTERS, {
   stormwing:   { name: 'Storm wing', from: 0, ventOnly: true, move: 'swarm', fly: true, pack: [3, 4], hp: (f) => 14 + Math.floor(f / 10), dmg: (f) => 16 + Math.floor(f / 8), speed: () => 50, xp: 12, color: '#3a4a6a' },
 });
 
+// v261 (roadmap 85j): seasonal creatures, out after dark in the Wilds and on every farm (Nuno), one kind a season.
+// surfaceOnly: never in the dungeons. disguise: a mimic's colour asleep (the gourd lurker is a pumpkin). Stats sit
+// beside the Hollow's first floors; Stardew has no counterpart beyond the wilderness farm's night monsters.
+Object.assign(MONSTERS, {
+  bramble:   { name: 'Bramble sprites', from: 0, surfaceOnly: true, season: 'Spring', move: 'swarm', pack: [3, 4], hp: () => 4, dmg: () => 5, speed: () => 40, xp: 3, color: '#6a8a3a' },
+  moth:      { name: 'Firefly moth', from: 0, surfaceOnly: true, season: 'Summer', move: 'fly', hp: () => 6, dmg: () => 6, speed: () => 36, xp: 4, color: '#e9d27a' },
+  gourd:     { name: 'Gourd lurker', from: 0, surfaceOnly: true, season: 'Autumn', move: 'mimic', disguise: '#e8862a', hp: () => 10, dmg: () => 6, speed: () => 16, xp: 5, color: '#c86a2a' },
+  frostwisp: { name: 'Frost wisp', from: 0, surfaceOnly: true, season: 'Winter', move: 'phase', hp: () => 8, dmg: () => 7, speed: () => 22, xp: 6, color: '#bfe0f2', glow: '#9fd8f0' },
+});
+// When they come out (game minutes), and how many: bodies on a farm, on the Wilds; a pack counts its bodies.
+export const NIGHTFOLK = { from: 20 * 60, farm: [2, 3], wilds: [3, 4] };
+
 export const MONSTER_COUNT = (f) => Math.min(10, 2 + Math.floor(f / 2));
 // v259 (roadmap 85h): busy floors (Stardew's infested floors). From Hollow floor `from`, a floor that is not a fifth
 // (the lift's stops) is busy with chance `chance`: `mult` times the usual count, up to `max` bodies, all of one kind

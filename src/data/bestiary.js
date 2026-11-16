@@ -21,6 +21,7 @@ export const HOW = {
 // Where a kind turns up, in words: the same rules as the spawns in systems/monsters.js.
 export function whereLives(kind) {
   const d = MONSTERS[kind], out = [];
+  if (d.surfaceOnly) return `Comes out after dark in the Wilds and on the farms, on ${d.season.toLowerCase()} nights.`;   // v261
   if (!d.cavernOnly && !d.ventOnly) out.push(d.to ? `the Hollow, floors ${d.from} to ${d.to}` : d.from > 1 ? `the Hollow from floor ${d.from}` : 'the Hollow');   // v253: to
   if (d.cavern || d.cavernOnly) out.push('the Sunken Cavern');
   if (d.vent || d.ventOnly) out.push('the Ember Vent', 'Smoke Peak');
@@ -30,6 +31,6 @@ export function whereLives(kind) {
 
 // The Bestiary's order: the Hollow's kinds by the floor they start on, then the Cavern's, then the Vent's.
 export const BESTIARY_ORDER = Object.keys(MONSTERS).sort((a, b) => {
-  const rank = (k) => (MONSTERS[k].ventOnly ? 2 : MONSTERS[k].cavernOnly ? 1 : 0);
+  const rank = (k) => (MONSTERS[k].surfaceOnly ? 3 : MONSTERS[k].ventOnly ? 2 : MONSTERS[k].cavernOnly ? 1 : 0);   // v261: the night creatures last
   return rank(a) - rank(b) || MONSTERS[a].from - MONSTERS[b].from;
 });

@@ -48,7 +48,7 @@ on('mine:floor', ({ floor: n, rng: R, zone, eff: floor, busy }) => {
   slimes.length = 0; slimeMap = 'mine'; busyFloor = !!busy;
   // v38: in the Sunken Cavern only its own monsters and those marked cavern, at the cavern's strength.
   const cav = zone === 'cavern', peak = zone === 'peak', vent = zone === 'vent' || peak, g = MAPS.mine.grid, D = MONSTERS;   // v67: the peak has the vent's monsters
-  const kinds = Object.keys(D).filter((k) => (vent ? D[k].vent || D[k].ventOnly : cav ? D[k].cavern || D[k].cavernOnly : !D[k].cavernOnly && !D[k].ventOnly && floor >= D[k].from && floor <= (D[k].to ?? Infinity)));   // v253: to
+  const kinds = Object.keys(D).filter((k) => (vent ? D[k].vent || D[k].ventOnly : cav ? D[k].cavern || D[k].cavernOnly : !D[k].cavernOnly && !D[k].ventOnly && !D[k].surfaceOnly && floor >= D[k].from && floor <= (D[k].to ?? Infinity)));   // v253: to; v261: not the night creatures
   let count = peak ? (n >= PEAK.floors ? 0 : PEAK.monsters(n)) : vent ? (n >= VENT.floors ? 0 : VENT.monsters(n)) : cav ? CAVERN.monsters(n) : MONSTER_COUNT(floor);   // v39: the forge room is safe
   const theme = busy ? kinds[Math.floor(R() * kinds.length)] : null;   // v259: a busy floor is all one kind, more of them
   if (busy) count = Math.min(BUSY.max, Math.round(count * BUSY.mult));
@@ -63,14 +63,16 @@ on('mine:floor', ({ floor: n, rng: R, zone, eff: floor, busy }) => {
 on('map:changed', (id) => { if (id !== slimeMap && !occupied(slimeMap)) slimes.length = 0; });   // v138: kept while either farmer is there
 
 // n first-floor slimes on open grass of a map, away from the player.
-export function spawnSlimes(map, n) {
-  slimes.length = 0; slimeMap = map;
-  const g = MAPS[map].grid, color = SLIME.colors[0], { w: MW, h: MH } = sizeOf(map);   // v157: the map's own size
-  for (let guard = 0; slimes.length < n && guard < 500; guard++) {
+// v261: kind: what comes out (the night creatures); keep: add to the creatures already on this map.
+export function spawnSlimes(map, n, kind = 'slime', keep = false) {
+  if (!keep || slimeMap !== map) slimes.length = 0;
+  slimeMap = map;
+  const g = MAPS[map].grid, color = kind === 'slime' ? SLIME.colors[0] : MONSTERS[kind].color, { w: MW, h: MH } = sizeOf(map), goal = slimes.length + n;   // v157: the map's own size
+  for (let guard = 0; slimes.length < goal && guard < 500; guard++) {
     const x = 1 + Math.floor(Math.random() * (MW - 2)), y = 5 + Math.floor(Math.random() * (MH - 6));
     if (g[y][x] !== 'g' || Math.hypot(x * T - G.S.x, y * T - G.S.y) < 5 * T) continue;
     const px = x * T + 8, py = y * T + 12;
-    slimes.push({ ...make('slime', 1, px, py, Math.random), color });
+    slimes.push({ ...make(kind, 1, px, py, Math.random), color });
   }
 }
 on('day:start', () => { slimes.length = 0; });
@@ -372,7 +374,7 @@ addEntities(() => (G.S.map !== slimeMap ? [] : slimes.map((m) => ({
     : MONSTERS[m.kind].move === 'split' ? drawSplitter(c, m)
     : m.ph ? drawPhaser(c, m)
     : m.cs ? drawCharger(c, m)
-    : m.hidden ? drawMonster(c, m.x, m.y, 'crabrock', ROCK_GREY, false, 0)   // v253: a mimic asleep looks like a rock
+    : m.hidden ? drawMonster(c, m.x, m.y, 'crabrock', MONSTERS[m.kind].disguise || ROCK_GREY, false, 0)   // v253: a mimic asleep looks like a rock (v261: the gourd lurker a pumpkin)
     : m.bs && m.bs !== 'up' ? drawMound(c, m.x + (m.bs === 'rise' ? (Math.floor(m.bt * 30) % 2 ? 1 : -1) : 0), m.y, m.hop, m.kind === 'lurker' ? 'lava' : 'earth')   // v253: a burrower's mound (shaking: the tell); v254: a lava ripple
     : drawMonster(c, m.x, m.y, m.kind, m.color, m.hurt > 0 || (m.aim && Math.floor(m.st * 14) % 2 === 0), m.hop, !!m.face)),   // v255: a spitter flashes before it spits
 })).concat(shots.map((s) => ({ y: s.y + 8, draw: (c) => drawShot(c, s.x, s.y, s.color) })))));

@@ -124,6 +124,7 @@ src/
     forge.js          the forge: forgeGem(), enchantWeapon(), enchantTool(); trinket effects underground
     treasure.js       bombs (throw, fuse, explode()), Hollow treasure chests (floor finds and rare loot), geode cracking
     guild.js          the Wardens' Lodge in the Wilds: shop, slaying goals (G.S.slain, G.S.goalsClaimed), its keeper
+    nightfolk.js      v261 (roadmap 85j): the season's night creatures on the farm and in the Wilds after 8 pm, nightKind()
     bestiary.js       v252 (roadmap 85c): G.S.bestiary: kinds met (on your map or defeated) and what each has dropped
     professions.js    professions: has(id) for the systems that apply one, priceMult() for selling, choosing, combat health
     helpers.js        helper hut harvests, waystones, the home charm, the farm cave (opening, choice, daily crate)
