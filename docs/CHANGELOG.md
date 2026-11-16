@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v252: The Bestiary
+- A new Creatures tab in the journal: a card for every kind of creature in the Hollow, the Sunken Cavern and the Ember Vent, with its picture, where it lives, how to fight it, how many you have defeated and its lodge goal.
+- Drops fill in as you find them: each card lists what that creature can drop, with "?" for what it has not dropped for you yet.
+- Creatures you have not met show as "???", and the tab says how many are still to meet.
+- New save data: the creatures you have met and what each has dropped. Old saves count every kind they have defeated as met.
+
 ## v251: Uses for monster loot
 - Recipes that had stand-ins for monster parts now take the real thing: bait is 1 chitin for 5 (was 1 gel), wild bait adds 5 chitin, the lightning rod takes 5 leatherwing instead of a copper bar, and the great bomb is 4 gold ore, a sunmote and a gloommote (was an iron bar, 2 coal and 10 gel).
 - Bone meal: grind 5 bone shards into 5 soil boosters at the crafting menu.

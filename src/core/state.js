@@ -116,6 +116,7 @@ export function newState() {
     bait: null, tackle: null, tackleUses: 0, bobber: 0, // v41: bait and tackle on the rod, bobber style
     read: [], mastery: { xp: 0, claimed: [] },          // v40: power books read, mastery XP and the skills whose perk is claimed
     slain: {}, goalsClaimed: [],                        // v37: monsters defeated by kind, slaying goals rewarded (systems/guild.js)
+    bestiary: { seen: [], drops: {} },                  // v252 (85c): kinds met and what each has dropped (systems/bestiary.js)
     recipes: ['friedegg'], fridge: {},                 // v35: dishes you can cook; what the kitchen fridge holds
     buff: null, drink: null, luck: 0,                   // v35: food and drink buffs, today's luck (systems/buffs.js)
     wish: {}, wishfruits: 0,                            // v35: wishfruit sources found, wishfruit eaten
@@ -176,6 +177,8 @@ export function merge(saved) {
   if (!Array.isArray(s.rings) || s.rings.length !== 2) s.rings = [null, null];
   if (!Array.isArray(s.finds)) s.finds = [];
   if (!s.slain || typeof s.slain !== 'object') s.slain = {};
+  const sb = saved.bestiary || {};   // v252 (85c)
+  s.bestiary = { seen: [...(sb.seen || [])], drops: Object.fromEntries(Object.entries(sb.drops || {}).map(([k, v]) => [k, [...v]])) };
   if (!Array.isArray(s.read)) s.read = [];
   if (!s.pots || typeof s.pots !== 'object') s.pots = {};
   if (!Array.isArray(s.legends)) s.legends = [];

@@ -705,6 +705,12 @@ Slot 5 (no hotbar change) swings the weapon chosen in the bag. Damage is Stardew
 - Boots found on floors 30, 60 and 80: Tunnel boots (3), Ember boots (4), Deepstone boots (5 defense).
 - v37: floor finds wait in a treasure chest on their floor (old saves keep the finds they took).
 
+### The Bestiary (v252, roadmap 85c)
+
+The journal's Creatures tab. A kind counts as met once it is on the map you are on, or falls. Each met kind has a card: its picture, where it lives, a line on how it fights (by the way it moves: hop, crawl, fly, walk, charge), how many you have defeated, its lodge goal's progress and reward, and its loot table, each item named once that kind has dropped it for you ("?" until then). Kinds not met show "???", and the tab's first line counts how many are left. Stardew has no bestiary; its monster eradication goals at the guild are the nearest thing, and the card shows those.
+
+Old saves: every kind with a defeat counts as met. Their drops start unknown, since saves never kept them.
+
 ### The Wardens' Lodge, bombs, treasure and geodes (v37)
 
 The lodge (Stardew's adventurers' guild) stands in the Wilds east of the Hollow. It opens once you have reached floor 1. Warden Hale (original) runs it.
