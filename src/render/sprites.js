@@ -624,11 +624,13 @@ export function drawDazed(c, px, py, t) {
 }
 
 // v253 (85d1): a burrower under the floor: a low heap of churned earth with a crumb or two jumping off it.
-export function drawMound(c, px, py, t) {
-  const x = Math.round(px), base = Math.round(py), f = Math.floor(t * 6) % 2;
+// v254: lava: a glowing ripple with sparks for the lava lurker.
+const MOUND = { earth: ['#5a4632', '#6e563c', '#86694a'], lava: ['#8a2a22', '#e9862a', '#ffd98a'] };
+export function drawMound(c, px, py, t, look = 'earth') {
+  const x = Math.round(px), base = Math.round(py), f = Math.floor(t * 6) % 2, [lo, mid, hi] = MOUND[look] || MOUND.earth;
   r(c, x - 6, base - 1, 12, 1, 'rgba(0,0,0,.3)');
-  r(c, x - 5, base - 3, 10, 2, '#5a4632'); r(c, x - 3, base - 5, 6, 2, '#6e563c'); r(c, x - 2, base - 6, 3, 1, '#86694a');
-  r(c, x - 4 + f * 6, base - 7 - f, 1, 1, '#6e563c'); r(c, x + 2 - f * 5, base - 8 + f, 1, 1, '#5a4632');
+  r(c, x - 5, base - 3, 10, 2, lo); r(c, x - 3, base - 5, 6, 2, mid); r(c, x - 2, base - 6, 3, 1, hi);
+  r(c, x - 4 + f * 6, base - 7 - f, 1, 1, mid); r(c, x + 2 - f * 5, base - 8 + f, 1, 1, look === 'lava' ? hi : lo);
 }
 
 // v228: flip faces it left (chargers face the way they go).
@@ -637,7 +639,8 @@ export function drawMonster(c, px, py, kind, color, hurt, t, flip = false) {
   if (sheetMonster(c, px + (k.sway ? Math.round(Math.sin(t * k.sway)) : 0), py, kind, color, hurt, Math.floor(t * 8) % 2,
     k.bob ? -Math.round(Math.sin(t * k.bob) * 2) : 0, flip)) return;
   const x = Math.round(px), base = Math.round(py), col = hurt ? '#ffffff' : color, f = Math.floor(t * 8) % 2;
-  if (k.shape) {   // v228: a charger before the sheet loads: a low body, a head the way it faces
+  if (k.shape === 'puff') kind = 'puff';   // v254: dust devils and the ash swarm draw as a puff
+  else if (k.shape) {   // v228: a charger before the sheet loads: a low body, a head the way it faces
     const s = flip ? -1 : 1;
     r(c, x - 7, base - 1, 14, 1, 'rgba(0,0,0,.35)'); r(c, x - 6, base - 8, 12, 6, col); r(c, x + (s > 0 ? 4 : -8), base - 9, 4, 5, col);
     r(c, x + (s > 0 ? 6 : -7), base - 8, 1, 1, '#2b211a'); r(c, x - 5 + f, base - 2, 2, 2, '#2b211a'); r(c, x + 3 - f, base - 2, 2, 2, '#2b211a');
@@ -655,6 +658,11 @@ export function drawMonster(c, px, py, kind, color, hurt, t, flip = false) {
   if (kind === 'mole') {   // v253: a burrow mole up out of its hole
     r(c, x - 6, base - 1, 12, 1, 'rgba(0,0,0,.35)'); r(c, x - 5, base - 3, 10, 2, '#5a4632'); r(c, x - 4, base - 11, 8, 8, col);
     r(c, x - 2, base - 9, 1, 1, '#2b211a'); r(c, x + 1, base - 9, 1, 1, '#2b211a'); r(c, x - 1, base - 7, 2, 1, '#e2707a'); r(c, x - 6, base - 6 + f, 2, 2, '#e8d0b0'); r(c, x + 4, base - 6 + (1 - f), 2, 2, '#e8d0b0');
+    return;
+  }
+  if (kind === 'lurker') {   // v254: a lava lurker, a red head up out of a glowing pool
+    r(c, x - 6, base - 3, 12, 3, '#e9862a'); r(c, x - 4, base - 2, 8, 1, '#ffd98a'); r(c, x - 3, base - 11, 6, 8, col); r(c, x - 4, base - 9, 8, 4, col);
+    r(c, x - 2, base - 9, 1, 1, '#ffd98a'); r(c, x + 1, base - 9, 1, 1, '#ffd98a'); r(c, x - 1, base - 6 + f, 2, 1, '#2b211a');
     return;
   }
   if (kind === 'puff') {   // v253: a soot puff, a little ball of smoke with two bright eyes

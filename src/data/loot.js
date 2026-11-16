@@ -36,6 +36,10 @@ export const LOOT = {
   crab:       [['chitin', 0.4, 1, 1], ['stone', 0.6, 2, 4], ['copper', 0.15, 1, 1]],
   mole:       [['fiber', 0.3, 1, 1], ['copper', 0.25, 1, 1], ['geode', 0.03, 1, 1]],
   puff:       [['coal', 0.3, 1, 1], ['quartz', 0.03, 1, 1]],
+  // v254 (85d2)
+  lurker:     [['cinder', 0.5, 1, 1], ['sunmote', 0.15, 1, 1]],
+  dustdevil:  [['stone', 0.3, 1, 2], ['copper', 0.1, 1, 1]],
+  ashswarm:   [['cinder', 0.2, 1, 1], ['sunmote', 0.03, 1, 1]],
 };
 
 // One defeat's drops: { item: count }. rand() in [0, 1); times multiplies every count (the thief's ring).

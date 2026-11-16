@@ -292,7 +292,7 @@ addEntities(() => (G.S.map !== slimeMap ? [] : slimes.map((m) => ({
   y: m.y, draw: (c) => (!m.kind || m.kind === 'slime' ? drawSlime(c, m.x, m.y, m.color, m.hurt > 0, m.hop % HOP < HOP_ACTIVE ? (m.hop % HOP) / HOP_ACTIVE : 0)
     : m.cs ? drawCharger(c, m)
     : m.hidden ? drawMonster(c, m.x, m.y, 'crabrock', ROCK_GREY, false, 0)   // v253: a mimic asleep looks like a rock
-    : m.bs && m.bs !== 'up' ? drawMound(c, m.x + (m.bs === 'rise' ? (Math.floor(m.bt * 30) % 2 ? 1 : -1) : 0), m.y, m.hop)   // v253: a burrower's mound (shaking: the tell)
+    : m.bs && m.bs !== 'up' ? drawMound(c, m.x + (m.bs === 'rise' ? (Math.floor(m.bt * 30) % 2 ? 1 : -1) : 0), m.y, m.hop, m.kind === 'lurker' ? 'lava' : 'earth')   // v253: a burrower's mound (shaking: the tell); v254: a lava ripple
     : drawMonster(c, m.x, m.y, m.kind, m.color, m.hurt > 0, m.hop, !!m.face)),
 }))));
 const ROCK_GREY = '#8a8580';   // the colour of the Hollow's plain rocks
