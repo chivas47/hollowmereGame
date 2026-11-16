@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v260: The challenge brazier
+- Warden Hale's lodge has a challenge brazier. Light it to make the Hollow, the Sunken Cavern, the Ember Vent and Smoke Peak harder: every creature is a quarter tougher, and about one in ten is a gold-ringed elite.
+- Elites have three times the health, give three times the XP, always drop a sunmote or gloommote, and are five times as likely to drop a weapon or ring.
+- Douse it any time to go back. It is cold in every save until you light it.
+- New save data: whether the brazier burns, and which kinds you have beaten as elites.
+
 ## v259: Busy floors
 - Now and then a Hollow floor from 10 down is busy: crowded with one kind of creature, two and a half times as many as usual. The ladder is not under a rock there: it opens once every creature is down.
 - Lift floors (every fifth) are never busy.

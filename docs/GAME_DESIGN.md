@@ -786,6 +786,16 @@ One goal for each way of fighting added in 85d to 85f, each counting every kind 
 
 Stardew's infested floors by role (data/weapons.js BUSY). From Hollow floor 10, any floor that is not a fifth (the lift's stops stay safe) is busy one time in 15. A busy floor holds 2.5 times the usual count, up to 18 creatures, all of one kind drawn from that floor's own (a pack still comes as a pack). No rock hides its ladder: when the last creature is down, a ladder opens on open floor near the middle. A notice says so on arrival. Only the Hollow has them for now; the Sunken Cavern, Ember Vent and Smoke Peak are unchanged.
 
+### The challenge brazier and elites (v260, roadmap 85i)
+
+Stardew's Shrine of Challenge by role, opt-in only (Nuno). The brazier is a row in the Wardens' Lodge dialog (the roadmap sketch put it at the Hollow's entrance; the lodge stands beside the Hollow and needs no new map piece). Light it or douse it any time; it takes effect from the next floor entered. While it burns (data/weapons.js ELITE):
+
+- every monster in the Hollow, Sunken Cavern, Ember Vent and Smoke Peak has 1.25 times its health and damage;
+- one in 10 is an elite: a pulsing gold ring at its feet, 3 times its health and 1.5 times its damage (on top), 3 times its XP, a sure sunmote or gloommote, and its rare-drop roll (weapons and rings) 5 times as likely;
+- the Bestiary card notes when you have beaten an elite of a kind.
+
+Cold, nothing changes. Saved as `G.S.brazier` (false in old saves). The farm's night slimes are never affected.
+
 ### The Bestiary (v252, roadmap 85c)
 
 The journal's Creatures tab. A kind counts as met once it is on the map you are on, or falls. Each met kind has a card: its picture, where it lives, a line on how it fights (by the way it moves: hop, crawl, fly, walk, charge), how many you have defeated, its lodge goal's progress and reward, and its loot table, each item named once that kind has dropped it for you ("?" until then). Kinds not met show "???", and the tab's first line counts how many are left. Stardew has no bestiary; its monster eradication goals at the guild are the nearest thing, and the card shows those.

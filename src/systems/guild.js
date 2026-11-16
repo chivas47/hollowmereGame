@@ -56,3 +56,11 @@ on('game:loaded', () => {
 });
 
 // v49: Hale is a villager now (data/npcs.js). v98: the door takes you inside, where he keeps the counter (systems/venues.js).
+
+// v260 (roadmap 85i): the challenge brazier at the lodge. Lit, the dungeons' monsters are tougher and some are elites
+// (systems/monsters.js challenge); doused, they are as before. It takes effect on the next floor you enter.
+export function setBrazier(lit) {
+  G.S.brazier = !!lit;
+  notify(lit ? 'The challenge brazier flares. The dungeons will be harder from the next floor down, and some creatures there will glow gold.' : 'You douse the challenge brazier. The dungeons go back to how they were from the next floor.');
+  changed();
+}

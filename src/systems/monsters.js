@@ -7,7 +7,7 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
 import { MAPS, SOLID, sizeOf } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
-import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS, CHARGE, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR, BUSY } from '../data/weapons.js';
+import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS, CHARGE, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR, BUSY, ELITE } from '../data/weapons.js';
 import { SAVAGE } from '../data/guild.js';
 import { CAVERN } from '../data/cavern.js';
 import { VENT } from '../data/forge.js';
@@ -24,6 +24,7 @@ import { COMBO, SLAM_RADIUS, HIT_STOP, IMPACT } from '../data/animation.js';
 import { HOTBAR } from '../data/hotbar.js';
 import { playAnim, shake, holdSwing, ring, burst } from './animation.js';
 import { motion } from '../core/motion.js';
+import { r } from '../render/pixel.js';   // v260: the elite's ring
 
 const AGGRO = 110, HOP = 1.2, HOP_ACTIVE = 0.5, TOUCH = 11;
 export const slimes = [];   // every monster on the map (named before v36, when there were only slimes); exported for tests
@@ -56,7 +57,7 @@ on('mine:floor', ({ floor: n, rng: R, zone, eff: floor, busy }) => {
     if (g[y][x] !== 'f' || (x < 7 && y < 6)) continue;
     const kind = theme || kinds[Math.floor(R() * kinds.length)], pack = D[kind].pack;
     const n = Math.min(pack ? pack[0] + Math.floor(R() * (pack[1] - pack[0] + 1)) : 1, busy ? count - slimes.length : Infinity);   // v253: a swarm is a pack in one slot; v259: a busy floor stops at its count
-    for (let i = 0; i < n; i++) slimes.push({ ...make(kind, floor, x * T + 8 + (i % 3 - 1) * 6, y * T + 12 + (Math.floor(i / 3) - 0.5) * 6, R), zone });
+    for (let i = 0; i < n; i++) slimes.push(challenge({ ...make(kind, floor, x * T + 8 + (i % 3 - 1) * 6, y * T + 12 + (Math.floor(i / 3) - 0.5) * 6, R), zone }));
   }
 });
 on('map:changed', (id) => { if (id !== slimeMap && !occupied(slimeMap)) slimes.length = 0; });   // v138: kept while either farmer is there
@@ -179,6 +180,15 @@ addUpdater((dt) => {
 });
 for (const ev of ['mine:floor', 'map:changed', 'day:start']) on(ev, () => { shots.length = 0; });
 
+// v260 (roadmap 85i): while the challenge brazier burns, every dungeon monster is tougher and one in ELITE.chance is
+// an elite. Uses Math.random (not the floor's rng) so the same floor is not always the same.
+export function challenge(m) {
+  if (!G.S.brazier) return m;
+  m.hp *= ELITE.tougher; m.dmg *= ELITE.tougher;
+  if (Math.random() < ELITE.chance) { m.elite = true; m.hp *= ELITE.hp; m.dmg *= ELITE.dmg; }
+  return m;
+}
+
 // v256 (roadmap 85e2): a big splitter falls into SPLIT.n small ones, spread a little apart and pushed outward.
 function splitUp(m, d) {
   const hp = Math.max(1, Math.ceil(d.hp(m.floor || 1) * SPLIT.hp));
@@ -262,16 +272,17 @@ function defeat(m) {
   const d = MONSTERS[m.kind || 'slime'], times = wearing('thiefring') ? 2 : 1;
   if (d.move === 'split' && !m.small) splitUp(m, d);   // v256: a big slime falls into smaller ones
   const got = rollLoot(m.kind || 'slime', Math.random, times);   // 85a: each kind's loot table
+  if (m.elite) { const e = ELITE.essences[Math.floor(Math.random() * ELITE.essences.length)]; got[e] = (got[e] || 0) + times; }   // v260: an elite's sure essence
   for (const [k, n] of Object.entries(got)) G.S.bag[k] = (G.S.bag[k] || 0) + n;
   if (Object.keys(got).length) notify(Object.entries(got).map(([k, n]) => `+${n} ${ITEMS[k].name}`).join(', '));
   const pool = DROP_POOL(m.floor || 1, m.zone);
-  if (pool.length && Math.random() < RARE_DROP * times * (G.S.read.includes('pw_bestiary') ? 2 : 1)) giveFind(pool[Math.floor(Math.random() * pool.length)], `The ${d.name.toLowerCase()} dropped`);
+  if (pool.length && Math.random() < RARE_DROP * times * (G.S.read.includes('pw_bestiary') ? 2 : 1) * (m.elite ? ELITE.rare : 1)) giveFind(pool[Math.floor(Math.random() * pool.length)], `The ${d.name.toLowerCase()} dropped`);
   if (wearing('leechring')) G.S.hp = Math.min(G.S.maxHp, G.S.hp + 2);
   if (wearing('savagering')) G.savageT = SAVAGE.time;   // v230
   if (weaponEnchant() === 'vampiric') G.S.hp = Math.min(G.S.maxHp, G.S.hp + 3);   // v39
   if (weaponEnchant() === 'haymaker' && Math.random() < 0.3) { const k = HAY[Math.floor(Math.random() * HAY.length)]; G.S.bag[k] = (G.S.bag[k] || 0) + 1; }
-  emit('gather', { skill: 'combat', xp: m.small ? Math.ceil(d.xp * SPLIT.xp) : d.xp });   // v256: a piece gives less
-  emit('monster:slain', { kind: m.kind || 'slime', x: m.x, y: m.y, map: slimeMap, drops: got });
+  emit('gather', { skill: 'combat', xp: (m.small ? Math.ceil(d.xp * SPLIT.xp) : d.xp) * (m.elite ? ELITE.xp : 1) });   // v260: an elite gives more   // v256: a piece gives less
+  emit('monster:slain', { kind: m.kind || 'slime', x: m.x, y: m.y, map: slimeMap, drops: got, elite: !!m.elite });
   if (busyFloor && slimeMap === 'mine' && !slimes.length) { busyFloor = false; emit('mine:cleared'); }   // v259: the ladder opens   // 85c: drops for the Bestiary   // v37: the lodge's goals, the blast ring
   changed();
 }
@@ -357,7 +368,7 @@ addInteraction(58, ({ item }) => {
 });
 
 addEntities(() => (G.S.map !== slimeMap ? [] : slimes.map((m) => ({
-  y: m.y, draw: (c) => (!m.kind || m.kind === 'slime' ? drawSlime(c, m.x, m.y, m.color, m.hurt > 0, m.hop % HOP < HOP_ACTIVE ? (m.hop % HOP) / HOP_ACTIVE : 0)
+  y: m.y, draw: (c) => (m.elite && !m.hidden && !untouchable(m) && drawElite(c, m), !m.kind || m.kind === 'slime' ? drawSlime(c, m.x, m.y, m.color, m.hurt > 0, m.hop % HOP < HOP_ACTIVE ? (m.hop % HOP) / HOP_ACTIVE : 0)
     : MONSTERS[m.kind].move === 'split' ? drawSplitter(c, m)
     : m.ph ? drawPhaser(c, m)
     : m.cs ? drawCharger(c, m)
@@ -366,6 +377,15 @@ addEntities(() => (G.S.map !== slimeMap ? [] : slimes.map((m) => ({
     : drawMonster(c, m.x, m.y, m.kind, m.color, m.hurt > 0 || (m.aim && Math.floor(m.st * 14) % 2 === 0), m.hop, !!m.face)),   // v255: a spitter flashes before it spits
 })).concat(shots.map((s) => ({ y: s.y + 8, draw: (c) => drawShot(c, s.x, s.y, s.color) })))));
 const ROCK_GREY = '#8a8580';
+// v260: an elite: a pulsing gold ring at its feet and a spark over it, drawn before the monster.
+function drawElite(c, m) {
+  const p = (Math.sin(m.hop * 6) + 1) / 2, x = Math.round(m.x), y = Math.round(m.y), w = 7 + Math.round(p * 2);
+  c.save(); c.globalAlpha = 0.45 + p * 0.35;
+  r(c, x - w, y - 2, w * 2, 1, ELITE_GOLD); r(c, x - w + 2, y - 3, w * 2 - 4, 1, ELITE_GOLD); r(c, x - w + 2, y, w * 2 - 4, 1, ELITE_GOLD);
+  r(c, x - 1, y - 26 - Math.round(p * 2), 2, 2, '#fff1b8');
+  c.restore();
+}
+const ELITE_GOLD = '#ffd25a';
 // v257: a phaser: see-through while faded, flickering in the last moments before it changes.
 function drawPhaser(c, m) {
   const flick = m.pt < PHASE.flicker && Math.floor(m.pt * 20) % 2 === 0, faint = (m.ph === 'faint') !== flick;

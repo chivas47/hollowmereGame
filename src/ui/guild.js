@@ -5,7 +5,7 @@ import { LODGE, LODGE_SHOP, GOALS } from '../data/guild.js';
 import { WEAPONS } from '../data/weapons.js';
 import { ITEMS } from '../data/items.js';
 import { CLOTHES } from '../data/clothing.js';
-import { stock, owns, itemName, buyGear, slain, goalDone, claimGoal } from '../systems/guild.js';
+import { stock, owns, itemName, buyGear, slain, goalDone, claimGoal, setBrazier } from '../systems/guild.js';
 import { weapon } from '../systems/gear.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
@@ -27,7 +27,9 @@ function lodge() {
   }).join('');
   openModal(`<h2>${LODGE.name}</h2><p class="role">${LODGE.keeper} looks up from a whetstone. "Keep the Hollow's creatures down and I'll make it worth your while." You have <b>${fmtGold(S.gold)}</b>. Your weapon: ${weapon().name}, ${weapon().damage} damage.</p>
     <h3>Weapons and boots</h3>${shop || '<p class="role">Nothing yet.</p>'}${next ? `<p class="role">More once you reach floor ${next.floor}.</p>` : ''}
-    <h3>Slaying goals</h3>${goals}`,
+    <h3>Slaying goals</h3>${goals}
+    <h3>The challenge brazier</h3><div class="shoprow"><div><b>${S.brazier ? 'Burning' : 'Cold'}</b><span>Light it to make the Hollow, the Sunken Cavern, the Ember Vent and Smoke Peak harder: every creature is tougher, and about one in ten is a gold-ringed elite with three times the health, a sure mote and a much better chance of a rare find. Douse it any time.</span></div>
+      <div class="btns"><button data-brazier="${S.brazier ? 'off' : 'on'}">${S.brazier ? 'Douse it' : 'Light it'}</button></div></div>`,
   [['Leave', closeModal, true]]);
 }
 
@@ -36,6 +38,8 @@ on('ui:lodge', lodge);
 $('#mbody').addEventListener('click', (e) => {
   const b = e.target.closest('[data-lodge]');
   if (b && !b.disabled) { if (buyGear(b.dataset.lodge)) lodge(); return; }
+  const z = e.target.closest('[data-brazier]');   // v260
+  if (z) { setBrazier(z.dataset.brazier === 'on'); lodge(); return; }
   const g = e.target.closest('[data-goal]');
   if (g && !g.disabled) { if (claimGoal(g.dataset.goal)) lodge(); }
 });

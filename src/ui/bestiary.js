@@ -34,7 +34,7 @@ function card(kind) {
   const drops = rows.map(([item]) => (got.includes(item) ? ITEMS[item].name : '?')).join(', ');
   const g = goalOf(kind), goal = g && GOALS[g];
   const goalLine = goal ? `<br>Lodge goal: ${Math.min(slain(g), goal.n).toLocaleString('en-US')} of ${goal.n.toLocaleString('en-US')} ${goal.label}${G.S.goalsClaimed.includes(g) ? ' (reward claimed)' : `, for ${ITEMS[goal.reward]?.name || itemName(goal.reward)}`}.` : '';
-  return `<div class="shoprow beast"><div><b>${d.name}</b><span>${whereLives(kind)} ${HOW[d.move] || ''}<br>Defeated: ${n.toLocaleString('en-US')}. Drops: ${drops}.${goalLine}</span></div><img class="beastpic" src="${picture(kind)}" alt=""></div>`;
+  return `<div class="shoprow beast"><div><b>${d.name}</b><span>${whereLives(kind)} ${HOW[d.move] || ''}<br>Defeated: ${n.toLocaleString('en-US')}.${B.elites?.includes(kind) ? ' You have beaten an elite one.' : ''} Drops: ${drops}.${goalLine}</span></div><img class="beastpic" src="${picture(kind)}" alt=""></div>`;
 }
 
 addJournalTab('creatures', 'Creatures', () => {
