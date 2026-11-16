@@ -295,8 +295,9 @@ test('heart scenes of staged neighbours play at their door: lines, a choice that
   const { pick } = await import('../src/systems/cutscene.js');
   const { stageOf } = await import('../src/systems/heartScenes.js');
   for (const id of HEART_STAGED) {
-    for (const at of Object.keys(SCENES[id]).map(Number)) {   // every scene's stage: open ground where you both stand and between
-      const st = stageOf(id, at), g = MAPS[st.map].grid, open = ([x, y]) => g[y]?.[x] && !SOLID.has(g[y][x]);
+    const barn = newState(); barn.built.barn = true; barn.sites.barn = { x: 12, y: 9 };   // v246: Rook's barn stage, moved
+    for (const at of Object.keys(SCENES[id]).map(Number)) for (const S of [newState(), barn]) {   // every scene's stage: open ground where you both stand and between
+      const st = stageOf(id, at, S), g = MAPS[st.map].grid, open = ([x, y]) => g[y]?.[x] && !SOLID.has(g[y][x]);
       assert.ok(open(st.npc), `${id} ${at}: they stand on open ground`);
       assert.ok(open(st.from) && open(st.to), `${id} ${at}: you start and stop on open ground`);
       assert.ok(st.from[0] === st.to[0] || st.from[1] === st.to[1], `${id} ${at}: a straight walk`);

@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v246: Heart scenes played out (Esme, Rook, Pell)
+- Esme's, Rook's and Pell's heart scenes now play out on the map too: Esme at her canvas in the forest, posing you on a stump in the clearing, in her cottage and on your porch; Rook at his boat shop, launching at the beach's waterline, out past the pier at sunset and by your barn (your porch if you have none); Pell in front of the town hall's schoolroom and, for the last one, in your farmhouse.
+- Same lines, choices and points as before.
+- New save data: none.
+
 ## v245: Heart scenes played out (Ines, Bram, Odile, Tavi)
 - Ines's, Bram's, Odile's and Tavi's heart scenes now play out on the map where their words say they happen: Bram at your shipping bin and workbench, Odile at the Wilds pond, on the beach pier and at your porch, Tavi at your kitchen table, Ines under the lime trees and at the edge of your farm, and otherwise at their front door. A title card, they wait for you, you walk up, they speak, and you choose.
 - The choice and its friendship points are the same as before. Use or a tap picks an answer; up and down move between them. Use only answers once the choice has been up for half a second, so tapping through lines never picks one by accident.

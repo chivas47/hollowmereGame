@@ -276,8 +276,8 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | 84d | Cutscenes: the old wing restored | feature | done (chivas47/hollowmereGame#259) | Nuno: the town hall's rooms coming back to life, and the coach road and harbour reopening. |
 | 84e | Cutscenes: firsts | feature | done (chivas47/hollowmereGame#260) | Nuno: first harvest, reaching the Hollow's bottom, the greenhouse rebuilt (the bridge is in 84a). |
 | 84f | Cutscenes: heart scenes played out (Ines, Bram, Odile, Tavi) | feature | done (chivas47/hollowmereGame#261) | Nuno: the heart scenes (data/scenes.js, 34) staged on the map instead of a page; GO on keeping the choices and points, staging each where its words set it (else their door), batches of a few neighbours. This batch: the first four (12 scenes) and the engine's choice step. |
-| 84g | Cutscenes: heart scenes (Esme, Rook, Pell) | feature | next | Their 12 scenes staged (data/scenes.js HEART_STAGES and HEART_STAGED). |
-| 84h | Cutscenes: heart scenes (Juno, Corvin) | feature | queued | Their 8 scenes staged; then every heart scene plays out and the page can go. |
+| 84g | Cutscenes: heart scenes (Esme, Rook, Pell) | feature | done (chivas47/hollowmereGame#262) | Their 12 scenes staged (data/scenes.js HEART_STAGES and HEART_STAGED). |
+| 84h | Cutscenes: heart scenes (Juno, Corvin) | feature | next | Their 8 scenes staged; then every heart scene plays out and the page can go. |
 
 ## Done
 
