@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v245: Heart scenes played out (Ines, Bram, Odile, Tavi)
+- Ines's, Bram's, Odile's and Tavi's heart scenes now play out on the map where their words say they happen: Bram at your shipping bin and workbench, Odile at the Wilds pond, on the beach pier and at your porch, Tavi at your kitchen table, Ines under the lime trees and at the edge of your farm, and otherwise at their front door. A title card, they wait for you, you walk up, they speak, and you choose.
+- The choice and its friendship points are the same as before. Use or a tap picks an answer; up and down move between them. Use only answers once the choice has been up for half a second, so tapping through lines never picks one by accident.
+- Holding to skip runs on to the choice, never past it.
+- The other neighbours' heart scenes still open as a page; they follow a few at a time.
+- New save data: none.
+
 ## v244: Firsts
 - Three new short scenes: your first harvest (where you stand, naming the crop), reaching floor 100 of the Hollow (Nell's old chalk mark, where the miners' maps end), and the morning the greenhouse is rebuilt (Bram hands it over by its door, wherever you moved it).
 - Notices that arrive during a scene now wait until it ends, instead of showing under the lines.

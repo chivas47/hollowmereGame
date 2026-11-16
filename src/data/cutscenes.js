@@ -19,6 +19,7 @@
 //   { do: 'title', text, sub, secs }         a title card over the scene
 //   { do: 'wait', secs }
 //   { do: 'goto', map, x, y, dir }           v241: you go to another map (the actors leave, the camera follows you)
+//   { do: 'choice', options: [label, ...] } v245: a choice; the scene's choose(i) answers it (heart scenes). Skipping stops here
 //   { do: 'emote', id, kind }                v242: a neighbour's bubble and gesture (data/emotes.js), e.g. love, happy
 // v242: a scene can have roles, filled when it is played (cast: { spouse: 'ines' }): '$spouse' stands in for an id
 // or who, and {spouse} in text for their name. A guest who is cast in a role is not added a second time.
@@ -31,6 +32,7 @@ export const CUTSCENE = {
   typeRate: 45,     // letters a second as a line types out
   walk: 40,         // px a second, a neighbour's unhurried walk
   barsTime: 0.4,    // seconds the bars take to slide in
+  choiceGuard: 0.5, // v245: seconds a choice is up before Use picks (so tapping through lines never answers it)
 };
 
 export const CUTSCENES = {

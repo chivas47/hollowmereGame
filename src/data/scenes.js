@@ -1,6 +1,31 @@
 // Heart scenes: the first talk after reaching 4 and 8 hearts plays a short scene with a choice.
 // Each choice adds friendship points and gets its own reply. Plain text, no em dashes.
-export const SCENE_HEARTS = [2, 4, 6, 8, 10, 14];   // v51: 2, 6 and 10 for the marriage candidates (10 only while dating)
+export const SCENE_HEARTS = [2, 4, 6, 8, 10, 14];
+// v245 (roadmap 84f): neighbours whose heart scenes play out on the map at their front door (systems/heartScenes.js);
+// the rest still open as a page (ui/dialogs.js). Grows a few neighbours a release.
+export const HEART_STAGED = ['ines', 'bram', 'odile', 'tavi'];
+// Where a scene plays when its words put it somewhere else than their door: the map, where they stand [x, y, facing],
+// where you walk from and to, and which way you face then. Without one: their front door (systems/heartScenes.js).
+export const HEART_STAGES = {
+  ines: {
+    10: { map: 'village', npc: [35, 9, 'up'], from: [31, 8], to: [35, 8], face: 'down' },   // under the lime trees past the east road
+    14: { map: 'farm', npc: [9, 6, 'left'], from: [8, 4], to: [8, 6], face: 'right' },     // a hive at the edge of the farm
+  },
+  bram: {
+    4: { map: 'farm', npc: [8, 4, 'up'], from: [4, 4], to: [7, 4], face: 'right' },         // on one knee at your shipping bin
+    8: { map: 'farm', npc: [15, 4, 'up'], from: [11, 4], to: [14, 4], face: 'right' },       // plans across your workbench
+  },
+  odile: {
+    4: { map: 'wilds', npc: [14, 10, 'left'], from: [11, 10], to: [13, 10], face: 'right' },   // the Wilds pond at dawn
+    8: { map: 'wilds', npc: [14, 10, 'left'], from: [11, 10], to: [13, 10], face: 'right' },   // the pond at dusk
+    10: { map: 'beach', npc: [6, 11, 'up'], from: [6, 7], to: [6, 10], face: 'down' },          // the pier at low tide
+    14: { map: 'farm', npc: [4, 4, 'right'], from: [7, 4], to: [5, 4], face: 'left' },         // your farmhouse porch
+  },
+  tavi: {
+    10: { map: 'house', npc: [12, 6, 'down'], from: [12, 10], to: [12, 7], face: 'up' },     // your kitchen table
+    14: { map: 'house', npc: [12, 6, 'down'], from: [12, 10], to: [12, 7], face: 'up' },
+  },
+};   // v51: 2, 6 and 10 for the marriage candidates (10 only while dating)
 
 export const SCENES = {
   ines: {

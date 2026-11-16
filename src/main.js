@@ -73,6 +73,7 @@ import './systems/books.js';
 import './systems/pots.js';
 import './systems/areas.js';
 import './systems/cutscene.js';   // v240 (roadmap 84a): cutscenes
+import './systems/heartScenes.js';   // v245 (84f): heart scenes at the neighbour's door
 import './systems/quarry.js';
 import './systems/hidden.js';
 import './systems/stalls.js';   // v165: the Saturday stalls

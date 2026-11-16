@@ -180,7 +180,8 @@ src/
     stalls.js         Saturday stalls on the town green (stallsOpen, sellerOf weekly rotation, buyStall at twice sell; raises ʂ once funded) (v165)
     traditions.js     the wishing stone (solid Ӂ in the village at load, bless() sets G.S.blessing, read by buffs.js) and the Lantern Float on the beach (setLantern(), floatLights() for nightlights.js; npcs.js walks neighbours there) (v110, G.S.traditions)
     signs.js          signposts and notices outdoors: solid Ş tiles set on open ground at load, Use reads them (v107)
-    cutscene.js       v240: plays a scene (G.cut): playCutscene(id, { replay, then, cast }) (v242: cast fills roles, '$spouse'; v244: vars fills words, {crop}; plays the first harvest and floor 100 itself), advance(), finish(), seen(id); stops the clock, you and farmer two, holds the camera (render/views.js), draws its actors; G.S.cutscenes[id] = the day seen
+    cutscene.js       v240: plays a scene (G.cut): playCutscene(id, { replay, then, cast }) (v242: cast fills roles, '$spouse'; v244: vars fills words, {crop}; plays the first harvest and floor 100 itself; v245: script, choose, a choice step: pick(i), moveChoice(d)), advance(), finish(), seen(id); stops the clock, you and farmer two, holds the camera (render/views.js), draws its actors; G.S.cutscenes[id] = the day seen
+    heartScenes.js    v245: heart scenes as cutscenes for HEART_STAGED neighbours: heartScript(n, at, scene), stageOf(id, at) (data/scenes.js HEART_STAGES, else their door); listens to heart:stage from npcs.js, chooseScene gives the points
     shortcuts.js      fallen trunks across shortcuts, cut with the copper axe; then trunk tiles turn to path and the maps get exits (v106, G.S.shortcuts)
     nightlights.js    outdoorLights(): lit windows (v151: a cottage only while homeNow(owner), ownerOf()), lamp posts and lanterns after dusk (renderer.js cuts them out of the dark); lit glass and lamp posts (v105, drawn only)
     falling.js        seasonal motion: petals, fluff, leaves, snow clumps from tree crowns, drifting with wind.js (v104, drawn only)
@@ -388,6 +389,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 |---|---|---|---|
 | `cutscene:start` / `cutscene:end` | scene id | systems/cutscene.js | ui/cutscene.js; tools/balance.mjs ends each at once |
 | `cutscene:frame` | none | systems/cutscene.js, every frame of a scene | ui/cutscene.js |
+| `heart:stage` | { npc, at, scene, extra } | systems/npcs.js, talking to a HEART_STAGED neighbour with a scene due (v245) | systems/heartScenes.js |
 | `state:changed` | none | everywhere via `changed()` | HUD, hotbar |
 | `toast` | message | `notify()` | ui/toast.js (v133: held on a new farm until the arrival scene is done; v176: in two-player, over the half of whoever caused it, #toast or #toast2; v193: inside the top of that farmer's open dialog card) |
 | `hud:prefs` | none | ui/hudPrefs.js (v120: also text size and contrast) | ui/goal.js, ui/prompt.js (v112) |

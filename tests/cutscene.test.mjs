@@ -286,3 +286,84 @@ test('old saves count the firsts they have passed as seen', () => {
   const fresh = JSON.parse(JSON.stringify(newState())); fresh.v = 5; delete fresh.cutscenes;
   assert.deepEqual(merge(fresh).cutscenes, {}, 'a new farm has all its firsts ahead');
 });
+
+test('heart scenes of staged neighbours play at their door: lines, a choice that gives its points, the reply', async () => {
+  const { HEART_STAGED, SCENES } = await import('../src/data/scenes.js');
+  const { HOMES } = await import('../src/data/homes.js');
+  const npcs = await import('../src/systems/npcs.js');
+  const { heartScript } = await import('../src/systems/heartScenes.js');
+  const { pick } = await import('../src/systems/cutscene.js');
+  const { stageOf } = await import('../src/systems/heartScenes.js');
+  for (const id of HEART_STAGED) {
+    for (const at of Object.keys(SCENES[id]).map(Number)) {   // every scene's stage: open ground where you both stand and between
+      const st = stageOf(id, at), g = MAPS[st.map].grid, open = ([x, y]) => g[y]?.[x] && !SOLID.has(g[y][x]);
+      assert.ok(open(st.npc), `${id} ${at}: they stand on open ground`);
+      assert.ok(open(st.from) && open(st.to), `${id} ${at}: you start and stop on open ground`);
+      assert.ok(st.from[0] === st.to[0] || st.from[1] === st.to[1], `${id} ${at}: a straight walk`);
+      const [x0, y0] = st.from, [x1, y1] = st.to;
+      for (let x = Math.min(x0, x1); x <= Math.max(x0, x1); x++) for (let y = Math.min(y0, y1); y <= Math.max(y0, y1); y++) assert.ok(open([x, y]), `${id} ${at}: the way at ${x},${y}`);
+      assert.ok(Math.abs(st.to[0] - st.npc[0]) + Math.abs(st.to[1] - st.npc[1]) <= 2, `${id} ${at}: you end beside them`);
+    }
+  }
+  freshFarm({ map: 'farm', x: 100, y: 100, profile: { name: 'Rowan', farm: 'Fernhill' } });
+  emit('game:reset');
+  const n = npcs.NPCRT.find((x) => x.id === 'ines');
+  G.S.npcs.ines.pts = 4 * 100 + 10; G.S.npcs.ines.talked = G.S.day;
+  const before = G.S.npcs.ines.pts;
+  npcs.startTalk(n);
+  update(0);
+  assert.equal(G.cut?.id, 'heart:ines:4');
+  assert.equal(G.S.map, HOMES.ines.map);
+  // skipping stops at the choice
+  G.useHeld = true; for (let i = 0; i < 40 && !G.cut.choice; i++) update(0.05); G.useHeld = false;
+  assert.ok(G.cut.choice, 'skip runs on to the choice');
+  assert.deepEqual(G.cut.choice.options, SCENES.ines[4].choices.map((c) => c.label));
+  G.keys = { down: true }; update(0.05); G.keys = {}; update(0.05);
+  assert.equal(G.cut.choice.sel, 1, 'down moves to the second answer');
+  pick(0);
+  assert.equal(G.cut.line.text, SCENES.ines[4].choices[0].reply);
+  assert.ok(G.S.npcs.ines.scenes.includes(4));
+  assert.equal(G.S.npcs.ines.pts, before + SCENES.ines[4].choices[0].pts);
+  G.useHeld = true; for (let i = 0; i < 40 && G.cut; i++) update(0.05); G.useHeld = false;
+  assert.equal(G.cut, null);
+  assert.deepEqual([G.S.map, G.S.x, G.S.y], ['farm', 100, 100]);
+  // their lines: a paragraph opening with speech is theirs
+  const script = heartScript(n, 8, SCENES.ines[8]);
+  const says = script.steps.filter((s) => s.do === 'say');
+  says.forEach((s, i) => assert.equal(s.who, SCENES.ines[8].text[i].startsWith('"') ? 'ines' : null));
+});
+
+test('neighbours not yet staged keep the heart scene page', async () => {
+  const { HEART_STAGED, SCENES } = await import('../src/data/scenes.js');
+  const npcs = await import('../src/systems/npcs.js');
+  const id = Object.keys(SCENES).find((k) => !HEART_STAGED.includes(k));
+  if (!id) return;
+  freshFarm({ map: 'farm' });
+  emit('game:reset');
+  const pages = []; on('ui:scene', (e) => pages.push(e));
+  const at = Object.keys(SCENES[id]).map(Number).sort((a, b) => a - b).find((h) => !SCENES[id][h].dating && !SCENES[id][h].married);
+  G.S.npcs[id].pts = at * 100 + 10; G.S.npcs[id].talked = G.S.day;
+  npcs.startTalk(npcs.NPCRT.find((x) => x.id === id));
+  update(0);
+  assert.equal(G.cut, null);
+  assert.equal(pages.length, 1);
+});
+
+test('Use pressed the moment a choice appears does not answer it', async () => {
+  const { SCENES } = await import('../src/data/scenes.js');
+  const npcs = await import('../src/systems/npcs.js');
+  freshFarm({ map: 'farm' });
+  emit('game:reset');
+  G.S.npcs.tavi.pts = 410; G.S.npcs.tavi.talked = G.S.day;
+  npcs.startTalk(npcs.NPCRT.find((x) => x.id === 'tavi'));
+  update(0);
+  G.useHeld = true; for (let i = 0; i < 60 && !G.cut.choice; i++) update(0.05); G.useHeld = false;
+  advance();
+  assert.ok(G.cut.choice, 'too soon: still choosing');
+  assert.ok(!(G.S.npcs.tavi.scenes || []).includes(4));
+  update(CUTSCENE.choiceGuard);
+  advance();
+  assert.equal(G.cut.choice, null);
+  assert.ok(G.S.npcs.tavi.scenes.includes(4));
+  assert.ok(SCENES.tavi[4]);
+});
