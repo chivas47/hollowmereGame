@@ -130,6 +130,7 @@ Short scenes played on the map for important moments (Stardew plays its events t
 
 | Scene | When | Where |
 |---|---|---|
+| The opening | A new farm, after the new game screen (v241; replaces v122's arrival pages) | The village's east road, then the farm; Bram. Ends at the farmhouse door, watched or skipped |
 | The bridge is mended | The morning after the workroom is restored (v240) | The mountain path; Bram |
 
 ## Controls

@@ -50,8 +50,8 @@ src/
     market.js         CART, BOOKSELLER, MACHINE, PRIZES, MYSTERY, the ticket and box items (v69)
     storage.js        CHEST_ROOM, SIGN_LENGTH, WORLD (the journal's map grid), WORLD_PARENT (v71)
     journal.js        v114: STORY (the main line: each step's name, hint and map), LANDMARKS per world map place, PIN_MAX, PIN_LENGTH, LOG_MAX
-    cutscenes.js      v240: CUTSCENE (skip hold, typing and walk speeds), CUTSCENES (each scene: where it plays, its steps)
-    firstweek.js      v122: ARRIVAL (the opening scene's pages), FIRST_WEEK (a goal a day: name, hint, map, done(S))
+    cutscenes.js      v240: CUTSCENE (skip hold, typing and walk speeds), CUTSCENES (each scene: where it plays, its steps, v241: where it ends)
+    firstweek.js      v122: FIRST_WEEK (v241: ARRIVAL's pages became the opening cutscene) (a goal a day: name, hint, map, done(S))
     reckoning.js      v128: RECKONING (day, the gem to ask again, the reward, lamp thresholds, porch spots), RECKON_POINTS (Stardew's 21), RECKON_LINES
     partner.js        v129: PARTNER (the second farmer's name, speed, look, where they stand beside you); v130: what only you can do (yours)
     emotes.js         v124: EMOTES (each reaction's length and gesture), GIFT_EMOTE by taste tier, SIGH (rain)
@@ -224,7 +224,7 @@ src/
     desert.js         the coach, the Oasis, the desert trader and the casino (ui:coach, ui:oasis, ui:dtrader, ui:casino, v64)
     museum.js         the museum's donations (ui:museum) and the journal (J, ui:journal): collections, notes, achievements, completion (v68); addJournalTab(key, label, render, front), redrawJournal() (v114)
     journal.js        v114: the journal's first tabs: Quests (main, optional, completed, Track), Story (steps, the story so far, discoveries), Map (found places, landmarks, markers, pins), People
-    arrival.js        v122: the arrival scene, once, after the new game screen
+    arrival.js        v122: the arrival scene, once, after the new game screen; v241: plays the opening cutscene, then the first-week tip
     cutscene.js       v240: a cutscene's bars, fade, title card, spoken line and skip hint over the field; a tap goes on, a finger held skips
     storage.js        chest, sign, farm computer and lost and found dialogs (ui:chest, ui:sign, ui:computer, ui:lostfound); journal tabs calendar and animals via addJournalTab() in ui/museum.js (v71; quests and map moved to ui/journal.js in v114); the chest as two icon grids, click or drag to move (v113)
     shipbin.js        the shipping bin's picker (ui:bin): a count per stack, Ship selected, Ship all, Take back (v236)

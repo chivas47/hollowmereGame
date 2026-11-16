@@ -24,11 +24,12 @@ function start(id, opts) {
 }
 
 test('every scene is well formed: known steps, neighbours that exist, tiles on the map', () => {
-  const kinds = new Set(['fade', 'bars', 'cam', 'pan', 'follow', 'actor', 'remove', 'walk', 'face', 'say', 'title', 'wait']);
+  const kinds = new Set(['fade', 'bars', 'cam', 'pan', 'follow', 'actor', 'remove', 'walk', 'face', 'say', 'title', 'wait', 'goto']);
   for (const [id, sc] of Object.entries(CUTSCENES)) {
-    const map = MAPS[sc.at?.map];
+    let map = MAPS[sc.at?.map];
     assert.ok(map, `${id}: a map to play on`);
     for (const s of sc.steps) {
+      if (s.do === 'goto') { map = MAPS[s.map]; assert.ok(map, `${id}: goto ${s.map}`); continue; }
       assert.ok(kinds.has(s.do), `${id}: ${s.do}`);
       for (const who of [s.who, s.do === 'actor' || s.do === 'walk' || s.do === 'face' ? s.id : null]) {
         if (who && who !== 'you') assert.ok(NPCS.some((n) => n.id === who), `${id}: ${who}`);
@@ -127,4 +128,31 @@ test('a scene ended by a listener as it starts leaves nothing running', async ()
   on1 = false;
   assert.equal(G.cut, null);
   assert.deepEqual([G.S.map, G.S.x, G.S.y], ['farm', 40, 40]);
+});
+
+test('a new farm opens with the opening scene; skipped, you are at the farmhouse door and have arrived', async () => {
+  await import('../src/ui/arrival.js').catch(() => null);   // DOM-free: it only queues the scene
+  const toasts = [];
+  on('toast', (m) => toasts.push(m));
+  freshFarm({ profile: { name: 'Rowan', farm: 'Fernhill' }, map: 'farm' });
+  emit('game:reset');
+  emit('game:loaded');
+  update(0);
+  assert.equal(G.cut?.id, 'opening');
+  assert.equal(G.S.map, 'village');
+  G.useHeld = true; for (let i = 0; i < 40 && G.cut; i++) update(0.05); G.useHeld = false;
+  assert.equal(G.cut, null);
+  assert.equal(G.S.firstWeek.arrived, true);
+  assert.deepEqual([G.S.map, Math.floor(G.S.x / 16), Math.floor(G.S.y / 16), G.S.dir], ['farm', 3, 4, 'down']);
+  assert.ok(toasts.some((m) => /first week/.test(m)));
+});
+
+test('watched to the end, the opening walks you from the village road to the farmhouse door', () => {
+  freshFarm({ profile: { name: 'Rowan', farm: 'Fernhill' }, map: 'farm' });
+  start('opening', { replay: true });
+  const maps = new Set();
+  for (let n = 0; n < 40 && G.cut; n++) { runFor(30); maps.add(G.S.map); if (G.cut?.line || G.cut?.title) advance(); if (G.cut?.line) advance(); }
+  assert.equal(G.cut, null, 'it ends');
+  assert.ok(maps.has('village') && maps.has('farm'));
+  assert.deepEqual([G.S.map, Math.floor(G.S.x / 16), Math.floor(G.S.y / 16), G.S.dir], ['farm', 3, 4, 'down']);
 });
