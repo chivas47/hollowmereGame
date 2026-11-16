@@ -6,7 +6,7 @@ import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addEntities } from '../core/registry.js';
 import { NPCS } from '../data/npcs.js';
-import { PENDANT, CHORE_CHANCE, BREAKFASTS, BOATMAN } from '../data/romance.js';
+import { PENDANT, CHORE_CHANCE, BREAKFASTS, BOATMAN, WEDDING_VOWS, WEDDING_VOW } from '../data/romance.js';
 import { drawPerson } from '../render/sprites.js';
 import { weatherNow } from './weather.js';
 import { addItem } from './quality.js';
@@ -42,7 +42,7 @@ on('day:start', () => {
   const st = S.npcs[w.id];
   st.married = true; st.dating = !w.roommate;
   if (w.roommate) emit('ui:message', { title: 'A new roommate', text: `${nameOf(w.id)} arrives at dusk with a single trunk and a lantern, and takes the quiet corner of the farmhouse. "Thank you," he says. "For the light."` });
-  else if (!playCutscene('wedding', { replay: true, cast: { spouse: w.id } })) {   // v242 (84c): played in the square
+  else if (!playCutscene('wedding', { replay: true, cast: { spouse: w.id }, vars: { vow: WEDDING_VOWS[w.id] || WEDDING_VOW } })) {   // v248: their own vow   // v242 (84c): played in the square
     emit('ui:message', { title: 'Your wedding', text: `The whole valley gathers in the square. ${nameOf(w.id)} is waiting under an arch of flowers, and when you say the words, the square cheers. ${nameOf(w.id)} moves into the farmhouse today.` });
   }
   changed();

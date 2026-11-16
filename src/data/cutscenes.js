@@ -105,7 +105,7 @@ export const CUTSCENES = {
       { do: 'face', id: 'you', dir: 'right' },
       { do: 'say', who: 'bram', text: 'I have built barns, bins and one bad boat. Never stood up for one of these before. Bear with me.' },
       { do: 'say', who: 'bram', text: '{name}, {spouse}. You each say you will keep the other, in good harvests and in thin ones. The valley is listening.' },
-      { do: 'say', who: '$spouse', text: 'I will. I have been keeping you for a while now, if I am honest.' },
+      { do: 'say', who: '$spouse', text: '{vow}' },   // v248: their own (data/romance.js WEDDING_VOWS)
       { do: 'say', who: 'you', text: 'I will.' },
       { do: 'say', who: 'bram', text: 'Then that is that. Go on, the square is waiting.' },
       { do: 'emote', id: '$spouse', kind: 'love' },

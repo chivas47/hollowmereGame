@@ -31,6 +31,21 @@ export const MARRIAGE_ITEMS = { pendant: { name: 'Sea-glass pendant', sell: 2500
 export const BOATMAN = { name: 'The old boatman', look: { skin: '#c99a74', hair: '#d0d0d0', shirt: '#3f4a5a', pants: '#2b2f36', shoes: '#1a1a1a', beard: true, hat: '#2b2f36', band: '#c9b083' } };
 
 // What a spouse says at home.
+// v248: each candidate's own vow at the wedding (data/cutscenes.js wedding), from their heart scenes: Ines's
+// ledger, Odile's nets, Tavi's maps, Esme's paintings, Rook's boat with your name on it, Pell's lessons, Juno's round,
+// Corvin's ring. WEDDING_VOW is said by anyone without one.
+export const WEDDING_VOW = 'I will. I have been keeping you for a while now, if I am honest.';
+export const WEDDING_VOWS = {
+  ines: 'I will. I wrote your name in my mother\'s ledger last spring. Ink does not come out.',
+  odile: 'I will. I have mended a thousand knots. This is the first one I ever meant to keep tied.',
+  tavi: 'I will. Every map I draw from now on has the same place at the middle of it.',
+  esme: 'I will. I stopped painting you alone. I am not going to start again.',
+  rook: 'I will. I put your name on a hull. In my trade that is a promise, and I keep those.',
+  pell: 'I will. It is the only question I have ever been sure of the answer to.',
+  juno: 'I will. I asked for the short round. The one that ends at your door.',
+  corvin: 'I will. I made the ring a long time ago. It just took me this long to finish.',
+};
+
 export const SPOUSE_LINES = {
   ines: ['I left honey on the table for your tea. Do not argue, just drink it.', 'The bees have settled in by the farmhouse. They like it here. So do I.'],
   odile: ['I fixed the gate this morning. It squeaked. I could not stand it.', 'Wake me early tomorrow. The tide is good and I want you with me.'],

@@ -165,9 +165,12 @@ test('watched to the end, the opening walks you from the village road to the far
 });
 
 test('the wedding plays in the square for any of the eight candidates, with them in it once', async () => {
-  const { CANDIDATES } = await import('../src/data/romance.js');
+  const { CANDIDATES, WEDDING_VOWS } = await import('../src/data/romance.js');
   await import('../src/systems/marriage.js');
+  assert.equal(new Set(CANDIDATES.map((c) => WEDDING_VOWS[c])).size, CANDIDATES.length, 'a different vow for each');
+  for (const c of CANDIDATES) assert.ok(WEDDING_VOWS[c] && !WEDDING_VOWS[c].includes('\u2014'), `${c}: a vow, no em dash`);
   for (const id of CANDIDATES) {
+    const vows = [];
     freshFarm({ map: 'house', profile: { name: 'Rowan', farm: 'Fernhill' } });
     emit('game:reset');
     G.S.wedding = { id, day: G.S.day };
@@ -182,8 +185,9 @@ test('the wedding plays in the square for any of the eight candidates, with them
     assert.equal(Object.keys(G.cut.actors).filter((k) => k === id).length, 1);
     assert.match(G.cut.line.text, new RegExp(name));
     let spoke = false;
-    for (let n = 0; n < 40 && G.cut; n++) { runFor(30); if (G.cut?.line?.who === id) spoke = true; advance(); advance(); }
+    for (let n = 0; n < 40 && G.cut; n++) { runFor(30); if (G.cut?.line?.who === id) { spoke = true; vows.push(G.cut.line.text); } advance(); advance(); }
     assert.ok(spoke, `${id} says their line`);
+    assert.ok(vows.includes(WEDDING_VOWS[id]), `${id} says their own vow`);
     assert.equal(G.cut, null);
     assert.equal(G.S.map, 'house', 'back where you woke');
   }
