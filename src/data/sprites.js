@@ -21,10 +21,12 @@ export const PETS = {
 };
 export const HORSE = { sheet: 'horse', size: 24, origin: [-12, -24] };
 
-// v80 monsters.png: 24x24 frames, 2 columns (the code art's two frames; the slime's are resting and mid-hop); one band
-// per kind and layer, tinted like the person sheet: body to the monster's colour (white while hurt), glow to the
-// kind's glow colour, ink as is. Flyers are drawn at rest height. Per kind: shadow [dx, width, alpha] drawn in code
-// on the ground, bob: the speed of the 2 px rise and fall (0: none), sway: the speed of a 1 px side to side.
+// v80 monsters.png: 24x24 frames, 4 columns (v265, 87c1: the animation frames; the slime's resting, landing, taking
+// off, mid-hop); one band per shape and layer, tinted like the person sheet: body to the monster's colour (white while
+// hurt), glow to the kind's glow colour, line (the outline) to a dark shade of the body, or to rim: a lighter outline
+// so a dark kind reads on a dark floor; ink as is. Flyers are drawn at rest height. Per kind: shadow [dx, width,
+// alpha] drawn in code on the ground, bob: the speed of the 2 px rise and fall (0: none), sway: the speed of a 1 px
+// side to side.
 // v81 crops.png: 16x16 frames over the tile (origin: its top-left); columns are the stages below, the ripe ones by
 // crop shape. Bands as the person sheet: plant and shine as is, fruit tinted to the crop's colour, top to its top
 // colour (only drawn when it has one), line to its line colour (or its colour).
@@ -108,33 +110,36 @@ export const SOIL_SHEET = { sheet: 'soil', size: 16 };
 
 export const MONSTERS = {
   sheet: 'monsters', size: 24, origin: [-12, -24],
-  layers: ['mite.body', 'mite.ink', 'bat.body', 'bat.ink', 'skeleton.body', 'skeleton.ink', 'wraith.body', 'wraith.ink',
-    'rex.body', 'rex.ink', 'sprite.body', 'sprite.glow', 'sprite.ink', 'golem.body', 'golem.glow', 'golem.ink',
-    'serpent.body', 'serpent.ink', 'slime.body', 'slime.ink',
-    'beetle.body', 'beetle.ink', 'boar.body', 'boar.ink', 'ram.body', 'ram.glow', 'ram.ink', 'hound.body', 'hound.glow', 'hound.ink',
-    'crab.body', 'crab.ink', 'crabrock.body', 'crabrock.ink', 'mole.body', 'mole.ink', 'puff.body', 'puff.ink',   // v253 (85d1)
-    'lurker.body', 'lurker.ink',   // v254 (85d2)
-    'spitter.body', 'spitter.glow', 'spitter.ink',   // v255 (85e1)
-    'wisp.body', 'wisp.glow', 'wisp.ink', 'shell.body', 'shell.ink'],   // v257 (85f)
+  layers: ['mite.body', 'mite.line', 'mite.ink', 'bat.body', 'bat.line', 'bat.ink', 'skeleton.body', 'skeleton.line',
+    'skeleton.ink', 'wraith.body', 'wraith.line', 'wraith.ink', 'rex.body', 'rex.line', 'rex.ink', 'sprite.body',
+    'sprite.glow', 'sprite.line', 'sprite.ink', 'golem.body', 'golem.glow', 'golem.line', 'golem.ink',
+    'serpent.body', 'serpent.line', 'serpent.ink', 'slime.body', 'slime.line', 'slime.ink', 'beetle.body',
+    'beetle.line', 'beetle.ink', 'boar.body', 'boar.line', 'boar.ink', 'ram.body', 'ram.glow', 'ram.line', 'ram.ink',
+    'hound.body', 'hound.glow', 'hound.line', 'hound.ink', 'crab.body', 'crab.line', 'crab.ink', 'crabrock.body',
+    'crabrock.line', 'crabrock.ink', 'mole.body', 'mole.line', 'mole.ink', 'puff.body', 'puff.line', 'puff.ink',
+    'lurker.body', 'lurker.line', 'lurker.ink', 'spitter.body', 'spitter.glow', 'spitter.line', 'spitter.ink',
+    'wisp.body', 'wisp.glow', 'wisp.line', 'wisp.ink', 'shell.body', 'shell.line', 'shell.ink', 'mossslime.body',
+    'mossslime.line', 'mossslime.ink'],
   kinds: {
-    mite: { shadow: [-5, 10, 0.35] }, bat: { shadow: [-3, 6, 0.25], bob: 6 }, skeleton: { shadow: [-4, 8, 0.35] },
+    mite: { shadow: [-5, 10, 0.35], rim: '#a8845a' }, bat: { shadow: [-3, 6, 0.25], bob: 6, rim: '#8f7aa8' }, skeleton: { shadow: [-4, 8, 0.35] },
     wraith: { shadow: [-4, 8, 0.35], sway: 3 }, rex: { shadow: [-4, 8, 0.25], bob: 5 },
     sprite: { shadow: [-3, 6, 0.25], bob: 7, glow: '#ffd98a' }, golem: { shadow: [-6, 12, 0.35], glow: '#e9862a' },
     serpent: { shadow: [-4, 8, 0.25], bob: 3 }, slime: { shadow: [-4, 9, 0.35] },
     // v228: the chargers, four shapes drawn once (shape) and tinted per kind; they face the way they go.
-    beetle: { shape: 'beetle', shadow: [-6, 12, 0.35] }, scuttler: { shape: 'beetle', shadow: [-6, 12, 0.35] },
+    beetle: { shape: 'beetle', shadow: [-6, 12, 0.35], rim: '#9a88b0' }, scuttler: { shape: 'beetle', shadow: [-6, 12, 0.35] },
     boar: { shape: 'boar', shadow: [-8, 16, 0.35] }, bull: { shape: 'boar', shadow: [-8, 16, 0.35] },
     ram: { shape: 'ram', shadow: [-8, 16, 0.35], glow: '#6f6862' }, magmaram: { shape: 'ram', shadow: [-8, 16, 0.35], glow: '#e9862a' },
-    gloomhound: { shape: 'hound', shadow: [-8, 16, 0.3], glow: '#8a6ad0' }, hound: { shape: 'hound', shadow: [-8, 16, 0.3], glow: '#e9862a' },
+    gloomhound: { shape: 'hound', shadow: [-8, 16, 0.3], glow: '#8a6ad0', rim: '#7f76a8' }, hound: { shape: 'hound', shadow: [-8, 16, 0.3], glow: '#e9862a' },
     // v253 (85d1): the pebble crab awake and asleep (a rock), the burrow mole up, the soot puff.
-    crab: { shadow: [-6, 12, 0.35] }, crabrock: { shadow: [-6, 12, 0.35] }, mole: { shadow: [-6, 12, 0.35] }, puff: { shadow: [-2, 4, 0.25], bob: 7 },
+    crab: { shadow: [-6, 12, 0.35] }, crabrock: { shadow: [-6, 12, 0.35] }, mole: { shadow: [-6, 12, 0.35] }, puff: { shadow: [-2, 4, 0.25], bob: 7, rim: '#8a8070' },
     // v254 (85d2): the lava lurker up out of its pool; dust devils and the ash swarm are the soot puff's shape, tinted.
     lurker: { shadow: [-6, 12, 0.3] }, dustdevil: { shape: 'puff', shadow: [-2, 4, 0.25], bob: 7 }, ashswarm: { shape: 'puff', shadow: [-2, 4, 0.25], bob: 7 },
     // v255 (85e1): the spitters, one shape tinted per kind; the glow (its mouth) is the colour of its globs.
-    spitter: { shape: 'spitter', shadow: [-6, 12, 0.35], glow: '#b07ae0' }, sandspitter: { shape: 'spitter', shadow: [-6, 12, 0.35], glow: '#e9c46a' },
+    spitter: { shape: 'spitter', shadow: [-6, 12, 0.35], glow: '#b07ae0', rim: '#9a88b0' }, sandspitter: { shape: 'spitter', shadow: [-6, 12, 0.35], glow: '#e9c46a' },
     cragspitter: { shape: 'spitter', shadow: [-6, 12, 0.35], glow: '#e9862a' },
-    // v256 (85e2): splitting slimes are the slime's bands in their own colours (drawn bigger while whole).
-    mossslime: { shape: 'slime', shadow: [-4, 9, 0.35] }, emberslime: { shape: 'slime', shadow: [-4, 9, 0.35] },
+    // v256 (85e2): splitting slimes are the slime's bands in their own colours (drawn bigger while whole); v265: the moss
+    // slime has its own (a moss cap). rim (v265): the Hollow's dark kinds get a lighter outline (the deep ones in 87c2).
+    mossslime: { shadow: [-4, 9, 0.35] }, emberslime: { shape: 'slime', shadow: [-4, 9, 0.35] },
     // v257 (85f): the phasers (a wisp with a glowing heart), the armored (a heavy shell), the storm wing (a bat, tinted).
     wisp: { shape: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#ffe08a' }, shade: { shape: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#b07ae0' },
     shellback: { shape: 'shell', shadow: [-7, 14, 0.35] }, cragshell: { shape: 'shell', shadow: [-7, 14, 0.35] },
