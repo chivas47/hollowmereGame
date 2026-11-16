@@ -42,6 +42,15 @@ export const GOALS = {
   hollowchargers: { n: 150, kinds: ['beetle', 'boar', 'ram', 'gloomhound'], reward: 'savagering', label: 'chargers in the Hollow' },
   sandchargers:   { n: 60,  kinds: ['scuttler', 'bull'], reward: 'hornhelm', label: 'chargers in the Sunken Cavern' },
   ventchargers:   { n: 60,  kinds: ['hound', 'magmaram'], reward: 'bracering', label: 'chargers in the Ember Vent' },
+  // v258 (roadmap 85f's kinds, 85g): one goal a way of fighting. Stardew: 60 rock crabs (crabshell ring), 30 duggies
+  // (hard hat), 500 dust sprites (burglar's ring); the rest are ours, sized like its goals of the same depth.
+  mimics:    { n: 60,  kinds: ['crab'], reward: 'stonering', label: 'pebble crabs' },
+  burrowers: { n: 30,  kinds: ['mole', 'lurker'], reward: 'diggercap', label: 'burrow moles and lava lurkers' },
+  swarms:    { n: 500, kinds: ['puff', 'dustdevil', 'ashswarm', 'stormwing'], reward: 'thiefring', label: 'swarming creatures' },
+  shooters:  { n: 100, kinds: ['spitter', 'sandspitter', 'cragspitter'], reward: 'tidering', label: 'spitters' },
+  splitters: { n: 200, kinds: ['mossslime', 'emberslime'], reward: 'mossring', label: 'moss and ember slimes (pieces count)' },
+  phasers:   { n: 100, kinds: ['wisp', 'shade'], reward: 'glowring', label: 'lantern wisps and tomb shades' },
+  armored:   { n: 60,  kinds: ['shellback', 'cragshell'], reward: 'shellring', label: 'shellbacks' },
 };
 // v230: the savage ring's burst of speed after a defeat: seconds, and food-buff speed points (data/cooking.js BUFF).
 export const SAVAGE = { time: 3, speed: 2 };

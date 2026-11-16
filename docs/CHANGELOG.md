@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v258: Lodge goals for the new creatures
+- Warden Hale has seven new goals, one for each new way of fighting: pebble crabs, burrowers, swarms, spitters, splitting slimes, wisps and shades, and shellbacks.
+- Two new rewards: the Digger's cap, a hat for 30 burrowers, and the Shell ring (3 more defense) for 60 shellbacks. The others pay rings you may have found already.
+- A Bestiary card shows its goal.
+- New save data: none.
+
 ## v257: Wisps, shades and shellbacks
 - Lantern wisps (Hollow floors 50 to 80) and tomb shades (Sunken Cavern) drift through walls and fade in and out. While faded they cannot hurt you or be hurt: strike while they are solid.
 - Shellbacks (Hollow from floor 85, and crag shellbacks in the Ember Vent and Smoke Peak) shrug off blades: swords and daggers do a quarter of their damage. Bring a club or a bomb.

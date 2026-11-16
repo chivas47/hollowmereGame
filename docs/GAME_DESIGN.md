@@ -768,6 +768,20 @@ The last two ways to fight from the creatures plan (data/weapons.js PHASE, ARMOR
 
 The two phasers share the wisp picture (its heart is the glow), the shellbacks the shell, the storm wing the cave bat's. Wisp silk, the lantern wisp's own drop, tailors into the Wisp-silk shirt. The roadmap sketch put the crag shellback and storm wing on Smoke Peak alone; they live in the Vent too, as every Peak kind does.
 
+### Lodge goals for the new creatures (v258, roadmap 85g)
+
+One goal for each way of fighting added in 85d to 85f, each counting every kind that fights that way. Counts follow Stardew's monster eradication goals where it has one (60 rock crabs, 30 duggies, 500 dust sprites) and are sized like its goals of the same depth otherwise.
+
+| Goal | Counts | Reward | Stardew |
+|---|---|---|---|
+| 60 pebble crabs | crab | Stone ring | 60 rock crabs |
+| 30 burrow moles and lava lurkers | mole, lurker | Digger's cap (hat, new) | 30 duggies, hard hat |
+| 500 swarming creatures | soot puffs, dust devils, ash swarm, storm wings | Thief's ring | 500 dust sprites, burglar's ring |
+| 100 spitters | the three spitters | Tide ring | ours |
+| 200 moss and ember slimes | each piece counts | Moss ring | ours |
+| 100 lantern wisps and tomb shades | wisp, shade | Glow ring | ours |
+| 60 shellbacks | shellback, crag shellback | Shell ring (new: 3 more defense, 400g) | crabshell ring (+5 defense) |
+
 ### The Bestiary (v252, roadmap 85c)
 
 The journal's Creatures tab. A kind counts as met once it is on the map you are on, or falls. Each met kind has a card: its picture, where it lives, a line on how it fights (by the way it moves: hop, crawl, fly, walk, charge), how many you have defeated, its lodge goal's progress and reward, and its loot table, each item named once that kind has dropped it for you ("?" until then). Kinds not met show "???", and the tab's first line counts how many are left. Stardew has no bestiary; its monster eradication goals at the guild are the nearest thing, and the card shows those.

@@ -28,7 +28,7 @@ export function hurtPlayer(dmg, fromX, fromY) {
 }
 
 // The hit after shoes (defense), the stone ring, amber forged into the weapon (v39) and the acrobat (v34).
-const taken = (dmg) => Math.max(1, Math.round(dmg * (has('acrobat') ? 0.75 : 1)) - defense() - (G.S.rings?.includes('stonering') ? 1 : 0) - (G.S.forged?.[G.S.weapon]?.ambergem || 0));
+const taken = (dmg) => Math.max(1, Math.round(dmg * (has('acrobat') ? 0.75 : 1)) - defense() - (G.S.rings?.includes('stonering') ? 1 : 0) - (G.S.rings?.includes('shellring') ? 3 : 0) - (G.S.forged?.[G.S.weapon]?.ambergem || 0));
 
 // v143: a monster reaches farmer two.
 export function hurtPartner(dmg, fromX, fromY) {
