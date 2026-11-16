@@ -19,6 +19,9 @@
 //   { do: 'title', text, sub, secs }         a title card over the scene
 //   { do: 'wait', secs }
 //   { do: 'goto', map, x, y, dir }           v241: you go to another map (the actors leave, the camera follows you)
+//   { do: 'emote', id, kind }                v242: a neighbour's bubble and gesture (data/emotes.js), e.g. love, happy
+// v242: a scene can have roles, filled when it is played (cast: { spouse: 'ines' }): '$spouse' stands in for an id
+// or who, and {spouse} in text for their name. A guest who is cast in a role is not added a second time.
 // A scene with end: { map, x, y, dir } leaves you there, watched or skipped; without one you go back to where you stood.
 export const CUTSCENE = {
   skipHold: 1,      // seconds Use or Esc is held to skip a scene
@@ -65,6 +68,50 @@ export const CUTSCENES = {
       { do: 'walk', id: 'you', path: [[3, 4]] },
       { do: 'face', id: 'you', dir: 'down' },
       { do: 'title', text: 'Welcome to {farm} Farm', sub: '', secs: 2 },
+    ],
+  },
+  // v242 (roadmap 84c): the wedding, the morning it falls (systems/marriage.js), in the village square. Bram, who
+  // is not a candidate, stands up for the two of you; the neighbours gather round the fountain. Any of the eight
+  // candidates can be cast as the spouse (a guest who is the spouse is not added twice). A roommate has no wedding.
+  wedding: {
+    name: 'The wedding',
+    at: { map: 'village', x: 11, y: 13, dir: 'up' },
+    steps: [
+      { do: 'fade', to: 1, secs: 0 },
+      { do: 'bars', on: true },
+      { do: 'cam', x: 11.5, y: 12 },
+      { do: 'actor', id: 'bram', x: 11.5, y: 6, dir: 'down' },
+      { do: 'actor', id: '$spouse', x: 12, y: 7, dir: 'down' },
+      { do: 'actor', id: 'ines', x: 9, y: 10, dir: 'up' },
+      { do: 'actor', id: 'hob', x: 13, y: 10, dir: 'up' },
+      { do: 'actor', id: 'wren', x: 14, y: 10, dir: 'up' },
+      { do: 'actor', id: 'nell', x: 15, y: 10, dir: 'up' },
+      { do: 'actor', id: 'pell', x: 8, y: 8, dir: 'right' },
+      { do: 'actor', id: 'juno', x: 8, y: 9, dir: 'right' },
+      { do: 'actor', id: 'kit', x: 15, y: 8, dir: 'left' },
+      { do: 'actor', id: 'odile', x: 15, y: 9, dir: 'left' },
+      { do: 'actor', id: 'esme', x: 8, y: 10, dir: 'up' },
+      { do: 'fade', to: 0, secs: 1.2 },
+      { do: 'say', who: null, text: 'The whole valley gathers in the square. {spouse} is waiting by the fountain, under an arch of flowers somebody stayed up all night to tie.' },
+      { do: 'walk', id: 'you', path: [[11, 11], [10, 10], [10, 7], [11, 7]], wait: false },
+      { do: 'pan', x: 11.5, y: 8, secs: 3 },
+      { do: 'walk', id: 'you', path: [[11, 7]] },
+      { do: 'face', id: '$spouse', dir: 'left' },
+      { do: 'face', id: 'you', dir: 'right' },
+      { do: 'say', who: 'bram', text: 'I have built barns, bins and one bad boat. Never stood up for one of these before. Bear with me.' },
+      { do: 'say', who: 'bram', text: '{name}, {spouse}. You each say you will keep the other, in good harvests and in thin ones. The valley is listening.' },
+      { do: 'say', who: '$spouse', text: 'I will. I have been keeping you for a while now, if I am honest.' },
+      { do: 'say', who: 'you', text: 'I will.' },
+      { do: 'say', who: 'bram', text: 'Then that is that. Go on, the square is waiting.' },
+      { do: 'emote', id: '$spouse', kind: 'love' },
+      { do: 'emote', id: 'ines', kind: 'happy' },
+      { do: 'emote', id: 'hob', kind: 'happy' },
+      { do: 'emote', id: 'kit', kind: 'surprise' },
+      { do: 'emote', id: 'wren', kind: 'happy' },
+      { do: 'emote', id: 'juno', kind: 'happy' },
+      { do: 'title', text: 'Just married', sub: '{name} and {spouse}', secs: 3 },
+      { do: 'say', who: null, text: '{spouse} moves into the farmhouse today.' },
+      { do: 'fade', to: 1, secs: 1 },
     ],
   },
   // v240: the morning after the old wing's workroom is restored (systems/quarry.js), the crew is just finishing.

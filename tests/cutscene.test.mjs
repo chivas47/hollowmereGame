@@ -23,19 +23,22 @@ function start(id, opts) {
   assert.equal(G.cut?.id, id);
 }
 
-test('every scene is well formed: known steps, neighbours that exist, tiles on the map', () => {
-  const kinds = new Set(['fade', 'bars', 'cam', 'pan', 'follow', 'actor', 'remove', 'walk', 'face', 'say', 'title', 'wait', 'goto']);
+test('every scene is well formed: known steps, neighbours that exist, tiles on the map', async () => {
+  const kinds = new Set(['fade', 'bars', 'cam', 'pan', 'follow', 'actor', 'remove', 'walk', 'face', 'say', 'title', 'wait', 'goto', 'emote']);
+  const { EMOTES } = await import('../src/data/emotes.js');
   for (const [id, sc] of Object.entries(CUTSCENES)) {
     let map = MAPS[sc.at?.map];
     assert.ok(map, `${id}: a map to play on`);
     for (const s of sc.steps) {
       if (s.do === 'goto') { map = MAPS[s.map]; assert.ok(map, `${id}: goto ${s.map}`); continue; }
       assert.ok(kinds.has(s.do), `${id}: ${s.do}`);
-      for (const who of [s.who, s.do === 'actor' || s.do === 'walk' || s.do === 'face' ? s.id : null]) {
-        if (who && who !== 'you') assert.ok(NPCS.some((n) => n.id === who), `${id}: ${who}`);
+      if (s.do === 'emote') assert.ok(EMOTES[s.kind], `${id}: emote ${s.kind}`);
+      for (const who of [s.who, ['actor', 'walk', 'face', 'emote'].includes(s.do) ? s.id : null]) {
+        if (who && who !== 'you' && !who.startsWith('$')) assert.ok(NPCS.some((n) => n.id === who), `${id}: ${who}`);
       }
       for (const [x, y] of [...(s.path || []), ...(s.do === 'actor' ? [[s.x, s.y]] : [])]) {
-        assert.ok(map.grid[y]?.[x] && !SOLID.has(map.grid[y][x]), `${id}: ${s.do} at ${x},${y} stands on open ground`);
+        const t = map.grid[Math.floor(y)]?.[Math.floor(x)];
+        assert.ok(t && !SOLID.has(t), `${id}: ${s.do} at ${x},${y} stands on open ground`);
       }
       if (s.text) assert.ok(!s.text.includes('—'), `${id}: no em dashes`);
     }
@@ -155,4 +158,40 @@ test('watched to the end, the opening walks you from the village road to the far
   assert.equal(G.cut, null, 'it ends');
   assert.ok(maps.has('village') && maps.has('farm'));
   assert.deepEqual([G.S.map, Math.floor(G.S.x / 16), Math.floor(G.S.y / 16), G.S.dir], ['farm', 3, 4, 'down']);
+});
+
+test('the wedding plays in the square for any of the eight candidates, with them in it once', async () => {
+  const { CANDIDATES } = await import('../src/data/romance.js');
+  await import('../src/systems/marriage.js');
+  for (const id of CANDIDATES) {
+    freshFarm({ map: 'house', profile: { name: 'Rowan', farm: 'Fernhill' } });
+    emit('game:reset');
+    G.S.wedding = { id, day: G.S.day };
+    emit('day:start');
+    assert.equal(G.S.spouse, id);
+    update(0);
+    assert.equal(G.cut?.id, 'wedding', id);
+    assert.equal(G.S.map, 'village');
+    runFor(2);
+    const name = NPCS.find((n) => n.id === id).name;
+    assert.ok(G.cut.actors[id], `${id} stands in the scene`);
+    assert.equal(Object.keys(G.cut.actors).filter((k) => k === id).length, 1);
+    assert.match(G.cut.line.text, new RegExp(name));
+    let spoke = false;
+    for (let n = 0; n < 40 && G.cut; n++) { runFor(30); if (G.cut?.line?.who === id) spoke = true; advance(); advance(); }
+    assert.ok(spoke, `${id} says their line`);
+    assert.equal(G.cut, null);
+    assert.equal(G.S.map, 'house', 'back where you woke');
+  }
+});
+
+test('a roommate moving in has no wedding scene', async () => {
+  await import('../src/systems/marriage.js');
+  freshFarm({ map: 'house' });
+  emit('game:reset');
+  G.S.wedding = { id: 'lamp', day: G.S.day, roommate: true };
+  emit('day:start');
+  update(0);
+  assert.equal(G.cut, null);
+  assert.equal(G.S.roommate, true);
 });

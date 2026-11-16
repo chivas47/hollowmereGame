@@ -9,7 +9,8 @@ import { on, emit, changed } from '../core/events.js';
 import { addUpdater, addEntities } from '../core/registry.js';
 import { CUTSCENE, CUTSCENES } from '../data/cutscenes.js';
 import { NPCS } from '../data/npcs.js';
-import { drawPerson } from '../render/sprites.js';
+import { drawPerson, drawEmote } from '../render/sprites.js';
+import { emote, emoteOf, gestureOffset } from './emotes.js';
 import { lookOf } from './npcs.js';
 import { placePlayer } from './world.js';
 
@@ -21,16 +22,17 @@ export const playing = () => !!G.cut;
 
 // Asks for a scene. It starts when nothing else is open; a scene already seen plays again only with replay.
 // then(): called when it ends or is skipped.
-export function playCutscene(id, { replay = false, then } = {}) {
+// v242: cast fills a scene's roles ({ spouse: 'ines' }): '$spouse' as an id or who, {spouse} in text (their name).
+export function playCutscene(id, { replay = false, then, cast = {} } = {}) {
   if (!CUTSCENES[id] || (!replay && seen(id)) || queue.some((q) => q.id === id) || G.cut?.id === id) return false;
-  queue.push({ id, then });
+  queue.push({ id, then, cast });
   return true;
 }
 
-function begin({ id, then }) {
+function begin({ id, then, cast }) {
   const sc = CUTSCENES[id], S = G.S;
   G.cut = {
-    id, then, i: -1, t: 0, step: null, skipT: 0,
+    id, then, cast, i: -1, t: 0, step: null, skipT: 0,
     back: { map: S.map, x: S.x, y: S.y, dir: S.dir },
     actors: {}, cam: null, pan: null, fade: 0, fadeTo: null, bars: false, line: null, title: null, walkers: [],
   };
@@ -55,7 +57,11 @@ export function finish() {
   c.then?.();
 }
 
-const text = (s) => s.replace(/\{name\}/g, G.S.profile?.name || 'Farmer').replace(/\{farm\}/g, G.S.profile?.farm || 'Hollowmere');
+const nameOfNpc = (id) => NPCS.find((n) => n.id === id)?.name || id;
+// A role ('$spouse') to the neighbour cast in it; any other id as it is.
+const who = (id) => (typeof id === 'string' && id.startsWith('$') ? G.cut?.cast?.[id.slice(1)] : id);
+const text = (s) => s.replace(/\{name\}/g, G.S.profile?.name || 'Farmer').replace(/\{farm\}/g, G.S.profile?.farm || 'Hollowmere')
+  .replace(/\{(\w+)\}/g, (m, role) => (G.cut?.cast?.[role] ? nameOfNpc(G.cut.cast[role]) : m));
 
 // Starts the next step. Steps that take no time run straight on.
 function next() {
@@ -78,15 +84,20 @@ function run(s) {
     case 'cam': c.cam = { x: px(s.x), y: py(s.y) }; return false;
     case 'follow': c.cam = null; return false;
     case 'pan': { const from = c.cam || { x: G.S.x, y: G.S.y }; c.pan = { from, to: { x: px(s.x), y: py(s.y) }, secs: s.secs || 1 }; return true; }
-    case 'actor': c.actors[s.id] = { id: s.id, x: px(s.x), y: py(s.y), dir: s.dir || 'down', moving: false, walkT: 0 }; return false;
-    case 'remove': delete c.actors[s.id]; return false;
-    case 'face': { const a = s.id === 'you' ? G.S : c.actors[s.id]; if (a) a.dir = s.dir; return false; }
+    case 'actor': {   // v242: a guest already in the scene under a role (the spouse) is not added twice
+      const id = who(s.id);
+      if (id && !c.actors[id]) c.actors[id] = { id, x: px(s.x), y: py(s.y), dir: s.dir || 'down', moving: false, walkT: 0 };
+      return false;
+    }
+    case 'emote': { const id = who(s.id); if (c.actors[id]) emote(id, s.kind); return false; }   // v242: a bubble and a hop
+    case 'remove': delete c.actors[who(s.id)]; return false;
+    case 'face': { const a = s.id === 'you' ? G.S : c.actors[who(s.id)]; if (a) a.dir = s.dir; return false; }
     case 'walk': {
-      const w = { id: s.id, path: s.path.map(([x, y]) => ({ x: px(x), y: py(y) })) };
+      const w = { id: who(s.id), path: s.path.map(([x, y]) => ({ x: px(x), y: py(y) })) };
       c.walkers.push(w);
       return s.wait !== false;
     }
-    case 'say': c.line = { who: s.who || null, text: text(s.text), shown: 0 }; return true;
+    case 'say': c.line = { who: who(s.who) || null, text: text(s.text), shown: 0 }; return true;
     case 'title': c.title = { text: text(s.text), sub: s.sub ? text(s.sub) : '' }; return true;
     case 'wait': return true;
     case 'goto': {   // v241: the scene moves on to another map
@@ -145,7 +156,7 @@ export function update(dt) {
   let done = false;
   if (s.do === 'fade') done = !c.fadeTo;
   else if (s.do === 'pan') done = !c.pan;
-  else if (s.do === 'walk') done = !c.walkers.some((w) => w.id === s.id);
+  else if (s.do === 'walk') done = !c.walkers.some((w) => w.id === who(s.id));
   else if (s.do === 'wait') done = c.t >= s.secs;
   else if (s.do === 'title') done = c.t >= (s.secs || 2);
   if (done) { c.title = null; next(); }
@@ -156,7 +167,12 @@ addUpdater(update);
 // The neighbours in the scene, drawn like the real ones (their looks for the season).
 addEntities(() => (G.cut ? Object.values(G.cut.actors).map((a) => {
   const def = NPCS.find((n) => n.id === a.id);
-  return { y: a.y, draw: (c) => def && drawPerson(c, a.x, a.y, a.dir, a.moving, a.walkT, lookOf(def)) };
+  return { y: a.y, draw: (c) => {
+    if (!def) return;
+    const look = lookOf(def), e = emoteOf(a.id), g = gestureOffset(e);
+    drawPerson(c, a.x + g.x, a.y + g.y, a.dir, a.moving, a.walkT, look);
+    if (e) drawEmote(c, a.x + g.x, a.y + g.y, e.kind, e.k, look);
+  } };
 }) : []));
 
 // A new game or a loaded save starts with no scene running.
