@@ -281,6 +281,23 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | 84i | Cutscenes: wedding vows | feature | done (chivas47/hollowmereGame#264) | Nuno (November 2026): each of the eight candidates says their own vow at the wedding, drawn from their heart scenes, instead of one line for all. |
 | 77r | Polish: a finer ravine and bridge | polish | done (chivas47/hollowmereGame#265) | Nuno (November 2026): fix the bridge and cliff art, more detail, more finish. Redrawn in render/tiles.js (drawRavine, drawBridge, drawBrokenBridge); nothing else changes. |
 
+## Creatures and loot (November 2026)
+
+Nuno asked for more creature variety, better drops, a glossary and more creatures. Plan and full creature glossary: docs/sketches/85-creatures-and-loot.md. 17 kinds and 5 behaviours today; 33 kinds and 12 behaviours after 85f. Loot and the Bestiary first (they make today's monsters worth fighting at little art cost), then behaviours shipped with the creatures that use them, then density and elites.
+
+| Item | What | Kind | Status | Notes |
+|---|---|---|---|---|
+| 85a | Loot tables | feature | next | `data/loot.js`: 2 to 4 drops per kind instead of one; new materials chitin, leatherwing, bone shard, wisp silk, sunmote, gloommote at Stardew's bug meat, bat wing, bone fragment and essence prices. Nuno: all six. |
+| 85b | Loot sinks | feature | queued | Recipes that spend the new drops: bait, bone meal, a warp charm, two dishes, essences as a forge reroll, a ring. |
+| 85c | The Bestiary | feature | queued | A Creatures journal tab: seen/defeated, where, how it fights, drops revealed as found, goal progress. `S.bestiary` save field seeded from `S.slain`. |
+| 85d | Behaviours: mimic, burrow, swarm | feature | queued | With pebble crab, burrow mole, soot puffs, lava lurker, dust devil, ash swarm. |
+| 85e | Behaviours: shoot, split | feature | queued | Projectiles you dodge or block. With Hollow, sand and crag spitters, moss and ember slimes. |
+| 85f | Behaviours: phase, armored | feature | queued | With lantern wisp, tomb shade, shellbacks, storm wing. Nuno: swords do a quarter damage to armored kinds. |
+| 85g | Slaying goals for the new kinds | feature | queued | One goal per behaviour group, Stardew-sized counts, a ring, hat or weapon each. |
+| 85h | Busy floors | feature | queued | Stardew's infested floors: about 1 floor in 15 is a themed swarm; the ladder appears once cleared. |
+| 85i | Elites | feature | queued | Nuno: opt-in only. A challenge brazier at the Hollow (Stardew's Shrine of Challenge) makes the dungeons dangerous: elites with a glow, 3x health, sure essence, 5x rare roll. |
+| 85j | Seasonal creatures | feature | needs decision | Nuno: add them. One kind a season at night (bramble sprite, firefly moth, gourd lurker, frost wisp). Open: Wilds and wild farm only, or every farm. |
+
 ## Done
 
 | Item | PR |
