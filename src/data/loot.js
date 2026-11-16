@@ -47,6 +47,12 @@ export const LOOT = {
   // v256 (85e2): rolled by the big one and by each piece it splits into
   mossslime:   [['gel', 0.8, 1, 3], ['fiber', 0.25, 1, 1]],
   emberslime:  [['gel', 0.6, 1, 2], ['cinder', 0.3, 1, 1]],
+  // v257 (85f): the lantern wisp is wisp silk's own source
+  wisp:        [['wispsilk', 0.15, 1, 1], ['sunmote', 0.05, 1, 1]],
+  shade:       [['gloommote', 0.25, 1, 1], ['boneshard', 0.3, 1, 1]],
+  shellback:   [['chitin', 0.6, 2, 3], ['umbrite', 0.05, 1, 1]],
+  cragshell:   [['chitin', 0.6, 2, 3], ['umbrite', 0.08, 1, 1]],
+  stormwing:   [['leatherwing', 0.5, 1, 1], ['gloommote', 0.1, 1, 1]],
 };
 
 // One defeat's drops: { item: count }. rand() in [0, 1); times multiplies every count (the thief's ring).

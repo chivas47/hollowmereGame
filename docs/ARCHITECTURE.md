@@ -422,6 +422,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `monster:wake`, `monster:crack`, `monster:surface` | {x, y} | monsters.js (v253: a mimic wakes or its shell cracks; a burrower comes up or goes down) | monsters.js (grit, a sound) |
 | `monster:spit` | {x, y} | monsters.js (v255: a spitter lets fly; its glob joins `shots`) | monsters.js (a puff at its mouth) |
 | `monster:split` | {x, y} | monsters.js (v256: a big splitter falls into pieces) | monsters.js (a burst) |
+| `monster:clang` | {x, y} | monsters.js (v257: a blade's hit on an armored monster) | monsters.js (sparks, a sound) |
 | `player:blocked` | {x, y, who} | monsters.js, health.js (v227: a hit turned by the sword's block) | specials (spark and sound) |
 | `mine:faint` | none | health.js | mine.js (carry out) |
 | `gather` | {skill, xp, item?, n?} | farming, giants, clearing, forage, fishing, mine, monsters, coop, barn, books | skills.js (XP, bonus item), books.js (mastery XP, book finds) |

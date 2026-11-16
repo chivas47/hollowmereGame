@@ -646,7 +646,7 @@ export function drawMonster(c, px, py, kind, color, hurt, t, flip = false) {
     k.bob ? -Math.round(Math.sin(t * k.bob) * 2) : 0, flip)) return;
   const x = Math.round(px), base = Math.round(py), col = hurt ? '#ffffff' : color, f = Math.floor(t * 8) % 2;
   if (k.shape === 'slime') return drawSlime(c, px, py, color, hurt, 0);   // v256: splitting slimes
-  if (k.shape === 'puff' || k.shape === 'spitter') kind = k.shape;   // v254: dust devils and the ash swarm draw as a puff; v255: spitters
+  if (['puff', 'spitter', 'wisp', 'shell', 'bat'].includes(k.shape)) kind = k.shape;   // v257: wisp, shell, bat shapes   // v254: dust devils and the ash swarm draw as a puff; v255: spitters
   else if (k.shape) {   // v228: a charger before the sheet loads: a low body, a head the way it faces
     const s = flip ? -1 : 1;
     r(c, x - 7, base - 1, 14, 1, 'rgba(0,0,0,.35)'); r(c, x - 6, base - 8, 12, 6, col); r(c, x + (s > 0 ? 4 : -8), base - 9, 4, 5, col);
@@ -665,6 +665,18 @@ export function drawMonster(c, px, py, kind, color, hurt, t, flip = false) {
   if (kind === 'mole') {   // v253: a burrow mole up out of its hole
     r(c, x - 6, base - 1, 12, 1, 'rgba(0,0,0,.35)'); r(c, x - 5, base - 3, 10, 2, '#5a4632'); r(c, x - 4, base - 11, 8, 8, col);
     r(c, x - 2, base - 9, 1, 1, '#2b211a'); r(c, x + 1, base - 9, 1, 1, '#2b211a'); r(c, x - 1, base - 7, 2, 1, '#e2707a'); r(c, x - 6, base - 6 + f, 2, 2, '#e8d0b0'); r(c, x + 4, base - 6 + (1 - f), 2, 2, '#e8d0b0');
+    return;
+  }
+  if (kind === 'wisp') {   // v257: a lantern wisp, a pale drifting flame with a bright heart
+    const y = base - 14 + Math.round(Math.sin(t * 3) * 1);
+    r(c, x - 2, base - 1, 4, 1, 'rgba(0,0,0,.2)'); r(c, x - 4, y, 8, 8, col); r(c, x - 3, y - 2, 6, 2, col); r(c, x - 1, y - 4 + f, 2, 2, col);
+    r(c, x - 2, y + 2, 4, 4, hurt ? '#ffffff' : k.glow || '#ffe08a'); r(c, x - 3, y + 8, 2, 2 - f, col); r(c, x + 1, y + 8, 2, 1 + f, col);
+    return;
+  }
+  if (kind === 'shell') {   // v257: a shellback, a low domed shell on stubby legs
+    r(c, x - 7, base - 1, 14, 1, 'rgba(0,0,0,.35)'); r(c, x - 7, base - 8, 14, 6, col); r(c, x - 5, base - 10, 10, 2, col);
+    r(c, x - 4, base - 9, 8, 1, 'rgba(255,255,255,.25)'); r(c, x + 6, base - 6, 3, 3, col); r(c, x + 7, base - 5, 1, 1, '#1c1712');
+    [-6, -2, 2].forEach((lx, i) => r(c, x + lx, base - 2 + ((i + f) % 2), 2, 2, '#2b211a'));
     return;
   }
   if (kind === 'spitter') {   // v255: a hooded spitter with a glowing mouth

@@ -5,11 +5,11 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { G } from '../src/core/game.js';
 import { runUpdaters } from '../src/core/registry.js';
-import { MONSTERS, MIMIC, BURROW, SHOOT, SPLIT } from '../src/data/weapons.js';
+import { MONSTERS, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR } from '../src/data/weapons.js';
 import { MAPS, SOLID } from '../src/data/maps.js';
 import { T } from '../src/core/constants.js';
 import { MONSTERS as SHEET } from '../src/data/sprites.js';
-import { slimes, spawnSlimes, hitMonster, untouchable, shots } from '../src/systems/monsters.js';
+import { slimes, spawnSlimes, hitMonster, untouchable, shots, strikeArea, damageOf } from '../src/systems/monsters.js';
 import '../src/systems/bestiary.js';
 import '../src/systems/guild.js';
 import { enterMine, leaveMine } from '../src/systems/mine.js';
@@ -223,4 +223,49 @@ test('splitters keep to their places and draw as slimes', () => {
   assert.ok(MONSTERS.mossslime.from >= 20 && MONSTERS.mossslime.to <= 60);
   assert.ok(MONSTERS.emberslime.ventOnly);
   for (const k of ['mossslime', 'emberslime']) assert.equal(SHEET.kinds[k].shape, 'slime');
+});
+
+// Roadmap 85f: phasers and the armored.
+test('five new kinds: two phasers, two shellbacks and a flying swarm, each in its place', () => {
+  assert.equal(MONSTERS.wisp.move, 'phase');
+  assert.ok(MONSTERS.wisp.from >= 50 && MONSTERS.wisp.to <= 80);
+  assert.ok(MONSTERS.shade.cavernOnly && MONSTERS.shade.move === 'phase');
+  assert.ok(MONSTERS.shellback.armored && MONSTERS.shellback.from >= 85);
+  assert.ok(MONSTERS.cragshell.armored && MONSTERS.cragshell.ventOnly);
+  assert.ok(MONSTERS.stormwing.fly && MONSTERS.stormwing.move === 'swarm' && MONSTERS.stormwing.ventOnly);
+  for (const [k, shape] of [['wisp', 'wisp'], ['shade', 'wisp'], ['shellback', 'shell'], ['cragshell', 'shell'], ['stormwing', 'bat']]) assert.equal(SHEET.kinds[k].shape, shape);
+});
+
+test('a lantern wisp fades in and out; faded, nothing touches it either way', () => {
+  const m = one('wisp', 4), hp = m.hp;
+  G.S.hp = G.S.maxHp = 1000;
+  m.ph = 'faint'; m.pt = PHASE.faint;
+  assert.ok(untouchable(m));
+  hitMonster(m, 5);
+  assert.equal(m.hp, hp, 'a faded wisp takes no hit');
+  m.x = G.S.x; m.y = G.S.y;
+  tick(0.5);
+  assert.equal(G.S.hp, 1000, 'and passes through you');
+  tick(PHASE.faint);
+  assert.equal(m.ph, 'solid');
+  hitMonster(m, 5);
+  assert.equal(m.hp, hp - 5, 'solid, it can be hit');
+  tick(PHASE.solid + 0.05);
+  assert.equal(m.ph, 'faint', 'and it fades again');
+});
+
+test('a shellback takes a quarter from a sword, all of it from a club or a bomb', () => {
+  const m = one('shellback', 10);
+  m.hp = 1e6;
+  G.S.weapons = ['oldblade', 'club'];
+  G.S.weapon = 'oldblade';
+  strikeArea(m.x, m.y - 4, 30, 1);
+  const sword = 1e6 - m.hp;
+  assert.ok(Math.abs(sword - damageOf() * ARMOR) < 1e-6, 'a quarter of the sword');
+  m.hp = 1e6; G.S.weapon = 'club';
+  strikeArea(m.x, m.y - 4, 30, 1);
+  assert.ok(Math.abs(1e6 - m.hp - damageOf()) < 1e-6, 'all of the club');
+  m.hp = 1e6;
+  hitMonster(m, 40);   // a bomb or the blast ring
+  assert.equal(m.hp, 1e6 - 40);
 });

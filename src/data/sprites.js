@@ -114,7 +114,8 @@ export const MONSTERS = {
     'beetle.body', 'beetle.ink', 'boar.body', 'boar.ink', 'ram.body', 'ram.glow', 'ram.ink', 'hound.body', 'hound.glow', 'hound.ink',
     'crab.body', 'crab.ink', 'crabrock.body', 'crabrock.ink', 'mole.body', 'mole.ink', 'puff.body', 'puff.ink',   // v253 (85d1)
     'lurker.body', 'lurker.ink',   // v254 (85d2)
-    'spitter.body', 'spitter.glow', 'spitter.ink'],   // v255 (85e1)
+    'spitter.body', 'spitter.glow', 'spitter.ink',   // v255 (85e1)
+    'wisp.body', 'wisp.glow', 'wisp.ink', 'shell.body', 'shell.ink'],   // v257 (85f)
   kinds: {
     mite: { shadow: [-5, 10, 0.35] }, bat: { shadow: [-3, 6, 0.25], bob: 6 }, skeleton: { shadow: [-4, 8, 0.35] },
     wraith: { shadow: [-4, 8, 0.35], sway: 3 }, rex: { shadow: [-4, 8, 0.25], bob: 5 },
@@ -134,6 +135,10 @@ export const MONSTERS = {
     cragspitter: { shape: 'spitter', shadow: [-6, 12, 0.35], glow: '#e9862a' },
     // v256 (85e2): splitting slimes are the slime's bands in their own colours (drawn bigger while whole).
     mossslime: { shape: 'slime', shadow: [-4, 9, 0.35] }, emberslime: { shape: 'slime', shadow: [-4, 9, 0.35] },
+    // v257 (85f): the phasers (a wisp with a glowing heart), the armored (a heavy shell), the storm wing (a bat, tinted).
+    wisp: { shape: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#ffe08a' }, shade: { shape: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#b07ae0' },
+    shellback: { shape: 'shell', shadow: [-7, 14, 0.35] }, cragshell: { shape: 'shell', shadow: [-7, 14, 0.35] },
+    stormwing: { shape: 'bat', shadow: [-3, 6, 0.25], bob: 6 },
   },
 };
 

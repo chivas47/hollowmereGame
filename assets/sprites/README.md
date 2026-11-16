@@ -35,10 +35,10 @@ Built by `tools/sprites/person.py`, which also writes the layout to `src/data/pe
 
 ## monsters.png
 
-48 x 1032. Frames are 24 x 24, the monster's feet at the bottom centre (x 12, y 24); flyers are drawn at their resting height and bobbed in code.
+48 x 1152. Frames are 24 x 24, the monster's feet at the bottom centre (x 12, y 24); flyers are drawn at their resting height and bobbed in code.
 
 - **Columns (2):** the two animation frames (for the slime: resting, mid-hop).
-- **Rows (43 bands), one per kind and layer:** the order is `MONSTERS.layers` in `src/data/sprites.js` (body, then glow for the magma sprite and ember golem, then ink, per kind). v228: the chargers' four shapes (beetle, boar, ram, hound) come last; each is shared by two kinds tinted differently (`MONSTERS.kinds[kind].shape`), drawn facing right and mirrored in code when facing left. The ram and hound have a glow band, which every kind using them tints. v253: the pebble crab (awake, and asleep as a plain rock: `crabrock`), the burrow mole up in its hole, and the soot puff come after them; a burrower under the floor is a mound drawn in code. v254: the lava lurker last; dust devils and the ash swarm use the puff's bands (`shape: 'puff'`). v255: the spitter (body, glow, ink), shared by the three spitters; the glow is its mouth, tinted to its globs.
+- **Rows (48 bands), one per kind and layer:** the order is `MONSTERS.layers` in `src/data/sprites.js` (body, then glow for the magma sprite and ember golem, then ink, per kind). v228: the chargers' four shapes (beetle, boar, ram, hound) come last; each is shared by two kinds tinted differently (`MONSTERS.kinds[kind].shape`), drawn facing right and mirrored in code when facing left. The ram and hound have a glow band, which every kind using them tints. v253: the pebble crab (awake, and asleep as a plain rock: `crabrock`), the burrow mole up in its hole, and the soot puff come after them; a burrower under the floor is a mound drawn in code. v254: the lava lurker last; dust devils and the ash swarm use the puff's bands (`shape: 'puff'`). v255: the spitter (body, glow, ink), shared by the three spitters; the glow is its mouth, tinted to its globs. v257: the wisp (body, glow, ink: the lantern wisp and tomb shade) and the shell (body, ink: both shellbacks); the storm wing uses the bat's bands.
 - Tinted like person.png: body becomes the monster's colour (white while hurt), glow the kind's glow colour; ink is drawn as is.
 - No shadows in the sheet: they are drawn in code (`MONSTERS.kinds[kind].shadow`) so they stay on the ground.
 
@@ -199,7 +199,7 @@ Lit bombs use the bomb frames of placed.png.
 | person.png | Hollowmere Farm (original, v77; rebuilt part by part v222) | same as the game |
 | animals.png | Hollowmere Farm (original, v78; redrawn v196) | same as the game |
 | pets.png, horse.png | Hollowmere Farm (original, v79; redrawn v196) | same as the game |
-| monsters.png | Hollowmere Farm (original, v80; redrawn v208; chargers added v228; crab, mole and puff v253; lurker v254; spitter v255) | same as the game |
+| monsters.png | Hollowmere Farm (original, v80; redrawn v208; chargers added v228; crab, mole and puff v253; lurker v254; spitter v255; wisp and shell v257) | same as the game |
 | crops.png | Hollowmere Farm (original, v81; redrawn v197) | same as the game |
 | forage.png | Hollowmere Farm (original, v82; redrawn v197) | same as the game |
 | trees.png | Hollowmere Farm (original, v82; redrawn v198) | same as the game |

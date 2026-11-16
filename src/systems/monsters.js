@@ -7,7 +7,7 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
 import { MAPS, SOLID, sizeOf } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
-import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS, CHARGE, MIMIC, BURROW, SHOOT, SPLIT } from '../data/weapons.js';
+import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS, CHARGE, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR } from '../data/weapons.js';
 import { SAVAGE } from '../data/guild.js';
 import { CAVERN } from '../data/cavern.js';
 import { VENT } from '../data/forge.js';
@@ -38,6 +38,7 @@ function make(kind, floor, px, py, R) {
   if (d.move === 'mimic') m.hidden = true;                          // v253: a rock until woken
   if (d.move === 'burrow') { m.bs = 'under'; m.bt = BURROW.under; }  // v253: under the floor
   if (d.move === 'shoot') m.st = SHOOT.every * (0.5 + R() * 0.5);    // v255: staggered first shots
+  if (d.move === 'phase') { m.ph = 'solid'; m.pt = PHASE.solid * (0.3 + R() * 0.7); }   // v257
   return m;
 }
 
@@ -71,7 +72,8 @@ export function spawnSlimes(map, n) {
 on('day:start', () => { slimes.length = 0; });
 
 function step(m, vx, vy, dist) {
-  const fly = MONSTERS[m.kind || 'slime'].move === 'fly', s = sizeOf(slimeMap), inside = (x, y) => x > 8 && y > 8 && x < s.w * T - 8 && y < s.h * T - 4;   // v157: the map's own edges
+  // v257: phasers and the storm wing pass over walls, as flyers do.
+  const D = MONSTERS[m.kind || 'slime'], fly = D.move === 'fly' || D.move === 'phase' || D.fly, s = sizeOf(slimeMap), inside = (x, y) => x > 8 && y > 8 && x < s.w * T - 8 && y < s.h * T - 4;   // v157: the map's own edges
   if (!fly) { const hit = moveBox(m, vx * dist, vy * dist, BOX); if (hit.x) m.tx = m.x; if (hit.y) m.ty = m.y; return; }
   const nx = m.x + vx * dist; if (inside(nx, m.y)) m.x = nx; else m.tx = m.x;
   const ny = m.y + vy * dist; if (inside(m.x, ny)) m.y = ny; else m.ty = m.y;
@@ -185,9 +187,9 @@ function splitUp(m, d) {
 }
 
 // v253: whether a monster is out of reach for now: a mimic still asleep is not, a burrower under the floor is.
-export const untouchable = (m) => m.bs === 'under' || m.bs === 'rise';
+export const untouchable = (m) => m.bs === 'under' || m.bs === 'rise' || m.ph === 'faint';   // v257: a phaser faded
 // v253: brings a burrower up at once (the balance bot, which does not wait out the clock, and tests).
-export function surface(m) { if (m.bs) { m.bs = 'up'; m.bt = BURROW.up; } }
+export function surface(m) { if (m.bs) { m.bs = 'up'; m.bt = BURROW.up; } if (m.ph) { m.ph = 'solid'; m.pt = PHASE.solid; } }   // v257: a phaser made solid
 
 // v140: monsters chase the nearer farmer on their map. v143: and hurt either of you.
 const here = () => [G.S, G.P2].filter((f) => f && (f.map ?? G.S.map) === slimeMap);
@@ -214,6 +216,7 @@ addUpdater((dt) => {
       continue;
     }
     if (move === 'burrow' && burrowTurn(m, d, vx, vy, dt)) continue;   // v253: under the floor, nothing touches
+    if (move === 'phase') { m.pt -= dt; if (m.pt <= 0) { m.ph = m.ph === 'faint' ? 'solid' : 'faint'; m.pt = PHASE[m.ph]; } }   // v257
     if (move === 'burrow') { /* up: it stands its ground */ }
     else if (move === 'charge' && chargeTurn(m, d, dx, dy, dt)) { /* v228: the charger moved itself */ }
     else if (move === 'hop' || move === 'split') { if (active) step(m, vx, vy, m.speed * 1.6 * dt); }   // v256: splitters hop
@@ -225,6 +228,7 @@ addUpdater((dt) => {
       m.kx *= 0.85; m.ky *= 0.85;
       if (Math.abs(m.kx) < 1) m.kx = 0; if (Math.abs(m.ky) < 1) m.ky = 0;
     }
+    if (untouchable(m)) { if (G.S.map !== slimeMap) return; continue; }   // v257: a faded phaser passes through you
     if (d < TOUCH && (f === G.S ? G.block : f.block) > 0) blocked(m, f);   // v227: the sword's block (v231: either farmer's)
     else if (d < TOUCH && !(m.kind === 'slime' && wearing('slimeward'))) (f === G.P2 ? hurtPartner : hurtPlayer)(m.dmg * (m.cs === 'charge' ? CHARGE.hit : 1), m.x, m.y);   // v36: the slime ward; v143: whoever it reached; v228: a charge hits harder
     if (G.S.map !== slimeMap) return;   // fainting moved us out
@@ -324,7 +328,9 @@ export function strikeArea(cx, cy, reach, mult, knock = 1, dir = null, stun = 0)
     const kn = wk.knock * fb.knock * knock, [ux, uy] = dir || [ox / (d || 1), oy / (d || 1)];   // spins and slams push outward
     if (motion.hitstop) m.frozen = Math.max(m.frozen || 0, HIT_STOP);   // v125: hit-stop can be turned off
     if (stun) m.frozen = Math.max(m.frozen || 0, stun);
-    hitMonster(m, damageOf() * crit * versus(m.kind) * mult, ux * kn, uy * kn, crit > 1);
+    const armor = MONSTERS[m.kind || 'slime'].armored && weapon().kind !== 'club' ? ARMOR : 1;   // v257: blades glance off a shell
+    if (armor < 1 && !untouchable(m)) emit('monster:clang', { x: m.x, y: m.y });
+    hitMonster(m, damageOf() * crit * versus(m.kind) * mult * armor, ux * kn * armor, uy * kn * armor, crit > 1);
     hits++;
   }
   return hits;
@@ -349,12 +355,20 @@ addInteraction(58, ({ item }) => {
 addEntities(() => (G.S.map !== slimeMap ? [] : slimes.map((m) => ({
   y: m.y, draw: (c) => (!m.kind || m.kind === 'slime' ? drawSlime(c, m.x, m.y, m.color, m.hurt > 0, m.hop % HOP < HOP_ACTIVE ? (m.hop % HOP) / HOP_ACTIVE : 0)
     : MONSTERS[m.kind].move === 'split' ? drawSplitter(c, m)
+    : m.ph ? drawPhaser(c, m)
     : m.cs ? drawCharger(c, m)
     : m.hidden ? drawMonster(c, m.x, m.y, 'crabrock', ROCK_GREY, false, 0)   // v253: a mimic asleep looks like a rock
     : m.bs && m.bs !== 'up' ? drawMound(c, m.x + (m.bs === 'rise' ? (Math.floor(m.bt * 30) % 2 ? 1 : -1) : 0), m.y, m.hop, m.kind === 'lurker' ? 'lava' : 'earth')   // v253: a burrower's mound (shaking: the tell); v254: a lava ripple
     : drawMonster(c, m.x, m.y, m.kind, m.color, m.hurt > 0 || (m.aim && Math.floor(m.st * 14) % 2 === 0), m.hop, !!m.face)),   // v255: a spitter flashes before it spits
 })).concat(shots.map((s) => ({ y: s.y + 8, draw: (c) => drawShot(c, s.x, s.y, s.color) })))));
 const ROCK_GREY = '#8a8580';
+// v257: a phaser: see-through while faded, flickering in the last moments before it changes.
+function drawPhaser(c, m) {
+  const flick = m.pt < PHASE.flicker && Math.floor(m.pt * 20) % 2 === 0, faint = (m.ph === 'faint') !== flick;
+  c.save(); c.globalAlpha = faint ? 0.25 : 0.95;
+  drawMonster(c, m.x, m.y, m.kind, m.color, m.hurt > 0, m.hop, !!m.face);
+  c.restore();
+}
 // v256: a splitting slime hops like a slime; whole, it is drawn SPLIT.scale times as big from its feet.
 function drawSplitter(c, m) {
   const phase = m.hop % HOP < HOP_ACTIVE ? (m.hop % HOP) / HOP_ACTIVE : 0;
@@ -375,6 +389,7 @@ function drawCharger(c, m) {
 // v253: a mimic waking or cracked, a burrower coming up or going down: a puff of grit.
 for (const ev of ['monster:wake', 'monster:crack', 'monster:surface']) on(ev, ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 3, IMPACT.stone, 6, { speed: 35, up: 25, size: 1, life: 0.35, shrink: true }); });
 on('monster:crack', () => emit('sfx', 'pick'));
+on('monster:clang', ({ x, y }) => { if (G.S.map !== slimeMap) return; burst(x, y - 6, IMPACT.stone, 4, { speed: 50, up: 20, size: 1, life: 0.2, shrink: true }); emit('sfx', 'pick'); });
 on('monster:split', ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 4, IMPACT.stone, 8, { speed: 45, up: 30, size: 2, life: 0.4, shrink: true }); });
 on('monster:spit', ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 8, IMPACT.stone, 3, { speed: 20, up: 10, size: 1, life: 0.25, shrink: true }); });
 // v228: a charger setting off kicks up dust; one that runs into a wall shakes the ground.
