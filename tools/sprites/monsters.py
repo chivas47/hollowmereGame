@@ -14,10 +14,12 @@ S = 24
 LAYERS = ['mite.body', 'mite.ink', 'bat.body', 'bat.ink', 'skeleton.body', 'skeleton.ink', 'wraith.body', 'wraith.ink',
           'rex.body', 'rex.ink', 'sprite.body', 'sprite.glow', 'sprite.ink', 'golem.body', 'golem.glow', 'golem.ink',
           'serpent.body', 'serpent.ink', 'slime.body', 'slime.ink',
-          'beetle.body', 'beetle.ink', 'boar.body', 'boar.ink', 'ram.body', 'ram.glow', 'ram.ink', 'hound.body', 'hound.glow', 'hound.ink']   # v228
+          'beetle.body', 'beetle.ink', 'boar.body', 'boar.ink', 'ram.body', 'ram.glow', 'ram.ink', 'hound.body', 'hound.glow', 'hound.ink',   # v228
+          'crab.body', 'crab.ink', 'crabrock.body', 'crabrock.ink', 'mole.body', 'mole.ink', 'puff.body', 'puff.ink']   # v253 (85d1)
 TONE = {'B': ('body', 255), 'b': ('body', 205), 'c': ('body', 160), 'G': ('glow', 255), 'g': ('glow', 200)}
 INK = {'Z': '#1c1712', 'Y': '#f0cc6a', 'P': '#e2707a', 'O': '#e9862a', 'F': '#ffe08a', 'R': '#c8352f', 'r': '#8a2a22',
-       'E': '#f4ead2', 'K': '#2b211a', 'H': '#d9c9a0', 'h': '#9a8a6a'}   # v228: H h a ram's horn
+       'E': '#f4ead2', 'K': '#2b211a', 'H': '#d9c9a0', 'h': '#9a8a6a',   # v228: H h a ram's horn
+       'D': '#5a4632', 'd': '#6e563c'}   # v253: D d the earth round a mole's hole
 SHINE = (255, 255, 255, 130)
 
 # kind: (x0, bottom row, [frame a rows, frame b rows])
@@ -312,6 +314,80 @@ ART = {
   ]]),
 }
 
+# v253 (85d1): the pebble crab awake (claws up, then down) and asleep (a plain rock, both frames), the burrow mole
+# up in its hole, and the soot puff (a flyer, drawn at rest height).
+ART.update({
+  'crab': (4, 23, [[
+    '.bb..........bb.',
+    'bBBb..Z..Z..bBBb',
+    'bBb..bBBBBb..bBb',
+    '.bBbBBWWBBBBbBb.',
+    '..bBBBBBBBBBBb..',
+    '..bBBBBBBBBBBb..',
+    '...cccccccccc...',
+    '..K.K.K..K.K.K..',
+  ], [
+    '................',
+    '......Z..Z......',
+    '.bb..bBBBBb..bb.',
+    'bBBbBBWWBBBBbBBb',
+    'bBb.BBBBBBBB.bBb',
+    '.bbBBBBBBBBBBbb.',
+    '...cccccccccc...',
+    '...K.K.KK.K.K...',
+  ]]),
+  'crabrock': (5, 23, [[
+    '....bBBBb.....',
+    '..bBBWBBBBb...',
+    '.bBWBBBBBBBb..',
+    'bBBBBBBBBBBBb.',
+    'bBBBBBBbBBBBBb',
+    'bBBBBBBBBBBBbc',
+    '.cbBBBBBBBBbc.',
+    '..cccccccccc..',
+  ]] * 2),
+  'mole': (5, 23, [[
+    '....bBBBBb....',
+    '...bBBBBBBb...',
+    '..bBZBBBBZBb..',
+    '..bBBBPPBBBb..',
+    '.EEbBBBBBBbEE.',
+    '.EEbBBWBBBbEE.',
+    '...bBBBBBBb...',
+    '..ddbBBBBbdd..',
+    '.dDDDDDDDDDDd.',
+    'dDDDDDDDDDDDDd',
+  ], [
+    '..............',
+    '....bBBBBb....',
+    '...bBBBBBBb...',
+    '..bBZBBBBZBb..',
+    '..bBBBPPBBBb..',
+    '..bBBBBBBBBb..',
+    'EEbBBBBBBBBbEE',
+    '.ddbBBBBBBbdd.',
+    '.dDDDDDDDDDDd.',
+    'dDDDDDDDDDDDDd',
+  ]]),
+  'puff': (6, 16, [[
+    '....bBb.....',
+    '..bBBBBBb...',
+    '.bBWBBBBBb..',
+    'bBBYBBBYBBb.',
+    'bBBBBBBBBBBb',
+    '.bBBBBBBBBb.',
+    '..cbbccbbc..',
+  ], [
+    '.....bBb....',
+    '...bBBBBBb..',
+    '..bBWBBBBBb.',
+    '.bBBYBBBYBBb',
+    '.bBBBBBBBBBb',
+    '..bBBBBBBBb.',
+    '...cbbccbbc.',
+  ]]),
+})
+
 def serpent(f):
     """A chain of round segments along a wave (the head last, so it sits on top), lit from the top left."""
     cells = {}
@@ -346,7 +422,7 @@ def build(path, preview=None):
     row = {L: i for i, L in enumerate(LAYERS)}
     def put(kind, layer, f, x, y, c):
         img.putpixel((f * S + x, row[f'{kind}.{layer}'] * S + y), c)
-    for kind in ['mite', 'bat', 'skeleton', 'wraith', 'rex', 'sprite', 'golem', 'serpent', 'slime', 'beetle', 'boar', 'ram', 'hound']:
+    for kind in ['mite', 'bat', 'skeleton', 'wraith', 'rex', 'sprite', 'golem', 'serpent', 'slime', 'beetle', 'boar', 'ram', 'hound', 'crab', 'crabrock', 'mole', 'puff']:
         for f in (0, 1):
             cs = {q: ch for q, ch in cells(kind, f).items() if 0 <= q[0] < S and 0 <= q[1] < S}
             for (i, j), ch in sorted(cs.items(), key=lambda kv: (kv[0][1], kv[0][0])):
@@ -364,7 +440,8 @@ def build(path, preview=None):
     img.save(path, optimize=True)
     if preview:
         cols = {'slime': '#7fcf6a', 'mite': '#6b4a2b', 'bat': '#4a3b5a', 'skeleton': '#e8e0d0', 'wraith': '#d9c39a', 'rex': '#c8352f',
-                'sprite': '#e9862a', 'golem': '#5a3a30', 'serpent': '#5f8a4a', 'beetle': '#5a4a6a', 'boar': '#7a5a3a', 'ram': '#9a928a', 'hound': '#5a2a22'}
+                'sprite': '#e9862a', 'golem': '#5a3a30', 'serpent': '#5f8a4a', 'beetle': '#5a4a6a', 'boar': '#7a5a3a', 'ram': '#9a928a', 'hound': '#5a2a22',
+                'crab': '#8a7a6a', 'crabrock': '#8a8580', 'mole': '#6a5040', 'puff': '#3d3833'}
         glows = {'sprite': '#ffd98a', 'golem': '#e9862a', 'ram': '#6f6862', 'hound': '#e9862a'}
         out = Image.new('RGBA', (S * 2 * len(cols) + len(cols), S), (58, 52, 48, 255))
         def band(L, f, col):

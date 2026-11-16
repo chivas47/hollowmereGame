@@ -623,6 +623,14 @@ export function drawDazed(c, px, py, t) {
   }
 }
 
+// v253 (85d1): a burrower under the floor: a low heap of churned earth with a crumb or two jumping off it.
+export function drawMound(c, px, py, t) {
+  const x = Math.round(px), base = Math.round(py), f = Math.floor(t * 6) % 2;
+  r(c, x - 6, base - 1, 12, 1, 'rgba(0,0,0,.3)');
+  r(c, x - 5, base - 3, 10, 2, '#5a4632'); r(c, x - 3, base - 5, 6, 2, '#6e563c'); r(c, x - 2, base - 6, 3, 1, '#86694a');
+  r(c, x - 4 + f * 6, base - 7 - f, 1, 1, '#6e563c'); r(c, x + 2 - f * 5, base - 8 + f, 1, 1, '#5a4632');
+}
+
 // v228: flip faces it left (chargers face the way they go).
 export function drawMonster(c, px, py, kind, color, hurt, t, flip = false) {
   const k = MONSTERS.kinds[kind] || {};
@@ -633,6 +641,26 @@ export function drawMonster(c, px, py, kind, color, hurt, t, flip = false) {
     const s = flip ? -1 : 1;
     r(c, x - 7, base - 1, 14, 1, 'rgba(0,0,0,.35)'); r(c, x - 6, base - 8, 12, 6, col); r(c, x + (s > 0 ? 4 : -8), base - 9, 4, 5, col);
     r(c, x + (s > 0 ? 6 : -7), base - 8, 1, 1, '#2b211a'); r(c, x - 5 + f, base - 2, 2, 2, '#2b211a'); r(c, x + 3 - f, base - 2, 2, 2, '#2b211a');
+    return;
+  }
+  if (kind === 'crabrock') {   // v253: a mimic asleep, a plain grey rock
+    r(c, x - 6, base - 1, 12, 1, 'rgba(0,0,0,.35)'); r(c, x - 6, base - 8, 12, 7, col); r(c, x - 4, base - 10, 8, 2, col); r(c, x - 3, base - 9, 3, 1, 'rgba(255,255,255,.35)');
+    return;
+  }
+  if (kind === 'crab') {   // v253: a pebble crab awake, a shell on legs with two claws
+    r(c, x - 6, base - 1, 12, 1, 'rgba(0,0,0,.35)'); r(c, x - 5, base - 9, 10, 6, col); r(c, x - 8, base - 7 - f, 3, 3, col); r(c, x + 5, base - 7 - (1 - f), 3, 3, col);
+    r(c, x - 2, base - 10, 1, 1, '#2b211a'); r(c, x + 1, base - 10, 1, 1, '#2b211a'); [-5, -2, 1, 4].forEach((lx, i) => r(c, x + lx, base - 3 + ((i + f) % 2), 1, 2, '#2b211a'));
+    return;
+  }
+  if (kind === 'mole') {   // v253: a burrow mole up out of its hole
+    r(c, x - 6, base - 1, 12, 1, 'rgba(0,0,0,.35)'); r(c, x - 5, base - 3, 10, 2, '#5a4632'); r(c, x - 4, base - 11, 8, 8, col);
+    r(c, x - 2, base - 9, 1, 1, '#2b211a'); r(c, x + 1, base - 9, 1, 1, '#2b211a'); r(c, x - 1, base - 7, 2, 1, '#e2707a'); r(c, x - 6, base - 6 + f, 2, 2, '#e8d0b0'); r(c, x + 4, base - 6 + (1 - f), 2, 2, '#e8d0b0');
+    return;
+  }
+  if (kind === 'puff') {   // v253: a soot puff, a little ball of smoke with two bright eyes
+    const y = base - 10 + Math.round(Math.sin(t * 7) * 2);
+    r(c, x - 2, base - 1, 4, 1, 'rgba(0,0,0,.25)'); r(c, x - 3, y, 6, 5, col); r(c, x - 4, y + 1, 8, 3, col); r(c, x - 1 - f, y - 1, 2, 1, col);
+    r(c, x - 2, y + 2, 1, 1, '#f0cc6a'); r(c, x + 1, y + 2, 1, 1, '#f0cc6a');
     return;
   }
   if (kind === 'mite') {

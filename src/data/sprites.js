@@ -111,7 +111,8 @@ export const MONSTERS = {
   layers: ['mite.body', 'mite.ink', 'bat.body', 'bat.ink', 'skeleton.body', 'skeleton.ink', 'wraith.body', 'wraith.ink',
     'rex.body', 'rex.ink', 'sprite.body', 'sprite.glow', 'sprite.ink', 'golem.body', 'golem.glow', 'golem.ink',
     'serpent.body', 'serpent.ink', 'slime.body', 'slime.ink',
-    'beetle.body', 'beetle.ink', 'boar.body', 'boar.ink', 'ram.body', 'ram.glow', 'ram.ink', 'hound.body', 'hound.glow', 'hound.ink'],
+    'beetle.body', 'beetle.ink', 'boar.body', 'boar.ink', 'ram.body', 'ram.glow', 'ram.ink', 'hound.body', 'hound.glow', 'hound.ink',
+    'crab.body', 'crab.ink', 'crabrock.body', 'crabrock.ink', 'mole.body', 'mole.ink', 'puff.body', 'puff.ink'],   // v253 (85d1)
   kinds: {
     mite: { shadow: [-5, 10, 0.35] }, bat: { shadow: [-3, 6, 0.25], bob: 6 }, skeleton: { shadow: [-4, 8, 0.35] },
     wraith: { shadow: [-4, 8, 0.35], sway: 3 }, rex: { shadow: [-4, 8, 0.25], bob: 5 },
@@ -122,6 +123,8 @@ export const MONSTERS = {
     boar: { shape: 'boar', shadow: [-8, 16, 0.35] }, bull: { shape: 'boar', shadow: [-8, 16, 0.35] },
     ram: { shape: 'ram', shadow: [-8, 16, 0.35], glow: '#6f6862' }, magmaram: { shape: 'ram', shadow: [-8, 16, 0.35], glow: '#e9862a' },
     gloomhound: { shape: 'hound', shadow: [-8, 16, 0.3], glow: '#8a6ad0' }, hound: { shape: 'hound', shadow: [-8, 16, 0.3], glow: '#e9862a' },
+    // v253 (85d1): the pebble crab awake and asleep (a rock), the burrow mole up, the soot puff.
+    crab: { shadow: [-6, 12, 0.35] }, crabrock: { shadow: [-6, 12, 0.35] }, mole: { shadow: [-6, 12, 0.35] }, puff: { shadow: [-2, 4, 0.25], bob: 7 },
   },
 };
 

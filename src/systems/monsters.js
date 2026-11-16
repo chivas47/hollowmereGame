@@ -7,14 +7,14 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
 import { MAPS, sizeOf } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
-import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS, CHARGE } from '../data/weapons.js';
+import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS, CHARGE, MIMIC, BURROW } from '../data/weapons.js';
 import { SAVAGE } from '../data/guild.js';
 import { CAVERN } from '../data/cavern.js';
 import { VENT } from '../data/forge.js';
 import { PEAK } from '../data/nuts.js';
 import { ITEMS } from '../data/items.js';
 import { rollLoot } from '../data/loot.js';
-import { drawSlime, drawMonster, drawDazed } from '../render/sprites.js';
+import { drawSlime, drawMonster, drawDazed, drawMound } from '../render/sprites.js';
 import { moveBox, occupied, mover } from './world.js';
 import { hurtPlayer, hurtPartner } from './health.js';
 import { has } from './professions.js';
@@ -33,20 +33,25 @@ const BOX = { l: 4, r: 4, t: 3, b: 1 };   // v73: swept and sliding like the pla
 
 function make(kind, floor, px, py, R) {
   const d = MONSTERS[kind];
-  return { kind, x: px, y: py, tx: px, ty: py, kx: 0, ky: 0, hurt: 0, hop: R() * HOP, floor,
+  const m = { kind, x: px, y: py, tx: px, ty: py, kx: 0, ky: 0, hurt: 0, hop: R() * HOP, floor,
     hp: d.hp(floor), dmg: d.dmg(floor), speed: d.speed(floor), color: d.color || SLIME.colors[floor > 10 ? 2 : floor > 5 ? 1 : 0] };
+  if (d.move === 'mimic') m.hidden = true;                          // v253: a rock until woken
+  if (d.move === 'burrow') { m.bs = 'under'; m.bt = BURROW.under; }  // v253: under the floor
+  return m;
 }
 
 on('mine:floor', ({ floor: n, rng: R, zone, eff: floor }) => {
   slimes.length = 0; slimeMap = 'mine';
   // v38: in the Sunken Cavern only its own monsters and those marked cavern, at the cavern's strength.
   const cav = zone === 'cavern', peak = zone === 'peak', vent = zone === 'vent' || peak, g = MAPS.mine.grid, D = MONSTERS;   // v67: the peak has the vent's monsters
-  const kinds = Object.keys(D).filter((k) => (vent ? D[k].vent || D[k].ventOnly : cav ? D[k].cavern || D[k].cavernOnly : !D[k].cavernOnly && !D[k].ventOnly && floor >= D[k].from));
+  const kinds = Object.keys(D).filter((k) => (vent ? D[k].vent || D[k].ventOnly : cav ? D[k].cavern || D[k].cavernOnly : !D[k].cavernOnly && !D[k].ventOnly && floor >= D[k].from && floor <= (D[k].to ?? Infinity)));   // v253: to
   const count = peak ? (n >= PEAK.floors ? 0 : PEAK.monsters(n)) : vent ? (n >= VENT.floors ? 0 : VENT.monsters(n)) : cav ? CAVERN.monsters(n) : MONSTER_COUNT(floor);   // v39: the forge room is safe
   for (let guard = 0; slimes.length < count && guard < 500; guard++) {
     const x = 1 + Math.floor(R() * (g[0].length - 2)), y = 1 + Math.floor(R() * (g.length - 2));   // v157: the floor's own size
     if (g[y][x] !== 'f' || (x < 7 && y < 6)) continue;
-    slimes.push({ ...make(kinds[Math.floor(R() * kinds.length)], floor, x * T + 8, y * T + 12, R), zone });
+    const kind = kinds[Math.floor(R() * kinds.length)], pack = D[kind].pack;
+    const n = pack ? pack[0] + Math.floor(R() * (pack[1] - pack[0] + 1)) : 1;   // v253: a swarm is a pack in one slot
+    for (let i = 0; i < n; i++) slimes.push({ ...make(kind, floor, x * T + 8 + (i % 3 - 1) * 6, y * T + 12 + (Math.floor(i / 3) - 0.5) * 6, R), zone });
   }
 });
 on('map:changed', (id) => { if (id !== slimeMap && !occupied(slimeMap)) slimes.length = 0; });   // v138: kept while either farmer is there
@@ -103,6 +108,31 @@ export function chargeTurn(m, d, dx, dy, dt) {
 }
 const daze = (m, t) => { m.cs = 'dazed'; m.ct = t; m.cn = 0; };
 
+// v253 (roadmap 85d1): a burrower's turn (data/weapons.js BURROW). m.bs: under (a mound sliding after you, below the
+// rocks), rise (the mound shakes: the tell), up (out and fighting), for m.bt seconds each. Returns true while it
+// cannot be touched either way (under or rising).
+function burrowTurn(m, d, vx, vy, dt) {
+  m.bt -= dt;
+  if (m.bs === 'under') {
+    if (d < AGGRO) underStep(m, vx, vy, m.speed * dt);
+    if (d < AGGRO && (d < BURROW.rise || m.bt <= 0)) { m.bs = 'rise'; m.bt = BURROW.tell; }
+    return true;
+  }
+  if (m.bs === 'rise') { if (m.bt <= 0) { m.bs = 'up'; m.bt = BURROW.up; emit('monster:surface', { x: m.x, y: m.y }); } return true; }
+  if (m.bt <= 0) { m.bs = 'under'; m.bt = BURROW.rest + BURROW.under; emit('monster:surface', { x: m.x, y: m.y }); }
+  return false;
+}
+// Under the floor it slides beneath rocks, kept inside the map's walls.
+function underStep(m, vx, vy, dist) {
+  const s = sizeOf(slimeMap), nx = m.x + vx * dist, ny = m.y + vy * dist;
+  if (nx > T + 8 && nx < (s.w - 1) * T - 8) m.x = nx;
+  if (ny > T + 8 && ny < (s.h - 1) * T - 4) m.y = ny;
+}
+// v253: whether a monster is out of reach for now: a mimic still asleep is not, a burrower under the floor is.
+export const untouchable = (m) => m.bs === 'under' || m.bs === 'rise';
+// v253: brings a burrower up at once (the balance bot, which does not wait out the clock, and tests).
+export function surface(m) { if (m.bs) { m.bs = 'up'; m.bt = BURROW.up; } }
+
 // v140: monsters chase the nearer farmer on their map. v143: and hurt either of you.
 const here = () => [G.S, G.P2].filter((f) => f && (f.map ?? G.S.map) === slimeMap);
 addUpdater((dt) => {
@@ -123,8 +153,15 @@ addUpdater((dt) => {
       else { vx = wx / wd; vy = wy / wd; }
     }
     const move = MONSTERS[m.kind || 'slime'].move;
-    if (move === 'charge' && chargeTurn(m, d, dx, dy, dt)) { /* v228: the charger moved itself */ }
+    if (m.hidden) {   // v253: a mimic sleeps among the rocks until you come close
+      if (d < MIMIC.wake) wake(m);
+      continue;
+    }
+    if (move === 'burrow' && burrowTurn(m, d, vx, vy, dt)) continue;   // v253: under the floor, nothing touches
+    if (move === 'burrow') { /* up: it stands its ground */ }
+    else if (move === 'charge' && chargeTurn(m, d, dx, dy, dt)) { /* v228: the charger moved itself */ }
     else if (move === 'hop') { if (active) step(m, vx, vy, m.speed * 1.6 * dt); }
+    else if (move === 'swarm') step(m, vx + Math.sin(m.hop * 7) * 0.8, vy + Math.cos(m.hop * 6) * 0.8, m.speed * dt);   // v253: weaving
     else step(m, vx + (move === 'fly' ? Math.sin(m.hop * 5) * 0.6 : 0), vy + (move === 'fly' ? Math.cos(m.hop * 4) * 0.6 : 0), m.speed * dt);
     if (m.kx || m.ky) {
       step(m, Math.sign(m.kx), 0, Math.abs(m.kx) * dt); step(m, 0, Math.sign(m.ky), Math.abs(m.ky) * dt);
@@ -175,12 +212,23 @@ function defeat(m) {
 // v37: hurts a monster (bombs and the blast ring use it too); knock: [kx, ky] push. v74: crit marks a critical hit
 // for the damage number (systems/animation.js listens to monster:hit).
 export function hitMonster(m, dmg, kx = 0, ky = 0, crit = false) {
-  if (!slimes.includes(m)) return;
+  if (!slimes.includes(m) || untouchable(m)) return;   // v253: a burrower under the floor
+  if (m.hidden || m.shell) {   // v253: the first hit only cracks a mimic's shell
+    wake(m); m.shell = false; m.hurt = 0.25;
+    emit('monster:crack', { x: m.x, y: m.y });
+    return;
+  }
   m.hp -= dmg; m.hurt = 0.25; m.kx = kx; m.ky = ky;
   emit('monster:hit', { x: m.x, y: m.y, dmg, crit, kx, ky });
   if (m.hp <= 0) defeat(m);
 }
 export const monstersOn = () => slimeMap;
+// v253: a mimic wakes: it climbs out of its rock, its shell still whole until the first hit.
+function wake(m) {
+  if (!m.hidden) return;
+  m.hidden = false; m.shell = true;
+  emit('monster:wake', { x: m.x, y: m.y });
+}
 
 function strike() {
   const wk = weaponKind(), kind = weapon().kind, steps = COMBO[kind] || COMBO.sword, fb = forgeBonus();
@@ -242,8 +290,12 @@ addInteraction(58, ({ item }) => {
 
 addEntities(() => (G.S.map !== slimeMap ? [] : slimes.map((m) => ({
   y: m.y, draw: (c) => (!m.kind || m.kind === 'slime' ? drawSlime(c, m.x, m.y, m.color, m.hurt > 0, m.hop % HOP < HOP_ACTIVE ? (m.hop % HOP) / HOP_ACTIVE : 0)
-    : m.cs ? drawCharger(c, m) : drawMonster(c, m.x, m.y, m.kind, m.color, m.hurt > 0, m.hop, !!m.face)),
+    : m.cs ? drawCharger(c, m)
+    : m.hidden ? drawMonster(c, m.x, m.y, 'crabrock', ROCK_GREY, false, 0)   // v253: a mimic asleep looks like a rock
+    : m.bs && m.bs !== 'up' ? drawMound(c, m.x + (m.bs === 'rise' ? (Math.floor(m.bt * 30) % 2 ? 1 : -1) : 0), m.y, m.hop)   // v253: a burrower's mound (shaking: the tell)
+    : drawMonster(c, m.x, m.y, m.kind, m.color, m.hurt > 0, m.hop, !!m.face)),
 }))));
+const ROCK_GREY = '#8a8580';   // the colour of the Hollow's plain rocks
 
 // v228: a charger mid-turn. Winding up it flashes and shakes (the tell); rushing it runs fast; winded or dazed it
 // stands still, dazed with stars over it.
@@ -253,6 +305,9 @@ function drawCharger(c, m) {
   drawMonster(c, m.x + shake, m.y, m.kind, m.color, m.hurt > 0 || flash, t, !!m.face);
   if (m.cs === 'dazed') drawDazed(c, m.x, m.y - 14, m.hop);
 }
+// v253: a mimic waking or cracked, a burrower coming up or going down: a puff of grit.
+for (const ev of ['monster:wake', 'monster:crack', 'monster:surface']) on(ev, ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 3, IMPACT.stone, 6, { speed: 35, up: 25, size: 1, life: 0.35, shrink: true }); });
+on('monster:crack', () => emit('sfx', 'pick'));
 // v228: a charger setting off kicks up dust; one that runs into a wall shakes the ground.
 on('monster:charge', ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 2, IMPACT.stone, 5, { speed: 30, up: 15, size: 1, life: 0.35, shrink: true }); });
 on('monster:bump', ({ x, y }) => { if (G.S.map !== slimeMap) return; burst(x, y - 4, IMPACT.stone, 10, { speed: 60, up: 35, size: 2, life: 0.45, shrink: true }); shake(1.5, 0.12); emit('sfx', 'pick'); });

@@ -65,6 +65,21 @@ Object.assign(MONSTERS, {
   magmaram:   { name: 'Magma ram', from: 0, ventOnly: true, ...charger({ windup: 0.8, rush: 150, time: 0.8, recover: 1, stun: 2.2 }), hp: (f) => 70 + Math.floor(f / 2), dmg: (f) => 30 + Math.floor(f / 5), speed: () => 14, xp: 48, color: '#4a3430' },
 });
 
+// v253 (roadmap 85d1): three new ways to fight, Stardew's by role, each with a kind that uses it. to: the last floor
+// it lives on (Stardew's rock crabs, duggies and dust sprites keep to bands of floors).
+// mimic: sits as a rock until you step within MIMIC.wake px or hit it; the first hit only cracks its shell (Stardew's
+//   rock crab, cracked with the pickaxe; ours with any hit).
+// burrow: moves under the floor as a mound (no hits either way), comes up within BURROW.rise px or after BURROW.under s
+//   with a BURROW.tell s shake, stays up BURROW.up s (it hurts and can be hurt), then digs down again (Stardew's duggy).
+// swarm: a pack of `pack` [min, max] in one spawn slot, weak and quick, weaving as it comes (Stardew's dust sprites).
+export const MIMIC = { wake: 20 };
+export const BURROW = { rise: 14, under: 4, tell: 0.5, up: 1.6, rest: 2.5 };
+Object.assign(MONSTERS, {
+  crab:  { name: 'Pebble crab', from: 1, to: 40, move: 'mimic', hp: (f) => 6 + Math.floor(f / 3), dmg: (f) => 5 + Math.floor(f / 2), speed: () => 16, xp: 4, color: '#8a7a6a' },
+  mole:  { name: 'Burrow mole', from: 8, to: 35, move: 'burrow', hp: (f) => 5 + Math.floor(f / 4), dmg: (f) => 6 + Math.floor(f / 2), speed: () => 34, xp: 5, color: '#6a5040' },
+  puff:  { name: 'Soot puffs', from: 40, to: 80, move: 'swarm', pack: [4, 5], hp: (f) => 2 + Math.floor(f / 10), dmg: (f) => 4 + Math.floor(f / 5), speed: () => 42, xp: 3, color: '#3d3833' },
+});
+
 export const MONSTER_COUNT = (f) => Math.min(10, 2 + Math.floor(f / 2));
 // Each kill: a small chance of a weapon or ring from the floor's pool (Stardew: monsters rarely drop rings and weapons).
 export const RARE_DROP = 0.01;
