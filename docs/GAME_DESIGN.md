@@ -751,6 +751,23 @@ Stardew's big slimes by role (data/weapons.js SPLIT). A big one hops like a slim
 
 They use the slime's bands in their own colours. The sketch gave the moss slime mixed seeds; those are seed packets, not items, so it drops fiber.
 
+### Phasers and the armored (v257, roadmap 85f)
+
+The last two ways to fight from the creatures plan (data/weapons.js PHASE, ARMOR):
+
+- Phase (Stardew's ghosts): drifts over walls and rocks, 2.2 s solid then 1.6 s faded. Faded, it can neither hurt you nor be hurt; it flickers in the last 0.4 s before it changes.
+- Armored (Stardew's armored bug): swords and daggers do a quarter of their damage and push it a quarter as far (Nuno's rule); clubs, bombs, the blast ring and globs sent back do it all. A blade's hit clangs.
+
+| Kind | Where | Way | Health | Damage | XP | Loot |
+|---|---|---|---|---|---|---|
+| Lantern wisp | Hollow floors 50 to 80 | phase | 16 + floor/4 | 10 + floor/2 | 16 | wisp silk 15%, sunmote 5% |
+| Tomb shade | Sunken Cavern | phase | 28 + floor/4 | 18 + floor/4 | 28 | gloommote 25%, bone shard 30% |
+| Shellback | Hollow from floor 85 | armored | 30 + floor/3 | 14 + floor/2 | 24 | chitin 60% (2-3), umbrite ore 5% |
+| Crag shellback | Ember Vent, Smoke Peak | armored | 70 + floor/3 | 28 + floor/5 | 45 | chitin 60% (2-3), umbrite ore 8% |
+| Storm wing | Ember Vent, Smoke Peak | swarm, flying (packs of 3 or 4) | 14 + floor/10 | 16 + floor/8 | 12 each | leatherwing 50%, gloommote 10% |
+
+The two phasers share the wisp picture (its heart is the glow), the shellbacks the shell, the storm wing the cave bat's. Wisp silk, the lantern wisp's own drop, tailors into the Wisp-silk shirt. The roadmap sketch put the crag shellback and storm wing on Smoke Peak alone; they live in the Vent too, as every Peak kind does.
+
 ### The Bestiary (v252, roadmap 85c)
 
 The journal's Creatures tab. A kind counts as met once it is on the map you are on, or falls. Each met kind has a card: its picture, where it lives, a line on how it fights (by the way it moves: hop, crawl, fly, walk, charge), how many you have defeated, its lodge goal's progress and reward, and its loot table, each item named once that kind has dropped it for you ("?" until then). Kinds not met show "???", and the tab's first line counts how many are left. Stardew has no bestiary; its monster eradication goals at the guild are the nearest thing, and the card shows those.

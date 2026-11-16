@@ -18,6 +18,7 @@ export const CLOTHES = {
   frostknit: { name: 'Frost knit',       slot: 'shirt', color: '#bfe0f2', from: 'icemoss' },
   blouse:    { name: 'Rose blouse',      slot: 'shirt', color: '#c8352f', from: 'rosehip' },
   vest:      { name: 'Honey vest',       slot: 'shirt', color: '#e9c46a', from: 'melon' },
+  wispsilk:  { name: 'Wisp-silk shirt',  slot: 'shirt', color: '#cfe6f0', from: 'wispsilk' },   // v257 (85f): the lantern wisp's silk
   cardigan:  { name: 'Wool cardigan',    slot: 'shirt', color: '#a5753f', style: 'cardigan', from: 'wool' },   // v224: over your own shirt
   // Trousers
   canvas:    { name: 'Canvas trousers',  slot: 'pants', color: '#8a7a5a', from: 'wood' },

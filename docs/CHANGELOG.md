@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v257: Wisps, shades and shellbacks
+- Lantern wisps (Hollow floors 50 to 80) and tomb shades (Sunken Cavern) drift through walls and fade in and out. While faded they cannot hurt you or be hurt: strike while they are solid.
+- Shellbacks (Hollow from floor 85, and crag shellbacks in the Ember Vent and Smoke Peak) shrug off blades: swords and daggers do a quarter of their damage. Bring a club or a bomb.
+- Storm wings fly over the Ember Vent and Smoke Peak in packs.
+- Lantern wisps drop wisp silk, which the sewing machine turns into a Wisp-silk shirt.
+- Each has its own drops and a Bestiary card.
+- New save data: none.
+
 ## v256: Splitting slimes
 - Moss slimes (Hollow floors 20 to 60) and ember slimes (Ember Vent and Smoke Peak) are big slimes that split into two small ones when they fall. The small ones do not split again.
 - Every piece drops its own loot: a moss slime and its two pieces can give a good handful of gel.

@@ -13,6 +13,8 @@ export const HOW = {
   burrow: 'Moves under the floor as a mound you cannot hit. When the mound shakes it comes up: hit it before it digs down again.',
   swarm: 'Comes in a pack, weak but quick. A club or a sword\'s spin catches several at once.',
   split: 'A big slime that hops like the small ones. When it falls it splits in two smaller ones, so finish them off.',
+  phase: 'Drifts through walls and fades in and out. Faded, it can neither hurt you nor be hurt: strike while it is solid.',
+  armored: 'Its shell turns a blade: swords and daggers do a quarter of their damage. A club or a bomb cracks it properly.',
   shoot: 'Keeps its distance and spits a glob at you after a short glow. Step aside, or block with the sword to send it back.',
 };
 

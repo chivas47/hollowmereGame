@@ -105,6 +105,22 @@ Object.assign(MONSTERS, {
   emberslime: { name: 'Ember slime', from: 0, ventOnly: true, move: 'split', hp: (f) => 50 + Math.floor(f / 4), dmg: (f) => 24 + Math.floor(f / 5), speed: () => 24, xp: 30, color: '#e07a3a' },
 });
 
+// v257 (roadmap 85f): two last ways to fight.
+// phase (Stardew's ghosts): drifts through walls and rocks, PHASE.solid s solid then PHASE.faint s faded, when nothing
+//   touches it either way; it flickers in the last PHASE.flicker s before it changes.
+// armored (Stardew's armored bug): swords and daggers do ARMOR of their damage (Nuno: a quarter); clubs, bombs, the
+//   blast ring and globs sent back do it all.
+// fly: true lets a swarm fly over walls (the storm wing).
+export const PHASE = { solid: 2.2, faint: 1.6, flicker: 0.4 };
+export const ARMOR = 0.25;
+Object.assign(MONSTERS, {
+  wisp:        { name: 'Lantern wisp', from: 50, to: 80, move: 'phase', hp: (f) => 16 + Math.floor(f / 4), dmg: (f) => 10 + Math.floor(f / 2), speed: () => 26, xp: 16, color: '#cfe6f0', glow: '#ffe08a' },
+  shade:       { name: 'Tomb shade', from: 0, cavernOnly: true, move: 'phase', hp: (f) => 28 + Math.floor(f / 4), dmg: (f) => 18 + Math.floor(f / 4), speed: () => 28, xp: 28, color: '#5a5070', glow: '#b07ae0' },
+  shellback:   { name: 'Shellback', from: 85, move: 'armored', armored: true, hp: (f) => 30 + Math.floor(f / 3), dmg: (f) => 14 + Math.floor(f / 2), speed: () => 14, xp: 24, color: '#7a8a6a' },
+  cragshell:   { name: 'Crag shellback', from: 0, ventOnly: true, move: 'armored', armored: true, hp: (f) => 70 + Math.floor(f / 3), dmg: (f) => 28 + Math.floor(f / 5), speed: () => 14, xp: 45, color: '#5a4a44' },
+  stormwing:   { name: 'Storm wing', from: 0, ventOnly: true, move: 'swarm', fly: true, pack: [3, 4], hp: (f) => 14 + Math.floor(f / 10), dmg: (f) => 16 + Math.floor(f / 8), speed: () => 50, xp: 12, color: '#3a4a6a' },
+});
+
 export const MONSTER_COUNT = (f) => Math.min(10, 2 + Math.floor(f / 2));
 // Each kill: a small chance of a weapon or ring from the floor's pool (Stardew: monsters rarely drop rings and weapons).
 export const RARE_DROP = 0.01;

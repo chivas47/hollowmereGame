@@ -731,7 +731,7 @@ function simulate(runSeed) {
     for (let i = 0; lootNeeds()[item] && !late() && i < 40; i++) {
       enterMine(lo + (i % span));
       for (const m of [...slimes]) {
-        if (m.bs) { surface(m); spend(TIME.rock); }   // 85d1: waits for a burrower to come up
+        if (m.bs || m.ph) { surface(m); spend(TIME.rock); }   // 85d1: waits for a burrower to come up; 85f: a phaser to turn solid
         while (slimes.includes(m) && !late()) { hitMonster(m, damageOf()); spend(TIME.rock); }
       }
     }
