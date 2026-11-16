@@ -809,6 +809,10 @@ From 8 pm, once a night on each map, the season's creature comes out on the farm
 
 They are drawn from shapes already on the sheet (puff, bat, crab, wisp) in their own colours. The lodge's goal: 50 night creatures, any season, for the Leech ring.
 
+### Rocks block swings (v263, roadmap 87a)
+
+A swing or weapon special (systems/monsters.js strikeArea) reaches a creature only if no solid tile (a rock, a wall, a tree) lies on the line from you to it, traced in 4 px steps. Creatures that pass over rocks can still be hit over them: flyers, phasers, the storm wing, and burrowers that are up (Nuno). Burrowers under the floor stay unhittable. Bombs and the blast ring are not swings and still reach behind rocks.
+
 ### The Bestiary (v252, roadmap 85c)
 
 The journal's Creatures tab. A kind counts as met once it is on the map you are on, or falls. Each met kind has a card: its picture, where it lives, a line on how it fights (by the way it moves: hop, crawl, fly, walk, charge), how many you have defeated, its lodge goal's progress and reward, and its loot table, each item named once that kind has dropped it for you ("?" until then). Kinds not met show "???", and the tab's first line counts how many are left. Stardew has no bestiary; its monster eradication goals at the guild are the nearest thing, and the card shows those.

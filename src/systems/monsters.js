@@ -333,13 +333,30 @@ function strike() {
 // v227: every monster within reach of (cx, cy) takes a hit of the weapon's damage times mult, with crits, rings,
 // professions and enchantments as a swing has them. dir: the push [dx, dy], or null to push outward from the centre.
 // stun: seconds it stands frozen after (the club's slam). Returns how many were hit. The weapon specials use it.
+// v263 (roadmap 87a): a swing reaches a creature only with no solid tile (a rock, a wall, a tree) on the line from you
+// to it, traced in 4 px steps. Creatures that pass over rocks (flyers, phasers, the storm wing) and burrowers that are
+// up can be hit over them (Nuno). Bombs and the blast ring are not swings and are unaffected.
+const overRocks = (m) => { const d = MONSTERS[m.kind || 'slime']; return d.move === 'fly' || d.move === 'phase' || d.move === 'burrow' || !!d.fly; };
+export function inSight(m, from = G.S) {
+  if (overRocks(m)) return true;
+  const g = MAPS[slimeMap]?.grid;
+  if (!g) return true;
+  const x0 = from.x, y0 = from.y - 6, x1 = m.x, y1 = m.y - 6, n = Math.ceil(Math.hypot(x1 - x0, y1 - y0) / 4);
+  const a = [Math.floor(x0 / T), Math.floor(y0 / T)], b = [Math.floor(x1 / T), Math.floor(y1 / T)];
+  for (let i = 1; i < n; i++) {
+    const tx = Math.floor((x0 + (x1 - x0) * i / n) / T), ty = Math.floor((y0 + (y1 - y0) * i / n) / T);
+    if ((tx === a[0] && ty === a[1]) || (tx === b[0] && ty === b[1])) continue;
+    if (SOLID.has(g[ty]?.[tx])) return false;
+  }
+  return true;
+}
 export function strikeArea(cx, cy, reach, mult, knock = 1, dir = null, stun = 0) {
   if (G.S.map !== slimeMap) return 0;
   const wk = weaponKind(), fb = forgeBonus();
   let hits = 0;
   for (const m of [...slimes]) {
     const ox = m.x - cx, oy = m.y - 4 - cy, d = Math.hypot(ox, oy);
-    if (d > reach) continue;
+    if (d > reach || !inSight(m)) continue;   // v263: not through a rock
     const critChance = (has('scout') ? 0.1 : 0) + (wearing('tidering') ? 0.1 : 0) + fb.crit;
     const crit = Math.random() < critChance ? (has('desperado') ? 3 : 2) * (wearing('mossring') ? 1.5 : 1) * fb.critPower : 1;   // v34 scout, desperado; v36 rings; v39 forge
     const kn = wk.knock * fb.knock * knock, [ux, uy] = dir || [ox / (d || 1), oy / (d || 1)];   // spins and slams push outward
