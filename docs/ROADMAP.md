@@ -287,16 +287,16 @@ Nuno asked for more creature variety, better drops, a glossary and more creature
 
 | Item | What | Kind | Status | Notes |
 |---|---|---|---|---|
-| 85a | Loot tables | feature | needs decision | `data/loot.js`: 2 to 4 drops per kind instead of one; new materials chitin, leatherwing, bone shard, wisp silk, sunmote, gloommote at Stardew's bug meat, bat wing, bone fragment and essence prices. Sketch question 3. |
+| 85a | Loot tables | feature | next | `data/loot.js`: 2 to 4 drops per kind instead of one; new materials chitin, leatherwing, bone shard, wisp silk, sunmote, gloommote at Stardew's bug meat, bat wing, bone fragment and essence prices. Nuno: all six. |
 | 85b | Loot sinks | feature | queued | Recipes that spend the new drops: bait, bone meal, a warp charm, two dishes, essences as a forge reroll, a ring. |
 | 85c | The Bestiary | feature | queued | A Creatures journal tab: seen/defeated, where, how it fights, drops revealed as found, goal progress. `S.bestiary` save field seeded from `S.slain`. |
 | 85d | Behaviours: mimic, burrow, swarm | feature | queued | With pebble crab, burrow mole, soot puffs, lava lurker, dust devil, ash swarm. |
 | 85e | Behaviours: shoot, split | feature | queued | Projectiles you dodge or block. With Hollow, sand and crag spitters, moss and ember slimes. |
-| 85f | Behaviours: phase, armored | feature | needs decision | With lantern wisp, tomb shade, shellbacks, storm wing. Sketch question 2 (swords against armour). |
+| 85f | Behaviours: phase, armored | feature | queued | With lantern wisp, tomb shade, shellbacks, storm wing. Nuno: swords do a quarter damage to armored kinds. |
 | 85g | Slaying goals for the new kinds | feature | queued | One goal per behaviour group, Stardew-sized counts, a ring, hat or weapon each. |
 | 85h | Busy floors | feature | queued | Stardew's infested floors: about 1 floor in 15 is a themed swarm; the ladder appears once cleared. |
-| 85i | Elites | feature | needs decision | 1 in 60 with a glow, 3x health, sure essence, 5x rare roll. Sketch question 4 (random or opt-in). |
-| 85j | Creatures outside the dungeons | feature | needs decision | Sketch question 1: keep the wild farm only, or add seasonal surface creatures. |
+| 85i | Elites | feature | queued | Nuno: opt-in only. A challenge brazier at the Hollow (Stardew's Shrine of Challenge) makes the dungeons dangerous: elites with a glow, 3x health, sure essence, 5x rare roll. |
+| 85j | Seasonal creatures | feature | needs decision | Nuno: add them. One kind a season at night (bramble sprite, firefly moth, gourd lurker, frost wisp). Open: Wilds and wild farm only, or every farm. |
 
 ## Done
 

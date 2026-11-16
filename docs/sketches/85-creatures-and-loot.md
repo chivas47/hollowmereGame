@@ -3,6 +3,9 @@
 Asked for by Nuno (November 2026): more creatures, more variety in how they fight, better drops, a glossary.
 This is the plan in words, for Nuno to correct before any code. Items 85a to 85j in ROADMAP.md.
 
+**Nuno's answers (November 2026):** (1) add seasonal surface creatures (85j); (2) swords do a quarter damage to
+armored creatures; (3) all six materials; (4) elites only when the player chooses (85i).
+
 ## What is wrong now
 
 - **17 kinds, 5 ways to move.** hop, crawl, fly, walk, charge (`data/weapons.js` MONSTERS). Past the chargers,
@@ -73,7 +76,7 @@ Seven new behaviours in `systems/monsters.js`, three PRs. Each is named after it
 | **shoot** | Keeps its distance, fires a slow shot you dodge or knock back with a blocked sword | shooting mage, squid kid |
 | **split** | A big one splits into two small ones when it falls | big slime |
 | **phase** | Drifts through walls, fades in and out; only hittable while solid | ghost |
-| **armored** | Swords glance off; clubs, bombs and blast ring hurt it | armored bug |
+| **armored** | Swords and daggers do a quarter damage (Nuno); clubs, bombs and the blast ring do full | armored bug |
 
 ## Glossary: every creature, old and new
 
@@ -132,14 +135,27 @@ This is the "more creatures" ask without crowding every floor.
 
 ## 85i: elites
 
-About 1 monster in 60 (Stardew-like rarity; the prismatic slime and dangerous-mines monsters by role) is an
-**elite**: a glow outline, 3x health, 1.5x damage, guaranteed essence, and its rare-drop roll at 5x. Costs no new
-art (tint plus glow layer). The Bestiary marks elites met.
+Opt-in only (Nuno). A **challenge brazier** beside the Hollow's entrance (Stardew's Shrine of Challenge by role):
+light it to make the Hollow, Cavern and Vent dangerous, douse it to go back; saved as `S.challenge`. While lit,
+about 1 monster in 10 is an **elite**: a glow outline, 3x health, 1.5x damage, a sure essence, and its rare-drop
+roll at 5x; every monster gets 1.25x health and damage. Unlit, there are no elites. Costs no new art (tint plus
+glow layer). The Bestiary marks elites met.
 
-## Questions for Nuno
+## 85j: seasonal creatures outside the dungeons
 
-1. **Creatures outside the dungeons?** Today only the wild farm has night monsters. Options: keep it that way
-   (Stardew), or add a few seasonal surface creatures. 85j is a placeholder until you decide.
-2. **Armored creatures ignore swords.** That makes a club worth carrying. OK, or should swords just do half?
-3. **Six new materials.** Not a currency, but six more things in the bag. Fewer (say chitin, bone, two essences)?
-4. **Elite rate.** 1 in 60, or opt-in only (Stardew's shrine that makes the mines harder)?
+Nuno: add them. Stardew has no counterpart (only the wilderness farm's night monsters), so numbers scale from the
+Hollow's first floors and the wild farm's slimes. Proposal, one kind a season, at night (after 8 pm) in the
+Wilds and on the wild farm only, so other farms and the village stay safe:
+
+| Season | Creature | Behaviour | Loot |
+|---|---|---|---|
+| Spring | **Bramble sprite** | swarm | fiber 40%, mixed seeds 5% |
+| Summer | **Firefly moth** | fly, glows | leatherwing 30%, sunmote 5% |
+| Autumn | **Gourd lurker** | mimic (a pumpkin) | chitin 30%, mixed seeds 10% |
+| Winter | **Frost wisp** | phase | wisp silk 10%, gloommote 5% |
+
+Each counts toward a seasonal slaying goal (85g) and has a Bestiary card. Needs Nuno's yes on where they live.
+
+## Open question for Nuno
+
+85j: seasonal creatures in the Wilds and on the wild farm only, or on every farm at night?
