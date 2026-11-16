@@ -593,7 +593,18 @@ export function drawFlag(c, x, y, col) {
 // phase: 0 at rest, 0..1 through a hop.
 // v36: the Hollow's other monsters. t: a running clock for wing beats and legs.
 // v80: from the monster sheet tinted to color once it has loaded (false until then: callers draw in code).
-// f: the frame (0 or 1), lift: px above the kind's rest height.
+// f: the frame (0 to 3, v265), lift: px above the kind's rest height.
+// v265 (87c1): the outline is its own band: a dark shade of the body (as drawn before), or the kind's lighter rim.
+const LINE_HURT = '#5f5f5f';
+const lines = new Map();
+function lineOf(color) {
+  let l = lines.get(color);
+  if (!l) {
+    const n = parseInt(color.slice(1), 16), d = (v) => Math.floor(v * 95 / 255).toString(16).padStart(2, '0');
+    lines.set(color, l = `#${d(n >> 16)}${d((n >> 8) & 255)}${d(n & 255)}`);
+  }
+  return l;
+}
 function sheetMonster(c, px, py, kind, color, hurt, f, lift, flip = false) {
   const M = MONSTERS, k = M.kinds[kind];
   if (!k || !ready(M.sheet)) return false;
@@ -601,7 +612,7 @@ function sheetMonster(c, px, py, kind, color, hurt, f, lift, flip = false) {
   r(c, x + sx, base - 1, sw, 1, `rgba(0,0,0,${sa})`);
   const layers = [[`${shape}.body`, hurt ? '#ffffff' : color]];
   if (k.glow) layers.push([`${shape}.glow`, hurt ? '#ffffff' : k.glow]);
-  layers.push([`${shape}.ink`, null]);
+  layers.push([`${shape}.line`, hurt ? LINE_HURT : k.rim || lineOf(color)], [`${shape}.ink`, null]);   // v265: the outline
   const src = tinted(M.sheet, M.layers, layers, M.size);
   if (!flip) frame(c, src, f, M.size, x + M.origin[0], base + M.origin[1] - lift);
   else { c.save(); c.translate(x * 2, 0); c.scale(-1, 1); frame(c, src, f, M.size, x + M.origin[0], base + M.origin[1] - lift); c.restore(); }   // v228: facing left
@@ -642,10 +653,10 @@ export function drawShot(c, px, py, color) {
 // v228: flip faces it left (chargers face the way they go).
 export function drawMonster(c, px, py, kind, color, hurt, t, flip = false) {
   const k = MONSTERS.kinds[kind] || {};
-  if (sheetMonster(c, px + (k.sway ? Math.round(Math.sin(t * k.sway)) : 0), py, kind, color, hurt, Math.floor(t * 8) % 2,
+  if (sheetMonster(c, px + (k.sway ? Math.round(Math.sin(t * k.sway)) : 0), py, kind, color, hurt, Math.floor(t * 8) % 4,
     k.bob ? -Math.round(Math.sin(t * k.bob) * 2) : 0, flip)) return;
   const x = Math.round(px), base = Math.round(py), col = hurt ? '#ffffff' : color, f = Math.floor(t * 8) % 2;
-  if (k.shape === 'slime') return drawSlime(c, px, py, color, hurt, 0);   // v256: splitting slimes
+  if (k.shape === 'slime' || kind === 'mossslime') return drawSlime(c, px, py, color, hurt, 0);   // v256: splitting slimes
   if (['puff', 'spitter', 'wisp', 'shell', 'bat', 'crab'].includes(k.shape)) kind = k.shape;   // v261: crab (the gourd lurker)   // v257: wisp, shell, bat shapes   // v254: dust devils and the ash swarm draw as a puff; v255: spitters
   else if (k.shape) {   // v228: a charger before the sheet loads: a low body, a head the way it faces
     const s = flip ? -1 : 1;
@@ -732,9 +743,11 @@ export function drawMonster(c, px, py, kind, color, hurt, t, flip = false) {
   }
 }
 
-export function drawSlime(c, px, py, color, hurt, phase) {
+// v265: kind: the slime's or a splitting slime's own bands (the moss slime's moss cap). Frames: resting, landing
+// (the last fifth of a hop), taking off (the first fifth), mid-hop.
+export function drawSlime(c, px, py, color, hurt, phase, kind = 'slime') {
   const lift = Math.round(Math.sin(phase * Math.PI) * 3), x = Math.round(px) - 5, base = Math.round(py);
-  if (sheetMonster(c, px, py, 'slime', color, hurt, lift > 1 ? 1 : 0, lift)) return;
+  if (sheetMonster(c, px, py, kind, color, hurt, !phase ? 0 : phase > 0.8 ? 1 : phase < 0.2 ? 2 : 3, lift)) return;
   const y = base - 8 - lift, col = hurt ? '#ffffff' : color;
   r(c, x + 1, base - 1, 9, 1, 'rgba(0,0,0,.35)');
   r(c, x + 2, y, 6, 1, col); r(c, x + 1, y + 1, 8, 1, col); r(c, x, y + 2, 10, 5, col);

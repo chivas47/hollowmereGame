@@ -421,9 +421,9 @@ function drawPhaser(c, m) {
 // v256: a splitting slime hops like a slime; whole, it is drawn SPLIT.scale times as big from its feet.
 function drawSplitter(c, m) {
   const phase = m.hop % HOP < HOP_ACTIVE ? (m.hop % HOP) / HOP_ACTIVE : 0;
-  if (m.small) return drawSlime(c, m.x, m.y, m.color, m.hurt > 0, phase);
+  if (m.small) return drawSlime(c, m.x, m.y, m.color, m.hurt > 0, phase, m.kind);
   c.save(); c.translate(m.x, m.y); c.scale(SPLIT.scale, SPLIT.scale); c.translate(-m.x, -m.y);
-  drawSlime(c, m.x, m.y, m.color, m.hurt > 0, phase);
+  drawSlime(c, m.x, m.y, m.color, m.hurt > 0, phase, m.kind);   // v265: the moss slime's moss cap
   c.restore();
 }   // the colour of the Hollow's plain rocks
 

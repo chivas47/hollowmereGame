@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v265: The Hollow's creatures redrawn
+- All 16 kinds that live in the Hollow have new, more detailed sprites with four frames each instead of two: slimes squash, stretch and land as they hop, walkers step with each leg in turn, bats beat their wings through a full stroke, soot puffs curl and the lantern wisp flickers.
+- The moss slime wears a moss cap of its own instead of looking like a big plain slime.
+- The dark kinds (Hollow mite, cave bat, burrow beetle, soot puffs, gloom hound, Hollow spitter) have a lighter outline, so they no longer vanish on the Hollow's dark floor.
+- The Cavern's, Vent's and night creatures keep their look for now (next: 87c2 and 87c3).
+- New save data: none.
+
 ## v264: Attack effects
 - A charger winding up now pulses red and paws the ground, and a spitter's mouth glows before it spits, so a warning no longer looks like the white flash of a hit.
 - Hits throw chips of what the creature is made of (gel in its own colour, bone, embers, chitin, smoke, sand, spirit motes, stone, scales, leaves, fur) with a flash where the blade lands.

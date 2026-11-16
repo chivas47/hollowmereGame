@@ -222,7 +222,8 @@ test('splitters keep to their places and draw as slimes', () => {
   assert.equal(MONSTERS.mossslime.move, 'split');
   assert.ok(MONSTERS.mossslime.from >= 20 && MONSTERS.mossslime.to <= 60);
   assert.ok(MONSTERS.emberslime.ventOnly);
-  for (const k of ['mossslime', 'emberslime']) assert.equal(SHEET.kinds[k].shape, 'slime');
+  assert.equal(SHEET.kinds.emberslime.shape, 'slime');
+  assert.ok(SHEET.layers.includes('mossslime.body'), 'the moss slime has bands of its own (v265: a moss cap)');
 });
 
 // Roadmap 85f: phasers and the armored.
