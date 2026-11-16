@@ -312,7 +312,7 @@ Nuno (November 2026): a polish sweep of all the creatures, detailed sprites, det
 
 | Item | What | Kind | Status | Notes |
 |---|---|---|---|---|
-| 87a | Rocks block hits on walkers | feature | in progress | Swings and weapon specials do not reach a creature that walks if a rock or wall stands between you; flyers, phasers, flying swarms and burrowers that are up can be hit over rocks. Bombs unchanged. |
+| 87a | Rocks block hits on walkers | feature | in progress (chivas47/hollowmereGame#280) | Swings and weapon specials do not reach a creature that walks if a rock or wall stands between you; flyers, phasers, flying swarms and burrowers that are up can be hit over rocks. Bombs unchanged. |
 | 87b | Creature sweep | polish | queued | A sweep mode that screenshots every kind standing, telling, hit and falling; finds logged in docs/POLISH.md. |
 | 87c | Detailed creature sprites | polish | queued | Every shape on monsters.png redrawn with richer shading and 4 frames (walk or fly cycle, a tell or attack frame), in about three batches. Same 24 x 24 size and anchors. |
 | 87d | Detailed attack effects | polish | queued | Weapon trails, hit sparks by what you hit (gel, bone, ember, chitin), death bursts, glob trails and splashes, charge dust, burrow spray. |
