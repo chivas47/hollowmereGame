@@ -694,6 +694,10 @@ function simulate(runSeed) {
     let need = oreNeeds();
     while (Object.keys(need).length && s.energy >= 2 && !late()) {
       if (MINE.chest) { openChest(); spend(TIME.chore); }   // v37: treasure chests
+      if (MINE.busy) for (const m of [...slimes]) {   // roadmap 85h: a busy floor's ladder waits for its last creature
+        if (m.bs || m.ph) { surface(m); spend(TIME.rock); }
+        while (slimes.includes(m) && !late()) { hitMonster(m, damageOf()); spend(TIME.rock); }
+      }
       bombFloor();
       const grid = MAPS.mine.grid, free = (x, y) => [[0, 1], [0, -1], [1, 0], [-1, 0]].some(([a, b]) => grid[y + b]?.[x + a] && !SOLID.has(grid[y + b][x + a]));
       const rocks = Object.keys(MINE.rocks).map((k) => k.split(',').map(Number)).filter(([x, y]) => free(x, y));

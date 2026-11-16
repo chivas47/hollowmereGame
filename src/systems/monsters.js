@@ -7,7 +7,7 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
 import { MAPS, SOLID, sizeOf } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
-import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS, CHARGE, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR } from '../data/weapons.js';
+import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS, CHARGE, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR, BUSY } from '../data/weapons.js';
 import { SAVAGE } from '../data/guild.js';
 import { CAVERN } from '../data/cavern.js';
 import { VENT } from '../data/forge.js';
@@ -42,17 +42,20 @@ function make(kind, floor, px, py, R) {
   return m;
 }
 
-on('mine:floor', ({ floor: n, rng: R, zone, eff: floor }) => {
-  slimes.length = 0; slimeMap = 'mine';
+let busyFloor = false;   // v259: this floor's ladder waits for the last creature
+on('mine:floor', ({ floor: n, rng: R, zone, eff: floor, busy }) => {
+  slimes.length = 0; slimeMap = 'mine'; busyFloor = !!busy;
   // v38: in the Sunken Cavern only its own monsters and those marked cavern, at the cavern's strength.
   const cav = zone === 'cavern', peak = zone === 'peak', vent = zone === 'vent' || peak, g = MAPS.mine.grid, D = MONSTERS;   // v67: the peak has the vent's monsters
   const kinds = Object.keys(D).filter((k) => (vent ? D[k].vent || D[k].ventOnly : cav ? D[k].cavern || D[k].cavernOnly : !D[k].cavernOnly && !D[k].ventOnly && floor >= D[k].from && floor <= (D[k].to ?? Infinity)));   // v253: to
-  const count = peak ? (n >= PEAK.floors ? 0 : PEAK.monsters(n)) : vent ? (n >= VENT.floors ? 0 : VENT.monsters(n)) : cav ? CAVERN.monsters(n) : MONSTER_COUNT(floor);   // v39: the forge room is safe
+  let count = peak ? (n >= PEAK.floors ? 0 : PEAK.monsters(n)) : vent ? (n >= VENT.floors ? 0 : VENT.monsters(n)) : cav ? CAVERN.monsters(n) : MONSTER_COUNT(floor);   // v39: the forge room is safe
+  const theme = busy ? kinds[Math.floor(R() * kinds.length)] : null;   // v259: a busy floor is all one kind, more of them
+  if (busy) count = Math.min(BUSY.max, Math.round(count * BUSY.mult));
   for (let guard = 0; slimes.length < count && guard < 500; guard++) {
     const x = 1 + Math.floor(R() * (g[0].length - 2)), y = 1 + Math.floor(R() * (g.length - 2));   // v157: the floor's own size
     if (g[y][x] !== 'f' || (x < 7 && y < 6)) continue;
-    const kind = kinds[Math.floor(R() * kinds.length)], pack = D[kind].pack;
-    const n = pack ? pack[0] + Math.floor(R() * (pack[1] - pack[0] + 1)) : 1;   // v253: a swarm is a pack in one slot
+    const kind = theme || kinds[Math.floor(R() * kinds.length)], pack = D[kind].pack;
+    const n = Math.min(pack ? pack[0] + Math.floor(R() * (pack[1] - pack[0] + 1)) : 1, busy ? count - slimes.length : Infinity);   // v253: a swarm is a pack in one slot; v259: a busy floor stops at its count
     for (let i = 0; i < n; i++) slimes.push({ ...make(kind, floor, x * T + 8 + (i % 3 - 1) * 6, y * T + 12 + (Math.floor(i / 3) - 0.5) * 6, R), zone });
   }
 });
@@ -268,7 +271,8 @@ function defeat(m) {
   if (weaponEnchant() === 'vampiric') G.S.hp = Math.min(G.S.maxHp, G.S.hp + 3);   // v39
   if (weaponEnchant() === 'haymaker' && Math.random() < 0.3) { const k = HAY[Math.floor(Math.random() * HAY.length)]; G.S.bag[k] = (G.S.bag[k] || 0) + 1; }
   emit('gather', { skill: 'combat', xp: m.small ? Math.ceil(d.xp * SPLIT.xp) : d.xp });   // v256: a piece gives less
-  emit('monster:slain', { kind: m.kind || 'slime', x: m.x, y: m.y, map: slimeMap, drops: got });   // 85c: drops for the Bestiary   // v37: the lodge's goals, the blast ring
+  emit('monster:slain', { kind: m.kind || 'slime', x: m.x, y: m.y, map: slimeMap, drops: got });
+  if (busyFloor && slimeMap === 'mine' && !slimes.length) { busyFloor = false; emit('mine:cleared'); }   // v259: the ladder opens   // 85c: drops for the Bestiary   // v37: the lodge's goals, the blast ring
   changed();
 }
 // v37: hurts a monster (bombs and the blast ring use it too); knock: [kx, ky] push. v74: crit marks a critical hit

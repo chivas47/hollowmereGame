@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v259: Busy floors
+- Now and then a Hollow floor from 10 down is busy: crowded with one kind of creature, two and a half times as many as usual. The ladder is not under a rock there: it opens once every creature is down.
+- Lift floors (every fifth) are never busy.
+- New save data: none.
+
 ## v258: Lodge goals for the new creatures
 - Warden Hale has seven new goals, one for each new way of fighting: pebble crabs, burrowers, swarms, spitters, splitting slimes, wisps and shades, and shellbacks.
 - Two new rewards: the Digger's cap, a hat for 30 burrowers, and the Shell ring (3 more defense) for 60 shellbacks. The others pay rings you may have found already.

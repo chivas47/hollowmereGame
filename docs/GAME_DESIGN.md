@@ -782,6 +782,10 @@ One goal for each way of fighting added in 85d to 85f, each counting every kind 
 | 100 lantern wisps and tomb shades | wisp, shade | Glow ring | ours |
 | 60 shellbacks | shellback, crag shellback | Shell ring (new: 3 more defense, 400g) | crabshell ring (+5 defense) |
 
+### Busy floors (v259, roadmap 85h)
+
+Stardew's infested floors by role (data/weapons.js BUSY). From Hollow floor 10, any floor that is not a fifth (the lift's stops stay safe) is busy one time in 15. A busy floor holds 2.5 times the usual count, up to 18 creatures, all of one kind drawn from that floor's own (a pack still comes as a pack). No rock hides its ladder: when the last creature is down, a ladder opens on open floor near the middle. A notice says so on arrival. Only the Hollow has them for now; the Sunken Cavern, Ember Vent and Smoke Peak are unchanged.
+
 ### The Bestiary (v252, roadmap 85c)
 
 The journal's Creatures tab. A kind counts as met once it is on the map you are on, or falls. Each met kind has a card: its picture, where it lives, a line on how it fights (by the way it moves: hop, crawl, fly, walk, charge), how many you have defeated, its lodge goal's progress and reward, and its loot table, each item named once that kind has dropped it for you ("?" until then). Kinds not met show "???", and the tab's first line counts how many are left. Stardew has no bestiary; its monster eradication goals at the guild are the nearest thing, and the card shows those.

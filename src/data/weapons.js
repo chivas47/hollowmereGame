@@ -122,6 +122,10 @@ Object.assign(MONSTERS, {
 });
 
 export const MONSTER_COUNT = (f) => Math.min(10, 2 + Math.floor(f / 2));
+// v259 (roadmap 85h): busy floors (Stardew's infested floors). From Hollow floor `from`, a floor that is not a fifth
+// (the lift's stops) is busy with chance `chance`: `mult` times the usual count, up to `max` bodies, all of one kind
+// from the floor's own, and no rock hides the ladder; it opens once every creature on the floor is down.
+export const BUSY = { from: 10, chance: 1 / 15, mult: 2.5, max: 18 };
 // Each kill: a small chance of a weapon or ring from the floor's pool (Stardew: monsters rarely drop rings and weapons).
 export const RARE_DROP = 0.01;
 

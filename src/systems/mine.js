@@ -15,7 +15,7 @@ import { has } from './professions.js';
 import { luck } from './buffs.js';
 import { GEODE_CHANCE, geodeFor } from '../data/guild.js';
 import { CAVERN, HOLLOW_GOLD } from '../data/cavern.js';
-import { RINGS } from '../data/weapons.js';
+import { RINGS, BUSY } from '../data/weapons.js';
 import { VENT } from '../data/forge.js';
 import { tier } from '../data/upgrades.js';
 import { PEAK } from '../data/nuts.js';
@@ -62,7 +62,10 @@ export function genFloor(n, zone = 'hollow') {
     keys.push(`${x},${y}`);
   }
   MINE.ladder = keys.length ? keys[Math.floor(R() * keys.length)] : null;
-  if (!MINE.ladder) g[8][12] = 'L';
+  // v259 (85h): a busy floor keeps its ladder until every creature on it is down (systems/monsters.js mine:cleared).
+  MINE.busy = !cav && !hot && n >= BUSY.from && n % CHECKPOINT_EVERY !== 0 && R() < BUSY.chance;
+  if (MINE.busy) MINE.ladder = null;
+  else if (!MINE.ladder) g[8][12] = 'L';
 
   Object.assign(MAPS.mine, { grid: g, name: peak ? `${PEAK.name}, floor ${n}` : vent ? `${VENT.name}, floor ${n}` : cav ? `${CAVERN.name}, floor ${n}` : `The Hollow, floor ${n}`, theme: peak ? 'peak' : vent ? 'ember' : cav ? 'sand' : null });
   Object.assign(MINE, { floor: n, zone, eff });
@@ -71,8 +74,24 @@ export function genFloor(n, zone = 'hollow') {
   else if (cav) G.S.cavernDeepest = Math.max(G.S.cavernDeepest || 0, n);
   else G.S.mineDeepest = Math.max(G.S.mineDeepest, n);
   emit('world:changed');
-  emit('mine:floor', { floor: n, rng: R, zone, eff });
+  emit('mine:floor', { floor: n, rng: R, zone, eff, busy: MINE.busy });
+  if (MINE.busy) notify('A busy floor! The ladder shows once every creature here is down.');
 }
+
+// v259 (85h): the last creature on a busy floor is down: a ladder opens on open floor near the middle.
+on('mine:cleared', () => {
+  if (G.S.map !== 'mine' || !MINE.busy) return;
+  MINE.busy = false;
+  const g = MAPS.mine.grid, open = [];
+  for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) if (g[y][x] === 'f' && (x > 4 || y > 4)) open.push([x, y]);
+  if (!open.length) return;
+  const [x, y] = open.sort((a, b) => Math.hypot(a[0] - W / 2, a[1] - H / 2) - Math.hypot(b[0] - W / 2, b[1] - H / 2))[0];
+  g[y][x] = 'L';
+  notify('Every creature is down. A ladder opens up!');
+  emit('mine:ladder', { floor: MINE.floor, zone: MINE.zone });
+  emit('world:changed');
+  changed();
+});
 
 // v39: the vent's top floor: a quiet room with the forge, no rocks and no monsters.
 function forgeRoom(n, eff, g) {
