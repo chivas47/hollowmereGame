@@ -3,7 +3,7 @@
 export const SCENE_HEARTS = [2, 4, 6, 8, 10, 14];
 // v245 (roadmap 84f): neighbours whose heart scenes play out on the map at their front door (systems/heartScenes.js);
 // the rest still open as a page (ui/dialogs.js). Grows a few neighbours a release.
-export const HEART_STAGED = ['ines', 'bram', 'odile', 'tavi'];
+export const HEART_STAGED = ['ines', 'bram', 'odile', 'tavi', 'esme', 'rook', 'pell'];   // v246: Esme, Rook and Pell
 // Where a scene plays when its words put it somewhere else than their door: the map, where they stand [x, y, facing],
 // where you walk from and to, and which way you face then. Without one: their front door (systems/heartScenes.js).
 export const HEART_STAGES = {
@@ -23,6 +23,28 @@ export const HEART_STAGES = {
   },
   tavi: {
     10: { map: 'house', npc: [12, 6, 'down'], from: [12, 10], to: [12, 7], face: 'up' },     // your kitchen table
+    14: { map: 'house', npc: [12, 6, 'down'], from: [12, 10], to: [12, 7], face: 'up' },
+  },
+  // v246 (roadmap 84g)
+  esme: {
+    2: { map: 'forest', npc: [13, 4, 'left'], from: [10, 4], to: [12, 4], face: 'right' },     // a canvas in the forest
+    6: { map: 'forest', npc: [5, 6, 'right'], from: [8, 6], to: [6, 6], face: 'left' },       // a stump in the clearing
+    14: { map: 'farm', npc: [4, 4, 'right'], from: [7, 4], to: [5, 4], face: 'left' },        // the two of you on the porch
+  },
+  rook: {
+    6: { map: 'beach', npc: [9, 9, 'down'], from: [9, 6], to: [9, 8], face: 'down' },         // the boat at the waterline
+    10: { map: 'beach', npc: [6, 11, 'up'], from: [6, 7], to: [6, 10], face: 'down' },        // out in the bay at sunset
+    // a second boat in your barn: beside the barn, wherever it stands; your porch if there is no barn
+    14: (S) => {
+      if (S.built?.barn !== true) return { map: 'farm', npc: [4, 4, 'right'], from: [7, 4], to: [5, 4], face: 'left' };
+      const b = S.sites?.barn || { x: 2, y: 11 };
+      return { map: 'farm', npc: [b.x + 1, b.y + 2, 'right'], from: [b.x + 4, b.y + 2], to: [b.x + 2, b.y + 2], face: 'left' };
+    },
+  },
+  pell: {   // the schoolroom in the town hall: in front of its door; the lesson plan on your pillow, at home
+    2: { map: 'town', npc: [10, 3, 'down'], from: [10, 6], to: [10, 4], face: 'up' },
+    6: { map: 'town', npc: [10, 3, 'down'], from: [10, 6], to: [10, 4], face: 'up' },
+    10: { map: 'town', npc: [10, 3, 'down'], from: [10, 6], to: [10, 4], face: 'up' },
     14: { map: 'house', npc: [12, 6, 'down'], from: [12, 10], to: [12, 7], face: 'up' },
   },
 };   // v51: 2, 6 and 10 for the marriage candidates (10 only while dating)

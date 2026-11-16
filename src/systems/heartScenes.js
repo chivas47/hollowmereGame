@@ -20,9 +20,9 @@ export function approach(id) {
   return k;
 }
 
-// Where a scene plays: its own stage, else their door with you coming up the path.
-export function stageOf(id, at) {
-  const own = HEART_STAGES[id]?.[at];
+// Where a scene plays: its own stage (v246: or worked out from the save, Rook's barn), else their door.
+export function stageOf(id, at, S = G.S) {
+  const set = HEART_STAGES[id]?.[at], own = typeof set === 'function' ? set(S) : set;   // v246: worked out from the save
   if (own) return own;
   const [dx, dy] = HOMES[id].door, k = Math.max(1, approach(id));
   return { map: HOMES[id].map, npc: [dx, dy, 'down'], from: [dx, dy + k], to: [dx, dy + 1], face: 'up' };
