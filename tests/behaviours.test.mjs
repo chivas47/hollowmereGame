@@ -5,12 +5,13 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { G } from '../src/core/game.js';
 import { runUpdaters } from '../src/core/registry.js';
-import { MONSTERS, MIMIC, BURROW, SHOOT } from '../src/data/weapons.js';
+import { MONSTERS, MIMIC, BURROW, SHOOT, SPLIT } from '../src/data/weapons.js';
 import { MAPS, SOLID } from '../src/data/maps.js';
 import { T } from '../src/core/constants.js';
 import { MONSTERS as SHEET } from '../src/data/sprites.js';
 import { slimes, spawnSlimes, hitMonster, untouchable, shots } from '../src/systems/monsters.js';
 import '../src/systems/bestiary.js';
+import '../src/systems/guild.js';
 import { enterMine, leaveMine } from '../src/systems/mine.js';
 import { placePlayer } from '../src/systems/world.js';
 import { freshFarm } from './setup.mjs';
@@ -199,4 +200,27 @@ test('a glob stops at a wall', () => {
   shots.push({ x: (wall[0] - 1) * T + 8, y: wall[1] * T + 8, vx: SHOOT.speed, vy: 0, t: SHOOT.life, dmg: 10, color: '#fff', back: false });
   tick(0.3);
   assert.equal(shots.length, 0);
+});
+
+// Roadmap 85e2: splitters.
+test('a big moss slime splits in two smaller ones that do not split again', () => {
+  const m = one('mossslime', 60);
+  m.floor = 30;
+  hitMonster(m, 1e6);
+  const kids = slimes.filter((o) => o.kind === 'mossslime');
+  assert.equal(kids.length, SPLIT.n);
+  for (const k of kids) {
+    assert.ok(k.small);
+    assert.equal(k.hp, Math.ceil(MONSTERS.mossslime.hp(30) * SPLIT.hp));
+  }
+  kids.forEach((k) => hitMonster(k, 1e6));
+  assert.equal(slimes.filter((o) => o.kind === 'mossslime').length, 0, 'the pieces stay down');
+  assert.equal(G.S.slain.mossslime, 3, 'each piece counts');
+});
+
+test('splitters keep to their places and draw as slimes', () => {
+  assert.equal(MONSTERS.mossslime.move, 'split');
+  assert.ok(MONSTERS.mossslime.from >= 20 && MONSTERS.mossslime.to <= 60);
+  assert.ok(MONSTERS.emberslime.ventOnly);
+  for (const k of ['mossslime', 'emberslime']) assert.equal(SHEET.kinds[k].shape, 'slime');
 });

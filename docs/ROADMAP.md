@@ -292,8 +292,8 @@ Nuno asked for more creature variety, better drops, a glossary and more creature
 | 85c | The Bestiary | feature | done (chivas47/hollowmereGame#269) | A Creatures journal tab: seen/defeated, where, how it fights, drops revealed as found, goal progress. `S.bestiary` save field seeded from `S.slain`. |
 | 85d1 | Behaviours: mimic, burrow, swarm | feature | done (chivas47/hollowmereGame#270) | Nuno: split in two. The three behaviours with the Hollow's pebble crab, burrow mole and soot puffs. |
 | 85d2 | Lava lurker, dust devil, ash swarm | feature | done (chivas47/hollowmereGame#271) | The 85d1 behaviours in the Ember Vent and the Sunken Cavern. |
-| 85e1 | Behaviours: shoot | feature | in progress (chivas47/hollowmereGame#272) | Split from 85e like 85d. Spitters that keep their distance and spit globs you dodge or block back: Hollow spitter (70+), sand spitter (Cavern), crag spitter (Vent and Peak). |
-| 85e2 | Behaviours: split | feature | queued | Big slimes that split in two: moss slime (Hollow), ember slime (Vent). |
+| 85e1 | Behaviours: shoot | feature | done (chivas47/hollowmereGame#272) | Split from 85e like 85d. Spitters that keep their distance and spit globs you dodge or block back: Hollow spitter (70+), sand spitter (Cavern), crag spitter (Vent and Peak). |
+| 85e2 | Behaviours: split | feature | in progress (chivas47/hollowmereGame#273) | Big slimes that split in two: moss slime (Hollow), ember slime (Vent). |
 | 85f | Behaviours: phase, armored | feature | queued | With lantern wisp, tomb shade, shellbacks, storm wing. Nuno: swords do a quarter damage to armored kinds. |
 | 85g | Slaying goals for the new kinds | feature | queued | One goal per behaviour group, Stardew-sized counts, a ring, hat or weapon each. |
 | 85h | Busy floors | feature | queued | Stardew's infested floors: about 1 floor in 15 is a themed swarm; the ladder appears once cleared. |

@@ -96,6 +96,15 @@ Object.assign(MONSTERS, {
   cragspitter: { name: 'Crag spitter', from: 0, ventOnly: true, move: 'shoot', hp: (f) => 32 + Math.floor(f / 4), dmg: (f) => 20 + Math.floor(f / 5), speed: () => 22, xp: 32, color: '#4a3a36', glow: '#e9862a' },
 });
 
+// v256 (roadmap 85e2): splitters (Stardew's big slimes). A big one hops like a slime and is drawn half again as big;
+// when it falls it splits into SPLIT.n small ones of the same kind with SPLIT.hp of its health and SPLIT.xp of its XP,
+// which do not split again. Each piece rolls its own loot and counts as a defeat.
+export const SPLIT = { n: 2, hp: 0.4, xp: 0.5, scale: 1.5, spread: 8 };
+Object.assign(MONSTERS, {
+  mossslime:  { name: 'Moss slime', from: 20, to: 60, move: 'split', hp: (f) => 14 + Math.floor(f / 2), dmg: (f) => 8 + Math.floor(f / 2), speed: () => 22, xp: 8, color: '#6a9a3a' },
+  emberslime: { name: 'Ember slime', from: 0, ventOnly: true, move: 'split', hp: (f) => 50 + Math.floor(f / 4), dmg: (f) => 24 + Math.floor(f / 5), speed: () => 24, xp: 30, color: '#e07a3a' },
+});
+
 export const MONSTER_COUNT = (f) => Math.min(10, 2 + Math.floor(f / 2));
 // Each kill: a small chance of a weapon or ring from the floor's pool (Stardew: monsters rarely drop rings and weapons).
 export const RARE_DROP = 0.01;

@@ -7,7 +7,7 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
 import { MAPS, SOLID, sizeOf } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
-import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS, CHARGE, MIMIC, BURROW, SHOOT } from '../data/weapons.js';
+import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS, CHARGE, MIMIC, BURROW, SHOOT, SPLIT } from '../data/weapons.js';
 import { SAVAGE } from '../data/guild.js';
 import { CAVERN } from '../data/cavern.js';
 import { VENT } from '../data/forge.js';
@@ -174,6 +174,16 @@ addUpdater((dt) => {
 });
 for (const ev of ['mine:floor', 'map:changed', 'day:start']) on(ev, () => { shots.length = 0; });
 
+// v256 (roadmap 85e2): a big splitter falls into SPLIT.n small ones, spread a little apart and pushed outward.
+function splitUp(m, d) {
+  const hp = Math.max(1, Math.ceil(d.hp(m.floor || 1) * SPLIT.hp));
+  for (let i = 0; i < SPLIT.n; i++) {
+    const a = (i / SPLIT.n) * Math.PI * 2 + Math.random(), ux = Math.cos(a), uy = Math.sin(a);
+    slimes.push({ ...m, x: m.x + ux * SPLIT.spread, y: m.y + uy * SPLIT.spread, tx: m.x, ty: m.y, hp, small: true, hurt: 0.25, kx: ux * 80, ky: uy * 80, hop: Math.random() * HOP, frozen: 0 });
+  }
+  emit('monster:split', { x: m.x, y: m.y });
+}
+
 // v253: whether a monster is out of reach for now: a mimic still asleep is not, a burrower under the floor is.
 export const untouchable = (m) => m.bs === 'under' || m.bs === 'rise';
 // v253: brings a burrower up at once (the balance bot, which does not wait out the clock, and tests).
@@ -206,7 +216,7 @@ addUpdater((dt) => {
     if (move === 'burrow' && burrowTurn(m, d, vx, vy, dt)) continue;   // v253: under the floor, nothing touches
     if (move === 'burrow') { /* up: it stands its ground */ }
     else if (move === 'charge' && chargeTurn(m, d, dx, dy, dt)) { /* v228: the charger moved itself */ }
-    else if (move === 'hop') { if (active) step(m, vx, vy, m.speed * 1.6 * dt); }
+    else if (move === 'hop' || move === 'split') { if (active) step(m, vx, vy, m.speed * 1.6 * dt); }   // v256: splitters hop
     else if (move === 'shoot') { const v = shootTurn(m, d, dx, dy, dt, f); if (v) step(m, v[0], v[1], m.speed * dt); else step(m, vx, vy, m.speed * dt); }   // v255
     else if (move === 'swarm') step(m, vx + Math.sin(m.hop * 7) * 0.8, vy + Math.cos(m.hop * 6) * 0.8, m.speed * dt);   // v253: weaving
     else step(m, vx + (move === 'fly' ? Math.sin(m.hop * 5) * 0.6 : 0), vy + (move === 'fly' ? Math.cos(m.hop * 4) * 0.6 : 0), m.speed * dt);
@@ -243,6 +253,7 @@ const HAY = ['fiber', 'cloth', 'coal'];
 function defeat(m) {
   slimes.splice(slimes.indexOf(m), 1);
   const d = MONSTERS[m.kind || 'slime'], times = wearing('thiefring') ? 2 : 1;
+  if (d.move === 'split' && !m.small) splitUp(m, d);   // v256: a big slime falls into smaller ones
   const got = rollLoot(m.kind || 'slime', Math.random, times);   // 85a: each kind's loot table
   for (const [k, n] of Object.entries(got)) G.S.bag[k] = (G.S.bag[k] || 0) + n;
   if (Object.keys(got).length) notify(Object.entries(got).map(([k, n]) => `+${n} ${ITEMS[k].name}`).join(', '));
@@ -252,7 +263,7 @@ function defeat(m) {
   if (wearing('savagering')) G.savageT = SAVAGE.time;   // v230
   if (weaponEnchant() === 'vampiric') G.S.hp = Math.min(G.S.maxHp, G.S.hp + 3);   // v39
   if (weaponEnchant() === 'haymaker' && Math.random() < 0.3) { const k = HAY[Math.floor(Math.random() * HAY.length)]; G.S.bag[k] = (G.S.bag[k] || 0) + 1; }
-  emit('gather', { skill: 'combat', xp: d.xp });
+  emit('gather', { skill: 'combat', xp: m.small ? Math.ceil(d.xp * SPLIT.xp) : d.xp });   // v256: a piece gives less
   emit('monster:slain', { kind: m.kind || 'slime', x: m.x, y: m.y, map: slimeMap, drops: got });   // 85c: drops for the Bestiary   // v37: the lodge's goals, the blast ring
   changed();
 }
@@ -337,12 +348,21 @@ addInteraction(58, ({ item }) => {
 
 addEntities(() => (G.S.map !== slimeMap ? [] : slimes.map((m) => ({
   y: m.y, draw: (c) => (!m.kind || m.kind === 'slime' ? drawSlime(c, m.x, m.y, m.color, m.hurt > 0, m.hop % HOP < HOP_ACTIVE ? (m.hop % HOP) / HOP_ACTIVE : 0)
+    : MONSTERS[m.kind].move === 'split' ? drawSplitter(c, m)
     : m.cs ? drawCharger(c, m)
     : m.hidden ? drawMonster(c, m.x, m.y, 'crabrock', ROCK_GREY, false, 0)   // v253: a mimic asleep looks like a rock
     : m.bs && m.bs !== 'up' ? drawMound(c, m.x + (m.bs === 'rise' ? (Math.floor(m.bt * 30) % 2 ? 1 : -1) : 0), m.y, m.hop, m.kind === 'lurker' ? 'lava' : 'earth')   // v253: a burrower's mound (shaking: the tell); v254: a lava ripple
     : drawMonster(c, m.x, m.y, m.kind, m.color, m.hurt > 0 || (m.aim && Math.floor(m.st * 14) % 2 === 0), m.hop, !!m.face)),   // v255: a spitter flashes before it spits
 })).concat(shots.map((s) => ({ y: s.y + 8, draw: (c) => drawShot(c, s.x, s.y, s.color) })))));
-const ROCK_GREY = '#8a8580';   // the colour of the Hollow's plain rocks
+const ROCK_GREY = '#8a8580';
+// v256: a splitting slime hops like a slime; whole, it is drawn SPLIT.scale times as big from its feet.
+function drawSplitter(c, m) {
+  const phase = m.hop % HOP < HOP_ACTIVE ? (m.hop % HOP) / HOP_ACTIVE : 0;
+  if (m.small) return drawSlime(c, m.x, m.y, m.color, m.hurt > 0, phase);
+  c.save(); c.translate(m.x, m.y); c.scale(SPLIT.scale, SPLIT.scale); c.translate(-m.x, -m.y);
+  drawSlime(c, m.x, m.y, m.color, m.hurt > 0, phase);
+  c.restore();
+}   // the colour of the Hollow's plain rocks
 
 // v228: a charger mid-turn. Winding up it flashes and shakes (the tell); rushing it runs fast; winded or dazed it
 // stands still, dazed with stars over it.
@@ -355,6 +375,7 @@ function drawCharger(c, m) {
 // v253: a mimic waking or cracked, a burrower coming up or going down: a puff of grit.
 for (const ev of ['monster:wake', 'monster:crack', 'monster:surface']) on(ev, ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 3, IMPACT.stone, 6, { speed: 35, up: 25, size: 1, life: 0.35, shrink: true }); });
 on('monster:crack', () => emit('sfx', 'pick'));
+on('monster:split', ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 4, IMPACT.stone, 8, { speed: 45, up: 30, size: 2, life: 0.4, shrink: true }); });
 on('monster:spit', ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 8, IMPACT.stone, 3, { speed: 20, up: 10, size: 1, life: 0.25, shrink: true }); });
 // v228: a charger setting off kicks up dust; one that runs into a wall shakes the ground.
 on('monster:charge', ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 2, IMPACT.stone, 5, { speed: 30, up: 15, size: 1, life: 0.35, shrink: true }); });
