@@ -41,7 +41,7 @@ export const SIGNS = {
   ],
   mountain: [
     { x: 20, y: 14, kind: 'post', dir: 'down', text: 'South: the Wilds.' },
-    { x: 22, y: 6, kind: 'post', dir: 'right', text: 'East: the quarry.' },
+    { x: 21, y: 6, kind: 'post', dir: 'right', text: 'East: the quarry, over the ravine bridge.' },   // 77q: off the ravine
     { x: 2, y: 11, kind: 'post', dir: 'left', text: 'West: an old path to town, under a fallen tree.',
       after: { shortcut: 'ridge', text: 'West: the ridge path to Hollowmere Town.' } },
     { x: 13, y: 4, kind: 'notice', text: 'Fish from the bank only. The ice is never as thick as it looks.' },

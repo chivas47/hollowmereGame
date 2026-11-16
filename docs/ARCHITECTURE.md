@@ -444,7 +444,9 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | E | exit to another map (paired with an `exits` entry) | no |
 | T | tree | yes |
 | q | quarry floor (farm layouts) | no |
-| ǂ | the broken bridge to the quarry (mountain 22,7; path once mended, systems/quarry.js) | yes |
+| ǂ | the broken bridge to the quarry (mountain 22,7, systems/quarry.js; drawn by render/tiles.js) | yes |
+| ǃ | the mended quarry bridge (v239) | no |
+| ǀ | the ravine down the mountain's east edge, under the bridge (v239) | yes |
 | h, I, . | farmhouse floor, wall, nothing (houseGrid in data/maps.js) | no, yes, yes |
 | Z, l, n, o, x, v | farmhouse bed, catalogue lectern, counter, stove, crib, cask | yes |
 | b | pet water bowl (farm, 6,5) | yes |

@@ -1,7 +1,9 @@
 // v238 (roadmap 82): the old bridge on the mountain path to the quarry. It is broken on a new farm and mended the
 // morning after the old wing's workroom is restored, by bundles or bought from Ashgrove (Stardew's bridge to the
 // quarry, mended with the Crafts Room or bought from Joja for 25,000g, which is our workroom's rival price).
-export const BRIDGE_TILE = 'ǂ';   // the grid letter of the broken bridge (solid; drawn by systems/quarry.js)
+export const BRIDGE_TILE = 'ǂ';   // the grid letter of the broken bridge (solid; drawn by render/tiles.js)
+export const MENDED_TILE = 'ǃ';   // polish 77q: the mended bridge (walkable)
+export const RAVINE_TILE = 'ǀ';   // polish 77q: the ravine down the mountain's east edge that the bridge crosses (solid)
 
 export const QUARRY_BRIDGE = {
   room: 'crafts',                                        // data/restoration.js ROOMS key
