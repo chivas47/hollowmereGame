@@ -143,11 +143,6 @@ function travel(n, map, tile, step, dt) {
 }
 
 // v154: another neighbour standing still on this one's tile (so a walker does not stop on top of them).
-// v262: someone else pausing on n's tile (a pause at a stop on a round).
-function pausedWith(n) {
-  const t = tileOf(n.x, n.y);
-  return NPCRT.some((m) => m !== n && m.visible && m.wait > 0 && m.map === n.map && (({ tx, ty }) => tx === t.tx && ty === t.ty)(tileOf(m.x, m.y)));
-}
 function standingOn(n) {
   const t = tileOf(n.x, n.y);
   return NPCRT.some((m) => m !== n && m.visible && !m.moving && m.map === n.map && (({ tx, ty }) => tx === t.tx && ty === t.ty)(tileOf(m.x, m.y)));
@@ -178,9 +173,6 @@ addUpdater((dt) => {
     n.block = b;   // v145: for systems/chatter.js (a festival place's mood)
     if (n.snap) settle(n, t <= START ? null : b);
     if (n.goal !== keyOf(b)) Object.assign(n, { goal: keyOf(b), wi: 0, wait: 0 });
-    // v262: two who reached a stop on their round at the same moment both found it free and paused on top of each
-    // other: the first one updated walks on. Only another pause counts, not someone passing through the tile.
-    if (n.wait > 0 && pausedWith(n)) n.wait = 0;
     if (n.wait > 0) { n.wait -= dt; n.moving = false; continue; }
     const h = homeOf(n), house = houseOf(n);
     if (!b) {   // home: indoors where there is an inside, else in at the door and out of sight
@@ -197,7 +189,12 @@ addUpdater((dt) => {
     if (b.stay && n.wi > last) { n.moving = false; continue; }   // standing at their place
     if (travel(n, b.map, b.path[Math.min(n.wi, last)], step, dt)) {
       if (b.stay) { n.wi++; if (n.wi > last) n.dir = b.face || 'down'; }
-      else { n.wi = (n.wi + 1) % b.path.length; n.wait = standingOn(n) ? 0 : 2 + Math.random() * 3; }   // v154: someone already stands here: walk on
+      else {   // v154: someone already stands here: walk on (v262: still moving, passing through, not stopped on them)
+        n.wi = (n.wi + 1) % b.path.length;
+        const taken = standingOn(n);
+        n.wait = taken ? 0 : 2 + Math.random() * 3;
+        if (taken) n.moving = true;
+      }
     }
   }
 });

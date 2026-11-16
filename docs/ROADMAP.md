@@ -304,7 +304,7 @@ Nuno asked for more creature variety, better drops, a glossary and more creature
 
 | Item | What | Kind | Status | Notes |
 |---|---|---|---|---|
-| 86 | Neighbours never pause on top of each other | fix | in progress | Nuno: next (November 2026). tests/week.test.mjs failed now and then (once in CI on chivas47/hollowmereGame#274, once locally): two neighbours reaching a stop on their round at the same moment both found it free and paused on it together. A pause now ends as soon as someone else stands on the tile. |
+| 86 | Neighbours passing a busy stop keep walking | fix | in progress | Nuno: next (November 2026). tests/week.test.mjs failed now and then (once in CI on chivas47/hollowmereGame#274, once locally; seeds 14 and 16 of 30 reproduce it). Neighbours who share a round (Kit and Tamsin) reach a corner where the other is pausing and walk on, but counted as stopped for that one tick; over a day those ticks added up past the test's minute. One reaching a taken stop now counts as moving. |
 
 ## Done
 
