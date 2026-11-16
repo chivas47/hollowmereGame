@@ -5,7 +5,7 @@ import { G } from '../core/game.js';
 import { T, DIRS } from '../core/constants.js';
 import { on } from '../core/events.js';
 import { addUpdater, addLayer } from '../core/registry.js';
-import { SWINGS, PICKUP, CRAFTED, PLACE, IMPACT, PERK, MOTION_LEVELS } from '../data/animation.js';
+import { SWINGS, PICKUP, CRAFTED, PLACE, IMPACT, PERK, MOTION_LEVELS, MATERIAL, MATERIALS } from '../data/animation.js';
 import { motion } from '../core/motion.js';
 import { ITEMS } from '../data/items.js';
 import { PLACEABLES } from '../data/crafting.js';
@@ -65,7 +65,15 @@ const snapshot = () => { last = { ...G.S.bag }; };
 on('game:loaded', () => { snapshot(); ready = false; G.anim = null; G.fx = { parts: [], floats: [], pickups: [] }; });
 on('game:reset', () => { G.anim = null; G.fx = { parts: [], floats: [], pickups: [] }; });
 on('map:changed', () => { if (mover() === 'you') { G.fx.pickups.length = 0; G.fx.parts.length = 0; G.fx.floats.length = 0; } G.anim = null; });   // v140: G.anim is the mover's
-on('monster:slain', ({ x, y }) => { dropAt = { x, y: y - 6, at: performance.now() }; burst(x, y - 4, IMPACT.slain, 10, { speed: 30, up: 20, size: 3, life: 0.45, gravity: 20, shrink: true }); ring(x, y, 'rgba(255,255,255,.7)', 10); });
+// v264 (87d): a defeat bursts in what the creature is made of (data/animation.js MATERIAL), with a soft flash.
+const stuff = (kind, color) => { const m = MATERIALS[MATERIAL[kind] || 'fur']; return { ...m, cols: m.cols || [color || '#7fbf5a', '#ffffff', color || '#7fbf5a'] }; };
+on('monster:slain', ({ x, y, kind, color }) => {
+  dropAt = { x, y: y - 6, at: performance.now() };
+  const m = stuff(kind, color);
+  burst(x, y - 6, m.cols, 16, { speed: 50, up: m.up, size: 2, life: 0.6, gravity: m.gravity, shrink: true });
+  burst(x, y - 4, IMPACT.slain, 5, { speed: 20, up: 10, size: 3, life: 0.35, gravity: 0, shrink: true });
+  ring(x, y - 2, 'rgba(255,255,255,.55)', 9, 0.25);
+});
 on('state:changed', () => {
   if (!G.S?.bag) return;
   if (G.paused || G.dialog.you || G.dialog.p2 || !ready) { snapshot(); return; }   // v141: dialogs no longer pause in two-player   // shops, dialogs and loading change the bag without a gather
@@ -96,11 +104,16 @@ export function perkLift(map, x, y) {
 }
 
 // ---- combat: damage numbers, sparks, the player's hurt flash ----
-on('monster:hit', ({ x, y, dmg, crit, kx, ky }) => {
+on('monster:hit', ({ x, y, dmg, crit, kx, ky, kind, color }) => {
   const n = Math.max(1, Math.round(dmg));
   floatText(x + (rand() - 0.5) * 6, y - 14, crit ? `${n}!` : `${n}`, crit ? '#ffd36a' : '#fffbe8', { life: 0.7, rise: 12, pop: true, big: crit });
   const a = Math.atan2(ky || 0, kx || 0.001);
-  burst(x, y - 5, IMPACT.hit, crit ? 9 : 5, { speed: 55, up: 10, size: 1, life: 0.25, gravity: 0, angle: a, spread: Math.PI * 0.9 });
+  burst(x, y - 5, IMPACT.hit, crit ? 7 : 3, { speed: 55, up: 10, size: 1, life: 0.2, gravity: 0, angle: a, spread: Math.PI * 0.9 });
+  if (kind) {   // v264 (87d): chips of what it is made of, thrown the way the blow pushed, and a flash where the blade met it
+    const m = stuff(kind, color);
+    burst(x, y - 5, m.cols, crit ? 8 : 5, { speed: 45, up: m.up * 0.6, size: 2, life: 0.4, gravity: m.gravity, angle: a, spread: Math.PI * 0.7, shrink: true });
+    ring(x, y - 5, 'rgba(255,255,255,.85)', crit ? 9 : 6, 0.12);
+  }
   if (crit) shake(2, 0.15);
 });
 on('sfx', (k) => { if (k === 'hurt' && G.S) { shake(2.5, 0.2); burst(G.S.x, G.S.y - 8, ['#ff6b6b', '#ffd0d0'], 6, { speed: 35, up: 15, size: 1, life: 0.3, gravity: 0 }); } });

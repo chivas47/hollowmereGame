@@ -100,10 +100,12 @@ export function chargeTurn(m, d, dx, dy, dt) {
   m.ct -= dt;
   if (m.cs === 'windup') {
     if (d > 1) { m.cdx = dx / d; m.cdy = dy / d; m.face = dx < 0; }   // it aims where you are until it goes
+    if (Math.random() < dt * 8 && G.S.map === slimeMap) burst(m.x - (m.cdx || 0) * 6, m.y - 1, IMPACT.stone, 1, { speed: 14, up: 10, size: 1, life: 0.3, shrink: true });   // v264: pawing the ground
     if (m.ct <= 0) { m.cs = 'charge'; m.ct = k.time; emit('monster:charge', { x: m.x, y: m.y }); }
     return true;
   }
   if (m.cs === 'charge') {
+    if (Math.random() < dt * 30 && G.S.map === slimeMap) burst(m.x - m.cdx * 5, m.y - 1, IMPACT.stone, 1, { speed: 8, up: 6, size: 2, life: 0.35, gravity: 0, shrink: true });   // v264: a dust trail
     const hit = moveBox(m, m.cdx * k.rush * dt, m.cdy * k.rush * dt, BOX);
     if (hit.x || hit.y) { daze(m, k.stun); emit('monster:bump', { x: m.x, y: m.y }); return true; }
     if (m.ct <= 0) {
@@ -127,8 +129,8 @@ function burrowTurn(m, d, vx, vy, dt) {
     if (d < AGGRO && (d < BURROW.rise || m.bt <= 0)) { m.bs = 'rise'; m.bt = BURROW.tell; }
     return true;
   }
-  if (m.bs === 'rise') { if (m.bt <= 0) { m.bs = 'up'; m.bt = BURROW.up; emit('monster:surface', { x: m.x, y: m.y }); } return true; }
-  if (m.bt <= 0) { m.bs = 'under'; m.bt = BURROW.rest + BURROW.under; emit('monster:surface', { x: m.x, y: m.y }); }
+  if (m.bs === 'rise') { if (m.bt <= 0) { m.bs = 'up'; m.bt = BURROW.up; emit('monster:surface', { x: m.x, y: m.y, kind: m.kind }); } return true; }
+  if (m.bt <= 0) { m.bs = 'under'; m.bt = BURROW.rest + BURROW.under; emit('monster:surface', { x: m.x, y: m.y, kind: m.kind }); }
   return false;
 }
 // Under the floor it slides beneath rocks, kept inside the map's walls.
@@ -146,6 +148,7 @@ function shootTurn(m, d, dx, dy, dt, f) {
   m.face = dx < 0;
   m.st -= dt;
   if (m.aim) {
+    if (Math.random() < dt * 10 && G.S.map === slimeMap) ring(m.x, m.y - 8, MONSTERS[m.kind].glow || '#e9862a', 7, 0.18);   // v264: the glow gathers at its mouth
     if (m.st <= 0) {
       const ox = f.x - m.x, oy = f.y - 6 - (m.y - 8), od = Math.hypot(ox, oy) || 1;
       shots.push({ x: m.x, y: m.y - 8, vx: (ox / od) * SHOOT.speed, vy: (oy / od) * SHOOT.speed, t: SHOOT.life, dmg: m.dmg, color: MONSTERS[m.kind].glow || '#e9862a', back: false });
@@ -165,11 +168,12 @@ addUpdater((dt) => {
   const g = MAPS[slimeMap]?.grid, farmers = here();
   for (const s of [...shots]) {
     s.x += s.vx * dt; s.y += s.vy * dt; s.t -= dt;
+    if (Math.random() < dt * 40 && G.S.map === slimeMap) burst(s.x, s.y, [s.color], 1, { speed: 4, up: 0, size: 1, life: 0.2, gravity: 0, z: 0, shrink: true });   // v264: a trail
     const tile = g?.[Math.floor(s.y / T)]?.[Math.floor(s.x / T)];
-    if (s.t <= 0 || !tile || SOLID.has(tile)) { shots.splice(shots.indexOf(s), 1); continue; }
+    if (s.t <= 0 || !tile || SOLID.has(tile)) { splash(s); shots.splice(shots.indexOf(s), 1); continue; }
     if (s.back) {
       const m = slimes.find((o) => Math.hypot(o.x - s.x, o.y - 6 - s.y) < SHOOT.hit + 2 && !untouchable(o));
-      if (m) { shots.splice(shots.indexOf(s), 1); hitMonster(m, s.dmg * SHOOT.back, Math.sign(s.vx) * 60, Math.sign(s.vy) * 60); }
+      if (m) { splash(s); shots.splice(shots.indexOf(s), 1); hitMonster(m, s.dmg * SHOOT.back, Math.sign(s.vx) * 60, Math.sign(s.vy) * 60); }
       continue;
     }
     const f = farmers.find((o) => Math.hypot(o.x - s.x, o.y - 6 - s.y) < SHOOT.hit);
@@ -177,10 +181,12 @@ addUpdater((dt) => {
     if ((f === G.S ? G.block : f.block) > 0) {   // the sword's block sends it back
       s.vx = -s.vx; s.vy = -s.vy; s.back = true; s.t = SHOOT.life;
       emit('player:blocked', { x: s.x, y: s.y, who: f === G.S ? 'you' : 'p2' });
-    } else { shots.splice(shots.indexOf(s), 1); (f === G.P2 ? hurtPartner : hurtPlayer)(s.dmg, s.x, s.y); }
+    } else { splash(s); shots.splice(shots.indexOf(s), 1); (f === G.P2 ? hurtPartner : hurtPlayer)(s.dmg, s.x, s.y); }
   }
 });
 for (const ev of ['mine:floor', 'map:changed', 'day:start']) on(ev, () => { shots.length = 0; });
+// v264 (87d): a glob bursts where it lands.
+function splash(s) { if (G.S.map === slimeMap) burst(s.x, s.y + 4, [s.color, '#ffffff'], 7, { speed: 35, up: 25, size: 1, life: 0.35, shrink: true }); }
 
 // v260 (roadmap 85i): while the challenge brazier burns, every dungeon monster is tougher and one in ELITE.chance is
 // an elite. Uses Math.random (not the floor's rng) so the same floor is not always the same.
@@ -284,7 +290,7 @@ function defeat(m) {
   if (weaponEnchant() === 'vampiric') G.S.hp = Math.min(G.S.maxHp, G.S.hp + 3);   // v39
   if (weaponEnchant() === 'haymaker' && Math.random() < 0.3) { const k = HAY[Math.floor(Math.random() * HAY.length)]; G.S.bag[k] = (G.S.bag[k] || 0) + 1; }
   emit('gather', { skill: 'combat', xp: (m.small ? Math.ceil(d.xp * SPLIT.xp) : d.xp) * (m.elite ? ELITE.xp : 1) });   // v260: an elite gives more   // v256: a piece gives less
-  emit('monster:slain', { kind: m.kind || 'slime', x: m.x, y: m.y, map: slimeMap, drops: got, elite: !!m.elite });
+  emit('monster:slain', { kind: m.kind || 'slime', x: m.x, y: m.y, map: slimeMap, drops: got, elite: !!m.elite, color: m.color });
   if (busyFloor && slimeMap === 'mine' && !slimes.length) { busyFloor = false; emit('mine:cleared'); }   // v259: the ladder opens   // 85c: drops for the Bestiary   // v37: the lodge's goals, the blast ring
   changed();
 }
@@ -298,7 +304,7 @@ export function hitMonster(m, dmg, kx = 0, ky = 0, crit = false) {
     return;
   }
   m.hp -= dmg; m.hurt = 0.25; m.kx = kx; m.ky = ky;
-  emit('monster:hit', { x: m.x, y: m.y, dmg, crit, kx, ky });
+  emit('monster:hit', { x: m.x, y: m.y, dmg, crit, kx, ky, kind: m.kind || 'slime', color: m.color });   // v264: kind and colour for the chips
   if (m.hp <= 0) defeat(m);
 }
 export const monstersOn = () => slimeMap;
@@ -393,7 +399,7 @@ addEntities(() => (G.S.map !== slimeMap ? [] : slimes.map((m) => ({
     : m.cs ? drawCharger(c, m)
     : m.hidden ? drawMonster(c, m.x, m.y, 'crabrock', MONSTERS[m.kind].disguise || ROCK_GREY, false, 0)   // v253: a mimic asleep looks like a rock (v261: the gourd lurker a pumpkin)
     : m.bs && m.bs !== 'up' ? drawMound(c, m.x + (m.bs === 'rise' ? (Math.floor(m.bt * 30) % 2 ? 1 : -1) : 0), m.y, m.hop, m.kind === 'lurker' ? 'lava' : 'earth')   // v253: a burrower's mound (shaking: the tell); v254: a lava ripple
-    : drawMonster(c, m.x, m.y, m.kind, m.color, m.hurt > 0 || (m.aim && Math.floor(m.st * 14) % 2 === 0), m.hop, !!m.face)),   // v255: a spitter flashes before it spits
+    : drawMonster(c, m.x, m.y, m.kind, m.aim && Math.floor(m.st * 14) % 2 === 0 ? MONSTERS[m.kind].glow || m.color : m.color, m.hurt > 0, m.hop, !!m.face)),   // v255: a spitter flashes before it spits (v264: in its glow colour, not white)
 })).concat(shots.map((s) => ({ y: s.y + 8, draw: (c) => drawShot(c, s.x, s.y, s.color) })))));
 const ROCK_GREY = '#8a8580';
 // v260: an elite: a pulsing gold ring at its feet and a spark over it, drawn before the monster.
@@ -423,14 +429,18 @@ function drawSplitter(c, m) {
 
 // v228: a charger mid-turn. Winding up it flashes and shakes (the tell); rushing it runs fast; winded or dazed it
 // stands still, dazed with stars over it.
+// v264 (87d): the wind-up pulses hot red (not the white of a hit) while it shakes.
+const WINDUP_RED = '#e2584a';
 function drawCharger(c, m) {
   const flash = m.cs === 'windup' && Math.floor(m.ct * 14) % 2 === 0, shake = m.cs === 'windup' ? (Math.floor(m.ct * 30) % 2 ? 1 : -1) : 0;
   const t = m.cs === 'charge' ? m.hop * 2.5 : m.cs === 'windup' ? m.hop : 0;
-  drawMonster(c, m.x + shake, m.y, m.kind, m.color, m.hurt > 0 || flash, t, !!m.face);
+  drawMonster(c, m.x + shake, m.y, m.kind, flash ? WINDUP_RED : m.color, m.hurt > 0, t, !!m.face);
   if (m.cs === 'dazed') drawDazed(c, m.x, m.y - 14, m.hop);
 }
 // v253: a mimic waking or cracked, a burrower coming up or going down: a puff of grit.
-for (const ev of ['monster:wake', 'monster:crack', 'monster:surface']) on(ev, ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 3, IMPACT.stone, 6, { speed: 35, up: 25, size: 1, life: 0.35, shrink: true }); });
+for (const ev of ['monster:wake', 'monster:crack']) on(ev, ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 3, IMPACT.stone, 6, { speed: 35, up: 25, size: 1, life: 0.35, shrink: true }); });
+// v264 (87d): a burrower breaking the floor throws up a spray of earth (or lava, for the lurker).
+on('monster:surface', ({ x, y, kind }) => { if (G.S.map === slimeMap) burst(x, y - 2, kind === 'lurker' ? ['#ffd98a', '#e9862a', '#8a2a22'] : IMPACT.dirt, 14, { speed: 45, up: 55, size: 2, life: 0.5, shrink: true }); });
 on('monster:crack', () => emit('sfx', 'pick'));
 on('monster:clang', ({ x, y }) => { if (G.S.map !== slimeMap) return; burst(x, y - 6, IMPACT.stone, 4, { speed: 50, up: 20, size: 1, life: 0.2, shrink: true }); emit('sfx', 'pick'); });
 on('monster:split', ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 4, IMPACT.stone, 8, { speed: 45, up: 30, size: 2, life: 0.4, shrink: true }); });
