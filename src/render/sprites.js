@@ -653,15 +653,20 @@ export function drawShot(c, px, py, color) {
   r(c, x - 2, y - 1, 4, 2, color); r(c, x - 1, y - 2, 2, 4, color); r(c, x - 1, y - 1, 1, 1, '#ffffff');
 }
 
+// v268 (87c2): until the sheet loads, kinds with their own shape draw as the shape they grew from.
+const CODE_LIKE = { scuttler: 'beetle', bull: 'boar', magmaram: 'ram', dustdevil: 'puff', ashswarm: 'puff', sandspitter: 'spitter',
+  cragspitter: 'spitter', shade: 'wisp', cragshell: 'shell', stormwing: 'bat' };
 // v228: flip faces it left (chargers face the way they go).
 export function drawMonster(c, px, py, kind, color, hurt, t, flip = false) {
   const k = MONSTERS.kinds[kind] || {};
   if (sheetMonster(c, px + (k.sway ? Math.round(Math.sin(t * k.sway)) : 0), py, kind, color, hurt, Math.floor(t * 8) % 4,
     k.bob ? -Math.round(Math.sin(t * k.bob) * 2) : 0, flip)) return;
   const x = Math.round(px), base = Math.round(py), col = hurt ? '#ffffff' : color, f = Math.floor(t * 8) % 2;
-  if (k.shape === 'slime' || kind === 'mossslime') return drawSlime(c, px, py, color, hurt, 0);   // v256: splitting slimes
-  if (['puff', 'spitter', 'wisp', 'shell', 'bat', 'crab'].includes(k.shape)) kind = k.shape;   // v261: crab (the gourd lurker)   // v257: wisp, shell, bat shapes   // v254: dust devils and the ash swarm draw as a puff; v255: spitters
-  else if (k.shape) {   // v228: a charger before the sheet loads: a low body, a head the way it faces
+  if (k.shape === 'slime' || kind === 'mossslime' || kind === 'emberslime') return drawSlime(c, px, py, color, hurt, 0);   // v256: splitting slimes
+  const shape = (CODE_LIKE[kind] ? MONSTERS.kinds[CODE_LIKE[kind]] : k).shape;   // v268: a deep kind borrows a Hollow one's code art
+  kind = CODE_LIKE[kind] || kind;
+  if (['puff', 'spitter', 'wisp', 'shell', 'bat', 'crab'].includes(shape)) kind = shape;   // v261: crab (the gourd lurker)   // v257: wisp, shell, bat shapes   // v254: dust devils and the ash swarm draw as a puff; v255: spitters
+  else if (shape) {   // v228: a charger before the sheet loads: a low body, a head the way it faces
     const s = flip ? -1 : 1;
     r(c, x - 7, base - 1, 14, 1, 'rgba(0,0,0,.35)'); r(c, x - 6, base - 8, 12, 6, col); r(c, x + (s > 0 ? 4 : -8), base - 9, 4, 5, col);
     r(c, x + (s > 0 ? 6 : -7), base - 8, 1, 1, '#2b211a'); r(c, x - 5 + f, base - 2, 2, 2, '#2b211a'); r(c, x + 3 - f, base - 2, 2, 2, '#2b211a');

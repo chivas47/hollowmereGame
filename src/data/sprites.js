@@ -119,31 +119,41 @@ export const MONSTERS = {
     'crabrock.line', 'crabrock.ink', 'mole.body', 'mole.line', 'mole.ink', 'puff.body', 'puff.line', 'puff.ink',
     'lurker.body', 'lurker.line', 'lurker.ink', 'spitter.body', 'spitter.glow', 'spitter.line', 'spitter.ink',
     'wisp.body', 'wisp.glow', 'wisp.line', 'wisp.ink', 'shell.body', 'shell.line', 'shell.ink', 'mossslime.body',
-    'mossslime.line', 'mossslime.ink'],
+    'mossslime.line', 'mossslime.ink', 'scuttler.body', 'scuttler.line', 'scuttler.ink', 'bull.body', 'bull.line',
+    'bull.ink', 'dustdevil.body', 'dustdevil.line', 'dustdevil.ink', 'ashswarm.body', 'ashswarm.line',
+    'ashswarm.ink', 'sandspitter.body', 'sandspitter.glow', 'sandspitter.line', 'sandspitter.ink',
+    'cragspitter.body', 'cragspitter.glow', 'cragspitter.line', 'cragspitter.ink', 'shade.body', 'shade.glow',
+    'shade.line', 'shade.ink', 'emberslime.body', 'emberslime.glow', 'emberslime.line', 'emberslime.ink',
+    'cragshell.body', 'cragshell.line', 'cragshell.ink', 'stormwing.body', 'stormwing.glow', 'stormwing.line',
+    'stormwing.ink', 'cinder.body', 'cinder.glow', 'cinder.line', 'cinder.ink', 'magmaram.body', 'magmaram.glow',
+    'magmaram.line', 'magmaram.ink'],
   kinds: {
     mite: { shadow: [-5, 10, 0.35], rim: '#a8845a' }, bat: { shadow: [-3, 6, 0.25], bob: 6, rim: '#8f7aa8' }, skeleton: { shadow: [-4, 8, 0.35] },
     wraith: { shadow: [-4, 8, 0.35], sway: 3 }, rex: { shadow: [-4, 8, 0.25], bob: 5 },
-    sprite: { shadow: [-3, 6, 0.25], bob: 7, glow: '#ffd98a' }, golem: { shadow: [-6, 12, 0.35], glow: '#e9862a' },
+    sprite: { shadow: [-3, 6, 0.25], bob: 7, glow: '#ffd98a' }, golem: { shadow: [-6, 12, 0.35], glow: '#e9862a', rim: '#a8786a' },
     serpent: { shadow: [-4, 8, 0.25], bob: 3 }, slime: { shadow: [-4, 9, 0.35] },
     // v228: the chargers, four shapes drawn once (shape) and tinted per kind; they face the way they go.
-    beetle: { shape: 'beetle', shadow: [-6, 12, 0.35], rim: '#9a88b0' }, scuttler: { shape: 'beetle', shadow: [-6, 12, 0.35] },
-    boar: { shape: 'boar', shadow: [-8, 16, 0.35] }, bull: { shape: 'boar', shadow: [-8, 16, 0.35] },
-    ram: { shape: 'ram', shadow: [-8, 16, 0.35], glow: '#6f6862' }, magmaram: { shape: 'ram', shadow: [-8, 16, 0.35], glow: '#e9862a' },
-    gloomhound: { shape: 'hound', shadow: [-8, 16, 0.3], glow: '#8a6ad0', rim: '#7f76a8' }, hound: { shape: 'hound', shadow: [-8, 16, 0.3], glow: '#e9862a' },
+    beetle: { shape: 'beetle', shadow: [-6, 12, 0.35], rim: '#9a88b0' }, scuttler: { shadow: [-6, 12, 0.35] },
+    boar: { shape: 'boar', shadow: [-8, 16, 0.35] }, bull: { shadow: [-8, 16, 0.35] },
+    ram: { shape: 'ram', shadow: [-8, 16, 0.35], glow: '#6f6862' }, magmaram: { shadow: [-8, 16, 0.35], glow: '#e9862a', rim: '#94786e' },
+    gloomhound: { shape: 'hound', shadow: [-8, 16, 0.3], glow: '#8a6ad0', rim: '#7f76a8' }, hound: { shape: 'cinder', shadow: [-8, 16, 0.3], glow: '#e9862a', rim: '#a8665a' },
     // v253 (85d1): the pebble crab awake and asleep (a rock), the burrow mole up, the soot puff.
     crab: { shadow: [-6, 12, 0.35] }, crabrock: { shadow: [-6, 12, 0.35] }, mole: { shadow: [-6, 12, 0.35] }, puff: { shadow: [-2, 4, 0.25], bob: 7, rim: '#8a8070' },
     // v254 (85d2): the lava lurker up out of its pool; dust devils and the ash swarm are the soot puff's shape, tinted.
-    lurker: { shadow: [-6, 12, 0.3] }, dustdevil: { shape: 'puff', shadow: [-2, 4, 0.25], bob: 7 }, ashswarm: { shape: 'puff', shadow: [-2, 4, 0.25], bob: 7 },
+    lurker: { shadow: [-6, 12, 0.3] }, dustdevil: { shadow: [-2, 4, 0.25], bob: 7, rim: '#2e2014' }, ashswarm: { shadow: [-2, 4, 0.25], bob: 7, rim: '#a89490' },
     // v255 (85e1): the spitters, one shape tinted per kind; the glow (its mouth) is the colour of its globs.
-    spitter: { shape: 'spitter', shadow: [-6, 12, 0.35], glow: '#b07ae0', rim: '#9a88b0' }, sandspitter: { shape: 'spitter', shadow: [-6, 12, 0.35], glow: '#e9c46a' },
-    cragspitter: { shape: 'spitter', shadow: [-6, 12, 0.35], glow: '#e9862a' },
+    spitter: { shape: 'spitter', shadow: [-6, 12, 0.35], glow: '#b07ae0', rim: '#9a88b0' }, sandspitter: { shadow: [-6, 12, 0.35], glow: '#e9c46a', rim: '#2e2014' },
+    cragspitter: { shadow: [-6, 12, 0.35], glow: '#e9862a', rim: '#9a827a' },
     // v256 (85e2): splitting slimes are the slime's bands in their own colours (drawn bigger while whole); v265: the moss
     // slime has its own (a moss cap). rim (v265): the Hollow's dark kinds get a lighter outline (the deep ones in 87c2).
-    mossslime: { shadow: [-4, 9, 0.35] }, emberslime: { shape: 'slime', shadow: [-4, 9, 0.35] },
+    mossslime: { shadow: [-4, 9, 0.35] }, emberslime: { shadow: [-4, 9, 0.35], glow: '#ffd98a' },
     // v257 (85f): the phasers (a wisp with a glowing heart), the armored (a heavy shell), the storm wing (a bat, tinted).
-    wisp: { shape: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#ffe08a' }, shade: { shape: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#b07ae0' },
-    shellback: { shape: 'shell', shadow: [-7, 14, 0.35] }, cragshell: { shape: 'shell', shadow: [-7, 14, 0.35] },
-    stormwing: { shape: 'bat', shadow: [-3, 6, 0.25], bob: 6 },
+    wisp: { shape: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#ffe08a' }, shade: { shadow: [-3, 6, 0.2], bob: 3, glow: '#b07ae0', rim: '#9a90b8' },
+    shellback: { shape: 'shell', shadow: [-7, 14, 0.35] }, cragshell: { shadow: [-7, 14, 0.35], rim: '#9a8a82' },
+    stormwing: { shadow: [-3, 6, 0.25], bob: 6, glow: '#9fd8f0', rim: '#7a8ab0' },
+    // v268 (87c2): every deep kind has its own shape now (the cinder hound's is 'cinder'; the gloom hound keeps
+    // 'hound'), the dark ones a lighter rim and the two sand-coloured ones (dust devils, sand spitter) a darker one
+    // so they stand off the Cavern's sand. CODE_LIKE in render/sprites.js: the shape the code art borrows before the sheet loads.
     // v261 (85j): the seasonal creatures, drawn from shapes already on the sheet.
     bramble: { shape: 'puff', shadow: [-2, 4, 0.25], bob: 7 }, moth: { shape: 'bat', shadow: [-3, 6, 0.2], bob: 6 },
     gourd: { shape: 'crab', shadow: [-6, 12, 0.35] }, frostwisp: { shape: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#9fd8f0' },
