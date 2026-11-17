@@ -9,6 +9,7 @@
 import { G } from '../core/game.js';
 import { on } from '../core/events.js';
 import { $ } from './dom.js';
+import { fightQuiet } from '../systems/monsters.js';
 
 const MAX = 3, FADE = 400, QUEUED_STAY = 3200;
 const stayFor = (msg) => Math.min(7000, Math.max(2600, 1800 + msg.length * 45));
@@ -54,7 +55,7 @@ function show(msg, id = toastBox()) {
   t.until = Date.now() + stay; t.timer = setTimeout(() => retire(t), stay);
 }
 
-on('toast', (msg) => { if (settling()) held.add(msg); else show(msg); });
+on('toast', (msg) => { if (fightQuiet(msg)) return; if (settling()) held.add(msg); else show(msg); });   // v272 (90a): pickups stay quiet in a fight
 on('state:changed', () => { if (!G.P2) document.getElementById('toast')?.classList.remove('split'); });   // back to the middle alone
 on('state:changed', () => { if (held.size && !settling()) { held.forEach((m) => show(m)); held.clear(); } });
 

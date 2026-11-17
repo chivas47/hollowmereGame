@@ -1090,6 +1090,9 @@ For when you are stuck. Nothing here touches the economy.
 
 Hints in order: past midnight, out of energy, hurt underground, empty can, dry crops, ripe crops, produce not shipped by 5 pm, nothing planted yet, no seeds, a machine finished, something waiting in the kit, animals not petted, the Hollow not yet visited, winter with nothing growing, and a last one when nothing else fits.
 
+
+v272 (roadmap 90a): in a fight (any mine floor, or creatures on your map) the stuck-tool tip stays quiet, and "+n item" notices are dropped (the items flying into the bag show them; finds, ladders and floor names still show).
+
 ## Shortcuts (v106)
 
 Stardew counterpart: the large log in front of the hidden woods (a tougher axe, 8 hardwood). Ours needs the copper axe, our top axe.

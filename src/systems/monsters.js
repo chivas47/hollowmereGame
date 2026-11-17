@@ -347,6 +347,11 @@ export function hitMonster(m, dmg, kx = 0, ky = 0, crit = false) {
   if (m.hp <= 0) defeat(m);
 }
 export const monstersOn = () => slimeMap;
+// v272 (roadmap 90a, Nuno): a fight is on here: any mine floor, or living creatures on your map (the wild farm, the
+// night creatures). In a fight the weapon tip stays quiet, and so do "+1 Gel"-style pickup notices, which the items
+// flying in to you already show.
+export const dangerHere = () => G.S.map === 'mine' || (slimeMap === G.S.map && slimes.length > 0);
+export const fightQuiet = (msg) => typeof msg === 'string' && /^\+\d/.test(msg) && dangerHere();
 // v253: a mimic wakes: it climbs out of its rock, its shell still whole until the first hit.
 function wake(m) {
   if (!m.hidden) return;

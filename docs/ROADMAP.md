@@ -337,6 +337,16 @@ Nuno (November 2026): "when you start a new world it did not trigger the creatio
 | 89a | New farm opens the new game screen | fix | done (chivas47/hollowmereGame#288) | Menu, New farm, Start over closed the dialog after the new farm had opened the new game screen, closing that screen instead; the farm started unnamed until a reload. Loading a save file had the same order. |
 | 89b | A title screen | feature | done (chivas47/hollowmereGame#289) | Nuno's answers: every launch; Continue, New farm, Farms, Settings and controls; a new farm goes into an empty slot (asking which to replace when all are full); a live valley scene in the last farm's season. |
 
+## Menus and messages (November 2026)
+
+Nuno (November 2026): no sword tip where there is fighting; pickup messages are annoying in a fight; the menus are one long list of text, too big, not friendly, with no art. His answers: the Esc menu first, then the other dialogs in the same style; a hub of picture tiles, each opening a small page; wood and parchment.
+
+| Item | What | Kind | Status | Notes |
+|---|---|---|---|---|
+| 90a | Quiet in a fight | polish | in progress | The weapon tip never shows where a fight is on (any mine floor, or creatures on your map); "+n item" notices are dropped there (the items flying in show them). Finds, ladders and floor names still show. |
+| 90b | The menu as a hub of picture tiles | feature | queued | Esc opens a wood-and-parchment board of tiles (Sound, Display, Controls, Farms, Saves, Help, ...), each a small page with Back; pixel-art icons. |
+| 90c | The same look for the Bag, Crafting, Journal and shops | polish | queued | The frame, headers and icons of 90b on the other dialogs. |
+
 ## Done
 
 | Item | PR |

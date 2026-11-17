@@ -9,6 +9,7 @@ import { CROPS } from '../data/crops.js';
 import { PLACEABLES, MACHINES } from '../data/crafting.js';
 import { HINTS, TOOL_TIPS, STUCK_PRESSES } from '../data/hints.js';
 import { isRipe } from './farming.js';
+import { dangerHere } from './monsters.js';
 
 const KIT_KINDS = new Set(['machine', 'sprinkler', 'furniture', 'chest', 'decor', 'sign', 'computer', 'bin', 'tree']);
 
@@ -53,6 +54,6 @@ on('used', ({ tx, ty, mapId, item }) => {
   const key = `${mapId}:${tx},${ty}:${item}`;
   if (heard || G.anim !== anim || G.paused) { stuck = { key: null, n: 0 }; return; }
   stuck = stuck.key === key ? { key, n: stuck.n + 1 } : { key, n: 1 };
-  if (stuck.n === STUCK_PRESSES && hintsOn() && TOOL_TIPS[item]) notify(TOOL_TIPS[item]);
+  if (stuck.n === STUCK_PRESSES && hintsOn() && TOOL_TIPS[item] && !dangerHere()) notify(TOOL_TIPS[item]);   // v272: never mid-fight
 });
 on('map:changed', () => { stuck = { key: null, n: 0 }; });
