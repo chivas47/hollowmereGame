@@ -109,10 +109,12 @@ export const PACKET_SHEET = { sheet: 'packet', size: 16, layers: ['main', 'secon
 export const SOIL_SHEET = { sheet: 'soil', size: 16 };
 
 // v276 (roadmap 92a) birds.png: 16x16 frames facing right (mirrored in code), feet at (8, 15); bands body, wing (tinted
-// to the map's bird colours) and ink. Frames: stand, look up, peck, hop, take off, wings up, level, down.
+// to the map's bird colours) and ink. Frames: stand, look up, peck, hop, take off, wings up, level, down. v277: five
+// shapes, each a block of body, wing, accent and ink bands, tinted per species (data/atmosphere.js BIRD_SPECIES).
 // penstock.png: 24x24 frames facing right, feet at (12, 23); a row each for the village pen's sheep and cows, colours
 // drawn in. Frames: stand, four walk beats, graze, chew, call. Both built by tools/sprites/wildlife.py.
-export const BIRDS_SHEET = { sheet: 'birds', size: 16, origin: [-8, -15], layers: ['body', 'wing', 'ink'] };
+export const BIRDS_SHEET = { sheet: 'birds', size: 16, origin: [-8, -15], shapes: ['song', 'crow', 'gull', 'parrot', 'quail'], bands: ['body', 'wing', 'accent', 'ink'] };   // v277: a block of bands per shape
+BIRDS_SHEET.layers = BIRDS_SHEET.shapes.flatMap((s) => BIRDS_SHEET.bands.map((b) => `${s}.${b}`));
 export const PENSTOCK = { sheet: 'penstock', size: 24, origin: [-12, -23], rows: ['sheep', 'cow'] };
 
 export const MONSTERS = {

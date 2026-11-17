@@ -35,10 +35,10 @@ Built by `tools/sprites/person.py`, which also writes the layout to `src/data/pe
 
 ## birds.png
 
-128 x 48 (v276). Frames are 16 x 16, facing right (mirrored in code), the bird's feet at (8, 15). Built by `tools/sprites/wildlife.py`.
+128 x 320 (v276; v277 five shapes). Frames are 16 x 16, facing right (mirrored in code), the bird's feet at (8, 15). Built by `tools/sprites/wildlife.py`.
 
 - **Columns (8):** stand, look up, peck (head down), hop (crouched), take off, wings up, wings level, wings down.
-- **Rows (3 bands):** body and wing, tinted to the map's bird colours (`BIRD_COLORS` in `src/data/atmosphere.js`); ink (beak, eye, legs, outline) drawn as is.
+- **Rows (v277):** a block of four bands per shape (`BIRDS_SHEET.shapes`: song, crow, gull, parrot, quail): body, wing and accent, tinted to the species' colours (`BIRD_SPECIES` in `src/data/atmosphere.js`); ink (beak, eye, legs, outline) drawn as is.
 
 ## penstock.png
 

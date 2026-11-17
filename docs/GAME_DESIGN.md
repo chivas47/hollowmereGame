@@ -1193,6 +1193,21 @@ Nothing here is saved or touches the economy.
 
 v276 (roadmap 92a): birds are drawn from birds.png (body and wing tinted to the map's colours) and live a little: on the ground they peck in bursts, look up, turn and hop; within 2.5 tiles they take off and fly away through a full wing beat. Tamsin's two sheep and two cows in the village pen (data/ranch.js RANCH_PEN) are drawn from penstock.png and move (systems/pen.js, PEN_LIFE): they graze (head down, chewing) 3 to 7 s, stand 1 to 2.5 s, walk at 7 px/s to a free spot inside the rails, and now and then call out for about a second. Scenery only: no friendship, produce or touch.
 
+v277 (roadmap 92b): ten species in five shapes (data/atmosphere.js BIRD_SPECIES; birds.png has a block of body, wing, accent and ink bands per shape). Who is out (BIRD_PLACES, birdsFor) depends on the map's biome, the season and the weather:
+
+| Where | Birds |
+|---|---|
+| Farm, village, town, railway | sparrow; robin (spring, autumn); blue tit (summer); crow (autumn, winter); bullfinch (winter) |
+| Wilds, forest, grove | robin (spring to autumn); blue tit (spring, summer); sparrow; crow (autumn, winter); bullfinch (winter) |
+| Mountain, quarry | goldfinch (spring to autumn); crow; bullfinch (winter) |
+| Beach | gull |
+| Mere | gull; blue tit (summer); robin (spring, autumn); bullfinch (winter) |
+| Island | parrot, lorikeet, gull |
+| Dig site | parrot, quail |
+| Dunes | quail (the dunes keep clear weather) |
+
+Storms keep every bird in; in rain and silvermist only the hardy ones (crows, gulls) stay out. Gulls glide between wing beats when they fly off.
+
 ## Management tools (v71)
 Data in `data/storage.js` and `data/crafting.js`; logic in `systems/storage.js`; dialogs and journal tabs in `ui/storage.js`.
 | Part | Ours | Stardew counterpart |

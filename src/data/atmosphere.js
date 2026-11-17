@@ -23,7 +23,7 @@ export const WATERFALLS = {
 // Wildlife, drawn only. birds peck on open grass by day and fly off when you come near (scare, tiles);
 // butterflies drift on fair spring and summer days; fireflies come out on summer nights.
 export const WILDLIFE = {
-  birds: { n: 4, scare: 2.5, maps: ['farm', 'wilds', 'village', 'forest', 'grove', 'mere', 'mountain', 'beach', 'town', 'railway', 'island'] },
+  birds: { n: 4, scare: 2.5 },   // v277: where and which: BIRD_PLACES below
   butterflies: { n: 4, seasons: ['Spring', 'Summer'], maps: ['farm', 'wilds', 'forest', 'grove', 'mere', 'mountain', 'village'] },
   fireflies: { n: 10, seasons: ['Summer'], from: 20 * 60, maps: ['farm', 'wilds', 'forest', 'grove', 'mere', 'mountain'] },
   // v162 (roadmap 75f): life in the water. A fish jumps every `every` seconds or so (open water, not in winter);
@@ -43,7 +43,43 @@ export const CAT = {
   spots: [[2, 12], [5, 12], [2, 14], [5, 14], [26, 5], [31, 5], [12, 10], [2, 4], [17, 4]],
   pet: ['Pudding opens one eye, then closes it again. She purrs.', 'Pudding leans into your hand and purrs like a kettle.', 'Pudding allows it, this once.'],
 };
-export const BIRD_COLORS = { beach: ['#f2f2ee', '#9aa0a6'], island: ['#e0503a', '#3a9a5a'], Winter: ['#a33a2e', '#5a4a3a'], other: ['#7a5a3a', '#4a5a6a'] };
+// v277 (roadmap 92b, Nuno): birds by place, season and weather. Each species is one of the bird sheet's shapes
+// (data/sprites.js BIRDS_SHEET) in its own colours: body, wing, accent (a breast, a beak, a cheek and tail, a plume).
+export const BIRD_SPECIES = {
+  sparrow:   { name: 'Sparrow', shape: 'song', colors: ['#8a6a48', '#5a3e28', '#e8d8b8'] },
+  robin:     { name: 'Robin', shape: 'song', colors: ['#7a6a52', '#5a4a38', '#d8582a'] },
+  bluetit:   { name: 'Blue tit', shape: 'song', colors: ['#d8c850', '#4a78c0', '#f4f0e0'] },
+  finch:     { name: 'Goldfinch', shape: 'song', colors: ['#e8c840', '#3a3a32', '#c84a2a'] },
+  bullfinch: { name: 'Bullfinch', shape: 'song', colors: ['#8a8a92', '#2a2a30', '#e06a6a'] },
+  crow:      { name: 'Crow', shape: 'crow', colors: ['#2e2a34', '#24212a', '#5a5a8a'], hardy: true },
+  gull:      { name: 'Gull', shape: 'gull', colors: ['#f4f4f0', '#9aa4ac', '#f0c040'], hardy: true },
+  parrot:    { name: 'Parrot', shape: 'parrot', colors: ['#4aa84a', '#d8402a', '#3a7ad8'] },
+  lorikeet:  { name: 'Lorikeet', shape: 'parrot', colors: ['#3a7ad8', '#e8c840', '#d8402a'] },
+  quail:     { name: 'Quail', shape: 'quail', colors: ['#b89868', '#7a5a3a', '#2a2420'] },
+};
+// Who lives where: [species, the seasons it is about (null: all year), how common]. By biome: the settled farmland,
+// the woods, the hills, the shore, the mere, the island and the dunes.
+const ALL = null, SP = ['Spring'], SU = ['Summer'], AU = ['Autumn'], WI = ['Winter'];
+const FARMLAND = [['sparrow', ALL, 3], ['robin', [...SP, ...AU], 2], ['bluetit', SU, 2], ['crow', [...AU, ...WI], 2], ['bullfinch', WI, 2]];
+const WOODS = [['robin', [...SP, ...SU, ...AU], 3], ['bluetit', [...SP, ...SU], 2], ['sparrow', ALL, 1], ['crow', [...AU, ...WI], 1], ['bullfinch', WI, 3]];
+const HILLS = [['finch', [...SP, ...SU, ...AU], 3], ['crow', ALL, 2], ['bullfinch', WI, 2]];
+export const BIRD_PLACES = {
+  farm: FARMLAND, village: FARMLAND, town: FARMLAND, railway: FARMLAND,
+  wilds: WOODS, forest: WOODS, grove: WOODS,
+  mountain: HILLS, quarry: HILLS,
+  beach: [['gull', ALL, 1]],
+  mere: [['gull', ALL, 2], ['bluetit', SU, 1], ['robin', [...SP, ...AU], 1], ['bullfinch', WI, 1]],
+  island: [['parrot', ALL, 2], ['lorikeet', ALL, 2], ['gull', ALL, 1]],
+  digsite: [['parrot', ALL, 1], ['quail', ALL, 2]],
+  desert: [['quail', ALL, 1]],
+};
+// The birds out on a map now: [[species, weight], ...]. Storms keep every bird in; in rain and silvermist only the
+// hardy ones (crows, gulls) stay out.
+export function birdsFor(map, season, weather) {
+  if (weather === 'storm') return [];
+  const wet = weather === 'rain' || weather === 'mist';
+  return (BIRD_PLACES[map] || []).filter(([k, seasons]) => (!seasons || seasons.includes(season)) && (!wet || BIRD_SPECIES[k].hardy)).map(([k, , w]) => [k, w]);
+}
 
 // Ambient sound by area: wild (birdsong by day, crickets at night), shore (surf, gulls), town (birdsong,
 // a far bell), cave (drips, a low hum), wind (the Dunes, the quarry). Rain and storms add their own bed.
