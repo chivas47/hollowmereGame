@@ -52,17 +52,21 @@ export const MONSTERS = {
 // `time` s, hurting CHARGE.hit times as much on contact, `times` rushes in a row. Then it stands winded for
 // `recover` s, open to hits; one that hits a wall, or is blocked by the sword, stands dazed for `stun` s. Between
 // charges it walks after you at `speed(f)` and rests CHARGE.rest s. Stats sit beside the walkers of the same floors.
-export const CHARGE = { range: 72, hit: 1.5, rest: 2, stun: 1.6 };
+// v266 (roadmap 88a, Nuno): a rush steers after you at up to `turn` radians a second, so it keeps coming but a late
+// sidestep still beats it; chargers have `tough` times the health they had (Nuno: way higher, not blade resistance,
+// which is the shellbacks' trait). A charger with `burrow` (the burrow beetle) travels under the floor between rushes
+// like a burrower (BURROW below) and winds up as soon as it comes up.
+export const CHARGE = { range: 72, hit: 1.5, rest: 2, stun: 1.6, turn: 2.4, tough: 2 };
 const charger = (o) => ({ move: 'charge', range: CHARGE.range, times: 1, stun: CHARGE.stun, ...o });
 Object.assign(MONSTERS, {
-  beetle:     { name: 'Burrow beetle', from: 6, ...charger({ windup: 0.5, rush: 110, time: 0.4, recover: 0.8 }), hp: (f) => 4 + Math.floor(f / 4), dmg: (f) => 5 + Math.floor(f / 2), speed: () => 16, xp: 4, color: '#5a4a6a' },
-  boar:       { name: 'Tusk boar', from: 15, ...charger({ windup: 0.6, rush: 140, time: 0.6, recover: 0.9 }), hp: (f) => 8 + Math.floor(f / 3), dmg: (f) => 8 + f, speed: () => 18, xp: 8, color: '#7a5a3a' },
-  ram:        { name: 'Stone ram', from: 35, ...charger({ windup: 0.7, rush: 150, time: 0.7, recover: 0.9, stun: 2 }), hp: (f) => 18 + Math.floor(f / 3), dmg: (f) => 12 + f, speed: () => 16, xp: 16, color: '#9a928a' },
-  gloomhound: { name: 'Gloom hound', from: 60, ...charger({ windup: 0.45, rush: 160, time: 0.45, recover: 0.9, times: 2 }), hp: (f) => 26 + Math.floor(f / 2), dmg: (f) => 14 + f, speed: () => 24, xp: 22, color: '#3a3550' },
-  scuttler:   { name: 'Dune scuttler', from: 0, cavernOnly: true, ...charger({ windup: 0.35, rush: 150, time: 0.35, recover: 0.6 }), hp: (f) => 20 + Math.floor(f / 4), dmg: (f) => 16 + Math.floor(f / 4), speed: () => 20, xp: 20, color: '#c9a36a' },
-  bull:       { name: 'Sand bull', from: 0, cavernOnly: true, ...charger({ windup: 0.8, rush: 170, time: 0.9, recover: 1.1 }), hp: (f) => 40 + Math.floor(f / 3), dmg: (f) => 22 + Math.floor(f / 4), speed: () => 16, xp: 32, color: '#a5753f' },
-  hound:      { name: 'Cinder hound', from: 0, ventOnly: true, ...charger({ windup: 0.4, rush: 170, time: 0.5, recover: 0.8, times: 2 }), hp: (f) => 28 + Math.floor(f / 4), dmg: (f) => 22 + Math.floor(f / 5), speed: () => 26, xp: 34, color: '#5a2a22' },
-  magmaram:   { name: 'Magma ram', from: 0, ventOnly: true, ...charger({ windup: 0.8, rush: 150, time: 0.8, recover: 1, stun: 2.2 }), hp: (f) => 70 + Math.floor(f / 2), dmg: (f) => 30 + Math.floor(f / 5), speed: () => 14, xp: 48, color: '#4a3430' },
+  beetle:     { name: 'Burrow beetle', from: 6, ...charger({ burrow: true, windup: 0.5, rush: 110, time: 0.4, recover: 0.8 }), hp: (f) => CHARGE.tough * (4 + Math.floor(f / 4)), dmg: (f) => 5 + Math.floor(f / 2), speed: () => 16, xp: 4, color: '#5a4a6a' },
+  boar:       { name: 'Tusk boar', from: 15, ...charger({ windup: 0.6, rush: 140, time: 0.6, recover: 0.9 }), hp: (f) => CHARGE.tough * (8 + Math.floor(f / 3)), dmg: (f) => 8 + f, speed: () => 18, xp: 8, color: '#7a5a3a' },
+  ram:        { name: 'Stone ram', from: 35, ...charger({ windup: 0.7, rush: 150, time: 0.7, recover: 0.9, stun: 2 }), hp: (f) => CHARGE.tough * (18 + Math.floor(f / 3)), dmg: (f) => 12 + f, speed: () => 16, xp: 16, color: '#9a928a' },
+  gloomhound: { name: 'Gloom hound', from: 60, ...charger({ windup: 0.45, rush: 160, time: 0.45, recover: 0.9, times: 2 }), hp: (f) => CHARGE.tough * (26 + Math.floor(f / 2)), dmg: (f) => 14 + f, speed: () => 24, xp: 22, color: '#3a3550' },
+  scuttler:   { name: 'Dune scuttler', from: 0, cavernOnly: true, ...charger({ windup: 0.35, rush: 150, time: 0.35, recover: 0.6 }), hp: (f) => CHARGE.tough * (20 + Math.floor(f / 4)), dmg: (f) => 16 + Math.floor(f / 4), speed: () => 20, xp: 20, color: '#c9a36a' },
+  bull:       { name: 'Sand bull', from: 0, cavernOnly: true, ...charger({ windup: 0.8, rush: 170, time: 0.9, recover: 1.1 }), hp: (f) => CHARGE.tough * (40 + Math.floor(f / 3)), dmg: (f) => 22 + Math.floor(f / 4), speed: () => 16, xp: 32, color: '#a5753f' },
+  hound:      { name: 'Cinder hound', from: 0, ventOnly: true, ...charger({ windup: 0.4, rush: 170, time: 0.5, recover: 0.8, times: 2 }), hp: (f) => CHARGE.tough * (28 + Math.floor(f / 4)), dmg: (f) => 22 + Math.floor(f / 5), speed: () => 26, xp: 34, color: '#5a2a22' },
+  magmaram:   { name: 'Magma ram', from: 0, ventOnly: true, ...charger({ windup: 0.8, rush: 150, time: 0.8, recover: 1, stun: 2.2 }), hp: (f) => CHARGE.tough * (70 + Math.floor(f / 2)), dmg: (f) => 30 + Math.floor(f / 5), speed: () => 14, xp: 48, color: '#4a3430' },
 });
 
 // v253 (roadmap 85d1): three new ways to fight, Stardew's by role, each with a kind that uses it. to: the last floor

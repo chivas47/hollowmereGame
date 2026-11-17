@@ -37,7 +37,7 @@ function make(kind, floor, px, py, R) {
   const m = { kind, x: px, y: py, tx: px, ty: py, kx: 0, ky: 0, hurt: 0, hop: R() * HOP, floor,
     hp: d.hp(floor), dmg: d.dmg(floor), speed: d.speed(floor), color: d.color || SLIME.colors[floor > 10 ? 2 : floor > 5 ? 1 : 0] };
   if (d.move === 'mimic') m.hidden = true;                          // v253: a rock until woken
-  if (d.move === 'burrow') { m.bs = 'under'; m.bt = BURROW.under; }  // v253: under the floor
+  if (d.move === 'burrow' || d.burrow) { m.bs = 'under'; m.bt = BURROW.under; }  // v253: under the floor (v266: the burrow beetle too)
   if (d.move === 'shoot') m.st = SHOOT.every * (0.5 + R() * 0.5);    // v255: staggered first shots
   if (d.move === 'phase') { m.ph = 'solid'; m.pt = PHASE.solid * (0.3 + R() * 0.7); }   // v257
   return m;
@@ -105,6 +105,7 @@ export function chargeTurn(m, d, dx, dy, dt) {
     return true;
   }
   if (m.cs === 'charge') {
+    if (d > 1) steer(m, dx / d, dy / d, CHARGE.turn * dt);   // v266: it bends toward you as it rushes
     if (Math.random() < dt * 30 && G.S.map === slimeMap) burst(m.x - m.cdx * 5, m.y - 1, IMPACT.stone, 1, { speed: 8, up: 6, size: 2, life: 0.35, gravity: 0, shrink: true });   // v264: a dust trail
     const hit = moveBox(m, m.cdx * k.rush * dt, m.cdy * k.rush * dt, BOX);
     if (hit.x || hit.y) { daze(m, k.stun); emit('monster:bump', { x: m.x, y: m.y }); return true; }
@@ -114,8 +115,36 @@ export function chargeTurn(m, d, dx, dy, dt) {
     }
     return true;
   }
-  if (m.ct <= 0) { m.cs = undefined; m.rest = CHARGE.rest; }   // recover or dazed: back to walking
+  if (m.ct <= 0) {   // recover or dazed: back to walking (v266: a burrowing charger digs back down)
+    m.cs = undefined; m.rest = CHARGE.rest;
+    if (k.burrow) { m.bs = 'under'; m.bt = BURROW.rest + BURROW.under; emit('monster:surface', { x: m.x, y: m.y, kind: m.kind }); }
+  }
   return true;
+}
+// v266: turns a rush's heading (m.cdx, m.cdy) toward (ux, uy), by at most `most` radians.
+function steer(m, ux, uy, most) {
+  const a = Math.atan2(m.cdy, m.cdx), want = Math.atan2(uy, ux);
+  let turn = want - a;
+  turn = Math.atan2(Math.sin(turn), Math.cos(turn));
+  const b = a + Math.max(-most, Math.min(most, turn));
+  m.cdx = Math.cos(b); m.cdy = Math.sin(b);
+  if (Math.abs(m.cdx) > 0.2) m.face = m.cdx < 0;
+}
+// v266 (88a): the burrow beetle between rushes: a mound sliding after you (as a burrower's) that rises when close,
+// then it winds up at once. Returns true while it is under or rising (nothing touches it).
+function beetleTurn(m, d, vx, vy, dt) {
+  if (m.bs !== 'under' && m.bs !== 'rise') return false;
+  m.bt -= dt;
+  if (m.bs === 'under') {
+    if (d < AGGRO) underStep(m, vx, vy, m.speed * 2 * dt);
+    if (d < AGGRO && (d < BURROW.rise || m.bt <= 0)) { m.bs = 'rise'; m.bt = BURROW.tell; }
+    return true;
+  }
+  if (m.bt > 0) return true;
+  const k = MONSTERS[m.kind];
+  m.bs = 'up'; m.cs = 'windup'; m.ct = k.windup; m.cn = k.times;
+  emit('monster:surface', { x: m.x, y: m.y, kind: m.kind });
+  return false;
 }
 const daze = (m, t) => { m.cs = 'dazed'; m.ct = t; m.cn = 0; };
 
@@ -237,6 +266,7 @@ addUpdater((dt) => {
       continue;
     }
     if (move === 'burrow' && burrowTurn(m, d, vx, vy, dt)) continue;   // v253: under the floor, nothing touches
+    if (MONSTERS[m.kind || 'slime'].burrow && beetleTurn(m, d, vx, vy, dt)) continue;   // v266: the burrow beetle
     if (move === 'phase') { m.pt -= dt; if (m.pt <= 0) { m.ph = m.ph === 'faint' ? 'solid' : 'faint'; m.pt = PHASE[m.ph]; } }   // v257
     if (move === 'burrow') { /* up: it stands its ground */ }
     else if (move === 'charge' && chargeTurn(m, d, dx, dy, dt)) { /* v228: the charger moved itself */ }
