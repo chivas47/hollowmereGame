@@ -691,14 +691,16 @@ Slot 5 (no hotbar change) swings the weapon chosen in the bag. Damage is Stardew
 
   | Charger | Where | Health | Damage | Wind-up, rush, length | Winded / dazed | XP |
   |---|---|---|---|---|---|---|
-  | Burrow beetle | Hollow 6+ | 4 + floor/4 | 5 + floor/2 | 0.5 s, 110 px/s, 0.4 s | 0.8 / 1.6 s | 4 |
-  | Tusk boar | Hollow 15+ | 8 + floor/3 | 8 + floor | 0.6 s, 140, 0.6 s | 0.9 / 1.6 s | 8 |
-  | Stone ram | Hollow 35+ | 18 + floor/3 | 12 + floor | 0.7 s, 150, 0.7 s | 0.9 / 2 s | 16 |
-  | Gloom hound | Hollow 60+ | 26 + floor/2 | 14 + floor | 0.45 s, 160, 0.45 s, twice | 0.9 / 1.6 s | 22 |
-  | Dune scuttler | Sunken Cavern | 20 + floor/4 | 16 + floor/4 | 0.35 s, 150, 0.35 s | 0.6 / 1.6 s | 20 |
-  | Sand bull | Sunken Cavern | 40 + floor/3 | 22 + floor/4 | 0.8 s, 170, 0.9 s | 1.1 / 1.6 s | 32 |
-  | Cinder hound | Ember Vent, Smoke Peak | 28 + floor/4 | 22 + floor/5 | 0.4 s, 170, 0.5 s, twice | 0.8 / 1.6 s | 34 |
-  | Magma ram | Ember Vent, Smoke Peak | 70 + floor/2 | 30 + floor/5 | 0.8 s, 150, 0.8 s | 1 / 2.2 s | 48 |
+  | Burrow beetle | Hollow 6+ | 8 + floor/2 | 5 + floor/2 | 0.5 s, 110 px/s, 0.4 s | 0.8 / 1.6 s | 4 |
+  | Tusk boar | Hollow 15+ | 16 + 2 × floor/3 | 8 + floor | 0.6 s, 140, 0.6 s | 0.9 / 1.6 s | 8 |
+  | Stone ram | Hollow 35+ | 36 + 2 × floor/3 | 12 + floor | 0.7 s, 150, 0.7 s | 0.9 / 2 s | 16 |
+  | Gloom hound | Hollow 60+ | 52 + floor | 14 + floor | 0.45 s, 160, 0.45 s, twice | 0.9 / 1.6 s | 22 |
+  | Dune scuttler | Sunken Cavern | 40 + floor/2 | 16 + floor/4 | 0.35 s, 150, 0.35 s | 0.6 / 1.6 s | 20 |
+  | Sand bull | Sunken Cavern | 80 + 2 × floor/3 | 22 + floor/4 | 0.8 s, 170, 0.9 s | 1.1 / 1.6 s | 32 |
+  | Cinder hound | Ember Vent, Smoke Peak | 56 + floor/2 | 22 + floor/5 | 0.4 s, 170, 0.5 s, twice | 0.8 / 1.6 s | 34 |
+  | Magma ram | Ember Vent, Smoke Peak | 140 + floor | 30 + floor/5 | 0.8 s, 150, 0.8 s | 1 / 2.2 s | 48 |
+
+  v266 (roadmap 88a, Nuno): a rush now bends toward you at up to 2.4 radians a second (CHARGE.turn), so standing still or stepping aside early gets you hit and a late sidestep still works; and every charger has twice its old health (CHARGE.tough; the health column above includes it). Nuno chose more health over blade resistance, which stays the shellbacks' trait. The burrow beetle (`burrow: true`) travels under the floor between rushes as a mound nothing can hit, sliding after you at twice its walking speed; when close (14 px) or after 4 s the mound shakes for 0.5 s, it comes up and winds up at once, and after its rush (winded or dazed) it digs back down for 6.5 s (BURROW's rest and under).
 
   Health, damage and XP sit beside the walkers that share their floors (the bone walker at 30+, the sand wraith, the ember golem), as Stardew's chargers do beside its other monsters of a level (shadow brutes beside shadow shamans). Each floor's monster count is unchanged: chargers share it with the others.
 - Rings (two worn; Stardew's ruby, topaz, aquamarine, jade, vampire, slime charmer, burglar's and glow rings): Ember +10% damage, Stone +1 defense, Tide +10% critical chance, Moss criticals x1.5, Leech +2 health a kill, Slime ward (slimes do no harm), Thief's (double drops), Glow (40% more light). Floors 15, 35, 45 and 65 give one; the rest drop.

@@ -8,7 +8,8 @@ export const HOW = {
   crawl: 'Crawls slowly after you. Easy to keep at a sword\'s length.',
   fly: 'Flies over walls and rocks and weaves as it comes. Wait for it to close in, then swing.',
   walk: 'Walks straight at you and hits hard. Keep moving and strike when it reaches you.',
-  charge: 'Winds up and flashes before it charges. Step aside, then hit it while it stands winded.',
+  charge: 'Winds up and flashes, then charges, bending toward you as it comes. Sidestep late, then hit it while it stands winded.',   // v266
+  dig: 'Travels under the floor as a mound you cannot hit. When the mound shakes it comes up and charges at once: sidestep late, then hit it while it stands winded.',   // v266: the burrow beetle
   mimic: 'Sits among the rocks looking like one. Step beside it or hit it to wake it; the first hit only cracks its shell.',
   burrow: 'Moves under the floor as a mound you cannot hit. When the mound shakes it comes up: hit it before it digs down again.',
   swarm: 'Comes in a pack, weak but quick. A club or a sword\'s spin catches several at once.',

@@ -319,6 +319,14 @@ Nuno (November 2026): a polish sweep of all the creatures, detailed sprites, det
 | 87c3 | Detailed sprites: the night creatures | polish | queued | Bramble sprites, firefly moth (with a glow), gourd lurker (a real pumpkin asleep: stem, ribs, leaf; find 42), frost wisp. |
 | 87d | Detailed attack effects | polish | in progress (chivas47/hollowmereGame#282) | Finds 37 to 39: a tell of its own (a red glow and dust for chargers, a mouth glow and a gathering spark for spitters) instead of the white hurt flash; hit sparks by material (gel splat, bone chips, embers, chitin flakes, smoke); a death burst of its own per material; a sword trail on contact; glob trails and splashes; charge dust; burrow spray. |
 
+## Charger fixes (November 2026)
+
+Nuno (November 2026): chargers rush without chasing, are too easy, and the burrow beetle does not burrow. His answers: twice the health rather than blade resistance; the beetle should really burrow.
+
+| Item | What | Kind | Status | Notes |
+|---|---|---|---|---|
+| 88a | Chargers steer and are tougher; the burrow beetle burrows | feature | in progress | A rush turns toward you at up to 2.4 rad/s; twice the health for all eight; the beetle travels under the floor between rushes and charges as it comes up. |
+
 ## Done
 
 | Item | PR |

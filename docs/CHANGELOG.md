@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v266: Smarter, tougher chargers
+- Burrow beetles, tusk boars, stone rams, gloom hounds and the deep dungeons' chargers now bend their rush toward you as they come. Standing still or stepping aside early gets you hit; a sidestep at the last moment still works.
+- Every charger has twice the health it had.
+- The burrow beetle lives up to its name: it travels under the floor as a mound you cannot hit, comes up close to you and charges at once, then digs back down after its rush.
+- New save data: none.
+
 ## v265: The Hollow's creatures redrawn
 - All 16 kinds that live in the Hollow have new, more detailed sprites with four frames each instead of two: slimes squash, stretch and land as they hop, walkers step with each leg in turn, bats beat their wings through a full stroke, soot puffs curl and the lantern wisp flickers.
 - The moss slime wears a moss cap of its own instead of looking like a big plain slime.
