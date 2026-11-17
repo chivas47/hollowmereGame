@@ -8,7 +8,7 @@ import { addLayer, addUpdater } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { MAPS, sizeOf } from '../data/maps.js';
 import { underSky } from '../data/weather.js';
-import { WATERFALLS, WILDLIFE, BIRD_COLORS } from '../data/atmosphere.js';
+import { WATERFALLS, WILDLIFE, BIRD_SPECIES, BIRD_PLACES, birdsFor } from '../data/atmosphere.js';
 import { r, rng } from '../render/pixel.js';
 import { drawBird } from '../render/wildlife.js';   // v276
 
@@ -73,6 +73,9 @@ addLayer(96, (c) => {
 
 // ---- Wildlife: rebuilt when the map or day changes ----
 let fauna = { key: null, birds: [], flies: [], bugs: [], ducks: [], frogs: [], water: [], jump: null, nextJump: 3 };
+// v277: the weather where you are (the dunes are always clear) and what the wildlife was last made for.
+const skyHere = () => (underSky(G.S.map) ? G.S.weather : 'sun');
+const faunaKey = () => `${G.S.map}-${G.S.day}-${skyHere()}`;
 export const faunaNow = () => fauna;   // v276: for tools and tests (the birds on this map)
 const isWater = (x, y) => MAPS[G.S.map].grid[y]?.[x] === 'O';
 function spawn() {
@@ -80,7 +83,7 @@ function spawn() {
   map.grid.forEach((row, y) => [...row].forEach((t, x) => { if ((t === 'g' || t === 'z') && !S.soil?.[`${x},${y}`] && !S.placed?.[`${x},${y}`]) tiles.push([x, y]); }));
   const { w, h } = sizeOf(S.map), many = (n) => Math.round(n * Math.max(1, (w * h) / (W * H)));   // v195: more on maps larger than the screen
   const pick = () => tiles[(R() * tiles.length) | 0] || [sizeOf(G.S.map).w / 2, sizeOf(G.S.map).h / 2];   // v157: the middle of the map
-  fauna = { key: `${S.map}-${S.day}`, birds: [], flies: [], bugs: [], ducks: [], frogs: [], water, jump: null, nextJump: 2 + R() * 4 };
+  fauna = { key: faunaKey(), birds: [], flies: [], bugs: [], ducks: [], frogs: [], water, jump: null, nextJump: 2 + R() * 4 };
   // v162: open water (water on three sides or more, so a narrow river counts) for ducks and jumps; grass beside water for frogs
   map.grid.forEach((row, y) => [...row].forEach((t, x) => {
     if (t === 'O' && [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(([a, b]) => isWater(x + a, y + b)).length >= 3) water.push([x, y]);
@@ -94,8 +97,11 @@ function spawn() {
   if (shore.length && WILDLIFE.frogs.maps.includes(S.map)) for (let i = 0; i < WILDLIFE.frogs.n; i++) {
     const [x, y] = shore[(R() * shore.length) | 0]; fauna.frogs.push({ x: x * T + 8, y: y * T + 11, hop: 0, next: 2 + R() * 8 });
   }
-  if (WILDLIFE.birds.maps.includes(S.map)) for (let i = 0; i < many(WILDLIFE.birds.n); i++) {
-    const [x, y] = pick(); fauna.birds.push({ x: x * T + 8, y: y * T + 10, vx: 0, vy: 0, flee: false, peck: R() * 3, mode: 'peck', left: R() < 0.5, t: R() * 2, age: 0 });
+  const kinds = birdsFor(S.map, today().season, skyHere()), weight = kinds.reduce((a, [, w]) => a + w, 0);   // v277: by place, season and weather
+  if (weight) for (let i = 0; i < many(WILDLIFE.birds.n); i++) {
+    let k = R() * weight, sp = kinds[0][0];
+    for (const [key, w] of kinds) { if ((k -= w) < 0) { sp = key; break; } }
+    const [x, y] = pick(); fauna.birds.push({ sp, x: x * T + 8, y: y * T + 10, vx: 0, vy: 0, flee: false, peck: R() * 3, mode: 'peck', left: R() < 0.5, t: R() * 2, age: 0 });
   }
   for (let i = 0; i < many(WILDLIFE.butterflies.n); i++) { const [x, y] = pick(); fauna.bugs.push({ x: x * T, y: y * T, p: R() * 6, col: ['#f2d14a', '#f2f2f2', '#e8884a', '#9ab8f0'][i % 4] }); }
   for (let i = 0; i < many(WILDLIFE.fireflies.n); i++) { const [x, y] = pick(); fauna.flies.push({ x: x * T, y: y * T, p: R() * 6 }); }
@@ -103,8 +109,8 @@ function spawn() {
 
 addUpdater((dt) => {
   const S = G.S;
-  if (!underSky(S.map)) return;
-  if (fauna.key !== `${S.map}-${S.day}`) spawn();
+  if (!underSky(S.map) && !BIRD_PLACES[S.map]) return;   // v277: the desert has birds but no weather of its own
+  if (fauna.key !== faunaKey()) spawn();   // v277: the weather changes who is out
   for (const b of fauna.birds) {
     if (!b.flee && Math.hypot(b.x - S.x, b.y - S.y) < WILDLIFE.birds.scare * T) {
       Object.assign(b, { flee: true, vx: (b.x < S.x ? -1 : 1) * (50 + Math.random() * 30), vy: -60, age: 0, left: b.x < S.x });
@@ -168,16 +174,18 @@ addLayer(9, (c) => {
 
 // v276: which frame of the bird sheet (data/sprites.js BIRDS_SHEET) a bird shows now.
 export function birdFrame(b) {
-  if (b.flee) return b.age < 0.12 ? 4 : [5, 6, 7, 6][Math.floor(b.age * 14) % 4];
+  if (b.flee) {
+    if (b.age < 0.12) return 4;
+    return BIRD_SPECIES[b.sp]?.shape === 'gull' ? [5, 6, 6, 6, 7, 6, 6, 6][Math.floor(b.age * 10) % 8] : [5, 6, 7, 6][Math.floor(b.age * 14) % 4];   // v277: a gull glides between beats
+  }
   if (b.mode === 'peck') return Math.floor(b.peck * 5) % 3 === 0 ? 0 : 2;
   return b.mode === 'look' ? 1 : b.mode === 'hop' ? 3 : 0;
 }
-const birdsOut = () => G.S.time < 19 * 60 && !wet() && G.S.weather !== 'mist';
+const birdsOut = () => G.S.time < 19 * 60;   // v277: the weather is in birdsFor (hardy birds stay out in rain)
 addLayer(40, (c) => {
-  if (!underSky(G.S.map) || !birdsOut()) return;
-  const [body, wing] = BIRD_COLORS[G.S.map] || (today().season === 'Winter' ? BIRD_COLORS.Winter : BIRD_COLORS.other);
+  if ((!underSky(G.S.map) && !BIRD_PLACES[G.S.map]) || !birdsOut()) return;
   for (const b of fauna.birds) {   // v276 (92a): from the bird sheet (render/wildlife.js)
-    drawBird(c, b.x, b.y, birdFrame(b), b.left, body, wing, b.flee ? 4 : b.mode === 'hop' ? 2 : 0);
+    drawBird(c, b.x, b.y, birdFrame(b), b.left, BIRD_SPECIES[b.sp], b.flee ? 4 : b.mode === 'hop' ? 2 : 0);
   }
 });
 addLayer(70, (c) => {
