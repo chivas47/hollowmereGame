@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v275: Two-tile boards and boats are solid all the way across
+- The boats at the beach and the island, the coach stops in town and at the dunes, and the island and desert traders' tables were solid and usable only on their left half. You could walk through the right half, and pressing Use there did nothing.
+- Both halves now block you, and both open the boat, the timetable or the trader.
+- The town's coach stop moved one tile west, so it no longer stands on the path beside it.
+- New save data: none.
+
 ## v274: Every dialog in the new look
 - The Bag, Crafting, the Journal, Neighbours, the shops, the shipping bin, talking to neighbours and every other dialog now have the menu's look: a wooden board, a red ribbon title and a parchment page with dark ink.
 - Buttons are wooden plaques, and the main one in each dialog is gold. Item tiles, search boxes and lists sit on parchment.
