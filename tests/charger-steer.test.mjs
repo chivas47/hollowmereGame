@@ -67,8 +67,10 @@ test('after its rush the beetle digs back down', () => {
   m.cs = 'recover'; m.ct = 0.05;
   tick(0.1);
   assert.equal(m.cs, undefined);
-  assert.equal(m.bs, 'under');
+  assert.equal(m.bs, 'sink', 'it sinks where you can see it (v267)');
   assert.ok(untouchable(m));
+  tick(BURROW.sink + 0.05);
+  assert.equal(m.bs, 'under');
   assert.ok(k.recover > 0);
 });
 
@@ -83,4 +85,20 @@ test('in the Hollow the beetles start under the floor; other chargers start up',
     }
   }
   assert.ok(beetles > 0, 'some beetles met');
+});
+
+// Roadmap 88b (Nuno: "they don't burrow, and after they die I hear their attacks"): digging down was a burst and a
+// vanish, like a defeat. Now it sinks for BURROW.sink s with the dig sound, and coming up makes the sound too.
+test('a beetle digging down and coming up is heard, and is not counted as slain', async () => {
+  const { on } = await import('../src/core/events.js');
+  const heard = [], slain = [];
+  on('sfx', (s) => heard.push(s)); on('monster:slain', (e) => slain.push(e.kind));
+  const m = one('beetle', 50, { bs: 'up' });
+  G.S.map = 'farm';
+  m.cs = 'recover'; m.ct = 0.02;
+  tick(0.06);
+  assert.equal(m.bs, 'sink');
+  assert.ok(heard.includes('hoe'), 'the dig sound');
+  assert.deepEqual(slain, [], 'digging down is not a defeat');
+  assert.ok(slimes.includes(m));
 });

@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v267: Burrowing you can see and hear
+- Burrow beetles, burrow moles and lava lurkers now sink into the ground with a dig sound when they go under, instead of vanishing in a burst that looked like they had been defeated.
+- Coming back up makes the dig sound too, so a creature you thought was gone no longer charges you out of an empty-looking floor.
+- The earth mound over a burrower is lighter and easier to see on the dark floor, and the burrow beetle's shell shows through the top of its mound.
+- New save data: none.
+
 ## v266: Smarter, tougher chargers
 - Burrow beetles, tusk boars, stone rams, gloom hounds and the deep dungeons' chargers now bend their rush toward you as they come. Standing still or stepping aside early gets you hit; a sidestep at the last moment still works.
 - Every charger has twice the health it had.

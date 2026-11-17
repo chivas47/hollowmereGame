@@ -96,7 +96,10 @@ test('a burrow mole cannot be touched under the floor, comes up near you, then d
   assert.equal(m.bs, 'up');
   hitMonster(m, 5);
   assert.equal(m.hp, hp - 5, 'up, it can be hit');
-  tick(BURROW.up + 0.1);
+  tick(BURROW.up + 0.05);
+  assert.equal(m.bs, 'sink', 'it sinks where you can see it (v267)');
+  assert.ok(untouchable(m), 'out of reach as it sinks');
+  tick(BURROW.sink + 0.05);
   assert.equal(m.bs, 'under', 'and it digs down again');
 });
 

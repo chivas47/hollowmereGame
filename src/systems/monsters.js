@@ -15,6 +15,7 @@ import { PEAK } from '../data/nuts.js';
 import { ITEMS } from '../data/items.js';
 import { rollLoot } from '../data/loot.js';
 import { drawSlime, drawMonster, drawDazed, drawMound, drawShot } from '../render/sprites.js';
+import { MONSTERS as SHEET } from '../data/sprites.js';
 import { moveBox, occupied, mover } from './world.js';
 import { hurtPlayer, hurtPartner } from './health.js';
 import { has } from './professions.js';
@@ -117,7 +118,7 @@ export function chargeTurn(m, d, dx, dy, dt) {
   }
   if (m.ct <= 0) {   // recover or dazed: back to walking (v266: a burrowing charger digs back down)
     m.cs = undefined; m.rest = CHARGE.rest;
-    if (k.burrow) { m.bs = 'under'; m.bt = BURROW.rest + BURROW.under; emit('monster:surface', { x: m.x, y: m.y, kind: m.kind }); }
+    if (k.burrow) digDown(m);
   }
   return true;
 }
@@ -133,8 +134,9 @@ function steer(m, ux, uy, most) {
 // v266 (88a): the burrow beetle between rushes: a mound sliding after you (as a burrower's) that rises when close,
 // then it winds up at once. Returns true while it is under or rising (nothing touches it).
 function beetleTurn(m, d, vx, vy, dt) {
-  if (m.bs !== 'under' && m.bs !== 'rise') return false;
+  if (m.bs !== 'under' && m.bs !== 'rise' && m.bs !== 'sink') return false;
   m.bt -= dt;
+  if (m.bs === 'sink') { if (m.bt <= 0) { m.bs = 'under'; m.bt = BURROW.rest + BURROW.under; } return true; }
   if (m.bs === 'under') {
     if (d < AGGRO) underStep(m, vx, vy, m.speed * 2 * dt);
     if (d < AGGRO && (d < BURROW.rise || m.bt <= 0)) { m.bs = 'rise'; m.bt = BURROW.tell; }
@@ -153,14 +155,21 @@ const daze = (m, t) => { m.cs = 'dazed'; m.ct = t; m.cn = 0; };
 // cannot be touched either way (under or rising).
 function burrowTurn(m, d, vx, vy, dt) {
   m.bt -= dt;
+  if (m.bs === 'sink') { if (m.bt <= 0) { m.bs = 'under'; m.bt = BURROW.rest + BURROW.under; } return true; }
   if (m.bs === 'under') {
     if (d < AGGRO) underStep(m, vx, vy, m.speed * dt);
     if (d < AGGRO && (d < BURROW.rise || m.bt <= 0)) { m.bs = 'rise'; m.bt = BURROW.tell; }
     return true;
   }
   if (m.bs === 'rise') { if (m.bt <= 0) { m.bs = 'up'; m.bt = BURROW.up; emit('monster:surface', { x: m.x, y: m.y, kind: m.kind }); } return true; }
-  if (m.bt <= 0) { m.bs = 'under'; m.bt = BURROW.rest + BURROW.under; emit('monster:surface', { x: m.x, y: m.y, kind: m.kind }); }
+  if (m.bt <= 0) digDown(m);
   return false;
+}
+// v267 (88b): a burrower digs down where you can see it: it sinks into a growing mound for BURROW.sink s (out of
+// reach), with the dig sound, instead of vanishing in a burst that looked like a defeat.
+function digDown(m) {
+  m.bs = 'sink'; m.bt = BURROW.sink;
+  emit('monster:dig', { x: m.x, y: m.y, kind: m.kind });
 }
 // Under the floor it slides beneath rocks, kept inside the map's walls.
 function underStep(m, vx, vy, dist) {
@@ -237,7 +246,7 @@ function splitUp(m, d) {
 }
 
 // v253: whether a monster is out of reach for now: a mimic still asleep is not, a burrower under the floor is.
-export const untouchable = (m) => m.bs === 'under' || m.bs === 'rise' || m.ph === 'faint';   // v257: a phaser faded
+export const untouchable = (m) => m.bs === 'under' || m.bs === 'rise' || m.bs === 'sink' || m.ph === 'faint';   // v267: sinking too   // v257: a phaser faded
 // v253: brings a burrower up at once (the balance bot, which does not wait out the clock, and tests).
 export function surface(m) { if (m.bs) { m.bs = 'up'; m.bt = BURROW.up; } if (m.ph) { m.ph = 'solid'; m.pt = PHASE.solid; } }   // v257: a phaser made solid
 
@@ -428,10 +437,22 @@ addEntities(() => (G.S.map !== slimeMap ? [] : slimes.map((m) => ({
     : m.ph ? drawPhaser(c, m)
     : m.cs ? drawCharger(c, m)
     : m.hidden ? drawMonster(c, m.x, m.y, 'crabrock', MONSTERS[m.kind].disguise || ROCK_GREY, false, 0)   // v253: a mimic asleep looks like a rock (v261: the gourd lurker a pumpkin)
-    : m.bs && m.bs !== 'up' ? drawMound(c, m.x + (m.bs === 'rise' ? (Math.floor(m.bt * 30) % 2 ? 1 : -1) : 0), m.y, m.hop, m.kind === 'lurker' ? 'lava' : 'earth')   // v253: a burrower's mound (shaking: the tell); v254: a lava ripple
+    : m.bs === 'sink' ? drawSinking(c, m)   // v267
+    : m.bs && m.bs !== 'up' ? drawMound(c, m.x + (m.bs === 'rise' ? (Math.floor(m.bt * 30) % 2 ? 1 : -1) : 0), m.y, m.hop, m.kind === 'lurker' ? 'lava' : 'earth', shellOf(m))   // v253: a burrower's mound (shaking: the tell); v254: a lava ripple
     : drawMonster(c, m.x, m.y, m.kind, m.aim && Math.floor(m.st * 14) % 2 === 0 ? MONSTERS[m.kind].glow || m.color : m.color, m.hurt > 0, m.hop, !!m.face)),   // v255: a spitter flashes before it spits (v264: in its glow colour, not white)
 })).concat(shots.map((s) => ({ y: s.y + 8, draw: (c) => drawShot(c, s.x, s.y, s.color) })))));
 const ROCK_GREY = '#8a8580';
+// v267 (88b): a burrowing charger's back shows through its mound (its colour, and its rim if it has one), so the
+// mound reads as that creature under the dirt.
+const shellOf = (m) => (MONSTERS[m.kind]?.burrow ? [m.color, SHEET.kinds[m.kind]?.rim || m.color] : null);
+// v267: a burrower digging down: sinking below the floor line into a mound that grows as it goes.
+function drawSinking(c, m) {
+  const k = Math.min(1, 1 - m.bt / BURROW.sink);
+  c.save(); c.beginPath(); c.rect(m.x - 24, m.y - 40, 48, 38); c.clip();
+  drawMonster(c, m.x, m.y + Math.round(k * 16), m.kind, m.color, false, m.hop, !!m.face);
+  c.restore();
+  if (k > 0.3) drawMound(c, m.x, m.y, m.hop, m.kind === 'lurker' ? 'lava' : 'earth', shellOf(m));
+}
 // v260: an elite: a pulsing gold ring at its feet and a spark over it, drawn before the monster.
 function drawElite(c, m) {
   const p = (Math.sin(m.hop * 6) + 1) / 2, x = Math.round(m.x), y = Math.round(m.y), w = 7 + Math.round(p * 2);
@@ -470,6 +491,9 @@ function drawCharger(c, m) {
 // v253: a mimic waking or cracked, a burrower coming up or going down: a puff of grit.
 for (const ev of ['monster:wake', 'monster:crack']) on(ev, ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 3, IMPACT.stone, 6, { speed: 35, up: 25, size: 1, life: 0.35, shrink: true }); });
 // v264 (87d): a burrower breaking the floor throws up a spray of earth (or lava, for the lurker).
+// v267: digging down: a small spray and the dig sound; coming up: the sound too.
+on('monster:dig', ({ x, y, kind }) => { if (G.S.map !== slimeMap) return; burst(x, y - 2, kind === 'lurker' ? ['#ffd98a', '#e9862a'] : IMPACT.dirt, 6, { speed: 25, up: 25, size: 1, life: 0.35, shrink: true }); emit('sfx', 'hoe'); });
+on('monster:surface', ({ x, y }) => { if (G.S.map === slimeMap) emit('sfx', 'hoe'); });
 on('monster:surface', ({ x, y, kind }) => { if (G.S.map === slimeMap) burst(x, y - 2, kind === 'lurker' ? ['#ffd98a', '#e9862a', '#8a2a22'] : IMPACT.dirt, 14, { speed: 45, up: 55, size: 2, life: 0.5, shrink: true }); });
 on('monster:crack', () => emit('sfx', 'pick'));
 on('monster:clang', ({ x, y }) => { if (G.S.map !== slimeMap) return; burst(x, y - 6, IMPACT.stone, 4, { speed: 50, up: 20, size: 1, life: 0.2, shrink: true }); emit('sfx', 'pick'); });
