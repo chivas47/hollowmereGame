@@ -2,6 +2,18 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v268: The deep dungeons' creatures redrawn
+- All 17 kinds of the Sunken Cavern and the Ember Vent have new sprites with four frames each, and none of them borrows another creature's shape any more:
+  - the dune scuttler is a sand scorpion with a curled stinger, and the sand bull has forward-swept horns, a hump and a nose ring;
+  - dust devils are little whirlwinds, and the ash swarm is a ragged clot of ash shedding sparks;
+  - the sand spitter is a ringed worm with a frill of spines, and the crag spitter is plated in rock with glowing seams;
+  - the tomb shade is a hooded spirit, and the ember slime glows through its cracks;
+  - the crag shellback has crags on its shell and lava between the plates, and the storm wing crackles with sparks;
+  - the cinder hound has a mane of fire, and the magma ram has horns of hot rock.
+- The sand wraith's wrappings flutter, the scorch rex beats its wings through a full stroke, the magma sprite flickers, the ember golem strides and the lava lurker's pool bubbles.
+- The dark ones (ember golem, cinder hound, magma ram, crag spitter, crag shellback, storm wing, ash swarm, tomb shade) have a lighter outline so they show on the Vent's dark floor. Dust devils and the sand spitter have a darker outline so they stand off the Cavern's sand.
+- New save data: none.
+
 ## v267: Burrowing you can see and hear
 - Burrow beetles, burrow moles and lava lurkers now sink into the ground with a dig sound when they go under, instead of vanishing in a burst that looked like they had been defeated.
 - Coming back up makes the dig sound too, so a creature you thought was gone no longer charges you out of an empty-looking floor.

@@ -118,7 +118,7 @@ test('the deep dungeons get a burrower and two swarms of their own', () => {
   assert.equal(MONSTERS.ashswarm.move, 'swarm');
   assert.ok(MONSTERS.ashswarm.ventOnly);
   assert.ok(SHEET.layers.includes('lurker.body') && SHEET.kinds.lurker);
-  for (const k of ['dustdevil', 'ashswarm']) assert.equal(SHEET.kinds[k].shape, 'puff', `${k} is drawn as a puff`);
+  for (const k of ['dustdevil', 'ashswarm']) assert.ok(SHEET.layers.includes(`${k}.body`), `${k} has a shape of its own (v268)`);
   freshFarm();
   const kinds = (zone) => { const out = new Set(); for (let i = 1; i <= 9; i++) { enterMine(i, zone); slimes.forEach((m) => out.add(m.kind)); } return out; };
   const cavern = kinds('cavern'), vent = kinds('vent');
@@ -139,13 +139,13 @@ test('a lava lurker burrows like a mole', () => {
 });
 
 // Roadmap 85e1: shooters.
-test('three spitters, one in each dungeon, drawn from one tinted shape', () => {
+test('three spitters, one in each dungeon, each with its own shape', () => {
   assert.equal(MONSTERS.spitter.move, 'shoot');
   assert.ok(MONSTERS.spitter.from >= 70 && !MONSTERS.spitter.cavernOnly && !MONSTERS.spitter.ventOnly);
   assert.ok(MONSTERS.sandspitter.cavernOnly);
   assert.ok(MONSTERS.cragspitter.ventOnly);
   for (const k of ['spitter', 'sandspitter', 'cragspitter']) {
-    assert.equal(SHEET.kinds[k].shape, 'spitter');
+    assert.ok(SHEET.layers.includes(`${SHEET.kinds[k].shape || k}.glow`), `${k}: a shape with a mouth (v268: its own in the deep dungeons)`);
     assert.equal(SHEET.kinds[k].glow, MONSTERS[k].glow, `${k}'s mouth is the colour of its globs`);
   }
   assert.ok(SHEET.layers.includes('spitter.glow'));
@@ -225,7 +225,7 @@ test('splitters keep to their places and draw as slimes', () => {
   assert.equal(MONSTERS.mossslime.move, 'split');
   assert.ok(MONSTERS.mossslime.from >= 20 && MONSTERS.mossslime.to <= 60);
   assert.ok(MONSTERS.emberslime.ventOnly);
-  assert.equal(SHEET.kinds.emberslime.shape, 'slime');
+  assert.ok(SHEET.layers.includes('emberslime.glow'), 'the ember slime has its own bands, cracks glowing (v268)');
   assert.ok(SHEET.layers.includes('mossslime.body'), 'the moss slime has bands of its own (v265: a moss cap)');
 });
 
@@ -237,7 +237,7 @@ test('five new kinds: two phasers, two shellbacks and a flying swarm, each in it
   assert.ok(MONSTERS.shellback.armored && MONSTERS.shellback.from >= 85);
   assert.ok(MONSTERS.cragshell.armored && MONSTERS.cragshell.ventOnly);
   assert.ok(MONSTERS.stormwing.fly && MONSTERS.stormwing.move === 'swarm' && MONSTERS.stormwing.ventOnly);
-  for (const [k, shape] of [['wisp', 'wisp'], ['shade', 'wisp'], ['shellback', 'shell'], ['cragshell', 'shell'], ['stormwing', 'bat']]) assert.equal(SHEET.kinds[k].shape, shape);
+  for (const [k, shape] of [['wisp', 'wisp'], ['shade', 'shade'], ['shellback', 'shell'], ['cragshell', 'cragshell'], ['stormwing', 'stormwing']]) assert.equal(SHEET.kinds[k].shape || k, shape);   // v268: the deep ones their own
 });
 
 test('a lantern wisp fades in and out; faded, nothing touches it either way', () => {

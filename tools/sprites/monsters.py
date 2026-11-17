@@ -47,7 +47,7 @@ def walk(body, legs, drop=(0, 1, 0, 1)):
     return frames
 
 ART = {}
-# The Cavern's and Vent's kinds (two frames each until 87c2).
+# The Cavern's and Vent's kinds as first drawn (v268 redraws them below with four frames).
 ART.update({
   'wraith': (6, 23, [[
     '....bBBb....',
@@ -558,6 +558,283 @@ ART['lurker'] = (5, 23, [[
   ]])
 
 
+# ---- v268 (87c2): the deep dungeons ----
+# Each kind that used to borrow a Hollow shape has its own now (polish find 41), and the Cavern's and Vent's own
+# kinds get four frames. S s sand, l lava drawn as ink.
+INK.update({'S': '#d8b47a', 's': '#a5825a', 'l': '#ffb04a'})
+
+def frames_of(kind):
+    fr = ART[kind][2]
+    return fr * 2 if len(fr) == 2 else fr
+
+def swap(rows, table):
+    """rows with letters swapped by table (a dict), e.g. a ram's horns made lava."""
+    return [''.join(table.get(ch, ch) for ch in r) for r in rows]
+
+# Sand wraith: a figure wound in old wrappings, ember eyes, the loose ends fluttering.
+WRAITH = [
+    '....bBBb....',
+    '...bBWBBb...',
+    '..bBcccBBb..',
+    '..bOZBBOZb..',
+    '..bBBBBBBb..',
+    '..bccBBccb..',
+    '.bBBBBBBBBb.',
+    'bBcccBBBBBbb',
+    'bBBBBBccccBb',
+    'cbBBBBBBBBbc',
+    '.bcccBBBBBb.',
+    '.bBBBBcccBb.',
+    '.bBBBBBBBBb.',
+]
+WRAITH_HEM = [['.bBb.bb.bBb.', '..b......b..'], ['..bBbbb.Bb..', '.b.......b..'],
+              ['.bBb.bb.bBb.', '...b....b...'], ['.bB.bbbBbb..', '..b.......b.']]
+ART['wraith'] = (6, 23, [WRAITH + WRAITH_HEM[f] for f in range(F)])
+
+# Scorch rex: a small flying lizard with flame-coloured wings: up, level, down, level.
+REX = [
+    '..................',
+    '..................',
+    '..................',
+    '............BBB...',
+    '...........BBWBB..',
+    '..bBBBBBBBBBBZBBB.',
+    '.bBBBBBBBBBBBBBcc.',
+    'bBB.BBBBBBBBBBEE..',
+    'bb...BcBcBcBBB....',
+    '.....c.....c......',
+    '..................',
+    '..................',
+]
+REX_WING = [(['....O..O....', '...OFOOFO...', '...OFFFFO...', '....OFFO....'], 2, 1),
+            (['..OOFFOO..', '.OFFFFFFO.'], 1, 4),
+            (['.OFFFO.', '..OFO..', '...O...'], 3, 8), None]
+REX_WING[3] = REX_WING[1]
+ART['rex'] = (3, 19, [over(REX, w, x, y) for w, x, y in REX_WING])
+
+# Magma sprite: an ember with a glowing heart, wings beating, its tip flickering, a spark over it now and then.
+SPRITE = [
+    '..............',
+    '......B.......',
+    '.....BWB......',
+    '....BBBBB.....',
+    '...BBGGGBB....',
+    '...BGGgGGB....',
+    '...BGGGGGB....',
+    '...BBZBZBB....',
+    '....BBBBB.....',
+    '.....bcb......',
+]
+SPRITE_WINGS = [(['RR.', 'RRr', '.rr'], ['.RR', 'rRR', 'rr.'], 3), (['RRRr'], ['rRRR'], 5),
+                (['.rr', 'RRr', 'RR.'], ['rr.', 'rRR', '.RR'], 5), (['RRRr'], ['rRRR'], 5)]
+def sprite(f):
+    L, R, y = SPRITE_WINGS[f]
+    rows = over(over(SPRITE, L, 0, y), R, 10, y)
+    if f % 2: rows = over(rows, ['.B', 'BB'], 6, 0)
+    if f == 1: rows = over(rows, ['F'], 9, 0)
+    if f == 3: rows = over(rows, ['F'], 4, 0)
+    return rows
+ART['sprite'] = (5, 18, [sprite(f) for f in range(F)])
+
+# Ember golem: the old heap with a stride on each side and its core and seams pulsing.
+GOLEM = ART['golem'][2]
+def golem(f):
+    rows = list(GOLEM[0 if f % 2 == 0 else 1])
+    if f == 2: rows = rows[:-3] + ['...BBb..BBb...', '..BBb....BBb..', '.BBBb.....BBb.']
+    if f in (1, 3): rows = [r.replace('Ggg', 'GGG').replace('ggG', 'GGG') for r in rows]
+    rows[5] = rows[5][:4] + 'G' + rows[5][5:9] + 'G' + rows[5][10:] if f % 2 else rows[5]
+    return rows
+ART['golem'] = (5, 23, [golem(f) for f in range(F)])
+
+# Lava lurker: shut, opening, open, opening, the pool bubbling.
+LURK = ART['lurker'][2]
+ART['lurker'] = (5, 23, [LURK[0], over(LURK[1], ['F'], 3, 8), LURK[1], over(LURK[0], ['F'], 10, 8)])
+
+# Dune scuttler: a sand scorpion, pincers forward, a stinger curled over its back, long legs.
+ART['scuttler'] = (2, 23, walk([
+    '.bb.................',
+    'bBBb................',
+    '.bBBb...............',
+    '..bBBb.bbbbbb.......',
+    '...bBbBBWWBBBb..k.k.',
+    '....bBBWBBBBBBbBBk..',
+    '....bBBBcBcBcBBBBYb.',
+    '.....cBBBBBBBBBbBBk.',
+    '......ccccccccc..k.k',
+  ], [
+    ['.....K..K..K..K.....', '....K..K..K..K......'],
+    ['.....K..K..K..K.....', '.....K..K..K..K.....'],
+    ['.....K..K..K..K.....', '......K..K..K..K....'],
+    ['.....K..K..K..K.....', '.....K..K..K..K.....'],
+  ], drop=(0, 0, 0, 0)))
+
+# Sand bull: heavier than a boar, a hump, horns swept forward, a ring in its nose, a tufted tail.
+ART['bull'] = (1, 23, walk([
+    '..............E....E.',
+    '.....bbbbbb...hE..Eh.',
+    '...bBBBBBBBbb.bBBBBb.',
+    '..bBWWBBBBBBBbBBBBBBb',
+    '.bBWBBBBBBBBBBBBZBBBb',
+    'bBBBBBBBBBBBBBBBBBBPP',
+    'bBBBBBBBBBBBBBBBBbbPY',
+    'cbBBBBBBBBBBBBBBbb...',
+    'ccbBBBBBBBBBBBBcc....',
+    '..cccbbbbbbbbbcc.....',
+  ], [
+    ['..cc...cc...cc...cc.', '.kk.....kk.kk.....kk'],
+    ['...cc.cc.....cc.cc..', '...kk.kk.....kk.kk..'],
+    ['..cc...cc...cc...cc.', '..kk...kk...kk...kk.'],
+    ['....cccc.....cccc...', '....kkkk.....kkkk...'],
+  ]))
+
+# Dust devils: a little whirlwind with two bright eyes, its bands turning, its tip swaying.
+DEVIL_W = [10, 12, 10, 8, 8, 6, 6, 4, 4, 2]
+def devil(f):
+    rows = []
+    for y, w in enumerate(DEVIL_W):
+        sway = [0, 1, 0, -1][(f + y // 3) % 4] if y > 3 else 0
+        x0 = (12 - w) // 2 + sway
+        row = ['.'] * 14
+        for i in range(w):
+            x = x0 + i + 1
+            edge = i == 0 or i == w - 1
+            row[x] = 'b' if edge else ('c' if (x + y * 2 + f * 2) % 6 < 2 else 'B')
+        rows.append(''.join(row))
+    rows[2] = rows[2][:4] + 'Y' + rows[2][5:8] + 'Y' + rows[2][9:]
+    rows[1] = rows[1][:3] + 'W' + rows[1][4:]
+    return rows
+ART['dustdevil'] = (5, 16, [devil(f) for f in range(F)])
+
+# Ash swarm: a ragged clot of ash with ember eyes, sparks drifting off it.
+ASH = [
+    '.b.bBb.b....',
+    'bBbBBBBBb.b.',
+    '.bBBBBBBBbB.',
+    'bBBBOBBBOBBb',
+    'bBBBBBBBBBBb',
+    '.bBBBBxBBBb.',
+    'b.bBBBBBBb.b',
+    '..cb.cbb.c..',
+]
+ASH_SPARK = [[('O', 1, 0), ('l', 10, 9)], [('l', 2, 9), ('O', 11, 1)], [('O', 0, 7), ('l', 9, 0)], [('l', 11, 6), ('O', 3, 0)]]
+def ash(f):
+    rows = ['.' * 12] + list(ASH) + ['.' * 12, '.' * 12]
+    for ch, x, y in ASH_SPARK[f]:
+        if rows[y][x] == '.': rows = over(rows, [ch], x, y)
+    if f % 2: rows = [rows[0]] + [r[1:] + '.' if j in (2, 3) else r for j, r in enumerate(rows[1:], 1)]
+    return rows
+ART['ashswarm'] = (6, 17, [ash(f) for f in range(F)])
+
+# Sand spitter: a ringed worm up out of a sand heap, a frill of spines round its glowing mouth.
+SANDSPIT = [
+    '..b..b..b..b..',
+    '.bBb.bBbbBb.b.',
+    '..bBBBBBBBBb..',
+    '.bBBBggggBBBb.',
+    '..bBZBBBBZBb..',
+    '...cccccccc...',
+    '...bBWBBBBb...',
+    '...bBBBBBBb...',
+    '...cccccccc...',
+    '..bBBBBBBBBb..',
+    '.sSSsSSSSsSSs.',
+    'sSSSSsSSSSSsSs',
+]
+def sandspit(f):
+    rows = list(SANDSPIT)
+    if f == 1: rows = [r[1:] + '.' if j < 5 else r for j, r in enumerate(rows)]
+    if f == 3: rows = ['.' + r[:-1] if j < 5 else r for j, r in enumerate(rows)]
+    if f == 2: rows[2] = '..bBBGGGGBBb..'; rows[3] = '.bBBGGggGGBBb.'
+    return rows
+ART['sandspitter'] = (5, 23, [sandspit(f) for f in range(F)])
+
+# Crag spitter: the spitter in rock plates with a jagged crest and glowing seams.
+def cragspit(f):
+    rows = spit(f)
+    top = next(j for j, r in enumerate(rows) if r.strip('.'))
+    rows = over(rows, ['..b.bb.bb.b...'], 0, max(0, top - 1))
+    out = []
+    for j, r in enumerate(rows):
+        r = list(r)
+        for i, ch in enumerate(r):
+            if ch == 'B' and (i * 3 + j * 5) % 13 == 0: r[i] = 'c'
+            if ch in 'Bb' and (i + j * 2) % 9 == 0 and 5 <= j <= 9: r[i] = 'g'
+        out.append(''.join(r))
+    return out
+ART['cragspitter'] = (5, 23, [cragspit(f) for f in range(F)])
+
+# Tomb shade: a hooded spirit, a dark hollow for a face with two glowing eyes, its robe tattered.
+SHADE = [
+    '....bBBBb.....',
+    '...bBWBBBb....',
+    '..bBBccBBBb...',
+    '..bBcZZZcBb...',
+    '..bBZGZGZBb...',
+    '..bBcZZZcBb...',
+    '.bbBBBBBBBbb..',
+    'bB.bBBBBBb.Bb.',
+    'b..bBBBBBb..b.',
+    '...bBBBBBb....',
+]
+SHADE_HEM = [['...bBcBBcBb...', '...b.b..b.b...'], ['....bBcBBcBb..', '....b.b..b.b..'],
+             ['...bBcBBcBb...', '..b.b..b.b....'], ['..bBcBBcBb....', '...b..b.b.....']]
+def shade(f):
+    rows = SHADE + SHADE_HEM[f]
+    if f in (1, 2): rows = over(rows, ['bB', 'b.'], 0, 6) if f == 1 else over(rows, ['Bb', '.b'], 11, 6)
+    return rows
+ART['shade'] = (5, 18, [shade(f) for f in range(F)])
+
+# Ember slime: a slime with glowing cracks running through it.
+def embery(rows, f):
+    out = [list(r) for r in pad(rows)]
+    for j, r in enumerate(out):
+        for i, ch in enumerate(r):
+            if ch in 'Bbx' and 0 < j < len(out) - 2 and ((i * 2 + j * 3) % 7 == 0 or (i == 8 and j % 2 == f % 2)): r[i] = 'g' if (i + j) % 2 else 'G'
+    return [''.join(r) for r in out]
+ART['emberslime'] = (4, 23, [embery(fr, f) for f, fr in enumerate(ART['slime'][2])])
+
+# Crag shellback: the shellback's dome in rock with lava between its plates and a row of crags on top.
+def cragshell(rows):
+    rows = swap(rows, {'c': 'O'})
+    out = [list(r) for r in rows]
+    for j, r in enumerate(out):
+        for i, ch in enumerate(r):
+            if ch == 'O' and j >= len(out) - 3: r[i] = 'c'   # the belly line stays rock
+    rows = [''.join(r) for r in out]
+    return over(['.' * len(rows[0])] + rows, ['.......b...b...b......', '......bBb.bBb.bBb.....'], 0, 0)
+ART['cragshell'] = (1, 23, [cragshell(fr) for fr in ART['shell'][2]])
+
+# Storm wing: a bat with jagged wing tips, sparks crackling at them and bright eyes.
+def storm(rows, f):
+    rows = swap(rows, {'P': 'F'})
+    out = [list(r) for r in rows]
+    for j, r in enumerate(out):
+        filled = [i for i, ch in enumerate(r) if ch != '.']
+        if not filled: continue
+        for i in (filled[0], filled[-1]):
+            if (j + f) % 2 == 0 and r[i] in 'Bbc': r[i] = 'G'
+    return [''.join(r) for r in out]
+ART['stormwing'] = (2, 17, [storm(fr, f) for f, fr in enumerate(ART['bat'][2])])
+
+# Cinder hound: the hound with a flickering mane of fire along its neck and back and an ember tail.
+CINDER_MANE = [['.g..G..g..G.', 'gGggGGgGGgG.'], ['..G..g..G...', '.gGGgGGgGGg.'],
+               ['.G..g..G..g.', 'GgGGgGGgGGg.'], ['..g..G..g...', '.GgGGgGGgGG.']]
+def cinder(rows, f):
+    rows = ['.' * len(rows[0])] * 2 + list(rows)
+    rows = over(rows, CINDER_MANE[f], 3, 3)
+    return swap(rows, {'P': 'O'})
+ART['cinder'] = (2, 23, [cinder(fr, f) for f, fr in enumerate(ART['hound'][2])])
+
+# Magma ram: the stone ram turned to cooling basalt: horns of hot rock and more lava cracks.
+def magmaram(rows):
+    rows = swap(rows, {'H': 'O', 'h': 'r'})
+    out = [list(r) for r in rows]
+    for j, r in enumerate(out):
+        for i, ch in enumerate(r):
+            if ch == 'B' and 3 <= j <= 7 and (i * 5 + j * 3) % 11 == 0: r[i] = 'G'
+    return [''.join(r) for r in out]
+ART['magmaram'] = (2, 23, [magmaram(fr) for fr in ART['ram'][2]])
+
 def cells(kind, f):
     if kind == 'serpent': return serpent(f)
     x0, bottom, frames = ART[kind]
@@ -567,7 +844,9 @@ def cells(kind, f):
     return {(x0 + i, y0 + j): ch for j, row in enumerate(rows) for i, ch in enumerate(row) if ch != '.' and x0 + i < S}
 
 SHAPES = ['mite', 'bat', 'skeleton', 'wraith', 'rex', 'sprite', 'golem', 'serpent', 'slime', 'beetle', 'boar', 'ram', 'hound',
-          'crab', 'crabrock', 'mole', 'puff', 'lurker', 'spitter', 'wisp', 'shell', 'mossslime']
+          'crab', 'crabrock', 'mole', 'puff', 'lurker', 'spitter', 'wisp', 'shell', 'mossslime',
+          'scuttler', 'bull', 'dustdevil', 'ashswarm', 'sandspitter', 'cragspitter', 'shade', 'emberslime', 'cragshell',
+          'stormwing', 'cinder', 'magmaram']   # v268 (87c2)
 def has_glow(kind): return any(ch in 'Gg' for f in range(F) for ch in cells(kind, f).values())
 LAYERS = [f'{k}.{L}' for k in SHAPES for L in (['body'] + (['glow'] if has_glow(k) else []) + ['line', 'ink'])]
 
@@ -606,7 +885,13 @@ PREVIEW = {'slime': ('#7fcf6a', None, None), 'mossslime': ('#6a9a3a', None, None
            'serpent': ('#5f8a4a', None, None), 'wisp': ('#cfe6f0', '#ffe08a', None), 'hound': ('#3a3550', '#8a6ad0', '#7a72a0'),
            'spitter': ('#5a4a6a', '#b07ae0', '#9a88b0'), 'shell': ('#7a8a6a', None, None),
            'wraith': ('#d9c39a', None, None), 'rex': ('#c8352f', None, None), 'sprite': ('#e9862a', '#ffd98a', None),
-           'golem': ('#5a3a30', '#e9862a', None), 'lurker': ('#a8352a', None, None)}
+           'golem': ('#5a3a30', '#e9862a', '#a8786a'), 'lurker': ('#a8352a', None, None),
+           'scuttler': ('#c9a36a', None, None), 'bull': ('#a5753f', None, None), 'dustdevil': ('#c9a36a', None, None),
+           'ashswarm': ('#6a5a58', None, '#a89490'), 'sandspitter': ('#b08a5a', '#e9c46a', None),
+           'cragspitter': ('#4a3a36', '#e9862a', '#9a827a'), 'shade': ('#5a5070', '#b07ae0', '#9a90b8'),
+           'emberslime': ('#e07a3a', '#ffd98a', None), 'cragshell': ('#5a4a44', None, '#9a8a82'),
+           'stormwing': ('#3a4a6a', '#9fd8f0', '#7a8ab0'), 'cinder': ('#5a2a22', '#e9862a', '#a8665a'),
+           'magmaram': ('#4a3430', '#e9862a', '#94786e')}
 def make_preview(img, row, path):
     def band(L, f, col):
         b = img.crop((f * S, row[L] * S, f * S + S, row[L] * S + S))

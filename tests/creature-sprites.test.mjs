@@ -39,3 +39,18 @@ test('the Hollow\'s dark kinds have an outline lighter than the floor and than t
     assert.ok(lum(rim) > lum(MONSTERS[k].color) + 40 && lum(rim) > lum(FLOOR) + 60, `${k}'s rim stands out`);
   }
 });
+
+// Roadmap 87c2: the deep dungeons' kinds each have a shape of their own (polish find 41), and the dark ones a rim.
+const deep = Object.keys(MONSTERS).filter((k) => MONSTERS[k].cavernOnly || MONSTERS[k].ventOnly);
+test('no deep kind borrows another kind\'s shape', () => {
+  assert.equal(deep.length, 17);
+  const shapes = deep.map((k) => SHEET.kinds[k].shape || k);
+  assert.equal(new Set(shapes).size, 17, shapes.join(', '));
+  const hollowShapes = new Set(hollow.map((k) => SHEET.kinds[k].shape || k));
+  for (const k of deep) assert.ok(!hollowShapes.has(SHEET.kinds[k].shape || k), `${k} has its own shape`);
+});
+test('the deep dungeons\' dark kinds have a lighter outline', () => {
+  const dark = deep.filter((k) => lum(MONSTERS[k].color) < 85);
+  assert.deepEqual(dark.sort(), ['cragshell', 'cragspitter', 'golem', 'hound', 'magmaram', 'stormwing']);
+  for (const k of dark) assert.ok(SHEET.kinds[k].rim && lum(SHEET.kinds[k].rim) > lum(MONSTERS[k].color) + 40, `${k}'s rim stands out`);
+});

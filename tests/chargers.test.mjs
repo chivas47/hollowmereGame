@@ -39,8 +39,9 @@ test('eight chargers, two to four per zone, each drawn and dropping a real item'
   assert.equal(CHARGERS.filter((k) => MONSTERS[k].ventOnly).length, 2);
   for (const k of CHARGERS) {
     const s = SHEET.kinds[k];
-    assert.ok(s?.shape && SHEET.layers.includes(`${s.shape}.body`), `${k} is on the sheet`);
-    if (SHEET.layers.includes(`${s.shape}.glow`)) assert.ok(s.glow, `${k} tints its shape's glow`);
+    const shape = s?.shape || k;   // v268: the deep chargers have shapes of their own
+    assert.ok(s && SHEET.layers.includes(`${shape}.body`), `${k} is on the sheet`);
+    if (SHEET.layers.includes(`${shape}.glow`)) assert.ok(s.glow, `${k} tints its shape's glow`);
     assert.ok(LOOT[k]?.length && LOOT[k].every(([it]) => ITEMS[it]), `${k} drops real items`);
   }
 });
