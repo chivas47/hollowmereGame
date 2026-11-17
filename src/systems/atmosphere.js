@@ -76,7 +76,9 @@ addLayer(96, (c) => {
 let fauna = { key: null, birds: [], flies: [], bugs: [], ducks: [], frogs: [], water: [], jump: null, nextJump: 3 };
 // v277: the weather where you are (the dunes are always clear) and what the wildlife was last made for.
 const skyHere = () => (underSky(G.S.map) ? G.S.weather : 'sun');
-const faunaKey = () => `${G.S.map}-${G.S.day}-${skyHere()}`;
+// v279 (roadmap 92d): wildlife is made fresh for each map and day; within a day, the weather and the hour change it
+// gradually (birds fly off or in, insects and frogs fade) instead of it all being swapped or cut at once.
+const faunaKey = () => `${G.S.map}-${G.S.day}`;
 export const faunaNow = () => fauna;
 export const TALL_COVER = new Set(['fern', 'tall', 'heather', 'bloom', 'scrub', 'cactus', 'driftwood', 'bones', 'twigs', 'mushrooms']);   // v278   // v276: for tools and tests (the birds on this map)
 const isWater = (x, y) => MAPS[G.S.map].grid[y]?.[x] === 'O';
@@ -103,23 +105,67 @@ function spawn() {
   // they looked to sit on top of it.
   const low = tiles.filter(([x, y]) => !TALL_COVER.has(coverKind(S.map, x, y, today().season)));
   const perch = () => low[(R() * low.length) | 0] || pick();
-  const kinds = birdsFor(S.map, today().season, skyHere()), weight = kinds.reduce((a, [, w]) => a + w, 0);   // v277: by place, season and weather
-  if (weight) for (let i = 0; i < many(WILDLIFE.birds.n); i++) {
-    let k = R() * weight, sp = kinds[0][0];
-    for (const [key, w] of kinds) { if ((k -= w) < 0) { sp = key; break; } }
-    const [x, y] = perch(); fauna.birds.push({ sp, x: x * T + 8, y: y * T + 10, vx: 0, vy: 0, flee: false, peck: R() * 3, mode: 'peck', left: R() < 0.5, t: R() * 2, age: 0 });
-  }
+  fauna.perch = perch; fauna.R = R; fauna.flock = many(WILDLIFE.birds.n); fauna.sky = skyHere();
+  if (S.time < BIRD_DAY.leave[0]) for (let i = 0; i < fauna.flock; i++) addBird(false);   // none if you arrive after dusk
   for (let i = 0; i < many(WILDLIFE.butterflies.n); i++) { const [x, y] = pick(); fauna.bugs.push({ x: x * T, y: y * T, p: R() * 6, col: ['#f2d14a', '#f2f2f2', '#e8884a', '#9ab8f0'][i % 4] }); }
   for (let i = 0; i < many(WILDLIFE.fireflies.n); i++) { const [x, y] = pick(); fauna.flies.push({ x: x * T, y: y * T, p: R() * 6 }); }
+  fauna.fade = { bugs: +bugsOn(), flies: +fliesOn(), frogs: +frogsOn() };   // v279: as they are when you arrive
 }
+
+// v279 (92d): birds come and go. Each leaves at its own moment in the last half hour before dusk (BIRD_DAY.leave),
+// flying off; when the weather turns, the ones it does not suit fly off and, if it improves, others fly in and land.
+export const BIRD_DAY = { leave: [18 * 60 + 30, 19 * 60], arrive: 60 };   // arrive: px a second, gliding in
+function pickSpecies() {
+  const kinds = birdsFor(G.S.map, today().season, skyHere()), weight = kinds.reduce((a, [, w]) => a + w, 0);
+  if (!weight) return null;
+  let k = fauna.R() * weight;
+  for (const [key, w] of kinds) { if ((k -= w) < 0) return key; }
+  return kinds[0][0];
+}
+function addBird(arriving) {
+  const sp = pickSpecies(), R = fauna.R;
+  if (!sp) return;
+  const [tx, ty] = fauna.perch(), x = tx * T + 8, y = ty * T + 10, from = R() < 0.5 ? -1 : 1;
+  const leaveAt = BIRD_DAY.leave[0] + R() * (BIRD_DAY.leave[1] - BIRD_DAY.leave[0]);
+  const b = { sp, x, y, vx: 0, vy: 0, flee: false, peck: R() * 3, mode: 'peck', left: R() < 0.5, t: R() * 2, age: 0, leaveAt };
+  if (arriving) Object.assign(b, { land: { x, y }, x: x + from * 140, y: y - 110, left: from > 0, age: 0 });
+  fauna.birds.push(b);
+}
+function depart(b, awayFrom) {
+  const dir = awayFrom !== undefined ? (b.x < awayFrom ? -1 : 1) : (Math.random() < 0.5 ? -1 : 1);
+  Object.assign(b, { flee: true, land: null, vx: dir * (50 + Math.random() * 30), vy: -60, age: 0, left: dir < 0 });
+}
+// When the weather changes: off go the birds it does not suit; in come new ones if there is room and daylight left.
+function weatherTurned() {
+  fauna.sky = skyHere();
+  const ok = new Set(birdsFor(G.S.map, today().season, fauna.sky).map(([k]) => k));
+  for (const b of fauna.birds) if (!b.flee && !ok.has(b.sp)) depart(b);
+  const staying = fauna.birds.filter((b) => !b.flee).length;
+  if (ok.size && G.S.time < BIRD_DAY.leave[0]) for (let i = staying; i < fauna.flock; i++) addBird(true);
+}
+// v279: insects and frogs fade in and out over FADE seconds as the hour or the weather changes (they used to pop).
+const FADE = 1.5;
+const bugsOn = () => open('butterflies') && G.S.weather === 'sun' && G.S.time >= 8 * 60 && G.S.time <= 18 * 60;
+const fliesOn = () => open('fireflies') && !wet() && G.S.time >= WILDLIFE.fireflies.from;
+const frogsOn = () => open('frogs') && G.S.time >= WILDLIFE.frogs.from && G.S.time < WILDLIFE.frogs.to && !wet();
+const ease = (v, on, dt) => Math.max(0, Math.min(1, v + (on ? dt : -dt) / FADE));
 
 addUpdater((dt) => {
   const S = G.S;
   if (!underSky(S.map) && !BIRD_PLACES[S.map]) return;   // v277: the desert has birds but no weather of its own
-  if (fauna.key !== faunaKey()) spawn();   // v277: the weather changes who is out
+  if (fauna.key !== faunaKey()) spawn();
+  if (fauna.sky !== skyHere()) weatherTurned();   // v279
+  fauna.fade.bugs = ease(fauna.fade.bugs, bugsOn(), dt); fauna.fade.flies = ease(fauna.fade.flies, fliesOn(), dt); fauna.fade.frogs = ease(fauna.fade.frogs, frogsOn(), dt);
   for (const b of fauna.birds) {
+    if (b.land) {   // v279: flying in to land
+      b.age += dt;
+      const dx = b.land.x - b.x, dy = b.land.y - b.y, d = Math.hypot(dx, dy), s = BIRD_DAY.arrive * dt;
+      if (d <= s) { b.x = b.land.x; b.y = b.land.y; b.land = null; b.mode = 'look'; b.t = 0.8; } else { b.x += (dx / d) * s; b.y += (dy / d) * s; }
+      continue;
+    }
+    if (!b.flee && S.time >= b.leaveAt) depart(b);   // v279: off to roost as dusk falls, one by one
     if (!b.flee && Math.hypot(b.x - S.x, b.y - S.y) < WILDLIFE.birds.scare * T) {
-      Object.assign(b, { flee: true, vx: (b.x < S.x ? -1 : 1) * (50 + Math.random() * 30), vy: -60, age: 0, left: b.x < S.x });
+      depart(b, S.x);
       emit('sfx', 'flap');
     }
     if (b.flee) { b.age += dt; b.x += b.vx * dt; b.y += b.vy * dt; continue; }
@@ -133,7 +179,7 @@ addUpdater((dt) => {
       if ((b.mode === 'look' || b.mode === 'hop') && Math.random() < 0.35) b.left = !b.left;
     }
   }
-  fauna.birds = fauna.birds.filter((b) => b.y > -10 && b.x > -10 && b.x < sizeOf(S.map).w * T + 10);
+  fauna.birds = fauna.birds.filter((b) => b.land || (b.y > -10 && b.x > -10 && b.x < sizeOf(S.map).w * T + 10));   // v279: arrivals start off the map
   for (const f of [...fauna.bugs, ...fauna.flies]) f.p += dt;
   // v162: ducks paddle and turn back at the bank; a fish jumps now and then; frogs hop
   for (const d of fauna.ducks) {
@@ -171,10 +217,13 @@ addLayer(9, (c) => {
     const ring = Math.min(1.2, j.t) * 6, a = Math.max(0, 0.6 - j.t * 0.5);
     c.strokeStyle = `rgba(230,240,255,${a})`; c.lineWidth = 1; c.beginPath(); c.ellipse(j.x, j.y + 1, ring + 1, (ring + 1) / 2.5, 0, 0, Math.PI * 2); c.stroke();
   }
-  const t = G.S.time, F = WILDLIFE.frogs;
-  if (open('frogs') && t >= F.from && t < F.to && !wet()) for (const f of fauna.frogs) {
-    const y = (f.y - (f.hop > 0 ? Math.sin((f.hop / 0.35) * Math.PI) * 3 : 0)) | 0, x = f.x | 0;
-    r(c, x - 2, y - 2, 5, 3, '#4a7a3a'); r(c, x - 2, y - 3, 1, 1, '#d8e8a0'); r(c, x + 2, y - 3, 1, 1, '#d8e8a0');
+  if (fauna.fade?.frogs) {   // v279: faded in and out
+    c.save(); c.globalAlpha = fauna.fade.frogs;
+    for (const f of fauna.frogs) {
+      const y = (f.y - (f.hop > 0 ? Math.sin((f.hop / 0.35) * Math.PI) * 3 : 0)) | 0, x = f.x | 0;
+      r(c, x - 2, y - 2, 5, 3, '#4a7a3a'); r(c, x - 2, y - 3, 1, 1, '#d8e8a0'); r(c, x + 2, y - 3, 1, 1, '#d8e8a0');
+    }
+    c.restore();
   }
 });
 
@@ -182,6 +231,7 @@ addLayer(9, (c) => {
 export const PECK = { every: 1.1, down: 0.35 };
 // v276: which frame of the bird sheet (data/sprites.js BIRDS_SHEET) a bird shows now.
 export function birdFrame(b) {
+  if (b.land) return [5, 6, 7, 6][Math.floor(b.age * 12) % 4];   // v279: flying in
   if (b.flee) {
     if (b.age < 0.12) return 4;
     return BIRD_SPECIES[b.sp]?.shape === 'gull' ? [5, 6, 6, 6, 7, 6, 6, 6][Math.floor(b.age * 10) % 8] : [5, 6, 7, 6][Math.floor(b.age * 14) % 4];   // v277: a gull glides between beats
@@ -189,25 +239,26 @@ export function birdFrame(b) {
   if (b.mode === 'peck') return (b.peck % PECK.every) < PECK.down ? 2 : 0;   // v278: about one peck a second, not five
   return b.mode === 'look' ? 1 : b.mode === 'hop' ? 3 : 0;
 }
-const birdsOut = () => G.S.time < 19 * 60;   // v277: the weather is in birdsFor (hardy birds stay out in rain)
 addLayer(40, (c) => {
-  if ((!underSky(G.S.map) && !BIRD_PLACES[G.S.map]) || !birdsOut()) return;
+  if (!underSky(G.S.map) && !BIRD_PLACES[G.S.map]) return;   // v279: no hour cut-off: they fly off at dusk instead
   for (const b of fauna.birds) {   // v276 (92a): from the bird sheet (render/wildlife.js)
-    drawBird(c, b.x, b.y, birdFrame(b), b.left, BIRD_SPECIES[b.sp], b.flee ? 4 : b.mode === 'hop' ? 2 : 0);
+    drawBird(c, b.x, b.y, birdFrame(b), b.left, BIRD_SPECIES[b.sp], b.flee || b.land ? 4 : b.mode === 'hop' ? 2 : 0);
   }
 });
 addLayer(70, (c) => {
   const t = G.S.time;
-  if (!underSky(G.S.map) || !open('butterflies') || G.S.weather !== 'sun' || t < 8 * 60 || t > 18 * 60) return;
+  if (!underSky(G.S.map) || !fauna.fade?.bugs) return;   // v279: faded in and out
+  c.save(); c.globalAlpha = fauna.fade.bugs;
   for (const f of fauna.bugs) {
     const x = (f.x + Math.sin(f.p * 0.7) * 24) | 0, y = (f.y + Math.sin(f.p * 1.3) * 10) | 0, open2 = Math.sin(f.p * 14) > 0;
     r(c, x, y, 1, 2, '#3a2a1a'); r(c, x - (open2 ? 2 : 1), y - 1, open2 ? 2 : 1, 2, f.col); r(c, x + 1, y - 1, open2 ? 2 : 1, 2, f.col);
   }
+  c.restore();
 });
 addLayer(1000, (c) => {
-  if (!underSky(G.S.map) || !open('fireflies') || wet() || G.S.time < WILDLIFE.fireflies.from) return;
+  if (!underSky(G.S.map) || !fauna.fade?.flies) return;   // v279: faded in and out
   for (const f of fauna.flies) {
-    const glow = (Math.sin(f.p * 2) + 1) / 2;
+    const glow = (Math.sin(f.p * 2) + 1) / 2 * fauna.fade.flies;
     if (glow < 0.2) continue;
     const x = (f.x + Math.sin(f.p * 0.4) * 30) | 0, y = (f.y + Math.cos(f.p * 0.5) * 16) | 0;
     c.fillStyle = `rgba(220,255,120,${glow * 0.25})`; c.fillRect(x - 2, y - 2, 5, 5);
