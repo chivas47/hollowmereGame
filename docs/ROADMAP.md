@@ -351,7 +351,7 @@ Nuno (November 2026): no sword tip where there is fighting; pickup messages are 
 
 | Item | What | Kind | Status | Notes |
 |---|---|---|---|---|
-| 91a | Two-tile objects solid all the way across | fix | in progress | Nuno: signs two squares wide and the boat block and answer Use on one square only. Boards, boats and tables drawn 32 px wide marked only their left tile; their second tile now takes the same tile (data/maps.js WIDE_OBJECTS). The town coach stop moves one tile west, off the lane's path (Corvin's heart scene walks it). |
+| 91a | Two-tile objects solid all the way across | fix | done (chivas47/hollowmereGame#293) | Nuno: signs two squares wide and the boat block and answer Use on one square only. Boards, boats and tables drawn 32 px wide marked only their left tile; their second tile now takes the same tile (data/maps.js WIDE_OBJECTS). The town coach stop moves one tile west, off the lane's path (Corvin's heart scene walks it). |
 
 ## Done
 
