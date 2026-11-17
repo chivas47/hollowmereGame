@@ -207,6 +207,7 @@ src/
     arcade.js         the arcade cabinets' screens (v70)
     animation.js      v74: the tool or weapon in hand (drawHeld, rotated hotbar icons), the rod (drawRod), the crafted pose, item pictures, particles and labels (drawFx)
     title.js          v271: the title screen's living valley (drawn in code, scaled up pixelated)
+    menuIcons.js      v273: the menu's 16x16 tile icons as letter grids
     renderer.js       composes a frame, caches backgrounds per map + season; v139: draws each view (G.view = the farmer it follows: night light, mine dark, facing outline)
     views.js          v139: split screen: views() (one alone, two halves side by side with a second farmer), camera(), onScreen(), toWorld() for prompts and taps; v156: the camera moves both ways over each farmer's own map (sizeOf() in data/maps.js), and visible() is the world rectangle a frame draws (G.drawing), for layers that cover the screen
     interiors.js      v97: cottage rooms (each room its own wallpaper and floor, two-row north walls), every floor-plan piece at its full size, small things on surfaces (TOPS), rugs; windows follow the hour, fires and stoves flicker
@@ -243,7 +244,7 @@ src/
     island.js         Rook's boat dialog (ui:boat, v65)
     nuts.js           the bridge and the island trader (ui:bridge, ui:islandshop, v66; ui:peak, v67)
     social.js         the social menu (F, or the Friends button) and letters (v48)
-    menu.js           the pause menu (Esc or the Menu button): settings, save files, debug tools, controls (v96)
+    menu.js           the pause menu (Esc or the Menu button): settings, save files, debug tools, controls (v96); v273: a hub of tiles, each a page (showPage, menuBack)
     dom.js toast.js modal.js (openModal(html, actions, {wide}); wide 'xl' the Bag's 960 px card (v235); v141: over the owner's half in two-player, no pause; v144: one dialog each, #modal yours and #modal2 farmer two's, G.dialog.{you,p2}; dom.js $ and $$ search only the acting farmer's box (G.partnerActing); listeners on #mbody/#mact serve both; clicks, input and change in #modal2 run through asThem) hud.js hudPrefs.js goal.js prompt.js hotbar.js dialogs.js
     workshop.js mine.js input.js (keys go through core/controls.js actionOf; v126: runAction(), escape() for the pad too) debugPanel.js
     offline.js        v121: registers sw.js and hands it the files the first visit loaded (v233: not on itch.io)

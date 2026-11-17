@@ -66,15 +66,16 @@ const PAIRS = [['toast', 'modal'], ['toast2', 'modal2']];
 const home = {};
 export function placeToasts() {
   for (const [tid, mid] of PAIRS) {
-    const t = document.getElementById(tid), m = document.getElementById(mid), card = m?.querySelector('.card');
-    if (!t || !card) continue;
+    const t = document.getElementById(tid), m = document.getElementById(mid);
+    if (!t || !m) continue;
     if (!home[tid]) home[tid] = { parent: t.parentElement, next: t.nextSibling };
-    const open = !m.hidden;
-    if (open && t.parentElement !== card) { card.prepend(t); t.classList.add('incard'); }
-    else if (!open && t.parentElement === card) { home[tid].parent.insertBefore(t, home[tid].next); t.classList.remove('incard'); }
+    const menu = tid === 'toast' && document.getElementById('menu');   // v273 (90b): the menu too, under its header
+    const card = !m.hidden ? m.querySelector('.card') : menu && !menu.hidden ? menu.querySelector('.card') : null;
+    if (card && t.parentElement !== card) { (card.querySelector('.cardhead') ? card.querySelector('.cardhead').after(t) : card.prepend(t)); t.classList.add('incard'); }
+    else if (!card && t.classList.contains('incard')) { home[tid].parent.insertBefore(t, home[tid].next); t.classList.remove('incard'); }
   }
 }
 if (typeof MutationObserver !== 'undefined') {
   const watch = new MutationObserver(placeToasts);
-  for (const [, mid] of PAIRS) { const m = document.getElementById(mid); if (m) watch.observe(m, { attributes: true, attributeFilter: ['hidden'] }); }
+  for (const id of [...PAIRS.map(([, mid]) => mid), 'menu']) { const m = document.getElementById(id); if (m) watch.observe(m, { attributes: true, attributeFilter: ['hidden'] }); }
 }

@@ -13,7 +13,7 @@ import { closeModal, dialogOf } from './modal.js';
 import { selectSlot } from './hotbar.js';
 import { confirmReset } from './dialogs.js';
 import { toggleDebug } from './debugPanel.js';
-import { openMenu, closeMenu, menuOpen } from './menu.js';
+import { openMenu, closeMenu, menuOpen, menuBack } from './menu.js';
 import { toggleAll } from './sound.js';
 import { cycleHud } from './hudPrefs.js';
 import { whistle } from '../systems/stable.js';
@@ -46,7 +46,7 @@ export const runAction = (a) => PRESS[a]?.();
 export function escape() {
   if (G.cut) return;   // v240: Esc held skips a cutscene (below); a tap does nothing
   if (dialogOf('you')) closeModal();   // v141: farmer two's dialog is theirs to close (B)
-  else if (menuOpen()) closeMenu();
+  else if (menuOpen()) { if (!menuBack()) closeMenu(); }   // v273: a menu page goes back to the tiles first
   else if (G.siting) cancelSiting();
   else openMenu();
 }

@@ -399,4 +399,49 @@ body.in-cut .goal,body.in-cut .prompt,body.in-cut .toasts{visibility:hidden}
 .titlebtns button.primary small{color:var(--soil)}
 .titlebtns button:focus-visible,.titlebtns button:hover{outline:3px solid var(--cream);outline-offset:1px}
 .titlenote{margin:0;background:rgba(42,33,24,.9);border-radius:8px;padding:8px 12px;color:var(--cream)}
-body.titling .game-only{display:none}
+body.titling .game-only,body.titling #menu .game-only{display:none}
+
+/* v273 (roadmap 90b): the menu as a wooden board of picture tiles, each opening a parchment page (ui/menu.js).
+   Parchment: --parch; ink: --ink. Scoped to #menu; the other dialogs follow in 90c. */
+#menu{--parch:#efe0bc;--parch2:#e3cf9f;--ink:#3a2a1a;--ink2:#6a5034;--wood:#7a4f2c;--wood2:#5c371e;--wood3:#9a6a3e}
+#menu .card.board{max-width:600px;color:var(--ink);border:0;border-radius:14px;padding:14px;
+  background:repeating-linear-gradient(90deg,rgba(0,0,0,.06) 0 2px,transparent 2px 9px),linear-gradient(180deg,var(--wood3),var(--wood) 30%,var(--wood2));
+  box-shadow:inset 0 0 0 3px #3a2412,inset 0 0 0 6px var(--wood3),inset 0 3px 0 7px rgba(255,220,170,.25),0 18px 44px rgba(0,0,0,.6)}
+#menu .card.board > *:not(.cardhead){position:relative}
+#menu .cardhead{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:8px;margin:0 0 10px}
+#menu .cardhead .close,#menu .cardhead .back{background:var(--wood2);color:var(--parch);border:2px solid #3a2412;border-radius:8px;min-width:44px;min-height:44px;font-size:20px;cursor:pointer}
+#menu .cardhead .back.gone{visibility:hidden}
+#menu h2.ribbon{justify-self:center;margin:0;padding:6px 34px;font-size:26px;color:#fff3d6;text-shadow:0 2px 0 #5a1a12;background:#b8402c;
+  clip-path:polygon(0 0,100% 0,calc(100% - 14px) 50%,100% 100%,0 100%,14px 50%);box-shadow:inset 0 -4px 0 rgba(0,0,0,.18)}
+#menu .mhub{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:12px;border-radius:10px;
+  background:radial-gradient(ellipse at 30% 20%,#f6ead0,var(--parch) 60%,var(--parch2));box-shadow:inset 0 0 0 2px #b8986a,inset 0 0 18px rgba(120,80,30,.35)}
+#menu .mhub[hidden]{display:none}
+#menu .mtile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:104px;padding:10px 4px;cursor:pointer;
+  background:linear-gradient(180deg,#fbf2dc,#ead6a8);color:var(--ink);font:inherit;font-size:18px;font-weight:600;border:2px solid #a07a4a;border-radius:10px;
+  box-shadow:0 3px 0 #8a6436,0 5px 8px rgba(60,35,10,.25);transition:transform .08s}
+#menu .mtile:hover,#menu .mtile:focus-visible{transform:translateY(-2px);outline:3px solid #b8402c;outline-offset:1px}
+#menu .mtile:active{transform:translateY(1px);box-shadow:0 1px 0 #8a6436}
+#menu .micon{width:48px;height:48px;image-rendering:pixelated}
+#menu .mpage{padding:14px 16px;border-radius:10px;color:var(--ink);
+  background:radial-gradient(ellipse at 30% 10%,#f6ead0,var(--parch) 55%,var(--parch2));box-shadow:inset 0 0 0 2px #b8986a,inset 0 0 18px rgba(120,80,30,.35)}
+#menu .mpage[hidden]{display:none}
+#menu .mpage h3{margin:12px 0 6px;font-size:20px;color:#8a2a1a;border-bottom:2px dashed #b8986a;padding-bottom:2px}
+#menu .mpage h3:first-child{margin-top:0}
+#menu .mpage .hint,#menu .mpage p{color:var(--ink2)}
+#menu .mpage .keys dt{color:var(--ink)}#menu .mpage .keys dd{color:var(--ink2)}
+#menu .mpage kbd{background:#fff7e4;color:var(--ink);border:1px solid #a07a4a;border-bottom-width:3px;border-radius:4px;padding:0 5px}
+#menu .mrows{display:flex;flex-direction:column;gap:8px}
+#menu .mpage .ghost,#menu .mpage .footbtns button,#menu .mpage .keys button,#menu .mpage #controlsReset,#menu .mfoot button{
+  background:linear-gradient(180deg,var(--wood3),var(--wood));color:#fff3d6;border:2px solid #3a2412;border-radius:8px;font-size:18px;min-height:44px;padding:6px 14px;
+  text-align:left;box-shadow:0 2px 0 #3a2412;cursor:pointer}
+#menu .mpage .ghost.slider{justify-content:space-between;text-align:left}
+#menu .mpage .ghost.slider input{flex:1 1 140px;accent-color:#e9b44c}
+#menu .mpage .ghost[aria-pressed="false"]{background:linear-gradient(180deg,#8a7a68,#6a5a4a)}
+#menu .mpage .ghost:focus-visible,#menu .mfoot button:focus-visible,#menu .cardhead button:focus-visible{outline:3px solid #ffe08a;outline-offset:1px}
+#menu .mfoot{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}
+#menu .mfoot button.primary{background:linear-gradient(180deg,#f0c860,#d9a43a);color:var(--ink);border-color:#8a6420;font-weight:600;text-align:center;min-width:120px}
+#menu .mpage section.debug button{background:var(--wood2)}
+@media (max-width:560px){#menu .mhub{grid-template-columns:repeat(2,1fr)}#menu .mtile{min-height:88px}#menu h2.ribbon{font-size:22px;padding:6px 24px}}
+/* v273: notices that arrive while the menu is open sit under its header as small dark notes (ui/toast.js). */
+#menu .toasts.incard{position:static;margin:0 0 8px;padding:0;background:none;width:auto}
+#menu .toasts.incard .toast{color:var(--cream);background:rgba(42,28,16,.92);border-color:#b8986a}
