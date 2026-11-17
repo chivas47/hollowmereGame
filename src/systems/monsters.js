@@ -436,7 +436,7 @@ addEntities(() => (G.S.map !== slimeMap ? [] : slimes.map((m) => ({
     : MONSTERS[m.kind].move === 'split' ? drawSplitter(c, m)
     : m.ph ? drawPhaser(c, m)
     : m.cs ? drawCharger(c, m)
-    : m.hidden ? drawMonster(c, m.x, m.y, 'crabrock', MONSTERS[m.kind].disguise || ROCK_GREY, false, 0)   // v253: a mimic asleep looks like a rock (v261: the gourd lurker a pumpkin)
+    : m.hidden ? drawMonster(c, m.x, m.y, SHEET.kinds[m.kind]?.sleep || 'crabrock', MONSTERS[m.kind].disguise || ROCK_GREY, false, 0)   // v269: its own sleeping shape (the gourd's pumpkin)   // v253: a mimic asleep looks like a rock (v261: the gourd lurker a pumpkin)
     : m.bs === 'sink' ? drawSinking(c, m)   // v267
     : m.bs && m.bs !== 'up' ? drawMound(c, m.x + (m.bs === 'rise' ? (Math.floor(m.bt * 30) % 2 ? 1 : -1) : 0), m.y, m.hop, m.kind === 'lurker' ? 'lava' : 'earth', shellOf(m))   // v253: a burrower's mound (shaking: the tell); v254: a lava ripple
     : drawMonster(c, m.x, m.y, m.kind, m.aim && Math.floor(m.st * 14) % 2 === 0 ? MONSTERS[m.kind].glow || m.color : m.color, m.hurt > 0, m.hop, !!m.face)),   // v255: a spitter flashes before it spits (v264: in its glow colour, not white)

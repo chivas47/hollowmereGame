@@ -126,7 +126,9 @@ export const MONSTERS = {
     'shade.line', 'shade.ink', 'emberslime.body', 'emberslime.glow', 'emberslime.line', 'emberslime.ink',
     'cragshell.body', 'cragshell.line', 'cragshell.ink', 'stormwing.body', 'stormwing.glow', 'stormwing.line',
     'stormwing.ink', 'cinder.body', 'cinder.glow', 'cinder.line', 'cinder.ink', 'magmaram.body', 'magmaram.glow',
-    'magmaram.line', 'magmaram.ink'],
+    'magmaram.line', 'magmaram.ink', 'bramble.body', 'bramble.line', 'bramble.ink', 'moth.body', 'moth.glow',
+    'moth.line', 'moth.ink', 'gourd.body', 'gourd.line', 'gourd.ink', 'gourdsleep.body', 'gourdsleep.line',
+    'gourdsleep.ink', 'frostwisp.body', 'frostwisp.glow', 'frostwisp.line', 'frostwisp.ink'],
   kinds: {
     mite: { shadow: [-5, 10, 0.35], rim: '#a8845a' }, bat: { shadow: [-3, 6, 0.25], bob: 6, rim: '#8f7aa8' }, skeleton: { shadow: [-4, 8, 0.35] },
     wraith: { shadow: [-4, 8, 0.35], sway: 3 }, rex: { shadow: [-4, 8, 0.25], bob: 5 },
@@ -154,9 +156,12 @@ export const MONSTERS = {
     // v268 (87c2): every deep kind has its own shape now (the cinder hound's is 'cinder'; the gloom hound keeps
     // 'hound'), the dark ones a lighter rim and the two sand-coloured ones (dust devils, sand spitter) a darker one
     // so they stand off the Cavern's sand. CODE_LIKE in render/sprites.js: the shape the code art borrows before the sheet loads.
-    // v261 (85j): the seasonal creatures, drawn from shapes already on the sheet.
-    bramble: { shape: 'puff', shadow: [-2, 4, 0.25], bob: 7 }, moth: { shape: 'bat', shadow: [-3, 6, 0.2], bob: 6 },
-    gourd: { shape: 'crab', shadow: [-6, 12, 0.35] }, frostwisp: { shape: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#9fd8f0' },
+    // v261 (85j): the seasonal creatures.
+    // v269 (87c3): each its own shape. halo: a soft light drawn round it (the firefly moth); sleep: the shape a mimic
+    // shows while asleep, tinted to its disguise colour (the gourd lurker's pumpkin; others the pebble crab's rock).
+    bramble: { shadow: [-2, 4, 0.25], bob: 7 }, moth: { shadow: [-3, 6, 0.2], bob: 6, glow: '#fff3a0', halo: '#fff3a0' },
+    gourd: { shadow: [-6, 12, 0.35], sleep: 'gourdsleep' }, gourdsleep: { shadow: [-6, 12, 0.35] },
+    frostwisp: { shadow: [-3, 6, 0.2], bob: 3, glow: '#9fd8f0' },
   },
 };
 

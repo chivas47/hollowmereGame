@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v269: The night creatures redrawn
+- The gourd lurker sleeps as a real pumpkin, with ribs, a stem, a leaf and a curling tendril, instead of an orange rock. Awake it has a carved, glowing face and scuttles on twiggy legs.
+- The firefly moth has soft wings with eye-spots, feathered antennae and a glowing tail, and gives off a faint pulsing light.
+- Bramble sprites are tumbling tangles of leafy twigs with thorns and berry eyes, and the frost wisp has ice shards at its sides and snowflakes falling from it.
+- All four have four frames, and now no two creatures share a shape.
+- New save data: none.
+
 ## v268: The deep dungeons' creatures redrawn
 - All 17 kinds of the Sunken Cavern and the Ember Vent have new sprites with four frames each, and none of them borrows another creature's shape any more:
   - the dune scuttler is a sand scorpion with a curled stinger, and the sand bull has forward-swept horns, a hump and a nose ring;
