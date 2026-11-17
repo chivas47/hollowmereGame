@@ -345,7 +345,7 @@ Nuno (November 2026): no sword tip where there is fighting; pickup messages are 
 |---|---|---|---|---|
 | 90a | Quiet in a fight | polish | done (chivas47/hollowmereGame#290) | The weapon tip never shows where a fight is on (any mine floor, or creatures on your map); "+n item" notices are dropped there (the items flying in show them). Finds, ladders and floor names still show. |
 | 90b | The menu as a hub of picture tiles | feature | done (chivas47/hollowmereGame#291) | Esc opens a wood-and-parchment board of tiles (Sound, Display, Controls, Farms, Saves, Help, ...), each a small page with Back; pixel-art icons. |
-| 90c | The same look for the Bag, Crafting, Journal and shops | polish | queued | The frame, headers and icons of 90b on the other dialogs. |
+| 90c | The same look for the Bag, Crafting, Journal and shops | polish | in progress | The frame, headers and icons of 90b on the other dialogs. |
 
 ## Done
 

@@ -33,7 +33,7 @@ Esc or the Menu button opens a wooden board of picture tiles (pixel icons in ren
 | Birthday | Your birthday |
 | Help | Getting started; debug tools where allowed |
 
-Resume and Undo sit at the foot. Esc or B on a page goes back to the tiles; on the tiles it closes the menu. Before a farm is loaded (the title screen) only Sound, Display, Effects, Controls and Help show. Notices that arrive while it is open sit under its title.
+v274 (90c): every dialog (the Bag, Crafting, the Journal, shops, talking, the new game screen and the rest) wears the same board, ribbon title and parchment page; the dialogs' text colours flip to ink through the palette variables, so their contents are unchanged. Resume and Undo sit at the foot. Esc or B on a page goes back to the tiles; on the tiles it closes the menu. Before a farm is loaded (the title screen) only Sound, Display, Effects, Controls and Help show. Notices that arrive while it is open sit under its title.
 
 ## The title screen (v271, roadmap 89b)
 

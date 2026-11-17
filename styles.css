@@ -445,3 +445,31 @@ body.titling .game-only,body.titling #menu .game-only{display:none}
 /* v273: notices that arrive while the menu is open sit under its header as small dark notes (ui/toast.js). */
 #menu .toasts.incard{position:static;margin:0 0 8px;padding:0;background:none;width:auto}
 #menu .toasts.incard .toast{color:var(--cream);background:rgba(42,28,16,.92);border-color:#b8986a}
+
+/* v274 (roadmap 90c): every dialog in the look of the menu (v273): a wooden board, a red ribbon title and a
+   parchment page. The text colours flip through the palette variables (cream text becomes ink, straw a softer ink),
+   so the dialogs' own rules keep working; buttons are wooden plaques, the main one gold. */
+#modal,#modal2{--bark:#efe0bc;--soil:#fff7e4;--plank:#ead6a8;--cream:#3a2a1a;--straw:#6a5034;--leaf:#3f7a2a;--seam:#b8986a;--water:#2f6a9a;--tired:#a8321c;--heart:#b8405a;--harvest:#9a5a10;
+  --wood:#7a4f2c;--wood2:#5c371e;--wood3:#9a6a3e;color-scheme:light}
+#modal .card,#modal2 .card{color:var(--cream);border:0;border-radius:14px;padding:12px;
+  background:repeating-linear-gradient(90deg,rgba(0,0,0,.06) 0 2px,transparent 2px 9px),linear-gradient(180deg,var(--wood3),var(--wood) 30%,var(--wood2));
+  box-shadow:inset 0 0 0 3px #3a2412,inset 0 0 0 6px var(--wood3),0 18px 44px rgba(0,0,0,.6)}
+#modal #mbody,#modal2 #mbody,#modal2 .mbody{padding:14px 16px;border-radius:10px;
+  background:radial-gradient(ellipse at 30% 10%,#f6ead0,#efe0bc 55%,#e3cf9f);box-shadow:inset 0 0 0 2px #b8986a,inset 0 0 18px rgba(120,80,30,.35)}
+#modal .card h2,#modal2 .card h2{display:table;margin:-4px auto 12px;padding:5px 32px;font-size:24px;color:#fff3d6;text-shadow:0 2px 0 #5a1a12;background:#b8402c;
+  clip-path:polygon(0 0,100% 0,calc(100% - 14px) 50%,100% 100%,0 100%,14px 50%);box-shadow:inset 0 -4px 0 rgba(0,0,0,.18);text-align:center}
+#modal .card h3,#modal2 .card h3{color:#8a2a1a;border-bottom:2px dashed #b8986a;padding-bottom:2px}
+#modal .card button,#modal2 .card button{background:linear-gradient(180deg,var(--wood3),var(--wood));color:#fff3d6;border:2px solid #3a2412;box-shadow:0 2px 0 #3a2412}
+#modal .card button.primary,#modal2 .card button.primary{background:linear-gradient(180deg,#f0c860,#d9a43a);color:#3a2a1a;border-color:#8a6420;box-shadow:0 3px 0 #8a6420}
+#modal .card button[aria-pressed="true"],#modal2 .card button[aria-pressed="true"],#modal .card button.on,#modal2 .card button.on{background:linear-gradient(180deg,#c86a3a,#9a4020);color:#fff3d6}
+#modal .card button:focus-visible,#modal2 .card button:focus-visible{outline:3px solid #b8402c;outline-offset:1px}
+#modal .card .bagcell,#modal2 .card .bagcell,#modal .card .swatch,#modal2 .card .swatch{background:linear-gradient(180deg,#fbf2dc,#ead6a8);border-color:#a07a4a;color:var(--cream);box-shadow:0 2px 0 #8a6436}
+#modal .card .bagline,#modal2 .card .bagline{background:linear-gradient(180deg,#fbf2dc,#ead6a8);color:var(--cream);border-color:#a07a4a;box-shadow:0 2px 0 #8a6436}
+#modal .card input,#modal2 .card input,#modal .card select,#modal2 .card select,#modal .card textarea{background:#fff7e4;color:var(--cream);border:2px solid #a07a4a;border-radius:6px}
+#modal .card kbd,#modal2 .card kbd{background:#fff7e4;color:var(--cream);border:1px solid #a07a4a;border-bottom-width:3px;border-radius:4px;padding:0 5px}
+#modal #mact,#modal2 .actions{margin-top:10px;background:linear-gradient(180deg,rgba(92,55,30,0),var(--wood2) 40%);border-radius:0 0 10px 10px;padding:10px 4px 4px}
+#modal .bagside,#modal2 .bagside{background:#efe0bc;box-shadow:0 -10px 12px -8px rgba(90,60,20,.35)}
+#modal .toasts.incard,#modal2 .toasts.incard{background:none}
+#modal .toasts.incard .toast,#modal2 .toasts.incard .toast{color:#f4ead2;background:rgba(42,28,16,.92)}
+/* v274: the journal marks its open tab by disabling it; read it as the chosen tab, not a switched-off one. */
+#modal .card button[data-jtab]:disabled,#modal2 .card button[data-jtab]:disabled{opacity:1;cursor:default;background:linear-gradient(180deg,#f0c860,#d9a43a);color:#3a2a1a;border-color:#8a6420}
