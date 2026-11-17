@@ -24,9 +24,10 @@ function confirmLoad(S, what = 'The file holds') {
   openModal(`<h2>Load this save?</h2><p>${what} a farm on ${d.season} ${d.d}, Year ${d.year} with ${fmtGold(S.gold)}. Your current farm will be replaced. Export it first if you want to keep it.</p>`, [
     ['Keep playing', closeModal, true],
     ['Load save', () => {
+      closeModal();   // v270 (89a): first, so a dialog the load opens (the new game screen) stays open
       G.S = S;
       emit('game:reset'); emit('game:loaded');
-      save({ night: true }); closeModal(); changed();
+      save({ night: true }); changed();
       notify('Save loaded.');
     }],
   ]);

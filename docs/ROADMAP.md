@@ -328,6 +328,15 @@ Nuno (November 2026): chargers rush without chasing, are too easy, and the burro
 | 88a | Chargers steer and are tougher; the burrow beetle burrows | feature | done (chivas47/hollowmereGame#284) | A rush turns toward you at up to 2.4 rad/s; twice the health for all eight; the beetle travels under the floor between rushes and charges as it comes up. |
 | 88b | Burrowing you can see and hear | fix | done (chivas47/hollowmereGame#285) | Nuno: "they don't burrow, and after they die I hear the sound of their attacks". Digging down was a dirt burst and a vanish, read as a defeat, and the dark mound was hard to see. Now a burrower sinks for 0.45 s (out of reach) with the dig sound, coming up makes it too, the mound is lighter and the beetle's shell shows through. |
 
+## Start of the game (November 2026)
+
+Nuno (November 2026): "when you start a new world it did not trigger the creation of character", and "there should really be an opening screen of the game".
+
+| Item | What | Kind | Status | Notes |
+|---|---|---|---|---|
+| 89a | New farm opens the new game screen | fix | in progress | Menu, New farm, Start over closed the dialog after the new farm had opened the new game screen, closing that screen instead; the farm started unnamed until a reload. Loading a save file had the same order. |
+| 89b | A title screen | feature | needs decision | Shown when the game opens, before any farm: the game's name over a scene, Continue, New farm, Farms. Questions for Nuno before building it. |
+
 ## Done
 
 | Item | PR |

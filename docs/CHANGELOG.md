@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v270: New farm opens the new game screen
+- Menu, New farm, Start over now opens the new game screen (your name, farm, look, pet and layout) as it should. Before, the screen closed at once and the new farm started unnamed until the game was reloaded.
+- The same fix for loading a save file.
+- New save data: none.
+
 ## v269: The night creatures redrawn
 - The gourd lurker sleeps as a real pumpkin, with ribs, a stem, a leaf and a curling tendril, instead of an orange rock. Awake it has a carved, glowing face and scuttles on twiggy legs.
 - The firefly moth has soft wings with eye-spots, feathered antennae and a glowing tail, and gives off a faint pulsing light.
