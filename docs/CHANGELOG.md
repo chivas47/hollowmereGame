@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v272: Quiet in a fight
+- Swinging the sword at nothing in the Hollow, the deep dungeons or near any creature no longer brings up the tip about what the sword is for.
+- Items you pick up in a fight ("+1 Gel, +2 Bone", "+3 Copper ore") no longer pop up as messages. They still fly into your bag with their names, and finds, ladders and floor names still show.
+- Away from creatures, both behave as before.
+- New save data: none.
+
 ## v271: A title screen
 - The game now opens on a title screen: Hollowmere Farm over a living valley at dawn, with clouds and birds drifting, smoke rising from the farmhouse and the season of the farm you last played (blossom, summer fireflies, falling leaves or snow).
 - Continue plays the farm you last played and shows its name, date and gold.
