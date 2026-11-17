@@ -316,7 +316,7 @@ Nuno (November 2026): a polish sweep of all the creatures, detailed sprites, det
 | 87b | Creature sweep | polish | done (chivas47/hollowmereGame#281) | tools/creature_sweep.mjs photographs every kind standing, telling, hurt and falling (a contact sheet in polish/creatures/). Finds 37 to 43 in docs/POLISH.md. |
 | 87c1 | Detailed sprites: the Hollow | polish | done (chivas47/hollowmereGame#283) | Finds 40, 41, 43 for the Hollow's kinds: slime, mite, pebble crab, beetle, mole, bat, boar, moss slime, bone walker, ram, soot puffs, serpent, lantern wisp, gloom hound, spitter, shellback. 4 frames each; dark kinds get a lighter rim so they read on dark floors. Same 24 x 24 and anchors. |
 | 87c2 | Detailed sprites: the deep dungeons | polish | done (chivas47/hollowmereGame#286) | The same for the Cavern and Vent: wraith, rex, scuttler, bull, dust devils, sand spitter, tomb shade, magma sprite, golem, cinder hound, magma ram, lurker, ash swarm, crag spitter, ember slime, crag shellback, storm wing. Each shared shape gets a look of its own (find 41). |
-| 87c3 | Detailed sprites: the night creatures | polish | in progress (chivas47/hollowmereGame#287) | Bramble sprites, firefly moth (with a glow), gourd lurker (a real pumpkin asleep: stem, ribs, leaf; find 42), frost wisp. |
+| 87c3 | Detailed sprites: the night creatures | polish | done (chivas47/hollowmereGame#287) | Bramble sprites, firefly moth (with a glow), gourd lurker (a real pumpkin asleep: stem, ribs, leaf; find 42), frost wisp. |
 | 87d | Detailed attack effects | polish | in progress (chivas47/hollowmereGame#282) | Finds 37 to 39: a tell of its own (a red glow and dust for chargers, a mouth glow and a gathering spark for spitters) instead of the white hurt flash; hit sparks by material (gel splat, bone chips, embers, chitin flakes, smoke); a death burst of its own per material; a sword trail on contact; glob trails and splashes; charge dust; burrow spray. |
 
 ## Charger fixes (November 2026)
@@ -327,6 +327,15 @@ Nuno (November 2026): chargers rush without chasing, are too easy, and the burro
 |---|---|---|---|---|
 | 88a | Chargers steer and are tougher; the burrow beetle burrows | feature | done (chivas47/hollowmereGame#284) | A rush turns toward you at up to 2.4 rad/s; twice the health for all eight; the beetle travels under the floor between rushes and charges as it comes up. |
 | 88b | Burrowing you can see and hear | fix | done (chivas47/hollowmereGame#285) | Nuno: "they don't burrow, and after they die I hear the sound of their attacks". Digging down was a dirt burst and a vanish, read as a defeat, and the dark mound was hard to see. Now a burrower sinks for 0.45 s (out of reach) with the dig sound, coming up makes it too, the mound is lighter and the beetle's shell shows through. |
+
+## Start of the game (November 2026)
+
+Nuno (November 2026): "when you start a new world it did not trigger the creation of character", and "there should really be an opening screen of the game".
+
+| Item | What | Kind | Status | Notes |
+|---|---|---|---|---|
+| 89a | New farm opens the new game screen | fix | in progress | Menu, New farm, Start over closed the dialog after the new farm had opened the new game screen, closing that screen instead; the farm started unnamed until a reload. Loading a save file had the same order. |
+| 89b | A title screen | feature | needs decision | Shown when the game opens, before any farm: the game's name over a scene, Continue, New farm, Farms. Questions for Nuno before building it. |
 
 ## Done
 

@@ -226,9 +226,10 @@ export function confirmReset() {
   openModal('<h2>Start a new farm?</h2><p>Your current farm, gold, crops and friendships will be replaced.</p>', [
     ['Keep playing', closeModal, true],
     ['Start over', () => {
+      closeModal();   // v270 (89a): first, or it would close the new game screen game:loaded opens
       G.S = newState(); G.S.time = START;
       emit('game:reset'); emit('game:loaded');
-      save({ night: true }); closeModal(); changed();   // v118: this morning is the new farm's
+      save({ night: true }); changed();   // v118: this morning is the new farm's
       notify('A fresh field. Till the grass below the path.');
     }],
   ]);
