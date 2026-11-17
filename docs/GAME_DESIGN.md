@@ -1206,7 +1206,7 @@ v277 (roadmap 92b): ten species in five shapes (data/atmosphere.js BIRD_SPECIES;
 | Dig site | parrot, quail |
 | Dunes | quail (the dunes keep clear weather) |
 
-Storms keep every bird in; in rain and silvermist only the hardy ones (crows, gulls) stay out. Gulls glide between wing beats when they fly off. v278 (92c): a peck every 1.1 s (head down 0.35 s), in bouts of 2.5 to 5 s; birds land only on bare ground or low cover (no ferns, tall grass, heather, blooms, scrub, cactus, driftwood, bones, twigs or mushrooms).
+Storms keep every bird in; in rain and silvermist only the hardy ones (crows, gulls) stay out. Gulls glide between wing beats when they fly off. v278 (92c): a peck every 1.1 s (head down 0.35 s), in bouts of 2.5 to 5 s; birds land only on bare ground or low cover (no ferns, tall grass, heather, blooms, scrub, cactus, driftwood, bones, twigs or mushrooms). v279 (92d): wildlife is made for each map and day and then changes gradually: each bird flies off at its own moment between 18:30 and 19:00 (BIRD_DAY), none are out if you arrive later; when the weather turns, birds it does not suit fly off and, before dusk, new ones fly in and land; butterflies, fireflies and frogs fade in and out over 1.5 s with the hour and the weather.
 
 ## Management tools (v71)
 Data in `data/storage.js` and `data/crafting.js`; logic in `systems/storage.js`; dialogs and journal tabs in `ui/storage.js`.

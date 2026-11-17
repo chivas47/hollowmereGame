@@ -100,3 +100,64 @@ test('birds land on bare ground or low cover, never in a fern or tall grass', as
   }
   assert.ok(seen > 30, `${seen} birds checked`);
 });
+
+// Roadmap 92d (Nuno: "birds just completely vanish in thin air when it gets dark"): wildlife comes and goes
+// gradually. Birds fly off at dusk and when the weather turns; new ones fly in when it improves; insects fade.
+async function onFarm(time, weather = 'sun', day = 31) {
+  const { runUpdaters } = await import('../src/core/registry.js');
+  freshFarm();
+  Object.assign(G.S, { map: 'farm', day, weather, time, x: -999, y: -999 });
+  runUpdaters(0.01);
+  return runUpdaters;
+}
+test('at dusk the birds fly off one by one; none are cut from the sky', async () => {
+  const { faunaNow, BIRD_DAY } = await import('../src/systems/atmosphere.js');
+  const run = await onFarm(17 * 60);
+  const n = faunaNow().birds.length;
+  assert.ok(n > 0);
+  const seen = new Set();
+  G.S.time = BIRD_DAY.leave[0] - 1; run(0.05);
+  for (let m = BIRD_DAY.leave[0]; m <= BIRD_DAY.leave[1]; m += 2) {
+    G.S.time = m;
+    for (let i = 0; i < 20; i++) { run(0.05); for (const b of faunaNow().birds) if (b.flee) seen.add(b); }
+    for (const b of faunaNow().birds) if (!b.flee) assert.ok(b.leaveAt > m, 'only birds whose time has not come stay');
+  }
+  assert.equal(seen.size, n, 'every bird took off: none simply vanished');
+  for (let i = 0; i < 200; i++) run(0.05);
+  assert.equal(faunaNow().birds.length, 0, 'gone once they have flown off the map');
+});
+test('arriving after dusk there are no birds; arriving by day there are', async () => {
+  const { faunaNow } = await import('../src/systems/atmosphere.js');
+  await onFarm(20 * 60, 'sun', 32);
+  assert.equal(faunaNow().birds.length, 0);
+  await onFarm(9 * 60, 'sun', 33);
+  assert.ok(faunaNow().birds.length > 0);
+});
+test('when rain comes, the songbirds fly off and the rest of the wildlife is not rebuilt', async () => {
+  const { faunaNow } = await import('../src/systems/atmosphere.js');
+  const run = await onFarm(10 * 60, 'sun', 59);   // autumn: sparrows, robins, crows
+  const before = faunaNow(), ids = [...before.birds];
+  G.S.weather = 'rain'; run(0.05);
+  assert.equal(faunaNow(), before, 'the same wildlife, not a new set');
+  for (const b of ids) assert.equal(b.flee, b.sp !== 'crow', `${b.sp}: ${b.sp === 'crow' ? 'stays' : 'flies off'}`);
+});
+test('when the sky clears, new birds fly in and land', async () => {
+  const { faunaNow } = await import('../src/systems/atmosphere.js');
+  const run = await onFarm(10 * 60, 'storm', 31);
+  assert.equal(faunaNow().birds.length, 0, 'none in a storm');
+  G.S.weather = 'sun'; run(0.05);
+  const birds = faunaNow().birds;
+  assert.ok(birds.length > 0 && birds.every((b) => b.land), 'they come flying in');
+  for (let i = 0; i < 200; i++) run(0.05);
+  assert.ok(faunaNow().birds.every((b) => !b.land && !b.flee), 'and settle on the ground');
+});
+test('butterflies fade out as evening comes instead of vanishing', async () => {
+  const { faunaNow } = await import('../src/systems/atmosphere.js');
+  const run = await onFarm(17 * 60 + 59, 'sun', 30);
+  assert.equal(faunaNow().fade.bugs, 1);
+  G.S.time = 18 * 60 + 1; run(0.5);
+  const f = faunaNow().fade.bugs;
+  assert.ok(f > 0 && f < 1, `half faded: ${f}`);
+  run(2);
+  assert.equal(faunaNow().fade.bugs, 0);
+});

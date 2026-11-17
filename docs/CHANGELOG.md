@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v279: Wildlife comes and goes instead of vanishing
+- At dusk birds no longer vanish all at once at 7 pm. Each takes off and flies away at its own moment in the half hour before.
+- When the weather turns, the birds it doesn't suit fly off. When it clears, new birds fly in and land. Before, the whole flock swapped in an instant.
+- A change of weather no longer moves the ducks, frogs and butterflies to new spots.
+- Butterflies, fireflies and frogs fade in and out with the hour and the weather instead of popping.
+- New save data: none.
+
 ## v278: Calmer birds that keep out of the ferns
 - Birds peck about once a second instead of five times, and their pecking bouts and pauses last a little longer.
 - Birds land on bare ground or low cover (flowers, clover, pebbles, leaves) and never in a fern, tall grass, heather, a tropical bloom, scrub or other tall plants, where they looked to be sitting on top of the plant.
