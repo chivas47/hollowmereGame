@@ -325,7 +325,7 @@ Nuno (November 2026): chargers rush without chasing, are too easy, and the burro
 
 | Item | What | Kind | Status | Notes |
 |---|---|---|---|---|
-| 88a | Chargers steer and are tougher; the burrow beetle burrows | feature | in progress (chivas47/hollowmereGame#284) | A rush turns toward you at up to 2.4 rad/s; twice the health for all eight; the beetle travels under the floor between rushes and charges as it comes up. |
+| 88a | Chargers steer and are tougher; the burrow beetle burrows | feature | done (chivas47/hollowmereGame#284) | A rush turns toward you at up to 2.4 rad/s; twice the health for all eight; the beetle travels under the floor between rushes and charges as it comes up. |
 
 ## Done
 
