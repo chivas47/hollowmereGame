@@ -345,7 +345,13 @@ Nuno (November 2026): no sword tip where there is fighting; pickup messages are 
 |---|---|---|---|---|
 | 90a | Quiet in a fight | polish | done (chivas47/hollowmereGame#290) | The weapon tip never shows where a fight is on (any mine floor, or creatures on your map); "+n item" notices are dropped there (the items flying in show them). Finds, ladders and floor names still show. |
 | 90b | The menu as a hub of picture tiles | feature | done (chivas47/hollowmereGame#291) | Esc opens a wood-and-parchment board of tiles (Sound, Display, Controls, Farms, Saves, Help, ...), each a small page with Back; pixel-art icons. |
-| 90c | The same look for the Bag, Crafting, Journal and shops | polish | in progress | The frame, headers and icons of 90b on the other dialogs. |
+| 90c | The same look for the Bag, Crafting, Journal and shops | polish | done (chivas47/hollowmereGame#292) | The frame, headers and icons of 90b on the other dialogs. |
+
+## Fixes (November 2026, second batch)
+
+| Item | What | Kind | Status | Notes |
+|---|---|---|---|---|
+| 91a | Two-tile objects solid all the way across | fix | in progress | Nuno: signs two squares wide and the boat block and answer Use on one square only. Boards, boats and tables drawn 32 px wide marked only their left tile; their second tile now takes the same tile (data/maps.js WIDE_OBJECTS). The town coach stop moves one tile west, off the lane's path (Corvin's heart scene walks it). |
 
 ## Done
 

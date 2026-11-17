@@ -217,7 +217,8 @@ function townGrid() {
   fill(m, 4, 1, 6, 2, 'V'); fill(m, 5, 3, 5, 7, 'P');        // v50: Pell's cottage
   fill(m, 18, 1, 20, 2, 'V'); fill(m, 19, 3, 20, 3, 'P'); fill(m, 20, 4, 20, 7, 'P');   // v50: Juno's cottage
   fill(m, 9, 1, 11, 2, '-'); fill(m, 8, 3, 10, 3, 'P'); fill(m, 8, 4, 8, 7, 'P');      // v53: the town hall
-  m[7][36] = '0';   // v64: the coach stop at the east end of the lane (v159: the new east end)
+  m[7][35] = '0';   // v64: the coach stop at the east end of the lane (v159: the new east end; v275: one tile west, so its two
+  // tiles (35 and 36) sit on the grass between the lane's two paths and neither path is blocked)
   m[MACHINE.at.y][MACHINE.at.x] = '¤';   // v69: the prize machine by the town hall
   m[4][w - 1] = 'E'; m[4][w - 2] = 'Ŧ'; fill(m, w - 3, 4, w - 3, 7, 'P');   // v106: the ridge path east to the mountain, behind a fallen trunk
   fill(m, 14, 14, 16, 15, 'V'); fill(m, 11, 16, 15, 16, 'P');   // v166 (roadmap 75j): Aurel, Bryn and Pip's cottage
@@ -470,7 +471,7 @@ export const MAPS = {
   },
   town: {
     name: 'Hollowmere Town', salt: 83, grid: townGrid(),
-    objects: [{ art: 'cottage', x: 14, y: 14, roof: '#6e7a8a' }, { art: 'board', x: 36, y: 7 }, ...Object.entries(SHOP_SPOTS).map(([kind, s]) => ({ art: 'storefront', kind, x: s.x, y: s.y })), { art: 'cottage', x: 13, y: 1, roof: '#7a4a8a' }, { art: 'cottage', x: 4, y: 1, roof: '#5f8fb5' }, { art: 'cottage', x: 18, y: 1, roof: '#a5432f' }, { art: 'storefront', kind: 'hall', x: 9, y: 1 }],
+    objects: [{ art: 'cottage', x: 14, y: 14, roof: '#6e7a8a' }, { art: 'board', x: 35, y: 7 }, ...Object.entries(SHOP_SPOTS).map(([kind, s]) => ({ art: 'storefront', kind, x: s.x, y: s.y })), { art: 'cottage', x: 13, y: 1, roof: '#7a4a8a' }, { art: 'cottage', x: 4, y: 1, roof: '#5f8fb5' }, { art: 'cottage', x: 18, y: 1, roof: '#a5432f' }, { art: 'storefront', kind: 'hall', x: 9, y: 1 }],
     exits: { [`10,${TOWN_SIZE.h - 1}`]: { to: 'village', x: 10, y: 1, dir: 'down' } },
   },
   maze: {
@@ -519,4 +520,14 @@ export const MAPS = {
 for (const [id, list] of Object.entries(PROPS)) for (const [kind, x, y] of list) {
   const row = MAPS[id].grid[y];
   if (['g', 'z', 'q'].includes(row?.[x])) row[x] = PROP_TILES[kind];
+}
+
+// v275 (roadmap 91a, Nuno): objects drawn two tiles wide (boards, boats, tables) were solid and usable only on
+// their left tile; you walked through their right half and Use did nothing there. Their second tile now takes the
+// first's tile, so both halves block and both answer Use. Only open ground is taken.
+export const WIDE_OBJECTS = { board: 2, boat: 2, table: 2 };
+for (const m of Object.values(MAPS)) for (const o of m.objects || []) {
+  const w = WIDE_OBJECTS[o.art], row = m.grid[o.y];
+  if (!w || !row || !SOLID.has(row[o.x])) continue;
+  for (let i = 1; i < w; i++) if (row[o.x + i] !== undefined && !SOLID.has(row[o.x + i])) row[o.x + i] = row[o.x];
 }
