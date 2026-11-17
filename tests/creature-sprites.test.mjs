@@ -54,3 +54,21 @@ test('the deep dungeons\' dark kinds have a lighter outline', () => {
   assert.deepEqual(dark.sort(), ['cragshell', 'cragspitter', 'golem', 'hound', 'magmaram', 'stormwing']);
   for (const k of dark) assert.ok(SHEET.kinds[k].rim && lum(SHEET.kinds[k].rim) > lum(MONSTERS[k].color) + 40, `${k}'s rim stands out`);
 });
+
+// Roadmap 87c3: the night creatures have shapes of their own; the gourd lurker sleeps as a pumpkin (find 42) and the
+// firefly moth glows.
+test('every creature has a shape of its own now', () => {
+  const night = Object.keys(MONSTERS).filter((k) => MONSTERS[k].surfaceOnly);
+  assert.deepEqual(night.sort(), ['bramble', 'frostwisp', 'gourd', 'moth']);
+  for (const k of night) assert.ok(!SHEET.kinds[k].shape && SHEET.layers.includes(`${k}.body`), `${k} has its own bands`);
+  const all = Object.keys(MONSTERS).map((k) => SHEET.kinds[k].shape || k);
+  assert.deepEqual(all.filter((s, i) => all.indexOf(s) !== i), [], 'no two kinds share a shape (polish find 41)');
+});
+test('the gourd lurker sleeps as a pumpkin, other mimics as a rock', () => {
+  assert.equal(SHEET.kinds.gourd.sleep, 'gourdsleep');
+  assert.ok(SHEET.layers.includes('gourdsleep.body') && SHEET.kinds.gourdsleep);
+  assert.equal(SHEET.kinds.crab.sleep, undefined, 'the pebble crab still sleeps as crabrock');
+});
+test('the firefly moth glows', () => {
+  assert.ok(SHEET.layers.includes('moth.glow') && SHEET.kinds.moth.glow && SHEET.kinds.moth.halo);
+});

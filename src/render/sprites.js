@@ -653,12 +653,21 @@ export function drawShot(c, px, py, color) {
   r(c, x - 2, y - 1, 4, 2, color); r(c, x - 1, y - 2, 2, 4, color); r(c, x - 1, y - 1, 1, 1, '#ffffff');
 }
 
+// v269 (87c3): a soft round light, pulsing slowly: three see-through discs.
+function halo(c, px, py, color, t) {
+  const p = 0.75 + Math.sin(t * 3) * 0.25;
+  c.save(); c.fillStyle = color;
+  for (const [rad, a] of [[11, 0.07], [7, 0.1], [4, 0.14]]) { c.globalAlpha = a * p; c.beginPath(); c.arc(Math.round(px), Math.round(py), rad, 0, Math.PI * 2); c.fill(); }
+  c.restore();
+}
 // v268 (87c2): until the sheet loads, kinds with their own shape draw as the shape they grew from.
 const CODE_LIKE = { scuttler: 'beetle', bull: 'boar', magmaram: 'ram', dustdevil: 'puff', ashswarm: 'puff', sandspitter: 'spitter',
-  cragspitter: 'spitter', shade: 'wisp', cragshell: 'shell', stormwing: 'bat' };
+  cragspitter: 'spitter', shade: 'wisp', cragshell: 'shell', stormwing: 'bat',
+  bramble: 'puff', moth: 'bat', gourd: 'crab', gourdsleep: 'crabrock', frostwisp: 'wisp' };   // v269
 // v228: flip faces it left (chargers face the way they go).
 export function drawMonster(c, px, py, kind, color, hurt, t, flip = false) {
   const k = MONSTERS.kinds[kind] || {};
+  if (k.halo) halo(c, px, py - 12 + (k.bob ? -Math.round(Math.sin(t * k.bob) * 2) : 0), k.halo, t);   // v269: the firefly moth's light
   if (sheetMonster(c, px + (k.sway ? Math.round(Math.sin(t * k.sway)) : 0), py, kind, color, hurt, Math.floor(t * 8) % 4,
     k.bob ? -Math.round(Math.sin(t * k.bob) * 2) : 0, flip)) return;
   const x = Math.round(px), base = Math.round(py), col = hurt ? '#ffffff' : color, f = Math.floor(t * 8) % 2;

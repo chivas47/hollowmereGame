@@ -835,6 +835,75 @@ def magmaram(rows):
     return [''.join(r) for r in out]
 ART['magmaram'] = (2, 23, [magmaram(fr) for fr in ART['ram'][2]])
 
+# ---- v269 (87c3): the night creatures ----
+
+# Bramble sprites: a tangle of leafy twigs with thorns and two berry eyes; the thorns turn as it tumbles.
+BRAMBLE = [
+    '..............',
+    '.....bBb.b....',
+    '...bBBWBBBb...',
+    '..bBkBBBBkBb..',
+    '.bBBBRBBBRBBb.',
+    '..bBBBBkBBBb..',
+    '...bBkBBBkb...',
+    '.....bBbbB....',
+    '..............',
+]
+BRAMBLE_THORNS = [[('k', 4, 0), ('k', 8, 0), ('k', 1, 1), ('k', 11, 1), ('k', 0, 4), ('k', 13, 4), ('k', 1, 7), ('k', 11, 7), ('k', 4, 8), ('k', 9, 8)],
+                  [('k', 6, 0), ('k', 2, 2), ('k', 11, 2), ('k', 0, 5), ('k', 13, 3), ('k', 2, 7), ('k', 10, 8), ('k', 5, 8)],
+                  [('k', 5, 0), ('k', 9, 0), ('k', 1, 2), ('k', 12, 1), ('k', 0, 3), ('k', 13, 5), ('k', 1, 6), ('k', 12, 7), ('k', 7, 8)],
+                  [('k', 7, 0), ('k', 3, 1), ('k', 10, 1), ('k', 0, 4), ('k', 13, 4), ('k', 3, 8), ('k', 9, 7), ('k', 12, 6)]]
+def bramble(f):
+    rows = list(BRAMBLE)
+    for ch, x, y in BRAMBLE_THORNS[f]:
+        if rows[y][x] == '.': rows = over(rows, [ch], x, y)
+    return rows
+ART['bramble'] = (5, 16, [bramble(f) for f in range(F)])
+
+# Firefly moth: soft rounded wings with eye-spots, feathered antennae and a glowing tail; wings up, level, down,
+# level. Drawn as the left half and its middle column, mirrored.
+def mirror(half):
+    return [l + mid + l[::-1] for l, mid in half]
+MOTH = [[
+    ('.bBb.....', '.'), ('bBcBb..K.', '.'), ('bBxcBb..K', 'B'), ('.bBcBBbBB', 'B'),
+    ('..bBBBBBB', 'G'), ('....bBBBB', 'G'), ('.......bB', 'G'), ('........b', 'g'), ('.........', '.'),
+  ], [
+    ('.........', '.'), ('.......K.', '.'), ('........K', 'B'), ('.bbBBBbBB', 'B'),
+    ('bBcxcBBBB', 'G'), ('bBBcBBbBB', 'G'), ('.bBBb..bB', 'G'), ('........b', 'g'), ('.........', '.'),
+  ], [
+    ('.........', '.'), ('.......K.', '.'), ('........K', 'B'), ('.......BB', 'B'),
+    ('....bBBBB', 'G'), ('..bBBcBBB', 'G'), ('.bBcxcbbB', 'G'), ('bBcBb...b', 'g'), ('.bBb.....', '.'),
+  ]]
+ART['moth'] = (2, 18, [mirror(MOTH[f]) for f in (0, 1, 2, 1)])
+
+# Gourd lurker awake: a pumpkin on twiggy legs with a carved, glowing face. Asleep (gourdsleep, tinted to its
+# disguise colour): a real pumpkin with ribs, a stem, a leaf and a curling tendril (polish find 42).
+PUMPKIN = [
+    '....bBBcBBBb....',
+    '..bBBcBBBcBBBb..',
+    '.bBWcBBBBBcBBBb.',
+    '.bBcBBBBBBBcBBb.',
+    '.bBcBBBBBBBcBBb.',
+    '..bBcBBBBBcBBb..',
+    '...cbbbbbbbbc...',
+]
+GOURD_LEGS = ['..K.K.K..K.K.K..', '...K.K.KK.K.K...', '.K.K.K....K.K.K.', '...K.K.KK.K.K...']
+def gourd(f):
+    rows = ['.......kk.......', '......mkm.......'] + list(PUMPKIN)
+    rows = over(rows, ['FF..FF', '......', 'FZFZFF'], 5, 5 - (f == 2))
+    return rows + [GOURD_LEGS[f]]
+ART['gourd'] = (4, 23, [gourd(f) for f in range(F)])
+ART['gourdsleep'] = (4, 23, [['.......k........', '......mkmm......', '.....mm.k.......'] + PUMPKIN] * F)
+
+# Frost wisp: the wisp's flame with ice shards at its sides and snowflakes falling from its tail.
+FROST_FLAKES = [[('E', 2, 15), ('E', 9, 17)], [('E', 4, 16), ('E', 10, 15)], [('E', 1, 17), ('E', 7, 16)], [('E', 3, 15), ('E', 9, 16)]]
+def frostwisp(f):
+    rows = wisp(f) + ['.' * 12] * 3
+    rows = over(over(rows, ['B.', 'bB', '.b'], 0, 5), ['.B', 'Bb', 'b.'], 10, 5)
+    for ch, x, y in FROST_FLAKES[f]: rows = over(rows, [ch], x, y)
+    return rows
+ART['frostwisp'] = (6, 21, [frostwisp(f) for f in range(F)])
+
 def cells(kind, f):
     if kind == 'serpent': return serpent(f)
     x0, bottom, frames = ART[kind]
@@ -846,7 +915,8 @@ def cells(kind, f):
 SHAPES = ['mite', 'bat', 'skeleton', 'wraith', 'rex', 'sprite', 'golem', 'serpent', 'slime', 'beetle', 'boar', 'ram', 'hound',
           'crab', 'crabrock', 'mole', 'puff', 'lurker', 'spitter', 'wisp', 'shell', 'mossslime',
           'scuttler', 'bull', 'dustdevil', 'ashswarm', 'sandspitter', 'cragspitter', 'shade', 'emberslime', 'cragshell',
-          'stormwing', 'cinder', 'magmaram']   # v268 (87c2)
+          'stormwing', 'cinder', 'magmaram',   # v268 (87c2)
+          'bramble', 'moth', 'gourd', 'gourdsleep', 'frostwisp']   # v269 (87c3)
 def has_glow(kind): return any(ch in 'Gg' for f in range(F) for ch in cells(kind, f).values())
 LAYERS = [f'{k}.{L}' for k in SHAPES for L in (['body'] + (['glow'] if has_glow(k) else []) + ['line', 'ink'])]
 
@@ -891,7 +961,9 @@ PREVIEW = {'slime': ('#7fcf6a', None, None), 'mossslime': ('#6a9a3a', None, None
            'cragspitter': ('#4a3a36', '#e9862a', '#9a827a'), 'shade': ('#5a5070', '#b07ae0', '#9a90b8'),
            'emberslime': ('#e07a3a', '#ffd98a', None), 'cragshell': ('#5a4a44', None, '#9a8a82'),
            'stormwing': ('#3a4a6a', '#9fd8f0', '#7a8ab0'), 'cinder': ('#5a2a22', '#e9862a', '#a8665a'),
-           'magmaram': ('#4a3430', '#e9862a', '#94786e')}
+           'magmaram': ('#4a3430', '#e9862a', '#94786e'),
+           'bramble': ('#6a8a3a', None, None), 'moth': ('#e9d27a', '#fff3a0', None), 'gourd': ('#c86a2a', None, None),
+           'gourdsleep': ('#e8862a', None, None), 'frostwisp': ('#bfe0f2', '#9fd8f0', None)}
 def make_preview(img, row, path):
     def band(L, f, col):
         b = img.crop((f * S, row[L] * S, f * S + S, row[L] * S + S))
