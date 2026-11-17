@@ -636,11 +636,14 @@ export function drawDazed(c, px, py, t) {
 
 // v253 (85d1): a burrower under the floor: a low heap of churned earth with a crumb or two jumping off it.
 // v254: lava: a glowing ripple with sparks for the lava lurker.
-const MOUND = { earth: ['#5a4632', '#6e563c', '#86694a'], lava: ['#8a2a22', '#e9862a', '#ffd98a'] };
-export function drawMound(c, px, py, t, look = 'earth') {
+// v267 (88b): lighter earth so the mound reads on the Hollow's dark floor; shell: [colour, rim] of a creature whose
+// back shows through the top (the burrow beetle).
+const MOUND = { earth: ['#7a6040', '#957650', '#c0a070'], lava: ['#8a2a22', '#e9862a', '#ffd98a'] };
+export function drawMound(c, px, py, t, look = 'earth', shell = null) {
   const x = Math.round(px), base = Math.round(py), f = Math.floor(t * 6) % 2, [lo, mid, hi] = MOUND[look] || MOUND.earth;
   r(c, x - 6, base - 1, 12, 1, 'rgba(0,0,0,.3)');
-  r(c, x - 5, base - 3, 10, 2, lo); r(c, x - 3, base - 5, 6, 2, mid); r(c, x - 2, base - 6, 3, 1, hi);
+  r(c, x - 6, base - 3, 12, 2, lo); r(c, x - 4, base - 5, 8, 2, mid); r(c, x - 2, base - 6, 4, 1, hi);
+  if (shell) { r(c, x - 3, base - 7, 6, 1, shell[1]); r(c, x - 3, base - 6, 6, 1, shell[0]); r(c, x - 4, base - 6, 1, 1, shell[1]); r(c, x + 3, base - 6, 1, 1, shell[1]); }
   r(c, x - 4 + f * 6, base - 7 - f, 1, 1, mid); r(c, x + 2 - f * 5, base - 8 + f, 1, 1, look === 'lava' ? hi : lo);
 }
 

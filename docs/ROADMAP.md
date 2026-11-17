@@ -325,7 +325,8 @@ Nuno (November 2026): chargers rush without chasing, are too easy, and the burro
 
 | Item | What | Kind | Status | Notes |
 |---|---|---|---|---|
-| 88a | Chargers steer and are tougher; the burrow beetle burrows | feature | in progress (chivas47/hollowmereGame#284) | A rush turns toward you at up to 2.4 rad/s; twice the health for all eight; the beetle travels under the floor between rushes and charges as it comes up. |
+| 88a | Chargers steer and are tougher; the burrow beetle burrows | feature | done (chivas47/hollowmereGame#284) | A rush turns toward you at up to 2.4 rad/s; twice the health for all eight; the beetle travels under the floor between rushes and charges as it comes up. |
+| 88b | Burrowing you can see and hear | fix | in progress | Nuno: "they don't burrow, and after they die I hear the sound of their attacks". Digging down was a dirt burst and a vanish, read as a defeat, and the dark mound was hard to see. Now a burrower sinks for 0.45 s (out of reach) with the dig sound, coming up makes it too, the mound is lighter and the beetle's shell shows through. |
 
 ## Done
 

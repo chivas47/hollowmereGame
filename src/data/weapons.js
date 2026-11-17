@@ -77,7 +77,7 @@ Object.assign(MONSTERS, {
 //   with a BURROW.tell s shake, stays up BURROW.up s (it hurts and can be hurt), then digs down again (Stardew's duggy).
 // swarm: a pack of `pack` [min, max] in one spawn slot, weak and quick, weaving as it comes (Stardew's dust sprites).
 export const MIMIC = { wake: 20 };
-export const BURROW = { rise: 14, under: 4, tell: 0.5, up: 1.6, rest: 2.5 };
+export const BURROW = { rise: 14, under: 4, tell: 0.5, up: 1.6, rest: 2.5, sink: 0.45 };   // v267: sink, the seconds it takes to dig down
 Object.assign(MONSTERS, {
   crab:  { name: 'Pebble crab', from: 1, to: 40, move: 'mimic', hp: (f) => 6 + Math.floor(f / 3), dmg: (f) => 5 + Math.floor(f / 2), speed: () => 16, xp: 4, color: '#8a7a6a' },
   mole:  { name: 'Burrow mole', from: 8, to: 35, move: 'burrow', hp: (f) => 5 + Math.floor(f / 4), dmg: (f) => 6 + Math.floor(f / 2), speed: () => 34, xp: 5, color: '#6a5040' },
