@@ -192,7 +192,8 @@ src/
     falling.js        seasonal motion: petals, fluff, leaves, snow clumps from tree crowns, drifting with wind.js (v104, drawn only)
     sway.js           grass tufts off the farm and clotheslines, bending with wind.js (v103, drawn only)
     water.js          moving water: ripples, sunny glints, rain rings, reflections of entities at the bank (v102, drawn only)
-    atmosphere.js     waterfalls, rain splashes, storm bolts and thunder, birds, butterflies, fireflies (v72, drawn only)
+    atmosphere.js     waterfalls, rain splashes, storm bolts and thunder, birds, butterflies, fireflies (v72, drawn only); v276: birds peck, look, hop and take off (birdFrame)
+    pen.js            v276: the village pen's sheep and cows graze, walk, chew and call inside the rails (scenery)
     indoors.js        indoor dark and light pools, the farmhouse windows, G.indoorRain and G.fires for the window art and ambience (v100, drawn only)
     clearing.js       debris and wild alders (G.S.debris), axe use, creeping debris, alder cones, gates, fences and paths
     quality.js        item quality: counts(), addItem(), valueOf(), takeBest(), quality rolls
@@ -207,6 +208,7 @@ src/
     arcade.js         the arcade cabinets' screens (v70)
     animation.js      v74: the tool or weapon in hand (drawHeld, rotated hotbar icons), the rod (drawRod), the crafted pose, item pictures, particles and labels (drawFx)
     title.js          v271: the title screen's living valley (drawn in code, scaled up pixelated)
+    wildlife.js       v276: drawBird, drawPenAnimal from birds.png and penstock.png (code art until they load)
     menuIcons.js      v273: the menu's 16x16 tile icons as letter grids
     renderer.js       composes a frame, caches backgrounds per map + season; v139: draws each view (G.view = the farmer it follows: night light, mine dark, facing outline)
     views.js          v139: split screen: views() (one alone, two halves side by side with a second farmer), camera(), onScreen(), toWorld() for prompts and taps; v156: the camera moves both ways over each farmer's own map (sizeOf() in data/maps.js), and visible() is the world rectangle a frame draws (G.drawing), for layers that cover the screen

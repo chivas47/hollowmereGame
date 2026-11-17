@@ -938,7 +938,8 @@ function bench(g, x, y) {
   r(g, X + 1, Y + 6, 14, 3, '#8a5a32'); r(g, X + 1, Y + 6, 14, 1, '#b0804a'); r(g, X + 1, Y + 3, 14, 2, '#6e4626');
   r(g, X + 2, Y + 9, 2, 5, '#4a3020'); r(g, X + 12, Y + 9, 2, 5, '#4a3020');
 }
-// v166: Tamsin's pens: fence rails round the box, grazed grass, her cows and sheep (data/maps.js RANCH_PEN).
+// v166: Tamsin's pens: fence rails round the box, grazed grass (data/maps.js RANCH_PEN); v276: her animals are
+// entities now (systems/pen.js, render/wildlife.js).
 function pen(g, x, y, p) {
   const X = x * T, Y = y * T, [x0, y0, x1, y1] = RANCH_PEN.box, rail = '#8a5a32', post = '#5c371e';
   r(g, X, Y, T, T, p?.snow ? '#e6e2d6' : '#7a9a52');
@@ -946,15 +947,7 @@ function pen(g, x, y, p) {
   if (y === y1) { r(g, X, Y + 11, T, 1, rail); r(g, X, Y + 14, T, 1, rail); }
   if (x === x0) { r(g, X + 1, Y, 1, T, rail); r(g, X + 1, Y, 2, 4, post); }
   if (x === x1) { r(g, X + 14, Y, 1, T, rail); r(g, X + 13, Y, 2, 4, post); }
-  const has = (list) => list.some(([a, b]) => a === x && b === y);
-  if (has(RANCH_PEN.cows)) {
-    r(g, X + 3, Y + 6, 9, 5, '#f4ead2'); r(g, X + 5, Y + 7, 3, 2, '#3a3028'); r(g, X + 11, Y + 5, 3, 4, '#f4ead2');
-    r(g, X + 12, Y + 6, 1, 1, '#2b211a'); r(g, X + 4, Y + 11, 1, 3, '#3a3028'); r(g, X + 10, Y + 11, 1, 3, '#3a3028');
-  }
-  if (has(RANCH_PEN.sheep)) {
-    r(g, X + 4, Y + 7, 7, 4, '#fffbe8'); r(g, X + 10, Y + 7, 3, 3, '#3a3028');
-    r(g, X + 5, Y + 11, 1, 2, '#3a3028'); r(g, X + 9, Y + 11, 1, 2, '#3a3028');
-  }
+  // v276: the animals are no longer painted into the ground; they live and move (systems/pen.js).
 }
 // v165: a market stall on the town green: a striped awning over a plank counter.
 function stall(g, x, y) {

@@ -1190,6 +1190,9 @@ Nothing here is saved or touches the economy.
 | Scenery props (v195) | village, town, mere, grove, Wilds, forest, railway, mountain (data/scenery.js PROPS) | bushes, mossy boulders, stumps, woodpiles, hay, barrels and crates, flower planters, and small stands of trees on the widest open ground. Solid, never on anyone's spot (tests/scenery.test.mjs); blossom in spring, berries in summer, russet in autumn, snow in winter |
 | Ambience volume (v100) | the menu's Ambience slider, 0 to 100% | Sound off still mutes it |
 
+
+v276 (roadmap 92a): birds are drawn from birds.png (body and wing tinted to the map's colours) and live a little: on the ground they peck in bursts, look up, turn and hop; within 2.5 tiles they take off and fly away through a full wing beat. Tamsin's two sheep and two cows in the village pen (data/ranch.js RANCH_PEN) are drawn from penstock.png and move (systems/pen.js, PEN_LIFE): they graze (head down, chewing) 3 to 7 s, stand 1 to 2.5 s, walk at 7 px/s to a free spot inside the rails, and now and then call out for about a second. Scenery only: no friendship, produce or touch.
+
 ## Management tools (v71)
 Data in `data/storage.js` and `data/crafting.js`; logic in `systems/storage.js`; dialogs and journal tabs in `ui/storage.js`.
 | Part | Ours | Stardew counterpart |
