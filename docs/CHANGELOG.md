@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v271: A title screen
+- The game now opens on a title screen: Hollowmere Farm over a living valley at dawn, with clouds and birds drifting, smoke rising from the farmhouse and the season of the farm you last played (blossom, summer fireflies, falling leaves or snow).
+- Continue plays the farm you last played and shows its name, date and gold.
+- New farm starts a farm in an empty slot and opens the new game screen, so it never overwrites a farm. When all three slots are in use, it asks which farm to replace.
+- Farms lists the three slots to play or start, and Settings and controls opens the menu's sound, display and key settings before you play.
+- Works with the keyboard and a controller. Old saves load through Continue as before.
+- New save data: none.
+
 ## v270: New farm opens the new game screen
 - Menu, New farm, Start over now opens the new game screen (your name, farm, look, pet and layout) as it should. Before, the screen closed at once and the new farm started unnamed until the game was reloaded.
 - The same fix for loading a save file.

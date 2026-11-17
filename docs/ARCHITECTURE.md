@@ -11,7 +11,8 @@ manifest.webmanifest  v121: name, colours and icons (assets/icons/) for installi
 sw.js                 v121: service worker: network first (no-cache for the game's files), every answer kept, the copy used offline; registered by ui/offline.js (v233: not on itch.io)
 assets/fonts/         v233: Pixelify Sans (OFL.txt), the UI font, shipped with the game instead of loaded from Google Fonts; v234: ligatures off (styles.css), its "fi" and "fl" read as "A"
 src/
-  main.js             boot: imports every system and UI module, runs the frame loop
+  main.js             boot: imports every system and UI module; v271: opens the title screen and starts the farm
+                      (game:reset, game:loaded) and the frame loop once one is chosen
   core/
     constants.js      T=16 tile px, W=24 x H=16 tiles, START 6:00, END 2:00, TICK, SAVE_KEY, SLOTS, SLOT_KEY, DIRS
     game.js           G: shared runtime object (G.S is the save; keys, useHeld, paused, lock, swing, fishing, hurtT)
@@ -205,6 +206,7 @@ src/
     itemIcons.js      v113: 16x16 item icons for the Bag and chests, one shape per kind coloured per item, cached as data URLs (iconURL)
     arcade.js         the arcade cabinets' screens (v70)
     animation.js      v74: the tool or weapon in hand (drawHeld, rotated hotbar icons), the rod (drawRod), the crafted pose, item pictures, particles and labels (drawFx)
+    title.js          v271: the title screen's living valley (drawn in code, scaled up pixelated)
     renderer.js       composes a frame, caches backgrounds per map + season; v139: draws each view (G.view = the farmer it follows: night light, mine dark, facing outline)
     views.js          v139: split screen: views() (one alone, two halves side by side with a second farmer), camera(), onScreen(), toWorld() for prompts and taps; v156: the camera moves both ways over each farmer's own map (sizeOf() in data/maps.js), and visible() is the world rectangle a frame draws (G.drawing), for layers that cover the screen
     interiors.js      v97: cottage rooms (each room its own wallpaper and floor, two-row north walls), every floor-plan piece at its full size, small things on surfaces (TOPS), rugs; windows follow the hour, fires and stoves flicker
@@ -248,6 +250,7 @@ src/
     debugPanel.js     v237: on itch.io (core/host.js onItch) the Debug tools button and panel are removed and ` does nothing
     itchNotice.js     v233: on itch.io, one dismissible notice that saves live in this browser, with Export save now
     slots.js          v127: the menu's Farms dialog (three save slots)
+    title.js          v271: the title screen (Continue, New farm, Farms, Settings); titleOpen() for input and pad
     reckoning.js      v128: the reckoning dialog after the morning report (waits for report:closed)
     motion.js         v125: the menu's Particles, Shake, Hit-stop and Motion speed buttons
     gamepad.js        v126: polls the pad: walking, actions, held A; in dialogs and the menu, focus moves and A presses; v129: a second pad steers the second farmer; v130: its A uses, LB and RB pick their slot
@@ -401,7 +404,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `report:closed` | none | ui/dialogs.js, Start the day (v128) | ui/reckoning.js |
 | `motion:prefs` | none | core/motion.js (v125) | ui/motion.js (the buttons) |
 | `controls:changed` | none | core/controls.js (v119) | ui/controls.js (labels, the list), ui/hotbar.js (slot keys) |
-| `game:loaded` | none | main.js, reset | forage, upgrades (recalc), coop (place), mine (eject) |
+| `game:loaded` | none | main.js (v271: once a farm is chosen on the title screen), reset | forage, upgrades (recalc), coop (place), mine (eject) |
 | `game:reset` | none | ui/dialogs.js | renderer cache, npcs, coop, fishing |
 | `map:changed` | map id (v138: `mover()` in world.js says whether you or the second farmer moved; v140: fishing, the horse, combat, effects and queued Use act only for the mover) | player.js, days.js, mine.js, partner.js (their exits) | fishing, monsters, partner, stable, animation, interact |
 | `world:changed` | none | coop.js, mine.js | renderer (drop background cache) |
