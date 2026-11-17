@@ -1,8 +1,9 @@
 # Builds assets/sprites/birds.png and assets/sprites/penstock.png (v276, roadmap 92a):
 #   python3 tools/sprites/wildlife.py assets/sprites [preview.png]
 #
-# birds.png: 16x16 frames, 8 columns, facing right (code mirrors them), feet at (8, 15); three bands tinted like the
-# monster sheet: body (to the map's bird body colour), wing (its wing colour), ink (beak, eye, legs: as drawn).
+# birds.png: 16x16 frames, 8 columns, facing right (code mirrors them), feet at (8, 15). v277 (92b): a block of four
+# bands per shape (song, crow, gull, parrot, quail; BIRDS_SHEET.shapes): body, wing and accent (tinted to the
+# species' colours, data/atmosphere.js BIRD_SPECIES) and ink (beak, eye, legs: as drawn).
 #   frames: 0 stand, 1 look up, 2 peck (head down), 3 hop (crouched), 4 take off, 5 wings up, 6 wings level,
 #   7 wings down.
 # penstock.png: 24x24 frames, 8 columns, facing right, feet at (12, 23); one row each for the sheep and the cow,
@@ -15,8 +16,10 @@ from PIL import Image
 
 INK = {'K': '#2b211a', 'O': '#e0a030', 'o': '#b07020', 'L': '#a06a3a', 'E': '#f4ead2', 'P': '#e2a0a0', 'p': '#c07878',
        'G': '#6aa444', 'g': '#4f8a34', 'H': '#d9c9a0', 'R': '#c8505a', 'F': '#3b3430', 'f': '#5a4e46',
-       'S': '#3a3028', 's': '#5a4a3e'}
-BIRD_TONE = {'B': ('body', 255), 'b': ('body', 200), 'c': ('body', 150), 'V': ('wing', 255), 'v': ('wing', 185), 'W': ('body', 255)}
+       'S': '#3a3028', 's': '#5a4a3e', 'D': '#4a4a52', 'e': '#9a9aa2'}
+BIRD_TONE = {'B': ('body', 255), 'b': ('body', 200), 'c': ('body', 150), 'V': ('wing', 255), 'v': ('wing', 185), 'W': ('body', 255),
+             'A': ('accent', 255), 'a': ('accent', 190)}
+BIRD_BANDS = ['body', 'wing', 'accent', 'ink']
 WOOL = {'B': '#f6f2e6', 'b': '#e2dccb', 'c': '#c8bfac', 'W': '#ffffff', 'x': '#a89e8a'}
 
 def pad(rows):
@@ -33,25 +36,60 @@ def over(rows, patch, x, y):
             out[y + j][x + i] = ch
     return [''.join(r) for r in out]
 
-# ---- birds (a little songbird, head right) ----
-BIRD = [
-  # 0 stand
-  ['......BBB..', '.....BBBKO.', '.....BBBB..', '..VVBBBBb..', '.VVvvBBBb..', 'VVvvvbbbc..', '.....L.L...'],
-  # 1 look up: the head tipped back, beak to the sky
-  ['......BBBO.', '.....BBBK..', '.....BBBB..', '..VVBBBBb..', '.VVvvBBBb..', 'VVvvvbbbc..', '.....L.L...'],
-  # 2 peck: tail up, head down to the ground
-  ['..V........', '.VVv.......', 'VVvvBBBb...', '.vvvBBBBBB.', '....bbbBBKB', '.....L.LBBO'],
-  # 3 hop: crouched, legs tucked, off the ground
-  ['......BBB..', '.....BBBKO.', '..VVBBBBB..', '.VVvvBBBb..', 'VVvvvbbbc..', '.....LL....', '...........'],
-  # 4 take off: wings raised, legs trailing
-  ['..VV.......', '.VvvV......', '..vvBBBB...', '...BBBBKO..', '..bbbbbb...', '...L.L.....'],
-  # 5 wings up
-  ['...V.......', '..VVv......', '..VvvV.....', '...vvBBBB..', 'VVbBBBBKO..', '..bbbbb....', '...........'],
-  # 6 wings level
-  ['...........', '...........', 'VVVvvBBBB..', '.VvvvBBBKO.', '...bbbbb...', '...........', '...........'],
-  # 7 wings down
-  ['...........', '....BBBB...', 'VVbBBBBKO..', '..vvbbbb...', '..Vvv......', '..VV.......', '...........'],
-]
+# ---- birds, head right. A the accent (a breast, a beak, a cheek, a tail, a plume) ----
+BIRDS = {
+  'song': [   # a sparrow-sized songbird: the accent is its breast
+    ['......BBB..', '.....BBBKO.', '.....BBBB..', '..VVBBAAb..', '.VVvvBAAb..', 'VVvvvbbac..', '.....L.L...'],
+    ['......BBBO.', '.....BBBK..', '.....BBBB..', '..VVBBAAb..', '.VVvvBAAb..', 'VVvvvbbac..', '.....L.L...'],
+    ['..V........', '.VVv.......', 'VVvvBBBb...', '.vvvBAABBB.', '....bbaBBKB', '.....L.LBBO'],
+    ['......BBB..', '.....BBBKO.', '..VVBBAAB..', '.VVvvBAAb..', 'VVvvvbbac..', '.....LL....', '...........'],
+    ['..VV.......', '.VvvV......', '..vvBBBB...', '...BAABKO..', '..bbaabb...', '...L.L.....'],
+    ['...V.......', '..VVv......', '..VvvV.....', '...vvBBBB..', 'VVbBAABKO..', '..bbaab....', '...........'],
+    ['...........', '...........', 'VVVvvBBBB..', '.VvvvAABKO.', '...bbaab...', '...........', '...........'],
+    ['...........', '....BBBB...', 'VVbBAABKO..', '..vvbaab...', '..Vvv......', '..VV.......', '...........'],
+  ],
+  'crow': [   # bigger and black, a heavy grey beak; the accent is a sheen on its breast
+    ['.......BBB...', '......BBBBDD.', '......BeBBDDD', '..VVVBBBBb...', '.VVvvBBBBBb..', 'VVvvvvAABBb..', 'VVvvvvbbbbc..', 'V.....bbbc...', '......K..K...'],
+    ['.......BBBD..', '......BBBBDD.', '......BeBBD..', '..VVVBBBBb...', '.VVvvBBBBBb..', 'VVvvvvAABBb..', 'VVvvvvbbbbc..', 'V.....bbbc...', '......K..K...'],
+    ['..VV.........', '.VVvv........', 'VVvvvBBBBb...', 'VVvvvBAABBBB.', 'V...bbbBBeBBD', '......K.KBBDD', '...........DD'],
+    ['.......BBB...', '......BBBBDD.', '......BeBBDDD', '..VVVBBBBb...', '.VVvvBBBBBb..', 'VVvvvvAABBb..', 'VVvvvvbbbbc..', 'V.....KK.....', '.............'],
+    ['..VV.........', '.VVvV........', '..vvvBBBB....', '...BBAABeDD..', '..bbbbbbDD...', '...K..K......'],
+    ['...VV........', '..VVvV.......', '..VvvvV......', '...vvvBBBBB..', 'VVbBAABBBeDD.', '..bbbbbbb....', '.............'],
+    ['.............', 'VVVVvvBBBBB..', '.VVvvvAABBeDD', '...bbbbbbb...', '.............', '.............'],
+    ['....BBBBBB...', 'VVbBAABBBeDD.', '..vvvbbbbb...', '..VVvv.......', '..VVV........', '.............'],
+  ],
+  'gull': [   # white with long grey wings and a yellow beak (the accent); pink legs
+    ['........BBB..', '.......BBBBAA', '.......BKBB..', '...VVVVBBBb..', '.VVVvvvBBBBb.', 'VVvvvvvbbbbc.', '.......bbb...', '.......P.P...'],
+    ['........BBBA.', '.......BBBBA.', '.......BKBB..', '...VVVVBBBb..', '.VVVvvvBBBBb.', 'VVvvvvvbbbbc.', '.......bbb...', '.......P.P...'],
+    ['.VVV.........', 'VVvvvBBBBb...', '.vvvvBBBBBBB.', '.....bbbBBKBB', '......P.P.BAA'],
+    ['........BBB..', '.......BBBBAA', '.......BKBB..', '...VVVVBBBb..', '.VVVvvvBBBBb.', 'VVvvvvvbbbbc.', '.......bbb...', '.......PP....', '.............'],
+    ['.VV..........', 'VVvV.........', '.vvvvBBBB....', '...BBBBBKAA..', '...bbbbbb....', '....P.P......'],
+    ['VV...........', 'VVV..........', '.VvV.........', '..vvvBBBBB...', '...bBBBBBKAA.', '....bbbbb....'],
+    ['VVVVVVvvBBBBB...', '.VVVVvvvBBBBKAA.', '.....bbbbbb.....', '................'],
+    ['.....BBBBB...', '...bBBBBBKAA.', '..vvvbbbbb...', '.VVvv........', 'VVV..........', '.............'],
+  ],
+  'parrot': [   # upright, green, a red wing, a hooked dark beak; the accent is its cheek and long tail
+    ['.....BBBB...', '....BBBKBD..', '....BABBBDD.', '....BBBBBD..', '...VVBBBBb..', '..VVvvBBBb..', '..VvvvBBb...', '.AAvvbbb....', 'AAA..L.L....'],
+    ['.....BBBBD..', '....BBBKBDD.', '....BABBBD..', '....BBBBB...', '...VVBBBBb..', '..VVvvBBBb..', '..VvvvBBb...', '.AAvvbbb....', 'AAA..L.L....'],
+    ['.............', '.....VVV.....', '...AVVvvBBBB.', '..AAvvvBBBBBB', '.AA..bbbBKBBD', '.......L.LBDD'],
+    ['.....BBBB...', '....BBBKBD..', '....BABBBDD.', '....BBBBBD..', '...VVBBBBb..', '..VVvvBBBb..', '..VvvvBBb...', '.AAvvbbb....', 'AAA..LL.....', '............'],
+    ['..VV........', '.VvvV.......', '..vvBBBBB...', 'AA.BBBBKBDD.', '.AAbbbbbBD..', '.....L.L....'],
+    ['...V........', '..VVv.......', '..VvvV......', '...vvBBBBB..', 'AAAbBBBBKBDD', '..AbbbbbBD..'],
+    ['............', 'AAVVVvvBBBBB', '.AAVVvvBBKBDD', '...bbbbbbBD.', '............'],
+    ['....BBBBB...', 'AAbBBBBBKBDD', '.AAvvbbbbBD.', '...VVvv.....', '...VVV......', '............'],
+  ],
+  'quail': [   # round and low on the ground, a dark face and a nodding plume (the accent)
+    ['.......A....', '......AA....', '.....BBBB...', '....BBBKBO..', '....BAABB...', '.VVVBBBBBb..', 'VVvvvBBBBb..', 'VvvvvbbbBb..', '.vvbbbbbbc..', '.....L.L....'],
+    ['........A...', '.......AA...', '.....BBBBO..', '....BBBKB...', '....BAABB...', '.VVVBBBBBb..', 'VVvvvBBBBb..', 'VvvvvbbbBb..', '.vvbbbbbbc..', '.....L.L....'],
+    ['............', '.....VVV....', '..VVVvvvBBB.', '.VVvvvvBBBBA', '.Vvvbbbb.BKBB', '.....L.L.BBO'],
+    ['.......A....', '......AA....', '.....BBBB...', '....BBBKBO..', '....BAABB...', '.VVVBBBBBb..', 'VVvvvBBBBb..', 'VvvvvbbbBb..', '.vvbbbbbbc..', '.....LL.....', '............'],
+    ['.VV.........', 'VvvV..A.....', '.vvBBBBA....', '..BBBBBKO...', '..bbbbbb....', '...L.L......'],
+    ['..V.........', '.VVv........', '.VvvV.A.....', '..vvBBBA....', '..bBBBBKO...', '...bbbbb....'],
+    ['............', '.......A....', 'VVVvvBBBA...', '.VvvvBBBKO..', '...bbbbb....', '............'],
+    ['.......A....', '....BBBBA...', '..bBBBBBKO..', '..vvbbbbb...', '..VVv.......', '..VV........'],
+  ],
+}
+BIRD_SHAPES = list(BIRDS)
 
 # ---- pen animals ----
 SHEEP_BODY = [
@@ -119,20 +157,24 @@ def hexc(h): h = h.lstrip('#'); return tuple(int(h[i:i + 2], 16) for i in (0, 2,
 def darker(c): return tuple(int(v * 0.45 + w * 0.1) for v, w in zip(c, (60, 36, 24)))
 
 def bird_sheet():
-    S, bands = 16, ['body', 'wing', 'ink']
-    img = Image.new('RGBA', (S * 8, S * 3), (0, 0, 0, 0))
-    for f, rows in enumerate(BIRD):
-        rows = pad(rows); y0 = 15 - len(rows) + 1
-        cells = {(2 + i, y0 + j): ch for j, r in enumerate(rows) for i, ch in enumerate(r) if ch != '.'}
-        for (x, y), (i, j) in outline_cells(cells).items():
-            if 0 <= x < S and 0 <= y < S: img.putpixel((f * S + x, 2 * S + y), (40, 30, 26, 255))
-        for (x, y), ch in cells.items():
-            if not (0 <= x < S and 0 <= y < S): continue
-            if ch in BIRD_TONE:
-                band, v = BIRD_TONE[ch]
-                img.putpixel((f * S + x, bands.index(band) * S + y), (v, v, v, 255))
-                if ch == 'W': img.putpixel((f * S + x, 2 * S + y), (255, 255, 255, 110))
-            else: img.putpixel((f * S + x, 2 * S + y), hexc(INK[ch]) + (255,))
+    S, NB = 16, len(BIRD_BANDS)
+    img = Image.new('RGBA', (S * 8, S * NB * len(BIRD_SHAPES)), (0, 0, 0, 0))
+    for k, shape in enumerate(BIRD_SHAPES):
+        base = k * NB
+        for f, rows in enumerate(BIRDS[shape]):
+            rows = pad(rows); y0 = 15 - len(rows) + 1
+            while y0 < 0: rows = rows[1:]; y0 += 1   # blank top rows only
+            x0 = max(0, (S - len(rows[0])) // 2 - 1)
+            cells = {(x0 + i, y0 + j): ch for j, r in enumerate(rows) for i, ch in enumerate(r) if ch != '.'}
+            ink = (base + BIRD_BANDS.index('ink')) * S
+            for (x, y), (i, j) in outline_cells(cells).items():
+                if 0 <= x < S and 0 <= y < S: img.putpixel((f * S + x, ink + y), (40, 30, 26, 255))
+            for (x, y), ch in cells.items():
+                if not (0 <= x < S and 0 <= y < S): continue
+                if ch in BIRD_TONE:
+                    band, v = BIRD_TONE[ch]
+                    img.putpixel((f * S + x, (base + BIRD_BANDS.index(band)) * S + y), (v, v, v, 255))
+                else: img.putpixel((f * S + x, ink + y), hexc(INK[ch]) + (255,))
     return img
 
 def pen_sheet():
@@ -154,22 +196,22 @@ def build(out_dir, preview=None):
     birds.save(f'{out_dir}/birds.png', optimize=True)
     pen.save(f'{out_dir}/penstock.png', optimize=True)
     if preview:
-        # birds in the farm's colours over grass, then the pen animals.
-        body, wing = hexc('#7a5a3a'), hexc('#c9a06a')
-        p = Image.new('RGBA', (16 * 8, 16), (122, 154, 82, 255))
-        for f in range(8):
-            for band, colr in ((0, body), (1, wing), (2, None)):
-                b = birds.crop((f * 16, band * 16, f * 16 + 16, band * 16 + 16))
-                if colr:
-                    px = b.load()
-                    for x in range(16):
-                        for y in range(16):
-                            r_, g_, b_, a = px[x, y]
-                            if a: px[x, y] = (r_ * colr[0] // 255, g_ * colr[1] // 255, b_ * colr[2] // 255, a)
-                p.alpha_composite(b, (f * 16, 0))
-        q = Image.new('RGBA', (24 * 8, 48), (122, 154, 82, 255)); q.alpha_composite(pen)
-        out = Image.new('RGBA', (24 * 8, 16 + 48), (40, 40, 40, 255)); out.alpha_composite(p, (0, 0)); out.alpha_composite(q, (0, 16))
-        out.resize((out.width * 5, out.height * 5), Image.NEAREST).save(preview)
+        sample = {'song': ('#8a6a48', '#5a3e28', '#d8582a'), 'crow': ('#2e2a34', '#24212a', '#5a5a8a'), 'gull': ('#f4f4f0', '#9aa4ac', '#f0c040'),
+                  'parrot': ('#4aa84a', '#d8402a', '#3a7ad8'), 'quail': ('#b89868', '#7a5a3a', '#2a2420')}
+        NB = len(BIRD_BANDS)
+        p = Image.new('RGBA', (16 * 8, 16 * len(BIRD_SHAPES)), (122, 154, 82, 255))
+        for k, shape in enumerate(BIRD_SHAPES):
+            for f in range(8):
+                for bi, band in enumerate(BIRD_BANDS):
+                    b = birds.crop((f * 16, (k * NB + bi) * 16, f * 16 + 16, (k * NB + bi) * 16 + 16))
+                    if band != 'ink':
+                        colr = hexc(sample[shape][bi]); px = b.load()
+                        for x in range(16):
+                            for y in range(16):
+                                r_, g_, b_, a = px[x, y]
+                                if a: px[x, y] = (r_ * colr[0] // 255, g_ * colr[1] // 255, b_ * colr[2] // 255, a)
+                    p.alpha_composite(b, (f * 16, k * 16))
+        p.resize((p.width * 8, p.height * 8), Image.NEAREST).save(preview)
 
 if __name__ == '__main__':
     build(sys.argv[1] if len(sys.argv) > 1 else 'assets/sprites', sys.argv[2] if len(sys.argv) > 2 else None)

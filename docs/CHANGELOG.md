@@ -2,6 +2,18 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v277: Birds of many kinds
+- Ten kinds of bird in five shapes now live in the valley, each in its own places and seasons:
+  - farmland: sparrows, robins in spring and autumn, blue tits in summer, crows in autumn and winter, bullfinches in winter;
+  - the woods: robins, blue tits and bullfinches;
+  - the hills: goldfinches and crows;
+  - the beach: gulls (they glide between wing beats);
+  - the mere: gulls and songbirds;
+  - the island: parrots, lorikeets and gulls;
+  - the dunes and the dig site: quail.
+- Weather matters: no birds in a storm, and in rain or silvermist only crows and gulls stay out.
+- New save data: none.
+
 ## v276: Livelier birds and pen animals
 - Birds are redrawn with detailed sprites. On the ground they peck in bursts, look up and about, turn and hop. When you come close they take off and fly away flapping through a full wing beat.
 - Tamsin's sheep and cows in the village pen are redrawn and now move. Before, they were painted into the ground.

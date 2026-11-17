@@ -11,11 +11,12 @@ function flipped(c, px, flip, draw) {
 }
 
 // A bird at its feet (px, py). f: the frame (see BIRDS_SHEET); left: facing left; lift: px above the ground.
-export function drawBird(c, px, py, f, left, body, wing, lift = 0) {
-  const B = BIRDS_SHEET, x = Math.round(px), y = Math.round(py);
-  if (!lift) r(c, x - 3, y, 6, 1, 'rgba(0,0,0,.18)');
+// v277: sp is its species (data/atmosphere.js BIRD_SPECIES): its shape and colours.
+export function drawBird(c, px, py, f, left, sp, lift = 0) {
+  const B = BIRDS_SHEET, x = Math.round(px), y = Math.round(py), [body, wing, accent] = sp.colors;
+  if (!lift) r(c, x - 3, y, sp.shape === 'crow' || sp.shape === 'gull' ? 8 : 6, 1, 'rgba(0,0,0,.18)');
   if (ready(B.sheet)) {
-    const src = tinted(B.sheet, B.layers, [['body', body], ['wing', wing], ['ink', null]], B.size);
+    const s = sp.shape, src = tinted(B.sheet, B.layers, [[`${s}.body`, body], [`${s}.wing`, wing], [`${s}.accent`, accent], [`${s}.ink`, null]], B.size);
     flipped(c, x, left, () => frame(c, src, f, B.size, x + B.origin[0], y + B.origin[1] - lift));
     return;
   }

@@ -9,6 +9,7 @@ import { BIRDS_SHEET, PENSTOCK } from '../src/data/sprites.js';
 import { RANCH_PEN } from '../src/data/ranch.js';
 import { penHerd, penBounds, stepPen, penFrame } from '../src/systems/pen.js';
 import { birdFrame } from '../src/systems/atmosphere.js';
+import { BIRD_SPECIES, BIRD_PLACES, birdsFor } from '../src/data/atmosphere.js';
 import { freshFarm } from './setup.mjs';
 
 const size = (name) => { const b = readFileSync(new URL(`../assets/sprites/${name}.png`, import.meta.url)); return [b.readUInt32BE(16), b.readUInt32BE(20)]; };
@@ -41,4 +42,34 @@ test('a bird pecks, looks and hops on the ground, and flaps through its wing fra
   assert.ok(ground.has(0) && ground.has(1) && ground.has(2) && ground.has(3));
   const air = new Set([0, 0.05, 0.2, 0.27, 0.34, 0.41].map((age) => birdFrame({ flee: true, age })));
   assert.ok(air.has(4) && air.has(5) && air.has(6) && air.has(7), [...air].join());
+});
+
+// Roadmap 92b (Nuno): different birds on the island and in each biome, season and weather.
+const kinds = (...a) => birdsFor(...a).map(([k]) => k).sort();
+test('every species is drawn from a shape on the sheet, in three colours', () => {
+  for (const [k, sp] of Object.entries(BIRD_SPECIES)) {
+    assert.ok(BIRDS_SHEET.shapes.includes(sp.shape), `${k}'s shape is on the sheet`);
+    assert.equal(sp.colors.length, 3, k);
+  }
+  for (const list of Object.values(BIRD_PLACES)) for (const [k] of list) assert.ok(BIRD_SPECIES[k], k);
+  assert.ok(new Set(Object.values(BIRD_SPECIES).map((s) => s.shape)).size >= 5, 'five shapes, not one recoloured');
+});
+test('each place has its own birds', () => {
+  assert.deepEqual(kinds('beach', 'Summer', 'sun'), ['gull']);
+  assert.deepEqual(kinds('island', 'Summer', 'sun'), ['gull', 'lorikeet', 'parrot']);
+  assert.deepEqual(kinds('desert', 'Summer', 'sun'), ['quail']);
+  assert.ok(kinds('mountain', 'Summer', 'sun').includes('finch'));
+  assert.ok(!kinds('farm', 'Summer', 'sun').includes('parrot') && !kinds('island', 'Summer', 'sun').includes('sparrow'));
+  assert.deepEqual(kinds('mine', 'Summer', 'sun'), [], 'none underground');
+});
+test('seasons change who is about: robins in spring, blue tits in summer, bullfinches and crows in winter', () => {
+  assert.ok(kinds('forest', 'Spring', 'sun').includes('robin'));
+  assert.ok(kinds('farm', 'Summer', 'sun').includes('bluetit') && !kinds('farm', 'Winter', 'snow').includes('bluetit'));
+  assert.ok(kinds('farm', 'Winter', 'snow').includes('bullfinch') && kinds('farm', 'Winter', 'snow').includes('crow'));
+});
+test('weather: no birds in a storm, only crows and gulls in rain and mist', () => {
+  assert.deepEqual(kinds('farm', 'Autumn', 'storm'), []);
+  assert.deepEqual(kinds('farm', 'Autumn', 'rain'), ['crow']);
+  assert.deepEqual(kinds('beach', 'Spring', 'rain'), ['gull']);
+  assert.deepEqual(kinds('forest', 'Summer', 'mist'), [], 'no hardy birds in the summer woods');
 });
