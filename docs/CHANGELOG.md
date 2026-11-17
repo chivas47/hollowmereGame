@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v278: Calmer birds that keep out of the ferns
+- Birds peck about once a second instead of five times, and their pecking bouts and pauses last a little longer.
+- Birds land on bare ground or low cover (flowers, clover, pebbles, leaves) and never in a fern, tall grass, heather, a tropical bloom, scrub or other tall plants, where they looked to be sitting on top of the plant.
+- New save data: none.
+
 ## v277: Birds of many kinds
 - Ten kinds of bird in five shapes now live in the valley, each in its own places and seasons:
   - farmland: sparrows, robins in spring and autumn, blue tits in summer, crows in autumn and winter, bullfinches in winter;

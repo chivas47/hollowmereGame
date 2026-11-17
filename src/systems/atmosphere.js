@@ -11,6 +11,7 @@ import { underSky } from '../data/weather.js';
 import { WATERFALLS, WILDLIFE, BIRD_SPECIES, BIRD_PLACES, birdsFor } from '../data/atmosphere.js';
 import { r, rng } from '../render/pixel.js';
 import { drawBird } from '../render/wildlife.js';   // v276
+import { coverKind } from '../render/scenery.js';   // v278: birds keep off tall ground cover
 
 const wet = () => G.S.weather === 'rain' || G.S.weather === 'storm';
 const open = (k) => WILDLIFE[k].maps.includes(G.S.map) && (!WILDLIFE[k].seasons || WILDLIFE[k].seasons.includes(today().season));
@@ -76,7 +77,8 @@ let fauna = { key: null, birds: [], flies: [], bugs: [], ducks: [], frogs: [], w
 // v277: the weather where you are (the dunes are always clear) and what the wildlife was last made for.
 const skyHere = () => (underSky(G.S.map) ? G.S.weather : 'sun');
 const faunaKey = () => `${G.S.map}-${G.S.day}-${skyHere()}`;
-export const faunaNow = () => fauna;   // v276: for tools and tests (the birds on this map)
+export const faunaNow = () => fauna;
+export const TALL_COVER = new Set(['fern', 'tall', 'heather', 'bloom', 'scrub', 'cactus', 'driftwood', 'bones', 'twigs', 'mushrooms']);   // v278   // v276: for tools and tests (the birds on this map)
 const isWater = (x, y) => MAPS[G.S.map].grid[y]?.[x] === 'O';
 function spawn() {
   const S = G.S, map = MAPS[S.map], R = rng(S.day * 31 + map.salt), tiles = [], water = [], shore = [];
@@ -97,11 +99,15 @@ function spawn() {
   if (shore.length && WILDLIFE.frogs.maps.includes(S.map)) for (let i = 0; i < WILDLIFE.frogs.n; i++) {
     const [x, y] = shore[(R() * shore.length) | 0]; fauna.frogs.push({ x: x * T + 8, y: y * T + 11, hop: 0, next: 2 + R() * 8 });
   }
+  // v278 (roadmap 92c, Nuno): birds land on bare ground or low cover, never in a fern, tall grass or a bush, where
+  // they looked to sit on top of it.
+  const low = tiles.filter(([x, y]) => !TALL_COVER.has(coverKind(S.map, x, y, today().season)));
+  const perch = () => low[(R() * low.length) | 0] || pick();
   const kinds = birdsFor(S.map, today().season, skyHere()), weight = kinds.reduce((a, [, w]) => a + w, 0);   // v277: by place, season and weather
   if (weight) for (let i = 0; i < many(WILDLIFE.birds.n); i++) {
     let k = R() * weight, sp = kinds[0][0];
     for (const [key, w] of kinds) { if ((k -= w) < 0) { sp = key; break; } }
-    const [x, y] = pick(); fauna.birds.push({ sp, x: x * T + 8, y: y * T + 10, vx: 0, vy: 0, flee: false, peck: R() * 3, mode: 'peck', left: R() < 0.5, t: R() * 2, age: 0 });
+    const [x, y] = perch(); fauna.birds.push({ sp, x: x * T + 8, y: y * T + 10, vx: 0, vy: 0, flee: false, peck: R() * 3, mode: 'peck', left: R() < 0.5, t: R() * 2, age: 0 });
   }
   for (let i = 0; i < many(WILDLIFE.butterflies.n); i++) { const [x, y] = pick(); fauna.bugs.push({ x: x * T, y: y * T, p: R() * 6, col: ['#f2d14a', '#f2f2f2', '#e8884a', '#9ab8f0'][i % 4] }); }
   for (let i = 0; i < many(WILDLIFE.fireflies.n); i++) { const [x, y] = pick(); fauna.flies.push({ x: x * T, y: y * T, p: R() * 6 }); }
@@ -123,7 +129,7 @@ addUpdater((dt) => {
     if (b.t <= 0) {
       const k = Math.random();
       b.mode = k < 0.45 ? 'peck' : k < 0.7 ? 'look' : k < 0.9 ? 'hop' : 'stand';
-      b.t = b.mode === 'hop' ? 0.25 : b.mode === 'peck' ? 1.2 + Math.random() * 1.3 : 0.5 + Math.random() * 0.9;
+      b.t = b.mode === 'hop' ? 0.3 : b.mode === 'peck' ? 2.5 + Math.random() * 2.5 : 0.9 + Math.random() * 1.4;   // v278: calmer
       if ((b.mode === 'look' || b.mode === 'hop') && Math.random() < 0.35) b.left = !b.left;
     }
   }
@@ -172,13 +178,15 @@ addLayer(9, (c) => {
   }
 });
 
+// v278 (92c): a peck: the head goes down for `down` s every `every` s (it was swapping five times a second).
+export const PECK = { every: 1.1, down: 0.35 };
 // v276: which frame of the bird sheet (data/sprites.js BIRDS_SHEET) a bird shows now.
 export function birdFrame(b) {
   if (b.flee) {
     if (b.age < 0.12) return 4;
     return BIRD_SPECIES[b.sp]?.shape === 'gull' ? [5, 6, 6, 6, 7, 6, 6, 6][Math.floor(b.age * 10) % 8] : [5, 6, 7, 6][Math.floor(b.age * 14) % 4];   // v277: a gull glides between beats
   }
-  if (b.mode === 'peck') return Math.floor(b.peck * 5) % 3 === 0 ? 0 : 2;
+  if (b.mode === 'peck') return (b.peck % PECK.every) < PECK.down ? 2 : 0;   // v278: about one peck a second, not five
   return b.mode === 'look' ? 1 : b.mode === 'hop' ? 3 : 0;
 }
 const birdsOut = () => G.S.time < 19 * 60;   // v277: the weather is in birdsFor (hardy birds stay out in rain)

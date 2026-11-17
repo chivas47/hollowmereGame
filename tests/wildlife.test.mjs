@@ -73,3 +73,30 @@ test('weather: no birds in a storm, only crows and gulls in rain and mist', () =
   assert.deepEqual(kinds('beach', 'Spring', 'rain'), ['gull']);
   assert.deepEqual(kinds('forest', 'Summer', 'mist'), [], 'no hardy birds in the summer woods');
 });
+
+// Roadmap 92c (Nuno): birds pecked like they were on speed, and sat on top of ferns and other tall plants.
+test('a bird pecks about once a second, not five times', async () => {
+  const { PECK } = await import('../src/systems/atmosphere.js');
+  let changes = 0, last = null;
+  for (let t = 0; t < 10; t += 0.01) { const f = birdFrame({ mode: 'peck', peck: t, flee: false }); if (f !== last) changes++; last = f; }
+  assert.ok(changes <= 2 * Math.ceil(10 / PECK.every) + 1, `${changes} head moves in 10 s`);
+  assert.ok(changes >= 10, 'it still pecks');
+});
+test('birds land on bare ground or low cover, never in a fern or tall grass', async () => {
+  const { faunaNow, TALL_COVER } = await import('../src/systems/atmosphere.js');
+  const { coverKind } = await import('../src/render/scenery.js');
+  const { runUpdaters } = await import('../src/core/registry.js');
+  const { today } = await import('../src/core/time.js');
+  freshFarm();
+  let seen = 0;
+  for (const map of ['forest', 'wilds', 'island', 'mountain', 'mere']) for (const day of [3, 31, 59]) {
+    Object.assign(G.S, { map, day, weather: 'sun', time: 600, x: -999, y: -999 });
+    runUpdaters(0.01);
+    for (const b of faunaNow().birds) {
+      seen++;
+      const k = coverKind(map, Math.floor(b.x / 16), Math.floor((b.y - 10) / 16), today().season);
+      assert.ok(!TALL_COVER.has(k), `${b.sp} on ${map} day ${day} stands in ${k}`);
+    }
+  }
+  assert.ok(seen > 30, `${seen} birds checked`);
+});
