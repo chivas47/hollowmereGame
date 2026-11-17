@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v274: Every dialog in the new look
+- The Bag, Crafting, the Journal, Neighbours, the shops, the shipping bin, talking to neighbours and every other dialog now have the menu's look: a wooden board, a red ribbon title and a parchment page with dark ink.
+- Buttons are wooden plaques, and the main one in each dialog is gold. Item tiles, search boxes and lists sit on parchment.
+- The Journal's open tab shows as chosen instead of looking switched off.
+- Nothing moved: every dialog has the same contents, buttons and keys as before.
+- New save data: none.
+
 ## v273: The menu as a board of picture tiles
 - The menu (Esc) is no longer one long list. It opens on a wooden board of eight picture tiles: Sound, Display, Effects, Controls, Farms, Saves, Birthday and Help.
 - Each tile opens a small parchment page with only its own settings. The ◀ button or Esc goes back to the tiles, and Esc on the tiles closes the menu. Resume and Undo sit at the bottom.
