@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v276: Livelier birds and pen animals
+- Birds are redrawn with detailed sprites. On the ground they peck in bursts, look up and about, turn and hop. When you come close they take off and fly away flapping through a full wing beat.
+- Tamsin's sheep and cows in the village pen are redrawn and now move. Before, they were painted into the ground.
+  - Sheep are woolly with black faces; cows have patches and horns.
+  - Each one grazes with its head down and chews, stands and looks about, walks to another spot in the pen (legs stepping), and now and then calls out.
+  - They stay inside the rails.
+- New save data: none.
+
 ## v275: Two-tile boards and boats are solid all the way across
 - The boats at the beach and the island, the coach stops in town and at the dunes, and the island and desert traders' tables were solid and usable only on their left half. You could walk through the right half, and pressing Use there did nothing.
 - Both halves now block you, and both open the boat, the timetable or the trader.

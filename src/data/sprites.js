@@ -108,6 +108,13 @@ export const PACKET_SHEET = { sheet: 'packet', size: 16, layers: ['main', 'secon
 // on the corners of every tilled tile, watered over it on the corners of watered ones.
 export const SOIL_SHEET = { sheet: 'soil', size: 16 };
 
+// v276 (roadmap 92a) birds.png: 16x16 frames facing right (mirrored in code), feet at (8, 15); bands body, wing (tinted
+// to the map's bird colours) and ink. Frames: stand, look up, peck, hop, take off, wings up, level, down.
+// penstock.png: 24x24 frames facing right, feet at (12, 23); a row each for the village pen's sheep and cows, colours
+// drawn in. Frames: stand, four walk beats, graze, chew, call. Both built by tools/sprites/wildlife.py.
+export const BIRDS_SHEET = { sheet: 'birds', size: 16, origin: [-8, -15], layers: ['body', 'wing', 'ink'] };
+export const PENSTOCK = { sheet: 'penstock', size: 24, origin: [-12, -23], rows: ['sheep', 'cow'] };
+
 export const MONSTERS = {
   sheet: 'monsters', size: 24, origin: [-12, -24],
   layers: ['mite.body', 'mite.line', 'mite.ink', 'bat.body', 'bat.line', 'bat.ink', 'skeleton.body', 'skeleton.line',

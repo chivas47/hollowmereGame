@@ -352,6 +352,7 @@ Nuno (November 2026): no sword tip where there is fighting; pickup messages are 
 | Item | What | Kind | Status | Notes |
 |---|---|---|---|---|
 | 91a | Two-tile objects solid all the way across | fix | done (chivas47/hollowmereGame#293) | Nuno: signs two squares wide and the boat block and answer Use on one square only. Boards, boats and tables drawn 32 px wide marked only their left tile; their second tile now takes the same tile (data/maps.js WIDE_OBJECTS). The town coach stop moves one tile west, off the lane's path (Corvin's heart scene walks it). |
+| 92a | Birds and the village pen's animals redrawn and alive | polish | in progress | Nuno: polish the birds and the sheep in the village pen; sprite files of their own, more detail, better animations. birds.png (8 frames: stand, look, peck, hop, take off, three wing beats) and penstock.png (sheep and cows: stand, four walk beats, graze, chew, call), both from tools/sprites/wildlife.py. Birds peck, look, turn and hop; pen animals graze, walk, chew and call inside the rails (systems/pen.js). |
 
 ## Done
 

@@ -102,6 +102,7 @@ import './systems/firstweek.js';   // v122: the first week's goals
 import './systems/reckoning.js';   // v128: Bram's reckoning
 import './systems/partner.js';   // v129: the second farmer
 import './systems/atmosphere.js';   // v72: waterfalls, splashes, lightning, wildlife
+import './systems/pen.js';   // v276: the village pen's sheep and cows
 import './systems/water.js';   // v102: moving water and reflections
 import './systems/sway.js';   // v103: wind in grass, trees and washing
 import './systems/falling.js';   // v104: petals, fluff, leaves and snow drifting down

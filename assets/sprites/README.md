@@ -33,6 +33,20 @@ Built by `tools/sprites/person.py`, which also writes the layout to `src/data/pe
 
 96 x 24. Frames are 24 x 24, the horse's feet at the bottom centre (x 12, y 24). Columns as animals.png, colours drawn in.
 
+## birds.png
+
+128 x 48 (v276). Frames are 16 x 16, facing right (mirrored in code), the bird's feet at (8, 15). Built by `tools/sprites/wildlife.py`.
+
+- **Columns (8):** stand, look up, peck (head down), hop (crouched), take off, wings up, wings level, wings down.
+- **Rows (3 bands):** body and wing, tinted to the map's bird colours (`BIRD_COLORS` in `src/data/atmosphere.js`); ink (beak, eye, legs, outline) drawn as is.
+
+## penstock.png
+
+192 x 48 (v276). Frames are 24 x 24, facing right (mirrored in code), the animal's feet at (12, 23); colours drawn in. Built by `tools/sprites/wildlife.py`. The village pen's animals (Tamsin's), not the player's barn animals (animals.png).
+
+- **Columns (8):** stand, four walk beats, graze (head down), chew, call (mouth open).
+- **Rows:** sheep, cow (`PENSTOCK.rows`).
+
 ## monsters.png
 
 96 x 3168. Frames are 24 x 24, the monster's feet at the bottom centre (x 12, y 24); flyers are drawn at their resting height and bobbed in code.
@@ -200,6 +214,7 @@ Lit bombs use the bomb frames of placed.png.
 | person.png | Hollowmere Farm (original, v77; rebuilt part by part v222) | same as the game |
 | animals.png | Hollowmere Farm (original, v78; redrawn v196) | same as the game |
 | pets.png, horse.png | Hollowmere Farm (original, v79; redrawn v196) | same as the game |
+| birds.png, penstock.png | Hollowmere Farm (original, v276) | same as the game |
 | monsters.png | Hollowmere Farm (original, v80; redrawn v208; chargers added v228; crab, mole and puff v253; lurker v254; spitter v255; wisp and shell v257; the Hollow's kinds redrawn in four frames, moss slime and outline bands v265; the deep dungeons' kinds each their own shape v268; the night creatures v269) | same as the game |
 | crops.png | Hollowmere Farm (original, v81; redrawn v197) | same as the game |
 | forage.png | Hollowmere Farm (original, v82; redrawn v197) | same as the game |
