@@ -18,6 +18,23 @@ You take over the overgrown Hollowmere plot. Farm through the seasons, fish and 
 - 28-day seasons: Spring, Summer, Autumn, Winter. Crops not in the new season wither.
 - Passing out at 2:00 (3:00 with street lamps): wake with 60% energy.
 
+## The menu (v273, roadmap 90b)
+
+Esc or the Menu button opens a wooden board of picture tiles (pixel icons in render/menuIcons.js), each opening a parchment page with a ribbon title (ui/menu.js). Nuno's choices: a hub of tiles, each a small page; wood and parchment.
+
+| Tile | Page |
+|---|---|
+| Sound | Sound, music, ambience volume, footsteps |
+| Display | HUD size, text size, contrast, HUD mode, objective, prompts, tips |
+| Effects | Particles, shake, hit-stop, motion speed |
+| Controls | Keys (rebind by clicking), the controller's buttons |
+| Farms | The Farms dialog (three slots), New farm |
+| Saves | Export, import, back to this morning |
+| Birthday | Your birthday |
+| Help | Getting started; debug tools where allowed |
+
+Resume and Undo sit at the foot. Esc or B on a page goes back to the tiles; on the tiles it closes the menu. Before a farm is loaded (the title screen) only Sound, Display, Effects, Controls and Help show. Notices that arrive while it is open sit under its title.
+
 ## The title screen (v271, roadmap 89b)
 
 Shown every time the game opens (Nuno), before any farm is loaded, over a living valley drawn in code (render/title.js): the farm at dawn, the sun rising, clouds and birds drifting, smoke from the farmhouse, in the season of the farm last played (spring blossom, summer fireflies, autumn leaves, winter snow). Its buttons (ui/title.js):

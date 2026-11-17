@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v273: The menu as a board of picture tiles
+- The menu (Esc) is no longer one long list. It opens on a wooden board of eight picture tiles: Sound, Display, Effects, Controls, Farms, Saves, Birthday and Help.
+- Each tile opens a small parchment page with only its own settings. The ◀ button or Esc goes back to the tiles, and Esc on the tiles closes the menu. Resume and Undo sit at the bottom.
+- Every setting is still there and works as before. On the title screen, only the tiles that apply before a farm is loaded show.
+- Messages that arrive while the menu is open sit as small notes under its title instead of over the tiles.
+- New save data: none.
+
 ## v272: Quiet in a fight
 - Swinging the sword at nothing in the Hollow, the deep dungeons or near any creature no longer brings up the tip about what the sword is for.
 - Items you pick up in a fight ("+1 Gel, +2 Bone", "+3 Copper ore") no longer pop up as messages. They still fly into your bag with their names, and finds, ladders and floor names still show.
