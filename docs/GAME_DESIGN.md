@@ -18,6 +18,19 @@ You take over the overgrown Hollowmere plot. Farm through the seasons, fish and 
 - 28-day seasons: Spring, Summer, Autumn, Winter. Crops not in the new season wither.
 - Passing out at 2:00 (3:00 with street lamps): wake with 60% energy.
 
+## The title screen (v271, roadmap 89b)
+
+Shown every time the game opens (Nuno), before any farm is loaded, over a living valley drawn in code (render/title.js): the farm at dawn, the sun rising, clouds and birds drifting, smoke from the farmhouse, in the season of the farm last played (spring blossom, summer fireflies, autumn leaves, winter snow). Its buttons (ui/title.js):
+
+| Button | What it does |
+|---|---|
+| Continue | Shown when the slot last played holds a farm (its name, date and gold); plays it. |
+| New farm | Starts a farm in the first empty slot and opens the new game screen; it never overwrites a farm. With all three slots in use it asks which farm to replace, then replaces it at once. |
+| Farms | The three slots: play a farm, or start one in an empty slot. |
+| Settings and controls | The menu, with only what applies before a farm is loaded (sound, display, keys; not Undo, Farms, saves, New farm or debug). |
+
+Esc or a controller's B opens the same settings. A live reload in a viewer that carries a farm skips the title.
+
 ## New game (v21)
 
 A new farm starts on a screen that asks for the farmer's name, the farm's name (shown as "<name> Farm"), a favourite thing, colours for skin, hair, shirt and trousers, a hair style (short, long, bun, ponytail, curly, cropped or balding; v222), a beard (none, full, moustache or goatee), glasses, and a starting pet: cat, dog or turtle. The pet is saved with the profile and moves in when pets arrive (roadmap item 8). Neighbours at 2 hearts or more have a line that uses the name and the favourite thing. Old saves get the default profile: Farmer of Hollowmere Farm, the original look.

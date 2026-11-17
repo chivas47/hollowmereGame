@@ -5,6 +5,7 @@ import { toWorld } from '../render/views.js';
 import { notify, emit } from '../core/events.js';
 import { save } from '../core/state.js';
 import { HOTBAR, SEED_SLOT } from '../data/hotbar.js';
+import { titleOpen } from './title.js';
 import { act } from '../systems/interact.js';
 import { moveChoice } from '../systems/cutscene.js';
 import { playerTile } from '../systems/world.js';
@@ -63,7 +64,7 @@ export function initInput(canvas) {
       return;
     }
     if (e.code === 'Escape') { escape(); return; }
-    if (dialogOf('you') || menuOpen()) return;   // v141: farmer two's dialog leaves your keys to you
+    if (dialogOf('you') || menuOpen() || titleOpen()) return;   // v271: the title screen's buttons take the keys   // v141: farmer two's dialog leaves your keys to you
     if (e.code === 'Backquote') { toggleDebug(); return; }
     if (e.ctrlKey || e.metaKey) {   // browser shortcuts stay the browser's, except Ctrl Z (undo)
       if (e.code === 'KeyZ') { e.preventDefault(); if (!e.repeat) undo(); }

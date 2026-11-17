@@ -334,8 +334,8 @@ Nuno (November 2026): "when you start a new world it did not trigger the creatio
 
 | Item | What | Kind | Status | Notes |
 |---|---|---|---|---|
-| 89a | New farm opens the new game screen | fix | in progress | Menu, New farm, Start over closed the dialog after the new farm had opened the new game screen, closing that screen instead; the farm started unnamed until a reload. Loading a save file had the same order. |
-| 89b | A title screen | feature | needs decision | Shown when the game opens, before any farm: the game's name over a scene, Continue, New farm, Farms. Questions for Nuno before building it. |
+| 89a | New farm opens the new game screen | fix | done (chivas47/hollowmereGame#288) | Menu, New farm, Start over closed the dialog after the new farm had opened the new game screen, closing that screen instead; the farm started unnamed until a reload. Loading a save file had the same order. |
+| 89b | A title screen | feature | in progress | Nuno's answers: every launch; Continue, New farm, Farms, Settings and controls; a new farm goes into an empty slot (asking which to replace when all are full); a live valley scene in the last farm's season. |
 
 ## Done
 

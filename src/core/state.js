@@ -250,7 +250,8 @@ export function load() {
 export function slotInfo(n) {
   try {
     const d = JSON.parse(localStorage.getItem(saveKey(n)) || localStorage.getItem(morningKey(n)));
-    if (d && d.day) return { farm: d.profile?.farm || null, name: d.profile?.name || null, day: d.day, gold: d.gold };
+    const p = d?.profile === undefined ? DEFAULT_PROFILE : d.profile;   // v271: a save from before names loads with the default ones (merge)
+    if (d && d.day) return { farm: p?.farm || null, name: p?.name || null, day: d.day, gold: d.gold };
   } catch (e) { /* storage unavailable or a damaged save */ }
   return null;
 }

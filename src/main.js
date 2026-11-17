@@ -174,6 +174,7 @@ import './audio/sfx.js';
 import './audio/ambience.js';   // v72
 import './audio/footsteps.js';   // v109: footsteps by surface
 import { $ } from './ui/dom.js';
+import { openTitle } from './ui/title.js';   // v271 (89b)
 
 const canvas = $('#game'), ctx = canvas.getContext('2d');
 let last = 0;
@@ -187,17 +188,24 @@ function frame(t) {
 }
 
 function start(data) {
-  G.S = data?.S?.day ? merge(data.S) : load();
+  const hot = data?.S?.day;
+  G.S = hot ? merge(data.S) : load();
   buildHotbar();
   initInput(canvas);
   initDebug();
   initSound();
   initSaveFile();
-  emit('game:loaded');
-  changed();
   try { window.claude?.hot?.snapshot?.(() => ({ S: G.S })); } catch (e) { /* not in a viewer */ }
+  if (hot) play(); else openTitle(play);   // v271 (89b): the title screen first, unless a live reload carries a farm
+}
+// The farm chosen (G.S set): load it and start the clock.
+let running = false;
+function play() {
+  G.paused = false;
+  emit('game:reset'); emit('game:loaded');
+  changed();
   if (G.S.day === 1 && G.S.time === START && !Object.keys(G.S.soil).length) notify('Pick the hoe and till the grass below the path.');
-  requestAnimationFrame(frame);
+  if (!running) { running = true; requestAnimationFrame(frame); }
 }
 
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});

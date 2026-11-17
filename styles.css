@@ -384,3 +384,19 @@ body.in-cut .goal,body.in-cut .prompt,body.in-cut .toasts{visibility:hidden}
 .cut-choice{position:absolute;left:8%;right:8%;bottom:13%;display:flex;flex-direction:column;gap:6px}
 .cut-choice button{font:inherit;font-size:clamp(16px,2.1cqw,20px);text-align:left;color:var(--cream);background:rgba(28,23,18,.94);border:2px solid var(--seam);border-radius:8px;padding:8px 12px;cursor:pointer}
 .cut-choice button.sel,.cut-choice button:hover{border-color:var(--harvest);color:var(--harvest)}
+
+/* v271 (roadmap 89b): the title screen over its living valley (ui/title.js, render/title.js). Under the menu and
+   dialogs (same z-index as the menu, earlier in the page) so Settings opens over it. */
+.title{position:fixed;inset:0;z-index:9;display:flex;align-items:center;justify-content:center;background:#2a3a5e;overflow:hidden}
+.title[hidden]{display:none}
+.title canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:pixelated}
+.titlecard{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px;max-width:min(92vw,720px);width:100%}
+.titlecard h1{margin:0;font-size:clamp(34px,8.5vw,72px);line-height:1.1;color:var(--harvest);text-shadow:0 3px 0 #5a3a22,0 0 18px rgba(0,0,0,.55);letter-spacing:1px;text-align:center}
+.titlebtns{display:flex;flex-direction:column;gap:8px;width:100%;max-width:460px;max-height:60vh;max-height:60dvh;overflow:auto}
+.titlebtns button{background:rgba(42,33,24,.9);border:2px solid var(--frame);border-radius:8px;color:var(--cream);font:inherit;font-size:20px;padding:8px 14px;min-height:48px;cursor:pointer;text-align:center}
+.titlebtns button small{display:block;font-size:16px;color:var(--straw)}
+.titlebtns button.primary{background:var(--harvest);color:var(--soil);border-color:#b8862b;font-weight:600}
+.titlebtns button.primary small{color:var(--soil)}
+.titlebtns button:focus-visible,.titlebtns button:hover{outline:3px solid var(--cream);outline-offset:1px}
+.titlenote{margin:0;background:rgba(42,33,24,.9);border-radius:8px;padding:8px 12px;color:var(--cream)}
+body.titling .game-only{display:none}

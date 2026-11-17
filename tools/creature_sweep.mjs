@@ -47,6 +47,11 @@ page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
 page.on('pageerror', (e) => errors.push(e.message));
 await page.goto(BASE);
 await page.waitForTimeout(1500);
+// v271: the title screen: Continue a seeded save, else New farm (into an empty slot).
+const cont = page.locator('#titleButtons [data-title="continue"]');
+if (await cont.isVisible().catch(() => false)) await cont.click();
+else if (await page.locator('#titleButtons [data-title="new"]').isVisible().catch(() => false)) await page.locator('#titleButtons [data-title="new"]').click();
+await page.waitForTimeout(400);
 for (let i = 0; i < 12; i++) {   // farmer creation and the arrival pages, then skip the opening
   const btn = page.getByRole('button', { name: /^(Start farming|Next)$/ }).first();
   if (!(await btn.isVisible().catch(() => false))) break;
