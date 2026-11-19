@@ -9,6 +9,13 @@ const SFX = {
   axe:     () => { noise({ dur: 0.12, vol: 0.2, freq: 400, filter: 'bandpass', sweep: 200 }); tone({ freq: 180, dur: 0.08, type: 'square', vol: 0.05 }); },
   pick:    () => { tone({ freq: 1600, dur: 0.06, type: 'square', vol: 0.06 }); noise({ dur: 0.08, vol: 0.15, freq: 2000, filter: 'bandpass' }); },
   sword:   () => noise({ dur: 0.18, vol: 0.12, filter: 'bandpass', freq: 600, sweep: 3000 }),
+  // v280 (roadmap 93a): a swish for each weapon kind, and blows that land.
+  swingDagger: () => noise({ dur: 0.1, vol: 0.1, filter: 'bandpass', freq: 1400, sweep: 5000 }),
+  swingClub:   () => { noise({ dur: 0.26, vol: 0.14, filter: 'bandpass', freq: 300, sweep: 1200 }); tone({ freq: 110, dur: 0.12, type: 'sine', vol: 0.05, at: 0.1 }); },
+  hit:     () => { noise({ dur: 0.07, vol: 0.18, filter: 'lowpass', freq: 900, sweep: 300 }); tone({ freq: 160, dur: 0.06, type: 'square', vol: 0.05, slide: 90 }); },
+  crit:    () => { noise({ dur: 0.09, vol: 0.2, filter: 'lowpass', freq: 1400, sweep: 300 }); tone({ freq: 1320, dur: 0.12, type: 'triangle', vol: 0.06, slide: 1760 }); },
+  slay:    () => { noise({ dur: 0.18, vol: 0.16, filter: 'lowpass', freq: 700, sweep: 120 }); tone({ freq: 523, dur: 0.07, type: 'triangle', vol: 0.06 }); tone({ freq: 784, dur: 0.1, type: 'triangle', vol: 0.06, at: 0.06 }); },
+  slam:    () => { noise({ dur: 0.35, vol: 0.25, freq: 260, sweep: 70 }); tone({ freq: 70, dur: 0.25, type: 'sine', vol: 0.1, slide: 40 }); },
   pickup:  () => { tone({ freq: 660, dur: 0.07, type: 'triangle' }); tone({ freq: 990, dur: 0.1, type: 'triangle', at: 0.06 }); },
   bite:    () => { tone({ freq: 880, dur: 0.06 }); tone({ freq: 880, dur: 0.06, at: 0.1 }); },
   catch:   () => [523, 659, 784, 1047].forEach((f, i) => tone({ freq: f, dur: 0.1, type: 'triangle', at: i * 0.07 })),

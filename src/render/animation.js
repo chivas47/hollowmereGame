@@ -11,7 +11,7 @@ import { MINERALS } from '../data/minerals.js';
 import { ITEMS } from '../data/items.js';
 import { onSheet, ready } from './sheets.js';
 import { TOOLS_SHEET } from '../data/sprites.js';
-import { PICKUP } from '../data/animation.js';
+import { PICKUP, TRAILS } from '../data/animation.js';
 
 const RAD = Math.PI / 180;
 const FACE = { right: 0, down: 90, left: 0, up: -90 };   // left is drawn mirrored
@@ -60,21 +60,44 @@ export function drawHeld(c, a, px, py) {
   c.save();
   handFrame(c, px, py, a.dir);
   if (a.thrust) c.translate(Math.sin(p * Math.PI) * a.thrust, 0);
-  if (a.trail && p > a.strike) {   // the slash arc behind a weapon
-    const dn = Math.sign(a.to - a.from) || 1, tail = dn > 0 ? Math.max(a.from, ang - 80) : Math.min(a.from, ang + 80);
-    if (Math.abs(ang - tail) > 4) {
-      c.globalAlpha = 0.55 * (1 - p);
-      c.strokeStyle = a.spin ? '#fff1b8' : '#f4f6ff'; c.lineWidth = 3;
-      c.beginPath(); c.arc(0, 0, a.reach || 12, Math.min(tail, ang) * RAD, Math.max(tail, ang) * RAD); c.stroke();
-      c.globalAlpha = 1;
-    }
-  }
+  if (a.trail && p > a.strike) drawTrail(c, a, p, ang);   // the slash arc behind a weapon
+  if (a.thrust && a.weapon === 'dagger' && p > 0.15 && p < 0.8) drawThrust(c, a, p);
   if (UPRIGHT.has(a.kind)) { c.rotate(ang * RAD); c.drawImage(sprite(a.kind), -3, -10); c.restore(); return; }   // held level and tilted
   c.rotate((ang + 45) * RAD);
   c.drawImage(sprite(a.weapon || a.kind), -4, -12);
   c.restore();
 }
 const UPRIGHT = new Set(['can', 'pan']);
+
+// v280 (roadmap 93a): trails by weapon kind (data/animation.js TRAILS). The tool used as a sickle (no weapon) keeps
+// the sword's. A finisher's trail is gold; layers go from a soft wide glow in to a bright core, fading as it ends.
+function drawTrail(c, a, p, ang) {
+  const tr = TRAILS[a.weapon] || TRAILS.sword, dn = Math.sign(a.to - a.from) || 1;
+  const tail = dn > 0 ? Math.max(a.from, ang - tr.tail) : Math.min(a.from, ang + tr.tail);
+  if (Math.abs(ang - tail) <= 4) return;
+  const fade = 1 - p, rad = a.reach || 12, lo = Math.min(tail, ang) * RAD, hi = Math.max(tail, ang) * RAD, fin = a.fin || a.spin;
+  c.save(); c.lineCap = 'round';
+  for (let s = 0; s < (tr.streaks || 1); s++) {
+    const rr = rad - (tr.streaks ? 3 - s * 2.5 : 0), from = tr.streaks ? lo + (hi - lo) * s * 0.18 : lo;
+    for (const [w, al, col] of tr.layers) {
+      c.globalAlpha = al * fade; c.strokeStyle = fin ? tr.fin : col; c.lineWidth = w;
+      c.beginPath(); c.arc(0, 0, rr, from, hi); c.stroke();
+    }
+  }
+  if (tr.spark && p < 0.85) {   // a glint at the leading tip
+    const tip = (dn > 0 ? hi : lo);
+    c.globalAlpha = fade; c.fillStyle = '#ffffff';
+    c.fillRect(Math.round(Math.cos(tip) * rad) - 1, Math.round(Math.sin(tip) * rad) - 1, 2, 2);
+  }
+  c.restore();
+}
+// v280: the dagger's lunging stab (and its quick stab) draws speed lines along the thrust.
+function drawThrust(c, a, p) {
+  const k = Math.sin(p * Math.PI), len = (a.reach || 12) + (typeof a.thrust === 'number' ? a.thrust : 6);
+  c.save(); c.globalAlpha = 0.6 * k; c.fillStyle = a.fin ? (TRAILS.dagger.fin) : '#f4f6ff';
+  for (const [off, start] of [[-3, 6], [0, 2], [3, 8]]) c.fillRect(start, off, Math.round(len * k) - start + 4, 1);
+  c.restore();
+}
 
 // The rod held out while a line is in the water; returns the tip for the line.
 export function drawRod(c, px, py, dir, bend) {
@@ -112,6 +135,12 @@ export function drawItem(c, k, cx, cy) {
 export function drawFx(c, fx, S) {
   for (const q of fx.parts) {
     c.globalAlpha = Math.max(0, Math.min(1, q.life / q.max * 1.5));
+    if (q.slash) {   // v280: a blade's mark, thinning as it fades
+      const k = q.life / q.max, h = q.len / 2 * (0.6 + 0.4 * k), dx = Math.cos(q.ang) * h, dy = Math.sin(q.ang) * h;
+      c.globalAlpha = Math.min(1, k * 1.6); c.strokeStyle = q.col; c.lineCap = 'round';
+      c.lineWidth = 1 + 2 * k; c.beginPath(); c.moveTo(q.x - dx, q.y - dy); c.lineTo(q.x + dx, q.y + dy); c.stroke();
+      c.lineCap = 'butt'; continue;
+    }
     if (q.ring) { c.strokeStyle = q.col; c.lineWidth = 1.5; c.beginPath(); c.ellipse(q.x, q.y, q.rad * (1 - q.life / q.max) + 2, (q.rad * (1 - q.life / q.max) + 2) * 0.55, 0, 0, Math.PI * 2); c.stroke(); continue; }
     const s = q.size * (q.shrink ? Math.max(0.3, q.life / q.max) : 1);
     r(c, Math.round(q.x - s / 2), Math.round(q.y - q.z - s / 2), Math.max(1, Math.round(s)), Math.max(1, Math.round(s)), q.col);

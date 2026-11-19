@@ -15,7 +15,7 @@ import { HOTBAR } from '../data/hotbar.js';
 import { SPECIALS } from '../data/weapons.js';
 import { IMPACT, HIT_STOP } from '../data/animation.js';
 import { weapon, wearing } from './gear.js';
-import { strikeArea } from './monsters.js';
+import { strikeArea, stopFor } from './monsters.js';
 import { playAnim, shake, ring, burst, holdSwing } from './animation.js';
 import { mover } from './world.js';
 import { asThem } from './partner.js';
@@ -58,7 +58,7 @@ function stab(sp) {
   const [dx, dy] = DIRS[G.S.dir], px = G.S.x + dx * 12, py = G.S.y - 4 + dy * 12;
   playAnim('sword', { gate: false, dur: sp.every, from: 0, to: 0, strike: 0.5, root: sp.every, weapon: 'dagger', trail: false, thrust: true, reach: 14 });
   if (strikeArea(px, py, sp.reach, sp.mult, 0.5, [dx, dy])) holdSwing(HIT_STOP / 2);
-  emit('sfx', 'sword');
+  emit('sfx', 'swingDagger');   // v280
 }
 
 function slam(sp) {
@@ -66,7 +66,8 @@ function slam(sp) {
   shake(3, 0.25);
   ring(x, y + 4, 'rgba(255,241,184,.9)', sp.radius, 0.4);
   burst(x, y + 4, IMPACT.stone, 16, { speed: 80, up: 50, size: 2, life: 0.5, shrink: true });
-  if (strikeArea(x, y, sp.radius, sp.mult, 1.2, null, sp.stun)) holdSwing(HIT_STOP);
+  if (strikeArea(x, y, sp.radius, sp.mult, 1.2, null, sp.stun)) holdSwing(stopFor(true));   // v280: holds as a finisher
+  emit('sfx', 'slam');   // v280: the slam lands with a thud
 }
 
 addUpdater((dt) => {

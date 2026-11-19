@@ -2,6 +2,15 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v280: Hits and swings with weight
+- A blade leaves a bright slash mark across whatever it hits. A critical hit leaves two, crossed, in gold.
+- A struck creature squashes and hops off the ground for a moment, then springs back.
+- Heavier blows hold a beat longer: critical hits, finishers, the club's ground slam and the blow that defeats a creature. Defeats also give the screen a small thump. Damage per second is unchanged.
+- Each weapon kind has its own swing trail: a layered sword arc with a glint at the tip, thin dagger streaks with speed lines on its stabs, a wide club smear. Every finisher's trail is gold.
+- New sounds: a quick swish for daggers, a heavy whoosh for clubs, a thud when a blow lands, a ring on a critical hit, a pop on a defeat and a deep thump for the ground slam.
+- The Motion settings still apply: Hit-stop off turns off the longer holds too.
+- New save data: none.
+
 ## v279: Wildlife comes and goes instead of vanishing
 - At dusk birds no longer vanish all at once at 7 pm. Each takes off and flies away at its own moment in the half hour before.
 - When the weather turns, the birds it doesn't suit fly off. When it clears, new birds fly in and land. Before, the whole flock swapped in an instant.

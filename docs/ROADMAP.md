@@ -357,6 +357,16 @@ Nuno (November 2026): no sword tip where there is fighting; pickup messages are 
 | 92c | Calmer birds that keep out of the ferns | fix | done (chivas47/hollowmereGame#296) | Nuno: birds peck like they are on speed, and look weird above ferns and some vegetation. A peck every 1.1 s (head down 0.35 s; it was five head moves a second), longer bouts; birds land only where the ground cover is low (TALL_COVER: fern, tall grass, heather, bloom, scrub, cactus, driftwood, bones, twigs, mushrooms). |
 | 92d | Wildlife comes and goes instead of vanishing | fix | in progress | Nuno: birds vanish in thin air when it gets dark; check the bug overall. Five pop-ins and pop-outs found: birds cut at 19:00; a weather change rebuilt all wildlife (birds swapped, ducks, frogs and butterflies moved); butterflies cut at 8:00, 18:00 and when the sun went; fireflies and frogs cut by the hour and rain. Birds now fly off one by one from 18:30 (BIRD_DAY) and when the weather turns, fly in when it clears; insects and frogs fade over 1.5 s. |
 
+## Combat feel and weapon tiers (November 2026)
+
+Nuno (November 2026): make combat animations and effects better, make fighting monsters fun, and make weapons upgradable with monster loot or by defeating monsters. His answers: hits feel weak, swings look plain and getting hit is unclear; upgrades need both loot and defeats; one item per pull request.
+
+| Item | What | Kind | Status | Notes |
+|---|---|---|---|---|
+| 93a | Hits and swings with weight | polish | in progress | A slash mark where the blade lands, a squash and a hop on the struck creature, longer hit-stop on crits, finishers and defeats, a sound of its own for each weapon kind and for a hit, a crit and a defeat, and swing trails of their own: a layered sword arc, thin dagger streaks, a heavy club smear, gold on the finisher. |
+| 93b | Getting hit you can feel | polish | queued | A red flash at the screen's edges and a red number when you are hurt, a pulse and heartbeat at low health, a red tint on the farmer while they cannot be hurt. |
+| 93c | Weapon tiers from loot and defeats | feature | queued | Each weapon rises three tiers at the Wardens' Lodge (+10%, +20%, +30% damage, Stardew's galaxy-to-infinity step split in three); each tier needs defeats with that weapon and monster materials, and the blade shows its tier. |
+
 ## Done
 
 | Item | PR |

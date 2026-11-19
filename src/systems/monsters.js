@@ -21,7 +21,7 @@ import { hurtPlayer, hurtPartner } from './health.js';
 import { has } from './professions.js';
 import { attackMult } from './buffs.js';
 import { weapon, weaponKind, wearing, giveFind, forgeBonus, weaponEnchant } from './gear.js';
-import { COMBO, SLAM_RADIUS, HIT_STOP, IMPACT } from '../data/animation.js';
+import { COMBO, SLAM_RADIUS, HIT_STOP, HIT_STOPS, STRUCK, IMPACT } from '../data/animation.js';
 import { HOTBAR } from '../data/hotbar.js';
 import { playAnim, shake, holdSwing, ring, burst } from './animation.js';
 import { motion } from '../core/motion.js';
@@ -330,6 +330,7 @@ function defeat(m) {
   if (weaponEnchant() === 'haymaker' && Math.random() < 0.3) { const k = HAY[Math.floor(Math.random() * HAY.length)]; G.S.bag[k] = (G.S.bag[k] || 0) + 1; }
   emit('gather', { skill: 'combat', xp: (m.small ? Math.ceil(d.xp * SPLIT.xp) : d.xp) * (m.elite ? ELITE.xp : 1) });   // v260: an elite gives more   // v256: a piece gives less
   emit('monster:slain', { kind: m.kind || 'slime', x: m.x, y: m.y, map: slimeMap, drops: got, elite: !!m.elite, color: m.color });
+  if (slimeMap === G.S.map) shake(STRUCK.defeatShake, 0.12);   // v280: a defeat lands with a thump
   if (busyFloor && slimeMap === 'mine' && !slimes.length) { busyFloor = false; emit('mine:cleared'); }   // v259: the ladder opens   // 85c: drops for the Bestiary   // v37: the lodge's goals, the blast ring
   changed();
 }
@@ -343,7 +344,8 @@ export function hitMonster(m, dmg, kx = 0, ky = 0, crit = false) {
     return;
   }
   m.hp -= dmg; m.hurt = 0.25; m.kx = kx; m.ky = ky;
-  emit('monster:hit', { x: m.x, y: m.y, dmg, crit, kx, ky, kind: m.kind || 'slime', color: m.color });   // v264: kind and colour for the chips
+  emit('monster:hit', { x: m.x, y: m.y, dmg, crit, kx, ky, kind: m.kind || 'slime', color: m.color, blade: blading });   // v264: kind and colour for the chips; v280: blade, a weapon's blow (a slash mark)
+  if (slimeMap === G.S.map) emit('sfx', m.hp <= 0 ? 'slay' : crit ? 'crit' : 'hit');   // v280: a blow you can hear
   if (m.hp <= 0) defeat(m);
 }
 export const monstersOn = () => slimeMap;
@@ -369,16 +371,19 @@ function strike() {
   const [dx, dy] = DIRS[G.S.dir];
   moveBox(G.S, dx * st.lunge, dy * st.lunge);   // a short step into the swing (v73: stops at walls)
   playAnim('sword', { gate: false, dur: base * (st.spin ? 1.3 : 1), from: st.arc[0], to: st.arc[1], strike: st.slam ? 0.4 : 0.1, root: base * 0.6,
-    weapon: kind === 'sword' ? 'sword' : kind, trail: !st.thrust, spin: st.spin, thrust: st.thrust, reach: st.spin ? 14 : 12 });
-  emit('sfx', 'sword');
+    weapon: kind === 'sword' ? 'sword' : kind, trail: !st.thrust, spin: st.spin, thrust: st.thrust, reach: st.spin ? 14 : 12, fin: last, slam: st.slam });
+  emit('sfx', SWING_SFX[kind] || 'sword');   // v280: each weapon kind sounds its own
   if (st.shake) shake(st.shake, 0.15);
   const reachK = st.reach || 1, px = G.S.x + dx * 12 * reachK, py = G.S.y - 4 + dy * 12 * reachK;
   if (st.slam) { ring(px, py + 4, 'rgba(255,241,184,.9)', SLAM_RADIUS, 0.35); burst(px, py + 4, IMPACT.stone, 10, { speed: 60, up: 40, size: 2, life: 0.45, shrink: true }); }
   if (G.S.map !== slimeMap) return;
   const cx = st.spin ? G.S.x : px, cy = st.spin ? G.S.y - 4 : py, reach = st.spin ? wk.reach + 6 : st.slam ? SLAM_RADIUS : wk.reach * reachK;
   const hits = strikeArea(cx, cy, reach, st.mult, st.knock || 1, st.spin || st.slam ? null : [dx, dy]);
-  if (hits) holdSwing(HIT_STOP);
+  if (hits) holdSwing(stopFor(last));
 }
+// v280 (roadmap 93a): the swing's sound by weapon kind (audio/sfx.js), and how long a blow that landed holds.
+const SWING_SFX = { sword: 'sword', dagger: 'swingDagger', club: 'swingClub' };
+export const stopFor = (finisher = false, s = lastStrike) => Math.max(HIT_STOP, finisher ? HIT_STOPS.finisher : 0, s.crit ? HIT_STOPS.crit : 0, s.defeats ? HIT_STOPS.defeat : 0);
 
 // v227: every monster within reach of (cx, cy) takes a hit of the weapon's damage times mult, with crits, rings,
 // professions and enchantments as a swing has them. dir: the push [dx, dy], or null to push outward from the centre.
@@ -400,7 +405,11 @@ export function inSight(m, from = G.S) {
   }
   return true;
 }
+// v280: what the last strikeArea did, for its hit-stop: any critical hit, how many it defeated.
+export let lastStrike = { crit: false, defeats: 0 };
+let blading = false;   // v280: a weapon's blow is landing (monster:hit's blade)
 export function strikeArea(cx, cy, reach, mult, knock = 1, dir = null, stun = 0) {
+  lastStrike = { crit: false, defeats: 0 };
   if (G.S.map !== slimeMap) return 0;
   const wk = weaponKind(), fb = forgeBonus();
   let hits = 0;
@@ -414,7 +423,11 @@ export function strikeArea(cx, cy, reach, mult, knock = 1, dir = null, stun = 0)
     if (stun) m.frozen = Math.max(m.frozen || 0, stun);
     const armor = MONSTERS[m.kind || 'slime'].armored && weapon().kind !== 'club' ? ARMOR : 1;   // v257: blades glance off a shell
     if (armor < 1 && !untouchable(m)) emit('monster:clang', { x: m.x, y: m.y });
+    blading = true;
     hitMonster(m, damageOf() * crit * versus(m.kind) * mult * armor, ux * kn * armor, uy * kn * armor, crit > 1);
+    blading = false;
+    if (crit > 1) lastStrike.crit = true;
+    if (!slimes.includes(m)) lastStrike.defeats++;
     hits++;
   }
   return hits;
@@ -437,16 +450,30 @@ addInteraction(58, ({ item }) => {
 });
 
 addEntities(() => (G.S.map !== slimeMap ? [] : slimes.map((m) => ({
-  y: m.y, draw: (c) => (m.elite && !m.hidden && !untouchable(m) && drawElite(c, m), !m.kind || m.kind === 'slime' ? drawSlime(c, m.x, m.y, m.color, m.hurt > 0, m.hop % HOP < HOP_ACTIVE ? (m.hop % HOP) / HOP_ACTIVE : 0)
+  y: m.y, draw: (c) => struck(c, m, () => (m.elite && !m.hidden && !untouchable(m) && drawElite(c, m), !m.kind || m.kind === 'slime' ? drawSlime(c, m.x, m.y, m.color, m.hurt > 0, m.hop % HOP < HOP_ACTIVE ? (m.hop % HOP) / HOP_ACTIVE : 0)
     : MONSTERS[m.kind].move === 'split' ? drawSplitter(c, m)
     : m.ph ? drawPhaser(c, m)
     : m.cs ? drawCharger(c, m)
     : m.hidden ? drawMonster(c, m.x, m.y, SHEET.kinds[m.kind]?.sleep || 'crabrock', MONSTERS[m.kind].disguise || ROCK_GREY, false, 0)   // v269: its own sleeping shape (the gourd's pumpkin)   // v253: a mimic asleep looks like a rock (v261: the gourd lurker a pumpkin)
     : m.bs === 'sink' ? drawSinking(c, m)   // v267
     : m.bs && m.bs !== 'up' ? drawMound(c, m.x + (m.bs === 'rise' ? (Math.floor(m.bt * 30) % 2 ? 1 : -1) : 0), m.y, m.hop, m.kind === 'lurker' ? 'lava' : 'earth', shellOf(m))   // v253: a burrower's mound (shaking: the tell); v254: a lava ripple
-    : drawMonster(c, m.x, m.y, m.kind, m.aim && Math.floor(m.st * 14) % 2 === 0 ? MONSTERS[m.kind].glow || m.color : m.color, m.hurt > 0, m.hop, !!m.face)),   // v255: a spitter flashes before it spits (v264: in its glow colour, not white)
+    : drawMonster(c, m.x, m.y, m.kind, m.aim && Math.floor(m.st * 14) % 2 === 0 ? MONSTERS[m.kind].glow || m.color : m.color, m.hurt > 0, m.hop, !!m.face))),   // v255: a spitter flashes before it spits (v264: in its glow colour, not white)
 })).concat(shots.map((s) => ({ y: s.y + 8, draw: (c) => drawShot(c, s.x, s.y, s.color) })))));
 const ROCK_GREY = '#8a8580';
+// v280 (roadmap 93a): a creature just struck squashes and hops (data/animation.js STRUCK), easing back over its
+// hurt time; drawn about its feet so it stays on its spot.
+export function struckPose(m) {
+  const k = m.hurt > 0 ? Math.min(1, m.hurt / 0.25) : 0;
+  if (!k || m.hidden || untouchable(m)) return null;
+  return { sx: 1 + STRUCK.x * k * k, sy: 1 - STRUCK.y * k * k, lift: Math.sin((1 - k) * Math.PI) * STRUCK.up };
+}
+function struck(c, m, draw) {
+  const p = struckPose(m);
+  if (!p) return draw();
+  c.save(); c.translate(m.x, m.y - p.lift); c.scale(p.sx, p.sy); c.translate(-m.x, -m.y);
+  draw();
+  c.restore();
+}
 // v267 (88b): a burrowing charger's back shows through its mound (its colour, and its rim if it has one), so the
 // mound reads as that creature under the dirt.
 const shellOf = (m) => (MONSTERS[m.kind]?.burrow ? [m.color, SHEET.kinds[m.kind]?.rim || m.color] : null);

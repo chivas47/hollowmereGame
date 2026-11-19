@@ -1001,6 +1001,7 @@ Nothing here is saved or touches the economy (cosmetic randomness has its own ge
 - v75: one action per swing. Use is ignored until the tool's swing ends (one press in its last 0.2 s is kept), so the swing time is also the fastest a tool can be used: about 3 axe, pickaxe or hoe strokes a second, 2.4 waterings.
 - Pickups fly in over 0.32 s, at most 6 kinds at once; labels stack. The crafted pose lasts 1 s; placing 0.25 s.
 - Hit-stop 0.06 s on contact; screen shake on stone, criticals, the spin and slam finishers, and when you are hurt.
+- v280 (roadmap 93a): heavier blows hold longer: 0.09 s on a critical hit, 0.08 s on a finisher (and the club's ground slam), 0.1 s when the swing defeats something; the longest that applies. Only the swing's art holds: cooldowns run on, so damage per second is unchanged. A struck creature squashes (30% wider, 25% shorter) and hops 3 px over its 0.25 s hurt time; a blade leaves a white slash mark across it (two crossed, gold, on a critical hit; bombs and the blast ring leave none); a defeat shakes the screen a little. Trails by weapon kind (data/animation.js TRAILS): a three-layer sword arc with a glint at the tip, three thin dagger streaks and speed lines on its stabs, a wide club smear; gold on every finisher. Sounds: a swish of its own for the dagger and the club, a thud on a hit, a ring on a critical, a two-note pop on a defeat, a deep thump for the ground slam.
 - v115 motion (data/animation.js MOTION): walking reaches full speed over 0.08 s (a reversal drops it to 40%); a reversal shows the side for 0.07 s; a 0.14 s settle on stopping; the tool fades out over 0.1 s after its swing. Idle: a blink every 2.5 to 5.5 s, a glance aside every 2 to 4 s after 7 s still (drawn only; the facing used by tools is unchanged). NPCs standing still blink.
 
 
@@ -1032,7 +1033,7 @@ v125, motion settings (menu; kept in this browser, not the save; core/motion.js)
 |---|---|---|
 | Particles | full, fewer, off | Each burst at 100%, 35% (at least one) or none; at most 160, 48 or 0 on screen. Labels and damage numbers always show. |
 | Shake | on, off | The screen shake on stone, criticals, finishers and getting hurt. |
-| Hit-stop | on, off | The 0.06 s a swing and the monster it strikes hold still on contact. Off makes a hit swing end 0.06 s sooner. |
+| Hit-stop | on, off | The 0.06 s (up to 0.1 s on a critical, a finisher or a defeat, v280) a swing and the monster it strikes hold still on contact. Off makes a hit swing end that much sooner. |
 | Motion speed | 100%, 75%, 50% | Particles, labels, pickups, the crop perk, neighbour reactions and the wind. Tool swings keep their timing. |
 
 A system set to reduce motion starts with fewer particles and no shake.
