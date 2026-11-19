@@ -10,9 +10,10 @@ import { moveBox, playerTile, currentMap, placePlayer } from './world.js';
 import { outfitPal } from './clothing.js';
 import { rooted } from './animation.js';
 import { lean } from './wind.js';
-import { drawHeld, drawRod, drawCrafted, swingAngle, handPoint } from '../render/animation.js';
+import { drawHeld, drawRod, drawCrafted, swingAngle, handPoint, drawTinted } from '../render/animation.js';
 import { DIRS, OPPOSITE } from '../core/constants.js';
-import { MOTION } from '../data/animation.js';
+import { MOTION, HURT } from '../data/animation.js';
+import { tinted } from './health.js';
 import { rng } from '../render/pixel.js';
 
 const SPEED = 62; // pixels per second
@@ -108,6 +109,7 @@ export const rodBend = () => { const f = G.fishing; return f?.phase === 'reel' ?
 addEntities(() => (G.youMap ? [] : [{   // v140: not drawn in their half when you are elsewhere
   y: G.S.y,
   draw: (c) => {
+    if (tinted(G.hurtT)) return drawTinted(c, G.S.x, G.S.y, HURT.col, HURT.tintAlpha, (g) => (G.riding ? (drawHorse(g, G.S.x, G.S.y, G.S.dir, G.moving), drawBody(g, G.S.x, G.S.y - 7, false)) : drawBody(g, G.S.x, G.S.y, G.moving)));   // v281: red for a moment, then the blink
     if (G.hurtT > 0 && Math.floor(performance.now() / 80) % 2) return;   // blink while hurt
     if (G.riding) { drawHorse(c, G.S.x, G.S.y, G.S.dir, G.moving); drawBody(c, G.S.x, G.S.y - 7, false); return; }
     drawBody(c, G.S.x, G.S.y, G.moving);

@@ -421,7 +421,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `order:done` | order key | orders.js | market.js (a prize ticket, v69), journal.js (the log, v114) |
 | `challenge:done` | challenge key | challenges.js (v114) | journal.js (the log) |
 | `mine:ladder` | {floor, zone} | mine.js | nuts.js (peak nut floors, v67) |
-| `monster:hit` | {x, y, dmg, crit, kx, ky} | monsters.js hitMonster() (v74) | animation (damage number, sparks) |
+| `monster:hit` | {x, y, dmg, crit, kx, ky, kind, color, blade} | monsters.js hitMonster() (v74; v280: blade, a weapon's blow) | animation (damage number, sparks, v280 slash mark) |
 | `crafted` | {key, n, kit} | crafting.js (v74) | animation (the crafted pose) |
 | `watered` | {map, x, y} | farming.js, the can on a planted tile (v123) | animation (the crop perks up and drips) |
 | `monster:slain` | {kind, x, y, map, drops} (v252: drops, {item: n}) | monsters.js | guild (goal counts), treasure (blast ring), bestiary (kinds met, drops) |
@@ -431,6 +431,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `monster:split` | {x, y} | monsters.js (v256: a big splitter falls into pieces) | monsters.js (a burst) |
 | `monster:clang` | {x, y} | monsters.js (v257: a blade's hit on an armored monster) | monsters.js (sparks, a sound) |
 | `mine:cleared` | none | monsters.js (v259: the last creature on a busy floor fell) | mine.js (the ladder opens) |
+| `player:hurt` | {who, n, x, y, map} | health.js hurtPlayer(), hurtPartner() (v281: n is the health lost) | animation (red number), ui/hurt.js (red edge flash) |
 | `player:blocked` | {x, y, who} | monsters.js, health.js (v227: a hit turned by the sword's block) | specials (spark and sound) |
 | `mine:faint` | none | health.js | mine.js (carry out) |
 | `gather` | {skill, xp, item?, n?} | farming, giants, clearing, forage, fishing, mine, monsters, coop, barn, books | skills.js (XP, bonus item), books.js (mastery XP, book finds) |
