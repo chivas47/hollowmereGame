@@ -4,11 +4,17 @@
 import { G } from '../core/game.js';
 import { changed, notify } from '../core/events.js';
 import { WEAPONS, WEAPON_KINDS, RINGS } from '../data/weapons.js';
+import { WEAPON_TIERS } from '../data/guild.js';
 import { CLOTHES } from '../data/clothing.js';
 import { ITEMS } from '../data/items.js';
 import { keyName } from '../core/controls.js';
 
 export const weapon = () => WEAPONS[G.S.weapon] || WEAPONS.oldblade;
+// v282 (roadmap 93c): a weapon's tier (0 to 3), its damage multiplier, and its name with the tier ("Honed old blade").
+export const tierOf = (key = G.S.weapon) => Math.max(0, Math.min(WEAPON_TIERS.length, G.S.weaponTier?.[key] || 0));
+export const tierMult = (key = G.S.weapon) => 1 + (WEAPON_TIERS[tierOf(key) - 1]?.damage || 0);
+export const tierDamage = (key = G.S.weapon) => Math.round((WEAPONS[key]?.damage || 0) * tierMult(key) * 10) / 10;   // its listed damage at its tier
+export const weaponLabel = (key = G.S.weapon) => { const t = tierOf(key), n = WEAPONS[key]?.name || key; return t ? `${WEAPON_TIERS[t - 1].name} ${n.toLowerCase()}` : n; };
 export const weaponKind = () => WEAPON_KINDS[weapon().kind];
 // v251: a ring with counts (the umbrite band) is worn as each ring it stands for too.
 export const wearing = (id) => G.S.rings.some((r) => r === id || RINGS[r]?.counts?.includes(id));

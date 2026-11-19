@@ -12,6 +12,7 @@ import { ITEMS } from '../data/items.js';
 import { onSheet, ready } from './sheets.js';
 import { TOOLS_SHEET } from '../data/sprites.js';
 import { PICKUP, TRAILS } from '../data/animation.js';
+import { WEAPON_TIERS } from '../data/guild.js';
 
 const RAD = Math.PI / 180;
 const FACE = { right: 0, down: 90, left: 0, up: -90 };   // left is drawn mirrored
@@ -80,7 +81,8 @@ function drawTrail(c, a, p, ang) {
   for (let s = 0; s < (tr.streaks || 1); s++) {
     const rr = rad - (tr.streaks ? 3 - s * 2.5 : 0), from = tr.streaks ? lo + (hi - lo) * s * 0.18 : lo;
     for (const [w, al, col] of tr.layers) {
-      c.globalAlpha = al * fade; c.strokeStyle = fin ? tr.fin : col; c.lineWidth = w;
+      const glow = a.tier && w === tr.layers[0][0] && !fin ? WEAPON_TIERS[a.tier - 1]?.glow : null;   // v282: the tier's glow on the outer layer
+      c.globalAlpha = (glow ? Math.max(al, 0.4) : al) * fade; c.strokeStyle = fin ? tr.fin : glow || col; c.lineWidth = w;
       c.beginPath(); c.arc(0, 0, rr, from, hi); c.stroke();
     }
   }

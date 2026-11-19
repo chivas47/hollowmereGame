@@ -92,3 +92,15 @@ export const chestLoot = (floor) => [
   ...(floor >= 130 ? [['cinder', 8, 15], ['starstone', 1, 1]] : []),
   ...(floor >= 20 ? [[CHEST_BOOKS[Math.floor(Math.random() * CHEST_BOOKS.length)], 1, 1]] : []),   // v40: books
 ];
+
+// v282 (roadmap 93c, Nuno): weapon tiers. Hale tempers any weapon you own up three tiers, each needing `kills`
+// defeats while it was your weapon (G.S.weaponKills), monster materials and gold. damage: the weapon's whole bonus at
+// that tier. Stardew by role: the galaxy-to-infinity step (three galaxy souls and an iridium bar, about +29% damage)
+// split into three; the defeats sit at its slaying goals' scale (50 to 400); gold at the guild's weapon prices (500
+// to 2,000, the last tier past the claymore). Materials go from the shallow Hollow's to the deep dungeons' (gloommotes
+// and umbrite stand in for the galaxy souls and the iridium bar).
+export const WEAPON_TIERS = [
+  { name: 'Honed',    kills: 50,  gold: 500,  needs: { chitin: 10, boneshard: 5 },   damage: 0.1, glow: '#bfe0ff' },
+  { name: 'Tempered', kills: 150, gold: 1500, needs: { leatherwing: 10, sunmote: 5 }, damage: 0.2, glow: '#9fe8b0' },
+  { name: 'Wardsteel', kills: 400, gold: 4000, needs: { gloommote: 3, umbrite: 1 },   damage: 0.3, glow: '#e0a8ff' },
+];

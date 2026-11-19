@@ -2,11 +2,11 @@
 // deeper and keeps the slaying goals: G.S.slain counts monsters by kind, G.S.goalsClaimed lists goals rewarded.
 import { G } from '../core/game.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { LODGE, LODGE_SHOP, GOALS } from '../data/guild.js';
+import { LODGE, LODGE_SHOP, GOALS, WEAPON_TIERS } from '../data/guild.js';
 import { WEAPONS } from '../data/weapons.js';
 import { CLOTHES } from '../data/clothing.js';
 import { MAPS } from '../data/maps.js';
-import { giveFind } from './gear.js';
+import { giveFind, tierOf, weaponLabel } from './gear.js';
 import { keyName } from '../core/controls.js';
 
 export const lodgeOpen = () => G.S.mineDeepest >= LODGE.opensAt;
@@ -43,6 +43,9 @@ export function claimGoal(kind) {
 on('monster:slain', ({ kind }) => {
   const S = G.S;
   S.slain[kind] = (S.slain[kind] || 0) + 1;
+  S.weaponKills[S.weapon] = (S.weaponKills[S.weapon] || 0) + 1;   // v282: toward its next tier
+  const t = WEAPON_TIERS[tierOf()];
+  if (t && S.weaponKills[S.weapon] === t.kills) notify(`Your ${weaponLabel().toLowerCase()} has seen ${t.kills} defeats. ${LODGE.keeper} can temper it at the lodge.`);
   for (const [k, g] of Object.entries(GOALS)) {   // v230: a goal may count several kinds
     if ((g.kinds || [k]).includes(kind) && slain(k) === g.n) notify(`You have defeated ${g.n} ${g.label}! ${LODGE.keeper} has a reward for you at the lodge.`);
   }
@@ -63,4 +66,29 @@ export function setBrazier(lit) {
   G.S.brazier = !!lit;
   notify(lit ? 'The challenge brazier flares. The dungeons will be harder from the next floor down, and some creatures there will glow gold.' : 'You douse the challenge brazier. The dungeons go back to how they were from the next floor.');
   changed();
+}
+
+// v282 (roadmap 93c): weapon tiers (data/guild.js WEAPON_TIERS). The next tier for a weapon, or null at the top; what
+// still stands in the way of it (an empty list when it can be tempered); temper it.
+export const nextWeaponTier = (key) => WEAPON_TIERS[tierOf(key)] || null;
+export function temperBlocks(key) {
+  const S = G.S, t = nextWeaponTier(key);
+  if (!t || !S.weapons.includes(key)) return ['top'];
+  const out = [];
+  if ((S.weaponKills[key] || 0) < t.kills) out.push('kills');
+  if (S.gold < t.gold) out.push('gold');
+  for (const [k, n] of Object.entries(t.needs)) if ((S.bag[k] || 0) < n) out.push(k);
+  return out;
+}
+export function temper(key) {
+  const S = G.S, t = nextWeaponTier(key);
+  if (temperBlocks(key).length) return false;
+  S.gold -= t.gold;
+  for (const [k, n] of Object.entries(t.needs)) S.bag[k] -= n;
+  S.weaponTier[key] = tierOf(key) + 1;
+  emit('sfx', 'levelup');
+  emit('weapon:tempered', { key, tier: S.weaponTier[key] });
+  notify(`${LODGE.keeper} hands back your ${weaponLabel(key).toLowerCase()}: ${Math.round(t.damage * 100)}% more damage than it had new.`);
+  changed();
+  return true;
 }
