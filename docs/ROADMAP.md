@@ -364,7 +364,7 @@ Nuno (November 2026): make combat animations and effects better, make fighting m
 | Item | What | Kind | Status | Notes |
 |---|---|---|---|---|
 | 93a | Hits and swings with weight | polish | done (chivas47/hollowmereGame#298) | A slash mark where the blade lands, a squash and a hop on the struck creature, longer hit-stop on crits, finishers and defeats, a sound of its own for each weapon kind and for a hit, a crit and a defeat, and swing trails of their own: a layered sword arc, thin dagger streaks, a heavy club smear, gold on the finisher. |
-| 93b | Getting hit you can feel | polish | in progress | A red flash at the screen's edges and a red number when you are hurt, a pulse and heartbeat at low health, a red tint on the farmer while they cannot be hurt. |
+| 93b | Getting hit you can feel | polish | in progress (chivas47/hollowmereGame#299) | A red flash at the screen's edges and a red number when you are hurt, a pulse and heartbeat at low health, a red tint on the farmer while they cannot be hurt. |
 | 93c | Weapon tiers from loot and defeats | feature | queued | Each weapon rises three tiers at the Wardens' Lodge (+10%, +20%, +30% damage, Stardew's galaxy-to-infinity step split in three); each tier needs defeats with that weapon and monster materials, and the blade shows its tier. |
 
 ## Done
