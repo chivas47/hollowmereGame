@@ -11,16 +11,21 @@ import { moveBox, placePlayer } from './world.js';
 import { defense } from './clothing.js';
 import { asThem } from './partner.js';
 import { fmtGold } from '../core/format.js';
+import { HURT } from '../data/animation.js';
 
 const INVULNERABLE = 1, KNOCKBACK = 10;
+// v281 (roadmap 93b): health low enough for the red pulse and the heartbeat; whether a farmer is in the red tint.
+export const lowHealth = (hp = G.S.hp, max = G.S.maxHp) => hp > 0 && hp < max * HURT.low;
+export const tinted = (hurtT) => hurtT > INVULNERABLE - HURT.tint;
 
 export function hurtPlayer(dmg, fromX, fromY) {
   if (G.hurtT > 0 || G.paused || G.dialog.you) return;   // v141: no harm while your dialog is open
   if (G.block > 0) { G.hurtT = INVULNERABLE / 2; emit('player:blocked', { x: fromX, y: fromY }); return; }   // v227: the sword's block turns any hit
-  const S = G.S;
-  S.hp = Math.max(0, S.hp - taken(dmg));
+  const S = G.S, n = taken(dmg);
+  S.hp = Math.max(0, S.hp - n);
   G.hurtT = INVULNERABLE;
   emit('sfx', 'hurt');
+  emit('player:hurt', { who: 'you', n, x: S.x, y: S.y, map: S.map });   // v281 (93b): the red number and edge flash
   const dx = S.x - fromX, dy = S.y - fromY, d = Math.hypot(dx, dy) || 1;
   moveBox(S, (dx / d) * KNOCKBACK, (dy / d) * KNOCKBACK);   // v73: slides along walls, stops flush
   changed();
@@ -35,9 +40,11 @@ export function hurtPartner(dmg, fromX, fromY) {
   const p = G.P2, P = G.S.partner;
   if (!p || p.hurtT > 0 || G.paused || G.dialog.p2) return;
   if (p.block > 0) { p.hurtT = INVULNERABLE / 2; emit('player:blocked', { x: fromX, y: fromY, who: 'p2' }); return; }   // v231: their block
-  P.hp = Math.max(0, P.hp - taken(dmg));
+  const n = taken(dmg);
+  P.hp = Math.max(0, P.hp - n);
   p.hurtT = INVULNERABLE;
   emit('sfx', 'hurt');
+  emit('player:hurt', { who: 'p2', n, x: p.x, y: p.y, map: p.map });   // v281
   const dx = p.x - fromX, dy = p.y - fromY, d = Math.hypot(dx, dy) || 1;
   moveBox(p, (dx / d) * KNOCKBACK, (dy / d) * KNOCKBACK);
   changed();

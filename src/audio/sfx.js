@@ -16,6 +16,7 @@ const SFX = {
   crit:    () => { noise({ dur: 0.09, vol: 0.2, filter: 'lowpass', freq: 1400, sweep: 300 }); tone({ freq: 1320, dur: 0.12, type: 'triangle', vol: 0.06, slide: 1760 }); },
   slay:    () => { noise({ dur: 0.18, vol: 0.16, filter: 'lowpass', freq: 700, sweep: 120 }); tone({ freq: 523, dur: 0.07, type: 'triangle', vol: 0.06 }); tone({ freq: 784, dur: 0.1, type: 'triangle', vol: 0.06, at: 0.06 }); },
   slam:    () => { noise({ dur: 0.35, vol: 0.25, freq: 260, sweep: 70 }); tone({ freq: 70, dur: 0.25, type: 'sine', vol: 0.1, slide: 40 }); },
+  heartbeat: () => { tone({ freq: 62, dur: 0.09, type: 'sine', vol: 0.16 }); tone({ freq: 55, dur: 0.11, type: 'sine', vol: 0.12, at: 0.16 }); },   // v281: low health in a fight
   pickup:  () => { tone({ freq: 660, dur: 0.07, type: 'triangle' }); tone({ freq: 990, dur: 0.1, type: 'triangle', at: 0.06 }); },
   bite:    () => { tone({ freq: 880, dur: 0.06 }); tone({ freq: 880, dur: 0.06, at: 0.1 }); },
   catch:   () => [523, 659, 784, 1047].forEach((f, i) => tone({ freq: f, dur: 0.1, type: 'triangle', at: i * 0.07 })),

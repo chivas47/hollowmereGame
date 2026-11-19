@@ -5,7 +5,7 @@ import { G } from '../core/game.js';
 import { T, DIRS } from '../core/constants.js';
 import { on } from '../core/events.js';
 import { addUpdater, addLayer } from '../core/registry.js';
-import { SWINGS, PICKUP, CRAFTED, PLACE, IMPACT, PERK, MOTION_LEVELS, MATERIAL, MATERIALS, SLASH } from '../data/animation.js';
+import { SWINGS, PICKUP, CRAFTED, PLACE, IMPACT, PERK, MOTION_LEVELS, MATERIAL, MATERIALS, SLASH, HURT } from '../data/animation.js';
 import { motion } from '../core/motion.js';
 import { ITEMS } from '../data/items.js';
 import { PLACEABLES } from '../data/crafting.js';
@@ -123,6 +123,8 @@ on('monster:hit', ({ x, y, dmg, crit, kx, ky, kind, color, blade }) => {
   }
   if (crit) shake(2, 0.15);
 });
+// v281 (roadmap 93b): the hurt you took, as a red number over whoever took it (on your map).
+on('player:hurt', ({ n, x, y, map }) => { if (G.S && map === G.S.map) floatText(x, y - 22, `-${n}`, HURT.col, { life: 0.9, rise: 14, pop: true, big: true }); });
 on('sfx', (k) => { if (k === 'hurt' && G.S) { shake(2.5, 0.2); burst(G.S.x, G.S.y - 8, ['#ff6b6b', '#ffd0d0'], 6, { speed: 35, up: 15, size: 1, life: 0.3, gravity: 0 }); } });
 
 // ---- placing: a crouch, a pop of dust and a ring ----

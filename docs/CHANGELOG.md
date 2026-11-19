@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v281: Getting hit you can feel
+- When you are hurt, the edges of the screen flash red and a red number rises over you with the health you lost.
+- For a moment after a hit you are drawn red, then you blink as before while you cannot be hurt again. Farmer two gets the same.
+- Under a quarter of your health, the edges of the screen pulse red. In a fight, a low heartbeat sounds with the pulse.
+- If your system asks for reduced motion, the low-health edge stays still instead of pulsing.
+- New save data: none.
+
 ## v280: Hits and swings with weight
 - A blade leaves a bright slash mark across whatever it hits. A critical hit leaves two, crossed, in gold.
 - A struck creature squashes and hops off the ground for a moment, then springs back.

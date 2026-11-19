@@ -25,7 +25,9 @@ import { PARTNER } from '../data/partner.js';
 import { HOTBAR } from '../data/hotbar.js';
 import { drawPerson, drawHorse } from '../render/sprites.js';
 import { STABLE } from '../data/upgrades.js';
-import { drawHeld, drawRod, handPoint, swingAngle } from '../render/animation.js';
+import { drawHeld, drawRod, handPoint, swingAngle, drawTinted } from '../render/animation.js';
+import { HURT } from '../data/animation.js';
+import { tinted } from './health.js';   // v281: used only while drawing (health.js imports this file)
 import { moveBox, blocked, playerTile, facing, tileAt, mover, placePlayer, placeKey } from './world.js';
 import { sleep } from './days.js';
 import { MAPS } from '../data/maps.js';
@@ -205,7 +207,11 @@ on('day:start', (report) => { G.S.partner.energy = report.passedOut ? Math.round
 
 const SWUNG = new Set(['hoe', 'pick', 'axe', 'can', 'sword', 'rod', 'pan']);
 function drawPartner(c) {
+  if (tinted(G.P2.hurtT)) return drawTinted(c, G.P2.x, G.P2.y, HURT.col, HURT.tintAlpha, drawPartnerBody);   // v281: red for a moment, as you are
   if (G.P2.hurtT > 0 && Math.floor(performance.now() / 80) % 2) return;   // v143: blink while hurt, as you do
+  drawPartnerBody(c);
+}
+function drawPartnerBody(c) {
   const p = G.P2, a = p.anim, held = a && SWUNG.has(a.kind), dir = a ? a.dir : p.dir;
   if (p.riding) { drawHorse(c, p.x, p.y, p.dir, p.moving); drawPerson(c, p.x, p.y - 7, p.dir, false, 0, G.S.partner.look, lean(p.x)); return; }   // as you ride (systems/player.js)
   const rod = G.fishing?.p2 && a?.kind !== 'rod';   // their line is out: the rod held out over the water

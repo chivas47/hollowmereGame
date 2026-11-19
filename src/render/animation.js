@@ -99,6 +99,20 @@ function drawThrust(c, a, p) {
   c.restore();
 }
 
+// v281 (roadmap 93b): draws a figure through fn(c) on a scratch canvas and lays colour col over its pixels at alpha a,
+// so the farmer reads red for a moment when hurt. (x, y): the feet; the figure fits in 48 x 56 px above them.
+let tintCv = null;
+export function drawTinted(c, x, y, col, a, fn) {
+  if (typeof document === 'undefined') return fn(c);
+  tintCv ||= Object.assign(document.createElement('canvas'), { width: 48, height: 56 });
+  const g = tintCv.getContext('2d'), ox = Math.round(x) - 24, oy = Math.round(y) - 48;
+  g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = 'source-over'; g.clearRect(0, 0, 48, 56);
+  g.translate(-ox, -oy); fn(g); g.setTransform(1, 0, 0, 1, 0, 0);
+  g.globalCompositeOperation = 'source-atop'; g.globalAlpha = a; g.fillStyle = col; g.fillRect(0, 0, 48, 56);
+  g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
+  c.drawImage(tintCv, ox, oy);
+}
+
 // The rod held out while a line is in the water; returns the tip for the line.
 export function drawRod(c, px, py, dir, bend) {
   const ang = -35 + bend;

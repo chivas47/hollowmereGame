@@ -118,6 +118,7 @@ import './systems/indoors.js';   // v100: indoor light, windows, rain on the gla
 import './ui/toast.js';
 import './ui/hudPrefs.js';   // v112: HUD size and visibility
 import './ui/hud.js';
+import './ui/hurt.js';   // v281: the red edge and heartbeat when hurt
 import './ui/goal.js';   // v112: the objective reminder
 import './ui/prompt.js';   // v112: what Use will do
 import './ui/dialogs.js';

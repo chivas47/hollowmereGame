@@ -59,6 +59,10 @@ export const TRAILS = {
 };
 // v280: the mark a blade leaves where it lands: a bright line `len` px across the creature for `life` s; a
 // critical hit leaves two, crossed, in `critCol`.
+// v281 (roadmap 93b): getting hit. low: the share of top health under which the screen's edges pulse red and, in a
+// fight, a heartbeat sounds every `beat` s; flash: seconds the red edge flash lasts; tint: seconds the farmer is drawn
+// red at the start of their safe time (the blink follows); tintAlpha: how red.
+export const HURT = { low: 0.25, beat: 0.9, flash: 0.35, tint: 0.22, tintAlpha: 0.6, col: '#ff5a4a' };
 export const SLASH = { len: 14, life: 0.16, col: '#ffffff', critCol: '#ffe08a' };
 // v125: the Particles setting (core/motion.js): share of each burst drawn and the most on screen at once.
 export const MOTION_LEVELS = { full: { share: 1, cap: 160 }, fewer: { share: 0.35, cap: 48 }, off: { share: 0, cap: 0 } };
