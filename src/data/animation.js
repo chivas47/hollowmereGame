@@ -42,6 +42,24 @@ export const COMBO = {
 };
 export const SLAM_RADIUS = 26;   // the club slam's shockwave reaches this far from the impact point
 export const HIT_STOP = 0.06;    // seconds a struck monster and the swing hold still on contact (v125: can be turned off)
+// v280 (roadmap 93a): heavier blows hold longer. The swing holds the longest that applies: a plain hit HIT_STOP, a
+// critical hit, a finisher (the combo's last step) or a defeat. Only the swing's art holds; cooldowns run on, so
+// damage per second is unchanged.
+export const HIT_STOPS = { crit: 0.09, finisher: 0.08, defeat: 0.1 };
+// v280: a struck creature squashes (wider and shorter, by x and y at the moment of the hit, easing back) and hops
+// `up` px off the ground, both over its 0.25 s hurt time. A defeat shakes the screen by `defeatShake`.
+export const STRUCK = { x: 0.3, y: 0.25, up: 3, defeatShake: 1.2 };
+// v280: swing trails by weapon kind (render/animation.js drawHeld). layers: [lineWidth, alpha, colour] drawn outside
+// in, at `reach` px (dagger streaks each a little further out); tail: degrees of arc behind the blade; fin: the
+// finisher's colour; spark: a bright dot at the blade's tip while it moves.
+export const TRAILS = {
+  sword:  { tail: 90, layers: [[6, 0.22, '#c9d6ff'], [3, 0.55, '#f4f6ff'], [1, 0.9, '#ffffff']], fin: '#ffe08a', spark: true },
+  dagger: { tail: 60, streaks: 3, layers: [[1, 0.7, '#f4f6ff']], fin: '#ffe08a', spark: true },
+  club:   { tail: 110, layers: [[8, 0.18, '#e8dcc0'], [4, 0.4, '#fff8e8']], fin: '#ffd36a', spark: false },
+};
+// v280: the mark a blade leaves where it lands: a bright line `len` px across the creature for `life` s; a
+// critical hit leaves two, crossed, in `critCol`.
+export const SLASH = { len: 14, life: 0.16, col: '#ffffff', critCol: '#ffe08a' };
 // v125: the Particles setting (core/motion.js): share of each burst drawn and the most on screen at once.
 export const MOTION_LEVELS = { full: { share: 1, cap: 160 }, fewer: { share: 0.35, cap: 48 }, off: { share: 0, cap: 0 } };
 export const MOTION_SPEEDS = [1, 0.75, 0.5];   // the cosmetic motion speeds offered, in the menu's order

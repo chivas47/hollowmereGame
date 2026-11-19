@@ -5,7 +5,7 @@ import { G } from '../core/game.js';
 import { T, DIRS } from '../core/constants.js';
 import { on } from '../core/events.js';
 import { addUpdater, addLayer } from '../core/registry.js';
-import { SWINGS, PICKUP, CRAFTED, PLACE, IMPACT, PERK, MOTION_LEVELS, MATERIAL, MATERIALS } from '../data/animation.js';
+import { SWINGS, PICKUP, CRAFTED, PLACE, IMPACT, PERK, MOTION_LEVELS, MATERIAL, MATERIALS, SLASH } from '../data/animation.js';
 import { motion } from '../core/motion.js';
 import { ITEMS } from '../data/items.js';
 import { PLACEABLES } from '../data/crafting.js';
@@ -42,6 +42,8 @@ export function burst(x, y, cols, n, o = {}) {
   }
 }
 export const ring = (x, y, col, rad = 12, life = 0.3) => { if (G.fx.parts.length < MOTION_LEVELS[motion.particles].cap) G.fx.parts.push({ ring: true, x, y, col, rad, life, max: life }); };
+// v280 (roadmap 93a): a blade's mark, a bright line across (x, y) at angle ang (radians), shrinking as it fades.
+export const slash = (x, y, ang, col = SLASH.col, len = SLASH.len) => { if (G.fx.parts.length < MOTION_LEVELS[motion.particles].cap) G.fx.parts.push({ slash: true, x, y, ang, len, col, life: SLASH.life, max: SLASH.life }); };
 export function floatText(x, y, text, col = '#fffbe8', o = {}) {
   if (G.fx.floats.length > 24) G.fx.floats.shift();
   if (o.stack) y -= 9 * G.fx.floats.filter((f) => f.stack && f.max - f.life < 0.5).length;   // labels in a burst stack up
@@ -104,7 +106,7 @@ export function perkLift(map, x, y) {
 }
 
 // ---- combat: damage numbers, sparks, the player's hurt flash ----
-on('monster:hit', ({ x, y, dmg, crit, kx, ky, kind, color }) => {
+on('monster:hit', ({ x, y, dmg, crit, kx, ky, kind, color, blade }) => {
   const n = Math.max(1, Math.round(dmg));
   floatText(x + (rand() - 0.5) * 6, y - 14, crit ? `${n}!` : `${n}`, crit ? '#ffd36a' : '#fffbe8', { life: 0.7, rise: 12, pop: true, big: crit });
   const a = Math.atan2(ky || 0, kx || 0.001);
@@ -113,6 +115,11 @@ on('monster:hit', ({ x, y, dmg, crit, kx, ky, kind, color }) => {
     const m = stuff(kind, color);
     burst(x, y - 5, m.cols, crit ? 8 : 5, { speed: 45, up: m.up * 0.6, size: 2, life: 0.4, gravity: m.gravity, angle: a, spread: Math.PI * 0.7, shrink: true });
     ring(x, y - 5, 'rgba(255,255,255,.85)', crit ? 9 : 6, 0.12);
+  }
+  if (blade) {   // v280: the mark the blade leaves, across the way it pushed; two crossed and gold on a critical hit
+    const tilt = (rand() - 0.5) * 0.6;
+    slash(x, y - 6, a + Math.PI / 2 + tilt, crit ? SLASH.critCol : SLASH.col, crit ? SLASH.len * 1.3 : SLASH.len);
+    if (crit) slash(x, y - 6, a + tilt, SLASH.critCol, SLASH.len * 1.3);
   }
   if (crit) shake(2, 0.15);
 });
@@ -167,7 +174,7 @@ addUpdater((dt) => {
   const fdt = dt * motion.speed;   // v125: particles, labels, pickups and the crop perk run at the motion speed
   for (const q of G.fx.parts) {
     q.life -= fdt;
-    if (q.ring) continue;
+    if (q.ring || q.slash) continue;
     q.x += q.vx * fdt; q.y += q.vy * fdt;
     if (q.drag) { q.vx *= 1 - Math.min(1, q.drag * fdt); q.vy *= 1 - Math.min(1, q.drag * fdt); }
     q.vz -= q.g * fdt; q.z += q.vz * fdt;
