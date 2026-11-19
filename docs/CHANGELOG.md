@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v282: Weapon tiers
+- Warden Hale now tempers weapons at the Wardens' Lodge. Each weapon you own can rise three tiers: Honed (+10% damage), Tempered (+20%) and Wardsteel (+30%).
+- Each tier needs defeats while the weapon is in slot 5 (50, 150 and 400 in total), monster materials (chitin and bone shards, then leatherwing and sunmotes, then gloommotes and an umbrite) and gold (500g, 1,500g, 4,000g).
+- Defeats with a weapon count from this version on. When a weapon reaches the defeats its next tier needs, you are told Hale can temper it.
+- A tempered weapon shows its tier in its name ("Honed oak club"), its damage in the bag includes the tier, and its swing trail glows in the tier's colour.
+- New save data: each weapon's tier and defeats. Old saves start every weapon at tier 0 with no defeats.
+
 ## v281: Getting hit you can feel
 - When you are hurt, the edges of the screen flash red and a red number rises over you with the health you lost.
 - For a moment after a hit you are drawn red, then you blink as before while you cannot be hurt again. Farmer two gets the same.

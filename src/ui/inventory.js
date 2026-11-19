@@ -16,7 +16,7 @@ import { PROFESSIONS } from '../data/professions.js';
 import { pending } from '../systems/professions.js';
 import { edible, eat } from '../systems/cooking.js';
 import { WEAPONS, RINGS } from '../data/weapons.js';
-import { weapon, chooseWeapon, wearRing, removeRing, wearTrinket, removeTrinket } from '../systems/gear.js';
+import { weapon, chooseWeapon, wearRing, removeRing, wearTrinket, removeTrinket, weaponLabel, tierDamage } from '../systems/gear.js';
 import { TRINKETS } from '../data/forge.js';
 import { BOOKS } from '../data/books.js';
 import { BAIT, TACKLE, BOBBERS, BOBBER_EVERY } from '../data/angling.js';
@@ -63,7 +63,7 @@ function otherTab(tab) {
   }).join('') + (pending() ? '<div class="btns"><button data-profs>Choose a profession</button></div>' : '')
     + (masteryOpen() ? `<p class="role">${masteryText()}${S.mastery.claimed.length ? ` Mastered: ${S.mastery.claimed.map((k) => SKILLS[k].name).join(', ')}.` : ''}</p>` : '');   // v40
   // v36: weapons and rings
-  const weapons = S.weapons.map((k) => row(`${WEAPONS[k].name} <span class="role">${WEAPONS[k].kind}, damage ${WEAPONS[k].damage}</span>`, S.weapon === k ? 'In slot 5' : `<button data-weapon="${k}">Use</button>`)).join('');
+  const weapons = S.weapons.map((k) => row(`${weaponLabel(k)} <span class="role">${WEAPONS[k].kind}, damage ${tierDamage(k)}</span>`, S.weapon === k ? 'In slot 5' : `<button data-weapon="${k}">Use</button>`)).join('');
   const worn = S.rings.map((k, i) => (k ? row(`${RINGS[k].name} <span class="role">${RINGS[k].desc}</span>`, `<button data-ringoff="${i}">Take off</button>`) : '')).join('');
   const spare = Object.keys(RINGS).filter((k) => S.bag[k] > 0).map((k) => row(`${RINGS[k].name} × ${S.bag[k]} <span class="role">${RINGS[k].desc}</span>`, `<button data-ring="${k}">Wear</button>`)).join('');
   // v41: the rod's bait, tackle and bobber

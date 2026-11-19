@@ -855,6 +855,18 @@ The journal's Creatures tab. A kind counts as met once it is on the map you are 
 
 Old saves: every kind with a defeat counts as met. Their drops start unknown, since saves never kept them.
 
+### Weapon tiers (v282, roadmap 93c)
+
+Hale tempers any weapon you own at the Wardens' Lodge, up three tiers (data/guild.js WEAPON_TIERS). Defeats count while the weapon is in slot 5 (G.S.weaponKills, per weapon, never reset), so the thresholds are totals. Stardew by role: the galaxy-to-infinity step (three galaxy souls and an iridium bar, about +29% damage) split in three; defeats at its slaying goals' scale; gold at the guild's weapon prices.
+
+| Tier | Defeats | Materials | Gold | Damage over new |
+|---|---|---|---|---|
+| Honed | 50 | 10 chitin, 5 bone shards | 500g | +10% |
+| Tempered | 150 | 10 leatherwing, 5 sunmotes | 1,500g | +20% |
+| Wardsteel | 400 | 3 gloommotes, 1 umbrite | 4,000g | +30% |
+
+The tier multiplies damage after rings, professions, forge gems and mastery. The tier name goes before the weapon's name in the bag and the lodge ("Honed oak club"), and its swing trail glows in the tier's colour (pale blue, green, violet). Every weapon can be tempered; on the old blade the 30% is under 1 damage, which the lodge row shows plainly. The balance bot tempers the weapon it uses once the defeats and materials are in, and keeps those materials for it instead of shipping them.
+
 ### The Wardens' Lodge, bombs, treasure and geodes (v37)
 
 The lodge (Stardew's adventurers' guild) stands in the Wilds east of the Hollow. It opens once you have reached floor 1. Warden Hale (original) runs it.
