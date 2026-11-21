@@ -73,7 +73,7 @@ HEAD = {   # v-sprites: lit from the top left, so the right cheek, ear and jaw t
     '.....zssSss.....',
   ],
 }
-# Steps (columns per view): stand, step a, pass (legs together, not bobbed), step b; a walk plays a, pass, b, pass.
+# Steps (columns per view): stand, step a, pass (legs together), step b; a walk plays a, pass, b, pass.
 # rows 9 to 11: shoulders, arms and hands; the near arm lit, the far one in shade, a soft fold under the collar
 TORSO = {
   'down': [[
@@ -424,7 +424,8 @@ def cells(rows, y0):
     return tint, ink
 
 STEPS = 4
-BOBS = [0, 1, 0, 1]   # which steps are a pixel lower (the feet planted wide); the pass frame stands tall
+BOBS = [0, 1, 1, 1]   # which steps are a pixel lower: every walking frame, so the head stays level through a stride
+# (a 1 px rise on the pass frame read as fidgeting at walking speed)
 OLD_STEP = [0, 1, 0, 2]   # tables drawn with three steps (stand, a, b): the pass frame uses the standing art
 
 def bob(d, step):
