@@ -185,12 +185,12 @@ function childArt(c, x, y, stage, i) {
 // v222: part by part (data/people.js personParts): body, outfit, hair, beard, extras and hat, each band tinted.
 // v223: the head's parts drawn on their own, lower on a child's body (and without the walking bob there).
 function sheetPerson(c, px, py, dir, moving, walkT, p) {
-  const P = PERSON, parts = personParts(p), step = moving ? 1 + Math.floor(walkT * 8) % 2 : 0;
+  const P = PERSON, parts = personParts(p), step = moving ? P.walk[Math.floor(walkT * 12) % P.walk.length] : 0;   // a, pass, b, pass
   const f = (P.dirs[dir] ?? 0) * P.steps + step, X = Math.round(px) + P.origin[0], Y = Math.round(py) + P.origin[1];
   const draw = (layers, dy) => c.drawImage(tinted(P.sheet, P.layers, layers, P.h), f * P.w, 0, P.w, P.h, X, Y + dy, P.w, P.h);
   if (!parts.dy) return draw([...parts.body, ...parts.head], 0);
   draw(parts.body, 0);
-  draw(parts.head, parts.dy - (step && !parts.bob ? 1 : 0));
+  draw(parts.head, parts.dy - (P.bobs[step] && !parts.bob ? 1 : 0));
 }
 
 // v123: wind in the hair and clothes. wind is the lean where they stand (systems/wind.js, about 0 to 1, + is

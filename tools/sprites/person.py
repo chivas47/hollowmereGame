@@ -15,7 +15,7 @@
 # order, each tinted to its colour. To add a style: draw it in the right PARTS table below, run this script, and give
 # it a label in src/data/people.js. Nothing else changes: the sheet's layout is written to src/data/personSheet.js.
 #
-# Layout: frames 16 wide and 20 tall, columns down, up, left, right (stand, step a, step b; left is right mirrored).
+# Layout: frames 16 wide and 20 tall, columns down, up, left, right (stand, step a, pass, step b; left is right mirrored).
 # One 20 px band per part and colour layer, named "<part>|<layer>" (layers: skin, shoes, pants, shirt, hair, beard,
 # hat, band, acc, scarf, bag, ink). Tinted layers are grey: 255 the colour, 205 its shade, 160 its deep shade, 105 the outline;
 # ink is drawn as is. Fixed points the code relies on, from the feet at (8, 20): the down eyes at x 6 and 9 and the
@@ -44,24 +44,24 @@ LAYER_ORDER = ['skin', 'shoes', 'pants', 'shirt', 'acc', 'scarf', 'bag', 'hair',
 SHADOW = (0, 0, 0, 64)
 
 # ---------------- the body: one drawing per view and step, rows 2 to 14 of person space ----------------
-HEAD = {
+HEAD = {   # v-sprites: lit from the top left, so the right cheek, ear and jaw take the shade
   'down': [
     '.....SSSSSS.....',
-    '....SSSSSSSS....',
-    '....SSSSSSSS....',
-    '....SSESSESS....',
-    '...sSSESSESSs...',
-    '....sSRSSRSs....',
-    '.....sSSSSs.....',
+    '....SSSSSSSs....',
+    '....SSSSSSSs....',
+    '....SSESSESs....',
+    '...sSSESSESss...',
+    '....sSRSSRss....',
+    '.....zsSSsz.....',
   ],
   'up': [
     '.....SSSSSS.....',
-    '....SSSSSSSS....',
-    '....SSSSSSSS....',
-    '....SSSSSSSS....',
-    '...sSSSSSSSSs...',
-    '....sSSSSSSs....',
-    '.....sSSSSs.....',
+    '....SSSSSSSs....',
+    '....SSSSSSSs....',
+    '....SSSSSSSs....',
+    '...sSSSSSSSss...',
+    '....sSSSSSss....',
+    '.....zsssss.....',
   ],
   'right': [
     '.....SSSSS......',
@@ -70,63 +70,80 @@ HEAD = {
     '....SSSSSSES....',
     '....SzSSSSESS...',
     '....sSSSSRSs....',
-    '.....ssSSSs.....',
+    '.....zssSss.....',
   ],
 }
-# rows 9 to 11: shoulders, arms and hands (stand, step a, step b)
+# Steps (columns per view): stand, step a, pass (legs together, not bobbed), step b; a walk plays a, pass, b, pass.
+# rows 9 to 11: shoulders, arms and hands; the near arm lit, the far one in shade, a soft fold under the collar
 TORSO = {
   'down': [[
-    '...cCCkzzkCCc...',
-    '...cCCCCCCCCc...',
-    '...SkCCCCCCkS...',
+    '...cCCCzzCCck...',
+    '...CcCCCCCCck...',
+    '...SkCCCCCckS...',
   ], [
-    '...cCCkzzkCCc...',
-    '...SCCCCCCCCc...',
-    '....kCCCCCCkS...',
+    '...cCCCzzCCck...',
+    '...SCCCCCCCck...',
+    '....kCCCCCckS...',
   ], [
-    '...cCCkzzkCCc...',
-    '...cCCCCCCCCS...',
-    '...SkCCCCCCk....',
+    '...cCCCzzCCck...',
+    '...CcCCCCCCck...',
+    '...SkCCCCCckS...',
+  ], [
+    '...cCCCzzCCck...',
+    '...CcCCCCCCcS...',
+    '...SkCCCCCck....',
   ]],
   'up': [[
-    '...cCCCCCCCCc...',
-    '...cCCCkkCCCc...',
-    '...SkCCCCCCkS...',
+    '...cCCCCCCCck...',
+    '...CcCCkkCCck...',
+    '...SkCCCCCckS...',
   ], [
-    '...cCCCCCCCCc...',
-    '...cCCCkkCCCS...',
-    '...SkCCCCCCk....',
+    '...cCCCCCCCck...',
+    '...CcCCkkCCcS...',
+    '...SkCCCCCck....',
   ], [
-    '...cCCCCCCCCc...',
-    '...SCCCkkCCCc...',
-    '....kCCCCCCkS...',
+    '...cCCCCCCCck...',
+    '...CcCCkkCCck...',
+    '...SkCCCCCckS...',
+  ], [
+    '...cCCCCCCCck...',
+    '...SCCCkkCCck...',
+    '....kCCCCCckS...',
   ]],
   'right': [[
-    '.....kCCCCc.....',
-    '.....kCCcCc.....',
-    '.....kkccSk.....',
+    '.....cCCCCk.....',
+    '.....cCCcCk.....',
+    '.....kcccSk.....',
   ], [
-    '.....kCCCCc.....',
-    '.....kCCCcCc....',
-    '.....kkcck.S....',
+    '.....cCCCCk.....',
+    '.....cCCCcCc....',
+    '.....kccck.S....',
   ], [
-    '.....kCCCCc.....',
+    '.....cCCCCk.....',
+    '.....cCCcCk.....',
+    '.....kcccSk.....',
+  ], [
+    '.....cCCCCk.....',
     '....cCcCCCk.....',
-    '....Skkcck......',
+    '....Skccck......',
   ]],
 }
-# rows 12 to 14: hips, legs and shoes
+# rows 12 to 14: hips, legs and shoes; the far leg in shade
 LEGS = {
   'down': [[
-    '....pPPPPPPp....',
-    '.....pPqqPp.....',
-    '.....fF..Ff.....',
+    '....pPPPPPpq....',
+    '.....PPqqPp.....',
+    '.....FF..Ff.....',
   ], [
-    '....pPPPPPPp....',
-    '.....pPq.fF.....',
-    '.....fF.........',
+    '....pPPPPPpq....',
+    '.....PPq.fF.....',
+    '.....FF.........',
   ], [
-    '....pPPPPPPp....',
+    '....pPPPPPpq....',
+    '......PPPp......',
+    '......FFFf......',
+  ], [
+    '....pPPPPPpq....',
     '.....Ff.qPp.....',
     '.........Ff.....',
   ]],
@@ -136,12 +153,16 @@ LEGS = {
     '......fFFFf.....',
   ], [
     '.....pPPPPq.....',
-    '.....pP..Pq.....',
-    '....fF....fFf...',
+    '.....qp..PP.....',
+    '....ff....FFf...',
   ], [
     '.....pPPPPq.....',
     '......pPPq......',
     '.....fFFfFf.....',
+  ], [
+    '.....pPPPPq.....',
+    '.....PP..pq.....',
+    '....FF....ffF...',
   ]],
 }
 LEGS['up'] = [[r.replace('qq', 'pp') for r in step] for step in LEGS['down']]
@@ -202,6 +223,10 @@ CHILD = {
     '.....fFfFf......',
   ]],
 }
+
+for _d, _pass in (('down', ['.....pPPPp......', '.....fFFFf......']), ('up', ['.....pPPPp......', '.....fFFFf......']),
+                  ('right', ['......pPPq......', '.....fFFfFf.....'])):
+    CHILD[_d].insert(2, CHILD[_d][0][:2] + _pass)
 
 def child(d, step):
     return {'rows': HEAD[d] + CHILD[d][step], 'y': 2 + CHILD_DY}
@@ -398,9 +423,13 @@ def cells(rows, y0):
             else: tint[q] = TONE[ch]
     return tint, ink
 
+STEPS = 4
+BOBS = [0, 1, 0, 1]   # which steps are a pixel lower (the feet planted wide); the pass frame stands tall
+OLD_STEP = [0, 1, 0, 2]   # tables drawn with three steps (stand, a, b): the pass frame uses the standing art
+
 def bob(d, step):
     """Walking: the head and body (person rows up to 11) one pixel lower on the step frames."""
-    if not step: return d
+    if not BOBS[step]: return d
     out = {}
     for (x, y), v in sorted(d.items(), key=lambda k: -k[0][1]):
         out[(x, y + 1) if y <= TOP + 11 else (x, y)] = v
@@ -421,7 +450,7 @@ def art(table, view, step):
     """A part's rows for a view and step: tables give per-view (rows, y) or per-view ([rows per step], y)."""
     d = 'right' if view == 'left' else view
     rows, y = table[d]
-    if rows and isinstance(rows[0], list): rows = rows[step]
+    if rows and isinstance(rows[0], list): rows = rows[step] if len(rows) == STEPS else rows[OLD_STEP[step]]
     return rows, y
 
 def frame(part, view, step, base):
@@ -460,14 +489,14 @@ def parts():
 def build(path, js, preview=None):
     frames = {}
     for v, view in enumerate(VIEWS):
-        for step in range(3):
+        for step in range(STEPS):
             base = frame('body', view, step, {})
             solid = {q for layer in base.values() for q in layer} - set(base.get('ink', {}))
             for part in parts():
                 f = base if part == 'body' else frame(part, view, step, {} if part == 'body:child' else solid)
-                for layer, px in f.items(): frames.setdefault(f'{part}|{layer}', {})[(v * 3 + step)] = px
+                for layer, px in f.items(): frames.setdefault(f'{part}|{layer}', {})[(v * STEPS + step)] = px
     bands = sorted(frames, key=lambda b: (parts().index(b.split('|')[0]), LAYER_ORDER.index(b.split('|')[1])))
-    img = Image.new('RGBA', (W * 12, H * len(bands)), (0, 0, 0, 0))
+    img = Image.new('RGBA', (W * 4 * STEPS, H * len(bands)), (0, 0, 0, 0))
     for n, band in enumerate(bands):
         for f, px in frames[band].items():
             for (x, y), c in px.items(): img.putpixel((f * W + x, n * H + y), c)
@@ -479,7 +508,7 @@ def build(path, js, preview=None):
         f.write('// "<part>|<layer>" in `layers` order; styles: what each part can be (labels in data/people.js).\n')
         f.write('export const PERSON = ' + json.dumps({
             'sheet': 'person', 'w': W, 'h': H, 'origin': [-8, -H], 'dirs': {'down': 0, 'up': 1, 'left': 2, 'right': 3},
-            'steps': 3, 'hatLine': HAT_LINE, 'styles': styles,
+            'steps': STEPS, 'bobs': BOBS, 'walk': [1, 2, 3, 2], 'hatLine': HAT_LINE, 'styles': styles,
             # per body: dy, how much lower the head's parts are drawn; bob, whether they bob on the step frames
             'bodies': {'adult': {'dy': 0, 'bob': True}, 'child': {'dy': CHILD_DY, 'bob': False}},
             'layers': bands}, indent=None) + ';\n')
@@ -500,7 +529,7 @@ def make_preview(img, bands, out):
     ]
     def hexc(h): h = h.lstrip('#'); return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
     cols = 4
-    prev = Image.new('RGBA', (len(looks) * (W * cols + 4), H * 2 + 2), (110, 120, 90, 255))
+    prev = Image.new('RGBA', (len(looks) * (W * cols + 4), H * 4 + 6), (110, 120, 90, 255))
     for n, L in enumerate(looks):
         hat = L.get('hat')
         hair = f"hair:{L['hairs']}" + ('@hat' if hat else '')
@@ -509,9 +538,9 @@ def make_preview(img, bands, out):
                ([f'hat:{hat[0]}'] if hat else [])
         col = {'skin': L['skin'], 'shoes': '#2b211a', 'pants': L['pants'], 'shirt': L['shirt'], 'hair': L['hair'],
                'beard': L['hair'], 'acc': '#f4ead2', 'hat': hat[1] if hat else None, 'band': hat[2] if hat else None}
-        for row, step in enumerate((0, 1)):
+        for row, step in enumerate((0, 1, 2, 3)):
             for v in range(4):
-                f = v * 3 + step
+                f = v * STEPS + step
                 tile = Image.new('RGBA', (W, H), (0, 0, 0, 0))
                 for part in want:
                     for b, band in enumerate(bands):
