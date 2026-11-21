@@ -1,6 +1,6 @@
 // Composes a frame: cached background, ground layers, facing outline, y-sorted entities, overlays, the light of the hour, layers above it.
 import { G } from '../core/game.js';
-import { T, H, DIRS } from '../core/constants.js';
+import { T, DIRS } from '../core/constants.js';
 import { on } from '../core/events.js';
 import { drawLayers, collectEntities } from '../core/registry.js';
 import { today, dayEnd } from '../core/time.js';
@@ -122,7 +122,7 @@ export function draw(c) {
     if (apart) { G.youMap = yours; G.S.map = v.farmer.map; }
     try { drawWorld(c); } finally { G.view = null; G.drawing = null; if (apart) { G.S.map = yours; G.youMap = null; } c.restore(); }
   }
-  if (list.length > 1) { c.fillStyle = '#1c1612'; c.fillRect(list[1].x0 - 1, 0, 2, H * T); }   // the line between the halves
+  if (list.length > 1) { c.fillStyle = '#1c1612'; c.fillRect(list[1].x0 - 1, 0, 2, list[1].h); }   // the line between the halves
 }
 
 // The tile the farmer a view follows is facing.
