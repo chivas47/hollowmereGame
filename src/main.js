@@ -116,6 +116,7 @@ import './systems/indoors.js';   // v100: indoor light, windows, rain on the gla
 
 // UI
 import './ui/toast.js';
+import './ui/fieldnotes.js';   // v287: the goal and notices clear of the field on phones
 import './ui/hudPrefs.js';   // v112: HUD size and visibility
 import './ui/hud.js';
 import './ui/hurt.js';   // v281: the red edge and heartbeat when hurt
