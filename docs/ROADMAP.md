@@ -374,7 +374,7 @@ Sweep after the combat update (v280 to v283): 300 stops and 37 creature kinds, 0
 
 | Item | What | Kind | Status | Notes |
 |---|---|---|---|---|
-| 94a | Weapon tiers read clearly everywhere | polish | in progress | Finds 44, 45: the Lodge's tempering row split into short lines (now, next, what it needs, each need ticked when met) with plural material names; the forge names weapons with their tier. |
+| 94a | Weapon tiers read clearly everywhere | polish | in progress (chivas47/hollowmereGame#303) | Finds 44, 45: the Lodge's tempering row split into short lines (now, next, what it needs, each need ticked when met) with plural material names; the forge names weapons with their tier. |
 | 94b | Farmer two's hurt flash in their half | polish | done (chivas47/hollowmereGame#302) | Find 46: in split screen the red edge flashes only over the half of the farmer who was hurt; the low-health pulse likewise per half (farmer two's from their own health). |
 
 ## Done
