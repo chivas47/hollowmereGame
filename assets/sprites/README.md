@@ -156,7 +156,7 @@ Built by `tools/sprites/person.py`, which also writes the layout to `src/data/pe
 
 **tools.png**, 144 x 16: tool and weapon icons, 16 x 16, one row in the order of `TOOLS_SHEET.order`. Draw the handle at the bottom left and the head at the top right: the same picture is held in the hand and rotated when swinging.
 
-**weapons.png**, 192 x 16: one picture per weapon, 16 x 16, in the order of `WEAPONS_SHEET.order` (the keys of `WEAPONS` in `src/data/weapons.js`), built by `tools/sprites/weapons.py`. Drawn like tools.png: the grip at the bottom left through (4, 12), the head at the top right. The hotbar's weapon slot and the weapon in your hand show the one you use; tools.png's sword, dagger and club stand in until it loads.
+**weapons.png**, 192 x 64: 16 x 16 pictures, a column per weapon in the order of `WEAPONS_SHEET.order` (the keys of `WEAPONS` in `src/data/weapons.js`) and a row per temper tier (as forged, Honed, Tempered, Wardsteel), built by `tools/sprites/weapons.py` from flat drawings turned onto the diagonal. Drawn like tools.png: the grip at the bottom left through (4, 12), the head at the top right. The hotbar's weapon slot and the weapon in your hand show the one you use; tools.png's sword, dagger and club stand in until it loads.
 
 **packet.png**, 16 x 48: the seed packet in three 16 px bands like furniture.png: main (tinted to the crop's colour), second (its top colour, or its colour), ink.
 

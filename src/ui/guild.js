@@ -8,6 +8,7 @@ import { CLOTHES } from '../data/clothing.js';
 import { stock, owns, itemName, buyGear, slain, goalDone, claimGoal, setBrazier, nextWeaponTier, temperBlocks, temper, tierNeeds } from '../systems/guild.js';
 import { tierOf, tierDamage, weaponLabel } from '../systems/gear.js';
 import { openModal, closeModal } from './modal.js';
+import { weaponIconURL } from '../render/icons.js';
 import { $ } from './dom.js';
 import { fmtGold } from '../core/format.js';
 
@@ -41,7 +42,8 @@ function tiers() {
   const S = G.S;
   return S.weapons.map((k) => {
     const t = nextWeaponTier(k), tier = tierOf(k), base = WEAPONS[k].damage;
-    const head = `<b>${weaponLabel(k)}</b><span>Tier ${tier} of ${WEAPON_TIERS.length}, ${tierDamage(k)} damage</span>`;
+    const look = (n) => { const u = weaponIconURL(k, n); return u ? `<img class="wlook" src="${u}" alt="">` : ''; };   // its look now, and after the next tier
+    const head = `<b>${look(tier)}${t ? `<span class="wnext">to</span>${look(tier + 1)}` : ''}${weaponLabel(k)}</b><span>Tier ${tier} of ${WEAPON_TIERS.length}, ${tierDamage(k)} damage</span>`;
     if (!t) return `<div class="shoprow"><div>${head}<span>Top tier.</span></div><div class="btns"><span class="role">Done</span></div></div>`;
     const next = Math.round(base * (1 + t.damage) * 10) / 10;
     const needs = tierNeeds(k).map((n) => `<li class="${n.met ? 'met' : ''}">${n.text}${n.have ? ` <em>${n.have}</em>` : ''}</li>`).join('');
