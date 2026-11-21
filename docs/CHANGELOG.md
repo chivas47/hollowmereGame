@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v290: A bigger field sideways
+- On a wide phone held sideways, the hotbar now stands in a column beside the field instead of a row under it. The field gets that height, and grows with it: from 390 x 260 to 468 x 312 px on an 844 x 390 phone (about 44% more to see).
+- Squarer phones (narrower than 19:10, such as 667 x 375) keep the hotbar under the field, where the field is bigger.
+- New save data: none.
+
 ## v289: A closer camera on phones
 - On a phone the view now shows 18 x 12 tiles instead of 24 x 16, so everything is drawn a third bigger: your farmer, crops, creatures and neighbours. On a 390 px wide phone a tile is 20 px instead of 15.
 - The view follows you as you walk, the way it already did on large maps, and stops at the map's edges.

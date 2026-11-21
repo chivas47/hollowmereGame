@@ -206,6 +206,17 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
   .basket{display:none}
   .toast{font-size:16px;max-width:96%;padding:5px 10px}   /* v287 (95a): smaller notices on a phone held sideways */
 }
+/* v290 (roadmap 95c): on a wide phone held sideways (19:10 or wider: most phones; a squarer one would lose field
+   width to the extra column) the hotbar stands in a column beside the field instead of a row under it, so the field
+   gets the height and, at 3:2, the width: 390 x 260 to 468 x 312 on an 844 x 390 phone. */
+@media (pointer:coarse) and (orientation:landscape) and (max-height:600px) and (min-aspect-ratio:19/10){
+  .game{grid-template-columns:auto minmax(0,1fr) auto auto;grid-template-rows:auto minmax(0,1fr) auto;
+    grid-template-areas:"top top top top" "pad stage bar meters" "pad stage bar use"}
+  .bottom{align-self:stretch;justify-content:center;min-height:0}
+  .bar{flex-direction:column;flex-wrap:nowrap;height:100%;max-height:100%;padding:3px;gap:3px;box-sizing:border-box}
+  .slot{width:52px;flex:1 1 0;min-height:0;padding:12px 0 1px;justify-content:center}
+  .slot canvas{width:24px;height:24px}
+}
 
 /* Dialogs */
 .modal{position:fixed;inset:0;background:rgba(10,8,6,.72);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
