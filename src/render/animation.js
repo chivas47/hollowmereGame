@@ -10,7 +10,7 @@ import { FRUIT } from '../data/trees.js';
 import { MINERALS } from '../data/minerals.js';
 import { ITEMS } from '../data/items.js';
 import { onSheet, ready } from './sheets.js';
-import { TOOLS_SHEET } from '../data/sprites.js';
+import { TOOLS_SHEET, WEAPONS_SHEET } from '../data/sprites.js';
 import { PICKUP, TRAILS } from '../data/animation.js';
 import { WEAPON_TIERS } from '../data/guild.js';
 
@@ -30,7 +30,7 @@ function sprite(kind, sel) {
   if (sprites[key]) return sprites[key];
   const cv = document.createElement('canvas'); cv.width = cv.height = 16;
   const g = cv.getContext('2d');
-  if (EXTRA[kind] && !ready(TOOLS_SHEET.sheet)) EXTRA[kind](g); else drawIcon(g, kind, sel);
+  if (EXTRA[kind] && !ready(TOOLS_SHEET.sheet) && !ready(WEAPONS_SHEET.sheet)) EXTRA[kind](g); else drawIcon(g, kind, sel);
   return (sprites[key] = cv);
 }
 
@@ -65,7 +65,7 @@ export function drawHeld(c, a, px, py) {
   if (a.thrust && a.weapon === 'dagger' && p > 0.15 && p < 0.8) drawThrust(c, a, p);
   if (UPRIGHT.has(a.kind)) { c.rotate(ang * RAD); c.drawImage(sprite(a.kind), -3, -10); c.restore(); return; }   // held level and tilted
   c.rotate((ang + 45) * RAD);
-  c.drawImage(sprite(a.weapon || a.kind), -4, -12);
+  c.drawImage(sprite(a.weapon || a.kind, a.key), -4, -12);
   c.restore();
 }
 const UPRIGHT = new Set(['can', 'pan']);

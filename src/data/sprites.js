@@ -102,6 +102,11 @@ export const GREENHOUSE_SHEET = { sheet: 'greenhouse', size: 16 };
 // packet.png: the seed packet in bands like the furniture: main (tinted to the crop's colour), second (its top colour,
 // or its colour), ink.
 export const TOOLS_SHEET = { sheet: 'tools', size: 16, order: ['hoe', 'rod', 'pick', 'sword', 'axe', 'pan', 'can', 'dagger', 'club'] };
+// weapons.png (tools/sprites/weapons.py): 16 px pictures, a column per weapon in the order of data/weapons.js WEAPONS and
+// a row per temper tier (as forged, then data/guild.js WEAPON_TIERS); the hotbar's weapon slot and the weapon in your
+// hand show the one you use at its tier (tools.png's sword, dagger and club until it loads). weaponArt names one.
+export const weaponArt = (key, tier = 0) => `${key}:${tier}`;
+export const WEAPONS_SHEET = { sheet: 'weapons', size: 16, tiers: 4, order: ['oldblade', 'shortsword', 'saber', 'cutlass', 'greatsword', 'duneblade', 'knife', 'dirk', 'shank', 'mitefang', 'club', 'mallet'] };
 export const PACKET_SHEET = { sheet: 'packet', size: 16, layers: ['main', 'second', 'ink'] };
 
 // v86 soil.png: tilled soil in the terrain layout (one 4x5 block each): dry, then watered. Drawn every frame: dry

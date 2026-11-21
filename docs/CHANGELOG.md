@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v293: Every weapon its own look, and how it grows
+- Each of the 12 weapons now has its own hand-drawn picture instead of one shared sword, dagger and club: the nicked old blade, a steel shortsword with a blue-gemmed brass guard, the slim curved silver saber with its knuckle bow, the broad green-steel Hollow cutlass, the cross-hilted greatsword, the obsidian dune blade with its chipped edge, a paring knife, the iron dirk, the saw-backed burrow shank, the hooked mite fang, a knotted oak club and a bound stone mallet.
+- A weapon's look grows with its tempering: Honed polishes the blade and adds a glint, Tempered adds a green temper line, a gold guard, a gem in the pommel and iron fittings on clubs, and Wardsteel blues the steel dark with glowing violet runes.
+- The hotbar's weapon slot and the weapon in your hand show the one you use at its tier. At the Wardens' Lodge, each weapon's tempering row shows how it looks now and after the next tier.
+- New save data: none.
+
 ## v292: People walk smoothly again
 - Fixes for v291: people no longer vanish or show the wrong direction while walking. The person sheet's address now carries its revision, so a browser never pairs an old cached sheet with the new layout, and a sheet of the wrong size falls back to the code-drawn people.
 - The head stays level through a stride: v291's passing pose rose a pixel, which read as fidgeting.

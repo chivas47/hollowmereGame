@@ -4,6 +4,7 @@ import { today } from '../core/time.js';
 import { CROPS } from '../data/crops.js';
 import { HOTBAR, SEED_SLOT, KIT_SLOT, TOOL_NAMES } from '../data/hotbar.js';
 import { PLACEABLES } from '../data/crafting.js';
+import { weaponArt } from '../data/sprites.js';
 import { drawIcon } from '../render/icons.js';
 import { onSheet } from '../render/sheets.js';
 import { cycleSeed, ensureUsefulSeed, announce } from '../systems/seeds.js';
@@ -13,9 +14,9 @@ import { addUpdater } from '../core/registry.js';
 import { specialWait, specialOf } from '../systems/specials.js';
 import { $ } from './dom.js';
 
-let drawnSeed = null, drawnKit = null;   // what the seed and kit slot icons show
+let drawnSeed = null, drawnKit = null, drawnWeapon = null;   // what the seed, kit and weapon slot icons show
 
-const selFor = (kind) => (kind === 'kit' ? (G.S.kit[G.S.kitSel] > 0 ? G.S.kitSel : null) : G.S.seedSel);
+const selFor = (kind) => (kind === 'kit' ? (G.S.kit[G.S.kitSel] > 0 ? G.S.kitSel : null) : kind === 'sword' ? weaponArt(G.S.weapon, G.S.weaponTier?.[G.S.weapon] || 0) : G.S.seedSel);
 
 // Picking the seed or kit slot again switches to the next type.
 export function selectSlot(i) {
@@ -81,6 +82,7 @@ on('state:changed', () => {
   const season = today().season;
   $('#held').textContent = label(HOTBAR[G.S.slot]);   // v96: phones hide slot names, so the held tool shows by the basket
   if (G.S.seedSel !== drawnSeed) { redrawIcon(SEED_SLOT, 'seeds'); drawnSeed = G.S.seedSel; }
+  if (selFor('sword') !== drawnWeapon && HOTBAR.includes('sword')) { redrawIcon(HOTBAR.indexOf('sword'), 'sword'); drawnWeapon = selFor('sword'); }   // a new weapon or tier
   if (selFor('kit') !== drawnKit) { redrawIcon(KIT_SLOT, 'kit'); drawnKit = selFor('kit'); }
   HOTBAR.forEach((kind, i) => {
     const b = $(`#slot${i}`); if (!b) return;

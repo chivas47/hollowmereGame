@@ -8,6 +8,7 @@ import { addUpdater, addLayer } from '../core/registry.js';
 import { SWINGS, PICKUP, CRAFTED, PLACE, IMPACT, PERK, MOTION_LEVELS, MATERIAL, MATERIALS, SLASH, HURT } from '../data/animation.js';
 import { motion } from '../core/motion.js';
 import { ITEMS } from '../data/items.js';
+import { weaponArt } from '../data/sprites.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { drawFx } from '../render/animation.js';
 import { rng } from '../render/pixel.js';
@@ -20,6 +21,7 @@ const rand = rng(0x5eed);
 export function playAnim(kind, opts = {}) {
   const base = SWINGS[kind] || {};
   G.anim = { kind, t: 0, dur: 0.3, from: 0, to: 0, strike: 0.3, root: 0, ...base, ...opts, dir: G.S.dir, hold: 0, hit: false };
+  if (kind === 'sword') G.anim.key = weaponArt(G.S.weapon, G.S.weaponTier?.[G.S.weapon] || 0);   // the weapon in use at its tier, drawn in the hand
   return G.anim;
 }
 // v75: a tool swing is under way; Use waits for it (systems/interact.js).
