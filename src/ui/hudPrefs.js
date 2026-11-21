@@ -4,14 +4,18 @@
 import { emit } from '../core/events.js';
 import { keyName } from '../core/controls.js';
 import { $ } from './dom.js';
+import { CAMERA_CHOICES, PHONE_QUERY, cameraFor } from '../data/camera.js';
+import { setCamera, screen } from '../render/views.js';
 
 const KEY = 'hollowmere-hud';
 export const MODES = ['full', 'minimal', 'hidden'];
-export const hud = { scale: 1, mode: 'full', goal: true, prompts: true, text: 1, contrast: false };
+export const hud = { scale: 1, mode: 'full', goal: true, prompts: true, text: 1, contrast: false, camera: 'auto' };   // v289: camera
 try { Object.assign(hud, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { /* storage unavailable */ }
 if (!MODES.includes(hud.mode)) hud.mode = 'full';
 hud.scale = Math.min(1.4, Math.max(1, +hud.scale || 1));   // never below 100%: HUD text stays 16 px or larger (rule 8)
 hud.text = Math.min(1.5, Math.max(1, +hud.text || 1));
+if (!CAMERA_CHOICES.includes(hud.camera)) hud.camera = 'auto';
+const phone = typeof matchMedia === 'function' ? matchMedia(PHONE_QUERY) : null;
 
 function apply() {
   const g = $('.game');
@@ -25,6 +29,8 @@ function apply() {
   $('#contrastToggle').textContent = `Contrast: ${hud.contrast ? 'on' : 'off'}`; $('#contrastToggle').setAttribute('aria-pressed', String(!!hud.contrast));
   $('#hudMode').innerHTML = `HUD: ${hud.mode} <kbd data-control="hud">${keyName('hud')}</kbd>`;
   $('#goalToggle').textContent = `Objective: ${hud.goal ? 'on' : 'off'}`; $('#goalToggle').setAttribute('aria-pressed', String(hud.goal));
+  setCamera(cameraFor(hud.camera, !!phone?.matches));   // v289 (95d)
+  $('#cameraToggle').textContent = `Camera: ${hud.camera}${hud.camera === 'auto' ? ` (${screen.kind})` : ''}`;
   $('#promptToggle').textContent = `Prompts: ${hud.prompts ? 'on' : 'off'}`; $('#promptToggle').setAttribute('aria-pressed', String(hud.prompts));
 }
 
@@ -43,4 +49,6 @@ $('#contrastToggle').addEventListener('click', (e) => { setHud('contrast', !hud.
 $('#hudMode').addEventListener('click', (e) => { cycleHud(); e.currentTarget.blur(); });
 $('#goalToggle').addEventListener('click', (e) => { setHud('goal', !hud.goal); e.currentTarget.blur(); });
 $('#promptToggle').addEventListener('click', (e) => { setHud('prompts', !hud.prompts); e.currentTarget.blur(); });
+phone?.addEventListener?.('change', () => { apply(); emit('hud:prefs'); });   // turning a tablet or resizing a window
+$('#cameraToggle').addEventListener('click', (e) => { setHud('camera', CAMERA_CHOICES[(CAMERA_CHOICES.indexOf(hud.camera) + 1) % CAMERA_CHOICES.length]); e.currentTarget.blur(); });
 apply();

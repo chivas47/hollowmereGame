@@ -6,8 +6,17 @@
 import { G } from '../core/game.js';
 import { T, W, H } from '../core/constants.js';
 import { sizeOf } from '../data/maps.js';
+import { CAMERAS } from '../data/camera.js';
 
-const SCREEN_W = W * T, SCREEN_H = H * T;
+// v289 (roadmap 95d): the screen's size in world px follows the Camera setting (data/camera.js); far is 24 x 16 tiles.
+// setCamera resizes the game canvas to match; the page keeps its size, so a near camera draws every tile bigger.
+export const screen = { w: W * T, h: H * T, kind: 'far' };
+export function setCamera(kind) {
+  const c = CAMERAS[kind] || CAMERAS.far;
+  Object.assign(screen, { w: c.cols * T, h: c.rows * T, kind: CAMERAS[kind] ? kind : 'far' });
+  const cv = globalThis.document?.getElementById('game');
+  if (cv && (cv.width !== screen.w || cv.height !== screen.h)) { cv.width = screen.w; cv.height = screen.h; }
+}
 
 // Where a camera of width `view` sits over a world `world` wide to keep `x` centred, held inside the world.
 // A world narrower than the view is centred in it.
@@ -18,15 +27,15 @@ export function camera(x, view, world) {
 
 function viewOf(who, farmer, x0, w) {
   const at = (who === 'you' && G.cut?.cam) || farmer;   // v240: a cutscene holds the camera (systems/cutscene.js)
-  const s = sizeOf(farmer.map || G.S.map), cam = camera(at.x, w, s.w * T), camY = camera(at.y, SCREEN_H, s.h * T);
-  return { who, farmer, x0, w, h: SCREEN_H, cam, camY };
+  const s = sizeOf(farmer.map || G.S.map), cam = camera(at.x, w, s.w * T), camY = camera(at.y, screen.h, s.h * T);
+  return { who, farmer, x0, w, h: screen.h, cam, camY };
 }
 
 // The views on screen: { who: 'you' | 'p2', farmer, x0 (left edge on screen), w, h, cam and camY (the world point
 // at the view's top left) }.
 export function views() {
-  if (!G.P2 || G.cut) return [viewOf('you', G.S, 0, SCREEN_W)];   // v240: a cutscene fills the screen
-  const w = SCREEN_W / 2;
+  if (!G.P2 || G.cut) return [viewOf('you', G.S, 0, screen.w)];   // v240: a cutscene fills the screen
+  const w = screen.w / 2;
   return [viewOf('you', G.S, 0, w), viewOf('p2', G.P2, w, w)];
 }
 
@@ -41,11 +50,11 @@ export function visible() {
 export function onScreen(v, px, py) {
   const sx = px - v.cam, sy = py - v.camY;
   if (sx < 0 || sx > v.w || sy < 0 || sy > v.h) return null;
-  return { x: (v.x0 + sx) / SCREEN_W, y: sy / SCREEN_H };
+  return { x: (v.x0 + sx) / screen.w, y: sy / screen.h };
 }
 
 // The world point under a screen fraction (fx, fy), and which view it falls in.
 export function toWorld(fx, fy) {
-  const sx = fx * SCREEN_W, list = views(), v = list.find((o) => sx >= o.x0 && sx < o.x0 + o.w) || list[0];
-  return { v, x: sx - v.x0 + v.cam, y: fy * SCREEN_H + v.camY };
+  const sx = fx * screen.w, list = views(), v = list.find((o) => sx >= o.x0 && sx < o.x0 + o.w) || list[0];
+  return { v, x: sx - v.x0 + v.cam, y: fy * screen.h + v.camY };
 }

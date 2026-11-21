@@ -3,7 +3,7 @@
 // tilled that day; storms send lightning at the farm overnight; on Silvermist days forage.js adds mist lilies.
 import { G } from '../core/game.js';
 import { visible } from '../render/views.js';
-import { T, W, H } from '../core/constants.js';
+import { T } from '../core/constants.js';
 import { on } from '../core/events.js';
 import { addLayer } from '../core/registry.js';
 import { dateParts } from '../core/time.js';
@@ -71,11 +71,12 @@ on('game:loaded', () => {
 // ---- Drawing: rain streaks, snowflakes, the silver mist (lightning and splashes: systems/atmosphere.js) ----
 // v190: a mist bank's rows, top to bottom: [half-width in px, opacity]
 const MIST_BANK = [[22, 0.06], [36, 0.1], [45, 0.14], [45, 0.16], [38, 0.12], [26, 0.08], [14, 0.05]];
-const drops = Array.from({ length: 140 }, (_, i) => ({ x: (i * 97) % (W * T), y: (i * 53) % (H * T), s: 0.8 + ((i * 37) % 10) / 20 }));
+// Drop places over the far view's 384 x 256 px, wrapped to the view's own size as they fall (v289).
+const drops = Array.from({ length: 140 }, (_, i) => ({ x: (i * 97) % 384, y: (i * 53) % 256, s: 0.8 + ((i * 37) % 10) / 20 }));
 addLayer(96, (c) => {
   const S = G.S, kind = S.weather;
   if (!underSky(S.map) || kind === 'sun' || !WEATHER[kind]) return;
-  const t = performance.now() / 1000, w = W * T, h = H * T, v = visible();
+  const v = visible(), t = performance.now() / 1000, w = v.w, h = v.h;   // v289: the view's size (the near camera is smaller)
   c.save(); c.translate(v.x, v.y);   // v156: weather falls over the screen, wherever the camera is
   if (kind === 'rain' || kind === 'storm') {
     c.fillStyle = kind === 'storm' ? 'rgba(20,30,50,.28)' : 'rgba(40,60,90,.16)'; c.fillRect(0, 0, w, h);

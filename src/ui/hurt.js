@@ -7,10 +7,9 @@ import { G } from '../core/game.js';
 import { on, emit } from '../core/events.js';
 import { addUpdater } from '../core/registry.js';
 import { HURT } from '../data/animation.js';
-import { W, T } from '../core/constants.js';
 import { lowHealth } from '../systems/health.js';
 import { dangerHere } from '../systems/monsters.js';
-import { views } from '../render/views.js';
+import { views, screen } from '../render/views.js';
 
 const ID = { you: 'hurtEdge', p2: 'hurtEdge2' };
 const edge = (who) => globalThis.document?.getElementById(ID[who]);
@@ -21,7 +20,7 @@ let beat = 0;
 export function halves() {
   return views().map((v) => {
     const f = v.who === 'p2' ? { hp: G.S.partner?.hp, dialog: G.dialog.p2 } : { hp: G.S.hp, dialog: G.dialog.you };
-    return { who: v.who, left: v.x0 / (W * T), width: v.w / (W * T), low: lowHealth(f.hp, G.S.maxHp) && !f.dialog };
+    return { who: v.who, left: v.x0 / screen.w, width: v.w / screen.w, low: lowHealth(f.hp, G.S.maxHp) && !f.dialog };
   });
 }
 

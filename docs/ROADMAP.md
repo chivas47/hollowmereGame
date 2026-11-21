@@ -385,9 +385,9 @@ Nuno (November 2026): "the goal is occupying the screen of the gameplay and I ca
 | Item | What | Kind | Status | Notes |
 |---|---|---|---|---|
 | 95a | A clear field on phones | polish | done (chivas47/hollowmereGame#305) | Finds 49 to 51: upright, the goal and notices move under the hotbar; sideways, notices one at a time; everywhere, the goal and notices turn see-through over your farmer. Field covered: upright 26-37% to 0%, sideways up to 89% to under 20%. |
-| 95b | Room on short phones | polish | in progress (chivas47/hollowmereGame#306) | Find 52, reworked with Nuno (measured: 6 px free under the hotbar on 360 x 640, notes need 110): on upright phones under 720 px tall the clock goes to one line, the Holding line goes, the pad buttons are 44 px; the room goes to the field first, then the goal line moves under the hotbar; notices stay over the field (see-through over your farmer) unless there is room for them too. |
+| 95b | Room on short phones | polish | done (chivas47/hollowmereGame#306) | Find 52, reworked with Nuno (measured: 6 px free under the hotbar on 360 x 640, notes need 110): on upright phones under 720 px tall the clock goes to one line, the Holding line goes, the pad buttons are 44 px; the room goes to the field first, then the goal line moves under the hotbar; notices stay over the field (see-through over your farmer) unless there is room for them too. |
 | 95c | A bigger field sideways | polish | needs decision | Find 53: the hotbar down the right side on a phone held sideways, giving the field about a third more size. |
-| 95d | A closer camera on phones | feature | needs decision | Find 54: fewer, bigger tiles on phones held upright. Every rule that assumes the 24 x 16 view (prompts, taps, the minimap, exits) needs checking; its own design pass. |
+| 95d | A closer camera on phones | feature | in progress (chivas47/hollowmereGame#307) | Find 54: fewer, bigger tiles on phones held upright. Every rule that assumes the 24 x 16 view (prompts, taps, the minimap, exits) needs checking; its own design pass. |
 
 ## Done
 

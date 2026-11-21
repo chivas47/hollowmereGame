@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v289: A closer camera on phones
+- On a phone the view now shows 18 x 12 tiles instead of 24 x 16, so everything is drawn a third bigger: your farmer, crops, creatures and neighbours. On a 390 px wide phone a tile is 20 px instead of 15.
+- The view follows you as you walk, the way it already did on large maps, and stops at the map's edges.
+- New Camera setting in Menu, Display: auto (near on a phone, far elsewhere), near or far.
+- Desktop and tablets are unchanged unless you pick near.
+- New save data: none (the setting is kept per browser, like the other display settings).
+
 ## v288: Room on short phones
 - On a short phone held upright (about 640 to 720 px tall), the clock panel fits on one line (date, time, gold), the "Holding / Basket" line is gone, the pad buttons are a little smaller and the hotbar slimmer.
 - The field gets that room first: on a 360 x 640 phone it grows from 287 x 192 to 328 x 219 px, the full width of the screen.
