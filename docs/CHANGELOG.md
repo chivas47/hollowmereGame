@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v283: Loot says it is used for weapon tiers
+- In the bag, chitin, bone shards, leatherwing, sunmotes, gloommotes and umbrite now list the weapon tier they go into under Used in (for example "Tempered weapon, Lodge, needs 5"), so you know to keep them instead of shipping them.
+- New save data: none.
+
 ## v282: Weapon tiers
 - Warden Hale now tempers weapons at the Wardens' Lodge. Each weapon you own can rise three tiers: Honed (+10% damage), Tempered (+20%) and Wardsteel (+30%).
 - Each tier needs defeats while the weapon is in slot 5 (50, 150 and 400 in total), monster materials (chitin and bone shards, then leatherwing and sunmotes, then gloommotes and an umbrite) and gold (500g, 1,500g, 4,000g).

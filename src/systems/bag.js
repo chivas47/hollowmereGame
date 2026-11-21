@@ -9,6 +9,7 @@ import { MAPS } from '../data/maps.js';
 import { PLACEABLES, RECIPES } from '../data/crafting.js';
 import { DISHES, WISHFRUIT } from '../data/cooking.js';
 import { UPGRADES } from '../data/upgrades.js';
+import { WEAPON_TIERS } from '../data/guild.js';   // v283: tier materials
 import { RINGS } from '../data/weapons.js';
 import { TRINKETS } from '../data/forge.js';
 import { BOOKS } from '../data/books.js';
@@ -97,12 +98,13 @@ export function describe(id) {
   return `Sells for ${fmtGold(it.sell)}.`;
 }
 
-// What an item goes into: crafting recipes, dishes and tool upgrades, with how many each needs.
+// What an item goes into: crafting recipes, dishes, tool upgrades and (v283) weapon tiers, with how many each needs.
 export function usedIn(k) {
   const out = [];
   for (const [r, rec] of Object.entries(RECIPES)) if (rec.needs?.[k]) out.push({ name: rec.name || PLACEABLES[r]?.name || ITEMS[r]?.name || r, n: rec.needs[k], where: 'Crafting' });
   for (const d of Object.values(DISHES)) if (d.needs?.[k]) out.push({ name: d.name, n: d.needs[k], where: 'Cooking' });
   for (const u of Object.values(UPGRADES)) for (const t of u.tiers) if (t.needs?.[k]) out.push({ name: t.label, n: t.needs[k], where: 'Upgrade' });
+  for (const t of WEAPON_TIERS) if (t.needs[k]) out.push({ name: `${t.name} weapon`, n: t.needs[k], where: 'Lodge' });   // v283 (roadmap 93d)
   return out;
 }
 // What an item takes to make, for dishes and crafted kit.
