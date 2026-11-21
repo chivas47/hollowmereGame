@@ -98,6 +98,7 @@ export function newState() {
     cavernOpen: false, cavernDeepest: 0,                // v38: the Sunken Cavern's door opened, its deepest floor
     ventOpen: false, ventDeepest: 0,                    // v39: the Ember Vent; floor 10 is the forge
     forged: {}, weaponEnch: {}, toolEnch: {}, trinket: null,   // v39: weapon -> gem counts, weapon -> enchant, tool -> enchant, worn trinket
+    weaponTier: {}, weaponKills: {},                   // v282: weapon -> tier (0 to 3), weapon -> defeats while it was yours
     quarryRocks: null,                                 // v44: today's rocks in the quarry (systems/quarry.js)
     spouse: null, wedding: null, roommate: false,      // v52: your spouse's villager id, a wedding { id, day } to come; v53: a roommate
     secretFriend: null,                              // v57: { year, id } for the Longnight Feast
@@ -185,7 +186,7 @@ export function merge(saved) {
   if (!s.pots || typeof s.pots !== 'object') s.pots = {};
   if (!Array.isArray(s.legends)) s.legends = [];
   s.mastery = Object.assign({ xp: 0, claimed: [] }, s.mastery || {});
-  for (const k of ['forged', 'weaponEnch', 'toolEnch']) if (!s[k] || typeof s[k] !== 'object') s[k] = {};
+  for (const k of ['forged', 'weaponEnch', 'toolEnch', 'weaponTier', 'weaponKills']) if (!s[k] || typeof s[k] !== 'object') s[k] = {};   // v282: tiers and defeats
   if (!Array.isArray(s.goalsClaimed)) s.goalsClaimed = [];
   if (!s.fridge || typeof s.fridge !== 'object') s.fridge = {};
   s.traditions = { blessed: saved.traditions?.blessed || 0, floated: [...(saved.traditions?.floated || [])] };   // v110

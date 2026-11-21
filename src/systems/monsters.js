@@ -20,7 +20,7 @@ import { moveBox, occupied, mover } from './world.js';
 import { hurtPlayer, hurtPartner } from './health.js';
 import { has } from './professions.js';
 import { attackMult } from './buffs.js';
-import { weapon, weaponKind, wearing, giveFind, forgeBonus, weaponEnchant } from './gear.js';
+import { weapon, weaponKind, wearing, giveFind, forgeBonus, weaponEnchant, tierMult, tierOf } from './gear.js';
 import { COMBO, SLAM_RADIUS, HIT_STOP, HIT_STOPS, STRUCK, IMPACT } from '../data/animation.js';
 import { HOTBAR } from '../data/hotbar.js';
 import { playAnim, shake, holdSwing, ring, burst } from './animation.js';
@@ -309,7 +309,7 @@ addUpdater((dt) => {
 });
 on('map:changed', () => { if (mover() === 'you') { cooldown = 0; buffered = false; combo = 0; since = 99; } });
 export function damageOf() {
-  return weapon().damage * attackMult() * (has('fighter') ? 1.1 : 1) * (has('brute') ? 1.15 : 1) * (wearing('emberring') ? 1.1 : 1) * forgeBonus().damage * (G.S.mastery.claimed.includes('combat') ? 1.15 : 1);   // v39: heartstones; v40: combat mastery
+  return weapon().damage * attackMult() * (has('fighter') ? 1.1 : 1) * (has('brute') ? 1.15 : 1) * (wearing('emberring') ? 1.1 : 1) * forgeBonus().damage * (G.S.mastery.claimed.includes('combat') ? 1.15 : 1) * tierMult();   // v39: heartstones; v40: combat mastery; v282: its tier
 }
 // v39: weapon enchantments that change damage against a kind.
 const versus = (kind) => { const e = weaponEnchant(); return e === 'crusader' && (kind === 'skeleton' || kind === 'wraith') ? 1.5 : e === 'bugkiller' && kind === 'mite' ? 2 : 1; };
@@ -371,7 +371,7 @@ function strike() {
   const [dx, dy] = DIRS[G.S.dir];
   moveBox(G.S, dx * st.lunge, dy * st.lunge);   // a short step into the swing (v73: stops at walls)
   playAnim('sword', { gate: false, dur: base * (st.spin ? 1.3 : 1), from: st.arc[0], to: st.arc[1], strike: st.slam ? 0.4 : 0.1, root: base * 0.6,
-    weapon: kind === 'sword' ? 'sword' : kind, trail: !st.thrust, spin: st.spin, thrust: st.thrust, reach: st.spin ? 14 : 12, fin: last, slam: st.slam });
+    weapon: kind === 'sword' ? 'sword' : kind, trail: !st.thrust, spin: st.spin, thrust: st.thrust, reach: st.spin ? 14 : 12, fin: last, slam: st.slam, tier: tierOf() });
   emit('sfx', SWING_SFX[kind] || 'sword');   // v280: each weapon kind sounds its own
   if (st.shake) shake(st.shake, 0.15);
   const reachK = st.reach || 1, px = G.S.x + dx * 12 * reachK, py = G.S.y - 4 + dy * 12 * reachK;

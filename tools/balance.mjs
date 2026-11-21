@@ -49,6 +49,7 @@ const STRATEGIES = {
     // v30: the mill needs cloth, so a loom comes first. v63: the shed comes right after the greenhouse, so machines go
     // inside it and the farm keeps room for buildings. The bot picks the first free spot from the bottom right.
     'lodge:saber', 'lodge:cutlass',   // v37: the lodge's weapons, skipped if the bot has not been deep enough
+    'temper', 'temper', 'temper',   // v282: its weapon's tiers, each waiting (later) until its defeats and materials are in
     'gardenpot', 'gardenpot', 'gardenpot', 'gardenpot',   // v217: winter crops in the shed (cheap: stone and wood)
     'loom', 'mill', 'helperhut',   // the hut's 100 fiber come slowly from weeds
     'seedmaker',   // v216: learnt at Farming 9; until then the list goes on past it (GOAL later)
@@ -151,7 +152,7 @@ const { MINE, enterMine, leaveMine, checkpoints } = await load('systems/mine.js'
 const { slimes, hitMonster, damageOf, surface } = await load('systems/monsters.js');   // roadmap 83c: gel for a pond ask; 85d1: surface
 const { skillLevel } = await load('systems/skills.js');
 const { bombs, throwBomb, openChest, crackGeode, GEODES } = await load('systems/treasure.js');
-const { buyGear, owns } = await load('systems/guild.js');
+const { buyGear, owns, nextWeaponTier, temperBlocks, temper } = await load('systems/guild.js');   // v282: temper
 const { bless } = await load('systems/traditions.js');   // v110: the wishing stone
 const { LODGE_SHOP } = await load('data/guild.js');
 const { readBook } = await load('systems/books.js');
@@ -263,6 +264,10 @@ function simulate(runSeed) {
   for (const k of Object.keys(TREES)) GOAL[k] = { shop: 'store', cost: () => TREES[k].cost, needs: () => ({}), ok: () => true, buy: () => track('saplings', () => buySupply(k, 1)) };
   // v37: weapons from the Wardens' Lodge; skipped when the bot has not reached the floor that sells them.
   for (const o of LODGE_SHOP) GOAL[`lodge:${o.key}`] = { cost: () => o.cost, needs: () => ({}), ok: () => !owns(o.key) && S().mineDeepest >= o.floor, buy: () => track('weapons', () => buyGear(o.key)) };
+  // v282 (roadmap 93c): the next tier of the weapon in use. It steps aside (later) until the defeats and materials are
+  // in, which come from the bot's mine trips; it ends once the weapon is at the top.
+  GOAL.temper = { cost: () => nextWeaponTier(S().weapon)?.gold || 0, needs: () => ({}), ok: () => !!nextWeaponTier(S().weapon),
+    later: () => temperBlocks(S().weapon).some((b) => b !== 'gold'), buy: () => track('weapons', () => temper(S().weapon)) };
   for (const k of Object.keys(RECIPES)) GOAL[k] = { cost: () => RECIPES[k].cost, needs: () => RECIPES[k].needs, ok: () => true, later: () => !learnt(RECIPES[k]) || (RECIPES[k].needs.goldbar && !(S().bag.goldbar >= RECIPES[k].needs.goldbar)), buy: () => track('crafting', () => craft(k)) };   // v216 later: a recipe a skill has not taught yet, or (the bot never digs for gold) one whose gold bar it does not hold yet
 
   // v216: the goal the bot is working towards: the first one not stepping aside for a skill it has not learnt.
@@ -853,6 +858,7 @@ function simulate(runSeed) {
     for (const k of GEODES) if (s.bag[k]) out[k] = s.bag[k];   // v46: kept for the smithy's morning trip
     for (const [k, n] of Object.entries(s.pond?.ask || {})) out[k] = Math.max(out[k] || 0, n);   // roadmap 83c: kept for the pond
     for (const [k, n] of Object.entries(GOAL[nextGoal()]?.needs?.() || {})) if (k in LOOT_ITEMS) out[k] = Math.max(out[k] || 0, n);   // 85b: kept for the goal
+    for (const [k, n] of Object.entries(nextWeaponTier(s.weapon)?.needs || {})) out[k] = Math.max(out[k] || 0, n);   // v282: kept for its weapon's next tier
     if (s.bag.friedegg) out.friedegg = s.bag.friedegg;   // pan eggs are kept to eat, not shipped   // crops the next purchase needs (the helper hut's gleamfruit)
     const n = nextFestival();
     if (n && n.inDays <= 7 && n.f.kind === 'contest') {

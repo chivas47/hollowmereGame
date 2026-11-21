@@ -424,7 +424,8 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `monster:hit` | {x, y, dmg, crit, kx, ky, kind, color, blade} | monsters.js hitMonster() (v74; v280: blade, a weapon's blow) | animation (damage number, sparks, v280 slash mark) |
 | `crafted` | {key, n, kit} | crafting.js (v74) | animation (the crafted pose) |
 | `watered` | {map, x, y} | farming.js, the can on a planted tile (v123) | animation (the crop perks up and drips) |
-| `monster:slain` | {kind, x, y, map, drops} (v252: drops, {item: n}) | monsters.js | guild (goal counts), treasure (blast ring), bestiary (kinds met, drops) |
+| `monster:slain` | {kind, x, y, map, drops} (v252: drops, {item: n}) | monsters.js | guild (goal counts, v282 weapon defeats), treasure (blast ring), bestiary (kinds met, drops) |
+| `weapon:tempered` | {key, tier} | guild.js temper() (v282) | (none yet) |
 | `monster:charge`, `monster:bump` | {x, y} | monsters.js (v228: a charger sets off; one runs into a wall) | monsters.js (dust, a shake) |
 | `monster:wake`, `monster:crack`, `monster:surface` | {x, y} | monsters.js (v253: a mimic wakes or its shell cracks; a burrower comes up or goes down) | monsters.js (grit, a sound) |
 | `monster:spit` | {x, y} | monsters.js (v255: a spitter lets fly; its glob joins `shots`) | monsters.js (a puff at its mouth) |
