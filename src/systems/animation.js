@@ -20,6 +20,7 @@ const rand = rng(0x5eed);
 export function playAnim(kind, opts = {}) {
   const base = SWINGS[kind] || {};
   G.anim = { kind, t: 0, dur: 0.3, from: 0, to: 0, strike: 0.3, root: 0, ...base, ...opts, dir: G.S.dir, hold: 0, hit: false };
+  if (kind === 'sword') G.anim.key = G.S.weapon;   // the weapon in use, drawn in the hand (render/animation.js)
   return G.anim;
 }
 // v75: a tool swing is under way; Use waits for it (systems/interact.js).

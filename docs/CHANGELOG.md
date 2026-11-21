@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v293: Every weapon its own look
+- Each of the 12 weapons now has its own picture instead of one shared sword, dagger and club: shaded blades with a bright edge and a glint, fullers on the broad blades, curved sabers and cutlasses, jewelled guards, wrapped grips and pommels, an obsidian dune blade, a chitin mite fang, a knotted club and a bound stone mallet.
+- The hotbar's weapon slot and the weapon in your hand show the one you use, and change when you pick another in the Bag.
+- New save data: none.
+
 ## v292: People walk smoothly again
 - Fixes for v291: people no longer vanish or show the wrong direction while walking. The person sheet's address now carries its revision, so a browser never pairs an old cached sheet with the new layout, and a sheet of the wrong size falls back to the code-drawn people.
 - The head stays level through a stride: v291's passing pose rose a pixel, which read as fidgeting.

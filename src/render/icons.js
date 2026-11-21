@@ -6,7 +6,7 @@ import { drawFurniture, drawTap, drawDebris } from './sprites.js';
 import { FURNITURE } from '../data/furniture.js';
 import { drawPlaced, drawFruitTree, drawFence, drawGate, drawFloor, drawAlder } from './sprites.js';
 import { TREES, FRUIT } from '../data/trees.js';
-import { TOOLS_SHEET, PACKET_SHEET } from '../data/sprites.js';
+import { TOOLS_SHEET, PACKET_SHEET, WEAPONS_SHEET } from '../data/sprites.js';
 import { ready, sheet, tinted } from './sheets.js';
 
 const TOOL_ICONS = {
@@ -38,9 +38,11 @@ const TOOL_ICONS = {
   },
 };
 
-// sel: the crop for the 'seeds' slot, or the placeable for the 'kit' slot.
+// sel: the crop for the 'seeds' slot, the placeable for the 'kit' slot, or the weapon (data/weapons.js) for the weapon slot.
 export function drawIcon(g, kind, sel) {
   g.clearRect(0, 0, 16, 16);
+  const wi = WEAPONS_SHEET.order.indexOf(sel);   // each weapon its own picture once weapons.png has loaded
+  if (wi >= 0 && ready(WEAPONS_SHEET.sheet)) return g.drawImage(sheet(WEAPONS_SHEET.sheet).img, wi * 16, 0, 16, 16, 0, 0, 16, 16);
   const ti = TOOLS_SHEET.order.indexOf(kind);   // v90: tools from the tool sheet once it has loaded
   if (ti >= 0 && ready(TOOLS_SHEET.sheet)) return g.drawImage(sheet(TOOLS_SHEET.sheet).img, ti * 16, 0, 16, 16, 0, 0, 16, 16);
   if (TOOL_ICONS[kind]) return TOOL_ICONS[kind](g);
