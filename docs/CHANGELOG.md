@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v291: Better-drawn people
+- Every person (you, your partner, all neighbours and Pip) is shaded as if lit from the top left: the far cheek, ear and jaw, the far arm and the far leg sit in shade, with a soft fold under the collar.
+- Walking has four frames instead of three: a passing pose with the legs together and the body standing tall between each step, played a little faster, so the walk reads smoother.
+- New save data: none.
+
 ## v290: A bigger field sideways
 - On a wide phone held sideways, the hotbar now stands in a column beside the field instead of a row under it. The field gets that height, and grows with it: from 390 x 260 to 468 x 312 px on an 844 x 390 phone (about 44% more to see).
 - Squarer phones (narrower than 19:10, such as 667 x 375) keep the hotbar under the field, where the field is bigger.
