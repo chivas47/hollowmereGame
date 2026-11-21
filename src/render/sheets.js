@@ -1,7 +1,13 @@
 // v77: pixel art from PNG sprite sheets in assets/sprites/. A sheet is a grid of frames; a layered sheet has one
 // row band per layer drawn in grey, tinted at runtime to a palette (white = the colour, grey = its shades).
 // Until a sheet has loaded (or in node, for tools/balance.mjs) ready() is false and callers draw their code art.
+import { PERSON } from '../data/personSheet.js';
+
 const sheets = {};
+// Sheets whose layout changes with their generator: the URL carries the PNG's revision, so a browser never pairs a
+// cached old PNG with the new layout, and a PNG of the wrong size counts as not loaded (code art) rather than
+// drawing blank or wrong frames. [revision, width, height]
+const CHECK = { [PERSON.sheet]: [PERSON.rev, PERSON.w * 4 * PERSON.steps, PERSON.h * PERSON.layers.length] };
 const tints = new Map();
 const hasImage = typeof Image !== 'undefined';
 
@@ -10,9 +16,13 @@ export function sheet(name) {
   const s = sheets[name] = { img: null, ok: false };
   if (!hasImage) return s;
   const img = new Image();
-  img.onload = () => { s.ok = true; listeners.forEach((fn) => fn(name)); };
+  const [rev, w, h] = CHECK[name] || [];
+  img.onload = () => {
+    if (w && (img.width !== w || img.height !== h)) return console.warn(`Sprite sheet ${name} is ${img.width} x ${img.height}, not ${w} x ${h}; using code art.`);
+    s.ok = true; listeners.forEach((fn) => fn(name));
+  };
   img.onerror = () => console.warn(`Sprite sheet ${name} failed to load; using code art.`);
-  img.src = `assets/sprites/${name}.png`;
+  img.src = `assets/sprites/${name}.png${rev ? `?v=${rev}` : ''}`;
   s.img = img;
   return s;
 }

@@ -2,9 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v292: People walk smoothly again
+- Fixes for v291: people no longer vanish or show the wrong direction while walking. The person sheet's address now carries its revision, so a browser never pairs an old cached sheet with the new layout, and a sheet of the wrong size falls back to the code-drawn people.
+- The head stays level through a stride: v291's passing pose rose a pixel, which read as fidgeting.
+- New save data: none.
+
 ## v291: Better-drawn people
 - Every person (you, your partner, all neighbours and Pip) is shaded as if lit from the top left: the far cheek, ear and jaw, the far arm and the far leg sit in shade, with a soft fold under the collar.
-- Walking has four frames instead of three: a passing pose with the legs together and the body standing tall between each step, played a little faster, so the walk reads smoother.
+- Walking has four frames instead of three: a passing pose with the legs together between each step, played a little faster, so the walk reads smoother.
 - New save data: none.
 
 ## v290: A bigger field sideways
