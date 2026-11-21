@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v287: A clear field on phones
+- On a phone held upright, the goal and notices now sit under the hotbar, in the empty space above the controls, instead of over the field. Nothing covers the game any more.
+- On a phone held sideways, notices show one at a time in a smaller font. Before, three stacked up and could cover almost the whole field.
+- On every screen, the goal and notices turn see-through while your farmer stands under them, so you can always see yourself.
+- Short phones (about 640 px tall) have no room under the hotbar, so the goal and notices stay over the field there, but they still turn see-through over your farmer.
+- New save data: none.
+
 ## v286: The special's tip until you have used it
 - The tip that explains your weapon's special no longer shows on the first mine floor of every session. It shows only until you have used the special once.
 - Older saves see it once more, until your next special.

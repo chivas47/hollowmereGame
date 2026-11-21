@@ -87,6 +87,9 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
 @keyframes hurtpulse{0%,100%{opacity:.25}30%{opacity:.7}}
 .goal{position:absolute;z-index:8;left:8px;top:8px;max-width:min(60%,420px);background:rgba(28,23,18,.8);border:2px solid var(--seam);border-radius:6px;padding:3px 8px;font-size:calc(16px * var(--hud,1));line-height:1.3;color:var(--cream);pointer-events:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .goal b{color:var(--harvest);font-weight:600;margin-right:4px}
+.fieldnotes{display:none}   /* v287 (95a): only upright phones use it */
+.goal,.toasts{transition:opacity .2s}
+.goal.dodge,.toasts.dodge{opacity:.15}   /* v287 (95a): see-through while your farmer is under it */
 .goal span{color:var(--straw)}
 .extra span{color:var(--straw)}
 .extra b{color:var(--leaf)}
@@ -159,6 +162,12 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
 @media (max-width:600px) and (orientation:portrait){
   .game{grid-template-rows:auto auto auto minmax(0,calc((100vw - 32px) / 1.5 + 12px)) auto minmax(auto,1fr)}
   .dpad,#use{align-self:end}
+  /* v287 (roadmap 95a): the goal and notices sit under the hotbar, in the room above the thumbs, not over the field.
+     They share the controls' row (top of it) so they take no height from the field on a short phone. */
+  .fieldnotes{grid-area:pad-start/pad-start/pad-end/use-end;align-self:start;z-index:1;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
+  .fieldnotes:empty{display:none}
+  .fieldnotes .goal{position:static;max-width:100%;align-self:stretch;text-align:center}
+  .fieldnotes .toasts{position:static;transform:none;width:100%;left:auto;bottom:auto}
 }
 /* Phones held sideways */
 @media (pointer:coarse) and (orientation:landscape) and (max-height:600px){
@@ -182,6 +191,7 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
   .bar{flex-wrap:nowrap;padding:3px;gap:4px}
   .slot{width:60px;padding:14px 0 2px}.slot canvas{width:26px;height:26px}.slot span{display:none}
   .basket{display:none}
+  .toast{font-size:16px;max-width:96%;padding:5px 10px}   /* v287 (95a): smaller notices on a phone held sideways */
 }
 
 /* Dialogs */

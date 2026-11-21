@@ -376,7 +376,18 @@ Sweep after the combat update (v280 to v283): 300 stops and 37 creature kinds, 0
 |---|---|---|---|---|
 | 94a | Weapon tiers read clearly everywhere | polish | done (chivas47/hollowmereGame#303) | Finds 44, 45: the Lodge's tempering row split into short lines (now, next, what it needs, each need ticked when met) with plural material names; the forge names weapons with their tier. |
 | 94b | Farmer two's hurt flash in their half | polish | done (chivas47/hollowmereGame#302) |
-| 94c | The special's tip until you have used it | polish | in progress (chivas47/hollowmereGame#304) | Nuno's pick from find 47: the weapon special's tip shows on the first mine floor of a session only until the special has been used once (saved, G.S.specialUsed); old saves see it once more, until their next special. | Find 46: in split screen the red edge flashes only over the half of the farmer who was hurt; the low-health pulse likewise per half (farmer two's from their own health). |
+| 94c | The special's tip until you have used it | polish | done (chivas47/hollowmereGame#304) | Nuno's pick from find 47: the weapon special's tip shows on the first mine floor of a session only until the special has been used once (saved, G.S.specialUsed); old saves see it once more, until their next special. | Find 46: in split screen the red edge flashes only over the half of the farmer who was hurt; the low-health pulse likewise per half (farmer two's from their own health). |
+
+## Phones (November 2026)
+
+Nuno (November 2026): "the goal is occupying the screen of the gameplay and I can't see, sometimes it is over my character". A phone review (upright 390 x 844 and 360 x 640, sideways 844 x 390): finds 49 to 54 in docs/POLISH.md.
+
+| Item | What | Kind | Status | Notes |
+|---|---|---|---|---|
+| 95a | A clear field on phones | polish | in progress (chivas47/hollowmereGame#305) | Finds 49 to 51: upright, the goal and notices move under the hotbar; sideways, notices one at a time; everywhere, the goal and notices turn see-through over your farmer. Field covered: upright 26-37% to 0%, sideways up to 89% to under 20%. |
+| 95b | Room on short phones | polish | needs decision | Find 52: a smaller pad and Use button on phones under about 700 px tall, so the goal and notices fit under the hotbar there too. |
+| 95c | A bigger field sideways | polish | needs decision | Find 53: the hotbar down the right side on a phone held sideways, giving the field about a third more size. |
+| 95d | A closer camera on phones | feature | needs decision | Find 54: fewer, bigger tiles on phones held upright. Every rule that assumes the 24 x 16 view (prompts, taps, the minimap, exits) needs checking; its own design pass. |
 
 ## Done
 

@@ -10,10 +10,12 @@ import { G } from '../core/game.js';
 import { on } from '../core/events.js';
 import { $ } from './dom.js';
 import { fightQuiet } from '../systems/monsters.js';
+import { notesHome } from './fieldnotes.js';
 
 const MAX = 3, FADE = 400, QUEUED_STAY = 3200;
 const stayFor = (msg) => Math.min(7000, Math.max(2600, 1800 + msg.length * 45));
-const narrow = () => typeof matchMedia === 'function' && matchMedia('(max-width: 600px)').matches;   // the phone layout's breakpoint (styles.css)
+// v287 (roadmap 95a): phones held sideways too (they are wider than 600 px): three notices covered almost all the field.
+const narrow = () => typeof matchMedia === 'function' && matchMedia('(max-width: 600px), (pointer: coarse) and (max-height: 600px)').matches;   // the phone layouts' breakpoints (styles.css)
 const waiting = { toast: [], toast2: [] };
 const liveIn = (box) => [...box.children].filter((c) => !c.classList.contains('out'));
 
@@ -72,7 +74,7 @@ export function placeToasts() {
     const menu = tid === 'toast' && document.getElementById('menu');   // v273 (90b): the menu too, under its header
     const card = !m.hidden ? m.querySelector('.card') : menu && !menu.hidden ? menu.querySelector('.card') : null;
     if (card && t.parentElement !== card) { (card.querySelector('.cardhead') ? card.querySelector('.cardhead').after(t) : card.prepend(t)); t.classList.add('incard'); }
-    else if (!card && t.classList.contains('incard')) { home[tid].parent.insertBefore(t, home[tid].next); t.classList.remove('incard'); }
+    else if (!card && t.classList.contains('incard')) { const h = (tid === 'toast' && notesHome()) || home[tid]; h.parent.insertBefore(t, h.next); t.classList.remove('incard'); }   // v287: back under the hotbar on an upright phone
   }
 }
 if (typeof MutationObserver !== 'undefined') {
