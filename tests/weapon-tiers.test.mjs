@@ -70,3 +70,10 @@ test('old saves start every weapon at tier 0 with no defeats', () => {
   assert.equal(tierOf('oldblade'), 0);
   assert.equal(tierMult('oldblade'), 1);
 });
+
+test('the bag lists the weapon tiers under Used in for their materials', async () => {
+  const { usedIn } = await import('../src/systems/bag.js');
+  for (const t of WEAPON_TIERS) for (const [k, n] of Object.entries(t.needs)) {
+    assert.ok(usedIn(k).some((u) => u.where === 'Lodge' && u.name === `${t.name} weapon` && u.n === n), `${k} lists ${t.name}`);
+  }
+});
