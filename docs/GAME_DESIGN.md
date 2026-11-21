@@ -865,7 +865,7 @@ Hale tempers any weapon you own at the Wardens' Lodge, up three tiers (data/guil
 | Tempered | 150 | 10 leatherwing, 5 sunmotes | 1,500g | +20% |
 | Wardsteel | 400 | 3 gloommotes, 1 umbrite | 4,000g | +30% |
 
-The tier multiplies damage after rings, professions, forge gems and mastery. The tier name goes before the weapon's name in the bag and the lodge ("Honed oak club"), and its swing trail glows in the tier's colour (pale blue, green, violet). Every weapon can be tempered; on the old blade the 30% is under 1 damage, which the lodge row shows plainly. v283 (roadmap 93d): the bag's Used in list names the tier each material goes into (where: Lodge). The balance bot tempers the weapon it uses once the defeats and materials are in, and keeps those materials for it instead of shipping them.
+The tier multiplies damage after rings, professions, forge gems and mastery. The tier name goes before the weapon's name in the bag and the lodge ("Honed oak club"), and its swing trail glows in the tier's colour (pale blue, green, violet). Every weapon can be tempered; on the old blade the 30% is under 1 damage, which the lodge row shows plainly. v285 (roadmap 94a): the lodge lists each need of the next tier on its own line, ticked when met, with plural names; the forge names weapons with their tier too. v283 (roadmap 93d): the bag's Used in list names the tier each material goes into (where: Lodge). The balance bot tempers the weapon it uses once the defeats and materials are in, and keeps those materials for it instead of shipping them.
 
 ### The Wardens' Lodge, bombs, treasure and geodes (v37)
 

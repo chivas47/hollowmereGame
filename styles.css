@@ -208,6 +208,11 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
 .shoprow div:first-child{display:flex;flex-direction:column;min-width:0;flex:1 1 12em}
 /* v194 (roadmap 76o): the text starts at 12em and takes the spare width, so a long line wraps inside it and Buy stays at the right; the row wraps only when 12em and the buttons do not fit */
 .shoprow span{font-size:16px;color:var(--straw)}
+.needs{list-style:none;margin:4px 0 0;padding:0;font-size:16px}   /* v285 (94a): a weapon tier's needs, one a line */
+.needs li{position:relative;padding-left:20px;line-height:1.4}
+.needs li::before{content:'';position:absolute;left:3px;top:.45em;width:7px;height:7px;border:2px solid var(--seam);border-radius:2px}
+.needs li.met::before{left:5px;top:.25em;width:5px;height:10px;border:solid #4f8a3a;border-width:0 3px 3px 0;border-radius:0;transform:rotate(40deg)}
+.needs em{font-style:normal;color:var(--straw);opacity:.85}
 .beastpic{width:48px;height:48px;flex:0 0 48px;image-rendering:pixelated}   /* 85c: the Bestiary's pictures */
 .beastpic.unknown{display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--straw);border:2px dashed var(--seam);box-sizing:border-box}
 .giftrow b img{width:32px;height:32px;vertical-align:middle;image-rendering:pixelated;margin-right:4px}   /* v188: the gift picker */

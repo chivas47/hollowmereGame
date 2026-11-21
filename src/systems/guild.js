@@ -6,6 +6,8 @@ import { LODGE, LODGE_SHOP, GOALS, WEAPON_TIERS } from '../data/guild.js';
 import { WEAPONS } from '../data/weapons.js';
 import { CLOTHES } from '../data/clothing.js';
 import { MAPS } from '../data/maps.js';
+import { ITEMS } from '../data/items.js';
+import { fmtGold } from '../core/format.js';
 import { giveFind, tierOf, weaponLabel } from './gear.js';
 import { keyName } from '../core/controls.js';
 
@@ -91,4 +93,18 @@ export function temper(key) {
   notify(`${LODGE.keeper} hands back your ${weaponLabel(key).toLowerCase()}: ${Math.round(t.damage * 100)}% more damage than it had new.`);
   changed();
   return true;
+}
+
+// v285 (roadmap 94a): the Lodge's tempering row reads from these: an amount with a plural name, and each need of a
+// weapon's next tier on its own, met or not.
+export const amount = (k, n) => `${n.toLocaleString('en-US')} ${(n === 1 ? ITEMS[k]?.name : ITEMS[k]?.many || ITEMS[k]?.name || k).toLowerCase()}`;
+export function tierNeeds(k) {
+  const S = G.S, t = nextWeaponTier(k);
+  if (!t) return [];
+  const kills = S.weaponKills[k] || 0;
+  return [
+    { text: `${t.kills} defeats with it`, have: `(${Math.min(kills, t.kills)} so far)`, met: kills >= t.kills },
+    ...Object.entries(t.needs).map(([m, n]) => ({ text: amount(m, n), have: `(you have ${(S.bag[m] || 0).toLocaleString('en-US')})`, met: (S.bag[m] || 0) >= n })),
+    { text: fmtGold(t.gold), have: '', met: S.gold >= t.gold },
+  ];
 }

@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v285: Weapon tiers read clearly
+- At the Wardens' Lodge each weapon's tempering row is short lines instead of one long sentence: its tier and damage now, the next tier and its damage, then each thing it needs on its own line, ticked once you have it ("5 bone shards (you have 2)").
+- Material names are plural where there are several ("5 bone shards", "10 leatherwings").
+- The forge names weapons with their tier ("Honed oak club"), as the Lodge and the Bag do.
+- New save data: none.
+
 ## v284: Farmer two's hurt flash in their half
 - In split screen the red edge flashes only over the half of the farmer who was hurt. Before, a hit on farmer two flashed your half too, as if you had been hit.
 - Each half pulses red at low health from its own farmer's health.
