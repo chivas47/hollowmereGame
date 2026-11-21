@@ -366,7 +366,7 @@ Nuno (November 2026): make combat animations and effects better, make fighting m
 | 93a | Hits and swings with weight | polish | done (chivas47/hollowmereGame#298) | A slash mark where the blade lands, a squash and a hop on the struck creature, longer hit-stop on crits, finishers and defeats, a sound of its own for each weapon kind and for a hit, a crit and a defeat, and swing trails of their own: a layered sword arc, thin dagger streaks, a heavy club smear, gold on the finisher. |
 | 93b | Getting hit you can feel | polish | done (chivas47/hollowmereGame#299) | A red flash at the screen's edges and a red number when you are hurt, a pulse and heartbeat at low health, a red tint on the farmer while they cannot be hurt. |
 | 93c | Weapon tiers from loot and defeats | feature | done (chivas47/hollowmereGame#300) | Each weapon rises three tiers at the Wardens' Lodge (+10%, +20%, +30% damage, Stardew's galaxy-to-infinity step split in three); each tier needs defeats with that weapon and monster materials, and the blade shows its tier. |
-| 93d | Loot says it is used for weapon tiers | polish | in progress (chivas47/hollowmereGame#301) | From 93c: chitin, bone shards, leatherwing, sunmotes, gloommotes and umbrite list the Lodge's tiers under Used in, in the bag, so players keep them instead of shipping them. |
+| 93d | Loot says it is used for weapon tiers | polish | done (chivas47/hollowmereGame#301) | From 93c: chitin, bone shards, leatherwing, sunmotes, gloommotes and umbrite list the Lodge's tiers under Used in, in the bag, so players keep them instead of shipping them. |
 
 ## Done
 
