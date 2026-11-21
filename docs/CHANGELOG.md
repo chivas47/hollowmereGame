@@ -5,6 +5,7 @@ Newest first. Version numbers match published versions of the playable page.
 ## v291: Better-drawn people
 - Every person (you, your partner, all neighbours and Pip) is shaded as if lit from the top left: the far cheek, ear and jaw, the far arm and the far leg sit in shade, with a soft fold under the collar.
 - Walking has four frames instead of three: a passing pose with the legs together and the body standing tall between each step, played a little faster, so the walk reads smoother.
+- The person sheet's address carries its revision, so a browser never pairs an old cached sheet with the new layout (which made people vanish or show the wrong direction while walking). A sheet of the wrong size falls back to the code-drawn people.
 - New save data: none.
 
 ## v290: A bigger field sideways
