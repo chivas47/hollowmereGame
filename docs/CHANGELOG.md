@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v288: Room on short phones
+- On a short phone held upright (about 640 to 720 px tall), the clock panel fits on one line (date, time, gold), the "Holding / Basket" line is gone, the pad buttons are a little smaller and the hotbar slimmer.
+- The field gets that room first: on a 360 x 640 phone it grows from 287 x 192 to 328 x 219 px, the full width of the screen.
+- The goal line then moves under the hotbar, as it does on taller phones. Notices still show over the field there (there is no room for them under it), and turn see-through over your farmer.
+- New save data: none.
+
 ## v287: A clear field on phones
 - On a phone held upright, the goal and notices now sit under the hotbar, in the empty space above the controls, instead of over the field. Nothing covers the game any more.
 - On a phone held sideways, notices show one at a time in a smaller font. Before, three stacked up and could cover almost the whole field.

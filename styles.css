@@ -169,6 +169,19 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
   .fieldnotes .goal{position:static;max-width:100%;align-self:stretch;text-align:center}
   .fieldnotes .toasts{position:static;transform:none;width:100%;left:auto;bottom:auto}
 }
+/* v288 (roadmap 95b): short phones held upright (under 720 px tall, 640 to 667 px phones): the clock on one line
+   (date, time, gold), no Holding line, 44 px pad buttons, a slimmer hotbar. The height goes to the field first,
+   then to the goal line under the hotbar (ui/fieldnotes.js). */
+@media (max-width:600px) and (orientation:portrait) and (max-height:720px){
+  .clock{display:flex;align-items:baseline;gap:10px;padding:3px 10px}
+  #date{order:0;flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .wd,.yr,#place,.binrow{display:none}
+  .clockrow{flex:0 0 auto}
+  .basket{display:none}
+  .slot{padding:13px 0 3px}
+  .dpad{grid-template-columns:repeat(3,44px);grid-template-rows:repeat(3,44px)}
+  #use{width:84px;height:84px}
+}
 /* Phones held sideways */
 @media (pointer:coarse) and (orientation:landscape) and (max-height:600px){
   .game{grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:auto auto minmax(0,1fr) auto;gap:4px 8px;

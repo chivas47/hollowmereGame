@@ -14,13 +14,16 @@ const back = {};   // where each element sits over the field: its parent and the
 
 // v287: the room between the hotbar and the d-pad must hold the goal and a notice (ROOM px); short phones (640 px
 // tall) have none, so there the notes stay over the field and only turn see-through under your farmer.
-const ROOM = 110;
+// v288 (roadmap 95b): the goal line alone needs GOAL_ROOM, so on a short phone (its HUD made smaller in styles.css)
+// it can move under the hotbar while notices stay over the field.
+const ROOM = 110, GOAL_ROOM = 40;
 function room() {
   const d = globalThis.document?.querySelector('.dpad'), b = globalThis.document?.getElementById('bar');
   return d && b ? d.getBoundingClientRect().top - b.getBoundingClientRect().bottom : 0;
 }
-// Whether the goal and notices live under the hotbar now.
-export const notesOn = () => !!media?.matches && !G.P2 && room() >= ROOM;
+// Whether the goal (id 'goal') or the notices ('toast') live under the hotbar now.
+export const underBar = (id) => !!media?.matches && !G.P2 && room() >= (id === 'goal' ? GOAL_ROOM : ROOM);
+export const notesOn = () => underBar('toast');
 // Where #toast goes back to when a dialog closes (ui/toast.js), or null for its place over the field.
 export function notesHome() { const n = byId('fieldNotes'); return notesOn() && n ? { parent: n, next: null } : null; }
 
@@ -31,10 +34,11 @@ export function placeNotes() {
     const el = byId(id);
     if (!el || el.classList.contains('incard')) continue;   // a dialog has the notices for now (ui/toast.js)
     if (!back[id] && el.parentElement !== notes) back[id] = { parent: el.parentElement, next: el.nextElementSibling };
-    if (notesOn() && el.parentElement !== notes) notes.append(el);
-    else if (!notesOn() && el.parentElement === notes) back[id].parent.insertBefore(el, back[id].next);
+    const under = underBar(id);
+    if (under && el.parentElement !== notes) notes.append(el);
+    else if (!under && el.parentElement === notes) back[id].parent.insertBefore(el, back[id].next);
   }
-  if (notesOn()) { const g = byId('goal'), t = byId('toast'); if (g && t && g.parentElement === notes && t.parentElement === notes && g.nextElementSibling !== t) notes.prepend(g); }   // the goal first
+  { const g = byId('goal'), t = byId('toast'); if (g && t && g.parentElement === notes && t.parentElement === notes && g.nextElementSibling !== t) notes.prepend(g); }   // the goal first
 }
 media?.addEventListener?.('change', placeNotes);
 globalThis.addEventListener?.('resize', placeNotes);
