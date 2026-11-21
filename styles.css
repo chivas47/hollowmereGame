@@ -77,7 +77,8 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
 .prompt.below{transform:translate(-50%,4px)}
 .prompt kbd{font-size:inherit;padding:0 4px;margin-right:2px}
 .prompt.p2,.meter.p2{border-color:#6a9a4a}   /* v131: the second farmer's, in their shirt colour */
-.hurtedge{position:absolute;inset:0;z-index:7;pointer-events:none;border-radius:4px;opacity:0;box-shadow:inset 0 0 calc(var(--edge,0) * 1px) calc(var(--edge,0) * .3px) rgba(214,40,32,.85)}   /* v281: the red edge when hurt, and its pulse at low health */
+.hurtedge{position:absolute;top:0;bottom:0;left:0;width:100%;z-index:7;pointer-events:none;border-radius:4px;opacity:0;box-shadow:inset 0 0 calc(var(--edge,0) * 1px) calc(var(--edge,0) * .3px) rgba(214,40,32,.85)}   /* v281: the red edge when hurt, and its pulse at low health */
+.hurtedge[hidden]{display:none}
 .hurtedge.hit{animation:hurtflash .35s ease-out}
 .hurtedge.low{opacity:.55;--edge:36;animation:hurtpulse .9s ease-in-out infinite}
 .hurtedge.low.hit{animation:hurtflash .35s ease-out}

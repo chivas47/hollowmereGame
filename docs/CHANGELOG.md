@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v284: Farmer two's hurt flash in their half
+- In split screen the red edge flashes only over the half of the farmer who was hurt. Before, a hit on farmer two flashed your half too, as if you had been hit.
+- Each half pulses red at low health from its own farmer's health.
+- The heartbeat stays with your own low health in a fight.
+- New save data: none.
+
 ## v283: Loot says it is used for weapon tiers
 - In the bag, chitin, bone shards, leatherwing, sunmotes, gloommotes and umbrite now list the weapon tier they go into under Used in (for example "Tempered weapon, Lodge, needs 5"), so you know to keep them instead of shipping them.
 - New save data: none.

@@ -366,7 +366,16 @@ Nuno (November 2026): make combat animations and effects better, make fighting m
 | 93a | Hits and swings with weight | polish | done (chivas47/hollowmereGame#298) | A slash mark where the blade lands, a squash and a hop on the struck creature, longer hit-stop on crits, finishers and defeats, a sound of its own for each weapon kind and for a hit, a crit and a defeat, and swing trails of their own: a layered sword arc, thin dagger streaks, a heavy club smear, gold on the finisher. |
 | 93b | Getting hit you can feel | polish | done (chivas47/hollowmereGame#299) | A red flash at the screen's edges and a red number when you are hurt, a pulse and heartbeat at low health, a red tint on the farmer while they cannot be hurt. |
 | 93c | Weapon tiers from loot and defeats | feature | done (chivas47/hollowmereGame#300) | Each weapon rises three tiers at the Wardens' Lodge (+10%, +20%, +30% damage, Stardew's galaxy-to-infinity step split in three); each tier needs defeats with that weapon and monster materials, and the blade shows its tier. |
-| 93d | Loot says it is used for weapon tiers | polish | in progress (chivas47/hollowmereGame#301) | From 93c: chitin, bone shards, leatherwing, sunmotes, gloommotes and umbrite list the Lodge's tiers under Used in, in the bag, so players keep them instead of shipping them. |
+| 93d | Loot says it is used for weapon tiers | polish | done (chivas47/hollowmereGame#301) | From 93c: chitin, bone shards, leatherwing, sunmotes, gloommotes and umbrite list the Lodge's tiers under Used in, in the bag, so players keep them instead of shipping them. |
+
+## Polish sweep 9 (November 2026)
+
+Sweep after the combat update (v280 to v283): 300 stops and 37 creature kinds, 0 errors, 0 slow frames. Finds 44 to 48 in docs/POLISH.md.
+
+| Item | What | Kind | Status | Notes |
+|---|---|---|---|---|
+| 94a | Weapon tiers read clearly everywhere | polish | needs decision | Finds 44, 45: the Lodge's tempering row split into short lines (now, next, what it needs, each need ticked when met) with plural material names; the forge names weapons with their tier. |
+| 94b | Farmer two's hurt flash in their half | polish | in progress (chivas47/hollowmereGame#302) | Find 46: in split screen the red edge flashes only over the half of the farmer who was hurt; the low-health pulse likewise per half (farmer two's from their own health). |
 
 ## Done
 
