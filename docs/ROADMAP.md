@@ -384,7 +384,7 @@ Nuno (November 2026): "the goal is occupying the screen of the gameplay and I ca
 
 | Item | What | Kind | Status | Notes |
 |---|---|---|---|---|
-| 95a | A clear field on phones | polish | in progress | Finds 49 to 51: upright, the goal and notices move under the hotbar; sideways, notices one at a time; everywhere, the goal and notices turn see-through over your farmer. Field covered: upright 26-37% to 0%, sideways up to 89% to under 20%. |
+| 95a | A clear field on phones | polish | in progress (chivas47/hollowmereGame#305) | Finds 49 to 51: upright, the goal and notices move under the hotbar; sideways, notices one at a time; everywhere, the goal and notices turn see-through over your farmer. Field covered: upright 26-37% to 0%, sideways up to 89% to under 20%. |
 | 95b | Room on short phones | polish | needs decision | Find 52: a smaller pad and Use button on phones under about 700 px tall, so the goal and notices fit under the hotbar there too. |
 | 95c | A bigger field sideways | polish | needs decision | Find 53: the hotbar down the right side on a phone held sideways, giving the field about a third more size. |
 | 95d | A closer camera on phones | feature | needs decision | Find 54: fewer, bigger tiles on phones held upright. Every rule that assumes the 24 x 16 view (prompts, taps, the minimap, exits) needs checking; its own design pass. |
