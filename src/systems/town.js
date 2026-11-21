@@ -26,10 +26,9 @@ export function closedWhy(k) {
 
 // v98: each shop's door takes you inside and its counter opens the dialog (systems/venues.js).
 
-// The farm's stall and workbench: their trade moved to town.
+// The farm's workbench: its trade moved to town (v294: the empty stall beside it is gone).
 addInteraction(70, ({ tile, mapId }) => {
   if (mapId !== 'farm') return false;
-  if (tile === 'S') { notify(`The stall is empty: seeds and supplies are sold at ${SHOPS.store.name} in town, north of the village.`); return true; }
   if (tile === 'K') { notify(`Bram works from ${SHOPS.carpenter.name} in town now; tools go to ${SHOPS.smithy.keeper} at ${SHOPS.smithy.name}.`); return true; }
   return false;
 });
