@@ -670,6 +670,7 @@ Slot 5 (no hotbar change) swings the weapon chosen in the bag. Damage is Stardew
   | Dagger | Quick stab | 4 stabs 0.08 s apart straight ahead, each 0.6 of the weapon's damage (2.4 times in all), 18 px reach | 3 s |
   | Club | Ground slam | after a 0.35 s leap, the weapon's damage to every monster within 40 px, pushed outward and dazed for 1 s | 6 s |
 
+  v286 (roadmap 94c): the special's tip (shown on the first mine floor of a session with the weapon in hand) stops for good once the special has been used (G.S.specialUsed, saved).
   Cooldowns are Stardew's (sword 1.5 s, dagger 3 s, club 6 s). Specials hit with crits, rings, professions, enchantments and forging like any swing. v231: farmer two has them too, on their controller's X (B still leaves), with their own cooldown, shown as a small bar under their feet (v232); their block guards them.
 - Monsters (count grows to 10 a floor): slime (floor 1+), Hollow mite (3+, crawls), cave bat (12+, flies), bone walker (30+), Hollow serpent (50+, flies). Combat XP 3, 2, 6, 15, 20. Any kill: 1% chance of a weapon or ring from the floor's pool.
 - v250 loot tables (roadmap 85a, data/loot.js). Every monster rolls each row of its table on its own at each defeat; the thief's ring doubles the counts. Stardew by role: its monsters drop materials of their own (bug meat, bat wing, bone fragment, solar and void essence) and sometimes the ore of their floors.

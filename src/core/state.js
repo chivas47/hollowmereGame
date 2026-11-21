@@ -118,6 +118,7 @@ export function newState() {
     read: [], mastery: { xp: 0, claimed: [] },          // v40: power books read, mastery XP and the skills whose perk is claimed
     slain: {}, goalsClaimed: [],                        // v37: monsters defeated by kind, slaying goals rewarded (systems/guild.js)
     bestiary: { seen: [], drops: {}, elites: [] },   // v260: elites: kinds met as an elite
+    specialUsed: false,                                 // v286 (94c): the weapon special has been used once, so its tip stays quiet
     brazier: false,                                     // v260 (85i): the challenge brazier at the lodge burns                  // v252 (85c): kinds met and what each has dropped (systems/bestiary.js)
     recipes: ['friedegg'], fridge: {},                 // v35: dishes you can cook; what the kitchen fridge holds
     buff: null, drink: null, luck: 0,                   // v35: food and drink buffs, today's luck (systems/buffs.js)
@@ -182,6 +183,7 @@ export function merge(saved) {
   const sb = saved.bestiary || {};   // v252 (85c)
   s.bestiary = { seen: [...(sb.seen || [])], drops: Object.fromEntries(Object.entries(sb.drops || {}).map(([k, v]) => [k, [...v]])), elites: [...(sb.elites || [])] };
   s.brazier = saved.brazier === true;   // v260
+  s.specialUsed = saved.specialUsed === true;   // v286
   if (!Array.isArray(s.read)) s.read = [];
   if (!s.pots || typeof s.pots !== 'object') s.pots = {};
   if (!Array.isArray(s.legends)) s.legends = [];

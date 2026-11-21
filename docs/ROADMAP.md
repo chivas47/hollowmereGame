@@ -374,8 +374,9 @@ Sweep after the combat update (v280 to v283): 300 stops and 37 creature kinds, 0
 
 | Item | What | Kind | Status | Notes |
 |---|---|---|---|---|
-| 94a | Weapon tiers read clearly everywhere | polish | in progress (chivas47/hollowmereGame#303) | Finds 44, 45: the Lodge's tempering row split into short lines (now, next, what it needs, each need ticked when met) with plural material names; the forge names weapons with their tier. |
-| 94b | Farmer two's hurt flash in their half | polish | done (chivas47/hollowmereGame#302) | Find 46: in split screen the red edge flashes only over the half of the farmer who was hurt; the low-health pulse likewise per half (farmer two's from their own health). |
+| 94a | Weapon tiers read clearly everywhere | polish | done (chivas47/hollowmereGame#303) | Finds 44, 45: the Lodge's tempering row split into short lines (now, next, what it needs, each need ticked when met) with plural material names; the forge names weapons with their tier. |
+| 94b | Farmer two's hurt flash in their half | polish | done (chivas47/hollowmereGame#302) |
+| 94c | The special's tip until you have used it | polish | in progress | Nuno's pick from find 47: the weapon special's tip shows on the first mine floor of a session only until the special has been used once (saved, G.S.specialUsed); old saves see it once more, until their next special. | Find 46: in split screen the red edge flashes only over the half of the farmer who was hurt; the low-health pulse likewise per half (farmer two's from their own health). |
 
 ## Done
 

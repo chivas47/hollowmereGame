@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v286: The special's tip until you have used it
+- The tip that explains your weapon's special no longer shows on the first mine floor of every session. It shows only until you have used the special once.
+- Older saves see it once more, until your next special.
+- New save data: whether you have used a weapon special.
+
 ## v285: Weapon tiers read clearly
 - At the Wardens' Lodge each weapon's tempering row is short lines instead of one long sentence: its tier and damage now, the next tier and its damage, then each thing it needs on its own line, ticked once you have it ("5 bone shards (you have 2)").
 - Material names are plural where there are several ("5 bone shards", "10 leatherwings").

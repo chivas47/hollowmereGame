@@ -40,6 +40,7 @@ export function special(who = 'you') {
     if (HOTBAR[G.S.slot] !== 'sword') return;   // G.S is them inside run('p2'): their slot
     const kind = weapon().kind, sp = SPECIALS[kind] || SPECIALS.sword;
     st.cooldown = sp.cooldown; ok = true;
+    G.S.specialUsed = true;   // v286 (94c): its tip has done its job (G.S is shared; inside run('p2') too)
     if (kind === 'dagger') { st.stabs = sp.stabs; st.stabT = 0; }
     else if (kind === 'club') {
       st.slamT = sp.windup;
@@ -104,9 +105,11 @@ on('map:changed', () => {
 });
 
 // The first time the weapon comes out, say how to use its special.
+// v286 (roadmap 94c, Nuno): only until the special has been used once (G.S.specialUsed, saved); before, every session.
 let told = false;
+export const specialTip = () => !told && !!G.S && !G.S.specialUsed && HOTBAR[G.S.slot] === 'sword' && G.S.map === 'mine';
 on('state:changed', () => {
-  if (told || !G.S || HOTBAR[G.S.slot] !== 'sword' || G.S.map !== 'mine') return;
+  if (!specialTip()) return;
   told = true;
   notify(`${specialOf().name}: your weapon's special (${keyName('special')}, right click, or the Special button).`);
 });
