@@ -5,7 +5,7 @@ import { LODGE, LODGE_SHOP, GOALS, WEAPON_TIERS } from '../data/guild.js';
 import { WEAPONS } from '../data/weapons.js';
 import { ITEMS } from '../data/items.js';
 import { CLOTHES } from '../data/clothing.js';
-import { stock, owns, itemName, buyGear, slain, goalDone, claimGoal, setBrazier, nextWeaponTier, temperBlocks, temper } from '../systems/guild.js';
+import { stock, owns, itemName, buyGear, slain, goalDone, claimGoal, setBrazier, nextWeaponTier, temperBlocks, temper, tierNeeds } from '../systems/guild.js';
 import { tierOf, tierDamage, weaponLabel } from '../systems/gear.js';
 import { openModal, closeModal } from './modal.js';
 import { $ } from './dom.js';
@@ -35,14 +35,17 @@ function lodge() {
 }
 
 // v282 (roadmap 93c): a row per weapon you own: its tier, the next one's cost and how far you are toward it.
+// v285 (roadmap 94a): short lines, not one sentence: where it is now, the next tier, then each need on its own line,
+// marked once met, with plural names ("5 bone shards").
 function tiers() {
   const S = G.S;
   return S.weapons.map((k) => {
     const t = nextWeaponTier(k), tier = tierOf(k), base = WEAPONS[k].damage;
-    if (!t) return `<div class="shoprow"><div><b>${weaponLabel(k)}</b><span>Top tier: ${tierDamage(k)} damage.</span></div><div class="btns"><span class="role">Done</span></div></div>`;
-    const kills = Math.min(S.weaponKills[k] || 0, t.kills), next = Math.round(base * (1 + t.damage) * 10) / 10;
-    const mats = Object.entries(t.needs).map(([m, n]) => `${Math.min(S.bag[m] || 0, n)} of ${n} ${(ITEMS[m]?.name || m).toLowerCase()}`).join(', ');
-    return `<div class="shoprow"><div><b>${weaponLabel(k)}</b><span>Tier ${tier} of ${WEAPON_TIERS.length}, ${tierDamage(k)} damage. ${t.name}: ${next} damage. Defeats ${kills} of ${t.kills}; ${mats}; ${fmtGold(t.gold)}.</span></div>
+    const head = `<b>${weaponLabel(k)}</b><span>Tier ${tier} of ${WEAPON_TIERS.length}, ${tierDamage(k)} damage</span>`;
+    if (!t) return `<div class="shoprow"><div>${head}<span>Top tier.</span></div><div class="btns"><span class="role">Done</span></div></div>`;
+    const next = Math.round(base * (1 + t.damage) * 10) / 10;
+    const needs = tierNeeds(k).map((n) => `<li class="${n.met ? 'met' : ''}">${n.text}${n.have ? ` <em>${n.have}</em>` : ''}</li>`).join('');
+    return `<div class="shoprow"><div>${head}<span>Next: ${t.name}, ${next} damage. It needs:</span><ul class="needs">${needs}</ul></div>
       <div class="btns"><button data-temper="${k}" ${temperBlocks(k).length ? 'disabled' : ''}>Temper</button></div></div>`;
   }).join('');
 }

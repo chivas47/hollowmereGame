@@ -77,3 +77,19 @@ test('the bag lists the weapon tiers under Used in for their materials', async (
     assert.ok(usedIn(k).some((u) => u.where === 'Lodge' && u.name === `${t.name} weapon` && u.n === n), `${k} lists ${t.name}`);
   }
 });
+
+test('the Lodge reads a tier as needs, one a line, with plural names and met marks (94a)', async () => {
+  const { amount, tierNeeds } = await import('../src/systems/guild.js');
+  assert.equal(amount('boneshard', 5), '5 bone shards');
+  assert.equal(amount('boneshard', 1), '1 bone shard');
+  assert.equal(amount('chitin', 10), '10 chitin');
+  assert.equal(amount('umbrite', 1), '1 umbrite ore');
+  freshFarm({ weapons: ['club'], weapon: 'club', gold: 600, weaponKills: { club: 12 } });
+  G.S.bag.chitin = 10;
+  const t = WEAPON_TIERS[0], n = tierNeeds('club');
+  assert.deepEqual(n.map((x) => x.text), [`${t.kills} defeats with it`, '10 chitin', '5 bone shards', '500g']);
+  assert.deepEqual(n.map((x) => x.met), [false, true, false, true]);
+  assert.equal(n[0].have, '(12 so far)');
+  G.S.weaponTier.club = 3;
+  assert.deepEqual(tierNeeds('club'), []);
+});
