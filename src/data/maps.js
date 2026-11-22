@@ -51,7 +51,6 @@ const fill = (m, x0, y0, x1, y1, t) => { for (let y = y0; y <= y1; y++) for (let
 export function farmGrid() {
   const m = emptyGrid();
   fill(m, 1, 1, 5, 3, 'H'); m[3][3] = 'D';
-  fill(m, 19, 1, 21, 3, 'S');
   m[3][8] = 'B'; m[3][12] = 'W'; m[3][15] = 'K';
   m[14][10] = 'P'; m[15][10] = 'E';   // v43: the path south to the forest (clear of every layout's water and the yards)
   m[5][6] = 'b';   // the pet's water bowl (systems/pets.js)
@@ -399,7 +398,7 @@ function caveGrid() {
 export const MAPS = {
   farm: {
     name: 'Farm', salt: 11, grid: farmGrid(),
-    objects: [{ art: 'house', x: 1, y: 1 }, { art: 'bin', x: 8, y: 3 }, { art: 'well', x: 12, y: 3 }, { art: 'workbench', x: 15, y: 3 }, { art: 'shop', x: 19, y: 1 }],
+    objects: [{ art: 'house', x: 1, y: 1 }, { art: 'bin', x: 8, y: 3 }, { art: 'well', x: 12, y: 3 }, { art: 'workbench', x: 15, y: 3 }],   // v294: the empty seed stall is gone (seeds are sold in town)
     exits: {
       [`${W - 1},4`]: { to: 'wilds', x: 1, y: 4, dir: 'right' },
       '0,4': { to: 'village', x: VILLAGE_SIZE.w - 2, y: 8, dir: 'left' },

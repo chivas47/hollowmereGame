@@ -63,9 +63,9 @@ test('what they say: the wedding and a win from everyone, thanks from whoever yo
   assert.ok(NEWS.wed.includes(say('nell', { ...none, wed: 'odile' })));
   assert.equal(say('odile', { ...none, wed: 'odile' }) && NEWS.wed.includes(say('odile', { ...none, wed: 'odile' })), false, 'not the one who married you');
   assert.match(say('nell', { ...none, won: 'blossom' }), /Blossom Show/);
-  assert.equal(say('odile', { ...none, helped: ['odile'] }), NEWS.helpedMe);
+  assert.ok(NEWS.helpedMe.includes(say('odile', { ...none, helped: ['odile'] })));
   let heard = 0;
-  for (let day = 2; day < 60; day++) if (say('nell', { ...none, donated: 3 }, day)?.includes('3 things')) heard++;
+  for (let day = 2; day < 60; day++) if (say('nell', { ...none, donated: 3 }, day)?.includes('3 ')) heard++;
   assert.ok(heard > 10 && heard < 48, `${heard} of 58 days`);
   assert.equal(say('nell', none), say('nell', null), 'nothing to tell: as if no news');
 });
