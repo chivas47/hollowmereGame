@@ -4,12 +4,14 @@
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { r, blink } from './pixel.js';
-import { drawHouseTile } from './tiles.js';
+import { drawHouseTile, drawBed, tone } from './tiles.js';
 import { drawFurniture } from './sprites.js';
 import { PIECES, roomAt } from '../data/interiors.js';
 import { WALLPAPERS, FLOORS } from '../data/furniture.js';
 
 const INK = '#2b211a', CREAM = '#f4ead2', GLINT = 'rgba(255,255,255,.22)', SHADE = 'rgba(0,0,0,.18)';
+// v299: a shade of a piece's colour (tone() for #rrggbb colours; anything else as it is)
+const sh = (c, k) => (/^#[0-9a-f]{6}$/i.test(c) ? tone(c, k) : c);
 const shadow = (c, X, Y, W, H) => r(c, X + 1, Y + H - 2, W - 2, 2, SHADE);
 
 // ---- Walls and floors, each room in its own wallpaper and floor ----
@@ -102,21 +104,33 @@ const box = (c, x, y, w, h, a, b) => { r(c, x, y, w, h, a); r(c, x, y, w, 1, GLI
 
 // ---- The pieces. Each: (c, X, Y, W, H, a, b, p) ----
 const ART = {
-  bed: (c, X, Y, W, H, a, b) => {
+  bed: (c, X, Y, W, H, a, b) => drawBed(c, X, Y, W, H, a, b),   // v299: render/tiles.js, shared with the farmhouse bed
+  // v299: a bedside cabinet: an overhanging top, two drawers with brass knobs, a shaded side and short feet
+  nightstand: (c, X, Y, W, H, a, b, p) => {
+    const al = sh(a, 1.25), ad = sh(a, 0.78), ak = sh(a, 0.55);
     shadow(c, X, Y, W, H);
-    r(c, X + 1, Y - 5, W - 2, 8, b); r(c, X + 2, Y - 4, W - 4, 1, GLINT);   // headboard against the wall
-    r(c, X + 2, Y + 2, W - 4, H - 6, CREAM);                                // sheet
-    if (W > T) { r(c, X + 3, Y + 3, W / 2 - 4, 5, '#ffffff'); r(c, X + W / 2 + 1, Y + 3, W / 2 - 4, 5, '#ffffff'); }   // two pillows on a double
-    else r(c, X + 3, Y + 3, W - 6, 5, '#ffffff');
-    r(c, X + 2, Y + 10, W - 4, H - 14, a); r(c, X + 2, Y + 10, W - 4, 2, CREAM);   // quilt, the sheet turned down over it
-    for (let i = 6; i < W - 4; i += 6) r(c, X + i, Y + 13, 1, H - 17, 'rgba(0,0,0,.12)');
-    r(c, X + 1, Y + H - 5, W - 2, 4, b); r(c, X + 1, Y + H - 5, W - 2, 1, GLINT);  // footboard
+    r(c, X + 3, Y + 6, 10, 8, ak); r(c, X + 4, Y + 6, 8, 7, a); r(c, X + 11, Y + 6, 1, 7, ad);
+    r(c, X + 2, Y + 4, 12, 3, ak); r(c, X + 3, Y + 4, 10, 1, al); r(c, X + 3, Y + 5, 10, 1, a);
+    for (const dy of [7, 10]) { r(c, X + 4, Y + dy + 2, 7, 1, ak); r(c, X + 7, Y + dy, 2, 1, '#e9c46a'); r(c, X + 7, Y + dy + 1, 2, 1, '#a57a2a'); }
+    r(c, X + 4, Y + 14, 1, 1, ak); r(c, X + 11, Y + 14, 1, 1, ak);
+    tops(c, p, X, Y + 5, W);
   },
-  nightstand: (c, X, Y, W, H, a, b, p) => { shadow(c, X, Y, W, H); box(c, X + 3, Y + 6, 10, 9, a, b); r(c, X + 4, Y + 9, 8, 1, b); r(c, X + 7, Y + 11, 2, 1, '#e9c46a'); tops(c, p, X, Y + 6, W); },
+  // v299: a tall wardrobe: a moulded crown, two panelled doors meeting in the middle, brass handles, a plinth with feet
   wardrobe: (c, X, Y, W, H, a, b) => {
+    const al = sh(a, 1.22), ad = sh(a, 0.78), ak = sh(a, 0.55);
     shadow(c, X, Y, W, H);
-    box(c, X + 1, Y - 12, W - 2, H + 11, a, b); r(c, X, Y - 13, W, 2, b);
-    r(c, X + W / 2, Y - 10, 1, H + 8, b); r(c, X + W / 2 - 3, Y - 2, 2, 3, '#e9c46a'); r(c, X + W / 2 + 2, Y - 2, 2, 3, '#e9c46a');
+    const top = Y - 12, bot = Y + H - 2;
+    r(c, X + 1, top, W - 2, bot - top, ak); r(c, X + 2, top + 1, W - 4, bot - top - 2, a); r(c, X + W - 3, top + 1, 1, bot - top - 2, ad);
+    r(c, X, top - 2, W, 3, ak); r(c, X + 1, top - 2, W - 2, 1, al);   // the crown
+    const dw = (W - 6) / 2;
+    for (const dx of [X + 2, X + 4 + dw]) {
+      r(c, dx + 1, top + 3, dw - 2, 7, ad); r(c, dx + 1, top + 3, dw - 2, 1, ak); r(c, dx + 1, top + 9, dw - 2, 1, al);
+      r(c, dx + 1, top + 12, dw - 2, bot - top - 16, ad); r(c, dx + 1, top + 12, dw - 2, 1, ak); r(c, dx + 1, bot - 4, dw - 2, 1, al);
+    }
+    r(c, X + W / 2 - 1, top + 1, 2, bot - top - 4, ak);   // where the doors meet
+    r(c, X + W / 2 - 3, Y - 2, 1, 4, '#e9c46a'); r(c, X + W / 2 + 2, Y - 2, 1, 4, '#e9c46a'); r(c, X + W / 2 - 3, Y + 1, 1, 1, '#a57a2a'); r(c, X + W / 2 + 2, Y + 1, 1, 1, '#a57a2a');
+    r(c, X + 1, bot - 2, W - 2, 2, ak); r(c, X + 2, bot - 2, W - 4, 1, ad);   // the plinth
+    r(c, X + 2, bot, 2, 1, ak); r(c, X + W - 4, bot, 2, 1, ak);
   },
   washstand: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); box(c, X + 2, Y + 6, 12, 9, a, '#6e4626'); r(c, X + 3, Y + 4, 10, 3, b); r(c, X + 4, Y + 4, 8, 1, '#9fc0d8'); r(c, X + 10, Y - 1, 3, 5, b); },
   tub: (c, X, Y, W, H, a, b) => {
@@ -125,9 +139,17 @@ const ART = {
     r(c, X + 2, Y + H - 3, 2, 2, b); r(c, X + W - 4, Y + H - 3, 2, 2, b); r(c, X + 4, Y + 1, 3, 4, b);
   },
   screen: (c, X, Y, W, H, a, b) => { [0, 5, 10].forEach((o, i) => { r(c, X + 1 + o, Y - 8 + (i % 2), 5, 22, b); r(c, X + 2 + o, Y - 7 + (i % 2), 3, 20, a); }); },
+  // v299: a kitchen run: a worktop with a lit edge and grain, a cupboard door with a sunk panel and knob per tile, a toe kick
   counter: (c, X, Y, W, H, a, b, p) => {
-    box(c, X, Y + 4, W, 12, a, '#5c371e'); r(c, X, Y + 2, W, 3, b); r(c, X, Y + 2, W, 1, GLINT);
-    for (let i = 0; i < W; i += T) { r(c, X + i + 2, Y + 7, 12, 7, 'rgba(0,0,0,.1)'); r(c, X + i + 8, Y + 7, 1, 7, 'rgba(0,0,0,.2)'); r(c, X + i + 6, Y + 10, 1, 1, '#e9c46a'); r(c, X + i + 10, Y + 10, 1, 1, '#e9c46a'); }
+    const ad = sh(a, 0.78), ak = sh(a, 0.55), al = sh(a, 1.2), bl = sh(b, 1.15), bd = sh(b, 0.8);
+    r(c, X, Y + 4, W, 11, ak); r(c, X, Y + 5, W, 9, a);
+    r(c, X, Y + 1, W, 4, bd); r(c, X, Y + 1, W, 1, bl); r(c, X, Y + 2, W, 2, b); r(c, X, Y + 4, W, 1, ak);   // worktop
+    for (let i = 0; i < W; i += 5) r(c, X + i + ((i * 7) % 3), Y + 2 + (i % 2), 2, 1, bd);
+    for (let i = 0; i < W; i += T) {
+      r(c, X + i + 2, Y + 6, 12, 7, ak); r(c, X + i + 3, Y + 7, 10, 5, ad); r(c, X + i + 3, Y + 7, 10, 1, ak); r(c, X + i + 3, Y + 11, 10, 1, al);
+      r(c, X + i + 11, Y + 9, 1, 2, '#e9c46a'); r(c, X + i + 11, Y + 10, 1, 1, '#a57a2a'); r(c, X + i + 15, Y + 5, 1, 9, ak);
+    }
+    r(c, X, Y + 14, W, 2, '#3f2a1a');   // toe kick
     tops(c, p, X, Y + 3, W);
   },
   sink: (c, X, Y, W, H, a, b) => {
@@ -160,24 +182,33 @@ const ART = {
       r(c, X + 2, y0 + hh - 2, W - 4, 1, b);
     }
   },
+  // v299: a table: a grained top with a lit front edge, an apron, legs lit on one side; drawers on a desk; a cloth
   table: (c, X, Y, W, H, a, b, p, P) => {
+    const al = sh(a, 1.2), ad = sh(a, 0.82), bl = sh(b, 1.25), bk = sh(b, 0.6);
     shadow(c, X, Y, W, H);
-    const top = Y + (H > T ? 3 : 4), th = H - (H > T ? 8 : 9);
-    r(c, X + 2, top + th, 2, Y + H - top - th - 1, b); r(c, X + W - 4, top + th, 2, Y + H - top - th - 1, b);   // legs
-    if (P.desk) r(c, X + W - 10, top + th, 7, Y + H - top - th - 1, b);   // drawers
-    box(c, X + 1, top, W - 2, th, a, b); r(c, X + 1, top + th, W - 2, 2, b);
-    if (p.cloth) { r(c, X + W / 2 - 5, top, 10, th + 3, p.cloth); r(c, X + W / 2 - 5, top + th + 2, 10, 1, 'rgba(0,0,0,.1)'); }
+    const top = Y + (H > T ? 3 : 4), th = H - (H > T ? 8 : 9), lb = Y + H - 1;
+    for (const lx of [X + 2, X + W - 4]) { r(c, lx, top + th, 2, lb - top - th, b); r(c, lx, top + th, 1, lb - top - th, bl); r(c, lx, lb - 1, 2, 1, bk); }
+    if (P.desk) { r(c, X + W - 11, top + th, 8, lb - top - th, bk); r(c, X + W - 10, top + th + 1, 6, 3, b); r(c, X + W - 10, top + th + 5, 6, 3, b); r(c, X + W - 8, top + th + 2, 2, 1, '#e9c46a'); r(c, X + W - 8, top + th + 6, 2, 1, '#e9c46a'); }
+    r(c, X + 1, top, W - 2, th + 2, bk); r(c, X + 2, top, W - 4, th, a); r(c, X + 2, top, W - 4, 1, al);
+    for (let y = top + 2; y < top + th - 1; y += 3) for (let x = X + 3 + (y % 2) * 4; x < X + W - 5; x += 8) r(c, x, y, 4, 1, ad);   // grain
+    r(c, X + 2, top + th, W - 4, 1, b); r(c, X + 2, top + th + 1, W - 4, 1, bk);   // the front edge and apron
+    if (p.cloth) { r(c, X + W / 2 - 5, top, 10, th + 3, p.cloth); r(c, X + W / 2 - 5, top, 10, 1, sh(p.cloth, 1.15)); r(c, X + W / 2 - 5, top + th + 2, 10, 1, 'rgba(0,0,0,.14)'); r(c, X + W / 2 - 1, top, 1, th + 2, 'rgba(0,0,0,.06)'); }
     tops(c, p, X, top + Math.min(th, 9), W);
   },
+  // v299: a chair with a spindled back, a cushioned seat and legs, facing down, up, left or right
   chair: (c, X, Y, W, H, a, b, p) => {
-    const d = p.dir || 'down';
+    const d = p.dir || 'down', bl = sh(b, 1.25), bk = sh(b, 0.6), al = sh(a, 1.2), ad = sh(a, 0.8);
     shadow(c, X + 2, Y, 12, H);
-    if (d === 'down') { r(c, X + 4, Y + 1, 8, 8, b); r(c, X + 5, Y + 2, 6, 6, a); r(c, X + 3, Y + 8, 10, 3, a); r(c, X + 4, Y + 11, 1, 4, b); r(c, X + 11, Y + 11, 1, 4, b); }
-    else if (d === 'up') { r(c, X + 4, Y + 11, 1, 4, b); r(c, X + 11, Y + 11, 1, 4, b); r(c, X + 3, Y + 6, 10, 3, a); r(c, X + 4, Y + 7, 8, 7, b); r(c, X + 5, Y + 8, 6, 5, a); }
+    const legs = () => { r(c, X + 4, Y + 11, 1, 4, b); r(c, X + 11, Y + 11, 1, 4, b); r(c, X + 4, Y + 14, 1, 1, bk); r(c, X + 11, Y + 14, 1, 1, bk); };
+    const seat = (y) => { r(c, X + 3, y, 10, 4, bk); r(c, X + 4, y, 8, 3, a); r(c, X + 4, y, 8, 1, al); r(c, X + 4, y + 2, 8, 1, ad); };
+    const back = (y, h) => { r(c, X + 4, y, 8, h, bk); r(c, X + 4, y, 8, 2, b); r(c, X + 4, y, 8, 1, bl); for (const sx of [6, 9]) r(c, X + sx, y + 2, 1, h - 2, b); r(c, X + 4, y + 2, 1, h - 2, b); r(c, X + 11, y + 2, 1, h - 2, b); };
+    if (d === 'down') { back(Y + 1, 8); legs(); seat(Y + 8); }
+    else if (d === 'up') { legs(); seat(Y + 6); back(Y + 7, 7); }
     else {
       const L = d === 'left', bx = L ? X + 11 : X + 3;
-      r(c, X + 3, Y + 8, 10, 3, a); r(c, X + 4, Y + 11, 1, 4, b); r(c, X + 11, Y + 11, 1, 4, b);
-      r(c, bx, Y + 1, 2, 14, b); r(c, bx + (L ? -1 : 1), Y + 2, 1, 7, a);
+      legs(); seat(Y + 8);
+      r(c, bx, Y + 1, 2, 14, bk); r(c, bx + (L ? 0 : 1), Y + 1, 1, 13, b); r(c, bx, Y + 1, 2, 1, bl);
+      r(c, bx + (L ? -2 : 2), Y + 3, 2, 5, b); r(c, bx + (L ? -2 : 2), Y + 3, 2, 1, bl);
     }
   },
   bench: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); r(c, X + 1, Y + 6, W - 2, 4, a); r(c, X + 1, Y + 6, W - 2, 1, GLINT); r(c, X + 2, Y + 10, 2, 5, b); r(c, X + W - 4, Y + 10, 2, 5, b); r(c, X + 1, Y + 1, W - 2, 3, b); r(c, X + 3, Y + 4, 1, 2, b); r(c, X + W - 4, Y + 4, 1, 2, b); },
@@ -191,14 +222,25 @@ const ART = {
       r(c, X, Y + 4, W, 6, a); r(c, X, Y + 9, W, 6, b); r(c, X + 1, Y + 10, W - 2, 3, a); r(c, X, Y + 4, 3, 10, b); r(c, X + W - 3, Y + 4, 3, 10, b);
     }
   },
+  // v299: an upholstered armchair: a buttoned back, rolled arms lit on top, a plump seat cushion, turned feet
   armchair: (c, X, Y, W, H, a, b, p) => {
-    const d = p.dir || 'down';
+    const d = p.dir || 'down', al = sh(a, 1.2), ad = sh(a, 0.78), ak = sh(a, 0.58), bk = sh(b, 0.6);
     shadow(c, X, Y, W, H);
-    if (d === 'down') { r(c, X + 2, Y + 1, 12, 8, b); r(c, X + 3, Y + 2, 10, 6, a); r(c, X + 1, Y + 6, 3, 8, b); r(c, X + 12, Y + 6, 3, 8, b); r(c, X + 4, Y + 8, 8, 5, a); }
-    else if (d === 'up') { r(c, X + 2, Y + 4, 12, 5, a); r(c, X + 1, Y + 4, 3, 10, b); r(c, X + 12, Y + 4, 3, 10, b); r(c, X + 2, Y + 8, 12, 6, b); r(c, X + 4, Y + 9, 8, 3, a); }
-    else {
+    const feet = () => { r(c, X + 2, Y + 14, 2, 1, bk); r(c, X + 12, Y + 14, 2, 1, bk); };
+    const arms = (y) => { for (const ax of [X + 1, X + 12]) { r(c, ax, y, 3, 14 - (y - Y), ak); r(c, ax, y, 3, 2, al); r(c, ax + 1, y + 2, 1, 12 - (y - Y), a); } };
+    if (d === 'down') {
+      feet(); r(c, X + 2, Y + 1, 12, 9, ak); r(c, X + 3, Y + 2, 10, 7, a); r(c, X + 3, Y + 2, 10, 1, al);
+      r(c, X + 5, Y + 4, 1, 1, ad); r(c, X + 10, Y + 4, 1, 1, ad); r(c, X + 8, Y + 6, 1, 1, ad);   // buttons
+      arms(Y + 6); r(c, X + 4, Y + 9, 8, 5, ak); r(c, X + 4, Y + 9, 8, 4, a); r(c, X + 4, Y + 9, 8, 1, al); r(c, X + 4, Y + 12, 8, 1, ad);
+    } else if (d === 'up') {
+      feet(); r(c, X + 4, Y + 4, 8, 4, a); r(c, X + 4, Y + 4, 8, 1, al); arms(Y + 4);
+      r(c, X + 2, Y + 7, 12, 7, ak); r(c, X + 3, Y + 8, 10, 5, ad); r(c, X + 3, Y + 8, 10, 1, a);
+    } else {
       const L = d === 'left';
-      r(c, X + 2, Y + 3, 12, 11, a); r(c, L ? X + 11 : X + 1, Y + 1, 4, 13, b); r(c, X + 2, Y + 3, 12, 2, b); r(c, X + 2, Y + 12, 12, 2, b); r(c, L ? X + 3 : X + 6, Y + 6, 7, 5, a);
+      feet(); r(c, X + 2, Y + 4, 12, 10, ak); r(c, X + 3, Y + 5, 10, 8, a); r(c, X + 3, Y + 5, 10, 1, al);
+      r(c, L ? X + 11 : X + 1, Y + 1, 4, 13, ak); r(c, L ? X + 12 : X + 2, Y + 2, 2, 11, a); r(c, L ? X + 12 : X + 2, Y + 2, 2, 1, al);   // the back
+      r(c, X + 3, Y + 4, 10, 2, ak); r(c, X + 3, Y + 4, 10, 1, al); r(c, X + 3, Y + 12, 10, 2, ak);   // the arms
+      r(c, L ? X + 4 : X + 6, Y + 7, 6, 4, a); r(c, L ? X + 4 : X + 6, Y + 7, 6, 1, al);
     }
   },
   lowtable: (c, X, Y, W, H, a, b, p) => { shadow(c, X, Y, W, H); box(c, X + 2, Y + 7, W - 4, 5, a, b); r(c, X + 3, Y + 12, 2, 3, b); r(c, X + W - 5, Y + 12, 2, 3, b); tops(c, p, X, Y + 10, W); },
@@ -212,8 +254,26 @@ const ART = {
     r(c, X - 1, Y + H - 2, W + 2, 2, '#6a6e72');   // the hearthstone
     tops(c, p, X, Y - 3, W);
   },
-  crate: (c, X, Y, W, H, a, b, p) => { shadow(c, X, Y, W, H); box(c, X + 2, Y + 5, W - 4, 10, a, b); r(c, X + 2, Y + 9, W - 4, 1, b); r(c, X + 2, Y + 5, 1, 10, b); r(c, X + W - 3, Y + 5, 1, 10, b); tops(c, p, X, Y + 6, W); },
-  basket: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); r(c, X + 3, Y + 8, 10, 7, a); r(c, X + 3, Y + 8, 10, 1, b); for (let i = 4; i < 13; i += 3) r(c, X + i, Y + 9, 1, 6, b); r(c, X + 5, Y + 6, 6, 3, b === '#8a6a3a' ? '#e2707a' : b); r(c, X + 4, Y + 3, 1, 5, '#8a6a3a'); r(c, X + 11, Y + 3, 1, 5, '#8a6a3a'); r(c, X + 4, Y + 3, 8, 1, '#8a6a3a'); },
+  // v299: a slatted crate: planks with dark gaps, nail heads, corner posts and a lit rim
+  crate: (c, X, Y, W, H, a, b, p) => {
+    const al = sh(a, 1.2), ad = sh(a, 0.78), ak = sh(a, 0.55);
+    shadow(c, X, Y, W, H);
+    r(c, X + 2, Y + 5, W - 4, 10, ak); r(c, X + 3, Y + 6, W - 6, 8, a);
+    for (const py of [Y + 8, Y + 11]) r(c, X + 3, py, W - 6, 1, ad);
+    r(c, X + 3, Y + 6, W - 6, 1, al);
+    for (const px of [X + 3, X + W - 5]) { r(c, px, Y + 6, 2, 8, ad); r(c, px, Y + 6, 1, 8, al); r(c, px + 1, Y + 7, 1, 1, '#2b211a'); r(c, px + 1, Y + 12, 1, 1, '#2b211a'); }
+    tops(c, p, X, Y + 6, W);
+  },
+  // v299: a woven basket: over-and-under rows, a lit rim, a bent handle, a cloth tucked in
+  basket: (c, X, Y, W, H, a, b) => {
+    const al = sh(a, 1.2), ad = sh(a, 0.75), ak = sh(a, 0.55), H1 = '#8a6a3a';
+    shadow(c, X, Y, W, H);
+    r(c, X + 4, Y + 3, 1, 5, H1); r(c, X + 11, Y + 3, 1, 5, H1); r(c, X + 5, Y + 2, 6, 1, H1); r(c, X + 5, Y + 2, 6, 1, sh(H1, 1.2));   // the handle
+    r(c, X + 5, Y + 6, 6, 3, b === H1 ? '#e2707a' : b); r(c, X + 6, Y + 6, 2, 1, 'rgba(255,255,255,.3)');   // the cloth
+    r(c, X + 3, Y + 8, 10, 7, ak); r(c, X + 4, Y + 9, 8, 5, a); r(c, X + 4, Y + 14, 8, 1, ak);
+    for (let y = Y + 9; y < Y + 14; y++) for (let x = X + 4 + ((y - Y) % 2); x < X + 12; x += 2) r(c, x, y, 1, 1, ad);   // the weave
+    r(c, X + 3, Y + 8, 10, 1, al); r(c, X + 3, Y + 9, 10, 1, a);   // the rim
+  },
   // ---- on the walls ----
   window: (c, X, Y, W, H, a, b) => {
     const t = G.S?.time ?? 720, night = t < 360 || t >= 1170, dusk = t >= 1080 && t < 1170;

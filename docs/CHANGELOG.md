@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v299: Beds that look like beds
+- Fixed: a stray square of wallpaper showed on the dark top of the wall above the farmhouse phone, and above the attic ladder.
+- Every bed (yours and every neighbour's, single, double and wide) is redrawn: a panelled headboard with turned posts, plump pillows, the sheet folded back over a patchwork quilt that drapes over the sides, and a footboard.
+- The farmhouse phone is a proper wall telephone now: a wooden box with brass bells, a mouthpiece, the handset on its hook with a curled cord, a crank and a little shelf.
+- More detail on the furniture in neighbours' homes and shops: nightstands (drawers and knobs), wardrobes (a crown, panelled doors, a plinth), kitchen counters (worktop grain, panelled cupboards), tables (grain, lit edges, legs, desk drawers), chairs (spindled backs, cushioned seats), armchairs (buttons, rolled arms), crates (slats and nails) and baskets (a woven pattern).
+- New save data: none.
+
 ## v298: Smooth mining
 - Breaking a rock, opening a chest or finding a ladder in the mine (and breaking quarry rocks or grove stumps, stocking the pond, the farm cave, the theatre, the market visitors, the wishing stone and the farmhouse renovations) now redraws only the map that changed. Before, each one threw away every map already drawn, so after a mining trip the farm, village and town were drawn again from scratch on the way home.
 - New save data: none.
