@@ -8,6 +8,7 @@ Newest first. Version numbers match published versions of the playable page.
 - The farmhouse phone is a proper wall telephone now: a wooden box with brass bells, a mouthpiece, the handset on its hook with a curled cord, a crank and a little shelf.
 - More detail on the furniture in neighbours' homes and shops: nightstands (drawers and knobs), wardrobes (a crown, panelled doors, a plinth), kitchen counters (worktop grain, panelled cupboards), tables (grain, lit edges, legs, desk drawers), chairs (spindled backs, cushioned seats), armchairs (buttons, rolled arms), crates (slats and nails) and baskets (a woven pattern).
 - In the shops and homes too: the smithy's forge (a riveted hood and chimney, a stone hearth, glowing coals), anvil, grindstone and bellows; the carpentry's workbench and lumber; grain sacks; the museum's glass cases and fluted pedestals; benches; and in homes the wood stove, bathtub, washstand, wall cupboard, wall clock and mirror.
+- And: stone fireplaces (coursed stones, a mantel, logs), cast-iron ranges (hob rings, oven doors, a glowing firebox), sofas (buttoned backs, cushions, rolled arms), low tables, theatre seats, hay bales, woodpiles, hanging lanterns, school desks, peg rails with a coat and hat, wall shelves on brackets, drying herbs, tool boards, wall charts, brass plaques, boots and papers.
 - New save data: none.
 
 ## v298: Smooth mining
