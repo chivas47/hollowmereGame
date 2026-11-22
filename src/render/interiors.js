@@ -132,11 +132,23 @@ const ART = {
     r(c, X + 1, bot - 2, W - 2, 2, ak); r(c, X + 2, bot - 2, W - 4, 1, ad);   // the plinth
     r(c, X + 2, bot, 2, 1, ak); r(c, X + W - 4, bot, 2, 1, ak);
   },
-  washstand: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); box(c, X + 2, Y + 6, 12, 9, a, '#6e4626'); r(c, X + 3, Y + 4, 10, 3, b); r(c, X + 4, Y + 4, 8, 1, '#9fc0d8'); r(c, X + 10, Y - 1, 3, 5, b); },
-  tub: (c, X, Y, W, H, a, b) => {
+  // v299: a washstand: a cabinet with a door, a china bowl of water on top, a jug standing beside it
+  washstand: (c, X, Y, W, H, a, b) => {
+    const al = sh(a, 1.2), ad = sh(a, 0.78), ak = sh(a, 0.55);
     shadow(c, X, Y, W, H);
-    r(c, X + 1, Y + 3, W - 2, H - 5, a); r(c, X + 3, Y + 5, W - 6, H - 10, '#9fc0d8'); r(c, X + 3, Y + 5, W - 6, 2, '#bcd4e6');
-    r(c, X + 2, Y + H - 3, 2, 2, b); r(c, X + W - 4, Y + H - 3, 2, 2, b); r(c, X + 4, Y + 1, 3, 4, b);
+    r(c, X + 2, Y + 6, 12, 9, ak); r(c, X + 3, Y + 6, 10, 8, a); r(c, X + 3, Y + 6, 10, 1, al);
+    r(c, X + 4, Y + 8, 8, 5, ad); r(c, X + 4, Y + 8, 8, 1, ak); r(c, X + 10, Y + 10, 1, 1, '#e9c46a');   // the door
+    r(c, X + 3, Y + 3, 8, 3, sh(b, 0.75)); r(c, X + 3, Y + 3, 8, 1, b); r(c, X + 4, Y + 3, 6, 1, '#9fc0d8'); r(c, X + 5, Y + 3, 2, 1, '#dcecf6');   // the bowl
+    r(c, X + 11, Y - 1, 3, 5, b); r(c, X + 11, Y - 1, 1, 4, sh(b, 1.2)); r(c, X + 10, Y, 1, 1, b); r(c, X + 14, Y, 1, 2, sh(b, 0.75));   // the jug
+  },
+  // v299: a claw-footed bathtub: a rolled lip, water with a highlight, the taps at its head, feet at the corners
+  tub: (c, X, Y, W, H, a, b) => {
+    const al = sh(a, 1.15), ad = sh(a, 0.8), ak = sh(a, 0.62);
+    shadow(c, X, Y, W, H);
+    r(c, X + 1, Y + 3, W - 2, H - 5, ak); r(c, X + 2, Y + 3, W - 4, H - 6, a); r(c, X + 2, Y + 3, W - 4, 1, al); r(c, X + 2, Y + H - 4, W - 4, 1, ad);
+    r(c, X + 4, Y + 5, W - 8, H - 10, '#7fa6c4'); r(c, X + 4, Y + 5, W - 8, 2, '#9fc0d8'); r(c, X + 5, Y + 7, 3, 1, '#dcecf6'); r(c, X + W - 8, Y + H - 7, 2, 1, '#bcd4e6');   // water
+    r(c, X + 4, Y + 1, 4, 3, b); r(c, X + 4, Y + 1, 4, 1, sh(b, 1.3)); r(c, X + 5, Y + 4, 1, 1, sh(b, 0.6));   // taps
+    for (const fx of [X + 2, X + W - 4]) { r(c, fx, Y + H - 3, 2, 2, b); r(c, fx, Y + H - 3, 1, 1, sh(b, 1.3)); }   // feet
   },
   screen: (c, X, Y, W, H, a, b) => { [0, 5, 10].forEach((o, i) => { r(c, X + 1 + o, Y - 8 + (i % 2), 5, 22, b); r(c, X + 2 + o, Y - 7 + (i % 2), 3, 20, a); }); },
   // v299: a kitchen run: a worktop with a lit edge and grain, a cupboard door with a sunk panel and knob per tile, a toe kick
@@ -157,11 +169,19 @@ const ART = {
     r(c, X + 2, Y + 2, W - 4, 4, '#8d939a'); r(c, X + 3, Y + 3, W - 6, 2, '#9fc0d8');
     r(c, X + W / 2 - 1, Y - 4, 2, 6, '#5c6268'); r(c, X + W / 2 - 1, Y - 4, 5, 2, '#5c6268');   // pump spout
   },
+  // v299: a cast-iron wood stove: its pipe up the wall, a lit top with a pot steaming, a firebox door with a glowing grate, feet
   stove: (c, X, Y, W, H, a, b) => {
-    r(c, X + 10, Y - 14, 3, 18, '#2b2f33');   // the pipe up through the wall
-    shadow(c, X, Y, W, H); box(c, X + 1, Y + 3, 14, 12, a, '#2b2f33'); r(c, X + 1, Y + 2, 14, 2, '#2b2f33');
-    r(c, X + 3, Y + 7, 10, 6, '#2b2f33'); r(c, X + 4, Y + 9, 8, 3, blink(220, 2) ? '#e8862a' : '#d9644a'); r(c, X + 5, Y + 10, 6, 1, '#ffd46a');
-    r(c, X + 3, Y - 2, 7, 4, b); r(c, X + 2, Y - 2, 9, 1, '#3f3226');   // a pot on top
+    const al = sh(a, 1.4), ad = sh(a, 0.8);
+    r(c, X + 10, Y - 14, 3, 17, '#2b2f33'); r(c, X + 10, Y - 14, 1, 17, '#4a5058'); r(c, X + 9, Y - 6, 5, 1, '#1f2428');   // pipe and collar
+    shadow(c, X, Y, W, H);
+    r(c, X + 1, Y + 2, 14, 12, '#1f2428'); r(c, X + 2, Y + 3, 12, 10, a); r(c, X + 2, Y + 3, 12, 1, al); r(c, X + 12, Y + 3, 2, 10, ad);
+    r(c, X + 1, Y + 1, 14, 2, '#2b2f33'); r(c, X + 1, Y + 1, 14, 1, '#4a5058');   // the top plate
+    const f = blink(220, 2);
+    r(c, X + 3, Y + 6, 9, 6, '#1f2428'); r(c, X + 4, Y + 7, 7, 4, '#2a1a10');
+    for (let x = X + 4; x < X + 11; x += 2) r(c, x, Y + 9, 1, 2, f ? '#e8862a' : '#d9644a');   // the grate glowing between bars
+    r(c, X + 5, Y + 8, 5, 1, f ? '#ffd46a' : '#e8862a'); r(c, X + 11, Y + 8, 1, 2, '#c9a35a');   // flame, latch
+    r(c, X + 2, Y + 14, 2, 1, '#1f2428'); r(c, X + 12, Y + 14, 2, 1, '#1f2428');   // feet
+    r(c, X + 3, Y - 2, 7, 4, b); r(c, X + 3, Y - 2, 7, 1, sh(b, 1.25)); r(c, X + 2, Y - 2, 9, 1, '#3f3226'); r(c, X + 2, Y, 1, 1, '#3f3226'); r(c, X + 10, Y, 1, 1, '#3f3226');   // a pot with handles
     if (blink(400, 2)) r(c, X + 5, Y - 5, 1, 2, 'rgba(255,255,255,.5)'); else r(c, X + 7, Y - 6, 1, 2, 'rgba(255,255,255,.5)');
   },
   range: (c, X, Y, W, H, a, b) => {
@@ -211,7 +231,17 @@ const ART = {
       r(c, bx + (L ? -2 : 2), Y + 3, 2, 5, b); r(c, bx + (L ? -2 : 2), Y + 3, 2, 1, bl);
     }
   },
-  bench: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); r(c, X + 1, Y + 6, W - 2, 4, a); r(c, X + 1, Y + 6, W - 2, 1, GLINT); r(c, X + 2, Y + 10, 2, 5, b); r(c, X + W - 4, Y + 10, 2, 5, b); r(c, X + 1, Y + 1, W - 2, 3, b); r(c, X + 3, Y + 4, 1, 2, b); r(c, X + W - 4, Y + 4, 1, 2, b); },
+  // v299: a slatted bench: a back rail on posts, a seat of two lit planks, splayed legs with a stretcher
+  bench: (c, X, Y, W, H, a, b) => {
+    const al = sh(a, 1.22), ad = sh(a, 0.78), bk = sh(b, 0.6), bl = sh(b, 1.2);
+    shadow(c, X, Y, W, H);
+    r(c, X + 1, Y + 1, W - 2, 3, bk); r(c, X + 2, Y + 1, W - 4, 1, bl); r(c, X + 2, Y + 2, W - 4, 1, b);   // back rail
+    for (let x = X + 3; x < X + W - 3; x += 6) r(c, x, Y + 4, 1, 2, b);
+    r(c, X + 3, Y + 4, 1, 2, b); r(c, X + W - 4, Y + 4, 1, 2, b);
+    r(c, X + 1, Y + 6, W - 2, 5, ad); r(c, X + 1, Y + 6, W - 2, 2, a); r(c, X + 1, Y + 6, W - 2, 1, al); r(c, X + 1, Y + 8, W - 2, 1, ad); r(c, X + 1, Y + 9, W - 2, 1, a); r(c, X + 1, Y + 10, W - 2, 1, sh(a, 0.6));
+    for (const lx of [X + 2, X + W - 4]) { r(c, lx, Y + 11, 2, 4, bk); r(c, lx, Y + 11, 1, 4, b); }
+    r(c, X + 4, Y + 13, W - 8, 1, bk);
+  },
   woodpile: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); r(c, X + 2, Y + 6, 12, 9, '#c9a35a'); [[3, 7], [8, 7], [5, 10], [10, 10], [3, 12], [8, 12]].forEach(([u, v]) => { r(c, X + u, Y + v, 4, 3, a); r(c, X + u + 1, Y + v + 1, 2, 1, '#d9b98a'); }); },
   sofa: (c, X, Y, W, H, a, b, p) => {
     shadow(c, X, Y, W, H);
@@ -293,9 +323,15 @@ const ART = {
     r(c, X + 2, y + h, W - 4, 1, SHADE);
   },
   wallshelf: (c, X, Y, W, H, a, b, p) => { r(c, X + 1, Y + 10, W - 2, 2, a); r(c, X + 1, Y + 12, W - 2, 1, b); r(c, X + 3, Y + 12, 1, 2, b); r(c, X + W - 4, Y + 12, 1, 2, b); tops(c, p, X, Y + 10, W); },
+  // v299: a wall cupboard: a cornice, a pair of panelled doors per tile with brass knobs, a shadow under it
   cupboard: (c, X, Y, W, H, a, b) => {
-    box(c, X + 1, Y + 1, W - 2, H - 4, a, b); r(c, X + 1, Y + H - 3, W - 2, 1, SHADE);
-    for (let i = 0; i < W; i += T) { r(c, X + i + 3, Y + 3, 10, H - 9, 'rgba(0,0,0,.1)'); r(c, X + i + 8, Y + 3, 1, H - 9, b); r(c, X + i + 6, Y + H / 2, 1, 2, '#e9c46a'); r(c, X + i + 10, Y + H / 2, 1, 2, '#e9c46a'); }
+    const al = sh(a, 1.2), ad = sh(a, 0.8), ak = sh(a, 0.58);
+    r(c, X + 1, Y + 1, W - 2, H - 4, ak); r(c, X + 2, Y + 2, W - 4, H - 6, a); r(c, X + 1, Y + H - 3, W - 2, 1, SHADE);
+    r(c, X, Y, W, 2, b); r(c, X, Y, W, 1, sh(b, 1.25));   // cornice
+    for (let i = 0; i < W; i += T) for (const dx of [3, 9]) {
+      r(c, X + i + dx, Y + 4, 4, H - 10, ad); r(c, X + i + dx, Y + 4, 4, 1, ak); r(c, X + i + dx, Y + H - 7, 4, 1, al);
+    }
+    for (let i = 0; i < W; i += T) { r(c, X + i + 7, Y + H / 2 - 1, 1, 2, '#e9c46a'); r(c, X + i + 9, Y + H / 2 - 1, 1, 2, '#e9c46a'); r(c, X + i + 8, Y + 3, 1, H - 8, ak); }
   },
   pegs: (c, X, Y, W, H, a, b) => {
     r(c, X + 1, Y + 3, W - 2, 2, b);
@@ -325,15 +361,36 @@ const ART = {
     for (let i = 5; i < W - 3; i += 9) r(c, X + i, Y + 3 + (i % 6), 1, 1, b);   // pins
   },
   board: (c, X, Y, W, H, a, b) => { r(c, X + 1, Y + 2, W - 2, H - 4, b); r(c, X + 2, Y + 3, W - 4, H - 6, a); for (let j = 5; j < H - 5; j += 3) r(c, X + 4, Y + j, (W - 10) * (((j * 3) % 5) + 3) / 7, 1, '#d9dccf'); r(c, X + 3, Y + H - 3, 5, 1, CREAM); },
-  mirror: (c, X, Y, W, H, a, b) => { r(c, X + 4, Y + 2, 8, H - 4, b); r(c, X + 5, Y + 3, 6, H - 6, a); r(c, X + 6, Y + 4, 2, 4, 'rgba(255,255,255,.55)'); },
-  wallclock: (c, X, Y, W, H, a, b) => { r(c, X + 4, Y + 3, 8, 9, b); r(c, X + 5, Y + 4, 6, 6, a); r(c, X + 8, Y + 5, 1, 3, INK); r(c, X + 8, Y + 7, 2, 1, INK); r(c, X + 7, Y + 12, 2, 3 + (blink(500, 2) ? 1 : 0), '#c9a35a'); },
+  // v299: a mirror: a carved frame lit on top, a cool glass reflecting the room, two streaks of light
+  mirror: (c, X, Y, W, H, a, b) => {
+    const bl = sh(b, 1.25), bk = sh(b, 0.58);
+    r(c, X + 4, Y + 2, 8, H - 4, bk); r(c, X + 5, Y + 2, 6, H - 5, b); r(c, X + 5, Y + 2, 6, 1, bl); r(c, X + 7, Y + 1, 2, 1, bk);
+    r(c, X + 6, Y + 3, 4, H - 7, a); r(c, X + 6, Y + H - 7, 4, 3, sh(a, 0.8));   // the glass, the room's floor in it
+    r(c, X + 6, Y + 4, 1, 4, 'rgba(255,255,255,.6)'); r(c, X + 8, Y + 4, 1, 2, 'rgba(255,255,255,.4)');
+  },
+  // v299: a wall clock: a carved case with a pointed top, a cream face with ticks and hands, a brass pendulum swinging
+  wallclock: (c, X, Y, W, H, a, b) => {
+    const bl = sh(b, 1.25), bk = sh(b, 0.58);
+    r(c, X + 4, Y + 3, 8, 11, bk); r(c, X + 5, Y + 3, 6, 10, b); r(c, X + 5, Y + 3, 6, 1, bl); r(c, X + 6, Y + 2, 4, 1, bk); r(c, X + 7, Y + 1, 2, 1, bk);   // case
+    r(c, X + 5, Y + 4, 6, 6, a); r(c, X + 6, Y + 4, 4, 1, sh(a, 1.1));
+    for (const [tx, ty] of [[8, 4], [10, 7], [8, 9], [5, 7]]) r(c, X + tx, Y + ty, 1, 1, sh(a, 0.6));   // ticks
+    r(c, X + 8, Y + 5, 1, 3, INK); r(c, X + 8, Y + 7, 2, 1, INK);   // hands
+    r(c, X + 6, Y + 10, 4, 3, '#1f1812'); const sw = blink(500, 2) ? 0 : 1;
+    r(c, X + 7 + sw, Y + 10, 1, 2, '#c9a35a'); r(c, X + 7 + sw, Y + 12, 1, 1, '#e9c46a');   // the pendulum behind its window
+  },
   plaque: (c, X, Y, W, H, a, b) => { r(c, X + 2, Y + 4, W - 4, 8, b); r(c, X + 2, Y + 4, W - 4, 1, GLINT); r(c, X + 4, Y + 6, W - 10, 4, a); r(c, X + W - 6, Y + 5, 3, 6, a); r(c, X + 5, Y + 7, 1, 1, INK); },
   lantern: (c, X, Y, W, H, a, b) => { r(c, X + 7, Y + 2, 2, 3, a); r(c, X + 5, Y + 5, 6, 8, a); r(c, X + 6, Y + 6, 4, 5, b); r(c, X + 5, Y + 13, 6, 1, a); },
   // ---- work and hobbies ----
+  // v299: a carpenter's workbench: a thick grained top, a shelf of offcuts under it, sturdy legs, an iron vise at the end
   workbench: (c, X, Y, W, H, a, b, p) => {
+    const al = sh(a, 1.2), ad = sh(a, 0.8), ak = sh(a, 0.58), bl = sh(b, 1.2), bk = sh(b, 0.6);
     shadow(c, X, Y, W, H);
-    r(c, X + 2, Y + 8, 2, 7, b); r(c, X + W - 4, Y + 8, 2, 7, b); r(c, X + 2, Y + 12, W - 4, 2, b);
-    box(c, X + 1, Y + 3, W - 2, 5, a, b); r(c, X + W - 8, Y + 1, 5, 3, '#5c6268'); r(c, X + W - 7, Y + 4, 3, 3, '#5c6268');   // vise
+    for (const lx of [X + 2, X + W - 4]) { r(c, lx, Y + 8, 2, 7, bk); r(c, lx, Y + 8, 1, 7, b); }
+    r(c, X + 2, Y + 12, W - 4, 2, bk); r(c, X + 3, Y + 12, W - 6, 1, b);   // the shelf
+    for (let x = X + 5; x < X + W - 9; x += 5) { r(c, x, Y + 11, 4, 1, '#d9b98a'); r(c, x, Y + 11, 1, 1, '#a5753f'); }   // offcuts
+    r(c, X + 1, Y + 3, W - 2, 6, ak); r(c, X + 2, Y + 3, W - 4, 4, a); r(c, X + 2, Y + 3, W - 4, 1, al); r(c, X + 2, Y + 7, W - 4, 1, ad);
+    for (let x = X + 4; x < X + W - 8; x += 7) r(c, x, Y + 5, 4, 1, ad);   // grain
+    r(c, X + W - 8, Y + 1, 6, 3, '#3f4850'); r(c, X + W - 8, Y + 1, 6, 1, '#8d939a'); r(c, X + W - 7, Y + 4, 4, 3, '#5c6268'); r(c, X + W - 3, Y + 2, 2, 1, '#c9a35a');   // vise and handle
     tops(c, p, X, Y + 5, W - 8);
   },
   sawhorse: (c, X, Y, W, H, a, b, p) => {
@@ -342,7 +399,15 @@ const ART = {
     if (p.oar) { r(c, X + 1, Y + 4, W - 2, 3, b); r(c, X + W - 9, Y + 2, 8, 6, b); r(c, X + W - 8, Y + 3, 6, 4, '#d9b98a'); return; }   // an oar, half carved
     r(c, X + 4, Y - 1, W - 8, 4, a); r(c, X + 5, Y - 6, 2, 6, b); r(c, X + W - 7, Y - 6, 2, 6, b); r(c, X + 4, Y + 3, W - 8, 2, b);   // a chair, upside down
   },
-  lumber: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); for (let j = 0; j < 4; j++) { r(c, X + 1 + (j % 2) * 2, Y + 4 + j * 3, W - 4, 3, j % 2 ? b : a); r(c, X + 1 + (j % 2) * 2, Y + 4 + j * 3, W - 4, 1, GLINT); } },
+  // v299: a stack of planks, ends showing their rings, each board lit along the top and shaded underneath
+  lumber: (c, X, Y, W, H, a, b) => {
+    shadow(c, X, Y, W, H);
+    for (let j = 0; j < 4; j++) {
+      const col = j % 2 ? b : a, x = X + 1 + (j % 2) * 2, y = Y + 4 + j * 3;
+      r(c, x, y, W - 4, 3, sh(col, 0.65)); r(c, x, y, W - 5, 2, col); r(c, x, y, W - 5, 1, sh(col, 1.2));
+      r(c, x + W - 6, y, 2, 3, '#d9b98a'); r(c, x + W - 5, y + 1, 1, 1, '#a5753f');   // the end grain
+    }
+  },
   extractor: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); r(c, X + 2, Y + 2, 12, 13, a); r(c, X + 2, Y + 2, 12, 2, b); r(c, X + 4, Y + 6, 8, 1, b); r(c, X + 4, Y + 11, 8, 1, b); r(c, X + 7, Y - 2, 2, 4, b); r(c, X + 7, Y - 2, 6, 1, '#6e4626'); r(c, X + 6, Y + 13, 3, 2, '#e9a43a'); },
   hives: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); for (let i = 0; i < W; i += T) { [0, 5, 10].forEach((o, j) => { r(c, X + i + 2, Y + o + 1, 12, 5, j % 2 ? b : a); r(c, X + i + 2, Y + o + 5, 12, 1, SHADE); }); r(c, X + i + 1, Y, 14, 2, '#8a5a32'); } },
   canvases: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); [[1, '#5d8a4a'], [5, '#e9a43a'], [9, '#5f8fb5']].forEach(([o, k], i) => { r(c, X + o, Y + 1 + i * 2, 7, 14 - i * 2, '#a5753f'); r(c, X + o + 1, Y + 2 + i * 2, 5, 12 - i * 2, a); r(c, X + o + 1, Y + 8, 5, 4, k); }); },
@@ -379,23 +444,82 @@ const ART = {
   },
   ladder: (c, X, Y, W, H, a, b) => { r(c, X + 3, Y, 2, H, a); r(c, X + 11, Y, 2, H, a); for (let j = 3; j < H; j += 5) r(c, X + 3, Y + j, 10, 2, b); r(c, X, Y, W, 2, '#3f2a1a'); },
   weapons: (c, X, Y, W, H, a, b) => { r(c, X + 1, Y + 3, W - 2, 2, a); r(c, X + 1, Y + 12, W - 2, 2, a); for (let x = X + 4; x < X + W - 3; x += 6) { r(c, x, Y + 1, 2, 12, b); r(c, x - 1, Y + 11, 4, 1, '#c9a35a'); r(c, x, Y + 12, 2, 3, '#6e4626'); } },
+  // v299: the forge: a riveted iron hood and chimney, a stone hearth course by course, coals glowing in a fire pit
   forge: (c, X, Y, W, H, a, b) => {
-    r(c, X + 4, Y - 14, W - 8, 16, b); r(c, X + 4, Y - 14, W - 8, 1, GLINT);   // the hood and chimney
-    r(c, X, Y + 2, W, 13, a); r(c, X, Y + 2, W, 2, '#8d8a84');
-    r(c, X + 4, Y + 5, W - 8, 7, '#1f1812'); const f = blink(160, 3);
-    r(c, X + 6, Y + 8, W - 12, 4, '#e8862a'); r(c, X + 8 + (f ? 1 : 0), Y + 6, W - 16, 3, '#ffd46a'); r(c, X + W / 2 - 1, Y + 5, 2, 2, f ? '#fff3c4' : '#ffd46a');
+    const bl = sh(b, 1.25), bd = sh(b, 0.75), bk = sh(b, 0.55), al = sh(a, 1.2), ad = sh(a, 0.78), ak = sh(a, 0.58);
+    r(c, X + W / 2 - 4, Y - 16, 8, 6, bk); r(c, X + W / 2 - 3, Y - 16, 6, 6, b); r(c, X + W / 2 - 3, Y - 16, 2, 6, bl);   // chimney
+    r(c, X + 3, Y - 10, W - 6, 12, bk); r(c, X + 4, Y - 9, W - 8, 10, b); r(c, X + 4, Y - 9, W - 8, 1, bl); r(c, X + W - 6, Y - 9, 2, 10, bd);   // hood
+    for (let x = X + 6; x < X + W - 6; x += 5) { r(c, x, Y - 7, 1, 1, bl); r(c, x, Y - 1, 1, 1, bl); }   // rivets
+    r(c, X, Y + 1, W, 14, ak); r(c, X + 1, Y + 2, W - 2, 12, a); r(c, X + 1, Y + 2, W - 2, 1, al);
+    for (let j = 0; j < 3; j++) { const yy = Y + 5 + j * 3; r(c, X + 1, yy, W - 2, 1, ad); for (let x = X + 3 + (j % 2) * 3; x < X + W - 2; x += 6) r(c, x, yy - 3, 1, 3, ad); }   // stone courses
+    const f = blink(160, 3);
+    r(c, X + 4, Y + 3, W - 8, 8, '#1f1812'); r(c, X + 5, Y + 7, W - 10, 4, '#3a1c10');
+    for (let x = X + 5; x < X + W - 5; x += 2) r(c, x, Y + 8 + ((x + (f ? 1 : 0)) % 3 === 0 ? 0 : 1), 2, 2, (x + (f ? 1 : 0)) % 4 ? '#e8862a' : '#ffd46a');   // coals
+    r(c, X + W / 2 - 2, Y + 5 + (f ? 1 : 0), 4, 2, '#ffd46a'); r(c, X + W / 2 - 1, Y + 4 + (f ? 1 : 0), 2, 1, '#fff3c4');   // the flame
+    r(c, X + 1, Y + 13, W - 2, 2, ak);
   },
-  bellows: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); r(c, X + 2, Y + 7, 10, 6, a); r(c, X + 3, Y + 8, 8, 4, b); r(c, X + 12, Y + 9, 3, 2, '#3f4850'); r(c, X + 1, Y + 6, 4, 1, '#6e4626'); },
-  grindstone: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); r(c, X + 3, Y + 10, 10, 5, b); r(c, X + 4, Y + 2, 8, 9, a); r(c, X + 5, Y + 3, 6, 7, '#c9c4ba'); r(c, X + 7, Y + 6, 2, 2, b); r(c, X + 12, Y + 6, 3, 1, b); },
-  anvil: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); r(c, X + 5, Y + 11, 6, 4, b); r(c, X + 6, Y + 8, 4, 3, a); r(c, X + 2, Y + 4, 12, 4, a); r(c, X, Y + 5, 3, 2, a); r(c, X + 2, Y + 4, 12, 1, '#8d939a'); r(c, X + 12, Y + 2, 3, 5, '#c9a35a'); },
-  sack: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); r(c, X + 3, Y + 5, 10, 10, a); r(c, X + 2, Y + 8, 12, 6, a); r(c, X + 5, Y + 3, 6, 3, b); r(c, X + 6, Y + 9, 4, 3, b); r(c, X + 3, Y + 5, 2, 9, 'rgba(255,255,255,.15)'); },
+  // v299: bellows: two boards hinged at the nose, pleated leather between, handles, an iron nozzle
+  bellows: (c, X, Y, W, H, a, b) => {
+    const al = sh(a, 1.2), ak = sh(a, 0.58), bl = sh(b, 1.15), bk = sh(b, 0.6);
+    shadow(c, X, Y, W, H);
+    r(c, X + 2, Y + 6, 10, 2, ak); r(c, X + 3, Y + 6, 8, 1, al);   // top board
+    r(c, X + 3, Y + 8, 9, 4, b); for (let x = X + 4; x < X + 12; x += 2) r(c, x, Y + 8, 1, 4, bk); r(c, X + 3, Y + 8, 9, 1, bl);   // pleats
+    r(c, X + 2, Y + 12, 10, 2, ak); r(c, X + 3, Y + 12, 8, 1, a);   // bottom board
+    r(c, X, Y + 5, 3, 2, ak); r(c, X, Y + 13, 3, 2, ak);   // handles
+    r(c, X + 12, Y + 9, 3, 2, '#3f4850'); r(c, X + 12, Y + 9, 3, 1, '#6a737c');   // nozzle
+  },
+  // v299: a grindstone: the wheel on its axle in a wooden frame, a lit rim, a crank, a trough of water under it
+  grindstone: (c, X, Y, W, H, a, b) => {
+    const bl = sh(b, 1.2), bk = sh(b, 0.6), al = sh(a, 1.25), ad = sh(a, 0.75);
+    shadow(c, X, Y, W, H);
+    r(c, X + 3, Y + 11, 10, 4, bk); r(c, X + 4, Y + 11, 8, 2, '#5f8fb5'); r(c, X + 4, Y + 11, 8, 1, '#9fc0d8');   // trough
+    r(c, X + 2, Y + 6, 2, 9, b); r(c, X + 12, Y + 6, 2, 9, b); r(c, X + 2, Y + 6, 1, 9, bl);   // frame
+    r(c, X + 5, Y + 2, 6, 10, ad); r(c, X + 4, Y + 3, 8, 8, ad); r(c, X + 5, Y + 3, 6, 8, a); r(c, X + 5, Y + 2, 6, 1, al); r(c, X + 4, Y + 3, 1, 7, al);   // the wheel
+    r(c, X + 6, Y + 5, 4, 4, sh(a, 0.88)); r(c, X + 7, Y + 6, 2, 2, bk);   // its hub
+    r(c, X + 3, Y + 7, 10, 1, bk); r(c, X + 13, Y + 7, 2, 1, bk); r(c, X + 14, Y + 5, 1, 3, bk); r(c, X + 14, Y + 4, 1, 1, '#c9a35a');   // axle, crank
+  },
+  // v299: an anvil on a stump: horn, face lit along its edge, a hardy hole, the stump's rings; a hammer resting on it
+  anvil: (c, X, Y, W, H, a, b) => {
+    const al = sh(a, 1.35), ad = sh(a, 0.72), ak = sh(a, 0.5), bl = sh(b, 1.2), bk = sh(b, 0.6);
+    shadow(c, X, Y, W, H);
+    r(c, X + 4, Y + 10, 8, 5, bk); r(c, X + 5, Y + 10, 6, 4, b); r(c, X + 5, Y + 10, 6, 1, bl); r(c, X + 7, Y + 11, 2, 1, bk);   // the stump
+    r(c, X + 6, Y + 7, 4, 3, ak); r(c, X + 6, Y + 7, 3, 3, ad);   // the waist
+    r(c, X + 1, Y + 4, 13, 4, ak); r(c, X + 3, Y + 4, 11, 3, a); r(c, X + 3, Y + 4, 11, 1, al);   // the face
+    r(c, X, Y + 5, 3, 2, a); r(c, X, Y + 5, 3, 1, al); r(c, X, Y + 6, 1, 1, ak);   // the horn
+    r(c, X + 11, Y + 5, 1, 1, ak);   // the hardy hole
+    r(c, X + 6, Y + 2, 6, 2, '#5c6268'); r(c, X + 6, Y + 2, 6, 1, '#8d939a'); r(c, X + 11, Y + 1, 3, 1, '#a5753f'); r(c, X + 12, Y + 1, 3, 1, '#c9a35a');   // a hammer
+  },
+  // v299: a grain sack: a slumped, creased body, the neck tied with twine, a stencilled mark
+  sack: (c, X, Y, W, H, a, b) => {
+    const al = sh(a, 1.15), ad = sh(a, 0.82), ak = sh(a, 0.62);
+    shadow(c, X, Y, W, H);
+    r(c, X + 3, Y + 6, 10, 9, ak); r(c, X + 2, Y + 9, 12, 5, ak);
+    r(c, X + 4, Y + 6, 8, 8, a); r(c, X + 3, Y + 9, 10, 4, a); r(c, X + 4, Y + 6, 3, 7, al);
+    r(c, X + 10, Y + 8, 1, 4, ad); r(c, X + 7, Y + 12, 4, 1, ad);   // creases
+    r(c, X + 6, Y + 3, 4, 4, ak); r(c, X + 6, Y + 3, 4, 3, a); r(c, X + 5, Y + 2, 2, 1, a); r(c, X + 9, Y + 2, 2, 1, a);   // the neck, flared
+    r(c, X + 5, Y + 6, 6, 1, '#8a6a3a');   // twine
+    r(c, X + 6, Y + 9, 4, 2, b); r(c, X + 7, Y + 9, 2, 1, sh(b, 1.2));   // the mark
+  },
   haybale: (c, X, Y, W, H, a, b) => { shadow(c, X, Y, W, H); r(c, X + 1, Y + 3, W - 2, H - 4, a); r(c, X + 1, Y + 3, W - 2, 2, '#f0d98a'); for (let i = X + 3; i < X + W - 2; i += 3) r(c, i, Y + 6, 1, H - 8, b); r(c, X + 1, Y + 7, W - 2, 1, '#8a6a3a'); r(c, X + 1, Y + H - 5, W - 2, 1, '#8a6a3a'); },
+  // v299: a glass display case: a dark wood base with a panel, glass sides catching the light, the find inside on velvet
   case: (c, X, Y, W, H, a, b, p) => {
-    shadow(c, X, Y, W, H); box(c, X + 1, Y + 9, W - 2, 6, a, '#3f2a1a');
-    r(c, X + 2, Y + 1, W - 4, 9, b); r(c, X + 2, Y + 1, W - 4, 1, '#ffffff'); r(c, X + 3, Y + 2, 2, 6, 'rgba(255,255,255,.5)');
+    const al = sh(a, 1.2), ak = sh(a, 0.55);
+    shadow(c, X, Y, W, H);
+    r(c, X + 1, Y + 9, W - 2, 6, ak); r(c, X + 2, Y + 9, W - 4, 5, a); r(c, X + 2, Y + 9, W - 4, 1, al);
+    r(c, X + 4, Y + 11, W - 8, 2, sh(a, 0.75));   // the base's panel
+    r(c, X + 2, Y + 1, W - 4, 9, '#6a7a86'); r(c, X + 3, Y + 2, W - 6, 7, b); r(c, X + 3, Y + 7, W - 6, 2, '#7a2f3a');   // glass and velvet
+    r(c, X + 2, Y + 1, W - 4, 1, '#ffffff'); r(c, X + 4, Y + 2, 1, 5, 'rgba(255,255,255,.6)'); r(c, X + 6, Y + 2, 1, 2, 'rgba(255,255,255,.4)');   // glints
     tops(c, p, X, Y + 9, W);
   },
-  pedestal: (c, X, Y, W, H, a, b, p) => { shadow(c, X, Y, W, H); r(c, X + 4, Y + 6, 8, 9, a); r(c, X + 3, Y + 5, 10, 2, b); r(c, X + 3, Y + 13, 10, 2, b); tops(c, p, X, Y + 5, W); },
+  // v299: a fluted stone pedestal: a moulded cap and base, shaded flutes up the column
+  pedestal: (c, X, Y, W, H, a, b, p) => {
+    const al = sh(a, 1.15), ad = sh(a, 0.8), bk = sh(b, 0.6), bl = sh(b, 1.15);
+    shadow(c, X, Y, W, H);
+    r(c, X + 4, Y + 7, 8, 7, ad); r(c, X + 5, Y + 7, 6, 7, a); r(c, X + 5, Y + 7, 1, 7, al); for (const fx of [7, 9]) r(c, X + fx, Y + 7, 1, 7, ad);   // the column
+    r(c, X + 3, Y + 5, 10, 2, bk); r(c, X + 3, Y + 5, 10, 1, bl);   // cap
+    r(c, X + 3, Y + 13, 10, 2, bk); r(c, X + 4, Y + 13, 8, 1, bl);   // base
+    tops(c, p, X, Y + 5, W);
+  },
   fossil: (c, X, Y, W, H, a, b) => {
     r(c, X + 2, Y + H - 6, W - 4, 5, b); r(c, X + 2, Y + H - 6, W - 4, 1, GLINT);   // the plinth
     const bone = (x, y, w, h) => r(c, X + x, Y + y, w, h, a);
