@@ -904,86 +904,141 @@ def frostwisp(f):
     return rows
 ART['frostwisp'] = (6, 21, [frostwisp(f) for f in range(F)])
 
-# ---- v303: the Duskmarch's creatures ----
+# ---- v303: the Duskmarch's creatures (97b: redrawn with four tones, shines and more detail) ----
 
-# Bristle hog: the boar's trot under a crest of long dark bristles, a mossy tuft on its back.
-def bristle(fr):
-    return over(['....k.k.k.k.k.k......', '...k.k.k.k.k.k.k.....', '.......mMMm..........'] + fr, ['......'], 0, 0)
-ART['bristle'] = (1, 23, [bristle(fr) for fr in ART['boar'][2]])
+# Bristle hog: a heavy hog under a crest of black bristles, lit along its back, deep in its belly; a pale tusk, a
+# glinting eye, a wet snout and a mossy tuft; a four-beat trot.
+HOG = [
+    '.......h.h.h.h........',
+    '.....h.khkhkhkk.h.....',
+    '....kkkkxkxkxkkkk.....',
+    '...bBWWBBBBBBBBBbkk...',
+    '..bBWBBBBBMmBBBBBbbbb.',
+    '.bBBBBBBBBBBBBBBBBbBBb',
+    'bBBBBBBBBBBBBBBBBBBYZb',
+    'bBBBBBBBBBBBBBBBBBBBPP',
+    'cbBBBBBBBBBBBBBBBBbEbP',
+    '.cbbBBBBBBBBBBBBBbbcE.',
+    '..cbbbbbbbbbbbbbbbcc..',
+    '...ccxxccccccccxxcc...',
+]
+HOG_LEGS = [
+    ['...cc...cc....cc..cc..', '..cc.....cc..cc...cc..', '..kk.....kk..kk...kk..'],
+    ['....cc.cc......cccc...', '....cc.cc......cccc...', '....kk.kk......kkkk...'],
+    ['...cc...cc....cc..cc..', '...cc...cc....cc..cc..', '...kk...kk....kk..kk..'],
+    ['.....cccc.....cc..cc..', '.....cccc....cc....cc.', '.....kkkk....kk....kk.'],
+]
+ART['bristle'] = (1, 23, walk(HOG, HOG_LEGS))
 
-# Thorn wasps: a striped body, a stinger, see-through wings beating up and down.
-WASP_BODY = ['.bBBBBBb..', 'bBKBKBBBZ.', 'bBKBKBBBBb', '.bBbBbbBb.', '...k......']
-WASP_WINGS = [['..WW.WW...', '..WW.WW...'], ['..........', '.WWW.WWW..'], ['..........', '..........'], ['..........', '.WWW.WWW..']]
+# Thorn wasps: a striped, shaded abdomen with a stinger, a round head with a big eye and antennae, legs tucked under,
+# see-through wings beating up, level, down, level.
+WASP_BODY = [
+    'K.K...........',
+    '.K.K..........',
+    '.bBBb.........',
+    'bBWZBbcbKBKBb.',
+    'bBZZBbBBKBKBBb',
+    '.bcBbcbcKcKcbck',
+    '..c..cbcxcxcb..',
+    '...k.k.k......',
+]
+WASP_WINGS = [['.....WWW.WWW..', '....WWWW.WWW..', '.....WW...W...'], ['..............', '..WWWWWWWWW...', '...WWWW.WWWW..'],
+              ['..............', '..............', '..............'], ['..............', '..WWWWWWWWW...', '...WWWW.WWWW..']]
 def wasp(f):
     rows = WASP_WINGS[f] + WASP_BODY
-    if f == 2: rows = over(rows, ['WWW.WWW'], 1, 5)
+    if f == 2: rows = over(rows, ['.WWWW.WWWW', '..WWW..WW'], 3, 9)   # wings swept down past the body
     return rows
-ART['wasp'] = (7, 16, [wasp(f) for f in range(F)])
+ART['wasp'] = (5, 18, [wasp(f) for f in range(F)])
 
-# Stump lurker: a cut stump with rings on top, glowing eyes and root legs. Asleep (stumpsleep): the stump alone.
-STUMP = [
-    '...bBBBBBBb...',
-    '..bBhHHHHhBb..',
-    '..BBHhhhhHBB..',
-    '..bBhHHHHhBb..',
-    '..BcBBBBBBcB..',
-    '..BBFZBBFZBB..',
-    '..BcBBBBBBcB..',
-    '..BBBcBBcBBB..',
-    '..BcBBBBBBcB..',
-    '.bBBBBBBBBBBb.',
+# Stump lurker: a cut stump, the rings on top, bark in grooves, two eyes glowing in carved hollows and a split for a
+# mouth, moss round its foot, roots for legs. Asleep (stumpsleep): only bark and moss.
+STUMP_TOP = [
+    '...hHHHHHHHh...',
+    '..hHhhhhhhhHh..',
+    '..HhHHHHHHHhH..',
+    '..HhHhhhhhHhH..',
+    '..hHhHHHHHhHh..',
+    '..bhHhhhhhHhc..',
 ]
-STUMP_ROOTS = [['.cc..c..c..cc.', 'c....c..c....c'], ['..cc.c..c.cc..', '.c...c..c...c.'],
-               ['.cc..c..c..cc.', 'c....c..c....c'], ['cc...c..c...cc', '..c..c..c..c..']]
-ART['stump'] = (5, 23, [STUMP + STUMP_ROOTS[f] for f in range(F)])
-ART['stumpsleep'] = (5, 23, [over(STUMP, ['MmBBBBBBmM'], 2, 5) + ['.cc..c..c..cc.', 'cc...c..c...cc']] * F)
+STUMP_AWAKE = [
+    '..BbcBBbBBcbc..',
+    '..BKKKbbbKKKc..',
+    '..BKFZbbbKFZx..',
+    '..BbcBbbBBcbx..',
+    '..BbKKKKKKKbx..',
+    '..BbcKBKBKcbx..',
+    '.MmBcbBbBBcbxm.',
+    '.mMBcbBbBBcbxMm',
+]
+STUMP_ASLEEP = [
+    '..BbcBBbBBcbc..',
+    '..BbcBBbBBcbc..',
+    '..BbcBkbBBcbx..',
+    '..BbcBkbBBcbx..',
+    '..BbcBBbBkcbx..',
+    '..BbcBBbBkcbx..',
+    '.MmBcbBbBBcbxm.',
+    '.mMBcbBbBBcbxMm',
+]
+STUMP_ROOTS = [['.cc..c...c..cc.', 'c....c...c....c'], ['..cc.c...c.cc..', '.c...c...c...c.'],
+               ['.cc..c...c..cc.', 'c....c...c....c'], ['cc...c...c...cc', '..c..c...c..c..']]
+ART['stump'] = (4, 23, [STUMP_TOP + over(STUMP_AWAKE, ['F'], 4 + (f == 1), 2) + STUMP_ROOTS[f] for f in range(F)])
+ART['stumpsleep'] = (4, 23, [STUMP_TOP + STUMP_ASLEEP + ['.cc..c...c..cc.', 'cc...c...c...cc']] * F)
 
-# Grave rattler: a bone walker in a rotted sash, with a dented helm and a crack down its skull.
+# Grave rattler: a bone walker in a dented helm with a crack down its skull, a rotted sash and a rusted, broken sword.
 def rattler(f):
-    rows = over(bones(f), ['.kkkkk.', 'k.....k'], 3, 0)
-    rows = over(rows, ['K'], 6, 1)
-    return over(rows, ['rr....', '.rr...', '..rr..', '...rr.'], 3, 7)
-ART['rattler'] = (6, 23, [rattler(f) for f in range(F)])
+    rows = over(bones(f), ['.kkkkk.', 'khhhhhk'], 3, 0)
+    rows = over(rows, ['K'], 6, 2)
+    rows = over(rows, ['rr....', '.rr...', '..rr..', '...rr.', '....r.'], 3, 7)
+    sway = 1 if f % 2 else 0
+    return over(rows, ['..h', '.h.', 'h..', 'k..'], 9 + sway, 9 - sway)
+ART['rattler'] = (5, 23, [rattler(f) for f in range(F)])
 
-# Barrow shambler: hunched, arms held out in front, a torn shirt and trousers, a dragging step.
+# Barrow shambler: grey-green skin lit on the left and sunken on the right, hollow eyes with a red spark, a torn
+# shirt with the skin showing through, arms held out ahead, ragged trousers and a dragging step.
 SHAMBLER = [
-    '....bBBBb.....',
-    '...bBBBBBb....',
-    '...BZBBZBc....',
-    '...BBBBBBc....',
-    '...bBKKBbc....',
-    '....bBBb......',
-    '..ddddddBBBBBb',
-    '..dddddd...BBb',
-    '..ddKdddd.....',
-    '..dddKddd.....',
-    '...dddddd.....',
-    '...hhhhhh.....',
+    '....k.kk.k....',
+    '...bBBBBBbc...',
+    '...BWBBBBbcc..',
+    '...BZRbZRbcc..',
+    '...BBBBBBbcc..',
+    '...bBKKKbcc...',
+    '....bcKcc.....',
+    '..DdddddDdBBBBb',
+    '..dddBddDxbbccb',
+    '..ddBBdddD..cc.',
+    '..dDdddddD.....',
+    '...ddddBdD.....',
+    '...hhhhhhh.....',
 ]
-SHAMBLER_LEGS = [['...hh..hh.....', '...hh..hh.....', '...KK..KK.....'], ['...hh...hh....', '..hh....hh....', '..KK....KK....'],
-                 ['...hh..hh.....', '...hh..hh.....', '...KK..KK.....'], ['....hh.hh.....', '....hh..hh....', '....KK..KK....']]
+SHAMBLER_LEGS = [['...hh...hh.....', '...hh...hh.....', '...KK...KK.....'], ['...hh....hh....', '..hh.....hh....', '..KK.....KK....'],
+                 ['...hh...hh.....', '...hh...hh.....', '...KK...KK.....'], ['....hh..hh.....', '....hh...hh....', '....KK...KK....']]
 def shambler(f):
     rows = SHAMBLER + SHAMBLER_LEGS[f]
-    return over(rows, ['BBBBBb'], 8, 6 + (f % 2)) if f % 2 else rows
+    return over(rows, ['bBBBBb', '.bbccb'], 9, 7 + (f % 2)) if f % 2 else rows
 ART['shambler'] = (5, 23, [shambler(f) for f in range(F)])
 
-# Mourning haunt: a pale sheet-spirit with glowing hollow eyes, arms out, its hem rippling.
+# Mourning haunt: a pale shroud lit at the top left and shadowed down its right and in its folds, hollow glowing
+# eyes, a dark mouth, a faint glow at its heart, arms trailing out, the hem rippling into wisps.
 HAUNT = [
-    '....bBBBb....',
-    '...bBWBBBb...',
-    '..bBBBBBBBb..',
-    '..BBGBBBGBB..',
-    '..BBGBBBGBB..',
-    '..BBBBBBBBB..',
-    '..BBBBKKBBB..',
-    '.bBBBBBBBBBb.',
-    'bBBBBBBBBBBBb',
-    '.bBBBBBBBBBb.',
-    '..BBBBBBBBB..',
+    '.....bBBb.....',
+    '....bBWWBb....',
+    '...bBWBBBBb...',
+    '..bBBBBBBBbc..',
+    '..BBGGBBGGbc..',
+    '..BBGgBBgGbc..',
+    '..BBBBBBBBbc..',
+    '..BBBBKKBBbc..',
+    '.bBBBBKKBbbcc.',
+    'bBBbBBgBBbcbcc',
+    'bBbcBBBBBbcccx',
+    '.c.bBBBBBbc.x.',
+    '...bBcBBcbc...',
+    '...BBcBBcbc...',
 ]
-HAUNT_HEM = [['..BbB.BbB.B..', '...b...b.....'], ['..B.BbB.BbB..', '.....b...b...'],
-             ['..BbB.BbB.B..', '.b...b...b...'], ['.B.BbB.BbB...', '....b...b....']]
-ART['haunt'] = (6, 19, [HAUNT + HAUNT_HEM[f] for f in range(F)])
+HAUNT_HEM = [['...BbB.BbB.c..', '....b...b.....'], ['...B.BbB.Bbc..', '......b...b...'],
+             ['...BbB.BbB.c..', '..b...b...b...'], ['..B.BbB.Bbc...', '.....b...b....']]
+ART['haunt'] = (5, 19, [HAUNT + HAUNT_HEM[f] for f in range(F)])
 
 
 def cells(kind, f):

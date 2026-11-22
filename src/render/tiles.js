@@ -3,7 +3,8 @@ import { T } from '../core/constants.js';
 import { r, rng } from './pixel.js';
 import { SHRINE } from '../data/books.js';
 import { CHIMES } from '../data/nuts.js';
-import { DECOR_SHEETS, BUILDING_SHEETS, PROPS_SHEET, GREENHOUSE_SHEET, VARIANTS_SHEET } from '../data/sprites.js';
+import { DECOR_SHEETS, BUILDING_SHEETS, PROPS_SHEET, GREENHOUSE_SHEET, VARIANTS_SHEET, DUSK_SHEET } from '../data/sprites.js';
+import { cryptPart } from '../data/duskmarch.js';
 import { BUILDINGS } from '../data/buildings.js';
 import { RANCH_PEN } from '../data/ranch.js';
 import { ready, sheet } from './sheets.js';
@@ -1158,7 +1159,18 @@ export const PROP_VARIANT = {
 export const variantKey = (t, x, y, p) => { const v = PROP_VARIANT[t]?.(x, y, p); return v ? `${t}:${v}` : t; };
 // v89: a prop from the props sheet once it has loaded, else drawn in code; over a ground drawn by a tile set.
 // v95: props with variants from the variants sheet, one frame per variant.
+// 97b: the Duskmarch's tiles from dusk.png: the frame for a tile (variants spread by place), or -1.
+const pickOf = (x, y, n) => (((x * 7 + y * 13) ^ (x * y)) >>> 0) % n;
+const DUSK_PICK = {
+  'ψ': (x, y) => `weeds${pickOf(x, y, 3)}`, 'ɤ': (x, y) => `stone${pickOf(x, y, 5)}`, 'ʇ': (x, y) => `tree${pickOf(x, y, 3)}`,
+  'ɮ': (x, y) => `roof${cryptPart(x, y)}`, 'ɯ': (x, y) => `front${cryptPart(x, y)}`,
+  'ʞ': () => 'door', 'ʡ': () => 'doorOpen', 'ɸ': () => 'railing', 'ʊ': () => 'chest', 'ʖ': () => 'chestOpen',
+  'ʚ': () => 'coffin', 'ʛ': () => 'sarcophagus', 'ʜ': () => 'sarcophagusOpen',
+};
+export const duskFrame = (t, x, y) => (DUSK_PICK[t] ? DUSK_SHEET.names.indexOf(DUSK_PICK[t](x, y)) : -1);
 export function drawProp(g, t, x, y, p) {
+  const k = duskFrame(t, x, y), D = DUSK_SHEET;
+  if (k >= 0 && ready(D.sheet)) return g.drawImage(sheet(D.sheet).img, k * D.size, p.snow ? D.size : 0, D.size, D.size, x * T, y * T, D.size, D.size);
   const P = PROPS_SHEET, i = P.order.indexOf(t);
   if (i >= 0 && ready(P.sheet)) return g.drawImage(sheet(P.sheet).img, i * P.size, 0, P.size, P.size, x * T, y * T, P.size, P.size);
   const V = VARIANTS_SHEET, j = PROP_VARIANT[t] ? V.order.indexOf(variantKey(t, x, y, p)) : -1;

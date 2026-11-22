@@ -7,8 +7,10 @@
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addUpdater, addInteraction } from '../core/registry.js';
-import { MAPS } from '../data/maps.js';
+import { addUpdater, addInteraction, addLayer } from '../core/registry.js';
+import { motion } from '../core/motion.js';
+import { drawMood } from '../render/dusk.js';
+import { MAPS, sizeOf } from '../data/maps.js';
 import { MONSTERS } from '../data/weapons.js';
 import { WEED, DUSK_MAPS, DUSK_CREATURES, NIGHT, WEED_DROPS, CRYPT, CHEST, CHEST_OPEN, CRYPT_DOOR, CRYPT_DOOR_OPEN, SARCOPHAGUS, SARCOPHAGUS_OPEN } from '../data/duskmarch.js';
 import { WEAPONS } from '../data/weapons.js';
@@ -153,3 +155,10 @@ addInteraction(64, ({ tx, ty, mapId }) => {
 });
 // The crypt's dead are there each time you go in.
 on('map:changed', (id) => { if (id === 'crypt') populate('crypt', between(CRYPT.n), NIGHT.kinds, false); });
+
+// 97b: the maps' mood over the ground, under everyone (render/dusk.js).
+addLayer(8, (c) => {
+  const S = G.S; if (!S) return;
+  const { w, h } = sizeOf(S.map);
+  drawMood(c, S.map, w, h, S.time, performance.now() / 1000, !motion.shake);   // still with screen shake off (the reduced-motion choice)
+});
