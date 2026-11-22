@@ -8,7 +8,7 @@ import { MONSTERS as SHEET } from '../src/data/sprites.js';
 
 const png = readFileSync(new URL('../assets/sprites/monsters.png', import.meta.url));
 const width = png.readUInt32BE(16), height = png.readUInt32BE(20);
-const hollow = Object.keys(MONSTERS).filter((k) => !MONSTERS[k].cavernOnly && !MONSTERS[k].ventOnly && !MONSTERS[k].surfaceOnly);
+const hollow = Object.keys(MONSTERS).filter((k) => !MONSTERS[k].cavernOnly && !MONSTERS[k].ventOnly && !MONSTERS[k].surfaceOnly && !MONSTERS[k].wildOnly);   // v303: not the Duskmarch's
 const lum = (hex) => { const n = parseInt(hex.slice(1), 16); return 0.3 * (n >> 16) + 0.59 * ((n >> 8) & 255) + 0.11 * (n & 255); };
 const FLOOR = '#3b3430';   // the Hollow's floor (render/tiles.js CAVE_COLS.rock)
 

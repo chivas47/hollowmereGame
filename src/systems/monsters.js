@@ -7,7 +7,7 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
 import { MAPS, SOLID, sizeOf } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
-import { MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS, CHARGE, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR, BUSY, ELITE } from '../data/weapons.js';
+import { UNDEAD, MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS, CHARGE, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR, BUSY, ELITE } from '../data/weapons.js';
 import { SAVAGE } from '../data/guild.js';
 import { CAVERN } from '../data/cavern.js';
 import { VENT } from '../data/forge.js';
@@ -49,7 +49,7 @@ on('mine:floor', ({ floor: n, rng: R, zone, eff: floor, busy }) => {
   slimes.length = 0; slimeMap = 'mine'; busyFloor = !!busy;
   // v38: in the Sunken Cavern only its own monsters and those marked cavern, at the cavern's strength.
   const cav = zone === 'cavern', peak = zone === 'peak', vent = zone === 'vent' || peak, g = MAPS.mine.grid, D = MONSTERS;   // v67: the peak has the vent's monsters
-  const kinds = Object.keys(D).filter((k) => (vent ? D[k].vent || D[k].ventOnly : cav ? D[k].cavern || D[k].cavernOnly : !D[k].cavernOnly && !D[k].ventOnly && !D[k].surfaceOnly && floor >= D[k].from && floor <= (D[k].to ?? Infinity)));   // v253: to; v261: not the night creatures
+  const kinds = Object.keys(D).filter((k) => (vent ? D[k].vent || D[k].ventOnly : cav ? D[k].cavern || D[k].cavernOnly : !D[k].cavernOnly && !D[k].ventOnly && !D[k].surfaceOnly && !D[k].wildOnly && floor >= D[k].from && floor <= (D[k].to ?? Infinity)));   // v253: to; v261: not the night creatures
   let count = peak ? (n >= PEAK.floors ? 0 : PEAK.monsters(n)) : vent ? (n >= VENT.floors ? 0 : VENT.monsters(n)) : cav ? CAVERN.monsters(n) : MONSTER_COUNT(floor);   // v39: the forge room is safe
   const theme = busy ? kinds[Math.floor(R() * kinds.length)] : null;   // v259: a busy floor is all one kind, more of them
   if (busy) count = Math.min(BUSY.max, Math.round(count * BUSY.mult));
@@ -72,8 +72,9 @@ export function spawnSlimes(map, n, kind = 'slime', keep = false) {
   for (let guard = 0; slimes.length < goal && guard < 500; guard++) {
     const x = 1 + Math.floor(Math.random() * (MW - 2)), y = 5 + Math.floor(Math.random() * (MH - 6));
     if (g[y][x] !== 'g' || Math.hypot(x * T - G.S.x, y * T - G.S.y) < 5 * T) continue;
-    const px = x * T + 8, py = y * T + 12;
-    slimes.push({ ...make(kind, 1, px, py, Math.random), color });
+    const px = x * T + 8, py = y * T + 12, pack = MONSTERS[kind]?.pack;
+    const k = pack ? Math.min(pack[0] + Math.floor(Math.random() * (pack[1] - pack[0] + 1)), goal - slimes.length) : 1;   // v303: a swarm comes as a pack
+    for (let i = 0; i < k; i++) slimes.push({ ...make(kind, 1, px + (i % 3 - 1) * 6, py + (Math.floor(i / 3) - 0.5) * 6, Math.random), color });
   }
 }
 on('day:start', () => { slimes.length = 0; });
@@ -312,7 +313,7 @@ export function damageOf() {
   return weapon().damage * attackMult() * (has('fighter') ? 1.1 : 1) * (has('brute') ? 1.15 : 1) * (wearing('emberring') ? 1.1 : 1) * forgeBonus().damage * (G.S.mastery.claimed.includes('combat') ? 1.15 : 1) * tierMult();   // v39: heartstones; v40: combat mastery; v282: its tier
 }
 // v39: weapon enchantments that change damage against a kind.
-const versus = (kind) => { const e = weaponEnchant(); return e === 'crusader' && (kind === 'skeleton' || kind === 'wraith') ? 1.5 : e === 'bugkiller' && kind === 'mite' ? 2 : 1; };
+const versus = (kind) => { const e = weaponEnchant(); return e === 'crusader' && UNDEAD.includes(kind) ? 1.5 : e === 'bugkiller' && kind === 'mite' ? 2 : 1; };
 const HAY = ['fiber', 'cloth', 'coal'];
 function defeat(m) {
   slimes.splice(slimes.indexOf(m), 1);
@@ -376,8 +377,9 @@ function strike() {
   if (st.shake) shake(st.shake, 0.15);
   const reachK = st.reach || 1, px = G.S.x + dx * 12 * reachK, py = G.S.y - 4 + dy * 12 * reachK;
   if (st.slam) { ring(px, py + 4, 'rgba(255,241,184,.9)', SLAM_RADIUS, 0.35); burst(px, py + 4, IMPACT.stone, 10, { speed: 60, up: 40, size: 2, life: 0.45, shrink: true }); }
-  if (G.S.map !== slimeMap) return;
   const cx = st.spin ? G.S.x : px, cy = st.spin ? G.S.y - 4 : py, reach = st.spin ? wk.reach + 6 : st.slam ? SLAM_RADIUS : wk.reach * reachK;
+  emit('swing', { map: G.S.map, x: cx, y: cy, reach });   // v303: the Duskmarch's weeds (systems/duskmarch.js)
+  if (G.S.map !== slimeMap) return;
   const hits = strikeArea(cx, cy, reach, st.mult, st.knock || 1, st.spin || st.slam ? null : [dx, dy]);
   if (hits) holdSwing(stopFor(last));
 }

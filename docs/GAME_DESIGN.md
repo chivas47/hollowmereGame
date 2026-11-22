@@ -332,6 +332,29 @@ Stardew's beach and Cindersap forest by role. The farm's new path south (10, 14)
 - Beach forage (Stardew's): ridge clam 50g, sand cockle 50g, sea coral 80g all year; purple urchin 160g (summer); spiral shell 120g (winter).
 - Forest forage (Stardew's): wood narcissus 30g, honeycomb morel 150g (spring); curled fern 90g, sweet vetch 50g (summer); gold chanterelle 160g, wild hazelnut 90g (autumn); winter holly 80g, frost berry 150g (winter).
 
+### The Duskmarch (v303)
+
+West of the village and the town. Stardew's Secret Woods and the Wilderness farm's night monsters by role; our own maps. The woods are a maze with loops carved from a fixed seed (the same every game), roughened to read as forest, then choked with weeds.
+
+| Map | Size | Ways in | What is there |
+|---|---|---|---|
+| Gloamwood | 48 x 32 | village west (rows 4 and 20); Tangle (2); Mournfield (north) | Winding woods, a still pool, Brackenwood's forage (4 a day), weeds, day creatures |
+| The Tangle | 40 x 32 | Gloamwood (2); Mournfield (north) | One-tile ways and dead ends, a stone glade, Brackenwood's forage (3 a day), weeds, day creatures |
+| Mournfield | 48 x 32 | town west (row 8); Tangle and Gloamwood (south) | About 95 headstones, three crypts, a railed yard, an overgrown west end; the dead rise after 8 pm |
+
+Weeds (Stardew's weeds and scythe): solid until a weapon swing reaches them, no energy; fiber 50%, mixed seeds 3%, 5 health 6% when hurt, 1 foraging XP. They grow back each morning.
+
+| Creature | Where, when | Moves | HP | Damage | XP | Drops |
+|---|---|---|---|---|---|---|
+| Bristle hog | woods, any time | charge | 14 | 8 | 7 | bone shard, fiber |
+| Thorn wasps | woods, any time | flying swarm of 2 to 3 | 4 | 5 | 3 | chitin, honey |
+| Stump lurker | woods, any time | mimic (a stump) | 12 | 7 | 6 | wood, hardwood, mushroom |
+| Grave rattler | Mournfield, night | walk | 18 | 12 | 10 | bone shard, iron |
+| Barrow shambler | Mournfield, night | walk, slow | 30 | 15 | 14 | bone shard, cloth, gloommote |
+| Mourning haunt | Mournfield, night | phase | 16 | 10 | 12 | wisp silk, gloommote, sunmote |
+
+The woods hold 4 to 7 creatures, back each time you walk in. Mournfield: 3 to 4 at nightfall, 1 to 2 more every 30 minutes, at most 10. Strength sits beside the Hollow's floors 10 to 25 (Stardew's wilderness night monsters sit beside its early to middle mine floors).
+
 ### The mountain lake and the quarry (v44)
 
 Stardew's mountain lake and quarry by role. The Wilds' path north (21, 1) leads to Cragmoor; the mountain's east path to the quarry. Cragmoor has 4 forage spots a morning; its lake never freezes.
@@ -1536,6 +1559,8 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 | Ranching | animal products one quality higher |
 
 ## Known issues and open questions
+
+- v303: The Duskmarch's creatures count toward no Guild goal yet, and the balance bot never goes there (its loot and weed fiber are not in the report). Mournfield's dead rise at the same night light as everywhere else.
 
 - v130: The second farmer's pickups fly to you and their tool level, enchantments and skills are yours; and only your bed ends the day.
 - v144: With both dialogs open, the keyboard's focus follows whichever box was used last: a controller takes it back on its first press, and the keyboard player can click or Tab back into theirs.

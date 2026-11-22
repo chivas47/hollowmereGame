@@ -134,6 +134,25 @@ Object.assign(MONSTERS, {
   gourd:     { name: 'Gourd lurker', from: 0, surfaceOnly: true, season: 'Autumn', move: 'mimic', disguise: '#e8862a', hp: () => 10, dmg: () => 6, speed: () => 16, xp: 5, color: '#c86a2a' },
   frostwisp: { name: 'Frost wisp', from: 0, surfaceOnly: true, season: 'Winter', move: 'phase', hp: () => 8, dmg: () => 7, speed: () => 22, xp: 6, color: '#bfe0f2', glow: '#9fd8f0' },
 });
+// v303: the Duskmarch's creatures (data/duskmarch.js DUSK_CREATURES and NIGHT). wildOnly: only on those maps, never in
+// the dungeons; lives: the Bestiary's line. By day the woods: a bristle hog (a charger, beside the tusk boar's first
+// floors), thorn wasps (a flying swarm, like the bramble sprites) and the stump lurker (a mimic that sleeps as a stump,
+// like the pebble crab). After dark in Mournfield: the grave rattler (a walker, a bone walker's role at about a third
+// of its depth), the barrow shambler (slow, tough, hits hard) and the mourning haunt (a phaser like the lantern wisp,
+// weaker). Stardew's counterparts by role: its Secret Woods and the Wilderness farm's night monsters, whose strength
+// sits beside its early to middle mine floors; stats here sit beside the Hollow's floors 10 to 25.
+const WOODS_LINE = 'Lives in Gloamwood and the Tangle, west of the village, by day and night.';
+const GRAVE_LINE = 'Rises from the graves of Mournfield, west of the town, after dark.';
+Object.assign(MONSTERS, {
+  bristle:  { name: 'Bristle hog', from: 0, wildOnly: true, lives: WOODS_LINE, ...charger({ windup: 0.7, rush: 120, time: 0.5, recover: 1 }), hp: () => CHARGE.tough * 7, dmg: () => 8, speed: () => 18, xp: 7, color: '#6a4a32' },
+  wasp:     { name: 'Thorn wasps', from: 0, wildOnly: true, lives: WOODS_LINE, move: 'swarm', fly: true, pack: [2, 3], hp: () => 4, dmg: () => 5, speed: () => 44, xp: 3, color: '#d9a83a' },
+  stump:    { name: 'Stump lurker', from: 0, wildOnly: true, lives: WOODS_LINE, move: 'mimic', disguise: '#7a5a3a', hp: () => 12, dmg: () => 7, speed: () => 18, xp: 6, color: '#8a6a44' },
+  rattler:  { name: 'Grave rattler', from: 0, wildOnly: true, lives: GRAVE_LINE, move: 'walk', hp: () => 18, dmg: () => 12, speed: () => 22, xp: 10, color: '#ddd4bc' },
+  shambler: { name: 'Barrow shambler', from: 0, wildOnly: true, lives: GRAVE_LINE, move: 'walk', hp: () => 30, dmg: () => 15, speed: () => 12, xp: 14, color: '#7a9a6a' },
+  haunt:    { name: 'Mourning haunt', from: 0, wildOnly: true, lives: GRAVE_LINE, move: 'phase', hp: () => 16, dmg: () => 10, speed: () => 26, xp: 12, color: '#b8c8e0', glow: '#8ae0d0' },
+});
+export const UNDEAD = ['skeleton', 'wraith', 'rattler', 'shambler', 'haunt'];   // the crusader's enchantment hurts these half as much again
+
 // When they come out (game minutes), and how many: bodies on a farm, on the Wilds; a pack counts its bodies.
 export const NIGHTFOLK = { from: 20 * 60, farm: [2, 3], wilds: [3, 4] };
 

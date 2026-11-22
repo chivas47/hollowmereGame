@@ -389,6 +389,7 @@ Nuno (November 2026): "the goal is occupying the screen of the gameplay and I ca
 | 95c | A bigger field sideways | polish | in progress (chivas47/hollowmereGame#308) | Find 53: the hotbar down the right side on a phone held sideways, giving the field about a third more size. |
 | 95d | A closer camera on phones | feature | done (chivas47/hollowmereGame#307) | Find 54: fewer, bigger tiles on phones held upright. Every rule that assumes the 24 x 16 view (prompts, taps, the minimap, exits) needs checking; its own design pass. |
 | 96 | Eat from the hotbar | feature | done (chivas47/hollowmereGame#316) | Nuno (November 2026): food gives energy and items go on the hotbar more easily, as in Stardew. Three item slots after the tools on 0, - and = (tool keys unchanged), filled from the Bag by key, button or drag; food held there is eaten with Use; raw crops, fruit, forage, fish and animal products give energy on the Stardew scale. |
+| 97 | The Duskmarch: woods and a graveyard to the west | feature | in progress | Nuno (November 2026): a big network of areas west of the village and the town to get lost in: Gloamwood and the Tangle (woods choked with weeds you cut with the sword, Zelda style, creatures by day) and Mournfield (a big graveyard where skeletons, zombies and spirits rise at night). Three maps joined to each other more than once; six new creatures. Follow-ups to decide: Guild goals and rewards for the new creatures, a reason to come back beyond loot (a crypt to open, a rare find deep in the Tangle). |
 
 ## Done
 

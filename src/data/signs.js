@@ -2,6 +2,7 @@
 // only where the tile is open grass or sand). Facing one and pressing Use reads it. Posts point toward a map edge
 // (dir), notices are handmade boards with a paper pinned on. {farm} is the player's farm name. A sign with `after`
 // changes its words once that shortcut is cut (data/shortcuts.js). None on the farm: that ground is the player's.
+import { DUSK_SIGNS } from './duskmarch.js';
 export const SIGN = 'Ş';
 
 export const SIGNS = {
@@ -47,3 +48,5 @@ export const SIGNS = {
     { x: 13, y: 4, kind: 'notice', text: 'Fish from the bank only. The ice is never as thick as it looks.' },
   ],
 };
+// v303: the Duskmarch's signs, at its ways in (data/duskmarch.js).
+for (const [id, list] of Object.entries(DUSK_SIGNS)) (SIGNS[id] ||= []).push(...list);

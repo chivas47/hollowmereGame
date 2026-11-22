@@ -51,6 +51,7 @@ export function newState() {
       // v65: the island farm's soil; Rook's boat repaired
     forage: [], forageDay: 0,
     wildWeeds: [],      // v33: weeds in the Wilds, cut for fiber (systems/forage.js)
+    cutWeeds: {}, cutDay: 0,   // v303: the Duskmarch's weeds cut today, by map (systems/duskmarch.js)
     fishLog: {},        // fish key -> number caught
     upgrades: { can: 0, hoe: 0, axe: 0, rod: 0, house: 0, pick: 0, pan: 0 },   // tier index per upgrade line
     waterBonus: 0, maxEnergy: 270,                      // derived stats, see systems/upgrades.js
@@ -147,6 +148,7 @@ export function merge(saved) {
   s.built = Object.assign(newState().built, saved.built || {});
   if (!Array.isArray(s.forage)) s.forage = [];
   if (!Array.isArray(s.wildWeeds)) s.wildWeeds = [];
+  s.cutWeeds = Object.fromEntries(Object.entries(saved.cutWeeds && typeof saved.cutWeeds === 'object' ? saved.cutWeeds : {}).filter(([, v]) => Array.isArray(v)).map(([k, v]) => [k, v.filter((t) => typeof t === 'string')]));   // v303
   if (!Array.isArray(s.chickens)) s.chickens = [];
   if (!s.projects || typeof s.projects !== 'object') s.projects = {};
   if (!s.greenSoil || typeof s.greenSoil !== 'object') s.greenSoil = {};

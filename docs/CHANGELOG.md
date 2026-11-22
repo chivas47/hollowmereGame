@@ -2,6 +2,18 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v303: The Duskmarch
+- New country west of the village and the town: three maps that join each other more than once, so it is easy to lose your way.
+- Gloamwood (west from the village, two roads in): old woods of winding ways, a still pool at its heart, Brackenwood's forage.
+- The Tangle (west of Gloamwood): a thicket of narrow ways and dead ends.
+- Mournfield (west from the town): the valley's old graveyard, nearly a hundred headstones, three crypts, a railed yard and an overgrown west end. Both woods have a way north into it.
+- Thick weeds choke the woods. Any swing of your weapon cuts the clumps it reaches: fiber about half the time, now and then mixed seeds or a little health back, and foraging XP. They grow back each morning. Facing one with another tool tells you how to get through.
+- By day the woods have bristle hogs (they charge), thorn wasps (a flying swarm) and stump lurkers (asleep they look like a stump). They come back each time you walk in.
+- After 8 pm the dead rise in Mournfield: grave rattlers (skeletons), barrow shamblers (slow, tough zombies) and mourning haunts (spirits that fade in and out). More rise every half hour, up to ten; morning clears them. The crusader enchantment hurts them half as much again.
+- Each new creature has its own art, loot (bone shards, cloth, chitin, wood, wisp silk, motes) and a Bestiary card.
+- The world map gains two columns in the west.
+- New save data: the weeds cut today (cutWeeds, cutDay). Old saves load with nothing cut.
+
 ## v302: The world in motion
 - The village fountain's water runs: drops slide down the column and rings spread in the basin (frozen in winter). Its jets still start when the hall's fish tank is restored.
 - Chimneys smoke: the farmhouse, the cottages and the lodge in the morning and evening (all day in autumn, winter and rain), and the smithy's forge while it works. The smoke drifts with the wind.

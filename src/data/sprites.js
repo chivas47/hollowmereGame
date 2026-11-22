@@ -146,7 +146,11 @@ export const MONSTERS = {
     'stormwing.ink', 'cinder.body', 'cinder.glow', 'cinder.line', 'cinder.ink', 'magmaram.body', 'magmaram.glow',
     'magmaram.line', 'magmaram.ink', 'bramble.body', 'bramble.line', 'bramble.ink', 'moth.body', 'moth.glow',
     'moth.line', 'moth.ink', 'gourd.body', 'gourd.line', 'gourd.ink', 'gourdsleep.body', 'gourdsleep.line',
-    'gourdsleep.ink', 'frostwisp.body', 'frostwisp.glow', 'frostwisp.line', 'frostwisp.ink'],
+    'gourdsleep.ink', 'frostwisp.body', 'frostwisp.glow', 'frostwisp.line', 'frostwisp.ink',
+    // v303: the Duskmarch's creatures
+    'bristle.body', 'bristle.line', 'bristle.ink', 'wasp.body', 'wasp.line', 'wasp.ink', 'stump.body', 'stump.line',
+    'stump.ink', 'stumpsleep.body', 'stumpsleep.line', 'stumpsleep.ink', 'rattler.body', 'rattler.line', 'rattler.ink',
+    'shambler.body', 'shambler.line', 'shambler.ink', 'haunt.body', 'haunt.glow', 'haunt.line', 'haunt.ink'],
   kinds: {
     mite: { shadow: [-5, 10, 0.35], rim: '#a8845a' }, bat: { shadow: [-3, 6, 0.25], bob: 6, rim: '#8f7aa8' }, skeleton: { shadow: [-4, 8, 0.35] },
     wraith: { shadow: [-4, 8, 0.35], sway: 3 }, rex: { shadow: [-4, 8, 0.25], bob: 5 },
@@ -180,6 +184,10 @@ export const MONSTERS = {
     bramble: { shadow: [-2, 4, 0.25], bob: 7 }, moth: { shadow: [-3, 6, 0.2], bob: 6, glow: '#fff3a0', halo: '#fff3a0' },
     gourd: { shadow: [-6, 12, 0.35], sleep: 'gourdsleep' }, gourdsleep: { shadow: [-6, 12, 0.35] },
     frostwisp: { shadow: [-3, 6, 0.2], bob: 3, glow: '#9fd8f0' },
+    // v303: the Duskmarch's creatures; the stump lurker sleeps as a plain stump.
+    bristle: { shadow: [-8, 16, 0.35] }, wasp: { shadow: [-2, 4, 0.25], bob: 7 },
+    stump: { shadow: [-6, 12, 0.35], sleep: 'stumpsleep' }, stumpsleep: { shadow: [-6, 12, 0.35] },
+    rattler: { shadow: [-4, 8, 0.35] }, shambler: { shadow: [-5, 10, 0.35] }, haunt: { shadow: [-3, 6, 0.2], bob: 3, glow: '#8ae0d0' },
   },
 };
 

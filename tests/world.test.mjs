@@ -32,7 +32,7 @@ const WAYS = [
   { from: 'desert', stand: [2, 8], to: 'town', land: [21, 8], why: 'the coach home (systems/desert.js)' },
 ];
 // Solid tiles that open in play (cleared, cut or unlocked), so a walk may pass them.
-const GATES = new Set(['}', '|', 'Ŧ', 'ǂ']);
+const GATES = new Set(['}', '|', 'Ŧ', 'ǂ', 'ψ']);   // v303: the Duskmarch's weeds, cut with the sword
 // Maps whose way out is set when you go in (systems/venues.js, systems/sites.js), or that have none on purpose.
 const SET_ON_ENTRY = (id) => id.startsWith('inside_') || id === 'shed';
 

@@ -16,6 +16,13 @@ export const LOOT_ITEMS = {
 };
 
 export const LOOT = {
+  // v303: the Duskmarch's creatures (Stardew by role: bone fragments from its skeletons, essences from its ghosts)
+  bristle:    [['boneshard', 0.3, 1, 1], ['fiber', 0.4, 1, 2]],
+  wasp:       [['chitin', 0.5, 1, 1], ['honey', 0.05, 1, 1]],
+  stump:      [['wood', 0.8, 2, 4], ['hardwood', 0.1, 1, 1], ['mushroom', 0.1, 1, 1]],
+  rattler:    [['boneshard', 0.6, 1, 2], ['iron', 0.1, 1, 1]],
+  shambler:   [['boneshard', 0.3, 1, 1], ['cloth', 0.12, 1, 1], ['gloommote', 0.05, 1, 1]],
+  haunt:      [['wispsilk', 0.08, 1, 1], ['gloommote', 0.1, 1, 1], ['sunmote', 0.04, 1, 1]],
   slime:      [['gel', 0.75, 1, 2], ['copper', 0.05, 1, 1]],
   mite:       [['chitin', 0.5, 1, 1], ['fiber', 0.2, 1, 1]],
   beetle:     [['chitin', 0.4, 1, 1], ['copper', 0.2, 1, 1]],

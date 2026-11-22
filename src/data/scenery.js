@@ -34,6 +34,9 @@ export const COVER = {
   desert:   { biome: 'dunes', rate: 0.1, patch: 0.4 },
   digsite:  { biome: 'dunes', rate: 0.1, patch: 0.4 },
   quarry:   { biome: 'stone', rate: 0.12, patch: 0.3 },
+  gloamwood: { biome: 'woods', rate: 0.3, patch: 0.5 },   // v303
+  tangle:   { biome: 'woods', rate: 0.34, patch: 0.4 },
+  mournfield: { biome: 'highland', rate: 0.14, patch: 0.6 },
   island:   { biome: 'tropic', rate: 0.25, patch: 0.5, keepOff: [[4, 3, 17, 8]] },
 };
 

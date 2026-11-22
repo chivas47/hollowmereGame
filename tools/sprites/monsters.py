@@ -904,6 +904,88 @@ def frostwisp(f):
     return rows
 ART['frostwisp'] = (6, 21, [frostwisp(f) for f in range(F)])
 
+# ---- v303: the Duskmarch's creatures ----
+
+# Bristle hog: the boar's trot under a crest of long dark bristles, a mossy tuft on its back.
+def bristle(fr):
+    return over(['....k.k.k.k.k.k......', '...k.k.k.k.k.k.k.....', '.......mMMm..........'] + fr, ['......'], 0, 0)
+ART['bristle'] = (1, 23, [bristle(fr) for fr in ART['boar'][2]])
+
+# Thorn wasps: a striped body, a stinger, see-through wings beating up and down.
+WASP_BODY = ['.bBBBBBb..', 'bBKBKBBBZ.', 'bBKBKBBBBb', '.bBbBbbBb.', '...k......']
+WASP_WINGS = [['..WW.WW...', '..WW.WW...'], ['..........', '.WWW.WWW..'], ['..........', '..........'], ['..........', '.WWW.WWW..']]
+def wasp(f):
+    rows = WASP_WINGS[f] + WASP_BODY
+    if f == 2: rows = over(rows, ['WWW.WWW'], 1, 5)
+    return rows
+ART['wasp'] = (7, 16, [wasp(f) for f in range(F)])
+
+# Stump lurker: a cut stump with rings on top, glowing eyes and root legs. Asleep (stumpsleep): the stump alone.
+STUMP = [
+    '...bBBBBBBb...',
+    '..bBhHHHHhBb..',
+    '..BBHhhhhHBB..',
+    '..bBhHHHHhBb..',
+    '..BcBBBBBBcB..',
+    '..BBFZBBFZBB..',
+    '..BcBBBBBBcB..',
+    '..BBBcBBcBBB..',
+    '..BcBBBBBBcB..',
+    '.bBBBBBBBBBBb.',
+]
+STUMP_ROOTS = [['.cc..c..c..cc.', 'c....c..c....c'], ['..cc.c..c.cc..', '.c...c..c...c.'],
+               ['.cc..c..c..cc.', 'c....c..c....c'], ['cc...c..c...cc', '..c..c..c..c..']]
+ART['stump'] = (5, 23, [STUMP + STUMP_ROOTS[f] for f in range(F)])
+ART['stumpsleep'] = (5, 23, [over(STUMP, ['MmBBBBBBmM'], 2, 5) + ['.cc..c..c..cc.', 'cc...c..c...cc']] * F)
+
+# Grave rattler: a bone walker in a rotted sash, with a dented helm and a crack down its skull.
+def rattler(f):
+    rows = over(bones(f), ['.kkkkk.', 'k.....k'], 3, 0)
+    rows = over(rows, ['K'], 6, 1)
+    return over(rows, ['rr....', '.rr...', '..rr..', '...rr.'], 3, 7)
+ART['rattler'] = (6, 23, [rattler(f) for f in range(F)])
+
+# Barrow shambler: hunched, arms held out in front, a torn shirt and trousers, a dragging step.
+SHAMBLER = [
+    '....bBBBb.....',
+    '...bBBBBBb....',
+    '...BZBBZBc....',
+    '...BBBBBBc....',
+    '...bBKKBbc....',
+    '....bBBb......',
+    '..ddddddBBBBBb',
+    '..dddddd...BBb',
+    '..ddKdddd.....',
+    '..dddKddd.....',
+    '...dddddd.....',
+    '...hhhhhh.....',
+]
+SHAMBLER_LEGS = [['...hh..hh.....', '...hh..hh.....', '...KK..KK.....'], ['...hh...hh....', '..hh....hh....', '..KK....KK....'],
+                 ['...hh..hh.....', '...hh..hh.....', '...KK..KK.....'], ['....hh.hh.....', '....hh..hh....', '....KK..KK....']]
+def shambler(f):
+    rows = SHAMBLER + SHAMBLER_LEGS[f]
+    return over(rows, ['BBBBBb'], 8, 6 + (f % 2)) if f % 2 else rows
+ART['shambler'] = (5, 23, [shambler(f) for f in range(F)])
+
+# Mourning haunt: a pale sheet-spirit with glowing hollow eyes, arms out, its hem rippling.
+HAUNT = [
+    '....bBBBb....',
+    '...bBWBBBb...',
+    '..bBBBBBBBb..',
+    '..BBGBBBGBB..',
+    '..BBGBBBGBB..',
+    '..BBBBBBBBB..',
+    '..BBBBKKBBB..',
+    '.bBBBBBBBBBb.',
+    'bBBBBBBBBBBBb',
+    '.bBBBBBBBBBb.',
+    '..BBBBBBBBB..',
+]
+HAUNT_HEM = [['..BbB.BbB.B..', '...b...b.....'], ['..B.BbB.BbB..', '.....b...b...'],
+             ['..BbB.BbB.B..', '.b...b...b...'], ['.B.BbB.BbB...', '....b...b....']]
+ART['haunt'] = (6, 19, [HAUNT + HAUNT_HEM[f] for f in range(F)])
+
+
 def cells(kind, f):
     if kind == 'serpent': return serpent(f)
     x0, bottom, frames = ART[kind]
@@ -916,7 +998,8 @@ SHAPES = ['mite', 'bat', 'skeleton', 'wraith', 'rex', 'sprite', 'golem', 'serpen
           'crab', 'crabrock', 'mole', 'puff', 'lurker', 'spitter', 'wisp', 'shell', 'mossslime',
           'scuttler', 'bull', 'dustdevil', 'ashswarm', 'sandspitter', 'cragspitter', 'shade', 'emberslime', 'cragshell',
           'stormwing', 'cinder', 'magmaram',   # v268 (87c2)
-          'bramble', 'moth', 'gourd', 'gourdsleep', 'frostwisp']   # v269 (87c3)
+          'bramble', 'moth', 'gourd', 'gourdsleep', 'frostwisp',   # v269 (87c3)
+          'bristle', 'wasp', 'stump', 'stumpsleep', 'rattler', 'shambler', 'haunt']   # v303
 def has_glow(kind): return any(ch in 'Gg' for f in range(F) for ch in cells(kind, f).values())
 LAYERS = [f'{k}.{L}' for k in SHAPES for L in (['body'] + (['glow'] if has_glow(k) else []) + ['line', 'ink'])]
 
@@ -963,7 +1046,10 @@ PREVIEW = {'slime': ('#7fcf6a', None, None), 'mossslime': ('#6a9a3a', None, None
            'stormwing': ('#3a4a6a', '#9fd8f0', '#7a8ab0'), 'cinder': ('#5a2a22', '#e9862a', '#a8665a'),
            'magmaram': ('#4a3430', '#e9862a', '#94786e'),
            'bramble': ('#6a8a3a', None, None), 'moth': ('#e9d27a', '#fff3a0', None), 'gourd': ('#c86a2a', None, None),
-           'gourdsleep': ('#e8862a', None, None), 'frostwisp': ('#bfe0f2', '#9fd8f0', None)}
+           'gourdsleep': ('#e8862a', None, None), 'frostwisp': ('#bfe0f2', '#9fd8f0', None),
+           'bristle': ('#6a4a32', None, None), 'wasp': ('#d9a83a', None, None), 'stump': ('#8a6a44', None, None),
+           'stumpsleep': ('#7a5a3a', None, None), 'rattler': ('#ddd4bc', None, None), 'shambler': ('#7a9a6a', None, None),
+           'haunt': ('#b8c8e0', '#8ae0d0', None)}
 def make_preview(img, row, path):
     def band(L, f, col):
         b = img.crop((f * S, row[L] * S, f * S + S, row[L] * S + S))

@@ -688,7 +688,8 @@ function halo(c, px, py, color, t) {
 // v268 (87c2): until the sheet loads, kinds with their own shape draw as the shape they grew from.
 const CODE_LIKE = { scuttler: 'beetle', bull: 'boar', magmaram: 'ram', dustdevil: 'puff', ashswarm: 'puff', sandspitter: 'spitter',
   cragspitter: 'spitter', shade: 'wisp', cragshell: 'shell', stormwing: 'bat',
-  bramble: 'puff', moth: 'bat', gourd: 'crab', gourdsleep: 'crabrock', frostwisp: 'wisp' };   // v269
+  bramble: 'puff', moth: 'bat', gourd: 'crab', gourdsleep: 'crabrock', frostwisp: 'wisp',   // v269
+  bristle: 'boar', wasp: 'puff', stump: 'crab', stumpsleep: 'crabrock', rattler: 'skeleton', shambler: 'skeleton', haunt: 'wisp' };   // v303
 // v228: flip faces it left (chargers face the way they go).
 export function drawMonster(c, px, py, kind, color, hurt, t, flip = false) {
   const k = MONSTERS.kinds[kind] || {};
