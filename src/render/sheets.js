@@ -26,7 +26,16 @@ export function sheet(name) {
   s.img = img;
   return s;
 }
-export const ready = (name) => sheet(name).ok;
+// v297: while a picture is drawn under missingWhile(), the sheets it asked for that had not loaded yet are noted, so
+// its cache can be dropped when one of those arrives (and only then).
+let missing = null;
+export const ready = (name) => { const ok = sheet(name).ok; if (!ok && missing) missing.add(name); return ok; };
+export function missingWhile(fn) {
+  const outer = missing, mine = (missing = new Set());
+  try { return { value: fn(), missing: mine }; } finally { if (outer) mine.forEach((n) => outer.add(n)); missing = outer; }
+}
+// v297: start every sheet loading at boot (312 KB in all), before the farmer walks anywhere.
+export const preloadSheets = (names) => { if (hasImage) names.forEach(sheet); };
 
 const listeners = [];
 // Runs fn(name) whenever a sheet finishes loading (for still pictures drawn once, like the creation preview).

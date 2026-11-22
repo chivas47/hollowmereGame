@@ -7,12 +7,12 @@ import { today, dayEnd } from '../core/time.js';
 import { MAPS, sizeOf } from '../data/maps.js';
 import { PAL, DRY_TREES } from '../data/seasons.js';
 import { LIGHT, NIGHT_FROM } from '../data/atmosphere.js';
-import { drawGrass, drawPath, drawTree, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, drawQuarry, drawSand, drawBowl, drawRavine, drawBridge, drawBrokenBridge, drawHouseTile, drawTerrain, drawFlowers, drawBuilding, drawProp, coveredTiles, HOUSE_ART, CAVE_ART, PROP_ART, PROP_GROUND } from './tiles.js';
+import { drawGrass, drawPath, drawTree, treeStamp, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, drawQuarry, drawSand, drawBowl, drawRavine, drawBridge, drawBrokenBridge, drawHouseTile, drawTerrain, drawFlowers, drawBuilding, drawProp, coveredTiles, HOUSE_ART, CAVE_ART, PROP_ART, PROP_GROUND } from './tiles.js';
 import { facing, tileAt } from '../systems/world.js';
 import { WALLPAPERS, FLOORS } from '../data/furniture.js';
 import { TERRAIN_SHEET, CAVE_SHEET } from '../data/sprites.js';
 import { drawHomeTile } from './interiors.js';
-import { ready, sheet, onSheet } from './sheets.js';
+import { ready, sheet, onSheet, missingWhile } from './sheets.js';
 import { addLayer } from '../core/registry.js';
 import { WIND } from '../data/atmosphere.js';
 import { lean, shiftOf } from '../systems/wind.js';
@@ -20,11 +20,20 @@ import { outdoorLights } from '../systems/nightlights.js';
 import { views, visible } from './views.js';
 import { drawCover } from './scenery.js';
 
-let cache = {};
-on('season:changed', () => { cache = {}; });
-on('game:reset', () => { cache = {}; });
-on('world:changed', () => { cache = {}; });
-onSheet(() => { cache = {}; });   // v85: redraw the background once a sheet arrives (ground, cave, wallpaper, floors)
+// v297: drawn backgrounds by map and season, most recently used last (a Map keeps insertion order). Their canvases
+// hold at most BUDGET pixels (4 bytes each: about 48 MB, room for most of the world); past that the least recently
+// used goes.
+const BUDGET = 12e6;
+const cache = new Map();
+let used = 0;
+const forget = (key) => { used -= cache.get(key).px; cache.delete(key); };
+const drop = () => { cache.clear(); used = 0; queue.length = 0; };
+on('season:changed', () => { drop(); ahead(); });
+on('game:reset', drop);
+on('world:changed', () => { drop(); ahead(); });
+// v85: redraw a background once a sheet it lacked arrives (ground, cave, wallpaper, floors); v297: only those
+// backgrounds, so a sheet arriving no longer sends every visited map back to be drawn again.
+onSheet((name) => { let gone = false; for (const [key, e] of cache) if (e.missing.has(name)) { forget(key); gone = true; } if (gone) ahead(); });
 
 const TILE_ART = { b: drawBowl, O: drawWater, T: drawTree, R: drawRock, w: drawGlassWall, 'ǀ': drawRavine, 'ǂ': drawBrokenBridge, 'ǃ': drawBridge, ...CAVE_ART };   // 77q: the quarry ravine and bridge
 
@@ -34,8 +43,10 @@ const CROWN = 12;   // rows of a tree tile that sway (drawTree's crown and its s
 function renderBackground(mapId, season) {
   const { w: MW, h: MH } = sizeOf(mapId);   // v156: the map's own size (larger than the screen behind a camera)
   const c = document.createElement('canvas'); c.width = MW * T; c.height = MH * T;
-  const crowns = document.createElement('canvas'); crowns.width = MW * T; crowns.height = MH * T;
-  const k = crowns.getContext('2d'), trees = [];
+  // v297: the crowns canvas only for a map with trees (no room indoors needs one)
+  let crowns = null, k = null;
+  const crownCtx = () => k || (crowns = Object.assign(document.createElement('canvas'), { width: MW * T, height: MH * T }), k = crowns.getContext('2d'));
+  const trees = [];
   const g = c.getContext('2d'), map = MAPS[mapId], p = { ...PAL[season], season, ...(map.theme ? { theme: map.theme } : {}), ...(map.dry ? DRY_TREES : {}) };   // v38: theme (the cavern's sand); v181: dry scrub
   const ground = map.base === 'cave' ? CAVE_SHEET.sheet(map.theme) : TERRAIN_SHEET.sheet(season);
   const sheetGround = (!map.base || map.base === 'cave') && ready(ground);   // v85: outdoor ground (v87: and caves) from a tile set
@@ -63,9 +74,9 @@ function renderBackground(mapId, season) {
     const t = map.grid[y][x], art = TILE_ART[t];
     if (sheetGround && PROP_ART[t]) drawProp(g, t, x, y, p);   // v89: the prop alone, its ground is in the tile set
     else if (art === drawTree && under.has(`${x},${y}`)) continue;   // v226: the building stands in front of it
-    else if (art === drawTree) {   // v183: the trunk foot drawn straight onto the ground through a clip; copying it back
-      art(k, x, y, p);             // from the crowns canvas after each tree stalled the canvas, 258 times in town (polish 76d)
-      g.save(); g.beginPath(); g.rect(x * T, y * T + CROWN, T, T - CROWN); g.clip(); art(g, x, y, p); g.restore();
+    else if (art === drawTree) {   // v183: the trunk foot never comes back from the crowns canvas (copying out of a canvas
+      art(crownCtx(), x, y, p);    // being drawn stalled it, 258 times in town, polish 76d); v297: it is the lower rows of
+      g.drawImage(treeStamp(x, y, p), 0, CROWN, T, T - CROWN, x * T, y * T + CROWN, T, T - CROWN);   // the tree's stamp
       trees.push([x, y]);
     }
     else if (art && !(sheetGround && (map.base === 'cave' ? t === 'X' : t === 'O'))) art(g, x, y, p);   // v85: outdoor water (v87: cave walls) are in the tile set
@@ -73,7 +84,7 @@ function renderBackground(mapId, season) {
   map.objects.forEach((o) => drawBuilding(g, p, o));   // v88: from the building sheets
   // One canvas per wind band (data/atmosphere.js WIND.tree) holding that band of every crown, so a column of
   // trees leans with one copy per band.
-  const bands = WIND.tree.map(([a, b]) => {
+  const bands = !trees.length ? [] : WIND.tree.map(([a, b]) => {   // v297: none for a map without trees
     const y0 = Math.round(a * CROWN), y1 = Math.round(b * CROWN), bc = document.createElement('canvas'); bc.width = MW * T; bc.height = MH * T;
     const bg = bc.getContext('2d');
     for (const [x, y] of trees) bg.drawImage(crowns, x * T, y * T + y0, T, y1 - y0, x * T, y * T + y0, T, y1 - y0);
@@ -91,10 +102,49 @@ function groundOf(map, t) {
   return 'grass';
 }
 
-function cached() {
-  const key = G.S.map + '-' + today().season + (MAPS[G.S.map].theme || '');
-  return cache[key] || (cache[key] = renderBackground(G.S.map, today().season));
+const keyOf = (mapId, season) => mapId + '-' + season + (MAPS[mapId].theme || '');
+function backgroundOf(mapId, season) {
+  const key = keyOf(mapId, season);
+  let e = cache.get(key);
+  if (e) { cache.delete(key); cache.set(key, e); return e; }   // most recently used
+  const { value, missing } = missingWhile(() => renderBackground(mapId, season));
+  e = { ...value, missing, px: value.bg.width * value.bg.height * (1 + value.bands.length) };
+  cache.set(key, e); used += e.px;
+  while (used > BUDGET && cache.size > 1) forget(cache.keys().next().value);   // the least recently used
+  return e;
 }
+const cached = () => backgroundOf(G.S.map, today().season);
+
+// v297: the maps one step from where the farmer stands are drawn while the browser is idle, so walking through a
+// door or off an edge finds its background ready instead of drawing it in that frame. Neighbours: where this map's
+// exits lead, then every map whose exits lead here (the rooms behind the doors: homes, shops, the house).
+const queue = [], SETTLE = 400;   // ms after arriving before the neighbours start
+let pending = false;
+const idle = globalThis.requestIdleCallback ? (fn) => requestIdleCallback(fn, { timeout: 300 }) : (fn) => setTimeout(fn, 100);   // a busy game loop still gets them drawn
+export function neighbours(mapId) {
+  const out = new Set(Object.values(MAPS[mapId]?.exits || {}).map((e) => e.to));
+  for (const [id, m] of Object.entries(MAPS)) if (Object.values(m.exits || {}).some((e) => e.to === mapId)) out.add(id);
+  out.delete(mapId);
+  return [...out].filter((id) => MAPS[id]?.grid?.length);
+}
+function ahead() {
+  if (!G.S?.map || !MAPS[G.S.map]) return;
+  const season = today().season;
+  queue.length = 0;
+  for (const id of neighbours(G.S.map)) if (!cache.has(keyOf(id, season))) queue.push(id);
+  if (queue.length && !pending) { pending = true; setTimeout(() => idle(drawAhead), SETTLE); }   // not in the frames you arrive in
+}
+function drawAhead() {
+  pending = false;
+  const id = queue.shift();
+  if (!id || !G.S?.map) return;
+  const here = keyOf(G.S.map, today().season);
+  backgroundOf(id, today().season);
+  if (cache.has(here)) { const e = cache.get(here); cache.delete(here); cache.set(here, e); }   // the map you stand on stays newest
+  if (queue.length) { pending = true; idle(drawAhead); }
+}
+on('map:changed', ahead);
+on('game:loaded', ahead);
 const background = () => cached().bg;
 
 // v103: the tree crowns, under everything else, each band of each column leaning with the wind there.

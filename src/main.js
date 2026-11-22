@@ -178,6 +178,8 @@ import './audio/ambience.js';   // v72
 import './audio/footsteps.js';   // v109: footsteps by surface
 import { $ } from './ui/dom.js';
 import { openTitle } from './ui/title.js';   // v271 (89b)
+import { preloadSheets } from './render/sheets.js';
+import { SHEET_FILES } from './data/sprites.js';
 
 const canvas = $('#game'), ctx = canvas.getContext('2d');
 let last = 0;
@@ -192,6 +194,7 @@ function frame(t) {
 }
 
 function start(data) {
+  preloadSheets(SHEET_FILES);   // v297: every sheet on its way during the title screen, none arriving mid-play
   const hot = data?.S?.day;
   G.S = hot ? merge(data.S) : load();
   buildHotbar();

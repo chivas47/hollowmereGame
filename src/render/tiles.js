@@ -155,8 +155,23 @@ const TREE_CROWNS = [
   }
   return { g, edge };
 });
-export function drawTree(g, x, y, p) {
-  const X = x * T, Y = y * T, R = rng(x * 71 + y * 313), crown = TREE_CROWNS[Math.floor(R() * 3)], flip = R() < 0.5;
+// v297: a tree is one of three crowns, flipped or not, in the palette's colours: six pictures a palette, each drawn
+// once into a stamp and copied after, instead of some 150 one-pixel rectangles for every tree on the map.
+const stamps = new Map();
+export function treeStamp(x, y, p) {
+  const R = rng(x * 71 + y * 313), c = Math.floor(R() * 3), flip = R() < 0.5;
+  const key = `${c}${flip ? 'f' : ''}|${p.trl}|${p.tr}|${p.trd}|${p.snow ? 1 : 0}`;
+  let cv = stamps.get(key);
+  if (!cv) {
+    cv = Object.assign(document.createElement('canvas'), { width: T, height: T });
+    paintTree(cv.getContext('2d'), 0, 0, TREE_CROWNS[c], flip, p);
+    if (stamps.size > 96) stamps.delete(stamps.keys().next().value);
+    stamps.set(key, cv);
+  }
+  return cv;
+}
+export function drawTree(g, x, y, p) { g.drawImage(treeStamp(x, y, p), x * T, y * T); }
+function paintTree(g, X, Y, crown, flip, p) {
   const col = { L: p.trl, l: p.tr, k: p.trd }, line = tone(p.trd, 0.55);
   r(g, X + 2, Y + 13, 12, 2, 'rgba(0,0,0,.18)'); r(g, X + 4, Y + 14, 8, 1, 'rgba(0,0,0,.12)');
   r(g, X + 6, Y + 9, 4, 6, '#3f2a18'); r(g, X + 7, Y + 9, 2, 6, '#6b4a2b'); r(g, X + 7, Y + 9, 1, 6, '#8a6440');
