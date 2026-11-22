@@ -51,8 +51,11 @@ export const SNOW = [
 // Birthdays. {name}: whose; {loved}: something they love (only a friend of theirs gives that away).
 export const BIRTHDAY = {
   mine: ['It is my birthday today. I am not making a fuss. You can, though.', 'Today is my birthday. Do not sing. Well. Maybe a little.'],
-  friend: 'It is {name}\'s birthday today. Between us, a {loved} would make their year.',
-  other: 'It is {name}\'s birthday today. Have you got them something?',
+  // v295: several wordings each, one per neighbour, so the whole valley does not say the same sentence.
+  friend: ['It is {name}\'s birthday today. Between us, a {loved} would make their year.', '{name}\'s birthday! I happen to know they would light up for a {loved}.',
+    'Do not tell {name} I told you, but it is their birthday, and a {loved} would be perfect.', 'It is {name}\'s birthday. I always give a {loved}. You could too.'],
+  other: ['It is {name}\'s birthday today. Have you got them something?', '{name} turns another year older today. Go and say something nice.',
+    'Did you know it is {name}\'s birthday? Somebody should make a fuss.', 'Birthday today: {name}. I hope someone remembers.', 'It is {name}\'s birthday. I am taking them a cake. Well. Half a cake.'],
 };
 
 // The festival tomorrow: its name and intro (data/festivals.js) follow.
@@ -64,11 +67,17 @@ export const EVE = 'The {name} is tomorrow. {intro}';
 export const NEWS = {
   bigShip: 1500,   // gold shipped in one night that people notice (Stardew's scale: a good early summer day)
   chance: 1 / 2,
-  wed: ['The wedding yesterday! I have not cried like that since the last one.', 'What a day yesterday. The square still has petals in every corner.'],
-  won: 'First prize at the {festival} yesterday! The whole square is still talking about it.',
-  helpedMe: 'Thank you again for yesterday. You did not have to, and you did.',
-  donated: { one: 'Word is you gave something to the museum yesterday. The curator has not stopped smiling.', many: 'Word is you gave {n} things to the museum yesterday. The curator is beside themselves.' },
-  helpedFriend: '{name} told me you helped out yesterday. That was kind of you.',
-  shipped: 'Juno says your shipping bin was full to the lid last night. Good harvest?',
-  skill: 'Getting good at {skill}, I hear. It shows.',
+  // v295: each a list of wordings; a neighbour always uses the same one, and neighbours side by side differ.
+  wed: ['The wedding yesterday! I have not cried like that since the last one.', 'What a day yesterday. The square still has petals in every corner.',
+    'I danced at your wedding till my feet gave out. Worth it.', 'Yesterday was lovely. I hope you two are very happy.', 'Still thinking about the wedding. The vows got me. They always do.'],
+  won: ['First prize at the {festival} yesterday! The whole square is still talking about it.', 'You won at the {festival}! I knew you would. Well, I hoped.',
+    'Congratulations on the {festival}. The judges have taste, for once.', 'A prize at the {festival}. Do not let it go to your head. Let it go a little.'],
+  helpedMe: ['Thank you again for yesterday. You did not have to, and you did.', 'About yesterday: thank you. I mean it.', 'You helped me out yesterday. I will not forget it.'],
+  donated: {
+    one: ['Word is you gave something to the museum yesterday. The curator has not stopped smiling.', 'Aldous was humming this morning. I hear you brought him a find.', 'Another case filled at the museum, I hear. Good of you.'],
+    many: ['Word is you gave {n} things to the museum yesterday. The curator is beside themselves.', '{n} finds for the museum in one day! Aldous will need more cases.', 'I hear Aldous got {n} new things for the museum yesterday. He will be labelling for a week.'],
+  },
+  helpedFriend: ['{name} told me you helped out yesterday. That was kind of you.', 'You helped {name} yesterday. They have not stopped saying so.', '{name} says you were a great help. Thank you, from me too.'],
+  shipped: ['Juno says your shipping bin was full to the lid last night. Good harvest?', 'Heard the shipping cart groaned at your bin last night. Busy farm.', 'Your bin was overflowing, they say. Somebody is working hard.'],
+  skill: ['Getting good at {skill}, I hear. It shows.', 'People say you are coming on at {skill}. Good for you.', 'Your {skill} is improving. Even I have heard.'],
 };

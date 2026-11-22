@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v295: Neighbours who sound like themselves
+- Every neighbour has their own voice: 12 more things to say each (4 per friendship level), written from their life, their work, family and friends. Nobody repeats a line until they have said everything they have, and talking to someone twice in a day gets you two different things; a third time, they wrap up in their own words.
+- No two people say the same sentence any more. On the first day of a season, in snow, on someone's birthday or the day before a festival, each neighbour says it their own way (the festival's rules still follow). News about you (a wedding, a prize, a museum gift) comes in several wordings, one per person.
+- They mention the season now and then on quiet days, and talk about any of their friends, not only the first one listed.
+- New save data: none.
+
 ## v294: No more empty stall on the farm
 - The empty seed stall in the farm's top right corner is gone (seeds have been sold at the general store in town for a long time). Its 3 x 3 tiles are grass you can farm or build on.
 - New save data: none.

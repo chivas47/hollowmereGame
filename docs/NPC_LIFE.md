@@ -99,3 +99,16 @@ A neighbour feels real when:
   use it the next day. A new notable act (a building finished, a legend caught) adds a field to `recordDay()`,
   a line in `data/topics.js` NEWS, and a test. Old saves get a migration step that starts the count from what they
   already have.
+
+## Their own voices (v295)
+
+Every neighbour has a voice in `src/data/voices.js`, written from their life: 4 more lines a friendship tier on top
+of `npcs.js`, a line per season, their own word on snow, their birthday, someone else's birthday and a festival eve,
+and goodbyes for when you keep talking. Rules a new neighbour or line must keep (`tests/voices.test.mjs`):
+
+- **Nobody repeats for weeks.** A tier's pool is dealt in a shuffled order (`systems/topics.js ownLine`), two lines a
+  day (the first and second talk), reshuffled each time through. The third talk on a day is a goodbye.
+- **No two people say the same sentence.** Shared news (a wedding, a win, a museum gift) comes in several wordings,
+  one per speaker; everything else is personal. The test fails on any sentence two neighbours share.
+- **Write the person, not the topic.** A season line from Tamsin is about calving, from Wilmot about brass in the cold.
+

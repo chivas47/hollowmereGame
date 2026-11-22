@@ -11,7 +11,7 @@ import { NPCS, OUTFITS } from '../data/npcs.js';
 import { festivalOn, hoursOf } from '../data/festivals.js';
 import { scheduleFor, spouseDay, festivalDay, rainDay, spouseRainDay, RAIN_WEATHERS } from '../data/schedules.js';
 import { DINNER, dinnerSeat } from '../data/birthday.js';
-import { topicFor } from './topics.js';
+import { topicFor, ownLine, againLine } from './topics.js';
 import { yesterday } from './news.js';
 import { crowdPlan } from './crowd.js';
 import { floatOn } from '../data/traditions.js';
@@ -227,6 +227,7 @@ export function addPoints(id, pts) {
   changed();
 }
 
+const chats = {};   // v295: id -> { day, n }, talks so far today
 export function startTalk(n) {
   const st = G.S.npcs[n.id], d = n.def, fest = festival() || gathering();
   G.talking = n.id;
@@ -239,10 +240,15 @@ export function startTalk(n) {
   }
   const h = hearts(st), scene = pendingScene(n);
   if (scene) { emit(HEART_STAGED.includes(n.id) && HOMES[n.id]?.door ? 'heart:stage' : 'ui:scene', { npc: n, ...scene, extra }); return; }   // v245: staged at their door
-  const lines = st.married ? SPOUSE_LINES[d.id] : st.dating && DATE_LINES[d.id] ? DATE_LINES[d.id] : d.lines[h >= 5 ? 2 : h >= 2 ? 1 : 0];   // v51: partners talk like partners; v52: and spouses like spouses
-  // v146 the weather, v152 what is going on (systems/topics.js); partners and spouses keep their own words
-  const topic = !st.married && !st.dating && topicFor(d, { day: G.S.day, date: today(), weather: G.S.weather, tomorrow: festivalOn(dateParts(G.S.day + 1)), npcs: NPCS, news: yesterday() });
-  emit('ui:talk', { npc: n, text: fest?.lines?.[d.id] || topic || lines[(G.S.day + d.seed) % lines.length], extra });
+  // v295: how many times you have talked today before this one (not saved: a new visit starts the count again)
+  const c = chats[n.id]?.day === G.S.day ? chats[n.id] : (chats[n.id] = { day: G.S.day, n: 0 }), nth = c.n++;
+  const partner = st.married ? SPOUSE_LINES[d.id] : st.dating && DATE_LINES[d.id] ? DATE_LINES[d.id] : null;   // v51: partners talk like partners; v52: and spouses like spouses
+  // v146 the weather, v152 what is going on (systems/topics.js), on the day's first talk; partners and spouses keep their own words
+  const topic = !partner && !nth && topicFor(d, { day: G.S.day, date: today(), weather: G.S.weather, tomorrow: festivalOn(dateParts(G.S.day + 1)), npcs: NPCS, news: yesterday() });
+  const own = partner ? partner[(G.S.day + d.seed + nth) % partner.length]
+    : nth >= 2 ? againLine(d, G.S.day, nth) || ownLine(d, h >= 5 ? 2 : h >= 2 ? 1 : 0, G.S.day, nth)
+    : ownLine(d, h >= 5 ? 2 : h >= 2 ? 1 : 0, G.S.day, nth);   // v295: their own pool, dealt so nothing repeats for weeks
+  emit('ui:talk', { npc: n, text: (!nth && fest?.lines?.[d.id]) || topic || own, extra });
 }
 
 // The first heart scene reached and not yet seen, if any.
