@@ -15,3 +15,25 @@ test('missingWhile notes the sheets a drawing asked for that had not loaded', ()
   assert.equal(value, 7);
   assert.deepEqual([...missing].sort(), ['props', 'trees']);   // a nested drawing's misses count for the outer one too
 });
+
+// v298: the mine names its own map when its tiles change, so the renderer keeps every other map it has drawn.
+test('a mine floor and a broken rock redraw only the mine', async () => {
+  const { G } = await import('../src/core/game.js');
+  const { newState } = await import('../src/core/state.js');
+  const { on } = await import('../src/core/events.js');
+  const { MAPS } = await import('../src/data/maps.js');
+  const { enterMine, breakRock } = await import('../src/systems/mine.js');
+  G.S = newState();
+  const seen = [];
+  on('world:changed', (ids) => seen.push(ids));
+  enterMine(3);
+  assert.ok(seen.length && seen.every((ids) => ids === 'mine'), JSON.stringify(seen));
+  const g = MAPS.mine.grid, rocks = Object.keys((await import('../src/systems/mine.js')).MINE.rocks);
+  assert.ok(rocks.length, 'floor 3 has rocks');
+  {
+    seen.length = 0;
+    const [x, y] = rocks[0].split(',').map(Number);
+    G.S.energy = 270; for (let i = 0; i < 20 && g[y][x] !== 'f' && g[y][x] !== 'L' && g[y][x] !== '!'; i++) breakRock(x, y, true);
+    assert.ok(seen.includes('mine') && seen.every((ids) => ids === 'mine'), JSON.stringify(seen));
+  }
+});

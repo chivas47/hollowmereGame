@@ -70,7 +70,7 @@ export function placeBuilding(key) {
     farm.objects.push({ art: state === true ? s.art : 'scaffold', x: fp.x, y: fp.y, w: fp.w, h: fp.h, site: key });
   }
   if (key === 'shed') MAPS.shed.exits = { '11,12': { to: 'farm', x: fp.x + 1, y: fp.y + fp.h, dir: 'down' } };
-  emit('world:changed');
+  emit('world:changed', ['farm', 'shed']);
 }
 
 on('game:reset', () => { G.siting = null; });

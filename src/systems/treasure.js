@@ -109,7 +109,7 @@ export function openChest() {
   MAPS.mine.grid[c.y][c.x] = 'f';
   MINE.chest = null;
   emit('sfx', 'pickup');
-  emit('world:changed');
+  emit('world:changed', 'mine');
   let got;
   if (c.find) {
     S.finds.push(MINE.floor);

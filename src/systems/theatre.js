@@ -28,7 +28,7 @@ function writeTheatre() {
   for (let j = 0; j < 2; j++) for (let i = 0; i < 3; i++) m.grid[y + j][x + i] = up ? 'Þ' : 'g';
   m.objects = m.objects.filter((o) => o.kind !== 'theatre');
   if (up) m.objects.push(SPOT);
-  emit('world:changed');
+  emit('world:changed', 'town');
 }
 on('game:loaded', writeTheatre);
 on('day:start', writeTheatre);

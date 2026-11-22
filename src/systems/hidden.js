@@ -20,7 +20,7 @@ function writeGates() {
   const g = gates();
   MAPS.forest.grid[12][1] = g.log ? 'P' : '|';
   MAPS.wilds.grid[3][22] = g.rubble ? 'P' : '}';
-  emit('world:changed');
+  emit('world:changed', ['forest', 'wilds']);
 }
 function checkGates() {
   const S = G.S, g = gates();
@@ -63,7 +63,7 @@ addInteraction(72, ({ tile, mapId, item }) => {
 function writeStumps() {
   const grid = MAPS.grove.grid;
   for (const [x, y] of GROVE.stumps) grid[y][x] = G.S.groveStumps[`${x},${y}`] ? 'Y' : 'g';
-  emit('world:changed');
+  emit('world:changed', 'grove');
 }
 function growStumps() {
   G.S.groveStumps = Object.fromEntries(GROVE.stumps.map(([x, y]) => [`${x},${y}`, GROVE.hp]));
@@ -83,7 +83,7 @@ export function chopStump(x, y) {
   MAPS.grove.grid[y][x] = 'g';
   addItem('hardwood', GROVE.hardwood);
   emit('gather', { skill: 'foraging', xp: 25 });
-  emit('world:changed');
+  emit('world:changed', 'grove');
   notify(`+${GROVE.hardwood} hardwood. It will grow back by morning.`);
   changed();
   return true;

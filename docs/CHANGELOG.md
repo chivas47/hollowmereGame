@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v298: Smooth mining
+- Breaking a rock, opening a chest or finding a ladder in the mine (and breaking quarry rocks or grove stumps, stocking the pond, the farm cave, the theatre, the market visitors, the wishing stone and the farmhouse renovations) now redraws only the map that changed. Before, each one threw away every map already drawn, so after a mining trip the farm, village and town were drawn again from scratch on the way home.
+- New save data: none.
+
 ## v297: Faster doors and map changes
 - Walking through a door or off the edge of a map no longer hitches. Before, the first sprite sheet to finish loading (the furniture, floors and wallpapers the first time you went indoors; a new season's ground) threw away every map already drawn, so the village, town and farm were drawn again from scratch the next time you walked in. Now a sheet arriving only redraws the maps drawn without it.
 - Every sprite sheet (312 KB) starts loading on the title screen, so none arrive mid-play, a new season's ground shows its tile set straight away, and every sheet is kept for playing offline.

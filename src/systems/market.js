@@ -40,7 +40,7 @@ const hereNow = (v, day) => day && G.S.time >= v.open && G.S.time < v.close;
 function writeVisitors() {
   MAPS[CART.map].grid[CART.at.y][CART.at.x] = cartToday() ? '¢' : 'g';
   MAPS[BOOKSELLER.map].grid[BOOKSELLER.at.y][BOOKSELLER.at.x] = booksToday() ? '§' : 'g';
-  emit('world:changed');
+  emit('world:changed', [CART.map, BOOKSELLER.map]);
 }
 on('game:loaded', writeVisitors);
 on('day:start', writeVisitors);

@@ -30,7 +30,13 @@ const forget = (key) => { used -= cache.get(key).px; cache.delete(key); };
 const drop = () => { cache.clear(); used = 0; queue.length = 0; };
 on('season:changed', () => { drop(); ahead(); });
 on('game:reset', drop);
-on('world:changed', () => { drop(); ahead(); });
+// v298: a change that names its map(s) (world:changed 'mine', or a list) redraws only those; one that names none,
+// every map. Breaking a rock in the mine no longer throws away the village.
+on('world:changed', (ids) => {
+  if (ids == null) drop();
+  else { const gone = new Set([].concat(ids)); for (const [key, e] of cache) if (gone.has(e.map)) forget(key); }
+  ahead();
+});
 // v85: redraw a background once a sheet it lacked arrives (ground, cave, wallpaper, floors); v297: only those
 // backgrounds, so a sheet arriving no longer sends every visited map back to be drawn again.
 onSheet((name) => { let gone = false; for (const [key, e] of cache) if (e.missing.has(name)) { forget(key); gone = true; } if (gone) ahead(); });
@@ -108,7 +114,7 @@ function backgroundOf(mapId, season) {
   let e = cache.get(key);
   if (e) { cache.delete(key); cache.set(key, e); return e; }   // most recently used
   const { value, missing } = missingWhile(() => renderBackground(mapId, season));
-  e = { ...value, missing, px: value.bg.width * value.bg.height * (1 + value.bands.length) };
+  e = { ...value, map: mapId, missing, px: value.bg.width * value.bg.height * (1 + value.bands.length) };
   cache.set(key, e); used += e.px;
   while (used > BUDGET && cache.size > 1) forget(cache.keys().next().value);   // the least recently used
   return e;

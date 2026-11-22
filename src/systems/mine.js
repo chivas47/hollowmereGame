@@ -73,7 +73,7 @@ export function genFloor(n, zone = 'hollow') {
   else if (vent) G.S.ventDeepest = Math.max(G.S.ventDeepest || 0, n);
   else if (cav) G.S.cavernDeepest = Math.max(G.S.cavernDeepest || 0, n);
   else G.S.mineDeepest = Math.max(G.S.mineDeepest, n);
-  emit('world:changed');
+  emit('world:changed', 'mine');
   emit('mine:floor', { floor: n, rng: R, zone, eff, busy: MINE.busy });
   if (MINE.busy) notify('A busy floor! The ladder shows once every creature here is down.');
 }
@@ -89,7 +89,7 @@ on('mine:cleared', () => {
   g[y][x] = 'L';
   notify('Every creature is down. A ladder opens up!');
   emit('mine:ladder', { floor: MINE.floor, zone: MINE.zone });
-  emit('world:changed');
+  emit('world:changed', 'mine');
   changed();
 });
 
@@ -102,7 +102,7 @@ function forgeRoom(n, eff, g) {
   Object.assign(MAPS.mine, { grid: g, name: `${VENT.name}: the forge`, theme: 'ember' });
   Object.assign(MINE, { floor: n, zone: 'vent', eff });
   G.S.ventDeepest = Math.max(G.S.ventDeepest || 0, n);
-  emit('world:changed');
+  emit('world:changed', 'mine');
   emit('mine:floor', { floor: n, rng: () => 1, zone: 'vent', eff });
 }
 
@@ -115,7 +115,7 @@ function summitRoom(n, eff, g) {
   Object.assign(MAPS.mine, { grid: g, name: `${PEAK.name}: the summit`, theme: 'peak' });
   Object.assign(MINE, { floor: n, zone: 'peak', eff });
   G.S.nuts.peakDeepest = Math.max(G.S.nuts.peakDeepest, n);
-  emit('world:changed');
+  emit('world:changed', 'mine');
   emit('mine:floor', { floor: n, rng: () => 1, zone: 'peak', eff });
 }
 
@@ -190,7 +190,7 @@ export function breakRock(tx, ty, quiet = false) {
     emit('mine:ladder', { floor: MINE.floor, zone: MINE.zone });   // v67: the peak's nut floors
   }
   else { MAPS.mine.grid[ty][tx] = 'f'; if (!quiet && (rock.item !== 'stone' || coal)) notify(`+${n} ${ITEMS[rock.item].name}${coal ? ', +1 Coal' : ''}`); }
-  emit('world:changed');
+  emit('world:changed', 'mine');
   changed();
   return true;
 }

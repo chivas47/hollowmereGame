@@ -76,7 +76,7 @@ addInteraction(57, ({ item }) => {
 function openMouth() {
   const m = CAVE.mouth;
   if (G.S.cave.open && MAPS.farm.grid[m.y][m.x] === 'T') MAPS.farm.grid[m.y][m.x] = 'y';
-  emit('world:changed');
+  emit('world:changed', 'farm');
 }
 on('game:loaded', () => {
   openMouth();
@@ -86,7 +86,7 @@ on('game:loaded', () => {
 export function chooseCave(choice) {
   if (!G.S.cave.open || G.S.cave.choice || !['bats', 'logs'].includes(choice)) return false;
   G.S.cave.choice = choice;
-  emit('world:changed'); changed();
+  emit('world:changed', ['farm', 'cave']); changed();
   return true;
 }
 
@@ -94,7 +94,7 @@ export function collectCave() {
   const got = [];
   for (const [k, n] of Object.entries(G.S.cave.items)) { if (!n) continue; addItem(k, n); got.push(`${n} ${ITEMS[k].name}`); }
   G.S.cave.items = {};
-  emit('world:changed'); changed();
+  emit('world:changed', ['farm', 'cave']); changed();
   return got;
 }
 

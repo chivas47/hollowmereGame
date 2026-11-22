@@ -24,7 +24,7 @@ export function stockPond(k) {
   if (!built('pond') || P.fish || !FISH[k] || !(G.S.bag[k] > 0)) return false;
   G.S.bag[k]--;
   Object.assign(P, { fish: k, n: 1, cap: POND.caps[0], timer: spawnEvery(FISH[k].sell), roe: 0, ask: null });
-  emit('world:changed'); changed();
+  emit('world:changed', 'farm'); changed();
   return true;
 }
 
@@ -33,7 +33,7 @@ export function takeFish() {
   if (!P.fish || !P.n) return false;
   addItem(P.fish, 1);
   if (--P.n === 0) Object.assign(P, { fish: null, cap: POND.caps[0], ask: null, roe: 0 });
-  emit('world:changed'); changed();
+  emit('world:changed', 'farm'); changed();
   return true;
 }
 
@@ -61,7 +61,7 @@ export function addSlime() {
   if (!built('slimepen')) { notify('You need a slime pen for it.'); return false; }
   if (G.S.slimes.n >= SLIME_PEN.room) { notify('The slime pen is full.'); return false; }
   G.S.slimes.n++;
-  emit('world:changed'); changed();
+  emit('world:changed', 'farm'); changed();
   return true;
 }
 
@@ -71,7 +71,7 @@ export function collectBalls() {
   let gel = 0;
   for (let i = 0; i < n; i++) gel += SLIME_PEN.gel[0] + Math.floor(Math.random() * (SLIME_PEN.gel[1] - SLIME_PEN.gel[0] + 1));
   addItem('gel', gel); S.slimes.balls = 0;
-  emit('world:changed'); changed();
+  emit('world:changed', 'farm'); changed();
   return gel;
 }
 
@@ -89,7 +89,7 @@ on('day:end', (report) => {
   if (built('slimepen') && S.slimes.n && S.slimes.trough === S.day) {
     for (let i = 0; i < S.slimes.n; i++) if (Math.random() < SLIME_PEN.ballChance) S.slimes.balls++;
   }
-  emit('world:changed');
+  emit('world:changed', 'farm');
 });
 
 // Priority 72, the band for things you open. The watering can fills the slime pen's trough.
