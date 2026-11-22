@@ -16,7 +16,7 @@ import { special, resetSpecials } from '../src/systems/specials.js';
 import { placePlayer } from '../src/systems/world.js';
 import { freshFarm } from './setup.mjs';
 
-const CHARGERS = Object.keys(MONSTERS).filter((k) => MONSTERS[k].move === 'charge');
+const CHARGERS = Object.keys(MONSTERS).filter((k) => MONSTERS[k].move === 'charge' && !MONSTERS[k].wildOnly);   // v303: the dungeons' chargers (the Duskmarch's bristle hog has no Guild goal yet)
 const tick = (s, dt = 0.02) => { for (let t = 0; t < s; t += dt) runUpdaters(dt); };
 
 // One charger of a kind on open farm grass, `gap` px to your right, at full health and away from walls.

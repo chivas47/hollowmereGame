@@ -31,6 +31,9 @@ export const LANDMARKS = {
   desert: 'The Oasis, the barter trader, the Gilded Dune casino',
   island: 'The island farm, the trader, the old bridge',
   digsite: 'Fresh dig spots every morning',
+  gloamwood: 'Old woods full of weeds to cut, a still pool, creatures by day',   // v303
+  tangle: 'A thicket of narrow ways and dead ends, easy to get lost in',
+  mournfield: 'The old graveyard, its crypts, and the dead who rise after dark',
 };
 
 export const PIN_MAX = 12;       // custom pins on the world map

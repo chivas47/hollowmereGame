@@ -1,0 +1,155 @@
+// v303: the Duskmarch (data/duskmarch.js), west of the village and the town. Two rules:
+// Weeds: thick clumps (WEED) block the woods' ways until a weapon swing cuts them, Zelda's way: any swing that
+//   reaches a clump cuts it, sometimes giving fiber, mixed seeds or a little health. Cut clumps grow back the next
+//   morning. G.S.cutWeeds[map] holds today's cut tiles ("x,y") so a reload keeps them cut; G.S.cutDay is its day.
+// Creatures: the woods' kinds come out each time you walk in, by day or night; after dark Mournfield's dead rise,
+//   a few as you arrive and more every NIGHT.every game minutes up to NIGHT.max. Morning clears them all.
+import { G } from '../core/game.js';
+import { T } from '../core/constants.js';
+import { on, emit, changed, notify } from '../core/events.js';
+import { addUpdater, addInteraction } from '../core/registry.js';
+import { MAPS } from '../data/maps.js';
+import { MONSTERS } from '../data/weapons.js';
+import { WEED, DUSK_MAPS, DUSK_CREATURES, NIGHT, WEED_DROPS, CRYPT, CHEST, CHEST_OPEN, CRYPT_DOOR, CRYPT_DOOR_OPEN, SARCOPHAGUS, SARCOPHAGUS_OPEN } from '../data/duskmarch.js';
+import { WEAPONS } from '../data/weapons.js';
+import { placePlayer } from './world.js';
+import { giveFind } from './gear.js';
+import { spawnSlimes, slimes, monstersOn } from './monsters.js';
+import { addItem } from './quality.js';
+import { burst } from './animation.js';
+
+// Every weed tile as the maps were built, so they can be put back each morning.
+const SOWN = Object.fromEntries(DUSK_MAPS.map((id) => [id, MAPS[id].grid.flatMap((row, y) => row.flatMap((t, x) => (t === WEED ? [`${x},${y}`] : [])))]));
+export const weedsOn = (id) => SOWN[id] || [];
+
+function apply() {
+  const S = G.S, cut = S?.cutWeeds || {};
+  for (const id of DUSK_MAPS) {
+    const g = MAPS[id].grid, gone = new Set(cut[id] || []);
+    for (const k of SOWN[id]) { const [x, y] = k.split(',').map(Number); g[y][x] = gone.has(k) ? 'g' : WEED; }
+    // forage never sits under a clump that grew back
+    if (S?.areaForage?.[id]) S.areaForage[id] = S.areaForage[id].filter((f) => g[f.y][f.x] !== WEED);
+  }
+  emit('world:changed');
+}
+export function regrow() { const S = G.S; if (!S) return; S.cutWeeds = {}; S.cutDay = S.day; apply(); }
+on('game:loaded', () => { const S = G.S; if (S.cutDay !== S.day || !S.cutWeeds || typeof S.cutWeeds !== 'object') regrow(); else apply(); });
+on('game:reset', () => { if (G.S) regrow(); });
+on('day:start', regrow);
+
+// Cuts the clump at (x, y) on the map; returns true if there was one.
+export function cutWeed(id, x, y) {
+  const g = MAPS[id]?.grid, S = G.S;
+  if (g?.[y]?.[x] !== WEED) return false;
+  g[y][x] = 'g';
+  (S.cutWeeds[id] ||= []).push(`${x},${y}`);
+  const px = x * T + 8, py = y * T + 10;
+  burst(px, py, ['#3f7a33', '#6aa64a', '#2f5a2a', '#a8c070'], 12, { speed: 55, up: 45, size: 2, life: 0.5, gravity: 160, shrink: true });
+  if (Math.random() < WEED_DROPS.fiber) addItem('fiber', 1);
+  if (Math.random() < WEED_DROPS.mixed) S.seeds.mixed = (S.seeds.mixed || 0) + 1;
+  if (S.hp < S.maxHp && Math.random() < WEED_DROPS.heal) { S.hp = Math.min(S.maxHp, S.hp + WEED_DROPS.healHp); emit('sfx', 'pickup'); }
+  emit('gather', { skill: 'foraging', xp: WEED_DROPS.xp });
+  return true;
+}
+
+// A swing (systems/monsters.js) cuts every clump whose middle it reaches.
+on('swing', ({ map, x, y, reach }) => {
+  if (!SOWN[map]?.length) return;
+  const g = MAPS[map].grid, r = reach + 6;
+  let n = 0;
+  for (let ty = Math.floor((y - r) / T); ty <= Math.floor((y + r) / T); ty++) for (let tx = Math.floor((x - r) / T); tx <= Math.floor((x + r) / T); tx++) {
+    if (g[ty]?.[tx] === WEED && Math.hypot(tx * T + 8 - x, ty * T + 8 - y) <= r && cutWeed(map, tx, ty)) n++;
+  }
+  if (n) { emit('sfx', 'rustle'); emit('world:changed'); changed(); }
+});
+
+// Facing a clump without a weapon in hand: say how to get through. Sits with farm debris (62), above the sword (58),
+// which it lets through.
+addInteraction(62, ({ tx, ty, mapId, item }) => {
+  if (item === 'sword' || MAPS[mapId]?.grid[ty]?.[tx] !== WEED) return false;
+  notify('Thick weeds block the way. Swing your weapon (slot 5) to cut through.');
+  return true;
+});
+
+// ---- creatures ----
+const pick = (list) => { let t = Math.random() * list.reduce((a, [, w]) => a + w, 0); for (const [k, w] of list) if ((t -= w) < 0) return k; return list[0][0]; };
+const between = ([lo, hi]) => lo + Math.floor(Math.random() * (hi - lo + 1));
+function populate(map, n, kinds, keep) {
+  for (let i = 0; i < n;) {
+    const kind = pick(kinds), pack = MONSTERS[kind].pack, k = pack ? Math.min(pack[1], n - i) : 1;
+    spawnSlimes(map, k, kind, keep || i > 0);
+    i += k;
+  }
+}
+const night = { day: -1, last: 0, told: -1 };
+on('map:changed', (id) => {
+  const c = DUSK_CREATURES[id];
+  if (c && (monstersOn() !== id || !slimes.length)) populate(id, between(c.n), c.day, false);   // back each time you come in
+  if (id === NIGHT.map && (monstersOn() !== id || !slimes.length)) night.day = -1;   // the night starts over for a new visit
+});
+
+addUpdater(() => {
+  const S = G.S;
+  if (!S || S.map !== NIGHT.map) return;
+  if (S.time < NIGHT.from) return;
+  const fresh = monstersOn() !== NIGHT.map || night.day !== S.day;
+  if (fresh) {
+    night.day = S.day; night.last = S.time;
+    populate(NIGHT.map, between(NIGHT.first), NIGHT.kinds, false);
+    if (night.told !== S.day) { night.told = S.day; notify('The ground in Mournfield shifts. The dead are rising: keep your weapon close.'); }
+    return;
+  }
+  if (S.time - night.last < NIGHT.every) return;
+  night.last = S.time;
+  const room = NIGHT.max - slimes.length;
+  if (room > 0) populate(NIGHT.map, Math.min(room, between(NIGHT.rise)), NIGHT.kinds, true);
+});
+on('day:start', () => { night.day = -1; });
+on('game:reset', () => { night.day = -1; night.told = -1; });
+
+// ---- 97a: the key chain. G.S.dusk = { key, door, blade }: the key found, the crypt door unlocked, the blade taken. ----
+function setPieces() {
+  const d = G.S?.dusk || {}, set = (map, { x, y }, t) => { MAPS[map].grid[y][x] = t; };
+  set('tangle', CRYPT.chest, d.key ? CHEST_OPEN : CHEST);
+  set('mournfield', CRYPT.door, d.door ? CRYPT_DOOR_OPEN : CRYPT_DOOR);
+  set('crypt', CRYPT.sarcophagus, d.blade ? SARCOPHAGUS_OPEN : SARCOPHAGUS);
+  emit('world:changed');
+}
+on('game:loaded', () => { G.S.dusk = { key: false, door: false, blade: false, ...(G.S.dusk || {}) }; setPieces(); });
+on('game:reset', () => { if (G.S) setPieces(); });
+
+export function openChest() {
+  const S = G.S;
+  if (S.dusk.key) { notify('The old chest is empty.'); return; }
+  S.dusk.key = true; setPieces(); emit('sfx', 'chime');
+  notify('Under the moss, an old chest. Inside: a heavy iron key, green with age, stamped with a chapel. Mournfield has a chapel crypt.');
+  changed();
+}
+export function useCryptDoor() {
+  const S = G.S;
+  if (!S.dusk.door) {
+    if (!S.dusk.key) { notify('The crypt door is locked. Its keyhole is green with age. They say the sexton lost his key in the Tangle.'); return; }
+    S.dusk.door = true; setPieces();
+    notify('The old key turns, grinding. The crypt door swings open.');
+  }
+  emit('sfx', 'door');
+  placePlayer('crypt', CRYPT.land.x, CRYPT.land.y, 'up');
+  emit('map:changed', 'crypt');
+}
+export function openSarcophagus() {
+  const S = G.S;
+  if (S.dusk.blade) { notify('The great sarcophagus lies open and empty.'); return; }
+  S.dusk.blade = true; setPieces(); emit('sfx', 'levelup');
+  giveFind(CRYPT.blade, 'Beneath the lid, on the bones of the old gravewarden, you found');
+  notify(`The ${WEAPONS[CRYPT.blade].name.toLowerCase()} strikes the dead half again as hard.`);
+  changed();
+}
+addInteraction(64, ({ tx, ty, mapId }) => {
+  const t = MAPS[mapId]?.grid[ty]?.[tx];
+  if (mapId === 'tangle' && (t === CHEST || t === CHEST_OPEN)) { openChest(); return true; }
+  if (mapId === 'mournfield' && (t === CRYPT_DOOR || t === CRYPT_DOOR_OPEN)) { useCryptDoor(); return true; }
+  if (mapId === 'crypt' && (t === SARCOPHAGUS || t === SARCOPHAGUS_OPEN)) { openSarcophagus(); return true; }
+  return false;
+});
+// The crypt's dead are there each time you go in.
+on('map:changed', (id) => { if (id === 'crypt') populate('crypt', between(CRYPT.n), NIGHT.kinds, false); });

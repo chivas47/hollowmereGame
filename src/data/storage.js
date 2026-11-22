@@ -9,11 +9,12 @@ export const SIGN_LENGTH = 40;   // letters on a sign
 
 // The live world map (journal): outdoor places on a grid, laid out the way their exits join (column, row).
 export const WORLD = {
-  desert: [0, 0], town: [1, 0], mountain: [3, 0], quarry: [4, 0],
-  village: [1, 1], farm: [2, 1], wilds: [3, 1], railway: [4, 1],
-  beach: [0, 2], grove: [1, 2], forest: [2, 2],
-  island: [0, 3], digsite: [1, 3],
+  // v303: two columns more in the west for the Duskmarch (Mournfield west of the town, the woods west of the village)
+  desert: [0, 0], mournfield: [2, 0], town: [3, 0], mountain: [5, 0], quarry: [6, 0],
+  tangle: [1, 1], gloamwood: [2, 1], village: [3, 1], farm: [4, 1], wilds: [5, 1], railway: [6, 1],
+  beach: [2, 2], grove: [3, 2], forest: [4, 2],
+  island: [2, 3], digsite: [3, 3],
 };
 // Rooms and caves show as the place you enter them from.
-export const WORLD_PARENT = { house: 'farm', cave: 'farm', shed: 'farm', greenhouse: 'farm', maze: 'village', sewer: 'village', shrine: 'wilds', mine: 'wilds',
+export const WORLD_PARENT = { house: 'farm', cave: 'farm', shed: 'farm', greenhouse: 'farm', maze: 'village', sewer: 'village', shrine: 'wilds', mine: 'wilds', crypt: 'mournfield',
   ...Object.fromEntries(Object.entries(HOMES).filter(([, h]) => h.cottage).map(([id, h]) => [homeMap(id), h.map])) };   // v76: the neighbours' cottages

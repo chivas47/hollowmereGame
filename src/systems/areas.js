@@ -14,13 +14,14 @@ import { has } from './professions.js';
 import { luck } from './buffs.js';
 
 // ground: the tile forage grows on; perDay: spots each morning (Stardew's beach and forest both have a handful).
-export const AREAS = { beach: { ground: 'z', perDay: 5 }, forest: { ground: 'g', perDay: 5 }, mountain: { ground: 'g', perDay: 4 }, grove: { ground: 'g', perDay: 3 }, railway: { ground: 'g', perDay: 3 } };   // v45: the grove and the railway   // v44: the mountain
+export const AREAS = { beach: { ground: 'z', perDay: 5 }, forest: { ground: 'g', perDay: 5 }, mountain: { ground: 'g', perDay: 4 }, grove: { ground: 'g', perDay: 3 }, railway: { ground: 'g', perDay: 3 },
+  gloamwood: { ground: 'g', perDay: 4, from: 'forest' }, tangle: { ground: 'g', perDay: 3, from: 'forest' } };   // v303: Brackenwood's finds (from: whose pool)   // v45: the grove and the railway   // v44: the mountain
 
 export function spawnAreaForage() {
   const S = G.S, season = today().season;
   S.areaForage = {};
   for (const [map, a] of Object.entries(AREAS)) {
-    const grid = MAPS[map].grid, pool = Object.keys(FORAGE).filter((k) => FORAGE[k].area === map && (FORAGE[k].season === season || FORAGE[k].season === 'all'));
+    const grid = MAPS[map].grid, pool = Object.keys(FORAGE).filter((k) => FORAGE[k].area === (a.from || map) && (FORAGE[k].season === season || FORAGE[k].season === 'all'));
     const out = [], n = a.perDay + (has('tracker') ? 1 : 0);
     for (let guard = 0; pool.length && out.length < n && guard < 600; guard++) {
       const x = 1 + Math.floor(Math.random() * (grid[0].length - 2)), y = 1 + Math.floor(Math.random() * (grid.length - 2));

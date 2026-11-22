@@ -30,6 +30,7 @@ HOLLOW = ['#ffffff', '#dff2e4', '#a6c8ae', '#668a72', '#80a68c']
 OBSIDIAN = ['#f4e4ff', '#b48ae0', '#4b3768', '#251a38', '#36284e']
 IRON = ['#f4f6f8', '#cdd3d9', '#98a1aa', '#646d76', '#7c858e']
 CHITIN = ['#fff4cc', '#f0c870', '#c08a3a', '#7a5220', '#9a6a2a']
+BONEBLADE = ['#ffffff', '#f4ecd8', '#d8ccb0', '#9a8c6e', '#b8a888']   # v303: the gravewarden's blade, old bone-white steel
 WARD = ['#ffffff', '#c8d6ff', '#4a5878', '#262e44', '#323c58']   # Wardsteel: dark blued steel
 # guard and pommel metals: G g h
 DARKIRON = ['#9aa3ac', '#646c75', '#3e444b']
@@ -167,6 +168,17 @@ ART = {
     '..............Ssssszz',
     '..............SIssRz.',
     '..............zzzzzz.']),
+  # v303: the gravewarden's blade from Mournfield's crypt: a long pale blade with a notched back, a bone guard
+  'gravewarden': dict(blade=BONEBLADE, guard='bone', grip=('#3a3a4a', '#24242e'), gem='green', art=[
+    '.......h.............',
+    '......Gh.............',
+    '......Gh..E.E.E......',
+    '..p...GhEEBEBEBEEEE..',
+    '.QpAaAgJjBFRFFRFFBBBW',
+    '..p...GhBBBBBBBBBBB..',
+    '......GhDDDDDDDDDD...',
+    '......Gh.............',
+    '.......h.............']),
 }
 ORDER = list(ART)
 TIERS = 4

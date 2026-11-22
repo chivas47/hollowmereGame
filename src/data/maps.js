@@ -34,11 +34,12 @@ import { INTERIORS, interiorGrid, doorOf } from './interiors.js';
 import { VENUES, venueMap } from './venues.js';
 import { MERE } from './mere.js';
 import { PROPS, PROP_TILES } from './scenery.js';
+import { DUSK_TILES, DUSK_EXITS, DUSK_WAYS_IN, CRYPT, gloamwoodGrid, tangleGrid, mournfieldGrid, cryptGrid } from './duskmarch.js';   // v303
 
 // v156 (roadmap 75g): a map's size in tiles, read from its grid, so a map can be larger than the screen (W x H).
 export const sizeOf = (id) => { const g = MAPS[id]?.grid; return g?.length ? { w: g[0].length, h: g.length } : { w: W, h: H }; };
 
-export const SOLID = new Set([...Object.values(PROP_TILES), 'ħ', 'ǧ', 'ƀ', 'β', 'ʋ', 'ʂ', 'ɲ', 'ʘ', 'ʌ', 'ŧ', 'Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'ǂ', 'ǀ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
+export const SOLID = new Set([...Object.values(PROP_TILES), ...DUSK_TILES, 'ħ', 'ǧ', 'ƀ', 'β', 'ʋ', 'ʂ', 'ɲ', 'ʘ', 'ʌ', 'ŧ', 'Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'ǂ', 'ǀ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
 
 // v158: w and h for a map larger than the screen (roadmap 75i); the camera follows you across it.
 function emptyGrid(w = W, h = H) {
@@ -395,6 +396,8 @@ function caveGrid() {
   return m;
 }
 
+function duskExits(id, list = DUSK_EXITS[id]) { return Object.fromEntries(list.map((e) => [e.at.join(), { to: e.to, x: e.x, y: e.y, dir: e.dir }])); }
+
 export const MAPS = {
   farm: {
     name: 'Farm', salt: 11, grid: farmGrid(),
@@ -511,9 +514,21 @@ export const MAPS = {
     objects: [{ art: 'trough', x: 2, y: 12 }],
     exits: { [`12,${H - 1}`]: { to: 'farm', x: 10, y: 3, dir: 'down' } },
   },
+  // v303: the Duskmarch, west of the village and the town (data/duskmarch.js)
+  gloamwood: { name: 'Gloamwood', salt: 101, grid: gloamwoodGrid(), objects: [], exits: duskExits('gloamwood') },
+  tangle: { name: 'The Tangle', salt: 103, grid: tangleGrid(), objects: [], exits: duskExits('tangle') },
+  mournfield: { name: 'Mournfield', salt: 107, grid: mournfieldGrid(), objects: [], exits: duskExits('mournfield') },
+  crypt: { name: 'The chapel crypt', salt: 109, base: 'cave', grid: cryptGrid(), objects: [],   // 97a: its door is faced (systems/duskmarch.js)
+    exits: { [`${CRYPT.out.x},${CRYPT.out.y}`]: { to: 'mournfield', x: CRYPT.stand.x, y: CRYPT.stand.y, dir: 'down' } } },
   ...homeMaps(),   // v76: the neighbours' cottages
   ...venueMaps(),   // v98: shops, halls and farm buildings
 };
+
+// v303: the village's and the town's west edges open onto the Duskmarch.
+for (const [id, list] of Object.entries(DUSK_WAYS_IN)) {
+  Object.assign(MAPS[id].exits, duskExits(id, list));
+  for (const e of list) { const [x, y] = e.at; MAPS[id].grid[y][x] = 'E'; if (MAPS[id].grid[y][x + 1] === 'g') MAPS[id].grid[y][x + 1] = 'P'; }
+}
 
 // v195: scenery props (data/scenery.js), each on open ground of its map.
 for (const [id, list] of Object.entries(PROPS)) for (const [kind, x, y] of list) {

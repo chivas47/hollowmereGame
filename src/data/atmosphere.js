@@ -65,7 +65,8 @@ const WOODS = [['robin', [...SP, ...SU, ...AU], 3], ['bluetit', [...SP, ...SU], 
 const HILLS = [['finch', [...SP, ...SU, ...AU], 3], ['crow', ALL, 2], ['bullfinch', WI, 2]];
 export const BIRD_PLACES = {
   farm: FARMLAND, village: FARMLAND, town: FARMLAND, railway: FARMLAND,
-  wilds: WOODS, forest: WOODS, grove: WOODS,
+  wilds: WOODS, forest: WOODS, grove: WOODS, gloamwood: WOODS, tangle: WOODS,   // v303
+  mournfield: [['crow', ALL, 3]],
   mountain: HILLS, quarry: HILLS,
   beach: [['gull', ALL, 1]],
   mere: [['gull', ALL, 2], ['bluetit', SU, 1], ['robin', [...SP, ...AU], 1], ['bullfinch', WI, 1]],
@@ -84,7 +85,7 @@ export function birdsFor(map, season, weather) {
 // Ambient sound by area: wild (birdsong by day, crickets at night), shore (surf, gulls), town (birdsong,
 // a far bell), cave (drips, a low hum), wind (the Dunes, the quarry). Rain and storms add their own bed.
 export const AMBIENCE = {
-  farm: 'wild', wilds: 'wild', forest: 'wild', grove: 'wild', mere: 'wild', mountain: 'wild', railway: 'wild', maze: 'wild',
+  farm: 'wild', wilds: 'wild', forest: 'wild', grove: 'wild', mere: 'wild', mountain: 'wild', railway: 'wild', maze: 'wild', gloamwood: 'wild', tangle: 'wild', mournfield: 'wild',   // v303
   beach: 'shore', island: 'shore', digsite: 'shore',
   village: 'town', town: 'town',
   desert: 'wind', quarry: 'wind',

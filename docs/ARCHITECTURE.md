@@ -352,6 +352,8 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 62 | clearing.js | Any tool aimed at farm debris or an alder |
 | 62 | shortcuts.js | Any tool aimed at the fallen trunk on a shortcut (the axe chops, others read the hint) (v106) |
 | 62 | quarry.js | Anything aimed at the broken quarry bridge on the mountain (reads what mends it) (v238) |
+| 64 | duskmarch.js | The Tangle's chest, the crypt door and the great sarcophagus (97a) |
+| 62 | duskmarch.js | Any tool but the weapon aimed at the Duskmarch's thick weeds (reads how to cut them; the weapon's swing cuts them, v303) |
 | 61 | forage.js | Any tool aimed at a weed in the Wilds (fiber) |
 | 59 | giants.js | Any tool aimed at a giant crop (chop with hoe, pickaxe or sword) |
 | 58 | monsters.js | The weapon in slot 5 (claims every press while held) |
@@ -435,6 +437,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `monster:hit` | {x, y, dmg, crit, kx, ky, kind, color, blade} | monsters.js hitMonster() (v74; v280: blade, a weapon's blow) | animation (damage number, sparks, v280 slash mark) |
 | `crafted` | {key, n, kit} | crafting.js (v74) | animation (the crafted pose) |
 | `watered` | {map, x, y} | farming.js, the can on a planted tile (v123) | animation (the crop perks up and drips) |
+| `swing` | {map, x, y, reach} (v303) | monsters.js, every weapon swing, before it looks for creatures | duskmarch (cuts the weeds it reaches) |
 | `monster:slain` | {kind, x, y, map, drops} (v252: drops, {item: n}) | monsters.js | guild (goal counts, v282 weapon defeats), treasure (blast ring), bestiary (kinds met, drops) |
 | `weapon:tempered` | {key, tier} | guild.js temper() (v282) | (none yet) |
 | `monster:charge`, `monster:bump` | {x, y} | monsters.js (v228: a charger sets off; one runs into a wall) | monsters.js (dust, a shake) |
@@ -519,6 +522,9 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | ŧ | the dining room's long table in the farmhouse (v173; house tile) | yes |
 | \|, }, ;, {, ? | fallen log, rubble, sewer grate, hot spring, sewer trader (v45; the gates become P once open) | yes |
 | ħ, ǧ, ƀ | hedge, garden bed, bench (v159: the village and the town; props drawn on grass, render/tiles.js) | yes |
+| ψ | thick weeds in the Duskmarch's woods, cut by a weapon swing, back each morning (v303, systems/duskmarch.js) | yes, until cut |
+| ɤ, ɮ, ɯ, ɸ, ʇ | Mournfield's headstone, crypt roof, crypt front, railing, dead tree (v303, data/duskmarch.js) | yes |
+| ʊ, ʖ, ʞ, ʡ, ʚ, ʛ, ʜ | the Tangle's chest (shut, open), the crypt door (locked, open), a coffin, the great sarcophagus (shut, open) (97a, set from G.S.dusk by systems/duskmarch.js) | yes |
 | ʋ, β | reeds, the boathouse's walls (v160: the mere; systems/mere.js answers its door) | yes |
 | ƃ, ǫ, ƫ, ǥ, ȟ, ȸ, ƥ | scenery props: bush, boulder, stump, woodpile, hay, barrels, planter (v195; data/scenery.js PROPS, written when the maps are built; art in render/scenery.js; tree stands use T) | yes |
 

@@ -82,7 +82,7 @@ export function tilePath(mapId, [sx, sy], [gx, gy], { extra = null, nearest = fa
 // v301: outdoors, a place on a schedule that has become solid (debris crept onto it, a stall or the wishing stone
 // went up there) or holds something to keep off (bad) moves to the nearest open tile, ring by ring. Indoors a solid
 // place stays: a keeper stands behind their counter.
-export const OUTDOOR = new Set([...OUTDOORS, 'mere', 'grove', 'railway', 'mountain', 'quarry', 'island', 'desert', 'digsite']);
+export const OUTDOOR = new Set([...OUTDOORS, 'mere', 'grove', 'railway', 'mountain', 'quarry', 'island', 'desert', 'digsite', 'gloamwood', 'tangle', 'mournfield']);   // v303
 export function openNear(mapId, [x, y], bad = () => false) {
   const g = MAPS[mapId].grid, free = (tx, ty) => { const t = g[ty]?.[tx]; return t !== undefined && !SOLID.has(t) && !bad(tx, ty); };
   const open = (tx, ty) => free(tx, ty) && g[ty][tx] !== 'E';   // never a stand-in on a door or a map exit

@@ -3,6 +3,7 @@ import { on } from '../core/events.js';
 import { tone, noise, stats, audio } from './engine.js';
 
 const SFX = {
+  rustle:  () => { noise({ dur: 0.16, vol: 0.14, filter: 'highpass', freq: 1800, sweep: 600 }); noise({ dur: 0.08, vol: 0.08, filter: 'bandpass', freq: 700, at: 0.04 }); },   // v303: weeds cut
   hoe:     () => noise({ dur: 0.14, vol: 0.22, freq: 500, sweep: 150 }),
   can:     () => { noise({ dur: 0.28, vol: 0.12, filter: 'highpass', freq: 2500, sweep: 1200 }); noise({ dur: 0.2, vol: 0.06, filter: 'bandpass', freq: 900, at: 0.05 }); },
   seed:    () => tone({ freq: 1200, dur: 0.05, type: 'triangle', vol: 0.08 }),
