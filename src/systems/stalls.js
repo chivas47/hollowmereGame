@@ -18,7 +18,7 @@ export const stallPrice = (item) => ITEMS[item].sell * STALLS.markup;
 function raise() {
   if (!G.S || !stallsBuilt()) return;
   const g = MAPS[STALLS.map].grid;
-  for (const [x, y] of STALLS.tiles) if (g[y][x] !== STALL) { g[y][x] = STALL; emit('world:changed'); }
+  for (const [x, y] of STALLS.tiles) if (g[y][x] !== STALL) { g[y][x] = STALL; emit('world:changed', STALLS.map); }
 }
 on('game:loaded', raise); on('state:changed', raise);
 

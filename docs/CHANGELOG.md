@@ -2,6 +2,19 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v298: Smooth mining
+- Breaking a rock, opening a chest or finding a ladder in the mine (and breaking quarry rocks or grove stumps, stocking the pond, the farm cave, the theatre, the market visitors, the wishing stone and the farmhouse renovations) now redraws only the map that changed. Before, each one threw away every map already drawn, so after a mining trip the farm, village and town were drawn again from scratch on the way home.
+- New save data: none.
+
+## v297: Faster doors and map changes
+- Walking through a door or off the edge of a map no longer hitches. Before, the first sprite sheet to finish loading (the furniture, floors and wallpapers the first time you went indoors; a new season's ground) threw away every map already drawn, so the village, town and farm were drawn again from scratch the next time you walked in. Now a sheet arriving only redraws the maps drawn without it.
+- Every sprite sheet (312 KB) starts loading on the title screen, so none arrive mid-play, a new season's ground shows its tile set straight away, and every sheet is kept for playing offline.
+- The maps one exit or door away from where you stand (the rooms behind a street's doors too) are drawn in the background a moment after you arrive, so the next map is ready when you step into it.
+- Trees are drawn from six cached pictures per season instead of pixel by pixel, so a wooded map draws 2 to 4 times faster (the town in 6 ms instead of 23). Rooms no longer set aside three empty map-sized canvases for tree crowns they do not have.
+- Drawn maps are kept up to about 48 MB of canvas, least recently visited dropped first (before, every map visited stayed in memory until the season changed).
+- Measured in a headless browser over 20 map changes: the frame after a map change averaged 34 ms (worst 74 ms) before, 17.6 ms (worst 21.6 ms) now, one screen refresh.
+- New save data: none.
+
 ## v296: No shaking under a dialog
 - Fixed: after a hit that shakes the screen (the last strike of a combo, a club slam, getting hurt), talking to someone or using the pet's bowl straight away kept the screen shaking for as long as the dialog stayed open. The shake now stops when a dialog opens.
 - New save data: none.

@@ -16,7 +16,7 @@ import { r } from '../render/pixel.js';
 function apply() {
   const row = MAPS[STONE.map]?.grid[STONE.y];
   if (row && row[STONE.x] === 'g') row[STONE.x] = STONE_TILE;
-  emit('world:changed');
+  emit('world:changed', STONE.map);
 }
 on('game:loaded', apply);
 

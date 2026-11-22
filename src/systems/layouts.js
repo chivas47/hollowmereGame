@@ -22,7 +22,7 @@ export function rebuildHouse(keep = false) {
   const h = G.S.house || {};
   copyInto(MAPS.house.grid, houseGrid(G.S.upgrades?.house || 0, h.renos || []), keep);
   MAPS.house.decor = { wall: h.wall || 0, floor: h.floor || 0 };
-  emit('world:changed');
+  emit('world:changed', 'house');
 }
 
 on('game:loaded', () => {

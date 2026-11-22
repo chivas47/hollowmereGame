@@ -6,7 +6,7 @@
 //   game:loaded          a save was loaded or a new game started
 //   game:reset           the player started a new farm
 //   map:changed (id)     player moved to another map
-//   world:changed        map tiles changed, redraw the cached background
+//   world:changed (ids?) map tiles changed, redraw the cached background (v298: of those map ids only, if given)
 //   day:end (report)     before the date advances (growth, payouts, eggs)
 //   season:changed ({from, to, report})
 //   day:start (report)   after the date advances (spawns, resets, buildings)

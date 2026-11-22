@@ -24,7 +24,7 @@ function writeRocks() {
   const g = MAPS[MAP].grid;
   for (let y = 1; y < g.length - 1; y++) for (let x = 1; x < g[0].length - 1; x++) if (ROCKS[g[y][x]]) g[y][x] = 'q';
   for (const [k, r] of Object.entries(G.S.quarryRocks || {})) { const [x, y] = k.split(',').map(Number); g[y][x] = r.t; }
-  emit('world:changed');
+  emit('world:changed', MAP);
 }
 export function refillQuarry() {
   const S = G.S, g = MAPS[MAP].grid, out = {};
@@ -48,7 +48,7 @@ function applyBridge() {
   MAPS[B.map].grid[B.y][B.x] = open ? MENDED_TILE : BRIDGE_TILE;   // drawn by render/tiles.js
   if (open) MAPS[B.map].exits[B.exit.at] = { to: B.exit.to, x: B.exit.x, y: B.exit.y, dir: B.exit.dir };
   else delete MAPS[B.map].exits[B.exit.at];
-  emit('world:changed');
+  emit('world:changed', B.map);
 }
 // The crew comes the night after the workroom is restored, by bundles or by Ashgrove.
 export function mendBridge(S = G.S) {
@@ -83,7 +83,7 @@ export function hitQuarryRock(x, y) {
   if (Math.random() < QUARRY.geode * (has('excavator') ? 2 : 1)) { geode = Math.random() < 0.7 ? 'geode' : 'frostgeode'; S.bag[geode] = (S.bag[geode] || 0) + 1; }
   delete S.quarryRocks[k];
   MAPS[MAP].grid[y][x] = 'q';
-  emit('world:changed');
+  emit('world:changed', MAP);
   emit('gather', { skill: 'mining', item: rock.item, xp: rock.hp * 2 - 1 });
   if (rock.item !== 'stone' || coal || geode) notify(`+${n} ${ITEMS[rock.item].name}${coal ? ', +1 Coal' : ''}${geode ? `, a ${ITEMS[geode].name.toLowerCase()}` : ''}`);
   changed();

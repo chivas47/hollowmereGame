@@ -3,6 +3,10 @@
 // tools/sprites/person.py into data/personSheet.js; data/people.js turns a look into the bands to draw.
 export { PERSON } from './personSheet.js';
 
+// v297: every PNG in assets/sprites/, preloaded at boot (render/sheets.js preloadSheets) so no sheet arrives mid-play and
+// sends cached backgrounds back to be redrawn. tests/sheets.test.mjs keeps this list in step with the folder.
+export const SHEET_FILES = ['alders', 'animals', 'birds', 'buildings', 'buildings-winter', 'bunting', 'cave-ember', 'cave-peak', 'cave-rock', 'cave-sand', 'cave-sewer', 'children', 'crops', 'debris', 'fences', 'fixtures', 'floors', 'forage', 'furniture', 'giants', 'glow', 'greenhouse', 'horse', 'monsters', 'packet', 'pens', 'penstock', 'person', 'pets', 'placed', 'props', 'soil', 'terrain-autumn', 'terrain-spring', 'terrain-summer', 'terrain-winter', 'tools', 'trees', 'variants', 'wallpapers', 'weapons'];
+
 // v78 animals.png: 24x24 frames, one row per kind; columns are right stand, right step, left stand, left step.
 // Colours are drawn in (no tinting). origin as above: the frame's top-left from the animal's feet.
 export const ANIMALS = {

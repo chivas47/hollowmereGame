@@ -119,7 +119,7 @@ on('mine:ladder', ({ floor, zone }) => {
 addInteraction(72, ({ tile, mapId }) => {
   if (tile === '7' && mapId === 'island') { if (N().peak) enterMine(1, 'peak'); else emit('ui:peak'); return true; }
   if (tile === '<' && mapId === 'mine') {
-    N().summit = true; MAPS.mine.grid[6][12] = 'f'; emit('world:changed');
+    N().summit = true; MAPS.mine.grid[6][12] = 'f'; emit('world:changed', 'mine');
     giveNuts(PEAK.summitNuts, 'The cache at the summit is full of old nuts.');
     return true;
   }

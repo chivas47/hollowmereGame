@@ -210,10 +210,10 @@ src/
     title.js          v271: the title screen's living valley (drawn in code, scaled up pixelated)
     wildlife.js       v276: drawBird, drawPenAnimal from birds.png and penstock.png (code art until they load)
     menuIcons.js      v273: the menu's 16x16 tile icons as letter grids
-    renderer.js       composes a frame, caches backgrounds per map + season; v139: draws each view (G.view = the farmer it follows: night light, mine dark, facing outline)
+    renderer.js       composes a frame, caches backgrounds per map + season (v297: least recently used past a pixel budget; a sheet arriving drops only the backgrounds drawn without it; the maps one exit or door away drawn ahead while idle, neighbours()); v139: draws each view (G.view = the farmer it follows: night light, mine dark, facing outline)
     views.js          v139: split screen: views() (one alone, two halves side by side with a second farmer), camera(), onScreen(), toWorld() for prompts and taps; v156: the camera moves both ways over each farmer's own map (sizeOf() in data/maps.js), and visible() is the world rectangle a frame draws (G.drawing), for layers that cover the screen; v289: screen {w, h, kind} is the view's size in world px, set by setCamera(kind) from the Camera setting (data/camera.js: far 24 x 16, near 18 x 12), which also resizes the #game canvas; code that covers the screen reads visible() or screen, never W * T
     interiors.js      v97: cottage rooms (each room its own wallpaper and floor, two-row north walls), every floor-plan piece at its full size, small things on surfaces (TOPS), rugs; windows follow the hour, fires and stoves flicker
-    sheets.js         v77: PNG sprite sheets from assets/sprites/: sheet(), ready(), tinted() (grey layers tinted to a palette, cached, up to 256), frame() (v78: optional row), onSheet()
+    sheets.js         v77: PNG sprite sheets from assets/sprites/: sheet(), ready() (v297: missingWhile() notes the sheets a drawing lacked), preloadSheets() (v297: every sheet in data/sprites.js SHEET_FILES at boot), tinted() (grey layers tinted to a palette, cached, up to 256), frame() (v78: optional row), onSheet()
   audio/              Web Audio output (like render/, but for sound); imported only by main.js and ui/
     engine.js         context, buses, settings (localStorage), tone() and noise()
     sfx.js            listens for 'sfx' and other events, plays effects
@@ -410,7 +410,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `game:loaded` | none | main.js (v271: once a farm is chosen on the title screen), reset | forage, upgrades (recalc), coop (place), mine (eject) |
 | `game:reset` | none | ui/dialogs.js | renderer cache, npcs, coop, fishing |
 | `map:changed` | map id (v138: `mover()` in world.js says whether you or the second farmer moved; v140: fishing, the horse, combat, effects and queued Use act only for the mover) | player.js, days.js, mine.js, partner.js (their exits) | fishing, monsters, partner, stable, animation, interact |
-| `world:changed` | none | coop.js, mine.js | renderer (drop background cache) |
+| `world:changed` | v298: optional map id or list of ids | coop.js, mine.js | renderer (drop the background cache of those maps, or of every map when none is named) |
 | `day:end` | report | days.js | weather (lightning, next forecast), farming (growth), economy (payout), coop (eggs) |
 | `season:changed` | {from, to, report} | days.js | farming (wither), trees (drop fruit), renderer |
 | `day:start` | report | days.js | forage, npcs, coop (build), health, fishing, monsters, trees (age, fruit), giants (merge), clearing (creep, alder growth), weather (rain waters soil) |
@@ -522,8 +522,8 @@ Soil is per map: `soilOf(mapId)` returns `G.S.soil` (farm) or `G.S.greenSoil` (g
 - **Forage:** entry in `data/forage.js` plus art in `FORAGE_ART` (render/sprites.js).
 - **Neighbour:** entry in `data/npcs.js` (farm path), a home in `data/homes.js` and, for a cottage, a floor plan in `data/interiors.js` (the `home_<id>` inside is built from it; run `node tools/check_interiors.mjs`), a routine in `data/schedules.js` and scenes in `data/scenes.js`. Routine spots are only the places that matter: neighbours find their own way around anything solid and from map to map (systems/routes.js); a spot may be a solid counter they stand behind.
 - **Upgrade tier:** append to a line in `data/upgrades.js`; read effects with `tier(G.S, 'line')`.
-- **Building:** follow systems/coop.js: order at the carpentry (ui/workshop.js), build on `day:start`, write tiles at runtime, emit `world:changed`.
-- **Image art (v77):** a PNG in `assets/sprites/` (format and credits in its README.md), its layout in `data/sprites.js`, and a draw function in `render/` that uses `ready(name)` and falls back to the code art until the sheet loads. Layered sheets are drawn in grey and tinted with `tinted()`.
+- **Building:** follow systems/coop.js: order at the carpentry (ui/workshop.js), build on `day:start`, write tiles at runtime, emit `world:changed` with the map id(s) whose tiles changed (v298: without one, every cached map is redrawn).
+- **Image art (v77):** a PNG in `assets/sprites/` (format and credits in its README.md), its name in `SHEET_FILES` (v297: preloaded at boot; tests/sheets.test.mjs fails if a PNG is missing from the list), its layout in `data/sprites.js`, and a draw function in `render/` that uses `ready(name)` and falls back to the code art until the sheet loads. Layered sheets are drawn in grey and tinted with `tinted()`.
 - **People (v222):** built part by part. `tools/sprites/person.py` draws every part (body, a child's body, outfits, gear, hair styles, beards, extras, hats) as its own bands of `assets/sprites/person.png` and writes their layout to `data/personSheet.js` (generated, not edited by hand). `data/people.js` holds the style labels and turns a look (a palette plus `hairStyle`, `beard`, `outfit`, `hatStyle`, `glasses`, and v224's `scarf` and `bag` colours) into the bands to draw (`lookOf`, `personLayers`); `render/sprites.js` draws them. A new style is drawn in person.py and labelled in data/people.js; `tools/sprites/people_lineup.mjs` draws every neighbour to check it.
 - **Tool:** key in `data/hotbar.js` (+ `TOOL_NAMES`), icon in `render/icons.js`, an interaction in its system.
 - **Map:** grid and entry in `data/maps.js`, with an `E` tile and `exits` entry on both sides.
