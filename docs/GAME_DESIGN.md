@@ -353,6 +353,8 @@ Weeds (Stardew's weeds and scythe): solid until a weapon swing reaches them, no 
 | Barrow shambler | Mournfield, night | walk, slow | 30 | 15 | 14 | bone shard, cloth, gloommote |
 | Mourning haunt | Mournfield, night | phase | 16 | 10 | 12 | wisp silk, gloommote, sunmote |
 
+The key chain (97a): an old chest at the Tangle's farthest dead end (found by walking distance from every way in) holds the crypt key. The key opens the chapel crypt's door in Mournfield (19, 15); inside (24 x 16) are 4 to 5 of the night's dead each visit, and the great sarcophagus gives the gravewarden blade once: sword, 21 damage (Stardew's bone sword, 20 to 30, refitted like the claymore to our greatsword), 1.5 times against grave rattlers, barrow shamblers, mourning haunts, bone walkers and sand wraiths. The crusader enchantment stacks with it.
+
 The woods hold 4 to 7 creatures, back each time you walk in. Mournfield: 3 to 4 at nightfall, 1 to 2 more every 30 minutes, at most 10. Strength sits beside the Hollow's floors 10 to 25 (Stardew's wilderness night monsters sit beside its early to middle mine floors).
 
 ### The mountain lake and the quarry (v44)

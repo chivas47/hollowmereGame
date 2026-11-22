@@ -30,6 +30,7 @@ export const WEAPONS = {
   mallet:     { name: 'Stone mallet',     kind: 'club',   damage: 17 },   // wood mallet 15-24
   duneblade:  { name: 'Dune blade',       kind: 'sword',  damage: 32 },   // v38: obsidian edge 30-45, from cavern chests and monsters
   mitefang:   { name: 'Mite fang',        kind: 'dagger', damage: 13 },   // v37: insect head 10-20, the lodge's reward for 80 mites
+  gravewarden: { name: 'Gravewarden blade', kind: 'sword', damage: 21, undead: 1.5 },   // 97a: bone sword 20-30, from Mournfield's crypt; half again against the dead
 };
 
 // Monsters by mine floor (Stardew: slimes and bugs early, bats from 30, skeletons around 70, serpents deep).

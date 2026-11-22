@@ -34,7 +34,7 @@ import { INTERIORS, interiorGrid, doorOf } from './interiors.js';
 import { VENUES, venueMap } from './venues.js';
 import { MERE } from './mere.js';
 import { PROPS, PROP_TILES } from './scenery.js';
-import { DUSK_TILES, DUSK_EXITS, DUSK_WAYS_IN, gloamwoodGrid, tangleGrid, mournfieldGrid } from './duskmarch.js';   // v303
+import { DUSK_TILES, DUSK_EXITS, DUSK_WAYS_IN, CRYPT, gloamwoodGrid, tangleGrid, mournfieldGrid, cryptGrid } from './duskmarch.js';   // v303
 
 // v156 (roadmap 75g): a map's size in tiles, read from its grid, so a map can be larger than the screen (W x H).
 export const sizeOf = (id) => { const g = MAPS[id]?.grid; return g?.length ? { w: g[0].length, h: g.length } : { w: W, h: H }; };
@@ -518,6 +518,8 @@ export const MAPS = {
   gloamwood: { name: 'Gloamwood', salt: 101, grid: gloamwoodGrid(), objects: [], exits: duskExits('gloamwood') },
   tangle: { name: 'The Tangle', salt: 103, grid: tangleGrid(), objects: [], exits: duskExits('tangle') },
   mournfield: { name: 'Mournfield', salt: 107, grid: mournfieldGrid(), objects: [], exits: duskExits('mournfield') },
+  crypt: { name: 'The chapel crypt', salt: 109, base: 'cave', grid: cryptGrid(), objects: [],   // 97a: its door is faced (systems/duskmarch.js)
+    exits: { [`${CRYPT.out.x},${CRYPT.out.y}`]: { to: 'mournfield', x: CRYPT.stand.x, y: CRYPT.stand.y, dir: 'down' } } },
   ...homeMaps(),   // v76: the neighbours' cottages
   ...venueMaps(),   // v98: shops, halls and farm buildings
 };

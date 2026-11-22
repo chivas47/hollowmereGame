@@ -14,7 +14,10 @@
 
 export const WEED = 'ψ';                   // thick weeds: solid until cut
 export const HEADSTONE = 'ɤ', CRYPT_ROOF = 'ɮ', CRYPT_FRONT = 'ɯ', RAILING = 'ɸ', DEADTREE = 'ʇ';
-export const DUSK_TILES = [WEED, HEADSTONE, CRYPT_ROOF, CRYPT_FRONT, RAILING, DEADTREE];
+// v303 (roadmap 97a): the key chain. An old chest at the Tangle's deepest dead end holds the crypt key; the key opens
+// the door of Mournfield's chapel crypt; inside, past its dead, the great sarcophagus holds the gravewarden's blade.
+export const CHEST = 'ʊ', CHEST_OPEN = 'ʖ', CRYPT_DOOR = 'ʞ', CRYPT_DOOR_OPEN = 'ʡ', COFFIN = 'ʚ', SARCOPHAGUS = 'ʛ', SARCOPHAGUS_OPEN = 'ʜ';
+export const DUSK_TILES = [WEED, HEADSTONE, CRYPT_ROOF, CRYPT_FRONT, RAILING, DEADTREE, CHEST, CHEST_OPEN, CRYPT_DOOR, CRYPT_DOOR_OPEN, COFFIN, SARCOPHAGUS, SARCOPHAGUS_OPEN];
 export const DUSK_SIZE = { gloamwood: { w: 48, h: 32 }, tangle: { w: 40, h: 32 }, mournfield: { w: 48, h: 32 } };
 export const DUSK_MAPS = Object.keys(DUSK_SIZE);
 
@@ -127,6 +130,43 @@ export function tangleGrid() {
   for (const e of DUSK_EXITS.tangle) trail(m, e.at);
   weeds(m, R, 0.3);
   clearRound(m, DUSK_EXITS.tangle);
+  const [x, y] = deepest(m, DUSK_EXITS.tangle.map((e) => e.at));
+  m[y][x] = CHEST; Object.assign(CRYPT.chest, { x, y });
+  return m;
+}
+
+// The dead end farthest on foot (weeds count as open) from every way in: where the old chest waits.
+function deepest(m, starts) {
+  const open = (x, y) => inner(m, x, y) && (m[y][x] === 'g' || m[y][x] === 'P' || m[y][x] === WEED);
+  const dist = new Map(), todo = [];
+  for (const [x, y] of starts) for (const [a, b] of [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]]) if (open(a, b)) { dist.set(`${a},${b}`, 0); todo.push([a, b]); }
+  for (let i = 0; i < todo.length; i++) {
+    const [x, y] = todo[i], d = dist.get(`${x},${y}`);
+    for (const [a, b] of [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]]) if (open(a, b) && !dist.has(`${a},${b}`)) { dist.set(`${a},${b}`, d + 1); todo.push([a, b]); }
+  }
+  let best = null, far = -1;
+  for (const [k, d] of dist) {
+    const [x, y] = k.split(',').map(Number), ways = [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]].filter(([a, b]) => open(a, b)).length;
+    if (ways === 1 && d > far) { far = d; best = [x, y]; }
+  }
+  return best;
+}
+
+// The crypt under Mournfield's chapel: a one-screen tomb (24 x 16), rows of coffins, the great sarcophagus at the back.
+// door: the tile on Mournfield you face to go in (stand: below it); land: where you arrive inside; out: its exit.
+// Its dead are there whenever you go in: NIGHT's kinds, CRYPT.n of them. Stardew by role: the Bone Sword (20 to 30
+// damage, a skeleton's sword) refitted like the claymore (20 to 32 is our 22): 21, half again against the dead.
+export const CRYPT = {
+  door: { x: 19, y: 15 }, stand: { x: 19, y: 16 }, land: { x: 11, y: 11 }, out: { x: 11, y: 12 },
+  sarcophagus: { x: 11, y: 3 }, chest: { x: 0, y: 0 }, n: [4, 5], blade: 'gravewarden',
+};
+export function cryptGrid() {
+  const m = blank(24, 16, 'X');
+  fill(m, 4, 2, 19, 11, 'f');
+  for (const y of [4, 6, 8]) for (const x of [5, 7, 9, 14, 16, 18]) m[y][x] = COFFIN;
+  for (const [x, y] of [[4, 2], [19, 2], [4, 11], [19, 11]]) m[y][x] = 'X';   // the corners' pillars
+  m[CRYPT.sarcophagus.y][CRYPT.sarcophagus.x] = SARCOPHAGUS;
+  m[CRYPT.out.y][CRYPT.out.x] = 'E';
   return m;
 }
 
@@ -148,9 +188,9 @@ export function mournfieldGrid() {
   }
   // crypts: a roof row and a front row with the door
   const crypt = (x, y, wd) => { fill(m, x, y, x + wd - 1, y, CRYPT_ROOF); fill(m, x, y + 1, x + wd - 1, y + 1, CRYPT_FRONT); fill(m, x, y + 2, x + wd - 1, y + 2, 'g'); };
-  crypt(18, 14, 4);               // the chapel crypt at the end of the east walk
+  crypt(18, 14, 4); m[CRYPT.door.y][CRYPT.door.x] = CRYPT_DOOR;   // the chapel crypt at the end of the east walk, its door
   crypt(39, 4, 3); crypt(25, 23, 3);
-  m[16][17] = 'P';
+  fill(m, 17, 16, 21, 16, 'P');   // the east walk runs right up to the crypt door
   // the overgrown west end: weeds, dead trees, a few lost headstones
   for (let y = 1; y < h - 1; y++) for (let x = 1; x < X0; x++) {
     const v = R();

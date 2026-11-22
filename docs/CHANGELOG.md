@@ -11,8 +11,9 @@ Newest first. Version numbers match published versions of the playable page.
 - By day the woods have bristle hogs (they charge), thorn wasps (a flying swarm) and stump lurkers (asleep they look like a stump). They come back each time you walk in.
 - After 8 pm the dead rise in Mournfield: grave rattlers (skeletons), barrow shamblers (slow, tough zombies) and mourning haunts (spirits that fade in and out). More rise every half hour, up to ten; morning clears them. The crusader enchantment hurts them half as much again.
 - Each new creature has its own art, loot (bone shards, cloth, chitin, wood, wisp silk, motes) and a Bestiary card.
+- A reason to go deep (roadmap 97a): an old chest waits at the Tangle's deepest dead end, more than 30 steps from every way in. Inside is the crypt key. It opens the barred door of Mournfield's chapel crypt, a tomb whose dead are there whenever you go in. The great sarcophagus at the back holds the gravewarden blade: a sword with 21 damage that hits the dead half again as hard. Without the key, the door tells you where it was lost.
 - The world map gains two columns in the west.
-- New save data: the weeds cut today (cutWeeds, cutDay). Old saves load with nothing cut.
+- New save data: the weeds cut today (cutWeeds, cutDay); the key chain (dusk: key, door, blade). Old saves load with nothing cut and the chest still shut.
 
 ## v302: The world in motion
 - The village fountain's water runs: drops slide down the column and rings spread in the basin (frozen in winter). Its jets still start when the hall's fish tank is restored.

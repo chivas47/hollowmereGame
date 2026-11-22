@@ -1058,7 +1058,7 @@ function cryptFront(g, x, y, p) {
   const X = x * T, Y = y * T;
   r(g, X, Y, T, 15, '#6e6a63'); r(g, X, Y + 15, T, 1, 'rgba(0,0,0,.35)');
   r(g, X, Y + 4, T, 1, '#5a5650'); r(g, X, Y + 9, T, 1, '#5a5650'); r(g, X + 7, Y, 1, 4, '#5a5650'); r(g, X + 3, Y + 5, 1, 4, '#5a5650'); r(g, X + 11, Y + 5, 1, 4, '#5a5650');
-  r(g, X + 5, Y + 6, 6, 9, '#2a2622'); r(g, X + 6, Y + 5, 4, 1, '#2a2622'); r(g, X + 9, Y + 10, 1, 1, '#c9a43a');
+  r(g, X + 5, Y + 6, 6, 9, '#55514b'); r(g, X + 6, Y + 5, 4, 1, '#55514b'); r(g, X + 5, Y + 10, 6, 1, '#47433e'); r(g, X + 7, Y + 6, 1, 4, '#47433e');   // 97a: a sealed arch
 }
 function railing(g, x, y) {
   const X = x * T, Y = y * T;
@@ -1070,6 +1070,43 @@ function deadTree(g, x, y, p) {
   r(g, X + 3, Y + 14, 10, 2, 'rgba(0,0,0,.3)'); r(g, X + 6, Y + 4, 4, 11, bark); r(g, X + 6, Y + 4, 1, 11, hi);
   r(g, X + 8 + f * 2, Y + 2, 2, 4, bark); r(g, X + 3, Y + 6, 3, 2, bark); r(g, X + 1, Y + 4, 2, 2, bark); r(g, X + 10, Y + 8, 4, 2, bark); r(g, X + 13, Y + 6, 2, 2, bark);
   r(g, X + 5, Y + 1, 2, 3, bark); if (p.snow) { r(g, X + 6, Y + 4, 4, 1, '#e8eef0'); r(g, X + 10, Y + 8, 4, 1, '#e8eef0'); }
+}
+
+// 97a: the key chain's pieces: the Tangle's mossy chest (shut, open), the crypt door (barred, open), coffins and
+// the great sarcophagus (shut, its lid pushed aside).
+function oldChest(g, x, y, p) {
+  chest(g, x, y, p);
+  const X = x * T, Y = y * T;
+  r(g, X + 3, Y + 4, 4, 2, p.snow ? '#e8eef0' : '#5d8a3a'); r(g, X + 10, Y + 9, 3, 2, p.snow ? '#e8eef0' : '#4f7a32');
+}
+function oldChestOpen(g, x, y, p) {
+  const X = x * T, Y = y * T;
+  r(g, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.35)'); r(g, X + 2, Y + 1, 12, 4, '#a5753f'); r(g, X + 2, Y + 1, 12, 1, '#e9b44c');
+  r(g, X + 2, Y + 6, 12, 8, '#8a5a32'); r(g, X + 3, Y + 6, 10, 3, '#2a1a10'); r(g, X + 2, Y + 6, 1, 8, '#e9b44c'); r(g, X + 13, Y + 6, 1, 8, '#e9b44c');
+}
+function cryptDoor(g, x, y, p) {
+  cryptFront(g, x, y, p);
+  const X = x * T, Y = y * T;
+  r(g, X + 5, Y + 6, 6, 9, '#1a1612'); r(g, X + 6, Y + 5, 4, 1, '#1a1612');
+  for (let i = 0; i < 3; i++) r(g, X + 6 + i * 2, Y + 6, 1, 9, '#6a6870');
+  r(g, X + 5, Y + 9, 6, 1, '#6a6870'); r(g, X + 9, Y + 11, 1, 2, '#5d8a3a');
+}
+function cryptDoorOpen(g, x, y, p) {
+  cryptFront(g, x, y, p);
+  const X = x * T, Y = y * T;
+  r(g, X + 5, Y + 6, 6, 9, '#120e0b'); r(g, X + 5, Y + 6, 1, 9, '#3a393f');
+}
+function coffin(g, x, y) {
+  const X = x * T, Y = y * T;
+  r(g, X + 3, Y + 14, 10, 2, 'rgba(0,0,0,.35)'); r(g, X + 4, Y + 1, 8, 14, '#5a4a3e'); r(g, X + 5, Y + 2, 6, 12, '#6e5a4a');
+  r(g, X + 7, Y + 4, 2, 6, '#3e3229'); r(g, X + 6, Y + 5, 4, 1, '#3e3229');
+}
+function sarcophagus(g, x, y, p, open = false) {
+  const X = x * T, Y = y * T;
+  r(g, X, Y + 14, T, 2, 'rgba(0,0,0,.35)'); r(g, X, Y + 4, T, 11, '#77726a'); r(g, X, Y + 4, T, 1, '#a8a49c');
+  r(g, X + 2, Y + 7, 12, 1, '#55524d'); r(g, X + 2, Y + 12, 12, 1, '#55524d');
+  if (open) { r(g, X + 2, Y + 5, 12, 6, '#1a1612'); r(g, X - 2 + 6, Y + 1, 12, 4, '#8a8680'); }
+  else { r(g, X + 1, Y + 1, 14, 4, '#8a8680'); r(g, X + 7, Y + 2, 2, 2, '#c9a43a'); }
 }
 
 // v89: the things on cave and special tiles, without their ground (PROP_GROUND says what lies under each), so a
@@ -1088,6 +1125,7 @@ export const PROP_ART = {
   'ʋ': reeds,   // v160
   'ʂ': stall,   // v165
   'ψ': weedClump, 'ɤ': headstone, 'ɮ': cryptRoof, 'ɯ': cryptFront, 'ɸ': railing, 'ʇ': deadTree,   // v303
+  'ʊ': oldChest, 'ʖ': oldChestOpen, 'ʞ': cryptDoor, 'ʡ': cryptDoorOpen, 'ʚ': coffin, 'ʛ': sarcophagus, 'ʜ': (g, x, y, p) => sarcophagus(g, x, y, p, true),   // 97a
   ...SCENERY_ART,   // v195: bushes, boulders, stumps, woodpiles, hay, barrels, planters (render/scenery.js)
 };
 // The ground under each prop: a cave's floor or wall, grass (with the salt its blades and flowers use) or sand.
@@ -1098,6 +1136,7 @@ export const PROP_GROUND = {
   '¢': 'grass:53', '§': 'grass:59', '¤': 'grass:61', '8': 'sand',
   'ħ': 'grass:67', 'ǧ': 'grass:71', 'ƀ': 'grass:73', 'ʋ': 'grass:79', 'β': 'grass:83', 'ʂ': 'grass:89', 'ɲ': 'grass:97',
   'ψ': 'grass:109', 'ɤ': 'grass:113', 'ɮ': 'grass:127', 'ɯ': 'grass:131', 'ɸ': 'grass:137', 'ʇ': 'grass:139',   // v303
+  'ʊ': 'grass:149', 'ʖ': 'grass:149', 'ʞ': 'grass:151', 'ʡ': 'grass:151', 'ʚ': 'floor', 'ʛ': 'floor', 'ʜ': 'floor',   // 97a
   ...Object.fromEntries(Object.keys(SCENERY_ART).map((t, i) => [t, `grass:${101 + 2 * i}`])),   // v195
 };
 function propGround(t, g, x, y, p) {

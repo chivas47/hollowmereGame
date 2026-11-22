@@ -71,7 +71,7 @@ export function spawnSlimes(map, n, kind = 'slime', keep = false) {
   const g = MAPS[map].grid, color = kind === 'slime' ? SLIME.colors[0] : MONSTERS[kind].color, { w: MW, h: MH } = sizeOf(map), goal = slimes.length + n;   // v157: the map's own size
   for (let guard = 0; slimes.length < goal && guard < 500; guard++) {
     const x = 1 + Math.floor(Math.random() * (MW - 2)), y = 5 + Math.floor(Math.random() * (MH - 6));
-    if (g[y][x] !== 'g' || Math.hypot(x * T - G.S.x, y * T - G.S.y) < 5 * T) continue;
+    if (g[y][x] !== (MAPS[map].base === 'cave' ? 'f' : 'g') || Math.hypot(x * T - G.S.x, y * T - G.S.y) < 5 * T) continue;
     const px = x * T + 8, py = y * T + 12, pack = MONSTERS[kind]?.pack;
     const k = pack ? Math.min(pack[0] + Math.floor(Math.random() * (pack[1] - pack[0] + 1)), goal - slimes.length) : 1;   // v303: a swarm comes as a pack
     for (let i = 0; i < k; i++) slimes.push({ ...make(kind, 1, px + (i % 3 - 1) * 6, py + (Math.floor(i / 3) - 0.5) * 6, Math.random), color });
@@ -313,7 +313,7 @@ export function damageOf() {
   return weapon().damage * attackMult() * (has('fighter') ? 1.1 : 1) * (has('brute') ? 1.15 : 1) * (wearing('emberring') ? 1.1 : 1) * forgeBonus().damage * (G.S.mastery.claimed.includes('combat') ? 1.15 : 1) * tierMult();   // v39: heartstones; v40: combat mastery; v282: its tier
 }
 // v39: weapon enchantments that change damage against a kind.
-const versus = (kind) => { const e = weaponEnchant(); return e === 'crusader' && UNDEAD.includes(kind) ? 1.5 : e === 'bugkiller' && kind === 'mite' ? 2 : 1; };
+export const versus = (kind) => { const e = weaponEnchant(), u = weapon().undead && UNDEAD.includes(kind) ? weapon().undead : 1; return u * (e === 'crusader' && UNDEAD.includes(kind) ? 1.5 : e === 'bugkiller' && kind === 'mite' ? 2 : 1); };   // 97a: the gravewarden blade
 const HAY = ['fiber', 'cloth', 'coal'];
 function defeat(m) {
   slimes.splice(slimes.indexOf(m), 1);

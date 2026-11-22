@@ -106,3 +106,49 @@ test('an old save without the field loads with nothing cut; junk in the field is
   assert.deepEqual(s.cutWeeds, {});
   assert.deepEqual(merge({ cutWeeds: { gloamwood: ['3,4', 7], tangle: 'x' } }).cutWeeds, { gloamwood: ['3,4'] });
 });
+
+// Roadmap 97a: the key chain. The chest at the Tangle's deepest dead end holds the key; the key opens Mournfield's
+// chapel crypt; the great sarcophagus inside holds the gravewarden blade, which hits the dead half again as hard.
+test('the key chain: chest in the Tangle, the crypt door, the blade in the sarcophagus', async () => {
+  const { CRYPT, CHEST, CHEST_OPEN, CRYPT_DOOR, SARCOPHAGUS } = await import('../src/data/duskmarch.js');
+  const { openChest, useCryptDoor, openSarcophagus } = await import('../src/systems/duskmarch.js');
+  const { WEAPONS } = await import('../src/data/weapons.js');
+  freshFarm(); emit('game:loaded');
+  const { x, y } = CRYPT.chest, g = MAPS.tangle.grid;
+  assert.equal(g[y][x], CHEST);
+  const ways = [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]].filter(([a, b]) => !SOLID.has(g[b][a]) || g[b][a] === WEED);
+  assert.equal(ways.length, 1, 'it sits at a dead end');
+  const steps = (from) => {   // on foot, weeds counted as cut
+    const d = new Map([[from.join(), 0]]), todo = [from];
+    for (let i = 0; i < todo.length; i++) { const [a, b] = todo[i]; for (const [c, e] of [[a + 1, b], [a - 1, b], [a, b + 1], [a, b - 1]]) { const t = g[e]?.[c]; if (t === undefined || d.has(`${c},${e}`) || (SOLID.has(t) && t !== WEED && t !== CHEST)) continue; d.set(`${c},${e}`, d.get(`${a},${b}`) + 1); todo.push([c, e]); } }
+    return d.get(`${x},${y}`);
+  };
+  for (const e of Object.keys(MAPS.tangle.exits)) assert.ok(steps(e.split(',').map(Number)) >= 30, `a long walk from ${e}: ${steps(e.split(',').map(Number))}`);
+  assert.equal(MAPS.mournfield.grid[CRYPT.door.y][CRYPT.door.x], CRYPT_DOOR);
+  placePlayer('mournfield', CRYPT.stand.x, CRYPT.stand.y, 'up');
+  useCryptDoor();
+  assert.equal(G.S.map, 'mournfield', 'locked without the key');
+  openChest();
+  assert.ok(G.S.dusk.key); assert.equal(g[y][x], CHEST_OPEN);
+  useCryptDoor();
+  assert.equal(G.S.map, 'crypt'); assert.ok(G.S.dusk.door);
+  assert.ok(slimes.length >= CRYPT.n[0], 'the crypt has its dead');
+  assert.equal(MAPS.crypt.grid[CRYPT.sarcophagus.y][CRYPT.sarcophagus.x], SARCOPHAGUS);
+  openSarcophagus();
+  assert.ok(G.S.weapons.includes('gravewarden') && G.S.dusk.blade);
+  openSarcophagus();
+  assert.equal(G.S.weapons.filter((w) => w === 'gravewarden').length, 1, 'only once');
+  assert.equal(WEAPONS.gravewarden.damage, 21);
+  const s = merge(JSON.parse(JSON.stringify(G.S)));
+  assert.deepEqual(s.dusk, { key: true, door: true, blade: true }, 'saved');
+  assert.deepEqual(merge({}).dusk, { key: false, door: false, blade: false }, 'an old save starts with none');
+});
+
+test('the gravewarden blade hits the dead half again as hard, and nothing else harder', async () => {
+  const { versus } = await import('../src/systems/monsters.js');
+  freshFarm({ weapons: ['oldblade', 'gravewarden'], weapon: 'gravewarden' });
+  for (const k of ['rattler', 'shambler', 'haunt', 'skeleton']) assert.equal(versus(k), 1.5, k);
+  for (const k of ['slime', 'bristle', 'wasp']) assert.equal(versus(k), 1, k);
+  G.S.weapon = 'oldblade';
+  assert.equal(versus('rattler'), 1);
+});
