@@ -6,7 +6,7 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities, addPrompt } from '../core/registry.js';
 import { today, dateParts } from '../core/time.js';
 import { ITEMS } from '../data/items.js';
-import { MAPS } from '../data/maps.js';
+import { MAPS, SOLID } from '../data/maps.js';
 import { NPCS, OUTFITS } from '../data/npcs.js';
 import { festivalOn, hoursOf } from '../data/festivals.js';
 import { scheduleFor, spouseDay, festivalDay, rainDay, spouseRainDay, RAIN_WEATHERS } from '../data/schedules.js';
@@ -29,7 +29,7 @@ import { GIFT_EMOTE, SIGH } from '../data/emotes.js';
 import { MOTION } from '../data/animation.js';
 import { lean } from './wind.js';
 import { tileOf } from './world.js';
-import { tilePath, nextHop } from './routes.js';
+import { tilePath, nextHop, openNear } from './routes.js';
 import { recalcStats } from './upgrades.js';
 
 const SPEED = 28, LEAD = 30;   // minutes before a block on another map that they set off for it
@@ -119,12 +119,33 @@ function walk(n, [gx, gy], step, dt) {
   return false;
 }
 
+// v301: what a neighbour keeps off without it being solid: weeds and forage in the Wilds, forage elsewhere, your
+// crops and tilled soil. Walked around when there is another way, never stood on.
+function softSpots(map) {
+  const S = G.S, out = new Set(), add = (x, y) => out.add(`${x},${y}`);
+  if (map === 'wilds') { (S.wildWeeds || []).forEach((w) => add(w.x, w.y)); (S.forage || []).forEach((f) => add(f.x, f.y)); }
+  if (map === 'farm') { Object.keys(S.soil || {}).forEach((k) => out.add(k)); (S.farmForage || []).forEach((f) => add(f.x, f.y)); }
+  (S.areaForage?.[map] || []).forEach((f) => add(f.x, f.y));
+  return out;
+}
+const SOFT_COST = 8;   // a weed or a crop row is worth a few tiles' detour, not a long way round
+const solidNow = (map, [x, y]) => { const t = MAPS[map].grid[y]?.[x]; return t === undefined || SOLID.has(t); };
+
 // Walks a found path toward a tile on their own map. Returns true on arrival.
+// v301: the path goes round what has become solid since it was found (debris, a building, something placed), round
+// soft spots where it can, to the nearest reachable tile when the place cannot be reached (never a straight line
+// through walls), and to the nearest open tile when an outdoor place is itself blocked.
 function walkTo(n, tile, step, dt) {
-  const k = `${n.map}:${tile}`;
-  if (n.routeTo !== k || !n.route) {
-    const here = tileOf(n.x, n.y), here2 = [here.tx, here.ty];
-    n.route = [here2, ...(tilePath(n.map, here2, tile) || [tile])]; n.routeTo = k;
+  const k = `${n.map}:${tile}`, here = tileOf(n.x, n.y), r = n.route;
+  let stale = false;
+  if (r && r.length) { for (let i = 1; i < r.length && !stale; i++) stale = solidNow(n.map, r[i]) && !(i === r.length - 1 && n.routeGoalSolid); }
+  else if (r) { const e = n.routeEnd || tile; stale = here.tx !== e[0] || here.ty !== e[1]; }
+  if (n.routeTo !== k || !r || stale) {
+    const soft = softSpots(n.map), w = MAPS[n.map].grid[0].length, cost = new Uint8Array(w * MAPS[n.map].grid.length);
+    for (const s of soft) { const [x, y] = s.split(',').map(Number); if (y * w + x < cost.length) cost[y * w + x] = SOFT_COST; }
+    const goal = openNear(n.map, tile, (x, y) => soft.has(`${x},${y}`));
+    const here2 = [here.tx, here.ty], path = tilePath(n.map, here2, goal, { extra: cost, nearest: true }) || [];
+    n.route = [here2, ...path]; n.routeTo = k; n.routeEnd = path.at(-1) || here2; n.routeGoalSolid = solidNow(n.map, goal);
   }
   while (n.route.length) {
     if (!walk(n, n.route[0], step, dt)) return false;

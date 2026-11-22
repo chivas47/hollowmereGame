@@ -41,7 +41,10 @@ export function nextHop(from, to) {
 
 // Tiles to walk from one tile to another on a map, not counting the start; the goal may be solid (a counter they
 // stand behind). Read live, so placed objects are walked around. null when there is no way.
-export function tilePath(mapId, [sx, sy], [gx, gy]) {
+// v301: extra adds to a tile's cost (weeds, forage, crops: walked around when there is another way): a typed array
+// of costs by tile (y * width + x) or a function (x, y); with
+// nearest, a goal that cannot be reached gives the way to the reachable tile closest to it instead of null.
+export function tilePath(mapId, [sx, sy], [gx, gy], { extra = null, nearest = false } = {}) {
   const g = MAPS[mapId].grid, w = g[0].length, h = g.length, goal = gy * w + gx;
   const dist = new Float64Array(w * h).fill(Infinity), prev = new Int32Array(w * h).fill(-1), done = new Uint8Array(w * h);
   const open = [sy * w + sx];
@@ -60,12 +63,33 @@ export function tilePath(mapId, [sx, sy], [gx, gy]) {
       if (x < 0 || y < 0 || x >= w || y >= h) continue;
       const i = y * w + x, t = g[y][x];
       if (i !== goal && (SOLID.has(t) || t === 'E')) continue;   // never wander onto another exit
-      const d = dist[cur] + (COST[t] || 3);
+      const d = dist[cur] + (COST[t] || 3) + (!extra || i === goal ? 0 : typeof extra === 'function' ? extra(x, y) : extra[i]);
       if (d < dist[i]) { dist[i] = d; prev[i] = cur; open.push(i); }
     }
   }
-  if (!done[goal]) return null;
+  let end = goal;
+  if (!done[goal]) {
+    if (!nearest) return null;
+    let best = Infinity;   // v301: the reached tile nearest the goal (then the cheapest way there)
+    for (let i = 0; i < w * h; i++) if (done[i]) { const m = Math.abs((i % w) - gx) + Math.abs(Math.floor(i / w) - gy); if (m < best || (m === best && dist[i] < dist[end])) { best = m; end = i; } }
+    if (end === goal) return null;
+  }
   const path = [];
-  for (let i = goal; i !== sy * w + sx; i = prev[i]) path.push([i % w, Math.floor(i / w)]);
+  for (let i = end; i !== sy * w + sx; i = prev[i]) path.push([i % w, Math.floor(i / w)]);
   return path.reverse();
+}
+
+// v301: outdoors, a place on a schedule that has become solid (debris crept onto it, a stall or the wishing stone
+// went up there) or holds something to keep off (bad) moves to the nearest open tile, ring by ring. Indoors a solid
+// place stays: a keeper stands behind their counter.
+export const OUTDOOR = new Set([...OUTDOORS, 'mere', 'grove', 'railway', 'mountain', 'quarry', 'island', 'desert', 'digsite']);
+export function openNear(mapId, [x, y], bad = () => false) {
+  const g = MAPS[mapId].grid, free = (tx, ty) => { const t = g[ty]?.[tx]; return t !== undefined && !SOLID.has(t) && !bad(tx, ty); };
+  const open = (tx, ty) => free(tx, ty) && g[ty][tx] !== 'E';   // never a stand-in on a door or a map exit
+  if (!OUTDOOR.has(mapId) || free(x, y)) return [x, y];   // a door or exit itself is a fine place to head for
+  for (let r = 1; r < 6; r++) for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) {
+    if (Math.abs(dx) + Math.abs(dy) !== r) continue;
+    if (open(x + dx, y + dy)) return [x + dx, y + dy];
+  }
+  return [x, y];
 }

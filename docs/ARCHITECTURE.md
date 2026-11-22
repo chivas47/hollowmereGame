@@ -176,7 +176,7 @@ src/
     village.js        fountain flavour text
     homes.js          v76: entering neighbours' cottages (door hours, 2 hearts after dark)
     venues.js         v98: entering buildings (the same hours and notes their doors gave), the counter that opens each dialog, and drawing and looking at every floor plan's pieces (cottages too); staff who are not villagers stand behind their counters while open
-    routes.js         v76: tilePath() (weighted grid search, paths before grass) and nextHop() (doors and map edges) for neighbours
+    routes.js         v76: tilePath() (weighted grid search, paths before grass; v301: extra costs for soft spots, nearest when the goal cannot be reached) and nextHop() (doors and map edges) for neighbours; v301: openNear() (an outdoor place that has become solid, or holds something to keep off, moves to the nearest open tile), OUTDOOR
     projects.js       village projects: fundProject(), funded()
     greenhouse.js     greenhouse placement on the farm, ordering, entering
     trees.js          fruit trees (placed objects of kind 'tree'): growth, fruit, picking, drawing
