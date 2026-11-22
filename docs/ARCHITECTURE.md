@@ -191,6 +191,7 @@ src/
     cutscene.js       v240: plays a scene (G.cut): playCutscene(id, { replay, then, cast }) (v242: cast fills roles, '$spouse'; v244: vars fills words, {crop}; plays the first harvest and floor 100 itself; v245: script, choose, a choice step: pick(i), moveChoice(d)), advance(), finish(), seen(id); stops the clock, you and farmer two, holds the camera (render/views.js), draws its actors; G.S.cutscenes[id] = the day seen
     heartScenes.js    v245: heart scenes as cutscenes for HEART_STAGED neighbours: heartScript(n, at, scene), stageOf(id, at) (data/scenes.js HEART_STAGES, else their door); listens to heart:stage from npcs.js, chooseScene gives the points
     shortcuts.js      fallen trunks across shortcuts, cut with the copper axe; then trunk tiles turn to path and the maps get exits (v106, G.S.shortcuts)
+    lively.js         v302: the world in motion over the cached background: chimney smoke, the fountain, mill sails, the clock tower's hands, pond rings, sprinklers at work, surf, flickering lamps (layers 7, 21, 24, 30, 62, 1001)
     nightlights.js    outdoorLights(): lit windows (v151: a cottage only while homeNow(owner), ownerOf()), lamp posts and lanterns after dusk (renderer.js cuts them out of the dark); lit glass and lamp posts (v105, drawn only)
     falling.js        seasonal motion: petals, fluff, leaves, snow clumps from tree crowns, drifting with wind.js (v104, drawn only)
     sway.js           grass tufts off the farm and clotheslines, bending with wind.js (v103, drawn only)
@@ -368,6 +369,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 4 | renderer.js | Tree crowns of the map's tree tiles, leaning with the wind (v103) |
 | 5 | sway.js | Grass tufts (v103) |
 | 6 | water.js | Reflections, ripples, glints, rain rings on open water |
+| 7 | lively.js | Surf lapping where water meets sand (v302) |
 | 8 | atmosphere.js | Waterfalls |
 | 9 | clearing.js, house.js | Paths, rugs |
 | 10 | farming.js, forage.js | Soil, crops, forage (soil of the current map) |
@@ -375,15 +377,19 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 12 | fishing.js | Ice hole in winter |
 | 12 | traditions.js | Lanterns drifting on the sea during the Lantern Float (v110; their lit tops at 1001) |
 | 14 | falling.js | Petals, leaves and snow resting on the ground (v104) |
-| 20 | placeables.js | Sprinklers, machines, lanterns |
+| 20 | placeables.js | Sprinklers, machines, lanterns (v302: a machine at work bubbles, burns, steams or sheds spores, render/sprites.js workingFx) |
+| 21 | lively.js | Sprinklers spraying for the first 40 minutes of a dry morning (v302) |
+| 24 | lively.js | Rings on the farm's fish pond (v302) |
 | 30 | festivals.js | Bunting on festival days |
 | 30 | wing.js | The hall: boards, flower boxes, the Ashgrove paint and board, bunting (v108) |
+| 30 | lively.js | The fountain's running water (always; the jets at 31 stay the tank's reward), the mill's turning sails (the background draws the mill without them), the clock tower's hands at the time of day (v302) |
 | 31 | wing.js | The village fountain jets once the fish tank is restored (v108) |
 | 40 | atmosphere.js | Birds |
 | (entities) | player (with the tool in hand, v74), npcs, coop, barn, monsters, treasure (lit bombs), guild (Warden Hale), trees, giants, clearing, house (furniture) | y-sorted characters, fruit trees, giant crops, debris, alders, fences, gates |
 | 55 | fishing.js | Line and bobber |
 | 60 | effects.js | Tool swing (water and seed overlay) |
 | 62 | wing.js | Smoke from the hall chimney once the boiler room is restored (v108) |
+| 62 | lively.js | Chimney smoke: the farmhouse, cottages and lodge mornings and evenings (all day in autumn, winter and rain), the smithy while it works (v302) |
 | 61 | animation.js | Particles, flying pickups, damage numbers and labels (v74) |
 | 65 | falling.js | Petals, fluff, leaves and snow clumps falling (v104) |
 | 70 | atmosphere.js | Butterflies |
@@ -395,6 +401,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 990 | indoors.js | Indoor dark and light pools (houses, cottages, buildings), v100 |
 | 1000+ | atmosphere.js | Fireflies (drawn after the light tint) |
 | 1001 | nightlights.js | Lit window glass and lamp heads, over the dark (v105) |
+| 1001 | lively.js | Each light flickering at its own pace after dark (v302) |
 
 The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after layers up to 999 (not in caves or houses); after 8 pm it opens around the player. Layers 1000 and up draw over it. Indoors, indoors.js draws its own dark at 990 from the same keyframes (`lightAt()` in renderer.js), with pools cut out around LIGHTS (v100).
 

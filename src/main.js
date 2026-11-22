@@ -55,7 +55,8 @@ import './systems/birthday.js';   // v174: the birthday dinner
 import './ui/birthday.js';
 import './systems/professions.js';
 import './systems/cooking.js';
-import './systems/hotbarItems.js';   // v300: the item slots on the hotbar
+import './systems/hotbarItems.js';
+import './systems/lively.js';   // v302: chimney smoke, the fountain, mill sails, the clock, pond rings, sprinklers, surf, lamps   // v300: the item slots on the hotbar
 import './systems/trees.js';
 import './systems/giants.js';
 import './systems/clearing.js';

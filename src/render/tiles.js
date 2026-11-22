@@ -601,7 +601,12 @@ function mill(g, p, o) {
   roofGable(g, X + 16, Y + 4, 8, 5, '#8a3a2a', p.snow);
   doorArt(g, X + 13, Y + 22, 6, 8, '#6e4626');
   windowArt(g, X + 14, Y + 14, 4, 4, '#ece0c2');
-  for (let k = 0; k < 4; k++) {   // sails: a dark spar with one panel of cloth beside it, ribbed every third pixel
+  if (!p.noSails) millSails(g, X, Y, a);   // v302: the background leaves them out; systems/lively.js turns them
+}
+// The mill's sails at angle a, around the hub at (X + 16, Y + 9): a dark spar with one panel of cloth beside it,
+// ribbed every third pixel.
+export function millSails(g, X, Y, a) {
+  for (let k = 0; k < 4; k++) {
     const ang = a + k * Math.PI / 2, c = Math.cos(ang), sn = Math.sin(ang);
     for (let i = 2; i < 13; i++) {
       const x = X + 16 + Math.round(c * i), y = Y + 9 + Math.round(sn * i);
@@ -796,6 +801,7 @@ export function coveredTiles(o) {
 
 // v88: a building from the building sheets (winter's in winter) once they have loaded, else drawn in code.
 export function drawBuilding(g, p, o) {
+  if (o.art === 'mill') return mill(g, { ...p, noSails: true }, o);   // v302: drawn in code so its sails can turn (systems/lively.js)
   const name = p.snow ? BUILDING_SHEETS.winter : BUILDING_SHEETS.summer, b = BUILDINGS[buildingKey(o)];
   if (!b || !ready(name)) return OBJECT_ART[o.art](g, p, o);
   const [sx, sy, w, h, dx, dy] = b;
