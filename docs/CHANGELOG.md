@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v301: Neighbours keep to open ground
+- Fixed: neighbours walked onto stones and weeds that had crept onto their spots on the farm, onto the village fountain and the wishing stone (Kit), and across weeds and forage in the Wilds. They now stop on the nearest open tile beside a blocked spot, and walk round weeds, forage and your crops when there is another way.
+- Fixed: when nothing could reach a neighbour's place (a building or fence put across their way), they walked to it in a straight line, through trees, buildings and walls. They now go as near as they can and wait there.
+- Fixed: a neighbour already on their way walked through anything placed or grown on their path since they set off; they now find a new way round.
+- Measured over 14 game days with the real updaters: neighbour time on solid tiles went from three places (a few hundred moments) to none; on Wilds weeds from seven places to one (a weed that was the only way through).
+- New save data: none.
+
 ## v300: Eat from the hotbar, and raw food gives energy
 - Three item slots on the hotbar, after the tools, on keys 0, - and =. Any item can go there: in the Bag, pick it and press the slot's key, use its Item slot buttons, or drag it onto an Item slot zone. The nine tool keys did not move.
 - Hold food in an item slot and press Use to eat it; the prompt says how much energy it gives. Picking a ripe crop or forage, doors and neighbours still come first. Holding food in front of a stone or a giant crop eats it instead of telling you which tool to use.

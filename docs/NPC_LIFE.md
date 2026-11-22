@@ -44,6 +44,10 @@ A neighbour feels real when:
 7. **Watch it in the browser.** Playwright: set the day and time, stand in the place, wait a few game hours,
    screenshot before and after. Check nobody walks through walls, blocks a door or counter you need, or stands
    on top of someone.
+   (v301) The walking itself keeps them off solid tiles and soft spots: systems/npcs.js walkTo goes round what has
+   become solid since its path was found, round weeds, forage and crops where it can, to the nearest reachable tile
+   when a place cannot be reached, and to the nearest open tile when an outdoor place is blocked (routes.js
+   openNear). A place on a solid tile outdoors is still a data bug to fix, but it no longer shows.
 8. **Keep the player's way clear.** Nobody stands in front of the festival table, a shop counter, a door or the
    quest board. Talking to a neighbour (priority 100) must not steal a press meant for something else.
 
