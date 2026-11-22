@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v304: The Duskmarch redrawn
+- A sprite sheet of its own (dusk.png) with three kinds of weed clump, five headstones (a rounded slab, a cross, a snapped slab, an obelisk, an old leaning stone), crypts in slate and dressed stone with sealed arches and a cross on the ridge, a barred door with a green padlock, iron railings with spear tips, three gnarled dead trees, and a winter row with snow on every top. The six creatures redrawn in four tones: the bristle hog with a grizzled crest, the wasps with big eyes and beating wings, the stump lurker with rings and carved eyes, the rattler with a rusted sword, the shambler with sunken red eyes and a torn shirt, the haunt with folds and a glow at its heart. Mournfield has a cool grey cast and mist drifting between the headstones after 6 pm; the woods are shaded by their canopy, with flecks of light by day.
+- Drawing only: the code-drawn tiles stay as the fallback.
+- New save data: none.
+
 ## v303: The Duskmarch
 - New country west of the village and the town: three maps that join each other more than once, so it is easy to lose your way.
 - Gloamwood (west from the village, two roads in): old woods of winding ways, a still pool at its heart, Brackenwood's forage.
@@ -12,7 +17,6 @@ Newest first. Version numbers match published versions of the playable page.
 - After 8 pm the dead rise in Mournfield: grave rattlers (skeletons), barrow shamblers (slow, tough zombies) and mourning haunts (spirits that fade in and out). More rise every half hour, up to ten; morning clears them. The crusader enchantment hurts them half as much again.
 - Each new creature has its own art, loot (bone shards, cloth, chitin, wood, wisp silk, motes) and a Bestiary card.
 - A reason to go deep (roadmap 97a): an old chest waits at the Tangle's deepest dead end, more than 30 steps from every way in. Inside is the crypt key. It opens the barred door of Mournfield's chapel crypt, a tomb whose dead are there whenever you go in. The great sarcophagus at the back holds the gravewarden blade: a sword with 21 damage that hits the dead half again as hard. Without the key, the door tells you where it was lost.
-- The Duskmarch's art redrawn with shading and detail (roadmap 97b): a sprite sheet of its own (dusk.png) with three kinds of weed clump, five headstones (a rounded slab, a cross, a snapped slab, an obelisk, an old leaning stone), crypts in slate and dressed stone with sealed arches and a cross on the ridge, a barred door with a green padlock, iron railings with spear tips, three gnarled dead trees, and a winter row with snow on every top. The six creatures redrawn in four tones: the bristle hog with a grizzled crest, the wasps with big eyes and beating wings, the stump lurker with rings and carved eyes, the rattler with a rusted sword, the shambler with sunken red eyes and a torn shirt, the haunt with folds and a glow at its heart. Mournfield has a cool grey cast and mist drifting between the headstones after 6 pm; the woods are shaded by their canopy, with flecks of light by day.
 - The world map gains two columns in the west.
 - New save data: the weeds cut today (cutWeeds, cutDay); the key chain (dusk: key, door, blade). Old saves load with nothing cut and the chest still shut.
 
