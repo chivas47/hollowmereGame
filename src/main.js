@@ -186,6 +186,7 @@ function frame(t) {
   const dt = last ? Math.min(0.05, (t - last) / 1000) : 0;
   last = t;
   if (!G.paused) runUpdaters(dt);
+  else G.shake = null;   // v296: the shake's timer runs in an updater, so under a dialog it would never end
   draw(ctx);
   requestAnimationFrame(frame);
 }
