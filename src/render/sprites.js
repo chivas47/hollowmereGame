@@ -551,13 +551,38 @@ const PLACED_LIVE = {
   },
 };
 
+// v302: a machine at work shows it: jars, vats and barrels bubble, the furnace and kiln flicker in their mouths and
+// smoke, the mushroom log sheds spores, the rest steam. TOPS: where each machine's top is in its tile (measured from
+// placed.png), so the effect rises from it.
+const TOPS = { crock: [7, 3], churn: [7, 1], vat: [7, 4], furnace: [7, 2], kiln: [7, 2], brewbarrel: [7, 2], eggpress: [7, 2], loom: [7, 1], oilpress: [7, 2], gemcopier: [7, 2], dryer: [7, 1], mushroomlog: [6, 4], seedmaker: [7, 0], slimepress: [7, 1], recycler: [7, 2] };
+const WORK_FX = { crock: 'bubbles', vat: 'bubbles', brewbarrel: 'bubbles', furnace: 'fire', kiln: 'fire', mushroomlog: 'spores' };
+const puff = (c, x, y, s, rgb, a) => { c.fillStyle = `rgba(${rgb},${a.toFixed(2)})`; c.fillRect(x - (s >> 1), y - (s >> 1), s, s); };
+function workingFx(c, X, Y, kind) {
+  const [tx, ty] = TOPS[kind] || [7, 2], t = performance.now() / 1000, seed = ((X * 7 + Y * 3) % 10) / 10, fx = WORK_FX[kind] || 'steam';
+  if (fx === 'fire') {   // the fire in its mouth, smoke from its chimney
+    const f = Math.floor(t * 10 + seed * 10) % 3;
+    r(c, X + 6, Y + 10, 4, 2, ['#e8862a', '#ffd46a', '#d9644a'][f]); r(c, X + 7 + (f === 2 ? 1 : 0), Y + 9, 2, 1, f === 1 ? '#fff3c4' : '#ffd46a');
+    for (let i = 0; i < 3; i++) { const k = (t * 0.5 + seed + i / 3) % 1; puff(c, X + tx + Math.round(Math.sin(t + i) + k * 3), Y + ty - 1 - Math.round(k * 12), 1 + Math.round(k * 3), '150,146,142', 0.6 * (1 - k)); }
+    return;
+  }
+  if (fx === 'bubbles') {   // little bubbles rising and popping over the lid
+    for (let i = 0; i < 3; i++) { const k = (t * 0.8 + seed + i / 3) % 1; r(c, X + tx - 2 + i * 2, Y + ty - 1 - Math.round(k * 6), 1, 1, k > 0.85 ? 'rgba(255,255,255,.35)' : 'rgba(236,244,236,.8)'); }
+    return;
+  }
+  if (fx === 'spores') {   // motes drifting up off the log
+    for (let i = 0; i < 3; i++) { const k = (t * 0.35 + seed + i / 3) % 1; r(c, X + 3 + i * 4 + Math.round(Math.sin(t * 2 + i) * 1.5), Y + ty - Math.round(k * 9), 1, 1, `rgba(230,214,140,${(0.8 * (1 - k)).toFixed(2)})`); }
+    return;
+  }
+  for (let i = 0; i < 2; i++) { const k = (t * 0.6 + seed + i / 2) % 1; puff(c, X + tx + Math.round(Math.sin(t * 1.5 + i * 3) * 1.5), Y + ty - 1 - Math.round(k * 10), 1 + Math.round(k * 3), '240,240,236', 0.55 * (1 - k)); }   // steam
+}
+
 export function drawPlaced(c, X, Y, kind, state) {
   const P = PLACED_SHEET, i = P.order.indexOf(kind);
   if (i >= 0 && ready(P.sheet)) {   // v84: from the placed sheet once it has loaded
     c.drawImage(sheet(P.sheet).img, i * P.w, 0, P.w, P.h, X + P.origin[0], Y + P.origin[1], P.w, P.h);
     PLACED_LIVE[kind]?.(c, X, Y, state);
   } else (PLACED_ART[kind] || PLACED_ART.crock)(c, X, Y, state);
-  if (state?.item && state.nights > 0) r(c, X + 12, Y + 1, 3, 3, '#e9b44c');            // working
+  if (state?.item && state.nights > 0) { r(c, X + 12, Y + 1, 3, 3, '#e9b44c'); workingFx(c, X, Y, kind); }   // working (v302: and shows it)
   if (state?.item && state.nights <= 0 && blink(400, 2)) { r(c, X + 11, Y, 4, 4, '#fffbe8'); r(c, X + 12, Y + 1, 2, 2, '#86b86a'); }   // ready
 }
 

@@ -2,6 +2,16 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v302: The world in motion
+- The village fountain's water runs: drops slide down the column and rings spread in the basin (frozen in winter). Its jets still start when the hall's fish tank is restored.
+- Chimneys smoke: the farmhouse, the cottages and the lodge in the morning and evening (all day in autumn, winter and rain), and the smithy's forge while it works. The smoke drifts with the wind.
+- The mill's sails turn, faster in a breeze. The clock tower's hands tell the time of day.
+- Rings spread on the farm's fish pond; sprinklers spray their tiles for the first 40 minutes of a dry morning; surf laps in and out where the sea meets the sand; lamps and lit windows flicker after dark.
+- Machines at work show it: jars, vats and brew barrels bubble, the furnace and kiln burn in their mouths and smoke, the mushroom log sheds spores, the presses, churn, loom, dryer and the rest steam. The yellow working dot stays.
+- Already moving before this: water, waterfalls, rain, birds and wildlife, grass and tree crowns in the wind, washing on the lines, falling leaves, flags, fires, stoves and lanterns indoors.
+- Drawing only, on the map you are on; a frame costs the same as before.
+- New save data: none.
+
 ## v301: Neighbours keep to open ground
 - Fixed: neighbours walked onto stones and weeds that had crept onto their spots on the farm, onto the village fountain and the wishing stone (Kit), and across weeds and forage in the Wilds. They now stop on the nearest open tile beside a blocked spot, and walk round weeds, forage and your crops when there is another way.
 - Fixed: when nothing could reach a neighbour's place (a building or fence put across their way), they walked to it in a straight line, through trees, buildings and walls. They now go as near as they can and wait there.
