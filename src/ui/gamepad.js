@@ -6,11 +6,10 @@ import { G } from '../core/game.js';
 import { notify, changed } from '../core/events.js';
 import { stickDirs, nextInDirection } from '../core/pad.js';
 import { PAD_BUTTONS, PAD } from '../data/gamepad.js';
-import { HOTBAR } from '../data/hotbar.js';
 import { act } from '../systems/interact.js';
 import { runAction, escape } from './input.js';
 import { special } from '../systems/specials.js';
-import { selectSlot } from './hotbar.js';
+import { selectSlot, usableSlots } from './hotbar.js';
 import { closeModal, dialogOf } from './modal.js';
 import { menuOpen, openMenu } from './menu.js';
 import { titleOpen } from './title.js';
@@ -52,7 +51,7 @@ function press(name, box) {
   if (name === 'use') { act(); return; }
   if (name === 'back') { if (G.siting) escape(); else runAction('special'); return; }   // B stops placing a building; otherwise (v227) the weapon special
   if (name === 'menu') { openMenu(); return; }
-  if (name === 'prev' || name === 'next') { const n = HOTBAR.length; selectSlot((G.S.slot + (name === 'next' ? 1 : n - 1)) % n); return; }
+  if (name === 'prev' || name === 'next') { const list = usableSlots(), at = Math.max(0, list.indexOf(G.S.slot)), n = list.length; selectSlot(list[(at + (name === 'next' ? 1 : n - 1)) % n]); return; }   // v300: and the filled item slots
   runAction(name);
 }
 

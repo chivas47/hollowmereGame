@@ -9,7 +9,7 @@ import { on } from '../core/events.js';
 import { keyName } from '../core/controls.js';
 import { PAD_LABELS } from '../data/gamepad.js';
 import { usingPad } from './gamepad.js';
-import { HOTBAR } from '../data/hotbar.js';
+import { slotKind } from '../data/hotbar.js';
 import { sizeOf } from '../data/maps.js';
 import { facing, tileAt } from '../systems/world.js';
 import { partnerPrompt } from '../systems/partner.js';
@@ -36,7 +36,7 @@ function update() {
   const { tx, ty } = facing();
   const size = sizeOf(G.S.map), inside = tx >= 0 && ty >= 0 && tx < size.w && ty < size.h, on = hud.prompts && hud.mode !== 'hidden' && !G.siting;
   const text = inside && on
-    ? promptFor({ tx, ty, tile: tileAt(tx, ty), mapId: G.S.map, item: HOTBAR[G.S.slot] }) : null;
+    ? promptFor({ tx, ty, tile: tileAt(tx, ty), mapId: G.S.map, item: slotKind(G.S) }) : null;
   const useKey = usingPad() ? PAD_LABELS.use : keyName('use');   // v126: the pad's A once a controller is in use
   const key = text && `${text}|${tx},${ty}|${touch.matches}|${useKey}|${views()[0].cam},${views()[0].camY}`;
   const [mine, theirs] = views();

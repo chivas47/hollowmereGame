@@ -29,6 +29,8 @@ src/
   data/               content only, no logic
     crops.js forage.js fish.js minerals.js products.js artisan.js items.js
     npcs.js maps.js seasons.js hotbar.js upgrades.js (incl. COOP, BARN)
+    hotbar.js         HOTBAR (the 9 tool slots); v300: ITEM_SLOTS (3 more on keys 0, - and =, G.S.itemSlots), SLOT_COUNT, slotKind(S) ('item' in an item slot), heldItem(S)
+    food.js           v300: RAW_FOOD, the energy of each raw crop, fruit, forage, fish and animal product (Stardew counterpart by role), fishEnergy()
     controls.js       v119: CONTROLS (each action, its label and default keys), FIXED_KEYS, KEY_NAMES
     crafting.js       PLACEABLES, RECIPES, MACHINES, sprinklerTiles()
     skills.js quests.js festivals.js projects.js quality.js
@@ -114,7 +116,8 @@ src/
     fishing.js        cast, bite, the catch bar (v41: hold Use, G.useHeld), bait, tackle, treasure, trash, fish log; v134: G.fishing.p2 is the second farmer's line (their A, G.P2.useHeld)
     sites.js          where every farm building stands: moving and placing buildings, writing their tiles
     mill.js           the mill (wheat and beets overnight) and the shed door
-    cooking.js        recipes, cooking at the stove, the fridge, eating, buffs on G.S.buff and G.S.drink, daily luck, the TV show, wishfruit sources
+    hotbarItems.js    v300: the item slots: assignItem(n, k), clearItem(n), slotOf(k); Use with food held eats it (priority 44) and its prompt
+    cooking.js        recipes, cooking at the stove, the fridge, eating (v300: edible() and energyOf() take raw food too), buffs on G.S.buff and G.S.drink, daily luck, the TV show, wishfruit sources
     buffs.js          buff() and luck() for the systems that read them (kept import-free of cooking.js)
     gear.js           weapons owned and in use, rings worn, giveFind(), forge bonuses (forgeBonus), trinkets worn
     areas.js          the beach, the forest and the mountain: their daily forage (G.S.areaForage)
@@ -356,6 +359,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 51 | farmPerks.js | Forage in the woodland farm's wood |
 | 50 | farming.js | Grass on the farm |
 | 45 | forage.js | Forage items and grass in the Wilds |
+| 44 | hotbarItems.js | Food in an item slot (eat it; v300). farming.js (50), clearing.js (62) and giants.js (59) let an item slot through when they would only name a tool |
 
 ### Render layers in use
 

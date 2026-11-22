@@ -11,7 +11,7 @@ import { DIRS } from '../core/constants.js';
 import { on, emit, notify } from '../core/events.js';
 import { addUpdater, addEntities } from '../core/registry.js';
 import { drawCooldownBar } from '../render/sprites.js';
-import { HOTBAR } from '../data/hotbar.js';
+import { slotKind } from '../data/hotbar.js';
 import { SPECIALS } from '../data/weapons.js';
 import { IMPACT, HIT_STOP } from '../data/animation.js';
 import { weapon, wearing } from './gear.js';
@@ -37,7 +37,7 @@ export function special(who = 'you') {
   if (G.paused || st.cooldown > 0 || st.stabs || st.slamT > 0) return false;
   let ok = false;
   run(who, () => {
-    if (HOTBAR[G.S.slot] !== 'sword') return;   // G.S is them inside run('p2'): their slot
+    if (slotKind(G.S) !== 'sword') return;   // G.S is them inside run('p2'): their slot
     const kind = weapon().kind, sp = SPECIALS[kind] || SPECIALS.sword;
     st.cooldown = sp.cooldown; ok = true;
     G.S.specialUsed = true;   // v286 (94c): its tip has done its job (G.S is shared; inside run('p2') too)
@@ -107,7 +107,7 @@ on('map:changed', () => {
 // The first time the weapon comes out, say how to use its special.
 // v286 (roadmap 94c, Nuno): only until the special has been used once (G.S.specialUsed, saved); before, every session.
 let told = false;
-export const specialTip = () => !told && !!G.S && !G.S.specialUsed && HOTBAR[G.S.slot] === 'sword' && G.S.map === 'mine';
+export const specialTip = () => !told && !!G.S && !G.S.specialUsed && slotKind(G.S) === 'sword' && G.S.map === 'mine';
 on('state:changed', () => {
   if (!specialTip()) return;
   told = true;

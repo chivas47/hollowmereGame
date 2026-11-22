@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v300: Eat from the hotbar, and raw food gives energy
+- Three item slots on the hotbar, after the tools, on keys 0, - and =. Any item can go there: in the Bag, pick it and press the slot's key, use its Item slot buttons, or drag it onto an Item slot zone. The nine tool keys did not move.
+- Hold food in an item slot and press Use to eat it; the prompt says how much energy it gives. Picking a ripe crop or forage, doors and neighbours still come first. Holding food in front of a stone or a giant crop eats it instead of telling you which tool to use.
+- Raw food gives energy, as in Stardew: crops, tree fruit, forage, fish, eggs and milk, each on its Stardew counterpart's scale (a turnip 25, a carrot 75, a melon 113, milk 38, fish 13 to 50). Health is 45% of it, as for dishes. Cooked dishes still give the most.
+- A slot keeps its item when you run out (dimmed) and fills again when you have more. On a phone, empty item slots stay hidden so the hotbar keeps its size.
+- If you had bound 0, - or = to something else, it keeps that job and the item slot is left without a key until you give it one in the menu.
+- New save data: the item slots (G.S.itemSlots). Older saves start with three empty slots.
+
 ## v299: Beds that look like beds
 - Fixed: a stray square of wallpaper showed on the dark top of the wall above the farmhouse phone, and above the attic ladder.
 - Every bed (yours and every neighbour's, single, double and wide) is redrawn: a panelled headboard with turned posts, plump pillows, the sheet folded back over a patchwork quilt that drapes over the sides, and a footboard.

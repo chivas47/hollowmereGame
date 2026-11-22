@@ -9,6 +9,9 @@ export const CONTROLS = [
   { id: 'right', label: 'Walk right', keys: ['KeyD', 'ArrowRight'] },
   { id: 'use', label: 'Use the tool, talk, open doors (hold to lift the fishing bar)', keys: ['Space', 'KeyE'] },
   ...HOTBAR.map((kind, i) => ({ id: `slot${i + 1}`, label: `Hotbar slot ${i + 1}`, keys: [`Digit${i + 1}`] })),
+  { id: 'slot10', label: 'Item slot 1 (food and anything from the bag)', keys: ['Digit0'] },   // v300
+  { id: 'slot11', label: 'Item slot 2', keys: ['Minus'] },
+  { id: 'slot12', label: 'Item slot 3', keys: ['Equal'] },
   { id: 'seeds', label: 'Pick seeds, again to switch seed type', keys: ['KeyQ'] },
   { id: 'special', label: 'Weapon special: block, quick stab or ground slam (also right click)', keys: ['KeyX'] },   // v227
   { id: 'bag', label: 'Bag', keys: ['KeyI'] },

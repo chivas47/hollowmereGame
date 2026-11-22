@@ -103,6 +103,11 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
 .slot::before{content:attr(data-key);position:absolute;top:1px;left:4px;right:4px;text-align:left;white-space:nowrap;overflow:hidden;font-size:16px;line-height:1;color:var(--straw)}
 .slot:hover{border-color:var(--frame-hi)}
 .slot canvas{width:36px;height:36px;image-rendering:pixelated}
+.slot img{width:36px;height:36px;image-rendering:pixelated;max-width:100%}   /* v300: an item slot's picture */
+.slot.firstitem{margin-left:8px}
+.slot.item.empty img{visibility:hidden}
+.slot.item.empty::after{content:'';position:absolute;inset:14px 18px 10px;border:2px dashed var(--seam);border-radius:4px;opacity:.6}
+.slot.off img{opacity:.45}
 .slot span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .slot[aria-pressed="true"]{border-color:var(--harvest);background:var(--plank);box-shadow:0 0 0 2px var(--harvest),0 0 12px rgba(233,180,76,.45);transform:translateY(-2px)}
 .slot[aria-pressed="true"]::before{color:var(--harvest)}
@@ -151,8 +156,10 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
   .meter{width:100%}
   .bar{flex-wrap:nowrap;gap:3px;padding:4px;max-width:100%}
   .slot{width:auto;flex:1 1 0;padding:16px 0 4px}
-  .slot canvas{width:28px;height:28px}
+  .slot canvas,.slot img{width:28px;height:28px}
   .slot span{display:none}
+  .slot.item.empty{display:none}   /* v300: on a phone an item slot shows once it holds something */
+  .slot.firstitem{margin-left:4px}
   .held{display:inline}
   .dpad{grid-template-columns:repeat(3,48px);grid-template-rows:repeat(3,48px)}
   .toast{font-size:16px;max-width:96%;padding:6px 10px}
@@ -202,7 +209,7 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
   .dpad{align-self:end;grid-template-columns:repeat(3,46px);grid-template-rows:repeat(3,46px)}
   #use{width:84px;height:84px;align-self:end;justify-self:center}
   .bar{flex-wrap:nowrap;padding:3px;gap:4px}
-  .slot{width:60px;padding:14px 0 2px}.slot canvas{width:26px;height:26px}.slot span{display:none}
+  .slot{width:60px;padding:14px 0 2px}.slot canvas,.slot img{width:26px;height:26px}.slot span{display:none}.slot.item.empty{display:none}
   .basket{display:none}
   .toast{font-size:16px;max-width:96%;padding:5px 10px}   /* v287 (95a): smaller notices on a phone held sideways */
 }
@@ -215,7 +222,8 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
   .bottom{align-self:stretch;justify-content:center;min-height:0}
   .bar{flex-direction:column;flex-wrap:nowrap;height:100%;max-height:100%;padding:3px;gap:3px;box-sizing:border-box}
   .slot{width:52px;flex:1 1 0;min-height:0;padding:12px 0 1px;justify-content:center}
-  .slot canvas{width:24px;height:24px}
+  .slot canvas,.slot img{width:24px;height:24px}
+  .slot.item.empty{display:none}
 }
 
 /* Dialogs */

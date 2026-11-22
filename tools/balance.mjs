@@ -126,6 +126,7 @@ const { stockPond, collectRoe, giveAsk, canGive, takeFish } = await load('system
 const { collectHut, chooseCave, collectCave } = await load('systems/helpers.js');
 const { pending, choose } = await load('systems/professions.js');
 const { cook, eat, kitchen } = await load('systems/cooking.js');
+const { RAW_FOOD } = await load('data/food.js');   // v300: raw food gives energy
 // The bot's professions (v34): the selling and yield picks, Stardew's usual money route.
 const PICKS = { farming: ['tiller', 'artisan'], ranching: ['rancher', 'coopkeeper'], foraging: ['forester', 'lumberjack'], mining: ['miner', 'blacksmith'], fishing: ['fisher', 'angler'], combat: ['fighter', 'brute'] };
 const { HOMES, homeOf, level, noRoom, buyLivestock, orderLevel, buyTool } = await load('systems/livestock.js');
@@ -921,6 +922,11 @@ function simulate(runSeed) {
     if (!late() && greenhouseBuilt()) farm('greenhouse', true);
     // v35: with a kitchen, eggs become pan eggs (50 energy each) eaten when energy runs low, for more fishing.
     if (kitchen()) { while (s.bag.egg > 2 && (s.bag.friedegg || 0) < 3 && cook('friedegg')); while (s.energy < 40 && s.bag.friedegg > 0 && eat('friedegg')); }
+    // v300: then raw food, as a Stardew player eats a carrot or a handful of forage to keep going: the spare item that
+    // gives the most energy per gold it would sell for, only while that is 1.5g an energy or less (a melon is shipped).
+    const rawSnack = () => Object.keys(RAW_FOOD).filter((k) => (s.bag[k] || 0) > (reserves()[k] || 0) && ITEMS[k].sell / RAW_FOOD[k] <= 1.5)
+      .sort((a, b) => ITEMS[a].sell / RAW_FOOD[a] - ITEMS[b].sell / RAW_FOOD[b])[0];
+    for (let k = rawSnack(); s.energy < 40 && k && eat(k); k = rawSnack());
     if (!late()) fish(0);
     machines(reserved);
     // The mill doubles wheat (flour 50g against wheat 25g); beets are worth more whole, so they are sold.
