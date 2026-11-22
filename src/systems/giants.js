@@ -57,6 +57,7 @@ addInteraction(59, ({ tx, ty, mapId, item }) => {
   const k = giantAt(tx, ty);
   if (!k) return false;
   const type = G.S.giants[k], name = ITEMS[type].name.toLowerCase();
+  if (item === 'item') return false;   // v300: food in an item slot is eaten instead
   if (!['hoe', 'pick', 'sword'].includes(item)) { notify(`A giant ${name}! Chop it with the hoe, pickaxe or sword.`); return true; }
   if (!useEnergy(GIANT.energy)) return true;
   const n = GIANT.min + Math.floor(Math.random() * (GIANT.max - GIANT.min + 1));

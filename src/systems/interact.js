@@ -1,7 +1,7 @@
 // The Use button. Builds a context and lets registered interactions claim it.
 import { G } from '../core/game.js';
 import { runInteractions, addUpdater } from '../core/registry.js';
-import { HOTBAR } from '../data/hotbar.js';
+import { slotKind } from '../data/hotbar.js';
 import { facing, tileAt, mover } from './world.js';
 import { busy, busyLeft } from './animation.js';
 import { TOOL_BUFFER } from '../data/animation.js';
@@ -16,7 +16,7 @@ export function act() {
   if (G.cut) { advance(); return; }   // v240: Use moves a cutscene on
   if (busy()) { if (busyLeft() <= TOOL_BUFFER) queued = true; return; }
   const { tx, ty } = facing();
-  const ctx = { tx, ty, tile: tileAt(tx, ty), mapId: G.S.map, item: HOTBAR[G.S.slot] };
+  const ctx = { tx, ty, tile: tileAt(tx, ty), mapId: G.S.map, item: slotKind(G.S) };
   emit('use', ctx);   // v101: systems/hints.js listens for presses that give no feedback at all
   runInteractions(ctx);
   emit('used', ctx);

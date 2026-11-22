@@ -7,7 +7,7 @@ import { MAPS } from '../data/maps.js';
 import { isBirthday } from '../systems/npcs.js';
 import { weatherNow } from '../systems/weather.js';
 import { monstersOn } from '../systems/monsters.js';
-import { HOTBAR } from '../data/hotbar.js';
+import { slotKind } from '../data/hotbar.js';
 import { $ } from './dom.js';
 import { fmtGold } from '../core/format.js';
 
@@ -38,7 +38,7 @@ function render() {
   const P = S.partner;
   $('#health2').parentElement.hidden = !G.P2 || (P.hp >= S.maxHp && monstersOn() !== G.P2.map);
   if (G.P2) { meter('#health2', P.hp, S.maxHp); $('#health2').classList.toggle('low', P.hp < S.maxHp * 0.25); }
-  $('#water').parentElement.hidden = HOTBAR[S.slot] !== 'can';
+  $('#water').parentElement.hidden = slotKind(S) !== 'can';
   const extra = EXTRA.find((e) => e.maps.includes(S.map));   // a second currency, only where it is spent
   $('#extra').hidden = !extra;
   if (extra) $('#extra').innerHTML = `<span>${extra.name}</span><b>${extra.get(S)}</b>`;

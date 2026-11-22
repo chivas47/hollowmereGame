@@ -14,7 +14,7 @@ import { SKILLS, BONUS_PER_LEVEL } from '../data/skills.js';
 import { skillProgress } from '../systems/skills.js';
 import { PROFESSIONS } from '../data/professions.js';
 import { pending } from '../systems/professions.js';
-import { edible, eat } from '../systems/cooking.js';
+import { edible, eat, energyOf } from '../systems/cooking.js';
 import { WEAPONS, RINGS } from '../data/weapons.js';
 import { weapon, chooseWeapon, wearRing, removeRing, wearTrinket, removeTrinket, weaponLabel, tierDamage } from '../systems/gear.js';
 import { TRINKETS } from '../data/forge.js';
@@ -29,12 +29,13 @@ import { esc } from './dom.js';
 import { wardrobeHtml } from './clothing.js';
 import { PETS } from '../data/profile.js';
 import { BAG_KINDS, BAG_SORTS, BAG_VIEWS } from '../data/bag.js';
-import { DISHES } from '../data/cooking.js';
 import { bagList, bagEntries, pinned, togglePin, describe, usedIn, needsOf, shippable, prices, facedChest, stash } from '../systems/bag.js';
 import { iconURL } from '../render/itemIcons.js';
 import { onDrop } from './drag.js';
 import { $, pressedKey, refocusIn } from './dom.js';
-import { keyName } from '../core/controls.js';
+import { keyName, actionOf } from '../core/controls.js';
+import { HOTBAR, ITEM_SLOTS } from '../data/hotbar.js';
+import { assignItem, clearItem, slotOf } from '../systems/hotbarItems.js';
 import { fmtGold } from '../core/format.js';
 
 const row = (left, right, cls = '') => `<div class="inv-row ${cls}"><span>${left}</span><span>${right}</span></div>`;
@@ -134,11 +135,19 @@ function actions(e) {
     if (k === 'mysterybox') b.push('<button data-openbox>Open</button>');
     if (facedChest()) b.push(`<button data-stash="${k}">Put in the chest</button>`);
   }
+  if (e.kind !== 'seed' && e.kind !== 'kit') b.push(hotButtons(k));   // v300
   b.push(`<button data-pin="${e.id}">${pinned(e.id) ? 'Unpin' : 'Pin'}</button>`);
   b.push(V.cmp === e.id ? '<button data-cmpoff>Stop comparing</button>' : `<button data-cmp="${e.id}">Compare</button>`);
   return `<div class="btns">${b.join('')}</div>`;
 }
 
+// v300: put the item in an item slot on the hotbar (keys 0, - and =), or take it off.
+const slotKey = (n) => keyName(`slot${HOTBAR.length + n + 1}`) || `#${n + 1}`;   // a slot left without a key shows its number
+function hotButtons(k) {
+  const at = slotOf(k);
+  const put = Array.from({ length: ITEM_SLOTS }, (_, n) => `<button data-hot="${n}" data-hotitem="${k}" ${at === n ? 'aria-pressed="true" class="primary"' : ''} title="Item slot ${slotKey(n)}">${slotKey(n)}</button>`).join('');
+  return `<span class="hotpick"><span class="role">Item slot</span>${put}${at >= 0 ? `<button data-hotoff="${at}">Off the hotbar</button>` : ''}</span>`;
+}
 function detail(e) {
   const k = e.key, quals = e.q ? e.q.map((n, t) => (n ? `${n} ${pct(t)}` : '')).filter(Boolean).join(', ') : '';
   const sell = shippable(e.id) ? prices(k).map((v, t) => `${pct(t)} ${fmtGold(v)}`).join(' · ') : '';
@@ -156,7 +165,7 @@ function detail(e) {
 function compare(a, b) {
   const line = (label, f) => `<tr><th>${label}</th><td>${f(a)}</td><td>${f(b)}</td></tr>`;
   const sell = (e) => (shippable(e.id) ? `${fmtGold(prices(e.key)[0])}` : 'Not shipped'), top = (e) => (shippable(e.id) ? `${fmtGold(prices(e.key)[3])}` : '');
-  const eat = (e) => (DISHES[e.key] ? `${DISHES[e.key].energy}` : '');
+  const eat = (e) => (edible(e.key) && energyOf(e.key) ? `${energyOf(e.key)}` : '');   // v300: raw food too
   return `<div class="bagdetail"><h3>Compare</h3><table class="bagcmp"><tr><th></th><td>${icon(a)} ${esc(a.name)}</td><td>${icon(b)} ${esc(b.name)}</td></tr>
     ${line('Kind', (e) => BAG_KINDS[e.kind].name)}${line('You have', (e) => e.n)}${line('Plain price', sell)}${line('Heirloom price', top)}
     ${line('Worth if shipped', (e) => (e.worth ? `${fmtGold(e.worth)}` : ''))}${line('Energy', eat)}${line('Used in', (e) => (e.kind === 'seed' || e.kind === 'kit' ? '' : usedIn(e.key).length || 'nothing'))}
@@ -177,7 +186,7 @@ function itemsTab() {
       <label>Sort <select id="bagSort">${sorts}</select></label><div class="btns">${views}</div></div>
     <div class="btns bagcats">${cats}</div>
     <p class="role">${all.length} kinds carried. Worth ${fmtGold(worth)} if shipped. Drag an item onto Pinned to pin it${chest ? ', or onto the chest to put it away' : ''}.</p>
-    <div class="bagdrops"><div class="bagzone" data-drop="pins">Pinned</div>${chest ? '<div class="bagzone" data-drop="chest">Chest you face</div>' : ''}</div>
+    <div class="bagdrops"><div class="bagzone" data-drop="pins">Pinned</div>${chest ? '<div class="bagzone" data-drop="chest">Chest you face</div>' : ''}${Array.from({ length: ITEM_SLOTS }, (_, n) => `<div class="bagzone hotzone" data-drop="hot${n}" title="Drop here for item slot ${slotKey(n)}">Item slot ${slotKey(n)}${G.S.itemSlots?.[n] ? `: ${esc(ITEMS[G.S.itemSlots[n]].name)}` : ''}</div>`).join('')}</div>
     <div class="bagmain"><div id="bagItems" data-drop="bag">${itemsGrid()}</div>
     <div class="bagside">${sel && cmp && sel !== cmp ? compare(cmp, sel) : sel ? detail(sel) : '<p class="role">Pick an item to read about it.</p>'}
     ${V.cmp && (!sel || sel === cmp) ? '<p class="role">Pick a second item to compare.</p>' : ''}</div></div>`;
@@ -214,6 +223,7 @@ function bag() {
   onDrop(bagDrop);
 }
 function bagDrop(id, from, to) {
+  if (/^hot\d$/.test(to)) { if (ITEMS[id]) assignItem(+to.slice(3), id); bag(); return; }   // v300: onto an item slot
   if (to === 'pins' && !pinned(id)) togglePin(id);
   else if (to === 'bag' && from === 'pins') togglePin(id);
   else if (to === 'chest' && !stash(id)) return;
@@ -244,7 +254,18 @@ $('#mbody').addEventListener('click', (e) => {
   const cm = e.target.closest('[data-cmp]'); if (cm) { V.cmp = cm.dataset.cmp; V.sel = null; bag(); return; }
   if (e.target.closest('[data-cmpoff]')) { V.cmp = null; bag(); return; }
   const st = e.target.closest('[data-stash]'); if (st && stash(st.dataset.stash)) { bag(); }
+  const ht = e.target.closest('[data-hot]'); if (ht) { assignItem(+ht.dataset.hot, ht.dataset.hotitem); bag(); return; }   // v300
+  const ho = e.target.closest('[data-hotoff]'); if (ho) { clearItem(+ho.dataset.hotoff); bag(); }
 });
+
+// v300: with an item picked in the Bag, its item slot key (0, - or =) puts it there, as in Stardew.
+addEventListener('keydown', (e) => {
+  if (!bagOpen() || V.tab !== 'items' || !V.sel || !ITEMS[V.sel] || e.target.id === 'bagSearch') return;
+  const a = actionOf(e.code), n = /^slot(\d+)$/.test(a || '') ? +a.slice(4) - HOTBAR.length - 1 : -1;
+  if (!(n >= 0 && n < ITEM_SLOTS)) return;
+  e.preventDefault(); e.stopImmediatePropagation();
+  assignItem(n, V.sel); bag();
+}, true);
 
 // v34: a profession choice that waits opens from the bag.
 document.querySelector('#mbody').addEventListener('click', (e) => {

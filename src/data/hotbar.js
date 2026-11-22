@@ -4,6 +4,15 @@
 // v19 added the axe at the end so no older key moved.
 // v42 added the gold pan at the end (key 9), so no key moved.
 export const HOTBAR = ['hoe', 'can', 'rod', 'pick', 'sword', 'seeds', 'kit', 'axe', 'pan'];
+// v300: three item slots after the tools (keys 0, - and =): any item from the bag, chosen by the player
+// (G.S.itemSlots). Holding food there and pressing Use eats it (systems/hotbarItems.js). No tool key moved.
+export const ITEM_SLOTS = 3;
+export const SLOT_COUNT = HOTBAR.length + ITEM_SLOTS;
+export const isItemSlot = (i) => i >= HOTBAR.length && i < SLOT_COUNT;
+// What the farmer holds: a tool kind from HOTBAR, or 'item' in an item slot. Systems compare this to 'hoe', 'sword'...
+export const slotKind = (S, i = S.slot) => (isItemSlot(i) ? 'item' : HOTBAR[i]);
+// The item key in the slot held (or the slot given), or null.
+export const heldItem = (S, i = S.slot) => (isItemSlot(i) ? S.itemSlots?.[i - HOTBAR.length] || null : null);
 export const SEED_SLOT = HOTBAR.indexOf('seeds');
 export const KIT_SLOT = HOTBAR.indexOf('kit');
 

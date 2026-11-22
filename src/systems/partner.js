@@ -22,7 +22,7 @@ import { T } from '../core/constants.js';
 import { on, notify, changed, emit } from '../core/events.js';
 import { addUpdater, addEntities } from '../core/registry.js';
 import { PARTNER } from '../data/partner.js';
-import { HOTBAR } from '../data/hotbar.js';
+import { HOTBAR, slotKind } from '../data/hotbar.js';
 import { drawPerson, drawHorse } from '../render/sprites.js';
 import { STABLE } from '../data/upgrades.js';
 import { drawHeld, drawRod, handPoint, swingAngle, drawTinted } from '../render/animation.js';
@@ -136,7 +136,7 @@ const atBed = () => { const { tx, ty } = facing(); return G.S.map === 'house' &&
 export function partnerPrompt() {
   let out = null;
   if (G.P2) asPartner(() => {
-    const { tx, ty } = facing(), item = HOTBAR[G.S.slot];
+    const { tx, ty } = facing(), item = slotKind(G.S);
     const text = atBed() ? (G.bed.p2 ? null : 'Sleep') : promptFor({ tx, ty, tile: tileAt(tx, ty), mapId: G.S.map, item });
     out = { tx, ty, text };
   });

@@ -170,6 +170,7 @@ Short scenes played on the map for important moments (Stardew plays its events t
 
 ## Controls
 
+- v300: three item slots after the tools on the hotbar, on keys 0, - and = (rebindable; the nine tool keys did not move): any item from the bag, put there from the Bag by picking the item and pressing the slot's key, its Item slot buttons, or dragging it onto an Item slot zone. Hold food there and press Use to eat it (the prompt says how much energy); harvesting, forage, doors and neighbours still come first. A slot keeps its item when you run out (dimmed), and fills again when you have more. LB and RB step through the tools and the filled item slots. On a phone an empty item slot is hidden. Farmer two's hotbar stays tools only.
 - v129: with a second controller, press A on it to bring in a second farmer (their own look) on the same screen. They walk with the stick, go where you go when you change map, and leave with B or when their controller disconnects. Dialogs and the menu stay the first player's.
 - v130: once in, the second farmer's A uses what they hold, through the same rules as yours (tools, talking, gifts, doors, map exits, which take you both), and LB and RB step through their hotbar. They have their own energy (270, refilled each morning, saved); the bag and gold are shared.
 - v144: both farmers can have a dialog open at once (a shop each, the bag and a chest): each in its own half, each worked by its own player.
@@ -904,6 +905,24 @@ The lodge (Stardew's adventurers' guild) stands in the Wilds east of the Hollow.
 - Treasure chests: the floor-find floors, plus a 3% chance on any other floor from 10: 2 to 4 geodes, bars, 5 to 10 coal, 2 to 4 bombs or a gem, by depth.
 - Geodes: 1.5% per broken rock (doubled by the excavator), geode floors 1 to 39 (sells 50g), frost geode 40 to 79 (100g), magma geode 80+ (150g); Stardew's prices and depths. Bram cracks one for 25g (Stardew's blacksmith; it moves to the blacksmith with item 22).
 - Contents: about half ore, stone and coal, half gems. New gems: Hollow amber 80g, Frost tear 75g, Ember quartz 100g, Tidestone 180g, Heartstone 250g, Starstone 750g (Stardew's topaz, frozen tear, fire quartz, aquamarine, ruby, diamond). The gem copier copies them in 2 to 5 nights.
+
+### Raw food (v300)
+
+Crops, tree fruit, forage, fish and animal products can be eaten straight from the bag or an item slot, as in Stardew: each gives its Stardew counterpart's energy (by role), health 45% of it. Cooking keeps its edge: dishes give 50 to 200, most raw food 25 to 75, and no dish gives less than one of its raw ingredients (drinks are for their buff, as Stardew's coffee is). Not edible, as in Stardew: the pumpkin, wheat and ruby stalk roles (pumpkin, wheat, rhubarb), shells and coral, ice moss, holly, wood narcissus, snow crocus and sweet vetch (daffodil, crocus, sweet pea), wool, feathers, the lucky paw and legendary fish.
+
+| Food | Energy | Stardew counterpart |
+|---|---|---|
+| Turnip, lettuce, cucumber, red onion, snap pea, corn | 25 | Parsnip, bok choy, green bean, corn |
+| Sweet pepper / cherry tomato / beet | 13 / 20 / 30 | Hot pepper / tomato / beet |
+| Radish, celeriac / lingonberry / frost kale | 45 / 38 / 50 | Radish, yam / cranberries / kale |
+| Fava bean, carrot / summer squash, broccoli | 75 / 63 | Cauliflower, carrot / summer squash, broccoli |
+| Melon / gleamfruit | 113 / 125 | Melon / starfruit |
+| Wild and crag leek / sunberry, fire berry, frost berry | 40 / 63 | Leek / spice berry, crystal fruit |
+| Hollow cap, wood ear, hill grape, cinder berry / chanterelle / morel | 38 / 75 / 20 | Common mushroom, grape / chanterelle / morel |
+| Other forage (sorrel, thyme, rosehip, frost root, fern, dandelion, plum, bramble, mint) / hazelnut, snow yam / poppy, mist lily | 25 / 30 / 45 | Dandelion, blackberry, winter root, wild plum / hazelnut, snow yam / poppy, fairy rose |
+| Egg / duck egg, milk / goat milk, mossback egg / strider egg / truffle | 25 / 38 / 63 / 75 / 13 | Egg / duck egg, milk / goat milk, dinosaur egg / ostrich egg / truffle |
+| Every tree fruit | 38 | Every Stardew tree fruit |
+| Fish: up to 40g / 60g / 100g / more | 13 / 25 / 38 / 50 | Sardine to catfish |
 
 ### Cooking and buffs (v35)
 

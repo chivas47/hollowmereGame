@@ -9,6 +9,7 @@ import { G } from '../core/game.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction } from '../core/registry.js';
 import { DISHES, TV_RECIPES, HEALTH_PER_ENERGY, LUCK, WISHFRUIT } from '../data/cooking.js';
+import { RAW_FOOD } from '../data/food.js';
 import { ITEMS } from '../data/items.js';
 import { FISH } from '../data/fish.js';
 import { PROJECTS } from '../data/projects.js';
@@ -48,7 +49,9 @@ export function cook(k) {
 }
 
 // ---- Eating and buffs ----
-export const edible = (k) => !!DISHES[k] || k === 'wishfruit';
+// v300: raw food too (data/food.js RAW_FOOD): crops, fruit, forage, fish and animal products, on the Stardew scale.
+export const edible = (k) => !!DISHES[k] || k === 'wishfruit' || RAW_FOOD[k] > 0;
+export const energyOf = (k) => DISHES[k]?.energy ?? RAW_FOOD[k] ?? 0;
 export function eat(k) {
   const S = G.S;
   if (!edible(k) || !(S.bag[k] > 0)) return false;
@@ -58,7 +61,7 @@ export function eat(k) {
     notify(`The wishfruit tastes of starlight. Max energy +${WISHFRUIT.energy}.`);
     changed(); return true;
   }
-  const d = DISHES[k];
+  const d = DISHES[k] || { name: ITEMS[k].name, energy: RAW_FOOD[k] };   // v300: raw food has no buff
   S.energy = Math.min(S.maxEnergy, S.energy + d.energy);
   S.hp = Math.min(S.maxHp, S.hp + Math.round(d.energy * HEALTH_PER_ENERGY));
   if (d.buff) {

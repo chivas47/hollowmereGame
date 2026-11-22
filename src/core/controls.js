@@ -10,6 +10,9 @@ let bound = defaults();
 try {
   const saved = JSON.parse(localStorage.getItem(KEY) || '{}');
   for (const id in saved) if (bound[id] && Array.isArray(saved[id]) && saved[id][0]) bound[id] = saved[id].slice(0, 2);
+  // v300: an action added since (the item slots) gives up a default key the player already chose for something else
+  const chosen = new Set(Object.keys(saved).filter((id) => bound[id]).flatMap((id) => bound[id]));
+  for (const id in bound) if (!(id in saved)) bound[id] = bound[id].filter((k) => !chosen.has(k));
 } catch (e) { /* storage unavailable */ }
 
 function store() {
@@ -19,7 +22,7 @@ function store() {
 
 export const keysOf = (id) => bound[id];
 export const actionOf = (code) => Object.keys(bound).find((id) => bound[id].includes(code)) || null;
-export const nameOfKey = (code) => KEY_NAMES[code] || code.replace(/^(Key|Digit|Numpad)/, (p) => (p === 'Numpad' ? 'Num ' : ''));
+export const nameOfKey = (code) => (!code ? '' : KEY_NAMES[code] || code.replace(/^(Key|Digit|Numpad)/, (p) => (p === 'Numpad' ? 'Num ' : '')));   // v300: '' for an action left with no key
 export const keyName = (id) => nameOfKey(bound[id][0]);
 
 // Puts code in slot (0 or 1) of action id. A key another action used moves over, and that action takes

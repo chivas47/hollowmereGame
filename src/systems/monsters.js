@@ -22,7 +22,7 @@ import { has } from './professions.js';
 import { attackMult } from './buffs.js';
 import { weapon, weaponKind, wearing, giveFind, forgeBonus, weaponEnchant, tierMult, tierOf } from './gear.js';
 import { COMBO, SLAM_RADIUS, HIT_STOP, HIT_STOPS, STRUCK, IMPACT } from '../data/animation.js';
-import { HOTBAR } from '../data/hotbar.js';
+import { slotKind } from '../data/hotbar.js';
 import { playAnim, shake, holdSwing, ring, burst } from './animation.js';
 import { motion } from '../core/motion.js';
 import { r } from '../render/pixel.js';   // v260: the elite's ring
@@ -304,7 +304,7 @@ addUpdater((dt) => {
   if (G.savageT > 0) G.savageT = Math.max(0, G.savageT - dt);   // v230: the savage ring's burst wears off
   if (cooldown > 0) {
     cooldown -= dt;
-    if (cooldown <= 0 && buffered) { buffered = false; if (!G.paused && HOTBAR[G.S.slot] === 'sword') strike(); }
+    if (cooldown <= 0 && buffered) { buffered = false; if (!G.paused && slotKind(G.S) === 'sword') strike(); }
   } else since += dt;
 });
 on('map:changed', () => { if (mover() === 'you') { cooldown = 0; buffered = false; combo = 0; since = 99; } });

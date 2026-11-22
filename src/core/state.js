@@ -6,7 +6,7 @@ import { CROPS } from '../data/crops.js';
 import { ITEMS } from '../data/items.js';
 import { NPCS } from '../data/npcs.js';
 import { MAPS } from '../data/maps.js';
-import { HOTBAR } from '../data/hotbar.js';
+import { HOTBAR, SLOT_COUNT, ITEM_SLOTS } from '../data/hotbar.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { SKILLS } from '../data/skills.js';
 import { DEFAULT_PROFILE } from '../data/profile.js';
@@ -24,6 +24,7 @@ export function newState() {
     water: MAXW, maxw: MAXW,
     map: 'farm', x: sp.x * T + 8, y: sp.y * T + 12, dir: sp.dir, slot: 0,
     seedSel: 'turnip',  // crop the seed slot plants (see systems/seeds.js)
+    itemSlots: [null, null, null],   // v300: what the item slots on keys 0, - and = hold (data/hotbar.js)
     seeds: Object.fromEntries(Object.keys(CROPS).map((k) => [k, STARTING_SEEDS[k] || 0])),
     bag: Object.fromEntries(Object.keys(ITEMS).map((k) => [k, 0])),
     bin: 0,
@@ -233,7 +234,9 @@ export function merge(saved) {
   if (!PLACEABLES[s.kitSel]) s.kitSel = 'sprinkler';
   migrate(s, saved);   // old saves' upgrades (core/migrations.js), then the checks below
   if (!CROPS[s.seedSel]) s.seedSel = 'turnip';
-  if (!(s.slot >= 0 && s.slot < HOTBAR.length)) s.slot = 0;
+  if (!(s.slot >= 0 && s.slot < SLOT_COUNT)) s.slot = 0;
+  // v300: the item slots hold item keys the game still knows, or nothing
+  s.itemSlots = Array.from({ length: ITEM_SLOTS }, (_, i) => (typeof s.itemSlots?.[i] === 'string' && ITEMS[s.itemSlots[i]] ? s.itemSlots[i] : null));
   return s;
 }
 

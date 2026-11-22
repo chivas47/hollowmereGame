@@ -4,7 +4,7 @@ import { T } from '../core/constants.js';
 import { toWorld } from '../render/views.js';
 import { notify, emit } from '../core/events.js';
 import { save } from '../core/state.js';
-import { HOTBAR, SEED_SLOT } from '../data/hotbar.js';
+import { SEED_SLOT, SLOT_COUNT } from '../data/hotbar.js';
 import { titleOpen } from './title.js';
 import { act } from '../systems/interact.js';
 import { moveChoice } from '../systems/cutscene.js';
@@ -38,7 +38,7 @@ const PRESS = {
   undo: () => undo(),   // v99
   special: () => special(),   // v227: the weapon's special move
 };
-HOTBAR.forEach((k, i) => { PRESS[`slot${i + 1}`] = () => selectSlot(i); });
+for (let i = 0; i < SLOT_COUNT; i++) PRESS[`slot${i + 1}`] = () => selectSlot(i);   // v300: and the item slots (slot10 to slot12)
 // v126: an action by name, for the controller too (ui/gamepad.js).
 export const runAction = (a) => PRESS[a]?.();
 

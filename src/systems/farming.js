@@ -60,6 +60,8 @@ addInteraction(50, ({ tx, ty, tile, mapId, item }) => {
     return true;
   }
 
+  if (item === 'item') return false;   // v300: food in an item slot is eaten (systems/hotbarItems.js) where there is nothing to pick
+
   if (item === 'hoe') {
     const reach = tier(S, 'hoe').reach, [dx, dy] = DIRS[S.dir], targets = [];
     for (let i = 0; i < reach; i++) {
