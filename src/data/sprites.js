@@ -5,7 +5,7 @@ export { PERSON } from './personSheet.js';
 
 // v297: every PNG in assets/sprites/, preloaded at boot (render/sheets.js preloadSheets) so no sheet arrives mid-play and
 // sends cached backgrounds back to be redrawn. tests/sheets.test.mjs keeps this list in step with the folder.
-export const SHEET_FILES = ['alders', 'animals', 'birds', 'buildings', 'buildings-winter', 'bunting', 'cave-ember', 'cave-peak', 'cave-rock', 'cave-sand', 'cave-sewer', 'children', 'crops', 'debris', 'fences', 'fixtures', 'floors', 'forage', 'furniture', 'giants', 'glow', 'greenhouse', 'horse', 'monsters', 'packet', 'pens', 'penstock', 'person', 'pets', 'placed', 'props', 'soil', 'terrain-autumn', 'terrain-spring', 'terrain-summer', 'terrain-winter', 'tools', 'trees', 'variants', 'wallpapers', 'weapons'];
+export const SHEET_FILES = ['alders', 'animals', 'birds', 'buildings', 'buildings-winter', 'bunting', 'cave-ember', 'cave-peak', 'cave-rock', 'cave-sand', 'cave-sewer', 'children', 'crops', 'debris', 'fences', 'fixtures', 'floors', 'forage', 'furniture', 'giants', 'glow', 'greenhouse', 'horse', 'monsters', 'packet', 'pens', 'penstock', 'person', 'pets', 'placed', 'props', 'soil', 'terrain-autumn', 'terrain-spring', 'terrain-summer', 'terrain-winter', 'tools', 'trees', 'variants', 'wallpapers', 'weapons', 'dusk'];   // 97b: dusk
 
 // v78 animals.png: 24x24 frames, one row per kind; columns are right stand, right step, left stand, left step.
 // Colours are drawn in (no tinting). origin as above: the frame's top-left from the animal's feet.
@@ -100,6 +100,12 @@ export const PROPS_SHEET = {
   sheet: 'props', size: 16,
   order: ['~', '>', '=', 'r', 'c', 'i', '%', '*', '#', 'U', '^', '!', 'L', 't', '$', '|', '}', ';', '{', '?', '9', '`', '¢', '§', '¤'],
 };
+// 97b dusk.png: the Duskmarch's tiles (tools/sprites/dusk.py), 16x16 over the tile, no ground; row 0 as drawn, row 1
+// winter. names: the columns in order. Weeds, headstones and dead trees have variants, picked per tile; crypt roofs
+// and fronts a piece by their place along the crypt (data/duskmarch.js cryptPart).
+export const DUSK_SHEET = { sheet: 'dusk', size: 16, names: ['weeds0', 'weeds1', 'weeds2', 'stone0', 'stone1', 'stone2', 'stone3', 'stone4',
+  'roofL', 'roofM', 'roofC', 'roofR', 'frontL', 'frontM', 'frontC', 'frontR', 'door', 'doorOpen', 'railing', 'tree0', 'tree1', 'tree2',
+  'chest', 'chestOpen', 'coffin', 'sarcophagus', 'sarcophagusOpen'] };
 export const GREENHOUSE_SHEET = { sheet: 'greenhouse', size: 16 };
 
 // v90 tools.png: hotbar tools and the extra weapons held in hand, 16x16, one row in this order, colours drawn in.

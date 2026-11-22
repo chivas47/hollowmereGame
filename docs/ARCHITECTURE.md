@@ -282,7 +282,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | Function | Purpose | Notes |
 |---|---|---|
 | `addInteraction(priority, fn)` | What Use does. `fn({tx, ty, tile, mapId, item})` returns `true` to claim the press. | Highest priority runs first. |
-| `addLayer(z, fn)` | Draw something every frame. `fn(ctx)`. | z < 50 under characters, z >= 50 over. |
+| `addLayer(z, fn)` | Draw something every frame. `fn(ctx)`. | z < 50 under characters, z >= 50 over. (97b: duskmarch.js at 8, the Duskmarch's wash, mist and light flecks.) |
 | `addEntities(fn)` | Return `[{ y, draw(ctx) }]` for y-sorted things. | Player, NPCs, chickens, slimes. |
 | `addUpdater(fn)` | Per-frame logic, `fn(dt)` in seconds. | Skipped while `G.paused`. |
 | `addPrompt(priority, fn)` | The HUD's Use prompt (v112). `fn({tx, ty, tile, mapId, item})` returns a short phrase ("Talk to Ines") or null; it must not change anything. | Use the same priority as the matching `addInteraction`, so the prompt names what Use would actually do. |

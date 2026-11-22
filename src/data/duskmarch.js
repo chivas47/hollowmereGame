@@ -172,6 +172,15 @@ export function cryptGrid() {
 
 // Mournfield: dead trees round a railed yard; rows of headstones on either side of two crossing walks; three
 // crypts; the old west end gone back to weeds and dead trees, which is where the Tangle path comes in.
+// Mournfield's crypts [x, y of the roof's left end, width]: the chapel crypt first. render/tiles.js picks each roof and
+// front tile's piece (an end, the middle, the centre with its cross) from these.
+export const CRYPTS = [[18, 14, 4], [39, 4, 3], [25, 23, 3]];
+export function cryptPart(x, y) {
+  const c = CRYPTS.find(([cx, cy, w]) => (y === cy || y === cy + 1) && x >= cx && x < cx + w);
+  if (!c) return 'M';
+  const [cx, , w] = c;
+  return x === cx ? 'L' : x === cx + w - 1 ? 'R' : x === cx + Math.floor(w / 2) ? 'C' : 'M';
+}
 export function mournfieldGrid() {
   const { w, h } = DUSK_SIZE.mournfield, m = blank(w, h, 'g'), R = seeded(4409);
   fill(m, 0, 0, w - 1, 0, 'T'); fill(m, 0, h - 1, w - 1, h - 1, 'T'); fill(m, 0, 0, 0, h - 1, 'T'); fill(m, w - 1, 0, w - 1, h - 1, 'T');
@@ -188,8 +197,8 @@ export function mournfieldGrid() {
   }
   // crypts: a roof row and a front row with the door
   const crypt = (x, y, wd) => { fill(m, x, y, x + wd - 1, y, CRYPT_ROOF); fill(m, x, y + 1, x + wd - 1, y + 1, CRYPT_FRONT); fill(m, x, y + 2, x + wd - 1, y + 2, 'g'); };
-  crypt(18, 14, 4); m[CRYPT.door.y][CRYPT.door.x] = CRYPT_DOOR;   // the chapel crypt at the end of the east walk, its door
-  crypt(39, 4, 3); crypt(25, 23, 3);
+  for (const [x, y, wd] of CRYPTS) crypt(x, y, wd);
+  m[CRYPT.door.y][CRYPT.door.x] = CRYPT_DOOR;   // the chapel crypt at the end of the east walk, its door
   fill(m, 17, 16, 21, 16, 'P');   // the east walk runs right up to the crypt door
   // the overgrown west end: weeds, dead trees, a few lost headstones
   for (let y = 1; y < h - 1; y++) for (let x = 1; x < X0; x++) {
@@ -218,6 +227,16 @@ export const NIGHT = { map: 'mournfield', from: 20 * 60, every: 30, first: [3, 4
 // Weeds: what a cut clump gives (Stardew's weeds: fiber about half the time, mixed seeds now and then), and a
 // small chance of a little health back (the heart under the grass), foraging XP as farm weeds give.
 export const WEED_DROPS = { fiber: 0.5, mixed: 0.03, heal: 0.06, healHp: 5, xp: 1 };
+
+// 97b: the mood drawn over each map's ground (render/dusk.js). wash: a colour over the whole map; mist: banks after
+// `from` (game minutes), fading in over `fade` minutes, drifting at `speed` px a second; flecks: light through the
+// canopy until `until`.
+export const MOOD = {
+  mournfield: { wash: 'rgba(58,52,86,0.16)', mist: { from: 18 * 60, fade: 90, banks: 18, alpha: 0.24, speed: 4 } },
+  tangle: { wash: 'rgba(8,34,18,0.16)', flecks: { n: 30, alpha: 0.22, until: 18 * 60 } },
+  gloamwood: { wash: 'rgba(8,34,18,0.07)', flecks: { n: 22, alpha: 0.18, until: 18 * 60 } },
+  crypt: { wash: 'rgba(10,8,20,0.22)' },
+};
 
 // Signs at the ways in, and few inside on purpose.
 export const DUSK_SIGNS = {

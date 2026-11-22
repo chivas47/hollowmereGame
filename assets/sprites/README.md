@@ -209,6 +209,10 @@ Lit bombs use the bomb frames of placed.png.
 
 272 x 16. Props that change with the place or the season, 16 x 16 over the tile, one row in the order of `VARIANTS_SHEET.order`: shrine door, shrine door in snow, the pedestals for farming, foraging, fishing, mining, combat and ranching, the farm cave mouth (plain, snow), the Smoke Peak mouth (plain, snow), the chime shells small, middle and large, the island altar, the summit's altar chest. The pedestals take their skill's colour from `SHRINE.colors` (src/data/books.js). Cave mouths and the shrine door fill their whole tile; the rest sit over the tile-set ground.
 
+## dusk.png
+
+432 x 32 (roadmap 97b). Built by `tools/sprites/dusk.py`. Frames are 16 x 16 over the tile with no ground, one column per piece in the order of `DUSK_SHEET.names` (`src/data/sprites.js`): three weed clumps, five headstones, the crypt roof and front as left end, middle, centre and right end, the crypt door shut and open, the railing, three dead trees, the Tangle's chest shut and open, a coffin, the great sarcophagus shut and open. Row 0 as drawn, row 1 winter (snow on the tops, the greens gone dull). `render/tiles.js` picks a variant per tile; every piece keeps its code-drawn fallback. Original art.
+
 ## Credits
 
 | File | Author | Licence |
