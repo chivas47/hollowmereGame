@@ -200,7 +200,7 @@ src/
     debug.js          DEBUG actions for the debug panel
   render/
     pixel.js          r() rectangle primitive, rng(seed), blink()
-    tiles.js          static art: grass, path, trees, water, rocks, buildings, cave tiles
+    tiles.js          static art: grass, path, trees, water, rocks, buildings, cave tiles; v297: treeStamp(); v299: drawBed() (the farmhouse bed and every neighbour's), the wall phone
     sprites.js        per-frame art: soil, crops, forage, people, chickens, slimes, fruit trees, giant crops, effects
     doings.js         v147: drawDoing(c, px, py, dir, kind, t, look), the props (v191: letter-row sprites over one shared PAL) neighbours hold or set down (DOING_KINDS)
     icons.js          16x16 hotbar icons
@@ -212,7 +212,7 @@ src/
     menuIcons.js      v273: the menu's 16x16 tile icons as letter grids
     renderer.js       composes a frame, caches backgrounds per map + season (v297: least recently used past a pixel budget; a sheet arriving drops only the backgrounds drawn without it; the maps one exit or door away drawn ahead while idle, neighbours()); v139: draws each view (G.view = the farmer it follows: night light, mine dark, facing outline)
     views.js          v139: split screen: views() (one alone, two halves side by side with a second farmer), camera(), onScreen(), toWorld() for prompts and taps; v156: the camera moves both ways over each farmer's own map (sizeOf() in data/maps.js), and visible() is the world rectangle a frame draws (G.drawing), for layers that cover the screen; v289: screen {w, h, kind} is the view's size in world px, set by setCamera(kind) from the Camera setting (data/camera.js: far 24 x 16, near 18 x 12), which also resizes the #game canvas; code that covers the screen reads visible() or screen, never W * T
-    interiors.js      v97: cottage rooms (each room its own wallpaper and floor, two-row north walls), every floor-plan piece at its full size, small things on surfaces (TOPS), rugs; windows follow the hour, fires and stoves flicker
+    interiors.js      v97: cottage rooms (each room its own wallpaper and floor, two-row north walls), every floor-plan piece at its full size (v299: the common ones shaded with sh(): outline, lit edge, shaded side, panels), small things on surfaces (TOPS), rugs; windows follow the hour, fires and stoves flicker
     sheets.js         v77: PNG sprite sheets from assets/sprites/: sheet(), ready() (v297: missingWhile() notes the sheets a drawing lacked), preloadSheets() (v297: every sheet in data/sprites.js SHEET_FILES at boot), tinted() (grey layers tinted to a palette, cached, up to 256), frame() (v78: optional row), onSheet()
   audio/              Web Audio output (like render/, but for sound); imported only by main.js and ui/
     engine.js         context, buses, settings (localStorage), tone() and noise()

@@ -1107,11 +1107,12 @@ function pattern(g, X, Y, d, wall) {
   else if (d.pattern === 'sprig') { r(g, X + 5, Y + 4, 1, 6, a); r(g, X + 3, Y + 5, 2, 1, a); r(g, X + 6, Y + 7, 2, 1, a); }
   else if (d.pattern === 'brick') { [0, 5, 10].forEach((o, i) => { r(g, X, Y + o + 4, T, 1, a); r(g, X + (i % 2 ? 4 : 10), Y + o, 1, 4, a); }); }
 }
+const ON_WALL = new Set(['I', '_', 'ʌ']);   // the wall and what hangs on it
 export function drawHouseTile(g, x, y, t, below, walls, floors, decor) {
   const X = x * T, Y = y * T;
   if (t === '.') { r(g, X, Y, T, T, '#14100c'); return; }
-  if (t === 'I' || t === '_' || t === 'ʌ') {   // v47: the phone hangs on a wall face (v172: and the attic ladder)
-    if (below && below !== 'I' && below !== '.') {   // the wall's face (v87: from the wallpaper sheet once it has loaded)
+  if (ON_WALL.has(t)) {   // v47: the phone hangs on a wall face (v172: and the attic ladder)
+    if (below && !ON_WALL.has(below) && below !== '.') {   // v299: what hangs on a wall is wall, so the top above it stays a top   // the wall's face (v87: from the wallpaper sheet once it has loaded)
       if (ready(DECOR_SHEETS.walls)) return g.drawImage(sheet(DECOR_SHEETS.walls).img, (walls[decor.wall] ? decor.wall : 0) * T, 0, T, T, X, Y, T, T);
       pattern(g, X, Y, walls[decor.wall] || walls[0], true); r(g, X, Y + 14, T, 2, '#3f3226'); return;
     }
@@ -1122,8 +1123,45 @@ export function drawHouseTile(g, x, y, t, below, walls, floors, decor) {
   else pattern(g, X, Y, floors[decor.floor] || floors[0], false);
   if (t === 'E') { r(g, X + 2, Y + 3, 12, 10, '#8a5a32'); r(g, X + 3, Y + 4, 10, 8, '#b5452f'); }   // doormat
 }
-const bed = (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 1, Y, 14, T, '#7a4a2a'); r(g, X + 2, Y + 1, 12, 14, '#f4ead2'); r(g, X + 2, Y + 6, 12, 9, '#5f8fb5'); r(g, X + 2, Y + 6, 12, 1, '#3d6a8f'); };
-const bedHead = (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 1, Y, 14, T, '#7a4a2a'); r(g, X + 2, Y + 3, 12, 13, '#f4ead2'); r(g, X + 4, Y + 4, 8, 4, '#ffffff'); r(g, X + 1, Y, 14, 3, '#5c371e'); };
+// v299: a bed seen from above and in front, readable at a glance: a panelled headboard with turned posts reaching up
+// the wall, plump pillows, the sheet folded back over a patchwork quilt that drapes over the sides, a footboard.
+// X, Y: the top-left pixel of its block of tiles (W x H px); quilt and wood are its two colours. Used by the farmhouse
+// bed and every bed in a neighbour's home (render/interiors.js).
+export function drawBed(c, X, Y, W, H, quilt, wood) {
+  const wl = tone(wood, 1.3), wd = tone(wood, 0.72), wk = tone(wood, 0.48);
+  const ql = tone(quilt, 1.25), qp = tone(quilt, 1.1), qd = tone(quilt, 0.8), qk = tone(quilt, 0.6);
+  const L = X + 1, R = X + W - 2, foot = Y + H - 5;
+  r(c, X + 2, Y + H - 1, W - 3, 1, 'rgba(0,0,0,.24)'); r(c, X + W - 1, Y + 3, 1, H - 3, 'rgba(0,0,0,.14)');   // on the floor
+  // the headboard: an outline, the board, a sunk panel (two on a double), posts with knobs at its ends
+  r(c, L, Y - 6, W - 2, 10, wk); r(c, L + 1, Y - 5, W - 4, 8, wood); r(c, L + 1, Y - 5, W - 4, 1, wl);
+  const panels = W > T ? 2 : 1, pw = Math.floor((W - 8 - (panels - 1) * 2) / panels);
+  for (let i = 0; i < panels; i++) { const px = L + 3 + i * (pw + 2); r(c, px, Y - 3, pw, 4, wd); r(c, px, Y - 3, pw, 1, wk); r(c, px, Y, pw, 1, wl); }
+  for (const px of [L, R - 1]) { r(c, px, Y - 7, 2, 11, wk); r(c, px, Y - 6, 1, 9, wood); r(c, px, Y - 8, 2, 2, wood); r(c, px, Y - 8, 1, 1, wl); }
+  // the mattress under it all: rails at the sides
+  r(c, L, Y + 4, W - 2, foot - Y - 4, wk); r(c, L + 1, Y + 4, W - 4, foot - Y - 4, '#e8dcc0');
+  // pillows, rounded, with a shaded underside and a crease
+  const pillows = W > T ? 2 : 1, gap = pillows > 1 ? 2 : 0, pwid = Math.floor((W - 6 - gap) / pillows);
+  for (let i = 0; i < pillows; i++) {
+    const px = X + 3 + i * (pwid + gap), py = Y + 4;
+    r(c, px + 1, py, pwid - 2, 6, '#fbf7ec'); r(c, px, py + 1, pwid, 4, '#fbf7ec');
+    r(c, px + 1, py + 5, pwid - 2, 1, '#d9cfb8'); r(c, px + pwid - 1, py + 2, 1, 3, '#d9cfb8');
+    r(c, px + 2, py + 2, pwid - 4, 1, '#ece4d2'); r(c, px + 1, py + 1, 1, 1, '#ffffff');
+  }
+  // the sheet folded back, then the quilt: lit fold, patchwork with stitched corners, darker draped edges
+  const qy = Y + 11;
+  r(c, L, qy, W - 2, 2, '#f4ead2'); r(c, L, qy + 2, W - 2, 1, '#cfc2a4');
+  const qt = qy + 3, qb = foot + 1;
+  r(c, L, qt, W - 2, qb - qt, quilt); r(c, L, qt, W - 2, 1, ql);
+  for (let y = qt + 1, j = 0; y < qb - 2; y += 4, j++) for (let x = L + 1, i = 0; x < R; x += 4, i++) {
+    if ((i + j) % 2) r(c, x, y, Math.min(4, R - x), Math.min(4, qb - 2 - y), qp);
+    r(c, x, y, 1, 1, qd);
+  }
+  r(c, L, qt, 1, qb - qt, qd); r(c, R, qt, 1, qb - qt, qd);   // drapes over the rails
+  r(c, L, qb - 2, W - 2, 2, qd); r(c, L, qb - 1, W - 2, 1, qk);   // hangs over the foot
+  // the footboard, lower than the head, posts at its corners
+  r(c, L, foot + 1, W - 2, 4, wk); r(c, L + 1, foot + 1, W - 4, 2, wood); r(c, L + 1, foot + 1, W - 4, 1, wl); r(c, L + 1, foot + 3, W - 4, 1, wd);
+  for (const px of [L, R - 1]) { r(c, px, foot - 1, 2, 6, wk); r(c, px, foot - 1, 1, 1, wl); r(c, px, foot, 1, 4, wood); }
+}
 export const HOUSE_ART = {
   // v173: the dining room's long table: a polished top, an edge, chairs drawn at its long sides.
   'ŧ': (g, x, y, m) => {
@@ -1139,8 +1177,22 @@ export const HOUSE_ART = {
     if (m[y + 1]?.[x] === '.') { r(g, X + 2, Y + 3, 12, 10, '#3f3226'); r(g, X + 3, Y + 4, 10, 8, '#14100c'); for (let i = 0; i < 3; i++) r(g, X + 4, Y + 5 + i * 3, 8, 1, '#8a5a32'); return; }
     r(g, X + 3, Y, 2, T, '#8a5a32'); r(g, X + 11, Y, 2, T, '#8a5a32'); for (let i = 0; i < 4; i++) r(g, X + 3, Y + 2 + i * 4, 10, 1, '#a5753f');
   },
-  _: (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 5, Y + 3, 6, 9, '#3f3226'); r(g, X + 6, Y + 4, 4, 7, '#b5452f'); r(g, X + 4, Y + 4, 2, 6, '#2b211a'); r(g, X + 7, Y + 6, 2, 1, '#e9c46a'); r(g, X + 7, Y + 8, 2, 1, '#e9c46a'); },
-  Z: (g, x, y, m) => (m[y - 1]?.[x] === 'Z' ? bed(g, x, y) : bedHead(g, x, y)),
+  // v299: the wall telephone: a wooden box with two brass bells, the mouthpiece, the handset on its hook and its curled
+  // cord, the crank at the side and a little writing shelf.
+  _: (g, x, y) => {
+    const X = x * T, Y = y * T, K = '#1f1812', W1 = '#8a5a32', W2 = '#b0804a', W0 = '#3f2a18', BR = '#e9c46a', BD = '#a57a2a';
+    r(g, X + 12, Y + 2, 1, 10, 'rgba(0,0,0,.16)');                                          // its shadow on the wall
+    r(g, X + 4, Y + 1, 8, 11, W0); r(g, X + 5, Y + 2, 6, 9, W1); r(g, X + 5, Y + 2, 6, 1, W2);   // the box
+    for (const bx of [5, 9]) { r(g, X + bx, Y + 3, 2, 2, BR); r(g, X + bx, Y + 4, 2, 1, BD); r(g, X + bx, Y + 3, 1, 1, '#fff3c4'); }
+    r(g, X + 7, Y + 4, 2, 1, W0);                                                          // the striker between the bells
+    r(g, X + 7, Y + 6, 2, 1, W0); r(g, X + 6, Y + 7, 4, 2, K); r(g, X + 6, Y + 7, 4, 1, '#4a3c30');   // the mouthpiece
+    r(g, X + 3, Y + 3, 2, 1, '#c9ccd6');                                                   // the hook
+    r(g, X + 2, Y + 4, 2, 5, K); r(g, X + 2, Y + 4, 1, 4, '#4a3c30'); r(g, X + 1, Y + 8, 3, 1, K);   // the handset
+    for (const [cx, cy] of [[3, 9], [4, 10], [3, 11], [4, 12], [5, 11]]) r(g, X + cx, Y + cy, 1, 1, K);   // its cord
+    r(g, X + 12, Y + 5, 1, 3, W0); r(g, X + 13, Y + 7, 1, 1, W0); r(g, X + 13, Y + 6, 1, 1, '#c9ccd6');   // the crank
+    r(g, X + 4, Y + 11, 8, 2, '#6e4626'); r(g, X + 4, Y + 11, 8, 1, '#a5753f'); r(g, X + 9, Y + 10, 2, 1, '#f4ead2');   // shelf, a note
+  },
+  Z: (g, x, y, m) => { if (m[y - 1]?.[x] !== 'Z') drawBed(g, x * T, y * T, T, T * 2, '#5f8fb5', '#7a4a2a'); },   // v299: the whole bed from its head
   l: (g, x, y) => { const X = x * T, Y = y * T; r(g, X + 6, Y + 8, 4, 7, '#6e4626'); r(g, X + 2, Y + 3, 12, 6, '#8a5a32'); r(g, X + 3, Y + 3, 5, 5, '#f4ead2'); r(g, X + 8, Y + 3, 5, 5, '#e8dcc0'); r(g, X + 7, Y + 3, 1, 5, '#b5452f'); },
   n: (g, x, y) => { const X = x * T, Y = y * T; r(g, X, Y + 2, T, 14, '#a5753f'); r(g, X, Y + 2, T, 3, '#d9caa6'); r(g, X + 3, Y + 8, 10, 6, '#8a5a32'); r(g, X + 7, Y + 10, 2, 1, '#e9c46a'); },
   o: (g, x, y) => { const X = x * T, Y = y * T; r(g, X, Y + 2, T, 14, '#5f6870'); r(g, X + 2, Y + 3, 4, 2, '#2b211a'); r(g, X + 9, Y + 3, 4, 2, '#2b211a'); r(g, X + 3, Y + 8, 10, 6, '#3f4850'); r(g, X + 4, Y + 9, 8, 1, '#e8862a'); },
