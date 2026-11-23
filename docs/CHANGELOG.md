@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v317: Sound files you can replace
+- Every sound is now a file in assets/audio/, named for what it does, one folder per kind: music (spring-farm-theme.wav, hollow-mine-theme.wav...), sfx (hoe-till-soil.wav, fish-caught-fanfare.wav...), ambience (rain-loop.wav, birdsong-chirp.wav...) and footsteps (footstep-snow.wav, horse-hoofbeat.wav...). 59 in all.
+- To replace one, save the new sound over the old file. assets/audio/README.md lists every file and what it plays for; src/data/audio.js holds each file's name, volume, whether it loops and how much its pitch varies.
+- The files were recorded from the game's own sound generators (tools/render_audio.mjs), so the game sounds the same. The generators stay as a fallback: a missing or broken file never makes the game silent.
+- Short sounds load as soon as sound starts; music and ambient loops only when first heard. Music crossfades when the mood changes.
+- New save data: none.
+
 ## v316: A guiding hand for food and the shipping bin
 - Eat something: the first time your energy drops under 30% with food in the bag, a card names the food that gives the most energy, and a pulse leads you to it one step at a time: the Bag button, then that food in the Bag, then its Eat button (and its hotbar item slot, if it sits on one). The pulse stops once it is eaten. With no food, the old "Nearly out of energy" card shows instead.
 - Sell before bed: the first evening (after 5 pm) you carry crops with nothing in the bin yet, a card says to ship them tonight, with an arrow that shows the way to the bin from anywhere (from the village: the road to the farm).

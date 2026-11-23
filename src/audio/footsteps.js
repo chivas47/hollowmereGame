@@ -9,6 +9,8 @@ import { MAPS } from '../data/maps.js';
 import { PLACEABLES } from '../data/crafting.js';
 import { STEPS, STEP_EVERY, HOOF_EVERY } from '../data/atmosphere.js';
 import { noise, settings, stats } from './engine.js';
+import { STEP_FILES } from '../data/audio.js';
+import { playFile } from './files.js';
 import { placeKey } from '../systems/world.js';
 
 stats.steps = 0;
@@ -31,12 +33,11 @@ export function surfaceAt(mapId, x, y) {
   return soft;
 }
 
-function step(kind) {
+export function stepSound(kind) {   // v317: also recorded by tools/render_audio.mjs (assets/audio/footsteps)
   const vary = 0.85 + Math.random() * 0.3;
   for (const [filter, freq, dur, vol, sweep] of STEPS[kind] || STEPS.grass) {
     noise({ filter, freq: freq * vary, dur, vol: vol * (0.8 + Math.random() * 0.4), sweep: sweep ? sweep * vary : null, bus: 'ambient' });
   }
-  stats.steps++;
 }
 
 let last = null, walked = 0;
@@ -49,5 +50,7 @@ addUpdater(() => {
   if (walked < every) return;
   walked -= every;
   if (settings.steps === false || !settings.sfx) return;
-  step(G.riding ? 'hoof' : surfaceAt(S.map, Math.floor(S.x / T), Math.floor(S.y / T)));
+  const kind = G.riding ? 'hoof' : surfaceAt(S.map, Math.floor(S.x / T), Math.floor(S.y / T));
+  stats.steps++;
+  if (!playFile(STEP_FILES[kind] || STEP_FILES.grass, { bus: 'ambient', vol: 0.8 + Math.random() * 0.4 })) stepSound(kind);   // v317: the file, else generated
 });

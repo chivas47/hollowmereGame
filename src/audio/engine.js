@@ -70,5 +70,25 @@ export function bed({ filter = 'lowpass', freq = 800, q = 0.7 }) {
   const src = a.ctx.createBufferSource(), f = a.ctx.createBiquadFilter(), g = a.ctx.createGain();
   src.buffer = noiseBuf; src.loop = true; f.type = filter; f.frequency.value = freq; f.Q.value = q; g.gain.value = 0;
   src.connect(f); f.connect(g); g.connect(a.ambient); src.start();   // v100: on the ambient bus
+  g.stop = () => { try { src.stop(); } catch (e) { /* already stopped */ } };   // v317: a file bed can take over
   return g;
+}
+
+// v317 (roadmap 109): a decoded sound file (audio/files.js) on a bus. vol: its level; rate: playback speed (pitch
+// with it, for variety); loop: until stopped. Returns { src, gain } to fade or stop, or null without audio.
+export function playBuffer(buffer, { bus = 'sfx', vol = 1, rate = 1, loop = false, at = 0 } = {}) {
+  const a = audio(); if (!a || !buffer) return null;
+  const t = a.ctx.currentTime + at, src = a.ctx.createBufferSource(), g = a.ctx.createGain();
+  src.buffer = buffer; src.loop = loop; src.playbackRate.value = rate; g.gain.value = vol;
+  src.connect(g); g.connect(a[bus]); src.start(t);
+  return { src, gain: g };
+}
+
+// v317: tools/render_audio.mjs records the generated sounds into files: every bus plays into this offline context
+// until the returned function puts the real one back.
+export function renderInto(off) {
+  const was = [ctx, buses, noiseBuf];
+  const bus = () => { const n = off.createGain(); n.connect(off.destination); return n; };
+  ctx = off; buses = { master: off.destination, sfx: bus(), music: bus(), ambient: bus() }; noiseBuf = null;
+  return () => { [ctx, buses, noiseBuf] = was; };
 }

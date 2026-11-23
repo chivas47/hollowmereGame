@@ -89,6 +89,7 @@ src/
     guide.js          v308: GUIDE, the guided first day's steps (say, slot or use, map, aim, from, done(facts), end), its closing line; v310 FARM (the field's actions), FIELD_GOAL, GUIDE_VERSION
     reach.js          v306: REACH: tools that stay exact on farmland, the weapon that stays exact everywhere, how far ahead side tiles are measured; v307 outline: the tools that show the tile outline (render/renderer.js)
     seats.js          v305: SEATS: which floor plan pieces, furniture shapes and tiles are seats, a placed seat's facing by turn, the walk-in delay and the seated pose
+    audio.js          v317: every sound file (assets/audio/, its README): MUSIC_FILES, SFX_FILES, BED_FILES, CALL_FILES, STEP_FILES by the id the code plays, each { file, gain, loop, vary }
     venues.js         v98: VENUES, the buildings you walk into (shops, tavern, clinic, museum, ranch, town hall, theatre, lodge, Oasis, casino, coop, barn): where each stands, which tiles are its door, the dialog its counter opens, its floor plan; venueMap(), venueFront()
     interiors.js      v97: each cottage's floor plan (24x16 characters: walls, doors, rooms, a key of pieces with colours, things on top and a line to read), PIECES, piecesOf(), interiorGrid(), doorOf(), roomAt()
     scenes.js         heart scenes at 4 and 8 hearts
@@ -228,11 +229,12 @@ src/
     interiors.js      v97: cottage rooms (each room its own wallpaper and floor, two-row north walls), every floor-plan piece at its full size (v299: the common ones shaded with sh(): outline, lit edge, shaded side, panels), small things on surfaces (TOPS), rugs; windows follow the hour, fires and stoves flicker
     sheets.js         v77: PNG sprite sheets from assets/sprites/: sheet(), ready() (v297: missingWhile() notes the sheets a drawing lacked), preloadSheets() (v297: every sheet in data/sprites.js SHEET_FILES at boot), tinted() (grey layers tinted to a palette, cached, up to 256), frame() (v78: optional row), onSheet()
   audio/              Web Audio output (like render/, but for sound); imported only by main.js and ui/
-    engine.js         context, buses, settings (localStorage), tone() and noise()
-    sfx.js            listens for 'sfx' and other events, plays effects
-    music.js          generated loop per mood (data/music.js)
-    footsteps.js      footsteps by surface under the player (surfaceAt), on the ambient bus; settings.steps (v109)
-    ambience.js       ambient sound by area: noise beds and calls (v72, data/atmosphere.js); rain taps indoors, hearth crackle; on the ambient bus with its own volume (v100)
+    engine.js         context, buses, settings (localStorage), tone() and noise(); v317 playBuffer() (a decoded file on a bus), renderInto() (tools/render_audio.mjs records into an offline context)
+    files.js          v317: the sound files (data/audio.js, assets/audio/): bufferOf() (fetch and decode once, after audio opens; false when it failed), playFile(); the short sounds load as audio opens, music and ambient loops when first heard; every caller falls back to its generated sound while a file is not there
+    sfx.js            listens for 'sfx' and other events, plays effects (v317: the file, else the generated SFX recipe)
+    music.js          generated loop per mood (data/music.js); v317: the mood's file looped with a crossfade and the night fade once loaded; renderSong() for the recorder
+    footsteps.js      footsteps by surface under the player (surfaceAt), on the ambient bus; settings.steps (v109); v317 its file per surface, else stepSound()
+    ambience.js       ambient sound by area: noise beds and calls (v72, data/atmosphere.js); rain taps indoors, hearth crackle; on the ambient bus with its own volume (v100); v317 a bed's looping file takes over once it is heard and loaded
   ui/
     sound.js          footer toggles, M key, unlock on first input
     saveFile.js       Export save / Import save buttons, file download and upload

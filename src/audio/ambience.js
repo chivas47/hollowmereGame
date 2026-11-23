@@ -7,12 +7,15 @@ import { MAPS } from '../data/maps.js';
 import { underSky } from '../data/weather.js';
 import { AMBIENCE, AMBIENT_VOLUME, WATERFALLS, CRACKLE_RANGE } from '../data/atmosphere.js';
 import { audio, bed, tone, noise, stats } from './engine.js';
+import { BED_FILES, CALL_FILES } from '../data/audio.js';
+import { playFile, bufferOf } from './files.js';
 
-const BEDS = { rain: { filter: 'bandpass', freq: 2600, q: 0.4 }, wind: { freq: 380 }, falls: { filter: 'bandpass', freq: 700, q: 0.6 }, surf: { freq: 520 }, hum: { freq: 110 }, fire: { freq: 240 } };
+// v317: BEDS and CALLS are exported for tools/render_audio.mjs, which records them into assets/audio/ambience.
+export const BEDS = { rain: { filter: 'bandpass', freq: 2600, q: 0.4 }, wind: { freq: 380 }, falls: { filter: 'bandpass', freq: 700, q: 0.6 }, surf: { freq: 520 }, hum: { freq: 110 }, fire: { freq: 240 } };
 let beds = null;
 stats.ambient = 0;
 
-const CALLS = {
+export const CALLS = {
   bird:    () => { const f = 2200 + Math.random() * 1400; [0, 0.09, 0.2].forEach((at) => tone({ freq: f, slide: f * 1.3, dur: 0.07, type: 'sine', vol: 0.03, at, bus: 'ambient' })); },
   cricket: () => [0, 0.05, 0.1].forEach((at) => tone({ freq: 4300, dur: 0.025, type: 'square', vol: 0.008, at, bus: 'ambient' })),
   gull:    () => { tone({ freq: 950, slide: 620, dur: 0.3, type: 'triangle', vol: 0.03, bus: 'ambient' }); tone({ freq: 900, slide: 600, dur: 0.25, type: 'triangle', vol: 0.025, at: 0.35, bus: 'ambient' }); },
@@ -22,7 +25,12 @@ const CALLS = {
   tap:     () => tone({ freq: 2400 + Math.random() * 1600, dur: 0.03, type: 'sine', vol: 0.012, bus: 'ambient' }),   // v100: rain on the glass
   crackle: (near) => { const n = 1 + (Math.random() * 3 | 0); for (let i = 0; i < n; i++) noise({ dur: 0.02 + Math.random() * 0.03, vol: 0.05 * near, filter: 'highpass', freq: 1800 + Math.random() * 2500, at: Math.random() * 0.2, bus: 'ambient' }); },
 };
-const call = (name, chance, arg) => { if (Math.random() < chance) { CALLS[name](arg); stats.ambient++; } };
+// v317: each call plays its file (crackle at the hearth's nearness), else its generated sound.
+const call = (name, chance, arg) => {
+  if (Math.random() >= chance) return;
+  if (!playFile(CALL_FILES[name], { bus: 'ambient', vol: name === 'crackle' ? arg : 1 })) CALLS[name](arg);
+  stats.ambient++;
+};
 
 // What is heard here now: target bed levels (0 to 1) and the calls to roll.
 function scene() {
@@ -49,7 +57,14 @@ function tick() {
   if (!a || !G.S || !MAPS[G.S.map]) return;
   if (!beds) beds = Object.fromEntries(Object.entries(BEDS).map(([k, o]) => [k, bed(o)]));
   const { lv, kind, night, wet, season, near } = scene();
-  for (const k in beds) beds[k]?.gain.setTargetAtTime(lv[k] * AMBIENT_VOLUME, a.ctx.currentTime, 0.4);
+  // v317: once a bed is heard and its file has loaded, its looping file takes over from the generated noise (same fades).
+  for (const k in beds) {
+    if (!beds[k] || beds[k].file || !(lv[k] > 0) || !bufferOf(BED_FILES[k])) continue;   // loaded only once it is heard
+    const f = playFile(BED_FILES[k], { bus: 'ambient', vol: 0, loop: true });
+    if (!f) continue;
+    beds[k].stop?.(); f.gain.file = true; f.gain.base = BED_FILES[k].gain; beds[k] = f.gain;
+  }
+  for (const k in beds) beds[k]?.gain.setTargetAtTime(lv[k] * (beds[k].file ? beds[k].base : AMBIENT_VOLUME), a.ctx.currentTime, 0.4);   // a file carries its own level
   if (near > 0) call('crackle', 0.25 + near * 0.5, near);
   if (G.indoorRain) call('tap', 0.6);
   if (wet) return;
@@ -61,4 +76,4 @@ function tick() {
   if (kind === 'wind') call('gust', 0.03);
 }
 
-setInterval(tick, 250);
+setInterval(tick, 250).unref?.();   // v317: in Node (the tests import BEDS and CALLS) the timer must not keep the process alive
