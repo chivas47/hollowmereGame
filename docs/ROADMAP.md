@@ -406,6 +406,18 @@ Nuno (November 2026): "the goal is occupying the screen of the gameplay and I ca
 | 98 | Sit on chairs and benches | feature | done (chivas47/hollowmereGame#321) | Nuno (November 2026): sit on chairs, benches and anything you could normally sit on. Use or walking into a seat sits you (cottages, shops, the greens' benches, your own furniture); a step stands you up. Drawing and controls only; nothing saved. |
 | 97a | The Duskmarch: the crypt key | feature | done (chivas47/hollowmereGame#319) | Nuno (November 2026), the key chain: a chest at the Tangle's deepest dead end holds the key to Mournfield's chapel crypt; inside, the gravewarden blade (Stardew's bone sword by role, 21 damage, half again against the dead). One time only. |
 
+## Depth review (November 2026)
+
+Nuno (November 2026): a review against modern cozy farming games found the game wide but shallow: a small farm, thin neighbour writing, empty late rooms and a HUD that shrinks the field. Nuno: the save bug first; composed music left out.
+
+| Item | What | Kind | Status | Notes |
+|---|---|---|---|---|
+| 111 | Old farms skip the lessons | fix | done (chivas47/hollowmereGame#334) | A save from before v122 has no `firstWeek`; `merge()` decided the guide from the raw save before migration 2 marked the farm arrived, so a Year-two farm replayed the guided first day. Tips added after v311 (eight, v314 to v316) also showed to veteran farms. Built: core/stage.js farmStage (new, learning, settled) as the one rule for teaching; save step 8 for the guide; tip generations (`since`, `tipsGen`) so later tips are marked seen on settled farms. |
+| 112 | A bigger farm | feature | needs decision | The farm is 24 x 16 tiles (384); Stardew's standard farm is about 80 x 65. A Year-2 farm fits on one screen, so every building takes crop space. Proposal: a new layout of at least 60 x 50, offered to new farms (old saves keep theirs). Decide: new layout only or all layouts, the size, and whether old farms can move. The balance bot's farm space changes. |
+| 113 | Neighbours with more to say | feature | needs decision | Dialogue in data/voices.js is about 55,000 characters for 30 neighbours (about 25 lines each). Stardew's marriage candidates have hundreds of lines and ten heart events. Proposal: depth for about eight marriage candidates first: lines per season, weather and place, and heart scenes at every two hearts to ten. Decide: which neighbours, and how many scenes per PR. |
+| 114 | Rooms that feel lived in | feature | needs decision | A fully renovated farmhouse is mostly bare floor. Proposal: furniture as the late-game decoration loop: a larger catalogue, sets per room, and a rotating stock to collect. Decide: catalogue size, and whether neighbours comment on the house. |
+| 115 | A full-screen field | feature | needs decision | On a 1280 px desktop the side panel and hotbar take about a quarter of the screen, and the Basket line lists raw inventory. Proposal: the HUD over a full-screen field (clock and energy in corners, menu buttons in one compact bar), the Basket line removed or folded into the Bag. Decide: overlay everywhere or as a Display setting; this moves where players look for the clock and buttons. |
+
 ## Done
 
 | Item | PR |

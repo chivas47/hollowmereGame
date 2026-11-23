@@ -18,6 +18,7 @@ src/
     game.js           G: shared runtime object (G.S is the save; keys, useHeld, paused, lock, swing, fishing, hurtT)
     state.js          newState(), merge(saved), load(), save({ night }) (localStorage), restoreMorning(), exportSave(), importSave(text); v127: currentSlot(), slotInfo(n), useSlot(n)
     migrations.js     v118: MIGRATIONS (ordered save upgrades), SAVE_VERSION, migrate(s, saved); merge() runs it
+    stage.js          v319: farmStage(s) ('new', 'learning', 'settled'), LEARNING_DAYS, catchUp(seen, catalogue, fromGen, stage): how old farms meet teaching added later
     events.js         on(event, fn), emit(event, data), changed(), notify(msg)
     host.js           v233: isItchHost(hostname, referrer), onItch (false in Node)
     controls.js       v119: key bindings per browser: actionOf(code), keyName(action) for messages, bind(), resetControls()
@@ -489,7 +490,7 @@ The `report` object collects overnight results: `passedOut, grown, payout, withe
 
 ## State
 
-- `G.S` is the whole save (see `newState()` in core/state.js). It is written to localStorage on sleep and when the tab is hidden; sleep also writes this morning's copy (the slot's key plus -morning; v127: three slots, slot 1 on SAVE_KEY so older saves are farm 1), which load() falls back to if the live save cannot be read. `G.S.v` says which steps in core/migrations.js a save has had: a new field with a plain default goes in `newState()`; old data that changes shape or a value worked out from other fields is a new step at the end of MIGRATIONS, with a test.
+- `G.S` is the whole save (see `newState()` in core/state.js). It is written to localStorage on sleep and when the tab is hidden; sleep also writes this morning's copy (the slot's key plus -morning; v127: three slots, slot 1 on SAVE_KEY so older saves are farm 1), which load() falls back to if the live save cannot be read. `G.S.v` says which steps in core/migrations.js a save has had: a new field with a plain default goes in `newState()`; old data that changes shape or a value worked out from other fields is a new step at the end of MIGRATIONS, with a test. v319 (roadmap 111): anything that teaches a new player (the opening, the guided first day, the first week, first-time tips, a future tutorial) judges an old farm by `farmStage()` in core/stage.js, read from the merged save after migrations, never from raw saved fields in `merge()`. A one-off thing taught gets an entry in a catalogue with `since` (its generation; a new tip takes the next number) and the save keeps the newest generation it was offered, so `catchUp()` marks newer entries seen on a settled farm and a learning farm still meets them.
 - Positions are pixels: `x = tile * 16 + 8`, `y = tile * 16 + 12` (feet).
 - `G.lock` freezes the player for minigames. `G.paused` is set by any open dialog.
 - Derived stats (`maxw`, `maxEnergy`) come from upgrade tiers. Call `recalcStats()` from systems/upgrades.js after changing tiers or bonuses.

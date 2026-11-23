@@ -1,6 +1,6 @@
 // v308 (roadmap 100): the guided first day (data/guide.js). G.S.firstWeek.guide = { step, off, v }: the step reached,
 // whether it is over (finished or skipped) and the version of the steps it was saved under. Old farms load with it
-// off (core/state.js merge). Starts once the opening is over. G.guide is what the HUD shows this frame:
+// off (core/migrations.js step 8, by core/stage.js farmStage). Starts once the opening is over. G.guide is what the HUD shows this frame:
 // { id, say, slot, use, count, aim: {tx, ty} | null } or null.
 // v310 (roadmap 102): the field is one looping step that picks the next real action each moment (farmAction), so
 // the line, the slot, the key and the arrow always agree, and till, plant and water repeat for every seed.
