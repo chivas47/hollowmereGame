@@ -96,3 +96,25 @@ test('the furnace: in the kit, set down (an arrow at it), and ore with no coal',
   assert.ok(due(S, { ...S.bag }).includes('coal'));
   S.bag.coal = 1; assert.ok(!due(S, { ...S.bag }).includes('coal'), 'not with coal in the bag');
 });
+
+test('eat now: low energy with food names the best food and pulses the Bag; without food, the old tired card', async () => {
+  const S = fresh(); S.bag.turnip = 2; S.bag.radish = 1;
+  S.energy = S.maxEnergy * 0.25;
+  const f = tipFacts(S, { ...S.bag }), t = TIPS.find((x) => x.id === 'eatNow');
+  assert.equal(f.bestFood, 'radish', 'the one giving the most energy');
+  assert.ok(due(S, { ...S.bag }).includes('eatNow'));
+  assert.match(t.text(S, f), /radish \(\+45 energy\)/); assert.equal(t.pulse, 'bag'); assert.equal(t.food(S, f), 'radish');
+  S.energy = S.maxEnergy * 0.1; assert.ok(!due(S, { ...S.bag }).includes('tired'), 'with food, eatNow says it');
+  S.bag.turnip = 0; S.bag.radish = 0; assert.ok(due(S, { ...S.bag }).includes('tired'));
+});
+
+test('sell before bed: crops in the bag after 5 pm, nothing shipped; the arrow shows the way to the bin from anywhere', async () => {
+  const { aimOf } = await import('../src/systems/tips.js');
+  const S = fresh(); S.firstWeek.guide.off = true; S.bag.turnip = 3; S.time = 18 * 60;
+  assert.ok(due(S, { ...S.bag }).includes('shipNow'));
+  S.bin = 40; assert.ok(!due(S, { ...S.bag }).includes('shipNow'), 'not once something is in the bin');
+  const aim = TIPS.find((x) => x.id === 'shipNow').aim;
+  S.map = 'farm'; assert.equal(MAPS.farm.grid[aimOf(S, aim).ty][aimOf(S, aim).tx], 'B');
+  S.map = 'village'; const out = Object.entries(MAPS.village.exits).find(([, e]) => e.to === 'farm')[0].split(',').map(Number);
+  assert.deepEqual(aimOf(S, aim), { tx: out[0], ty: out[1] }, 'from the village: the way to the farm');
+});

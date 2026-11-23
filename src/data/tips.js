@@ -23,10 +23,10 @@ export const TIPS = [
     text: (S, f) => `${ITEMS[f.food]?.name || 'It'} gives ${f.energy(f.food)} energy. Open the Bag (${keyName('bag')}) and press Eat, or put it on a slot (${keyName('slot10')}) and press ${keyName('use')}.` },
   { id: 'energy', title: 'Energy', when: (S) => S.energy <= S.maxEnergy * 0.6,
     text: () => `Each swing of a tool uses some. Food gives it back; a night in bed fills it. Eat from the Bag (${keyName('bag')}).` },
-  { id: 'tired', title: 'Nearly out of energy', when: (S) => S.energy <= S.maxEnergy * 0.15,
+  { id: 'tired', title: 'Nearly out of energy', when: (S, f) => S.energy <= S.maxEnergy * 0.15 && !f.bestFood,   // v316: with food in the bag, eatNow says what to eat
     text: () => `At zero you cannot use tools. Eat something from the Bag (${keyName('bag')}), or go to bed.` },
   { id: 'ship', title: 'Selling', when: (S, f) => f.gotAny((k) => CROPS[k] && ITEMS[k]),
-    text: () => 'Drop crops in the shipping bin by your house. The money comes overnight.', aim: { map: 'farm', tile: 'B' } },
+    text: () => 'Drop crops in the shipping bin by your house. The money comes overnight.', aim: { map: 'farm', tile: 'B', route: true } },
   { id: 'craft', title: 'Wood and stone', when: (S, f) => f.got('wood') || f.got('stone'),
     text: () => `They build things: fences, chests, sprinklers, a furnace. Open Craft (${keyName('craft')}) to see what you can make.` },
   { id: 'ore', title: 'Ore', when: (S, f) => f.gotAny((k) => /ore$/.test(ITEMS[k]?.name || '') && ITEMS[k]?.material),
@@ -64,5 +64,14 @@ TIPS.push(
     text: () => `Face the furnace, press ${keyName('use')} and pick Put in (${MACHINES.furnace.hint}). The bar is ready at once: pick Collect to take it.`, aim: { placed: 'furnace' } },
   { id: 'coal', title: 'Coal', when: (S, f) => f.placed('furnace') && !(S.bag.coal > 0) && ORES.some((k) => (S.bag[k] || 0) >= 5),
     text: () => `Each bar takes 1 coal. Break stone in the Hollow (some hold coal), or buy it at the Anvil for ${fmtGold(COAL_COST)}.` },
+);
+// v316 (roadmap 108): food and the bin get guiding hands too. pulse: 'bag' makes the Bag button pulse, then that
+// food's Eat button inside the Bag (and its hotbar item slot, if it sits on one) (ui/tips.js). route: the arrow also
+// shows the way to the map from anywhere else (systems/wayfind.js).
+TIPS.push(
+  { id: 'eatNow', title: 'Eat something', when: (S, f) => S.energy <= S.maxEnergy * 0.3 && !!f.bestFood,
+    text: (S, f) => `You have ${ITEMS[f.bestFood].name.toLowerCase()} (+${f.energy(f.bestFood)} energy). Open the Bag (${keyName('bag')}) and press Eat.`, pulse: 'bag', food: (S, f) => f.bestFood },
+  { id: 'shipNow', title: 'Sell before bed', when: (S, f) => S.time >= 17 * 60 && !(S.bin > 0) && f.has((k) => CROPS[k] && ITEMS[k]) && !f.guiding,
+    text: () => 'You are carrying crops. Drop them in the shipping bin by your house tonight; the money comes in the morning.', aim: { map: 'farm', tile: 'B', route: true } },
 );
 export const TIP_SHOW = 18;   // seconds a card stays up, unless dismissed sooner

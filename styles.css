@@ -551,3 +551,7 @@ body.titling .game-only,body.titling #menu .game-only{display:none}
 .tip button{font:inherit;font-size:16px;color:var(--cream);background:var(--soil);border:2px solid var(--seam);border-radius:5px;padding:1px 10px;cursor:pointer}
 .hud-hidden .tip{display:none!important}
 .contrast .tip{background:#000;border-color:var(--cream);color:#fff}
+/* v316 (roadmap 108): the Bag button and an Eat button pulse when a tip points at them */
+.pill.guided,button.guided:not(.slot){animation:guidedBtn 1s ease-in-out infinite;box-shadow:0 0 0 3px var(--harvest)}
+@keyframes guidedBtn{50%{box-shadow:0 0 0 5px var(--harvest);filter:brightness(1.2)}}
+@media (prefers-reduced-motion:reduce){.pill.guided,button.guided:not(.slot){animation:none}}

@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v316: A guiding hand for food and the shipping bin
+- Eat something: the first time your energy drops under 30% with food in the bag, a card names the food that gives the most energy, and a pulse leads you to it one step at a time: the Bag button, then that food in the Bag, then its Eat button (and its hotbar item slot, if it sits on one). The pulse stops once it is eaten. With no food, the old "Nearly out of energy" card shows instead.
+- Sell before bed: the first evening (after 5 pm) you carry crops with nothing in the bin yet, a card says to ship them tonight, with an arrow that shows the way to the bin from anywhere (from the village: the road to the farm).
+- The first-crop Selling card's arrow now shows the way from other maps too.
+- New save data: none.
+
 ## v315: Tips for the furnace
 - Crafted and still in your kit: a card says to pick the kit (7), face open farm grass and press Use to set it down.
 - Set down: a card says how to smelt (press Use, pick Put in with 5 ore and 1 coal; the bar is ready at once, pick Collect), with an arrow at your furnace while you are on its map.

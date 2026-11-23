@@ -6,12 +6,12 @@ import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, emit } from '../core/events.js';
 import { addUpdater, addLayer } from '../core/registry.js';
-import { doorOf } from './wayfind.js';
+import { doorOf, exitToward } from './wayfind.js';
 import { parsePlaceKey } from './world.js';
 import { CROPS } from '../data/crops.js';
 import { SEASONS, SEASON_LENGTH } from '../data/seasons.js';
 import { TIPS, TIP_SHOW } from '../data/tips.js';
-import { energyOf } from './cooking.js';
+import { energyOf, edible } from './cooking.js';
 import { guideOn } from './guide.js';
 import { drawPointer } from '../render/guide.js';
 import { dateParts } from '../core/time.js';
@@ -31,6 +31,8 @@ export function tipFacts(S, before) {
     energy: (k) => energyOf(k),
     food: gained.find((k) => energyOf(k) > 0) || null,
     seasonLeft: SEASON_LENGTH - d + 1, next, guiding: guideOn(S),
+    // v316: the food in the bag that gives the most energy (to suggest eating)
+    bestFood: Object.keys(bag).filter((k) => bag[k] > 0 && edible(k) && energyOf(k) > 0).sort((a, b) => energyOf(b) - energyOf(a))[0] || null,
     placed: (kind) => Object.values(S.placed || {}).some((p) => p.kind === kind),   // v315
     dying: Object.values(S.soil || {}).filter((t) => t.crop && !t.crop.dead && !CROPS[t.crop.type]?.seasons.includes(next)).length,
   };
@@ -52,7 +54,8 @@ export function aimOf(S, aim) {
     const { x, y } = parsePlaceKey(k);
     return { tx: x, ty: y };
   }
-  return S.map === aim.map ? doorOf(S.map, aim.tile) : null;
+  if (S.map === aim.map) return doorOf(S.map, aim.tile);
+  return aim.route ? exitToward(S.map, aim.map) : null;   // v316: the way there from elsewhere
 }
 
 export function dismissTip() { shown = null; left = 0; G.tip = null; }
@@ -61,11 +64,12 @@ let t = 0;
 addUpdater((dt) => {
   const S = G.S;
   if (!S?.tips || !S.firstWeek?.arrived) return;
+  G.tipPulse = shown?.pulse ? { pulse: shown.pulse, food: shown.food } : null;   // v316: kept while the Bag is open, so its Eat button can pulse
   if (G.cut || G.dialog?.you) { G.tip = null; return; }   // wait, without counting down
   if ((t -= dt) <= 0) {
     t = 0.3;
     const f = tipFacts(S, last);
-    for (const tip of dueTips(S, f)) queue.push({ id: tip.id, title: tip.title, text: tip.text(S, f), aim: tip.aim || null });
+    for (const tip of dueTips(S, f)) queue.push({ id: tip.id, title: tip.title, text: tip.text(S, f), aim: tip.aim || null, pulse: tip.pulse || null, food: tip.food?.(S, f) || null });
     last = { ...S.bag };
   }
   if (!shown && queue.length) {
