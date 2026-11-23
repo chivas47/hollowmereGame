@@ -9,7 +9,8 @@ import { addInteraction, addLayer, addEntities, addPrompt } from '../core/regist
 import { MAPS } from '../data/maps.js';
 import { FURNITURE, WALLPAPERS, FLOORS, DECOR_COST, CATALOGUE_COST, RENOVATIONS, turnsOf } from '../data/furniture.js';
 import { drawFurniture } from '../render/sprites.js';
-import { placePlayer, parsePlaceKey, placeKey, facing } from './world.js';
+import { placePlayer, parsePlaceKey, placeKey } from './world.js';
+import { reachTiles } from './reach.js';
 import { rebuildHouse } from './layouts.js';
 
 const free = () => G.S.house.catalogue;
@@ -101,8 +102,8 @@ export function turnFurniture(tx, ty, mapId = G.S.map, to = null) {
 export const canTurn = (tx, ty) => turnsOf(G.S.placed[placeKey(G.S.map, tx, ty)]?.kind) > 1;
 // The R key: the furniture you face.
 export function turnFacing() {
-  const f = facing(), p = G.S.placed[placeKey(G.S.map, f.tx, f.ty)];
-  if (G.lock || !FURNITURE[p?.kind]) { notify('Face a piece of your furniture to turn it.'); return false; }
+  const f = reachTiles().find((q) => FURNITURE[G.S.placed[placeKey(G.S.map, q.tx, q.ty)]?.kind]);   // v306: the nearest in reach
+  if (G.lock || !f) { notify('Face a piece of your furniture to turn it.'); return false; }
   return turnFurniture(f.tx, f.ty);
 }
 

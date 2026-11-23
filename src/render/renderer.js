@@ -9,6 +9,8 @@ import { PAL, DRY_TREES } from '../data/seasons.js';
 import { LIGHT, NIGHT_FROM } from '../data/atmosphere.js';
 import { drawGrass, drawPath, drawTree, treeStamp, drawWater, drawRock, drawCaveFloor, drawGreenhouseFloor, drawGlassWall, drawQuarry, drawSand, drawBowl, drawRavine, drawBridge, drawBrokenBridge, drawHouseTile, drawTerrain, drawFlowers, drawBuilding, drawProp, coveredTiles, HOUSE_ART, CAVE_ART, PROP_ART, PROP_GROUND } from './tiles.js';
 import { facing, tileAt } from '../systems/world.js';
+import { slotKind } from '../data/hotbar.js';
+import { REACH } from '../data/reach.js';
 import { WALLPAPERS, FLOORS } from '../data/furniture.js';
 import { TERRAIN_SHEET, CAVE_SHEET } from '../data/sprites.js';
 import { drawHomeTile } from './interiors.js';
@@ -181,9 +183,11 @@ export function draw(c) {
   if (list.length > 1) { c.fillStyle = '#1c1612'; c.fillRect(list[1].x0 - 1, 0, 2, list[1].h); }   // the line between the halves
 }
 
+// v307: the outline only for tools that need a precise tile (data/reach.js).
+const OUTLINE = new Set(REACH.outline);
 // The tile the farmer a view follows is facing.
 function facingOf(p) {
-  if (p === G.S) return facing();
+  if (p === G.S) return G.target || facing();   // v306: the tile Use would reach (systems/reach.js)
   const [dx, dy] = DIRS[p.dir];
   return { tx: Math.floor(p.x / T) + dx, ty: Math.floor((p.y - 2) / T) + dy };
 }
@@ -194,8 +198,8 @@ function drawWorld(c) {
   if (sk) { const m = sk.mag * Math.min(1, sk.t / sk.max * 1.5); const s = visible(); c.fillStyle = '#000'; c.fillRect(s.x, s.y, s.w, s.h); c.translate(Math.round((Math.random() - 0.5) * 2 * m), Math.round((Math.random() - 0.5) * 2 * m)); }
   c.drawImage(background(), 0, 0);
   drawLayers(c, 0, 49);
-  const f = facingOf(G.view || G.S), t = tileAt(f.tx, f.ty);
-  if (t && !G.cut && !['T', 'X', 'w', 'I', '.'].includes(t))   // v240: no facing outline in a cutscene
+  const who = G.view || G.S, f = facingOf(who), t = tileAt(f.tx, f.ty);
+  if (t && !G.cut && OUTLINE.has(slotKind(who)) && !['T', 'X', 'w', 'I', '.'].includes(t))   // v240: no facing outline in a cutscene
     { c.strokeStyle = 'rgba(255,246,214,.6)'; c.lineWidth = 1; c.strokeRect(f.tx * T + 0.5, f.ty * T + 0.5, T - 1, T - 1); }
   collectEntities().sort((a, b) => a.y - b.y).forEach((e) => e.draw(c));
   drawLayers(c, 50, 999);

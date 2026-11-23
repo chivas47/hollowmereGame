@@ -18,7 +18,7 @@ import { SKILLS } from '../data/skills.js';
 import { BAG_KINDS, ITEM_KIND, MADE_FROM, madeFrom } from '../data/bag.js';
 import { counts, valueOf, unitValue } from './quality.js';
 import { buffText } from './cooking.js';
-import { facing } from './world.js';
+import { reachTiles } from './reach.js';
 import { chestAt, store } from './storage.js';
 import { fmtGold } from '../core/format.js';
 
@@ -120,8 +120,8 @@ export const prices = (k) => [0, 1, 2, 3].map((t) => unitValue(k, t));
 
 // The chest you face, if any, and putting every one of an item into it.
 export function facedChest() {
-  const { tx, ty } = facing();
-  return chestAt(tx, ty) ? { x: tx, y: ty } : null;
+  const t = reachTiles().find((q) => chestAt(q.tx, q.ty));   // v306: the nearest chest in reach
+  return t ? { x: t.tx, y: t.ty } : null;
 }
 export function stash(k) {
   const c = facedChest();

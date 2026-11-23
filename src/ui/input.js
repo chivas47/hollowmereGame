@@ -113,8 +113,9 @@ export function initInput(canvas) {
     if (at.v.who !== 'you') return;   // the second farmer's half: theirs is the controller
     const tx = Math.floor(at.x / T), ty = Math.floor(at.y / T);
     const p = playerTile(), dx = tx - p.tx, dy = ty - p.ty;
-    if (Math.abs(dx) + Math.abs(dy) === 1) { G.S.dir = dx < 0 ? 'left' : dx > 0 ? 'right' : dy < 0 ? 'up' : 'down'; act(); }
-    else if (dx || dy) notify('Walk next to that tile, then tap it.');
+    // v306: any of the eight tiles around you, or your own (systems/reach.js); you turn toward it unless it is underfoot
+    if (Math.max(Math.abs(dx), Math.abs(dy)) <= 1) { if (dx || dy) G.S.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 'left' : 'right') : (dy < 0 ? 'up' : 'down'); act({ tx, ty }); }
+    else notify('Walk next to that tile, then tap it.');
   });
 
   $('#bagBtn').addEventListener('click', (e) => { emit('ui:inventory'); e.currentTarget.blur(); });

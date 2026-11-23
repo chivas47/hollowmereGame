@@ -2,6 +2,19 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v307: The tile outline only for precise tools
+- The outline on the ground shows only while you hold the hoe, the watering can, seeds or the kit (placing), the tools where the exact tile matters. With anything else the prompt still says what Use will do, without the box.
+- Works for the second farmer's half too, by what they hold.
+- New save data: none.
+
+## v306: Use reaches what is near you
+- Use no longer needs you lined up on the exact tile. When nothing is on the tile in front, it acts on the nearest thing in reach: under your feet first, then the tiles either side of the one in front, then either side of you. Forage, neighbours, chests, doors, seats and harvests all count.
+- The HUD prompt and the outline show the tile Use will act on, so you can see the pick before you press.
+- The mouse or a tap now works on any of the eight tiles around you, and on your own tile, not only the four straight beside you.
+- Kept exact on purpose: on farmland (the farm, the greenhouse, the island farm) the hoe, can, seeds and kit still act on the tile in front, so tilling and watering never harvest a neighbouring crop by mistake. The weapon always swings where you face, and any tool aimed at something solid (a rock, a tree, debris) stays on it, so a pickaxe never climbs a ladder beside the rock.
+- R (turn furniture) and putting things in a chest from the bag find the nearest piece or chest in reach too.
+- New save data: none.
+
 ## v305: Sit down
 - Chairs, stools, benches, sofas and armchairs are seats now: in every neighbour's cottage, the shops, the tavern and the other buildings you walk into, the benches on the village and town greens, and the seats you place in your own house.
 - Face one and press Use (the prompt says Sit down), or walk into it for a moment. You sit facing the way the seat faces (a stool keeps your facing); a seat with its own line (a neighbour's worn armchair) says it as you sit.
