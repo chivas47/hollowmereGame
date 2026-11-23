@@ -1,9 +1,8 @@
 // Entry point. Importing a system registers it; remove an import to switch a feature off.
 import { G } from './core/game.js';
-import { emit, changed, notify } from './core/events.js';
+import { emit, changed } from './core/events.js';
 import { runUpdaters } from './core/registry.js';
 import { load, merge } from './core/state.js';
-import { START } from './core/constants.js';
 import { draw } from './render/renderer.js';
 
 // Systems (order of import does not matter; priorities live in each file)
@@ -27,6 +26,7 @@ import './systems/homes.js';   // v76: the neighbours' cottages
 import './systems/venues.js';   // v98: buildings you walk into
 import './systems/reach.js';   // v306: Use reaches the nearest thing, not only the exact tile in front
 import './systems/seats.js';   // v305: sitting on chairs, sofas and benches
+import './systems/guide.js';   // v308: the guided first day
 import './systems/fishing.js';
 import './systems/upgrades.js';
 import './systems/livestock.js';
@@ -55,6 +55,7 @@ import './systems/attic.js';      // v172: the attic ladder
 import './systems/train.js';      // v179: the goods train
 import './systems/birthday.js';   // v174: the birthday dinner
 import './ui/birthday.js';
+import './ui/guide.js';   // v308: the guided first day's line
 import './systems/professions.js';
 import './systems/cooking.js';
 import './systems/hotbarItems.js';
@@ -216,7 +217,6 @@ function play() {
   G.paused = false;
   emit('game:reset'); emit('game:loaded');
   changed();
-  if (G.S.day === 1 && G.S.time === START && !Object.keys(G.S.soil).length) notify('Pick the hoe and till the grass below the path.');
   if (!running) { running = true; requestAnimationFrame(frame); }
 }
 

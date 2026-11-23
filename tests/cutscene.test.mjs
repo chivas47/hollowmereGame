@@ -151,7 +151,9 @@ test('a new farm opens with the opening scene; skipped, you are at the farmhouse
   assert.equal(G.cut, null);
   assert.equal(G.S.firstWeek.arrived, true);
   assert.deepEqual([G.S.map, Math.floor(G.S.x / 16), Math.floor(G.S.y / 16), G.S.dir], ['farm', 3, 4, 'down']);
-  assert.ok(toasts.some((m) => /first week/.test(m)));
+  // v308: the guided first day takes over from the old notice about the first week (systems/guide.js)
+  assert.ok(!toasts.some((m) => /first week/.test(m)));
+  assert.equal(G.S.firstWeek.guide.off, false);
 });
 
 test('watched to the end, the opening walks you from the village road to the farmhouse door', () => {

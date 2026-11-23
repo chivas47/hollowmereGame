@@ -30,7 +30,7 @@ export function newState() {
     bin: 0,
     binLast: null,   // v236: the last stack put in the bin today, { k, t, n, value }; it can come back out until night
     journal: { story: {}, log: [], seen: [], pins: [], track: null, markers: true },   // v114: story steps done, finished quests, places found, map pins, tracked objective (systems/journal.js)
-    firstWeek: { arrived: false, done: {}, over: false },   // v122: the arrival scene and the first week's goals (systems/firstweek.js)
+    firstWeek: { arrived: false, done: {}, over: false, guide: { step: 0, off: false } },   // v122: the arrival scene and the first week's goals (systems/firstweek.js); v308: the guided first day (systems/guide.js)
     reckoning: { done: 0, points: 0, lamps: 0, pending: false, again: 0, lid: false },   // v128: Bram's reckoning (systems/reckoning.js)
     news: { day: 0, yesterday: {}, today: { museumAt: 0, spouseAt: null, quests: [], skills: [] } },   // v153: what you did, for the neighbours to talk about (systems/news.js)
     // v130: the second farmer's energy (systems/partner.js); full each morning. v142: their name and look, where
@@ -168,7 +168,8 @@ export function merge(saved) {
   const sj = saved.journal || {};   // v114
   s.journal = { story: { ...(sj.story || {}) }, log: [...(sj.log || [])], seen: [...(sj.seen || [])], pins: [...(sj.pins || [])], track: sj.track || null, markers: sj.markers !== false };
   const fw = saved.firstWeek || {};   // v122
-  s.firstWeek = { arrived: !!fw.arrived, done: { ...(fw.done || {}) }, over: !!fw.over };
+  const gd = fw.guide;   // v308: a farm from before the guide skips it
+  s.firstWeek = { arrived: !!fw.arrived, done: { ...(fw.done || {}) }, over: !!fw.over, guide: gd ? { step: +gd.step || 0, off: !!gd.off } : { step: 0, off: !!fw.arrived } };
   s.reckoning = { ...newState().reckoning, ...(saved.reckoning || {}) };   // v128
   const sn = saved.news || {}, st = sn.today || {};   // v153
   s.news = { day: sn.day || 0, yesterday: { ...(sn.yesterday || {}) }, today: { museumAt: st.museumAt || 0, spouseAt: st.spouseAt || null, quests: [...(st.quests || [])], skills: [...(st.skills || [])] } };

@@ -4,11 +4,12 @@
 import { G } from '../core/game.js';
 import { on } from '../core/events.js';
 import { tracked } from '../systems/journal.js';
+import { guideOn } from '../systems/guide.js';
 import { hud } from './hudPrefs.js';
 import { $, esc } from './dom.js';
 
 function render() {
-  const el = $('#goal'), list = hud.goal ? tracked() : [];
+  const el = $('#goal'), list = hud.goal && !guideOn() ? tracked() : [];   // v308: the guide's line stands in for it
   el.hidden = !list.length;
   if (!list.length) return;
   const more = list.length > 1 ? `<span> +${list.length - 1} in the journal</span>` : '';

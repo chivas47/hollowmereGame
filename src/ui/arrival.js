@@ -2,8 +2,6 @@
 import { G } from '../core/game.js';
 import { on, changed } from '../core/events.js';
 import { save } from '../core/state.js';
-import { keyName } from '../core/controls.js';
-import { notify } from '../core/events.js';
 import { playCutscene } from '../systems/cutscene.js';
 
 // v241 (roadmap 84b): the opening cutscene (data/cutscenes.js opening) replaces the arrival pages. Skipped or
@@ -11,7 +9,6 @@ import { playCutscene } from '../systems/cutscene.js';
 function done() {
   G.S.firstWeek.arrived = true;
   save(); changed();
-  notify(`Each day of your first week brings one goal. It shows in the corner of the field, and your journal (${keyName('journal')}) explains it.`);
 }
 
 on('game:loaded', () => { if (G.S.profile && !G.S.firstWeek.arrived) playCutscene('opening', { replay: true, then: done }); });
