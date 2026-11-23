@@ -49,15 +49,34 @@ function emptyGrid(w = W, h = H) {
 const put = (m, list, t) => list.forEach(([x, y]) => { m[y][x] = t; });
 const fill = (m, x0, y0, x1, y1, t) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) m[y][x] = t; };
 
-export function farmGrid() {
-  const m = emptyGrid();
+// v320 (roadmap 112a): any size (a layout's size, data/layouts.js; 24 x 16 unless it says). The top of the farm (house,
+// path, bin, well, workbench, the pet's bowl) is the same on every size; the east road, the path south and the corner
+// trees follow the edges.
+export const FARM_SOUTH_X = 10;   // the column of the path south to the forest
+export function farmGrid(w = W, h = H) {
+  const m = emptyGrid(w, h);
   fill(m, 1, 1, 5, 3, 'H'); m[3][3] = 'D';
   m[3][8] = 'B'; m[3][12] = 'W'; m[3][15] = 'K';
-  m[14][10] = 'P'; m[15][10] = 'E';   // v43: the path south to the forest (clear of every layout's water and the yards)
+  m[h - 2][FARM_SOUTH_X] = 'P'; m[h - 1][FARM_SOUTH_X] = 'E';   // v43: the path south to the forest (clear of every layout's water and the yards)
   m[5][6] = 'b';   // the pet's water bowl (systems/pets.js)
-  fill(m, 1, 4, W - 2, 4, 'P'); m[4][W - 1] = 'E'; m[4][0] = 'E';
-  put(m, [[22, 1], [22, 2], [22, 3], [6, 1], [7, 1], [16, 1], [17, 1], [1, 14], [22, 14], [22, 13], [1, 13]], 'T');
+  fill(m, 1, 4, w - 2, 4, 'P'); m[4][w - 1] = 'E'; m[4][0] = 'E';
+  put(m, [[w - 2, 1], [w - 2, 2], [w - 2, 3], [6, 1], [7, 1], [16, 1], [17, 1], [1, h - 2], [w - 2, h - 2], [w - 2, h - 3], [1, h - 3]], 'T');
   return m;
+}
+
+// v320 (roadmap 112a): the farm's ways out for its size, and the ways in from the wilds (east) and the forest (south),
+// which set you down one tile inside the farm's edge. systems/layouts.js calls joinFarm() whenever the farm is built.
+function farmExits(w, h) {
+  return {
+    [`${w - 1},4`]: { to: 'wilds', x: 1, y: 4, dir: 'right' },
+    '0,4': { to: 'village', x: VILLAGE_SIZE.w - 2, y: 8, dir: 'left' },
+    [`${FARM_SOUTH_X},${h - 1}`]: { to: 'forest', x: FARM_SOUTH_X, y: 1, dir: 'down' },   // v43
+  };
+}
+export function joinFarm(w, h) {
+  MAPS.farm.exits = farmExits(w, h);
+  MAPS.wilds.exits['0,4'].x = w - 2;
+  MAPS.forest.exits[`${FARM_SOUTH_X},0`].y = h - 2;
 }
 
 function wildsGrid() {
@@ -402,11 +421,7 @@ export const MAPS = {
   farm: {
     name: 'Farm', salt: 11, grid: farmGrid(),
     objects: [{ art: 'house', x: 1, y: 1 }, { art: 'bin', x: 8, y: 3 }, { art: 'well', x: 12, y: 3 }, { art: 'workbench', x: 15, y: 3 }],   // v294: the empty seed stall is gone (seeds are sold in town)
-    exits: {
-      [`${W - 1},4`]: { to: 'wilds', x: 1, y: 4, dir: 'right' },
-      '0,4': { to: 'village', x: VILLAGE_SIZE.w - 2, y: 8, dir: 'left' },
-      '10,15': { to: 'forest', x: 10, y: 1, dir: 'down' },   // v43
-    },
+    exits: farmExits(W, H),   // v320: joinFarm() sets them for the farm's size
     spawn: { x: 3, y: 4, dir: 'down' },
   },
   wilds: {

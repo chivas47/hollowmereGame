@@ -23,6 +23,8 @@ function links() {
 }
 let LINKS = null;
 const hops = {};
+// v320 (roadmap 112a): the ways between maps changed (the farm built at another size): work them out again.
+export function forgetRoutes() { LINKS = null; for (const k of Object.keys(hops)) delete hops[k]; }
 
 // The first link to take from one map toward another (fewest maps on the way), or null.
 export function nextHop(from, to) {

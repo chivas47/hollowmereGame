@@ -66,7 +66,7 @@ function arrivals(id) {
 }
 const near = (p, q) => Math.abs(p[0] - q[0]) + Math.abs(p[1] - q[1]) <= 1;
 
-test('every exit lands on open ground of a real map, not on another exit', () => {
+function checkLandings() {
   const bad = [];
   for (const id of Object.keys(MAPS)) for (const e of exitsOf(id)) {
     if (!MAPS[e.to]) { bad.push(`${id} ${e.at}: leads to missing map ${e.to}`); continue; }
@@ -75,8 +75,9 @@ test('every exit lands on open ground of a real map, not on another exit', () =>
     if (tile(id, e.at) !== 'E' && !SET_ON_ENTRY(id)) bad.push(`${id} ${e.at}: the exit tile is '${tile(id, e.at)}', not E`);
   }
   for (const w of WAYS) if (!open(w.to, w.land)) bad.push(`${w.why}: lands on '${tile(w.to, w.land)}' at ${w.to} ${w.land}`);
-  assert.deepEqual(bad, []);
-});
+  return bad;
+}
+test('every exit lands on open ground of a real map, not on another exit', () => assert.deepEqual(checkLandings(), []));
 
 // Where you land on `to` coming from `from`: its exits and ways in, and a cottage's front door.
 function landings(from, to) {
@@ -86,7 +87,7 @@ function landings(from, to) {
   return out;
 }
 
-test('every exit has a way back that lands beside it', () => {
+function checkWaysBack() {
   const bad = [];
   for (const id of Object.keys(MAPS)) for (const e of exitsOf(id)) {
     if (SET_ON_ENTRY(e.to)) continue;
@@ -94,8 +95,9 @@ test('every exit has a way back that lands beside it', () => {
     if (!back.length) { bad.push(`${id} ${e.at} -> ${e.to}: no way back`); continue; }
     if (!back.some((b) => near(b, e.at))) bad.push(`${id} ${e.at} -> ${e.to}: the way back lands at ${back.join(' or ')}, not beside it`);
   }
-  assert.deepEqual(bad, []);
-});
+  return bad;
+}
+test('every exit has a way back that lands beside it', () => assert.deepEqual(checkWaysBack(), []));
 
 test('every map can be reached from the farm', () => {
   const links = (id) => [...exitsOf(id).map((e) => e.to), ...WAYS.filter((w) => w.from === id).map((w) => w.to),
@@ -106,7 +108,7 @@ test('every map can be reached from the farm', () => {
   assert.deepEqual(Object.keys(MAPS).filter((id) => !seen.has(id)), []);
 });
 
-test('every exit, door and way out can be walked to from where you arrive', () => {
+function checkWalkable() {
   const bad = [];
   for (const id of Object.keys(MAPS)) {
     if (SET_ON_ENTRY(id)) continue;
@@ -123,8 +125,9 @@ test('every exit, door and way out can be walked to from where you arrive', () =
       }
     }
   }
-  assert.deepEqual(bad, []);
-});
+  return bad;
+}
+test('every exit, door and way out can be walked to from where you arrive', () => assert.deepEqual(checkWalkable(), []));
 
 test('every neighbour has a home that exists, with a door on open ground', () => {
   const bad = [];
@@ -254,4 +257,27 @@ test('75w: three new neighbours; Thorne on the mountain; Sabine and Emmet share 
   assert.equal(homeMap('emmet'), 'home_sabine');
   assert.equal(MAPS.home_sabine.grid[HOMES.emmet.spot[1]][HOMES.emmet.spot[0]], 'h');
   assert.equal(NPCS.length, 30, 'thirty people in the valley (the Lamplighter counted, as 75e to 75s did)');
+});
+
+// v320 (roadmap 112a): the farm takes its layout's size. Built at 64 x 48 (a layout made up for the test), its edges
+// still join the wilds, the village and the forest both ways, and every way in and out can be walked to.
+import { LAYOUTS } from '../src/data/layouts.js';
+import { buildFarm } from '../src/systems/layouts.js';
+import { nextHop } from '../src/systems/routes.js';
+test('112a: a farm larger than the screen joins the world as the 24 x 16 one does', () => {
+  LAYOUTS.testWide = { name: 'Test', size: { w: 64, h: 48 }, apply: () => {} };
+  try {
+    buildFarm('testWide');
+    assert.equal(MAPS.farm.grid.length, 48); assert.ok(MAPS.farm.grid.every((r) => r.length === 64));
+    assert.deepEqual(MAPS.farm.exits['63,4'], { to: 'wilds', x: 1, y: 4, dir: 'right' });
+    assert.deepEqual(MAPS.farm.exits['10,47'], { to: 'forest', x: 10, y: 1, dir: 'down' });
+    assert.equal(MAPS.wilds.exits['0,4'].x, 62); assert.equal(MAPS.forest.exits['10,0'].y, 46);
+    assert.deepEqual([...checkLandings(), ...checkWaysBack(), ...checkWalkable()], []);
+    assert.deepEqual(nextHop('forest', 'farm').arrive, [10, 46], 'neighbours walking from the forest arrive at the new edge');
+  } finally {
+    delete LAYOUTS.testWide;
+    buildFarm('open');
+  }
+  assert.equal(MAPS.farm.grid.length, H); assert.ok(MAPS.farm.grid.every((r) => r.length === W), 'back to 24 x 16, in place');
+  assert.equal(MAPS.wilds.exits['0,4'].x, W - 2); assert.equal(MAPS.forest.exits['10,0'].y, H - 2);
 });
