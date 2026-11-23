@@ -85,6 +85,7 @@ src/
     crowd.js          v145: the festival crowd (v151: EARLY, SETUP, CLOSE): STATIONS (places in the square, the way they face, festival kinds, a mood), ROLES (jobs by festival kind), CROWD (minutes per place), CHAT
     homes.js          where each neighbour lives: door, cottage, door hours (v76); homeEntry() inside the front door (v97); shares: a home of more than one, its owner's door and inside, a spot each from the plan's spots (v166)
     ranch.js          Tamsin's pens on the village map and where her cows and sheep stand (v166)
+    seats.js          v305: SEATS: which floor plan pieces, furniture shapes and tiles are seats, a placed seat's facing by turn, the walk-in delay and the seated pose
     venues.js         v98: VENUES, the buildings you walk into (shops, tavern, clinic, museum, ranch, town hall, theatre, lodge, Oasis, casino, coop, barn): where each stands, which tiles are its door, the dialog its counter opens, its floor plan; venueMap(), venueFront()
     interiors.js      v97: each cottage's floor plan (24x16 characters: walls, doors, rooms, a key of pieces with colours, things on top and a line to read), PIECES, piecesOf(), interiorGrid(), doorOf(), roomAt()
     scenes.js         heart scenes at 4 and 8 hearts
@@ -175,6 +176,7 @@ src/
     festivals.js      festival day logic, contests, market stall, decorations
     village.js        fountain flavour text
     homes.js          v76: entering neighbours' cottages (door hours, 2 hearts after dark)
+    seats.js          v305: sitting on chairs, stools, benches, sofas and armchairs (data/seats.js): seatAt(), sit(), stand(), seated() (player.js draws the seated pose); Use or walking into a seat for 0.3 s; nothing saved
     venues.js         v98: entering buildings (the same hours and notes their doors gave), the counter that opens each dialog, and drawing and looking at every floor plan's pieces (cottages too); staff who are not villagers stand behind their counters while open
     routes.js         v76: tilePath() (weighted grid search, paths before grass; v301: extra costs for soft spots, nearest when the goal cannot be reached) and nextHop() (doors and map edges) for neighbours; v301: openNear() (an outdoor place that has become solid, or holds something to keep off, moves to the nearest open tile), OUTDOOR
     projects.js       village projects: fundProject(), funded()
@@ -293,6 +295,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 |---|---|---|
 | 300 | sites.js | Any Use while placing or moving a building |
 | 200 | fishing.js | Any Use while a line is out, by whoever cast it (v134) |
+| 198 | seats.js | Any Use while seated (stand up) (v305) |
 | 199 | stable.js | Any Use while riding (get off) |
 | 100 | npcs.js | Facing a neighbour |
 | 97 | stable.js | Facing the horse (get on) |
@@ -340,6 +343,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 73 | venues.js | Any tile of a building with an inside: go in, or why it is shut (v98) |
 | 72 | homes.js | Cottage V front row (enter the owner's cottage, or why it is locked) (v76) |
 | 72 | venues.js | The counter or hopper inside a building: its dialog (v98) |
+| 72 | seats.js | A seat in a floor plan or a bench tile ƀ: sit (your own placed seats go to placeables' dialog, which has Sit) (v305) |
 | 71 | venues.js | Any piece inside a cottage or building, on the floor or on a wall (its own line, v97, v98) (v76) |
 | 71 | stalls.js | The Saturday stalls ʂ on the town green (buy from this week's seller, ui:stalls) (v165) |
 | 71 | village.js | Fountain F, cottage V away from its front (where the door is) |

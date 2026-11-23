@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v305: Sit down
+- Chairs, stools, benches, sofas and armchairs are seats now: in every neighbour's cottage, the shops, the tavern and the other buildings you walk into, the benches on the village and town greens, and the seats you place in your own house.
+- Face one and press Use (the prompt says Sit down), or walk into it for a moment. You sit facing the way the seat faces (a stool keeps your facing); a seat with its own line (a neighbour's worn armchair) says it as you sit.
+- Any step, Use or tool stands you up where you were. Changing map or the day ending does too.
+- Your own chairs still open their dialog on Use (pick up, turn), with a new Sit button; walking into them sits you.
+- Nothing changes in prices, energy or the hotbar. Farmer two does not sit yet.
+- New save data: none (you are saved standing beside the seat).
+
 ## v304: The Duskmarch redrawn
 - A sprite sheet of its own (dusk.png) with three kinds of weed clump, five headstones (a rounded slab, a cross, a snapped slab, an obelisk, an old leaning stone), crypts in slate and dressed stone with sealed arches and a cross on the ridge, a barred door with a green padlock, iron railings with spear tips, three gnarled dead trees, and a winter row with snow on every top. The six creatures redrawn in four tones: the bristle hog with a grizzled crest, the wasps with big eyes and beating wings, the stump lurker with rings and carved eyes, the rattler with a rusted sword, the shambler with sunken red eyes and a torn shirt, the haunt with folds and a glow at its heart. Mournfield has a cool grey cast and mist drifting between the headstones after 6 pm; the woods are shaded by their canopy, with flecks of light by day.
 - Drawing only: the code-drawn tiles stay as the fallback.

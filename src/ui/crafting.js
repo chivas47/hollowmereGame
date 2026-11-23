@@ -9,6 +9,7 @@ import { SKILLS } from '../data/skills.js';
 import { CROPS } from '../data/crops.js';
 import { placedAt, pickUp } from '../systems/placeables.js';
 import { turnFurniture, canTurn } from '../systems/house.js';
+import { seatAt, sit } from '../systems/seats.js';
 import { accepted, loadMachine, collectMachine } from '../systems/artisan.js';
 import { animalDef, homeOf } from '../systems/livestock.js';
 import { openModal, closeModal } from './modal.js';
@@ -77,6 +78,7 @@ function placedDialog() {
   }
   if (!p.item) html += '<p class="role" style="margin-top:12px">Picking it up puts it back in your kit.</p>';
   const actions = [];
+  if (seatAt(G.S.map, at.x, at.y)) { const { x, y } = at; actions.push(['Sit', () => { closeModal(); sit(x, y); }]); }   // v305 (systems/seats.js)
   if (canTurn(at.x, at.y)) actions.push(['Turn', () => { turnFurniture(at.x, at.y); }]);
   if (!p.item && !(p.crop && !p.crop.dead)) actions.push(['Pick up', () => { if (pickUp(at.x, at.y)) closeModal(); }]);
   actions.push(['Close', closeModal, true]);
