@@ -28,7 +28,7 @@ const inRect = (x, y, f) => x >= f.x && x < f.x + f.w && y >= f.y && y < f.y + f
 const reserved = (map, x, y) => map === 'farm' && (inRect(x, y, COOP.footprint) || inRect(x, y, BARN.footprint) || inRect(x, y, GREENHOUSE.footprint) || inRect(x, y, STABLE.footprint));
 
 function syncGrid() {
-  written.forEach((k) => { const { map, x, y } = parsePlaceKey(k); if (MAPS[map].grid[y][x] === TILE || MAPS[map].grid[y][x] === 'P') MAPS[map].grid[y][x] = ground(map); });
+  written.forEach((k) => { const { map, x, y } = parsePlaceKey(k); const t = MAPS[map].grid[y]?.[x]; if (t === TILE || t === 'P') MAPS[map].grid[y][x] = ground(map); });   // v321: ?. a tile of a larger farm loaded before
   written.clear();
   for (const k of Object.keys(G.S.placed)) {
     const { map, x, y } = parsePlaceKey(k), grid = MAPS[map]?.grid;

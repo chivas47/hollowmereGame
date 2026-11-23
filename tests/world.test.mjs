@@ -281,3 +281,16 @@ test('112a: a farm larger than the screen joins the world as the 24 x 16 one doe
   assert.equal(MAPS.farm.grid.length, H); assert.ok(MAPS.farm.grid.every((r) => r.length === W), 'back to 24 x 16, in place');
   assert.equal(MAPS.wilds.exits['0,4'].x, W - 2); assert.equal(MAPS.forest.exits['10,0'].y, H - 2);
 });
+
+// v321 (roadmap 112b): every layout, at its own size, joins the world: edges, ways back, every door walkable.
+test('112b: every farm layout joins the world at its own size', () => {
+  try {
+    for (const id of Object.keys(LAYOUTS)) {
+      buildFarm(id);
+      const bad = [...checkLandings(), ...checkWaysBack(), ...checkWalkable()];
+      assert.deepEqual(bad, [], id);
+    }
+    buildFarm('wide');
+    assert.equal(MAPS.farm.grid.length, 48); assert.equal(MAPS.farm.grid[0].length, 64);
+  } finally { buildFarm('open'); }
+});

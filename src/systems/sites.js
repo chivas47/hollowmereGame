@@ -59,7 +59,7 @@ function applySites() {
 const written = {};   // key -> [[x, y, tile under it]]
 export function placeBuilding(key) {
   const s = SITES[key], fp = s.def.footprint, state = G.S.built[key];
-  for (const [x, y, t] of written[key] || []) if (farm.grid[y][x] === s.tile) farm.grid[y][x] = t;
+  for (const [x, y, t] of written[key] || []) if (farm.grid[y]?.[x] === s.tile) farm.grid[y][x] = t;   // v321: ?. a larger farm loaded before
   written[key] = [];
   farm.objects = farm.objects.filter((o) => o.site !== key);
   if ((state === true || (state === 'pending' && s.placed)) && fp.x !== OFF) {

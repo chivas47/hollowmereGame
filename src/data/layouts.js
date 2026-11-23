@@ -8,6 +8,9 @@
 import { W, H } from '../core/constants.js';
 const rect = (m, x0, y0, x1, y1, t) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) m[y][x] = t; };
 const dots = (m, list, t) => list.forEach(([x, y]) => { m[y][x] = t; });
+// v321: a pond with its corners left as grass, and a loose stand of old trees around (cx, cy).
+const pond = (m, x0, y0, x1, y1) => { rect(m, x0, y0, x1, y1, 'O'); dots(m, [[x0, y0], [x1, y0], [x0, y1], [x1, y1]], 'g'); };
+const grove = (cx, cy) => [[0, 0], [2, 0], [1, 1], [3, 1], [-1, 2], [1, 2], [2, 3], [0, 4], [3, 4]].map(([dx, dy]) => [cx + dx, cy + dy]);
 
 export const LAYOUTS = {
   open: {
@@ -49,6 +52,20 @@ export const LAYOUTS = {
     desc: 'Sand and sea on the east side. Sea fishing at home, and a crate of supplies washes up most mornings.',
     apply: (m) => { rect(m, 17, 5, 20, 10, 'z'); rect(m, 21, 5, 22, 12, 'O'); },
     perks: { crates: { cap: 3, chance: 0.6 } },
+  },
+  // v321 (roadmap 112b): the big farm, 64 x 48 (Stardew's Standard Farm by role, about half its area; eight times the
+  // open field). The homestead corner is the same as every layout; the rest is wild land: two ponds to fish, old
+  // groves and boulders along the edges, and six times the open field's starting clutter to clear.
+  wide: {
+    name: 'Wide acres', role: 'Standard (large)',
+    desc: 'Eight times the open field and wild to start: two ponds to fish, old groves, and plenty to clear before it is all yours.',
+    size: { w: 64, h: 48 },
+    apply: (m) => {
+      pond(m, 40, 20, 46, 25); pond(m, 14, 33, 18, 36);
+      dots(m, grove(54, 7).concat(grove(58, 30), grove(4, 40), grove(30, 42), grove(50, 41), grove(27, 18)), 'T');
+      dots(m, [[34, 12], [47, 33], [22, 27], [60, 18], [8, 24], [38, 37]], 'R');
+    },
+    perks: { clutter: 6 },
   },
   meadow: {
     name: 'Meadow farm', role: 'Meadowlands',

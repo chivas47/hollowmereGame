@@ -87,7 +87,7 @@ function scatter(counts) {
 
 // Undo this module's tiles before another save loads (other modules check the grid on game:loaded).
 function unmark() {
-  written.forEach((t, k) => { const [x, y] = k.split(',').map(Number); if (grid()[y][x] === 'Y') grid()[y][x] = t; });
+  written.forEach((t, k) => { const [x, y] = k.split(',').map(Number); if (grid()[y]?.[x] === 'Y') grid()[y][x] = t; });   // v321: ?. a larger farm loaded before
   written.clear();
 }
 on('game:reset', unmark);
@@ -98,7 +98,8 @@ on('game:loaded', () => {
     S.debris = {};
     const fresh = S.day === 1 && !Object.keys(S.soil).length, extra = fresh ? LAYOUTS[S.layout]?.perks?.alders || 0 : 0;
     const { grass = 0, ...rest } = fresh ? { ...START_CLUTTER.new, alder: START_CLUTTER.new.alder + extra } : START_CLUTTER.old;
-    scatter(rest);
+    const times = fresh ? LAYOUTS[S.layout]?.perks?.clutter || 1 : 1;   // v321 (roadmap 112b): a bigger farm starts with more
+    scatter(Object.fromEntries(Object.entries(rest).map(([k, n]) => [k, n * times])));
     // v28: a new farm's grass grows in the animal yards, ready for the first animals to graze.
     const yards = [COOP.yard, BARN.yard].flatMap((yd) => { const t = []; for (let y = yd.y0; y <= yd.y1; y++) for (let x = yd.x0; x <= yd.x1; x++) if (grassTile(x, y)) t.push([x, y]); return t; });
     for (let i = 0; i < grass && yards.length; i++) put(...yards.splice(Math.floor(Math.random() * yards.length), 1)[0], { kind: 'grass' });
