@@ -85,7 +85,7 @@ src/
     crowd.js          v145: the festival crowd (v151: EARLY, SETUP, CLOSE): STATIONS (places in the square, the way they face, festival kinds, a mood), ROLES (jobs by festival kind), CROWD (minutes per place), CHAT
     homes.js          where each neighbour lives: door, cottage, door hours (v76); homeEntry() inside the front door (v97); shares: a home of more than one, its owner's door and inside, a spot each from the plan's spots (v166)
     ranch.js          Tamsin's pens on the village map and where her cows and sheep stand (v166)
-    reach.js          v306: REACH: tools that stay exact on farmland, the weapon that stays exact everywhere, how far ahead side tiles are measured
+    reach.js          v306: REACH: tools that stay exact on farmland, the weapon that stays exact everywhere, how far ahead side tiles are measured; v307 outline: the tools that show the tile outline (render/renderer.js)
     seats.js          v305: SEATS: which floor plan pieces, furniture shapes and tiles are seats, a placed seat's facing by turn, the walk-in delay and the seated pose
     venues.js         v98: VENUES, the buildings you walk into (shops, tavern, clinic, museum, ranch, town hall, theatre, lodge, Oasis, casino, coop, barn): where each stands, which tiles are its door, the dialog its counter opens, its floor plan; venueMap(), venueFront()
     interiors.js      v97: each cottage's floor plan (24x16 characters: walls, doors, rooms, a key of pieces with colours, things on top and a line to read), PIECES, piecesOf(), interiorGrid(), doorOf(), roomAt()

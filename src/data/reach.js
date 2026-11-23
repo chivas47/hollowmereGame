@@ -8,5 +8,6 @@
 export const REACH = {
   exact: ['hoe', 'can', 'seeds', 'kit'],   // on maps with farmland (the farm, the greenhouse, the island farm)
   always: ['sword'],   // everywhere: a swing is never taken over by a pickup
-  ahead: 10,   // pixels ahead of the feet the side tiles are measured from
+  ahead: 10,
+  outline: ['hoe', 'can', 'seeds', 'kit'],   // v307: the tile outline shows only while holding these (the prompt still names other targets)   // pixels ahead of the feet the side tiles are measured from
 };

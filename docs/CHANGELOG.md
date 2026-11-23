@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v307: The tile outline only for precise tools
+- The outline on the ground shows only while you hold the hoe, the watering can, seeds or the kit (placing), the tools where the exact tile matters. With anything else the prompt still says what Use will do, without the box.
+- Works for the second farmer's half too, by what they hold.
+- New save data: none.
+
 ## v306: Use reaches what is near you
 - Use no longer needs you lined up on the exact tile. When nothing is on the tile in front, it acts on the nearest thing in reach: under your feet first, then the tiles either side of the one in front, then either side of you. Forage, neighbours, chests, doors, seats and harvests all count.
 - The HUD prompt and the outline show the tile Use will act on, so you can see the pick before you press.

@@ -193,6 +193,7 @@ Short scenes played on the map for important moments (Stardew plays its events t
 - The kit slot places the selected crafted object on untilled farm grass. Press 7 again to switch. Face a placed object and press Use to open it (load, collect, pick up).
 - I opens the bag, C opens crafting.
 - V switches the HUD between full, minimal and hidden (v112).
+- v307: the tile outline shows only with the hoe, can, seeds or kit in hand (data/reach.js REACH.outline).
 - v306: Use reaches the nearest thing: the tile in front, else under you, else either side of the tile in front or of you (nearest first); the prompt and outline show the pick. Exact as before: the hoe, can, seeds and kit on farmland, the weapon everywhere, and any tool aimed at something solid. The mouse or a tap acts on any of the 8 tiles around you or your own.
 - v305: Use on a chair, stool, bench, sofa or armchair (or walking into one for 0.3 s) sits you on it, facing its way; any step, Use or tool stands you up. Your own placed seats open their dialog first (it has a Sit button). Only the first farmer sits.
 

@@ -79,3 +79,9 @@ test('a tool aimed at something solid stays on it (a pickaxe at a rock never cli
   stand('village', at, 'up', 'item'); SPOTS.add(`village:${at.x + 1},${at.y - 1}`);
   assert.deepEqual(useTarget(), { tx: at.x + 1, ty: at.y - 1 }, 'empty-handed, the thing beside it');
 });
+
+test('the tile outline is kept for tools that need a precise tile, all of them real hotbar tools', async () => {
+  const { REACH } = await import('../src/data/reach.js');
+  assert.deepEqual(REACH.outline, ['hoe', 'can', 'seeds', 'kit']);
+  for (const k of REACH.outline) assert.ok(HOTBAR.includes(k), k);
+});
