@@ -34,6 +34,7 @@ export function newState() {
     journal: { story: {}, log: [], seen: [], pins: [], track: null, markers: true },   // v114: story steps done, finished quests, places found, map pins, tracked objective (systems/journal.js)
     firstWeek: { arrived: false, done: {}, over: false, guide: { step: 0, off: false, v: GUIDE_VERSION } },   // v122: the arrival scene and the first week's goals (systems/firstweek.js); v308: the guided first day (systems/guide.js)
     tips: [],   // v311: first-time tips already shown (systems/tips.js)
+    music: { history: [], lastFor: {} },   // v318: recent tracks and each place's last one (systems/musicDirector.js)
     reckoning: { done: 0, points: 0, lamps: 0, pending: false, again: 0, lid: false },   // v128: Bram's reckoning (systems/reckoning.js)
     news: { day: 0, yesterday: {}, today: { museumAt: 0, spouseAt: null, quests: [], skills: [] } },   // v153: what you did, for the neighbours to talk about (systems/news.js)
     // v130: the second farmer's energy (systems/partner.js); full each morning. v142: their name and look, where
@@ -174,6 +175,8 @@ export function merge(saved) {
   const gd = fw.guide;   // v308: a farm from before the guide skips it
   s.firstWeek = { arrived: !!fw.arrived, done: { ...(fw.done || {}) }, over: !!fw.over, guide: gd ? { step: gd.v === GUIDE_VERSION ? +gd.step || 0 : 0, off: !!gd.off, v: GUIDE_VERSION } : { step: 0, off: !!fw.arrived, v: GUIDE_VERSION } };   // v310: steps saved under older numbers start again (done ones pass at once)
   s.reckoning = { ...newState().reckoning, ...(saved.reckoning || {}) };   // v128
+  const sm = saved.music || {};   // v318
+  s.music = { history: Array.isArray(sm.history) ? sm.history.filter((x) => typeof x === 'string').slice(0, 8) : [], lastFor: sm.lastFor && typeof sm.lastFor === 'object' ? { ...sm.lastFor } : {} };
   s.tips = Array.isArray(saved.tips) ? [...saved.tips] : (saved.day > 7 ? TIPS.map((t) => t.id) : []);   // v311: past the first week, a farm from before the tips knows its way
   const sn = saved.news || {}, st = sn.today || {};   // v153
   s.news = { day: sn.day || 0, yesterday: { ...(sn.yesterday || {}) }, today: { museumAt: st.museumAt || 0, spouseAt: st.spouseAt || null, quests: [...(st.quests || [])], skills: [...(st.skills || [])] } };

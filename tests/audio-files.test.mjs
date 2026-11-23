@@ -4,18 +4,17 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { ALL_AUDIO, AUDIO_DIR, MUSIC_FILES, SFX_FILES, BED_FILES, CALL_FILES, STEP_FILES } from '../src/data/audio.js';
-import { MOODS } from '../src/data/music.js';
+import { ALL_AUDIO, AUDIO_DIR, SFX_FILES, BED_FILES, CALL_FILES, STEP_FILES } from '../src/data/audio.js';
+import { TRACKS } from '../src/data/musicTracks.js';
 import { STEPS } from '../src/data/atmosphere.js';
 import { SFX } from '../src/audio/sfx.js';
 
 const ROOT = new URL('..', import.meta.url).pathname;
-const entries = Object.values(ALL_AUDIO).flatMap((g) => Object.values(g));
+const entries = [...Object.values(ALL_AUDIO).flatMap((g) => Object.values(g)), ...TRACKS.map((t) => ({ file: t.file, gain: t.gain, loop: t.loop !== false, ogg: true }))];   // v318: music from the track database
 
 test('every sound the game can make has a file entry', async () => {
   const { BEDS, CALLS } = await import('../src/audio/ambience.js');
   assert.deepEqual(Object.keys(SFX_FILES).sort(), Object.keys(SFX).sort(), 'effects');
-  assert.deepEqual(Object.keys(MUSIC_FILES).sort(), Object.keys(MOODS).sort(), 'music moods');
   assert.deepEqual(Object.keys(BED_FILES).sort(), Object.keys(BEDS).sort(), 'ambient beds');
   assert.deepEqual(Object.keys(CALL_FILES).sort(), Object.keys(CALLS).sort(), 'ambient calls');
   assert.deepEqual(Object.keys(STEP_FILES).sort(), Object.keys(STEPS).sort(), 'footstep surfaces');
@@ -26,6 +25,7 @@ test('each file exists, is a WAV the browser can decode, and loops are long enou
     const path = join(ROOT, AUDIO_DIR, e.file);
     assert.ok(existsSync(path), e.file);
     const b = readFileSync(path);
+    if (e.file.endsWith('.ogg')) { assert.equal(b.toString('ascii', 0, 4), 'OggS', e.file); assert.ok(b.length > 4000, `${e.file}: ${b.length} bytes`); continue; }
     assert.equal(b.toString('ascii', 0, 4), 'RIFF', e.file); assert.equal(b.toString('ascii', 8, 12), 'WAVE', e.file);
     const seconds = (b.length - 44) / b.readUInt32LE(28);
     assert.ok(seconds > 0.03, `${e.file}: ${seconds} s`);
@@ -39,7 +39,7 @@ test('files are named for what they do, sorted by kind, and nothing unlisted sit
   for (const e of entries) {
     const [dir, name] = e.file.split('/');
     assert.ok(kinds.includes(dir), `${e.file}: in a kind folder`);
-    assert.match(name, /^[a-z]+(-[a-z]+)+\.wav$/, `${e.file}: lowercase words joined by hyphens, at least two`);
+    assert.match(name, /^[a-z]+(-[a-z0-9]+)+\.(wav|ogg)$/, `${e.file}: lowercase words joined by hyphens, at least two`);
   }
   assert.equal(new Set(entries.map((e) => e.file)).size, entries.length, 'no two sounds share a file');
   const listed = new Set(entries.map((e) => e.file));

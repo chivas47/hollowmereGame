@@ -89,6 +89,7 @@ src/
     guide.js          v308: GUIDE, the guided first day's steps (say, slot or use, map, aim, from, done(facts), end), its closing line; v310 FARM (the field's actions), FIELD_GOAL, GUIDE_VERSION
     reach.js          v306: REACH: tools that stay exact on farmland, the weapon that stays exact everywhere, how far ahead side tiles are measured; v307 outline: the tools that show the tile outline (render/renderer.js)
     seats.js          v305: SEATS: which floor plan pieces, furniture shapes and tiles are seats, a placed seat's facing by turn, the walk-in delay and the seated pose
+    musicTracks.js    v318: TRACKS (the music database), LAYERS (priority order), LOCATIONS (map groups), TIMES, WEATHER_VOLUME, NIGHT_VOLUME, MUSIC (fades, combat range, rotation)
     audio.js          v317: every sound file (assets/audio/, its README): MUSIC_FILES, SFX_FILES, BED_FILES, CALL_FILES, STEP_FILES by the id the code plays, each { file, gain, loop, vary }
     venues.js         v98: VENUES, the buildings you walk into (shops, tavern, clinic, museum, ranch, town hall, theatre, lodge, Oasis, casino, coop, barn): where each stands, which tiles are its door, the dialog its counter opens, its floor plan; venueMap(), venueFront()
     interiors.js      v97: each cottage's floor plan (24x16 characters: walls, doors, rooms, a key of pieces with colours, things on top and a line to read), PIECES, piecesOf(), interiorGrid(), doorOf(), roomAt()
@@ -183,6 +184,7 @@ src/
     wayfind.js        v312: exitToward(from, to) (the exit starting the fewest-maps way), doorOf(map, tile) (a building's door)
     tips.js           v311: first-time tips: tipFacts() (what just came into the bag, the season's end), dueTips(), the queue and G.tip, dismissTip(); its arrow at layer 1001
     guide.js          v308: the guided first day: advance() (steps done move on, never back), facts(), aimAt() (nearest grass, soil, dry seed, village exit, bed), skipGuide(); v310 farmAction() (the field's next action) and guideLine(); G.guide each frame for the HUD; arrow at layer 1001
+    musicDirector.js  v318: which music plays: musicContext() (menu, cutscene, festival, boss, combat, fishing, location, season, weather, time), pickTrack() (pure: layers, fallback by specificity, priority, weighted draw without repeats), updateMusic() on events plus a 0.5 s context check, sting(), skipTrack(), musicDebug(); memory in S.music
     reach.js          v306: forgiving Use: reachTiles() (in front, under you, the side tiles nearest first), useTarget() (the first whose prompt depends on the tile; G.target each frame for the prompt and outline), inReach() for taps; interact.js act(at) uses it
     seats.js          v305: sitting on chairs, stools, benches, sofas and armchairs (data/seats.js): seatAt(), sit(), stand(), seated() (player.js draws the seated pose); Use or walking into a seat for 0.3 s; nothing saved
     venues.js         v98: entering buildings (the same hours and notes their doors gave), the counter that opens each dialog, and drawing and looking at every floor plan's pieces (cottages too); staff who are not villagers stand behind their counters while open
@@ -232,7 +234,7 @@ src/
     engine.js         context, buses, settings (localStorage), tone() and noise(); v317 playBuffer() (a decoded file on a bus), renderInto() (tools/render_audio.mjs records into an offline context)
     files.js          v317: the sound files (data/audio.js, assets/audio/): bufferOf() (fetch and decode once, after audio opens; false when it failed), playFile(); the short sounds load as audio opens, music and ambient loops when first heard; every caller falls back to its generated sound while a file is not there
     sfx.js            listens for 'sfx' and other events, plays effects (v317: the file, else the generated SFX recipe)
-    music.js          generated loop per mood (data/music.js); v317: the mood's file looped with a crossfade and the night fade once loaded; renderSong() for the recorder
+    music.js          v318: plays what systems/musicDirector.js picks ('music:play', 'music:sting'): each track through its own fader, crossfades, stingers over a ducked background, the level by volume, weather and night; the track's file, else its generator recipe (song(), renderSong() for the recorder); reports each loop ('music:looped'); nowPlaying()
     footsteps.js      footsteps by surface under the player (surfaceAt), on the ambient bus; settings.steps (v109); v317 its file per surface, else stepSound()
     ambience.js       ambient sound by area: noise beds and calls (v72, data/atmosphere.js); rain taps indoors, hearth crackle; on the ambient bus with its own volume (v100); v317 a bed's looping file takes over once it is heard and loaded
   ui/
@@ -475,6 +477,11 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `turned` | {map, x, y, from} | house.js (the player turned furniture) | undo.js (v99) |
 | `use`, `used` | {tx, ty, tile, mapId, item} | interact.js (before and after each press of Use) | hints.js (v101: presses with no message, sound or swing) |
 | `sfx` | name | effects, monsters, fishing, health, economy, skills, coop, barn, ui/modal | audio/sfx.js |
+| `music:play` | {track, fade, layer, reason} | musicDirector.js | audio/music.js (v318) |
+| `music:sting` | {track} | musicDirector.js | audio/music.js (v318) |
+| `music:looped` | track id | audio/music.js | musicDirector.js (rotation, v318) |
+| `player:fainted` | none | health.js | musicDirector.js (game over stinger, v318) |
+| `place:found` | map id | journal.js | musicDirector.js (discovery stinger, v318) |
 | `ui:scene` | {npc, at, scene, extra} | npcs.js | ui/dialogs.js heart scene with choices |
 | `ui:*` | varies | systems | ui modules open dialogs |
 

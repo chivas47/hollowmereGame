@@ -2,6 +2,16 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v318: Music that follows the moment
+- The music now follows where you are, the season, the weather, the hour and what is happening, in this order: cutscenes, festivals, a boss (a golden elite), combat, fishing, special places, the place you are in, the season, then a default.
+- 42 tracks, up from 6: the farm (two spring tunes, the season themes, a night tune and a rain tune), the village and town in each season and in rain, the forest, the beach, the mountains, the wild woods, the Hollow, caves, your house, the tavern, the shops, the old shrine and graveyard, the desert and the island, every season's festival plus a harvest festival and a contest tune, a story theme and a wedding theme, two combat tunes, a boss tune, a fishing tune, the main menu, credits, and three stingers (passing out, beating an elite, finding a new place).
+- Where a place has no tune for this season, weather or hour, its own tune plays; rain picks a rainy tune where there is one.
+- Tracks crossfade (2 seconds; under a second into and out of a fight). A tune that still fits keeps playing: walking from the village into town, or a change of weather with no rainy variant, does not restart it. After a few loops another tune of the same kind takes over, never the same one twice in a row. When a fight, festival or cutscene ends, the music is worked out again for where you are now.
+- Stormy and rainy days play a little quieter; nights after 8 pm too.
+- Music files are Ogg Vorbis now (1.8 MB for all 42, against 2.7 MB for the six WAVs before). A browser that cannot play Ogg plays the same tunes from their recipes.
+- Debug tools: "Music: why this track" says what is playing and why and logs every choice to the console; "Music: next track" skips ahead.
+- New save data: music (recent tracks and each place's last one, so a reload carries on).
+
 ## v317: Sound files you can replace
 - Every sound is now a file in assets/audio/, named for what it does, one folder per kind: music (spring-farm-theme.wav, hollow-mine-theme.wav...), sfx (hoe-till-soil.wav, fish-caught-fanfare.wav...), ambience (rain-loop.wav, birdsong-chirp.wav...) and footsteps (footstep-snow.wav, horse-hoofbeat.wav...). 59 in all.
 - To replace one, save the new sound over the old file. assets/audio/README.md lists every file and what it plays for; src/data/audio.js holds each file's name, volume, whether it loops and how much its pitch varies.

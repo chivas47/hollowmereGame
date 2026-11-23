@@ -39,13 +39,13 @@ const hz = (midi) => 440 * 2 ** ((midi - 69) / 12);
 export { hz };
 
 // A short enveloped oscillator. slide: end frequency (Hz) for pitch sweeps.
-export function tone({ freq, dur = 0.12, type = 'square', vol = 0.12, slide = null, at = 0, bus = 'sfx' }) {
+export function tone({ freq, dur = 0.12, type = 'square', vol = 0.12, slide = null, at = 0, bus = 'sfx', to = null }) {   // v318: to, a node to play into (a music voice's fader)
   const a = audio(); if (!a) return;
   const t = a.ctx.currentTime + at, o = a.ctx.createOscillator(), g = a.ctx.createGain();
   o.type = type; o.frequency.setValueAtTime(freq, t);
   if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + dur);
   g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-  o.connect(g); g.connect(a[bus]); o.start(t); o.stop(t + dur + 0.02);
+  o.connect(g); g.connect(to || a[bus]); o.start(t); o.stop(t + dur + 0.02);
 }
 
 // A filtered noise burst for thuds, splashes and whooshes.
@@ -76,11 +76,11 @@ export function bed({ filter = 'lowpass', freq = 800, q = 0.7 }) {
 
 // v317 (roadmap 109): a decoded sound file (audio/files.js) on a bus. vol: its level; rate: playback speed (pitch
 // with it, for variety); loop: until stopped. Returns { src, gain } to fade or stop, or null without audio.
-export function playBuffer(buffer, { bus = 'sfx', vol = 1, rate = 1, loop = false, at = 0 } = {}) {
+export function playBuffer(buffer, { bus = 'sfx', vol = 1, rate = 1, loop = false, at = 0, to = null } = {}) {
   const a = audio(); if (!a || !buffer) return null;
   const t = a.ctx.currentTime + at, src = a.ctx.createBufferSource(), g = a.ctx.createGain();
   src.buffer = buffer; src.loop = loop; src.playbackRate.value = rate; g.gain.value = vol;
-  src.connect(g); g.connect(a[bus]); src.start(t);
+  src.connect(g); g.connect(to || a[bus]); src.start(t);
   return { src, gain: g };
 }
 

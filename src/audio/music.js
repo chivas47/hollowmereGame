@@ -1,25 +1,31 @@
-// A generated music loop: a lead melody and a bass line, scheduled a little ahead on the audio clock.
-// The mood follows the season, the mine and festival days; it fades down at night.
+// Music playback. v318 (roadmap 110): systems/musicDirector.js decides which track plays and emits 'music:play' and
+// 'music:sting'; this file plays them: the track's file (data/musicTracks.js, assets/audio/music/) looped, or, until
+// the file has loaded or if it is missing, the same tune from its generator recipe. Each track plays through its own
+// fader: a new track fades in as the old one fades out (a crossfade over the director's fade), so two background
+// tracks only overlap during a change. Stingers duck the background, play once, and let it back up. The level
+// follows the track's volume, the weather and the night. Each finished loop is reported ('music:looped') so the
+// director can move on to another track of the same kind.
 import { G } from '../core/game.js';
-import { today } from '../core/time.js';
-import { festivalOn } from '../data/festivals.js';
-import { MOODS, MUSIC_VOLUME, NIGHT_VOLUME } from '../data/music.js';
+import { emit, on } from '../core/events.js';
+import { MUSIC_VOLUME } from '../data/music.js';
+import { MUSIC, WEATHER_VOLUME, NIGHT_VOLUME } from '../data/musicTracks.js';
 import { rng } from '../render/pixel.js';
 import { audio, tone, hz, stats } from './engine.js';
-import { MUSIC_FILES } from '../data/audio.js';
 import { playFile, bufferOf } from './files.js';
 
-const STEPS = 16, BARS = 4, AHEAD = 0.3;
+const STEPS = 16, AHEAD = 0.3;
 const cache = {};
 
-// Four bars of melody (null = rest) and bass for a mood, the same every time.
-function song(name) {
-  if (cache[name]) return cache[name];
-  const m = MOODS[name], R = rng(m.seed), notes = m.scale.length;
+// The generator: bars of melody (null = rest) and bass for a recipe { root, scale, bpm, lead, seed }, the same
+// every time (seeded). Four bars loop; a stinger is one bar that comes home to the root.
+export function song(gen, bars = 4) {
+  const key = `${JSON.stringify(gen)}|${bars}`;
+  if (cache[key]) return cache[key];
+  const m = gen, R = rng(m.seed), notes = m.scale.length;
   let deg = 0;
   const lead = [];
-  for (let i = 0; i < STEPS * BARS; i++) {
-    const lastBar = i >= STEPS * (BARS - 1);
+  for (let i = 0; i < STEPS * bars; i++) {
+    const lastBar = i >= STEPS * (bars - 1);
     if (i % 2 === 1 && R() < 0.5) { lead.push(null); continue; }
     if (R() < 0.18) { lead.push(null); continue; }
     deg = Math.max(-2, Math.min(notes + 2, deg + Math.round((R() - 0.5) * 3)));
@@ -29,64 +35,109 @@ function song(name) {
   }
   // Bass on every beat: the root, and the fifth on the third beat of each bar.
   const bass = lead.map((_, i) => (i % 4 === 0 ? m.root - 24 + (Math.floor(i / 4) % 4 === 2 ? 7 : 0) : null));
-  return (cache[name] = { lead, bass, m });
+  return (cache[key] = { lead, bass, m, stepDur: 60 / m.bpm / 4 });
 }
 
-function mood() {
-  if (G.S.map === 'mine') return 'mine';
-  if (G.S.map === 'village' && festivalOn(today())) return 'festival';
-  return today().season;
-}
-
-let step = 0, nextAt = 0, current = null;
-function schedule() {
-  const a = audio();
-  if (!a || !G.S) return;
-  const name = mood();
-  if (name !== current) { current = name; step = 0; nextAt = a.ctx.currentTime + 0.05; }
-  if (fromFile(a, name)) return;   // v317: the mood's file is playing
-  const { lead, bass, m } = song(name), stepDur = 60 / m.bpm / 4;
-  const vol = MUSIC_VOLUME * (G.S.time >= 20 * 60 ? NIGHT_VOLUME : 1);
-  if (nextAt < a.ctx.currentTime) nextAt = a.ctx.currentTime + 0.02;
-  while (nextAt < a.ctx.currentTime + AHEAD) {
-    const at = nextAt - a.ctx.currentTime, i = step % lead.length;
-    if (lead[i] !== null) { tone({ freq: hz(lead[i]), dur: stepDur * 1.8, type: m.lead, vol, at, bus: 'music' }); stats.notes++; }
-    if (bass[i] !== null) tone({ freq: hz(bass[i]), dur: stepDur * 3.5, type: 'triangle', vol: vol * 1.3, at, bus: 'music' });
-    nextAt += stepDur; step++;
-  }
-}
-
-// v317: one loop of a mood's tune at the day's level, for tools/render_audio.mjs to record. Returns its length in
-// seconds; notes ringing past the end are folded back over the start by the tool, so the file loops seamlessly.
-export function renderSong(name) {
-  const { lead, bass, m } = song(name), stepDur = 60 / m.bpm / 4;
+// One loop of a recipe, for tools/render_audio.mjs to record (at the day's level). Returns its length in seconds;
+// the tool folds notes ringing past the end back over the start, so the file loops without a seam.
+export function renderSong(gen, bars = 4) {
+  const { lead, bass, m, stepDur } = song(gen, bars);
   lead.forEach((n, i) => { if (n !== null) tone({ freq: hz(n), dur: stepDur * 1.8, type: m.lead, vol: MUSIC_VOLUME, at: i * stepDur, bus: 'music' }); });
   bass.forEach((n, i) => { if (n !== null) tone({ freq: hz(n), dur: stepDur * 3.5, type: 'triangle', vol: MUSIC_VOLUME * 1.3, at: i * stepDur, bus: 'music' }); });
   return lead.length * stepDur;
 }
 
-// v317 (roadmap 109): the mood's music file (data/audio.js MUSIC_FILES), looped, once it has loaded; a change of mood
-// fades the old one out over FADE seconds as the new one comes in, and night lowers it like the generated tune.
-// Returns false while there is no file to play, so the generated tune plays instead.
-const FADE = 1.5;
-let playing = null;   // { name, src, gain, base }
-function fromFile(a, name) {
-  const entry = MUSIC_FILES[name], t = a.ctx.currentTime;
-  const level = (G.S.time >= 20 * 60 ? NIGHT_VOLUME : 1);
-  if (playing && playing.name !== name) {
-    playing.gain.gain.setTargetAtTime(0, t, FADE / 3);
-    const old = playing.src; setTimeout(() => { try { old.stop(); } catch (e) { /* already stopped */ } }, FADE * 1000 + 200);
-    playing = null;
-  }
-  if (!playing) {
-    if (!bufferOf(entry)) return false;
-    const f = playFile(entry, { bus: 'music', vol: 0, loop: true });
-    if (!f) return false;
-    playing = { name, ...f, base: entry.gain };
-  }
-  playing.gain.gain.setTargetAtTime(playing.base * level, t, 0.5);
-  stats.notes++;   // the music is sounding (tests count it)
-  return true;
+// --- Voices --------------------------------------------------------------------------------------------------------
+let voice = null;          // the background playing: { track, fader, kind: 'file' | 'gen', src, step, nextAt, loopTimer }
+let wanted = null;         // the track the director asked for (kept until audio opens)
+let duck = 1;              // under a stinger
+
+// How loud a track plays now (the file's own gain is applied by playFile; the generator's notes carry the mix level).
+function level(track) {
+  const S = G.S, night = S && S.time >= 20 * 60 && !(track.time === 'night' || track.time?.includes?.('night'));
+  return (track.volume ?? 1) * (WEATHER_VOLUME[S?.weather] ?? 1) * (night ? NIGHT_VOLUME : 1) * duck;
 }
 
-export function startMusic() { setInterval(schedule, 100); }
+function startVoice(track, fade, loop = track.loop !== false) {
+  const a = audio(); if (!a) return null;
+  const fader = a.ctx.createGain(), t = a.ctx.currentTime;
+  fader.gain.setValueAtTime(0.0001, t); fader.gain.linearRampToValueAtTime(level(track), t + Math.max(0.05, fade));
+  fader.connect(a.music);
+  const v = { track, fader, kind: 'gen', step: 0, nextAt: t + 0.05, loop, fadeUntil: t + Math.max(0.05, fade) };
+  const file = bufferOf(track);
+  if (file) {
+    const f = playFile(track, { bus: 'music', to: fader, loop });
+    if (f) {
+      v.kind = 'file'; v.src = f.src;
+      const each = file.duration * 1000;
+      if (loop) v.loopTimer = setInterval(() => emit('music:looped', track.id), each);
+      else v.endsIn = file.duration;
+    }
+  }
+  if (v.kind === 'gen' && !loop) { const s = song(track.gen, track.bars || 4); v.endsIn = s.lead.length * s.stepDur + 0.6; }
+  return v;
+}
+
+function stopVoice(v, fade) {
+  const a = audio(); if (!a || !v) return;
+  const t = a.ctx.currentTime;
+  v.fader.gain.cancelScheduledValues(t); v.fader.gain.setValueAtTime(Math.max(0.0001, v.fader.gain.value), t);
+  v.fader.gain.linearRampToValueAtTime(0.0001, t + Math.max(0.05, fade));
+  clearInterval(v.loopTimer); v.stopped = true;
+  setTimeout(() => { try { v.src?.stop(); } catch (e) { /* already stopped */ } v.fader.disconnect(); }, fade * 1000 + 300);
+}
+
+// The director's choice: crossfade to it (or fade out to silence for null).
+function play({ track, fade = MUSIC.fade }) {
+  wanted = track;
+  if (!audio()) return;
+  if (voice?.track.id === track?.id) return;   // never restart what is already playing
+  stopVoice(voice, fade);
+  voice = track ? startVoice(track, fade) : null;
+}
+
+// A stinger: the background ducks, the stinger plays once, the background comes back.
+function sting({ track }) {
+  if (!audio()) return;
+  duck = MUSIC.duck; refresh(MUSIC.fastFade);
+  const s = startVoice(track, 0.05, false);
+  if (!s) { duck = 1; return; }
+  s.fader.gain.setValueAtTime(track.volume ?? 1, audio().ctx.currentTime);
+  setTimeout(() => { stopVoice(s, 0.3); duck = 1; refresh(MUSIC.fastFade); }, (s.endsIn || 2) * 1000);
+}
+
+// The level after the night, the weather or a stinger changed it.
+function refresh(secs = 1) {
+  const a = audio(); if (!a || !voice || voice.stopped || a.ctx.currentTime < voice.fadeUntil) return;   // never over a fade in progress
+  voice.fader.gain.setTargetAtTime(level(voice.track), a.ctx.currentTime, secs / 3);
+}
+
+// The generator, scheduled a little ahead on the audio clock, into the voice's fader.
+function schedule(v) {
+  const a = audio(), { lead, bass, m, stepDur } = song(v.track.gen);
+  if (v.nextAt < a.ctx.currentTime) v.nextAt = a.ctx.currentTime + 0.02;
+  while (v.nextAt < a.ctx.currentTime + AHEAD) {
+    const at = v.nextAt - a.ctx.currentTime, i = v.step % lead.length;
+    if (lead[i] !== null) { tone({ freq: hz(lead[i]), dur: stepDur * 1.8, type: m.lead, vol: MUSIC_VOLUME, at, to: v.fader }); stats.notes++; }
+    if (bass[i] !== null) tone({ freq: hz(bass[i]), dur: stepDur * 3.5, type: 'triangle', vol: MUSIC_VOLUME * 1.3, at, to: v.fader });
+    v.nextAt += stepDur; v.step++;
+    if (v.step % lead.length === 0) emit('music:looped', v.track.id);
+  }
+}
+
+function tick() {
+  if (!audio()) return;
+  if (!voice && wanted) voice = startVoice(wanted, MUSIC.fade);   // audio has just opened
+  if (!voice || voice.stopped) return;
+  if (voice.kind === 'gen') {
+    // the file arrived: hand over to it (the same tune) with a short crossfade
+    if (bufferOf(voice.track)) { const old = voice; voice = startVoice(old.track, 1); stopVoice(old, 1); return; }
+    schedule(voice);
+  } else stats.notes++;   // a file is sounding (tests count it)
+  refresh(2);
+}
+
+on('music:play', play);
+on('music:sting', sting);
+export function startMusic() { setInterval(tick, 100); }
+export const nowPlaying = () => (voice && !voice.stopped ? { id: voice.track.id, kind: voice.kind } : null);

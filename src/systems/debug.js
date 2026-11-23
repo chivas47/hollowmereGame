@@ -1,5 +1,6 @@
 // Shortcuts for testing. Each returns a message for the UI.
 import { G } from '../core/game.js';
+import { musicDebug, skipTrack } from './musicDirector.js';
 import { changed } from '../core/events.js';
 import { dateParts } from '../core/time.js';
 import { SEASON_LENGTH } from '../data/seasons.js';
@@ -10,7 +11,17 @@ import { SKILLS } from '../data/skills.js';
 import { festivalOn } from '../data/festivals.js';
 import { emit } from '../core/events.js';
 
+// v318 (roadmap 110): the music director's tools. "Why this track" names the track, the layer and the reason, and turns
+// on the console log of every pick (or set localStorage 'hollowmere-music-debug' to '1'); "next track" skips ahead.
+const musicWhy = () => {
+  G.musicDebug = true;
+  const d = musicDebug();
+  console.info('[music]', d);
+  return d.track ? `Music: ${d.name} (${d.track}). ${d.reason}. Picks are now logged in the console.` : 'Music: nothing playing.';
+};
 export const DEBUG = {
+  music: musicWhy,
+  musicNext: () => { skipTrack(); return musicWhy(); },
   day: () => { sleep(false); return null; },
   season: () => {
     const d = dateParts(G.S.day);

@@ -33,12 +33,12 @@ export function bufferOf(entry) {
 
 // Plays an entry's file. vol multiplies its gain; vary shifts the pitch a little. Returns { src, gain } or null
 // when there is no file to play (the caller then plays the generated sound).
-export function playFile(entry, { bus = 'sfx', vol = 1, at = 0, loop = entry?.loop || false } = {}) {
+export function playFile(entry, { bus = 'sfx', vol = 1, at = 0, loop = entry?.loop || false, to = null } = {}) {
   const b = bufferOf(entry);
   if (!b) return null;
   const rate = entry.vary ? 1 + (Math.random() * 2 - 1) * entry.vary : 1;
   stats.files++;
-  return playBuffer(b, { bus, vol: entry.gain * vol, rate, loop, at });
+  return playBuffer(b, { bus, vol: (entry.gain ?? 1) * vol, rate, loop, at, to });
 }
 
 // Once audio is open: load the short sounds at once, so the first press already plays its file. Music and beds load

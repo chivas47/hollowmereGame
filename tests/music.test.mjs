@@ -1,0 +1,114 @@
+// v318 (roadmap 110): the dynamic music director. The fifteen scenarios from the brief, by the pure picker
+// (pickTrack) and through the running director (events in, 'music:play' out), plus the rules around them:
+// fallbacks, no restarts, no repeats, rotation, empty categories and the saved memory.
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { G } from '../src/core/game.js';
+import { on } from '../src/core/events.js';
+import { newState, merge } from '../src/core/state.js';
+import { TRACKS, LAYERS, locationOf, timeOf } from '../src/data/musicTracks.js';
+import { pickTrack, fits, categoriesOf, musicContext, updateMusic, musicDebug } from '../src/systems/musicDirector.js';
+import { slimes } from '../src/systems/monsters.js';
+
+const base = { menu: false, cutscene: null, festival: null, boss: false, combat: false, fishing: false, location: 'farm', map: 'farm', season: 'Spring', weather: 'sun', time: 'morning' };
+const ctx = (o) => ({ ...base, ...o });
+const pick = (o, mem) => pickTrack(ctx(o), mem, () => 0);
+const id = (o, mem) => pick(o, mem)?.track.id;
+
+test('scenarios 1 to 3: spring farm, then the spring village, then rain in the village', () => {
+  assert.match(id({}), /^farm_spring_0[12]$/, '1: spring farm music');
+  assert.equal(id({ location: 'village', map: 'village' }), 'village_spring_01', '2: the spring village');
+  assert.equal(id({ location: 'village', map: 'village', weather: 'rain' }), 'village_rain_01', '3: the rainy village track wins over the season');
+});
+
+test('scenarios 4 and 5: a festival overrides; when it ends the village comes back', () => {
+  assert.equal(id({ location: 'village', festival: 'ribbondance' }), 'festival_spring_01', '4: the season\'s festival');
+  assert.equal(id({ location: 'village', festival: 'blossom' }), 'competition_01', 'a contest has its own music');
+  assert.equal(id({ location: 'village', festival: 'weighin', season: 'Autumn' }), 'festival_harvest_01', 'the harvest festival');
+  assert.equal(id({ location: 'village', map: 'village' }, { current: 'festival_spring_01', lastFor: { 'location:village': 'village_spring_01' } }), 'village_spring_01', '5: restored');
+});
+
+test('scenarios 6 to 10: the mines, combat and back, a boss and away', () => {
+  const mine = { location: 'mines', map: 'mine' };
+  assert.equal(id(mine), 'mines_01', '6: mine music');
+  assert.match(id({ ...mine, combat: true }), /^combat_0[12]$/, '7: combat');
+  assert.equal(id(mine, { current: 'combat_01', lastFor: { 'location:mines': 'mines_01' } }), 'mines_01', '8: the mine again');
+  assert.equal(id({ ...mine, combat: true, boss: true }), 'boss_01', '9: a boss');
+  assert.equal(id({ location: 'village', map: 'village' }, { current: 'boss_01' }), 'village_spring_01', '10: where you are now, worked out afresh');
+});
+
+test('scenarios 11 to 13: a new season; no seasonal or weather track falls back to the location\'s own', () => {
+  assert.equal(id({ season: 'Summer' }), 'farm_summer_01', '11: summer on the farm');
+  assert.equal(id({ location: 'forest', map: 'forest', season: 'Winter' }), 'forest_01', '12: no winter forest track');
+  assert.equal(id({ location: 'forest', map: 'forest', weather: 'storm' }), 'forest_01', '13: no stormy forest track');
+  assert.equal(id({ season: 'Winter', weather: 'snow' }), 'farm_winter_01', 'snow on the farm: its winter track');
+});
+
+test('scenarios 14 and 15: a cutscene overrides everything; after it the place\'s music is worked out again', () => {
+  assert.equal(id({ cutscene: 'opening', combat: true, festival: 'blossom' }), 'story_01', '14: above combat and festivals');
+  assert.equal(id({ cutscene: 'wedding' }), 'celebration_01', 'the wedding has its own');
+  assert.equal(id({ location: 'village', map: 'village', time: 'evening' }, { current: 'story_01' }), 'village_spring_01', '15: restored for now');
+});
+
+test('a track that still fits keeps playing: no restart for weather it has no variant for, or another map of its place', () => {
+  assert.equal(id({ location: 'forest', weather: 'rain' }, { current: 'forest_01' }), 'forest_01');
+  assert.match(pick({ location: 'village', map: 'town' }, { current: 'village_spring_01' }).reason, /still fits/);
+  assert.equal(id({}, { current: 'farm_spring_02' }), 'farm_spring_02', 'not swapped for the other spring tune');
+});
+
+test('variety: a rotation never repeats the track just played; weights and priorities count', () => {
+  const r = pickTrack(ctx({}), { current: 'farm_spring_01', rotate: true, history: ['farm_spring_01'] }, () => 0);
+  assert.equal(r.track.id, 'farm_spring_02');
+  const r2 = pickTrack(ctx({}), { current: 'farm_spring_02', rotate: true, history: ['farm_spring_02', 'farm_spring_01'] }, () => 0);
+  assert.equal(r2.track.id, 'farm_spring_01', 'with every one heard lately, anything but the current one');
+  const heavy = [{ id: 'a', category: 'default', weight: 1 }, { id: 'b', category: 'default', weight: 9 }];
+  assert.equal(pickTrack(ctx({ location: null }), {}, () => 0.5, heavy).track.id, 'b', 'the heavier one at the middle of the draw');
+  const ranked = [{ id: 'low', category: 'default' }, { id: 'high', category: 'default', priority: 2 }];
+  assert.equal(pickTrack(ctx({ location: null }), {}, () => 0, ranked).track.id, 'high');
+});
+
+test('empty categories and unknown places are handled: lower layers take over, and no tracks at all is silence', () => {
+  assert.equal(pick({ fishing: true }).layer, 'fishing');
+  assert.equal(pickTrack(ctx({ combat: true }), {}, () => 0, TRACKS.filter((t) => !categoriesOf(t).includes('combat'))).layer, 'location', 'no combat music: the location keeps going');
+  assert.equal(pick({ location: null, map: 'nowhere', season: 'Autumn' }).track.id, 'farm_autumn_01', 'no location: the season');
+  assert.equal(pickTrack(ctx({}), {}, () => 0, []), null);
+  assert.equal(locationOf('home_ines'), 'village'); assert.equal(locationOf('inside_tavern'), 'tavern'); assert.equal(locationOf('nowhere'), null);
+  assert.equal(timeOf(7 * 60), 'morning'); assert.equal(timeOf(13 * 60), 'afternoon'); assert.equal(timeOf(18 * 60), 'evening'); assert.equal(timeOf(25 * 60), 'night');
+});
+
+test('the database: unique ids, every track has a file and a recipe, and every layer has music', () => {
+  assert.equal(new Set(TRACKS.map((t) => t.id)).size, TRACKS.length);
+  for (const t of TRACKS) { assert.ok(t.file && t.gen?.scale?.length, t.id); assert.ok(t.gain > 0 && t.gain <= 1, `${t.id} gain`); }
+  for (const l of LAYERS) assert.ok(TRACKS.some((t) => categoriesOf(t).includes(l.category)), l.id);
+  for (const k of ['gameover', 'victory', 'discovery']) assert.ok(TRACKS.some((t) => categoriesOf(t).includes(`sting:${k}`)), k);
+  assert.ok(!fits({ season: 'Winter' }, ctx({})) && fits({}, ctx({})));
+});
+
+test('the running director: the game\'s state in, one music:play per real change, with the reason', () => {
+  const played = []; on('music:play', (e) => played.push(e.track?.id));
+  G.title = false; G.cut = null; G.fishing = null;
+  G.S = newState(); Object.assign(G.S, { map: 'farm', time: 8 * 60, weather: 'sun', x: 50, y: 50 });
+  slimes.length = 0;
+  updateMusic('test', true);
+  assert.match(played.at(-1), /^farm_spring/);
+  const n = played.length;
+  G.S.time = 9 * 60; updateMusic('test');
+  assert.equal(played.length, n, 'the same moment of the day: nothing new');
+  G.S.map = 'village'; updateMusic('map:changed');
+  assert.equal(played.at(-1), 'village_spring_01');
+  G.S.weather = 'rain'; updateMusic('weather');
+  assert.equal(played.at(-1), 'village_rain_01');
+  G.cut = { id: 'opening' }; updateMusic('cutscene:start'); assert.equal(played.at(-1), 'story_01');
+  G.cut = null; updateMusic('cutscene:end'); assert.equal(played.at(-1), 'village_rain_01', 'back to the rainy village');
+  assert.match(musicDebug().reason, /location layer/);
+  assert.equal(G.S.music.lastFor['location:village'], 'village_rain_01', 'the memory is in the save');
+  G.title = true; updateMusic('title'); assert.equal(played.at(-1), 'menu_01'); G.title = false;
+  assert.deepEqual(musicContext().menu, false);
+});
+
+test('saves: the music memory survives a save and load; an old farm starts with an empty one', () => {
+  const s = JSON.parse(JSON.stringify(newState())); s.music = { history: ['farm_spring_01'], lastFor: { 'location:farm': 'farm_spring_01' } };
+  assert.deepEqual(merge(s).music, s.music);
+  const old = JSON.parse(JSON.stringify(newState())); delete old.music;
+  assert.deepEqual(merge(old).music, { history: [], lastFor: {} });
+});

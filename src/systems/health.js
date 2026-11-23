@@ -74,6 +74,7 @@ function faint() {
   S.gold -= bill;
   S.hp = Math.round(S.maxHp / 2);
   G.hurtT = 0;
+  emit('player:fainted');   // v318: the game over stinger (systems/musicDirector.js)
   const inMine = S.map === 'mine';
   if (inMine) emit('mine:faint');   // the Hollow lets go of you first
   placePlayer(CLINIC_BED.map, CLINIC_BED.x, CLINIC_BED.y, CLINIC_BED.dir);
