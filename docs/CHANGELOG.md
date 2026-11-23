@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v321: Wide acres
+- A new farm layout on the new game screen: Wide acres, 64 x 48 tiles, eight times the open field. The house, bin, well and workbench sit in the same corner as on every farm; beyond them is wild land with two ponds to fish, old groves and boulders, and six times the usual clutter to clear. The camera follows you across it.
+- Farms that already exist keep their layout.
+- Fix: loading a farm after a larger one in the same session (Farms, or New farm) could stop on the larger farm's debris, machines or buildings.
+- New save data: none (the layout is the save's own `layout`).
+
 ## v320: A farm of any size
 - Groundwork for a bigger farm (roadmap 112): a farm layout can now be larger than the screen, with the camera following you across it as in the village. No layout uses it yet, so every farm looks and plays exactly as before.
 - The road east to the wilds and the path south to the forest move to the farm's edges with its size, and the wilds and the forest set you down on them; neighbours walking between maps find the new edges.

@@ -82,6 +82,7 @@ v320 (roadmap 112a): a layout can be larger than the screen (`size` in data/layo
 | Four corners | Four Corners | Small pond, small quarry, a few trees | Fishing, 1 rock a night (cap 4), 2 stumps regrow each season |
 | Beach farm | Beach | Sand and a strip of sea on the east | Sea fishing; a supply crate washes up on 60% of mornings (cap 3): wood, stone, copper, iron, fiber or hardwood |
 | Meadow farm | Meadowlands | All grass | Starts with the coop built, 2 hens and 14 feed |
+| Wide acres (v321) | Standard, large | 64 x 48 (eight times the open field; Stardew's Standard Farm is about twice it): the same homestead corner, two ponds (54 water tiles), six groves and six boulders on the wild land | Room: about ten times the open field's grass. Starts with six times the clutter (366 pieces against 61, besides the yard grass) |
 
 Fainting on the farm (wild farm) wakes you on the doorstep and costs gold as in the mine.
 
@@ -1583,6 +1584,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v321: A farm cannot move to Wide acres (Nuno: new farms only, for now). The balance bot plays it with the open field's plan (its field and machines in the homestead corner, buildings from the far corner): energy limits it before land does, so its gold is close to the open field's.
 - v319: A farm in its second week when a tip generation ships counts that generation as seen (it is past its first week). A save with a farmer profile left empty past day 1 (only test saves made by the balance bot) opens the new game screen on load.
 
 - v303: The Duskmarch's creatures count toward no Guild goal yet, and the balance bot never goes there (its loot and weed fiber are not in the report). Mournfield's dead rise at the same night light as everywhere else.
