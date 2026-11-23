@@ -36,8 +36,8 @@ export const CUTSCENE = {
 };
 
 export const CUTSCENES = {
-  // v241 (roadmap 84b): the opening, after the new game screen (ui/arrival.js). The carrier's cart drops you at the
-  // end of the village's east road, and Bram meets you on the farm by the shipping bin he built. It ends with you
+  // v241 (roadmap 84b): the opening, after the new game screen (ui/arrival.js). You walk the village's east road to
+  // the farm (v309: the words say only what the screen shows), and Bram meets you on the farm by the shipping bin he built. It ends with you
   // at the farmhouse door, in control.
   opening: {
     name: 'Arriving at Hollowmere',
@@ -47,13 +47,13 @@ export const CUTSCENES = {
       { do: 'fade', to: 1, secs: 0 },
       { do: 'bars', on: true },
       { do: 'title', text: '{farm} Farm', sub: 'Spring, year one', secs: 2.6 },
-      { do: 'say', who: null, text: 'A letter came at the end of winter. A great-aunt you met once had kept a plot below the village of Hollowmere, and she left it to you.' },
-      { do: 'say', who: null, text: 'Everything you own fits in one trunk. The carrier said he would take you as far as the road goes.' },
+      { do: 'say', who: null, text: 'A letter came at the end of winter. A great-aunt you met once had left you her farm, just east of the village of Hollowmere.' },
+      { do: 'say', who: null, text: 'You came with everything you own in one pack.' },
       { do: 'cam', x: 18, y: 9 },
       { do: 'fade', to: 0, secs: 1.4 },
       { do: 'walk', id: 'you', path: [[37, 8]], wait: false },
       { do: 'pan', x: 33, y: 8, secs: 3.4 },
-      { do: 'say', who: null, text: 'The cart stops where the road gives out. Past a gate that leans more than it stands, the old plot waits under a season of weeds.' },
+      { do: 'say', who: null, text: 'The road runs east past the last cottages. At its end, the old farm waits under a season of weeds.' },
       { do: 'walk', id: 'you', path: [[38, 8]] },
       { do: 'fade', to: 1, secs: 0.8 },
       { do: 'goto', map: 'farm', x: 0, y: 4, dir: 'right' },
