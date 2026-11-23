@@ -27,6 +27,7 @@ import './systems/venues.js';   // v98: buildings you walk into
 import './systems/reach.js';   // v306: Use reaches the nearest thing, not only the exact tile in front
 import './systems/seats.js';   // v305: sitting on chairs, sofas and benches
 import './systems/guide.js';   // v308: the guided first day
+import './systems/tips.js';   // v311: first-time tips
 import './systems/fishing.js';
 import './systems/upgrades.js';
 import './systems/livestock.js';
@@ -56,6 +57,7 @@ import './systems/train.js';      // v179: the goods train
 import './systems/birthday.js';   // v174: the birthday dinner
 import './ui/birthday.js';
 import './ui/guide.js';   // v308: the guided first day's line
+import './ui/tips.js';   // v311: the first-time tip card
 import './systems/professions.js';
 import './systems/cooking.js';
 import './systems/hotbarItems.js';

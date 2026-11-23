@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v311: First-time tips
+- The first time something new happens, a small card at the top of the field says in a line or two what it is for and what to do. Once per farm; Got it closes it, or it goes after 18 seconds. Never blocks play, and waits while a dialog is open.
+- A geode: Corvin at the Anvil in town cracks it for 25g (9 am to 4 pm). Next time you are in town with one before 4 pm, an arrow points at the Anvil's door.
+- Food: the first thing you can eat says how much energy it gives and how to eat it (the Bag's Eat, or an item slot and Use). Energy at 60%: what it is and how to get it back. At 15%: what happens at zero.
+- Also: selling crops (an arrow at the shipping bin), wood and stone (Craft), ore (the furnace and bars), an old find (the museum), 10 pm (bed before 2 am), health, rain, and crops that will die when the season changes.
+- Farms past their first week from before this version have seen them all; newer farms get them as they come.
+- New save data: tips (the ids already shown).
+
 ## v310: The guide walks you through every seed
 - Fixed: after the first seed, the guide said only "Till, plant and water the rest", with no key, and its arrow often sat on land already planted.
 - The field is now one looping step that always names the next real thing to do, the tool to take (its slot pulses, with its key) and points at a tile that fits: grass to till (beside your field, so rows grow together), empty soil to plant, a dry seed to water. Till, plant and water come round again for every seed.
