@@ -1489,7 +1489,8 @@ Stardew counterparts: basic, quality and deluxe fertilizer; speed-gro and deluxe
 
 ## Sound
 
-- Every sound is generated with Web Audio at runtime: oscillators and filtered noise, no audio files.
+- v317: every sound is a file in assets/audio/ (music, sfx, ambience, footsteps), named for what it does and listed in src/data/audio.js; replacing one is saving over it (assets/audio/README.md). The shipped files were recorded from the game's own generators (tools/render_audio.mjs), so the game sounds as before. Short sounds load when audio opens; music and ambient loops when first heard. Until a file is ready, or if it is missing, the generator plays instead.
+- Before v317 every sound was generated with Web Audio at runtime: oscillators and filtered noise. The generators remain as the fallback.
 - Effects follow game events (tools, pickups, fishing, coins, level-ups, doors, dialogs). Music is a melody and bass loop generated from a fixed seed per mood (data/music.js): Spring, Summer, Autumn, Winter, the mine and festival days. Music drops to 55% after 8 pm.
 - Footer toggles for sound and music, M mutes both; stored per browser, not in the save.
 

@@ -1,8 +1,10 @@
 // Sound effects. Systems emit 'sfx' (name) and a few other events; this file turns them into sound.
 import { on } from '../core/events.js';
 import { tone, noise, stats, audio } from './engine.js';
+import { SFX_FILES } from '../data/audio.js';
+import { playFile } from './files.js';
 
-const SFX = {
+export const SFX = {   // v317: exported for tools/render_audio.mjs, which records each into assets/audio/sfx
   rustle:  () => { noise({ dur: 0.16, vol: 0.14, filter: 'highpass', freq: 1800, sweep: 600 }); noise({ dur: 0.08, vol: 0.08, filter: 'bandpass', freq: 700, at: 0.04 }); },   // v303: weeds cut
   hoe:     () => noise({ dur: 0.14, vol: 0.22, freq: 500, sweep: 150 }),
   can:     () => { noise({ dur: 0.28, vol: 0.12, filter: 'highpass', freq: 2500, sweep: 1200 }); noise({ dur: 0.2, vol: 0.06, filter: 'bandpass', freq: 900, at: 0.05 }); },
@@ -40,7 +42,7 @@ const SFX = {
 export function play(name) {
   if (!SFX[name] || !audio()) return;
   stats.sfx++;
-  SFX[name]();
+  if (!playFile(SFX_FILES[name])) SFX[name]();   // v317: the file, or the generated sound until it loads
 }
 
 on('sfx', play);
