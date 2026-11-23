@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v309: The opening says what you see
+- The opening's narration no longer mentions things that never appear on screen (a carrier, his cart, a trunk, a leaning gate) or puts the farm below the village. You walk the village's east road to the farm, and the words now say just that: the farm is east of the village, you came with everything in one pack, and the road runs east past the last cottages to the old farm.
+- Shorter too: three lines of narration, two of them a sentence.
+- New save data: none.
+
 ## v308: A guided first day
 - A new farmer is shown what to do, one small step at a time, right after the opening: till the grass, take the seeds, plant, take the can, water, plant and water the rest, walk to the village, say hello, and in the evening go to bed.
 - Each step is one short line at the top of the field with the key to press (keyboard, controller or touch, as you play). A yellow arrow bobs on the spot to go to, and the hotbar slot to pick pulses. Steps move on by themselves as you do them, and skip themselves if you already have.
