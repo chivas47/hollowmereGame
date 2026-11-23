@@ -22,6 +22,7 @@ function how(g) {
     if (touch.matches) return `tap the ${esc(toolName(g.slot))} below`;
     return `press ${kbd(keyName(`slot${i + 1}`))}`;
   }
+  if (g.key) return usingPad() ? kbd(PAD_LABELS[g.key]) : touch.matches ? 'tap the seeds again' : `press ${kbd(keyName(g.key))}`;   // v310: switch seeds
   if (g.use) return usingPad() ? kbd(PAD_LABELS.use) : touch.matches ? 'tap Use' : kbd(keyName('use'));
   return '';
 }
@@ -29,7 +30,7 @@ function how(g) {
 let shown = null, pulsed = null;
 addUpdater(() => {
   const el = $('#guide'), g = hud.mode === 'hidden' ? null : G.guide;
-  const html = g ? `<b>${esc(g.say)}</b>${how(g) ? ` <span>${how(g)}</span>` : ''}<button type="button" data-skipguide aria-label="Skip the guide">Skip</button>` : '';
+  const html = g ? `<b>${esc(g.say)}</b>${how(g) ? ` <span>${how(g)}</span>` : ''}${g.count ? ` <i>${esc(g.count)}</i>` : ''}<button type="button" data-skipguide aria-label="Skip the guide">Skip</button>` : '';
   if (html !== shown) { shown = html; el.innerHTML = html; el.hidden = !g; }
   const slot = g?.slot ? $(`#slot${HOTBAR.indexOf(g.slot)}`) : null;
   if (slot !== pulsed) { pulsed?.classList.remove('guided'); slot?.classList.add('guided'); pulsed = slot; }

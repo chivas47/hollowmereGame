@@ -50,7 +50,7 @@ Esc or a controller's B opens the same settings. A live reload in a viewer that 
 
 ## The guided first day (v308, roadmap 100)
 
-Right after the opening a new farm gets a guide (data/guide.js): one step at a time, a few words at the top of the field with the key to press, an arrow on the spot and a pulse on the slot to pick. Steps: till, take the seeds, plant, take the can, water, plant and water the rest (until the seeds run out or six crops are watered), walk west to the village, say hello, and from 6 pm go to bed. Each moves on as soon as it is done (a step already done is passed over); day two ends it. Off its map a step says to head back to the farm. Skip ends it; old farms load with it off. While it shows, the corner goal is hidden. Pays nothing.
+Right after the opening a new farm gets a guide (data/guide.js): one step at a time, a few words at the top of the field with the key to press, an arrow on the spot and a pulse on the slot to pick. Steps: the field (v310: one looping step that names the next action each moment: till, plant, water, switch seeds when a type runs out, refill the can; the tool to take first, then the key; the arrow on a tile that fits; the first seed one tile at a time, then the tool in hand first; a count of seeds planted; ends when every seed that grows this season is in and watered, at most 9), walk west to the village, say hello, and from 6 pm go to bed. A finished field and the first hello each get a line and a chime. Each moves on as soon as it is done (a step already done is passed over); day two ends it. Off its map a step says to head back to the farm. Skip ends it; old farms load with it off. While it shows, the corner goal is hidden. Pays nothing.
 
 ## New game (v21)
 

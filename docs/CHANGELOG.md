@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v310: The guide walks you through every seed
+- Fixed: after the first seed, the guide said only "Till, plant and water the rest", with no key, and its arrow often sat on land already planted.
+- The field is now one looping step that always names the next real thing to do, the tool to take (its slot pulses, with its key) and points at a tile that fits: grass to till (beside your field, so rows grow together), empty soil to plant, a dry seed to water. Till, plant and water come round again for every seed.
+- The first seed goes one tile at a time (till, plant, water). After that the tool in your hand comes first: till a row, plant it, water it, with fewer switches.
+- A count shows how far along you are (3/9 planted); the radishes you start with count too. When the turnips run out it tells you to switch seeds (Q). An empty can sends you to the well.
+- Like a finished quest: a short line and a chime when the field is done and after your first hello.
+- New save data: none (a guide saved under v308's steps starts over from the top; steps already done pass at once).
+
 ## v309: The opening says what you see
 - The opening's narration no longer mentions things that never appear on screen (a carrier, his cart, a trunk, a leaning gate) or puts the farm below the village. You walk the village's east road to the farm, and the words now say just that: the farm is east of the village, you came with everything in one pack, and the road runs east past the last cottages to the old farm.
 - Shorter too: three lines of narration, two of them a sentence.
