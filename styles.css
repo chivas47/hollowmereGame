@@ -543,3 +543,11 @@ body.titling .game-only,body.titling #menu .game-only{display:none}
 .hud-hidden .guide{display:none!important}
 .contrast .guide{background:#000;border-color:var(--cream);color:#fff}
 .guide i{font-style:normal;font-size:16px;color:var(--leaf);border:1px solid var(--seam);border-radius:10px;padding:0 7px}   /* v310: the field's progress */
+/* v311 (roadmap 103): the first-time tip card, under the guide's line when both show */
+.tip{position:absolute;z-index:9;left:50%;top:8px;transform:translateX(-50%);width:min(440px,calc(100% - 16px));background:rgba(28,23,18,.92);border:2px solid var(--leaf);border-radius:8px;padding:6px 10px 8px;font-size:calc(16px * var(--hud,1));line-height:1.35;color:var(--cream);box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.guide:not([hidden]) ~ .tip{top:56px}
+.tip b{display:block;color:var(--leaf);font-weight:600}
+.tip p{margin:2px 0 6px}
+.tip button{font:inherit;font-size:16px;color:var(--cream);background:var(--soil);border:2px solid var(--seam);border-radius:5px;padding:1px 10px;cursor:pointer}
+.hud-hidden .tip{display:none!important}
+.contrast .tip{background:#000;border-color:var(--cream);color:#fff}
