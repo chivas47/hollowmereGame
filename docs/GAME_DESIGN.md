@@ -54,7 +54,7 @@ Right after the opening a new farm gets a guide (data/guide.js): one step at a t
 
 ## Arrows for the first week (v312, roadmap 104)
 
-After the guided first day, the first week's goal in the corner gets an arrow (data/firstweek.js aim): on the goal's map at the thing to do (the nearest dry seed, a neighbour who is out, forage, the bin, the cave mouth), elsewhere at the exit starting the shortest way there (systems/wayfind.js, by fewest map changes). Off screen, a chevron at the view's edge points toward it. Say hello with nobody out here points toward a map where someone is. Hidden with the Objective setting off.
+After the guided first day, the first week's goal in the corner gets an arrow (data/firstweek.js aim): on the goal's map at the thing to do (the nearest dry seed, a neighbour who is out, forage, the bin, the cave mouth), elsewhere at the exit starting the shortest way there (systems/wayfind.js, by fewest map changes). Off screen, a chevron at the view's edge points toward it. Say hello (v313) keeps to one neighbour: the nearest out where you are (else one out in the village, then the town), followed to another map by the way there, chosen again only when they go indoors; it points at them on any map. Hidden with the Objective setting off.
 
 ## First-time tips (v311, roadmap 103)
 

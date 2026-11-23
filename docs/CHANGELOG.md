@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v313: Say hello keeps to one neighbour
+- The day 3 arrow no longer jumps between neighbours as they walk about. It picks the nearest one who is out and stays on them; if they walk to another map it shows the way after them, and it only picks someone else once they go indoors.
+- It also points at a neighbour wherever you meet one, not only in the village (anyone counts for Say hello).
+- New save data: none (a reload picks again).
+
 ## v312: Arrows for the first week's goals
 - Days 2 to 7 now show the way, like the guided first day: an arrow at the thing to do on the goal's map (a dry seed for Water the rows, a neighbour who is out for Say hello, the nearest forage in the Wilds, the shipping bin, the cave mouth), and on any other map an arrow at the exit that starts the shortest way there, even across several maps (the town through the village, the Wilds through the farm, out of the farmhouse by its door).
 - When the spot is off screen, a chevron on a dark disc sits at the edge of the view pointing toward it. The guide's and the tips' arrows do the same now.

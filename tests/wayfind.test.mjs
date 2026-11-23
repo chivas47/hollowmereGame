@@ -35,14 +35,46 @@ function goalDay(id, map = 'farm') {
   G.S = S; return S;
 }
 
-test('each goal from day 2 points somewhere useful', () => {
+test('each goal from day 2 points somewhere useful', async () => {
   let S = goalDay('water'); S.soil['5,6'] = { w: false, crop: { type: 'turnip', age: 1 } };
   assert.deepEqual(weekAim(S), { tx: 5, ty: 6 }, 'water: the dry seed');
-  S = goalDay('hello'); assert.deepEqual(weekAim(S), exitTo('farm', 'village'), 'hello: the way to the village');
+  const { NPCRT } = await import('../src/systems/npcs.js'); const { forgetNeighbour } = await import('../src/systems/firstweek.js');
+  for (const n of NPCRT) Object.assign(n, { map: 'farm', visible: false, inside: true });
+  Object.assign(NPCRT[0], { map: 'village', x: 20 * T + 8, y: 12 * T + 12, visible: true, inside: false }); forgetNeighbour();
+  S = goalDay('hello'); assert.deepEqual(weekAim(S), exitTo('farm', 'village'), 'hello: the way to the neighbour out in the village');
   S = goalDay('wild'); assert.deepEqual(weekAim(S), exitTo('farm', 'wilds'), 'wild: the way to the Wilds');
   S.map = 'wilds'; S.x = 2 * T + 8; S.forage = [{ x: 9, y: 9, type: 'leek' }, { x: 30, y: 12, type: 'leek' }];
   assert.deepEqual(weekAim(S), { tx: 9, ty: 9 }, 'in the Wilds: the nearest forage');
   S = goalDay('sell'); assert.equal(MAPS.farm.grid[weekAim(S).ty][weekAim(S).tx], 'B', 'sell: the shipping bin');
   S = goalDay('town', 'village'); assert.deepEqual(weekAim(S), exitTo('village', 'town'), 'town: north out of the village');
   S = goalDay('hollow', 'wilds'); assert.deepEqual(weekAim(S), { tx: 12, ty: 1 }, 'the Hollow: the cave mouth');
+});
+
+test('Say hello keeps one neighbour: not swapped for someone nearer, followed off the map, chosen again once indoors', async () => {
+  const { NPCRT } = await import('../src/systems/npcs.js');
+  const { forgetNeighbour, chosenNeighbour } = await import('../src/systems/firstweek.js');
+  const S = goalDay('hello', 'village'); S.x = 20 * T + 8; S.y = 12 * T + 12;
+  for (const n of NPCRT) Object.assign(n, { map: 'farm', visible: false, inside: true });
+  const [a, b] = NPCRT;
+  const put = (n, map, x, y) => Object.assign(n, { map, x: x * T + 8, y: y * T + 12, visible: true, inside: false });
+  forgetNeighbour();
+  put(a, 'village', 24, 12); put(b, 'village', 30, 12);
+  assert.deepEqual(weekAim(S), { tx: 24, ty: 12 }, 'the nearest is chosen');
+  put(b, 'village', 21, 12);
+  assert.deepEqual(weekAim(S), { tx: 24, ty: 12 }, 'someone walking closer does not take the arrow');
+  put(a, 'town', 10, 10);
+  assert.deepEqual(weekAim(S), exitTo('village', 'town'), 'the chosen one walks to town: the arrow shows the way after them');
+  a.inside = true;
+  assert.deepEqual(weekAim(S), { tx: 21, ty: 12 }, 'once they are indoors, the nearest other one');
+  assert.equal(chosenNeighbour(S).id, b.id);
+});
+
+test('a neighbour out where you are is pointed at, even off the village (anyone can be greeted)', async () => {
+  const { NPCRT } = await import('../src/systems/npcs.js');
+  const { forgetNeighbour } = await import('../src/systems/firstweek.js');
+  const S = goalDay('hello', 'town'); S.x = 20 * T + 8; S.y = 8 * T + 12;
+  for (const n of NPCRT) Object.assign(n, { map: 'farm', visible: false, inside: true });
+  Object.assign(NPCRT[0], { map: 'town', x: 15 * T + 8, y: 8 * T + 12, visible: true, inside: false });
+  forgetNeighbour();
+  assert.deepEqual(weekAim(S), { tx: 15, ty: 8 });
 });

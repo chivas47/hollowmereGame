@@ -43,12 +43,29 @@ on('state:changed', () => { if (ready) checkWeek(); });
 // the exit that starts the way there (systems/wayfind.js). Not while the guided first day runs (it has its own), and
 // off with the Objective setting (G.goalArrow, set by ui/goal.js). G.weekAim: { tx, ty } or null.
 const nearestOf = (S, list) => { const me = tileOf(S.x, S.y); let best = null, bd = Infinity; for (const p of list) { const d = (p.tx - me.tx) ** 2 + (p.ty - me.ty) ** 2; if (d < bd) { bd = d; best = p; } } return best; };
+// v313 (roadmap 105): the neighbour Say hello points at. Kept while they are out (followed to another map by the way
+// there); chosen again only when they go indoors or out of sight: the nearest out on this map, else one out in the
+// village, then the town, then anywhere. Not saved: a reload chooses again.
+let chosen = null;
+const out = (n) => n.visible && !n.inside;
+export function chosenNeighbour(S = G.S) {
+  const keep = NPCRT.find((n) => n.id === chosen);
+  if (keep && out(keep)) return keep;
+  const me = tileOf(S.x, S.y), dist = (n) => { const t = tileOf(n.x, n.y); return (t.tx - me.tx) ** 2 + (t.ty - me.ty) ** 2; };
+  const here = NPCRT.filter((n) => n.map === S.map && out(n)).sort((a, b) => dist(a) - dist(b))[0];
+  const rank = (m) => { const i = ['village', 'town'].indexOf(m); return i < 0 ? 9 : i; };
+  const pick = here || NPCRT.filter((n) => out(n) && exitToward(S.map, n.map)).sort((a, b) => rank(a.map) - rank(b.map))[0] || null;
+  chosen = pick?.id || null;
+  return pick;
+}
+export const forgetNeighbour = () => { chosen = null; };
+on('game:loaded', forgetNeighbour);
+
 const HERE = {
   till: (S) => aimAt('till', S),
   dry: (S) => aimAt('dry', S) || (S.water === 0 ? aimAt('well', S) : null),
-  // a neighbour out on this map; none here, the way to a map where one is (the village first, then the town)
-  npc: (S) => nearestOf(S, NPCRT.filter((n) => n.map === S.map && n.visible && !n.inside).map((n) => tileOf(n.x, n.y)))
-    || ['village', 'town', ...new Set(NPCRT.map((n) => n.map))].filter((m) => m !== S.map && NPCRT.some((n) => n.map === m && n.visible && !n.inside)).map((m) => exitToward(S.map, m)).find(Boolean) || null,
+  // v313 (roadmap 105): one neighbour, kept (chosen), so the arrow does not jump between passers-by
+  npc: (S) => { const n = chosenNeighbour(S); return !n ? null : n.map === S.map ? tileOf(n.x, n.y) : exitToward(S.map, n.map); },
   forage: (S) => nearestOf(S, (S.forage || []).map((f) => ({ tx: f.x, ty: f.y }))) || aimAt('well', S),
   bin: (S) => doorOf(S.map, 'B'),
   cave: (S) => doorOf(S.map, 'M'),
@@ -57,7 +74,7 @@ const HERE = {
 export function weekAim(S = G.S) {
   const g = weekGoal();
   if (!g) return null;
-  return S.map === g.map ? HERE[g.aim]?.(S) || null : exitToward(S.map, g.map);
+  return S.map === g.map || g.anywhere ? HERE[g.aim]?.(S) || null : exitToward(S.map, g.map);
 }
 let t = 0;
 addUpdater((dt) => {
