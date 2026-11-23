@@ -4,18 +4,24 @@
 // (its first-week quests are data/firstweek.js here); this follows today's cozy games instead. Pays nothing.
 // Each step: say (a few words), slot (a hotbar tool to pick) or use (press Use), map (where it happens: off it, the
 // line says how to get back), aim (what the arrow points at, found in systems/guide.js), from (not shown before this
-// minute of the day), done(f) with the facts systems/guide.js works out.
+// minute of the day), done(f) with the facts systems/guide.js works out, end (said with a chime when it is done).
+// v310: the field is one looping step (farm): it picks the next real action each moment and walks you through it
+// again for every seed, so till, plant and water repeat until the seeds are in and watered. FARM: its lines; each
+// action names the tool to take (take, with the slot pulsing) until it is in hand, then what to do with Use.
 export const GUIDE = [
-  { id: 'hoe',     say: 'Take the hoe', slot: 'hoe', done: (f) => f.held === 'hoe' || f.tilled > 0 },
-  { id: 'till',    say: 'Face the grass and till it', use: true, map: 'farm', aim: 'grass', done: (f) => f.tilled > 0 },
-  { id: 'seeds',   say: 'Take your seeds', slot: 'seeds', done: (f) => f.held === 'seeds' || f.crops > 0 },
-  { id: 'plant',   say: 'Plant a seed on the soil', use: true, map: 'farm', aim: 'soil', done: (f) => f.crops > 0 },
-  { id: 'can',     say: 'Take the watering can', slot: 'can', done: (f) => f.held === 'can' || f.wet > 0 },
-  { id: 'water',   say: 'Water the seed', use: true, map: 'farm', aim: 'dry', done: (f) => f.wet > 0 },
-  { id: 'rest',    say: 'Till, plant and water the rest', map: 'farm', aim: 'next', done: (f) => f.seeds === 0 || f.wet >= 6 },
+  { id: 'farm',    farm: true, map: 'farm', done: (f) => (f.seeds === 0 && f.dry === 0) || f.wet >= FIELD_GOAL, end: 'Seeds in! Watered crops grow a stage each night.' },
   { id: 'village', say: 'Meet the neighbours: the village is west', map: 'farm', aim: 'village', done: (f) => f.map === 'village' || f.talked > 0 },
-  { id: 'hello',   say: 'Say hello to someone', use: true, done: (f) => f.talked > 0 },
+  { id: 'hello',   say: 'Say hello to someone', use: true, done: (f) => f.talked > 0, end: 'First hello! Talk to neighbours each day to make friends.' },
   { id: 'bed',     say: 'Go home to bed: it ends the day', from: 18 * 60, aim: 'bed', done: (f) => f.day >= 2 },
 ];
+export const FARM = {
+  till:   { slot: 'hoe',   take: 'Take the hoe',          say: 'Till the grass', aim: 'till' },
+  plant:  { slot: 'seeds', take: 'Take your seeds',       say: 'Plant a seed',   aim: 'soil' },
+  water:  { slot: 'can',   take: 'Take the watering can', say: 'Water the seed', aim: 'dry' },
+  refill: { slot: 'can',   take: 'Take the watering can', say: 'The can is empty: fill it at the well', aim: 'well' },
+  swap:   { slot: 'seeds', take: 'Take your seeds',       say: 'Switch to your other seeds', key: 'seeds', aim: 'soil' },   // the type in hand ran out
+};
+export const FIELD_GOAL = 9;   // the field step ends once this many are watered (more seeds bought on day one do not keep it going)
+export const GUIDE_VERSION = 2;   // v310: steps renumbered; a guide saved under v308's steps starts again from the top
 export const GUIDE_DONE = 'That is the basics. Each day a new goal shows in the corner; the journal has hints.';
 export const GUIDE_BACK = 'Head back to your farm';
