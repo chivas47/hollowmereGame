@@ -183,7 +183,7 @@ export function draw(c) {
 
 // The tile the farmer a view follows is facing.
 function facingOf(p) {
-  if (p === G.S) return facing();
+  if (p === G.S) return G.target || facing();   // v306: the tile Use would reach (systems/reach.js)
   const [dx, dy] = DIRS[p.dir];
   return { tx: Math.floor(p.x / T) + dx, ty: Math.floor((p.y - 2) / T) + dy };
 }

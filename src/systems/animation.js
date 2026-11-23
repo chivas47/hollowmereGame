@@ -81,7 +81,7 @@ on('monster:slain', ({ x, y, kind, color }) => {
 on('state:changed', () => {
   if (!G.S?.bag) return;
   if (G.paused || G.dialog.you || G.dialog.p2 || !ready) { snapshot(); return; }   // v141: dialogs no longer pause in two-player   // shops, dialogs and loading change the bag without a gather
-  const f = facing(), src = dropAt && performance.now() - dropAt.at < 300 ? dropAt : { x: f.tx * T + 8, y: f.ty * T + 6 };
+  const f = G.lastUse || facing(), src = dropAt && performance.now() - dropAt.at < 300 ? dropAt : { x: f.tx * T + 8, y: f.ty * T + 6 };
   let shown = 0;
   for (const k of Object.keys(G.S.bag)) {
     const n = (G.S.bag[k] || 0) - (last[k] || 0);

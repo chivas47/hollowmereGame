@@ -85,6 +85,7 @@ src/
     crowd.js          v145: the festival crowd (v151: EARLY, SETUP, CLOSE): STATIONS (places in the square, the way they face, festival kinds, a mood), ROLES (jobs by festival kind), CROWD (minutes per place), CHAT
     homes.js          where each neighbour lives: door, cottage, door hours (v76); homeEntry() inside the front door (v97); shares: a home of more than one, its owner's door and inside, a spot each from the plan's spots (v166)
     ranch.js          Tamsin's pens on the village map and where her cows and sheep stand (v166)
+    reach.js          v306: REACH: tools that stay exact on farmland, the weapon that stays exact everywhere, how far ahead side tiles are measured
     seats.js          v305: SEATS: which floor plan pieces, furniture shapes and tiles are seats, a placed seat's facing by turn, the walk-in delay and the seated pose
     venues.js         v98: VENUES, the buildings you walk into (shops, tavern, clinic, museum, ranch, town hall, theatre, lodge, Oasis, casino, coop, barn): where each stands, which tiles are its door, the dialog its counter opens, its floor plan; venueMap(), venueFront()
     interiors.js      v97: each cottage's floor plan (24x16 characters: walls, doors, rooms, a key of pieces with colours, things on top and a line to read), PIECES, piecesOf(), interiorGrid(), doorOf(), roomAt()
@@ -176,6 +177,7 @@ src/
     festivals.js      festival day logic, contests, market stall, decorations
     village.js        fountain flavour text
     homes.js          v76: entering neighbours' cottages (door hours, 2 hearts after dark)
+    reach.js          v306: forgiving Use: reachTiles() (in front, under you, the side tiles nearest first), useTarget() (the first whose prompt depends on the tile; G.target each frame for the prompt and outline), inReach() for taps; interact.js act(at) uses it
     seats.js          v305: sitting on chairs, stools, benches, sofas and armchairs (data/seats.js): seatAt(), sit(), stand(), seated() (player.js draws the seated pose); Use or walking into a seat for 0.3 s; nothing saved
     venues.js         v98: entering buildings (the same hours and notes their doors gave), the counter that opens each dialog, and drawing and looking at every floor plan's pieces (cottages too); staff who are not villagers stand behind their counters while open
     routes.js         v76: tilePath() (weighted grid search, paths before grass; v301: extra costs for soft spots, nearest when the goal cannot be reached) and nextHop() (doors and map edges) for neighbours; v301: openNear() (an outdoor place that has become solid, or holds something to keep off, moves to the nearest open tile), OUTDOOR
@@ -287,7 +289,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | `addLayer(z, fn)` | Draw something every frame. `fn(ctx)`. | z < 50 under characters, z >= 50 over. (97b: duskmarch.js at 8, the Duskmarch's wash, mist and light flecks.) |
 | `addEntities(fn)` | Return `[{ y, draw(ctx) }]` for y-sorted things. | Player, NPCs, chickens, slimes. |
 | `addUpdater(fn)` | Per-frame logic, `fn(dt)` in seconds. | Skipped while `G.paused`. |
-| `addPrompt(priority, fn)` | The HUD's Use prompt (v112). `fn({tx, ty, tile, mapId, item})` returns a short phrase ("Talk to Ines") or null; it must not change anything. | Use the same priority as the matching `addInteraction`, so the prompt names what Use would actually do. |
+| `addPrompt(priority, fn)` | The HUD's Use prompt (v112). `fn({tx, ty, tile, mapId, item})` returns a short phrase ("Talk to Ines") or null; it must not change anything. v306: systems/reach.js also uses prompts to pick which nearby tile Use acts on, so anything Use can do on a tile should have a prompt, or it is only reached when it is in front. | Use the same priority as the matching `addInteraction`, so the prompt names what Use would actually do. |
 
 ### Interaction priorities in use
 

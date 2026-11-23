@@ -33,7 +33,7 @@ function place(el, v, tx, ty, html) {
 }
 
 function update() {
-  const { tx, ty } = facing();
+  const { tx, ty } = G.target || facing();   // v306: the tile Use would reach (systems/reach.js)
   const size = sizeOf(G.S.map), inside = tx >= 0 && ty >= 0 && tx < size.w && ty < size.h, on = hud.prompts && hud.mode !== 'hidden' && !G.siting;
   const text = inside && on
     ? promptFor({ tx, ty, tile: tileAt(tx, ty), mapId: G.S.map, item: slotKind(G.S) }) : null;
