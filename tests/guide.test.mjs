@@ -97,12 +97,12 @@ test('the rest of the day: the village, a hello, then bed; the guide ends on day
 });
 
 test('saves: before the guide it is off; mid-guide keeps its step; a v308 guide starts the new steps from the top', () => {
-  const old = JSON.parse(JSON.stringify(newState())); old.firstWeek = { arrived: true, done: {}, over: false };
+  const old = JSON.parse(JSON.stringify(newState())); old.v = 7; old.firstWeek = { arrived: true, done: {}, over: false };   // v319: a save from before step 8
   assert.equal(merge(old).firstWeek.guide.off, true);
   const mid = JSON.parse(JSON.stringify(newState())); mid.firstWeek.arrived = true; mid.firstWeek.guide.step = 2;
   assert.equal(merge(mid).firstWeek.guide.step, 2);
   const v308 = JSON.parse(JSON.stringify(newState())); v308.firstWeek.arrived = true; v308.firstWeek.guide = { step: 6, off: false };
   assert.deepEqual(merge(v308).firstWeek.guide, { step: 0, off: false, v: 2 });
-  const unseen = JSON.parse(JSON.stringify(newState())); unseen.firstWeek = { arrived: false, done: {}, over: false };
+  const unseen = JSON.parse(JSON.stringify(newState())); unseen.v = 7; unseen.firstWeek = { arrived: false, done: {}, over: false };
   assert.equal(merge(unseen).firstWeek.guide.off, false, 'a farm that has not seen the opening yet still gets the guide');
 });

@@ -54,9 +54,9 @@ test('every tip reads short and plain, and every arrow has a tile to point at', 
 });
 
 test('saves: a farm past its first week from before the tips has seen them all; a newer one keeps its list', () => {
-  const old = JSON.parse(JSON.stringify(newState())); delete old.tips; old.day = 30;
+  const old = JSON.parse(JSON.stringify(newState())); delete old.tips; delete old.tipsGen; old.v = 7; old.day = 30; old.firstWeek.arrived = true;
   assert.equal(merge(old).tips.length, TIPS.length);
-  const young = JSON.parse(JSON.stringify(newState())); delete young.tips; young.day = 3;
+  const young = JSON.parse(JSON.stringify(newState())); delete young.tips; delete young.tipsGen; young.v = 7; young.day = 3;
   assert.deepEqual(merge(young).tips, []);
   const mid = JSON.parse(JSON.stringify(newState())); mid.tips = ['geode'];
   assert.deepEqual(merge(mid).tips, ['geode']);

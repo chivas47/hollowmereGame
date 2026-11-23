@@ -1,7 +1,8 @@
 // The saved game. Add new fields to newState(); merge() fills them in for old saves.
 import { G } from './game.js';
 import { GUIDE_VERSION } from '../data/guide.js';
-import { TIPS } from '../data/tips.js';
+import { TIPS, TIPS_GEN } from '../data/tips.js';
+import { farmStage, catchUp } from './stage.js';
 import { T, START, MAXW, SAVE_KEY, SLOTS, SLOT_KEY } from './constants.js';
 import { notify } from './events.js';
 import { CROPS } from '../data/crops.js';
@@ -34,6 +35,7 @@ export function newState() {
     journal: { story: {}, log: [], seen: [], pins: [], track: null, markers: true },   // v114: story steps done, finished quests, places found, map pins, tracked objective (systems/journal.js)
     firstWeek: { arrived: false, done: {}, over: false, guide: { step: 0, off: false, v: GUIDE_VERSION } },   // v122: the arrival scene and the first week's goals (systems/firstweek.js); v308: the guided first day (systems/guide.js)
     tips: [],   // v311: first-time tips already shown (systems/tips.js)
+    tipsGen: TIPS_GEN,   // v319 (roadmap 111): the newest tip generation this farm was offered (data/tips.js since, core/stage.js)
     music: { history: [], lastFor: {} },   // v318: recent tracks and each place's last one (systems/musicDirector.js)
     reckoning: { done: 0, points: 0, lamps: 0, pending: false, again: 0, lid: false },   // v128: Bram's reckoning (systems/reckoning.js)
     news: { day: 0, yesterday: {}, today: { museumAt: 0, spouseAt: null, quests: [], skills: [] } },   // v153: what you did, for the neighbours to talk about (systems/news.js)
@@ -172,12 +174,12 @@ export function merge(saved) {
   const sj = saved.journal || {};   // v114
   s.journal = { story: { ...(sj.story || {}) }, log: [...(sj.log || [])], seen: [...(sj.seen || [])], pins: [...(sj.pins || [])], track: sj.track || null, markers: sj.markers !== false };
   const fw = saved.firstWeek || {};   // v122
-  const gd = fw.guide;   // v308: a farm from before the guide skips it
-  s.firstWeek = { arrived: !!fw.arrived, done: { ...(fw.done || {}) }, over: !!fw.over, guide: gd ? { step: gd.v === GUIDE_VERSION ? +gd.step || 0 : 0, off: !!gd.off, v: GUIDE_VERSION } : { step: 0, off: !!fw.arrived, v: GUIDE_VERSION } };   // v310: steps saved under older numbers start again (done ones pass at once)
+  const gd = fw.guide;   // v308
+  s.firstWeek = { arrived: !!fw.arrived, done: { ...(fw.done || {}) }, over: !!fw.over, guide: gd ? { step: gd.v === GUIDE_VERSION ? +gd.step || 0 : 0, off: !!gd.off, v: GUIDE_VERSION } : { step: 0, off: false, v: GUIDE_VERSION } };   // v310: steps saved under older numbers start again (done ones pass at once); v319: a farm from before the guide is decided by migration 8
   s.reckoning = { ...newState().reckoning, ...(saved.reckoning || {}) };   // v128
   const sm = saved.music || {};   // v318
   s.music = { history: Array.isArray(sm.history) ? sm.history.filter((x) => typeof x === 'string').slice(0, 8) : [], lastFor: sm.lastFor && typeof sm.lastFor === 'object' ? { ...sm.lastFor } : {} };
-  s.tips = Array.isArray(saved.tips) ? [...saved.tips] : (saved.day > 7 ? TIPS.map((t) => t.id) : []);   // v311: past the first week, a farm from before the tips knows its way
+  s.tips = Array.isArray(saved.tips) ? saved.tips.filter((id) => typeof id === 'string') : [];   // v311; v319: tips added since are settled after migrate() below
   const sn = saved.news || {}, st = sn.today || {};   // v153
   s.news = { day: sn.day || 0, yesterday: { ...(sn.yesterday || {}) }, today: { museumAt: st.museumAt || 0, spouseAt: st.spouseAt || null, quests: [...(st.quests || [])], skills: [...(st.skills || [])] } };
   s.partner = { ...newState().partner, energy: s.maxEnergy, hp: s.maxHp, ...(saved.partner || {}) };   // v143: hp   // v130; v131: a farm with a bigger energy bar starts them at its top
@@ -245,6 +247,11 @@ export function merge(saved) {
   if (!Array.isArray(s.quests)) s.quests = [];
   if (!PLACEABLES[s.kitSel]) s.kitSel = 'sprinkler';
   migrate(s, saved);   // old saves' upgrades (core/migrations.js), then the checks below
+  // v319 (roadmap 111): tips added since this farm was saved are marked seen once it is past its first week (core/stage.js).
+  // A save with a tip list but no generation is from v311 to v318 (generation 1); one with neither, from before the tips.
+  const tipsFrom = Number.isInteger(saved.tipsGen) ? saved.tipsGen : Array.isArray(saved.tips) ? 1 : 0;
+  s.tips = catchUp(s.tips, TIPS, tipsFrom, farmStage(s));
+  s.tipsGen = TIPS_GEN;
   if (!CROPS[s.seedSel]) s.seedSel = 'turnip';
   if (!(s.slot >= 0 && s.slot < SLOT_COUNT)) s.slot = 0;
   // v300: the item slots hold item keys the game still knows, or nothing

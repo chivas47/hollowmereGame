@@ -60,6 +60,8 @@ After the guided first day, the first week's goal in the corner gets an arrow (d
 
 The first time something new happens a card explains it in a line or two (data/tips.js), once per farm: a geode (who cracks it, the price, the hours; in town before 4 pm with one, an arrow at the Anvil), the first food (its energy and how to eat it), energy at 60% and 15%, the first crop (an arrow at the shipping bin), wood or stone (Craft), ore (furnace, bars), an artifact (the museum), 10 pm, health under half, rain, and crops that will die in the next 4 days when the season turns. v314: the quest board (in the village from day 2 with requests up, not during the guide; arrow at the board), the first bar (what bars buy at the Anvil, numbers from data/upgrades.js), and a first upgrade you can afford (in town before 4 pm with the bars and gold; arrow at the Anvil). While a tip's arrow shows, the first week's goal arrow waits. v316: Eat something (energy under 30% with food: names the most filling one; the Bag button, then the food, then Eat pulse in turn) and Sell before bed (after 5 pm with crops and an empty bin; the arrow shows the way to the bin from any map; the first-crop card's too). v315: the furnace in the kit (how to set it down), set down (Put in, then Collect; an arrow at yours), and 5 ore with no coal (where coal comes from). One card at a time, 18 seconds or Got it; hidden while a dialog or cutscene is up. "New" means it came into the bag just now, never a stack you had. The journal's Hints tab (v101) stays for anything the cards did not cover.
 
+v319 (roadmap 111): farms past their first week (core/stage.js) never meet teaching added after they were saved. Each tip has a generation (`since`: 1 for v311, 2 for v314, 3 for v315, 4 for v316) and the save remembers the newest it was offered (`tipsGen`); on load a settled farm counts newer tips as seen, while a farm still in its first week meets them. The guided first day is off for any farm that has played its opening, decided after the older save steps (a Year-two farm from before v122 replayed it before).
+
 ## New game (v21)
 
 A new farm starts on a screen that asks for the farmer's name, the farm's name (shown as "<name> Farm"), a favourite thing, colours for skin, hair, shirt and trousers, a hair style (short, long, bun, ponytail, curly, cropped or balding; v222), a beard (none, full, moustache or goatee), glasses, and a starting pet: cat, dog or turtle. The pet is saved with the profile and moves in when pets arrive (roadmap item 8). Neighbours at 2 hearts or more have a line that uses the name and the favourite thing. Old saves get the default profile: Farmer of Hollowmere Farm, the original look.
@@ -1578,6 +1580,8 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 | Ranching | animal products one quality higher |
 
 ## Known issues and open questions
+
+- v319: A farm in its second week when a tip generation ships counts that generation as seen (it is past its first week). A save with a farmer profile left empty past day 1 (only test saves made by the balance bot) opens the new game screen on load.
 
 - v303: The Duskmarch's creatures count toward no Guild goal yet, and the balance bot never goes there (its loot and weed fiber are not in the report). Mournfield's dead rise at the same night light as everywhere else.
 

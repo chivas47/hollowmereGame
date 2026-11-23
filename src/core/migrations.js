@@ -5,6 +5,7 @@
 import { SEED_SLOT, OLD_SEED_SLOTS, OLD_FIRST_SEED_SLOT } from '../data/hotbar.js';
 import { MAPS, SOLID } from '../data/maps.js';
 import { T } from './constants.js';
+import { farmStage } from './stage.js';
 
 export const MIGRATIONS = [
   // v1 (v118): everything from before saves had a version. Each check still looks at what the save
@@ -63,6 +64,12 @@ export const MIGRATIONS = [
   // dropped was never kept, so those rows stay "?" until a kind drops them again.
   { v: 7, run(s) {
     for (const [k, n] of Object.entries(s.slain || {})) if (n > 0 && !s.bestiary.seen.includes(k)) s.bestiary.seen.push(k);
+  } },
+  // v8 (v319, roadmap 111): the guided first day (v308) is for a farm that has not played its opening yet. Decided here,
+  // after step 2 has marked farms from before v122 as arrived (merge() read the raw save before, so a Year-two farm from
+  // before v122 replayed the guide). Every teaching feature judges old farms by core/stage.js farmStage.
+  { v: 8, run(s, saved) {
+    if (!saved.firstWeek?.guide) s.firstWeek.guide.off = farmStage(s) !== 'new';
   } },
 ];
 

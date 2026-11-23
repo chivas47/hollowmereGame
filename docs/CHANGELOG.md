@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v319: Old farms skip the lessons
+- A farm saved before v122 (the arrival and the first week) no longer replays the guided first day: a Year-two farm loaded with "Head back to your farm" and "Meet the neighbours" in the corner. The guide is now decided after the older save steps have marked the farm as arrived.
+- Tips added after the first ones (the quest board, bars, a first tool upgrade, the furnace, coal, Eat something, Sell before bed) no longer show to farms past their first week that were saved before those tips came in. A farm still in its first week still meets them.
+- One rule for every lesson: a farm is new until its opening plays, learning through its first week, and settled after (core/stage.js). Tips added in future are marked seen on settled farms by themselves.
+- New save data: tipsGen (the newest tips this farm was offered). Save step 8.
+
 ## v318: Music that follows the moment
 - The music now follows where you are, the season, the weather, the hour and what is happening, in this order: cutscenes, festivals, a boss (a golden elite), combat, fishing, special places, the place you are in, the season, then a default.
 - 42 tracks, up from 6: the farm (two spring tunes, the season themes, a night tune and a rain tune), the village and town in each season and in rain, the forest, the beach, the mountains, the wild woods, the Hollow, caves, your house, the tavern, the shops, the old shrine and graveyard, the desert and the island, every season's festival plus a harvest festival and a contest tune, a story theme and a wedding theme, two combat tunes, a boss tune, a fishing tune, the main menu, credits, and three stingers (passing out, beating an elite, finding a new place).
