@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v320: A farm of any size
+- Groundwork for a bigger farm (roadmap 112): a farm layout can now be larger than the screen, with the camera following you across it as in the village. No layout uses it yet, so every farm looks and plays exactly as before.
+- The road east to the wilds and the path south to the forest move to the farm's edges with its size, and the wilds and the forest set you down on them; neighbours walking between maps find the new edges.
+- Fix: switching between farms with different layouts in one session could leave neighbours' routes and the foam along beach-farm water worked out for the other farm.
+- New save data: none.
+
 ## v319: Old farms skip the lessons
 - A farm saved before v122 (the arrival and the first week) no longer replays the guided first day: a Year-two farm loaded with "Head back to your farm" and "Meet the neighbours" in the corner. The guide is now decided after the older save steps have marked the farm as arrived.
 - Tips added after the first ones (the quest board, bars, a first tool upgrade, the furnace, coal, Eat something, Sell before bed) no longer show to farms past their first week that were saved before those tips came in. A farm still in its first week still meets them.

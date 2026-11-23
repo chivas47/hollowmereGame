@@ -4,16 +4,24 @@
 // greenhouse, placed objects, debris) into the grid. The layouts' perks live in systems/farmPerks.js.
 import { G } from '../core/game.js';
 import { on, emit } from '../core/events.js';
-import { MAPS, farmGrid, houseGrid } from '../data/maps.js';
-import { LAYOUTS } from '../data/layouts.js';
+import { MAPS, farmGrid, houseGrid, joinFarm } from '../data/maps.js';
+import { LAYOUTS, farmSize } from '../data/layouts.js';
+import { forgetRoutes } from './routes.js';
 import { COOP } from '../data/upgrades.js';
 
 export const layout = () => LAYOUTS[G.S.layout] || LAYOUTS.open;
 
 // keep: leave furniture tiles ('Y') where the new grid has floor (a house change during play).
+// v320 (roadmap 112a): the grid takes the fresh one's size too (a farm of another layout, or another slot), still in
+// place: other modules hold the grid and its rows.
 function copyInto(grid, fresh, keep) {
-  for (let y = 0; y < grid.length; y++) for (let x = 0; x < grid[y].length; x++) {
-    if (!(keep && grid[y][x] === 'Y' && fresh[y][x] === 'h')) grid[y][x] = fresh[y][x];   // in place: other modules hold the rows
+  grid.length = Math.min(grid.length, fresh.length);
+  while (grid.length < fresh.length) grid.push([]);
+  for (let y = 0; y < grid.length; y++) {
+    grid[y].length = fresh[y].length;
+    for (let x = 0; x < grid[y].length; x++) {
+      if (!(keep && grid[y][x] === 'Y' && fresh[y][x] === 'h')) grid[y][x] = fresh[y][x];
+    }
   }
 }
 
@@ -25,10 +33,17 @@ export function rebuildHouse(keep = false) {
   emit('world:changed', 'house');
 }
 
-on('game:loaded', () => {
-  const fresh = farmGrid();
-  layout().apply(fresh);
+// v320 (roadmap 112a): the farm at its layout's size, with its edges joined to the wilds and the forest.
+export function buildFarm(id = G.S.layout) {
+  const { w, h } = farmSize(id), fresh = farmGrid(w, h);
+  (LAYOUTS[id] || LAYOUTS.open).apply(fresh);
   copyInto(MAPS.farm.grid, fresh, false);
+  joinFarm(w, h);
+  forgetRoutes();
+}
+
+on('game:loaded', () => {
+  buildFarm();
   rebuildHouse(false);
   emit('world:changed');
 });

@@ -5,6 +5,7 @@
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { addLayer } from '../core/registry.js';
+import { on } from '../core/events.js';
 import { today } from '../core/time.js';
 import { MAPS } from '../data/maps.js';
 import { PLACEABLES, sprinklerTiles } from '../data/crafting.js';
@@ -131,6 +132,8 @@ addLayer(21, (c) => {
 
 // ---- Surf: foam lapping in and out along water that meets sand ----
 const shores = {};
+// v320: worked out again when a map changes (a farm of another layout or size: water and sand move).
+on('world:changed', (ids) => { for (const id of ids ? [].concat(ids) : Object.keys(shores)) delete shores[id]; });
 function shoreOf(id) {
   if (shores[id]) return shores[id];
   const m = MAPS[id], g = m.grid, out = [];

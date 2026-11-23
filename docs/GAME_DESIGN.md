@@ -70,6 +70,8 @@ A new farm starts on a screen that asks for the farmer's name, the farm's name (
 
 Chosen on the new game screen. The top of the farm (house, path, bin, well, workbench, stall, greenhouse plot) and the coop and barn plots with their yards are the same on every layout.
 
+v320 (roadmap 112a): a layout can be larger than the screen (`size` in data/layouts.js; the camera follows you, as in the village). The top of the farm stays where it is; the road east to the wilds, the path south to the forest and the corner trees follow the farm's edges, and the wilds and the forest set you down one tile inside them. Every layout so far is 24 x 16; the first larger one is roadmap 112b.
+
 | Layout | Stardew role | Land | Perk |
 |---|---|---|---|
 | Open field | Standard | All grass | Most room to farm |

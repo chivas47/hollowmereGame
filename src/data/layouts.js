@@ -3,6 +3,9 @@
 // only the open ground below changes. apply(m) edits a fresh farm grid; perks are read by
 // systems/layouts.js. Stardew's farm types by role, under our own names.
 // Tiles: O water (fishable), T tree, R boulder, q quarry floor (rocks appear on it), z sand.
+// v320 (roadmap 112a): size { w, h } in tiles, for a layout larger than 24 x 16 (core/constants.js W, H); the camera
+// follows you across it. apply(m) gets a grid of that size from data/maps.js farmGrid(w, h).
+import { W, H } from '../core/constants.js';
 const rect = (m, x0, y0, x1, y1, t) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) m[y][x] = t; };
 const dots = (m, list, t) => list.forEach(([x, y]) => { m[y][x] = t; });
 
@@ -54,6 +57,8 @@ export const LAYOUTS = {
     perks: { start: { coop: true, hens: 2, feed: 14 } },
   },
 };
+
+export const farmSize = (id) => LAYOUTS[id]?.size || { w: W, h: H };
 
 // What a washed-up crate can hold: item -> [min, max]. One is picked.
 export const CRATE = [
