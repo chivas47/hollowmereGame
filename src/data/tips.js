@@ -8,6 +8,9 @@ import { ITEMS } from './items.js';
 import { CROPS } from './crops.js';
 import { SHOPS } from './town.js';
 import { CRACK_COST } from './guild.js';
+import { QUEST } from './quests.js';
+import { UPGRADES } from './upgrades.js';
+import { fmtGold } from '../core/format.js';
 
 const smith = () => SHOPS.smithy.keeper;
 export const TIPS = [
@@ -38,4 +41,16 @@ export const TIPS = [
   { id: 'season', title: 'The season ends soon', when: (S, f) => f.seasonLeft <= 4 && f.dying > 0,
     text: (S, f) => `${f.dying} of your crops will die when ${f.next} starts. Harvest what you can before then.` },
 ];
+// v314 (roadmap 106): the quest board and tool upgrades. FIRST: the first upgrade of a tool (2,000g and 5 copper bars
+// in Stardew's scale); its numbers are read from data/upgrades.js so the card never goes out of date.
+const FIRST = UPGRADES.hoe.tiers[1], FIRST_BARS = Object.values(FIRST.needs)[0], FIRST_BAR = Object.keys(FIRST.needs)[0];
+const upgraded = (S) => Object.values(S.upgrades || {}).some((n) => n > 0);
+TIPS.push(
+  { id: 'board', title: 'The quest board', when: (S, f) => S.map === 'village' && S.day >= 2 && (S.quests || []).length > 0 && !f.guiding,
+    text: () => `Neighbours pin requests here. Bring what one asks within ${QUEST.lasts} days: you are paid at once and they like you more.`, aim: { map: 'village', tile: 'Q' } },
+  { id: 'bars', title: 'Bars', when: (S, f) => f.gotAny((k) => /bar$/.test(k) && ITEMS[k]?.material !== false && UPGRADES.hoe.tiers.some((t) => t.needs?.[k])),
+    text: () => `Bars make tools better at the Anvil in town: ${FIRST_BARS} ${ITEMS[FIRST_BAR].name.toLowerCase()}s and ${fmtGold(FIRST.cost)} for a wide hoe, a bigger can, or a stronger axe or pickaxe.` },
+  { id: 'upgrade', title: 'A better tool', when: (S) => S.map === 'town' && !upgraded(S) && (S.bag[FIRST_BAR] || 0) >= FIRST_BARS && S.gold >= FIRST.cost && S.time < 16 * 60,
+    text: () => `You can afford your first upgrade. ${SHOPS.smithy.keeper} at the Anvil does it while you wait.`, aim: { map: 'town', tile: ')' } },
+);
 export const TIP_SHOW = 18;   // seconds a card stays up, unless dismissed sooner

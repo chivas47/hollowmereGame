@@ -80,6 +80,7 @@ let t = 0;
 addUpdater((dt) => {
   if ((t -= dt) > 0) return;
   t = 0.25;
-  G.weekAim = G.S?.firstWeek?.arrived && !guideOn() && !G.cut && G.goalArrow !== false ? weekAim() : null;
+  // v314: one arrow at a time: a tip pointing somewhere (systems/tips.js) has the stage while it is up
+  G.weekAim = G.S?.firstWeek?.arrived && !guideOn() && !G.cut && G.goalArrow !== false && !G.tip?.aim ? weekAim() : null;
 });
 addLayer(1001, (c) => { const a = G.weekAim; if (a && (!G.view || G.view === G.S)) drawPointer(c, a.tx * T + T / 2, a.ty * T); });

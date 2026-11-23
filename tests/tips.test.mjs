@@ -59,3 +59,21 @@ test('saves: a farm past its first week from before the tips has seen them all; 
   const mid = JSON.parse(JSON.stringify(newState())); mid.tips = ['geode'];
   assert.deepEqual(merge(mid).tips, ['geode']);
 });
+
+test('the quest board: in the village from day 2 with requests up, not while the first day is guided', () => {
+  const S = fresh(); S.map = 'village'; S.day = 2; S.firstWeek.guide.off = true; S.quests = [{ id: 'x', npc: 'ines', item: 'turnip', n: 1, reward: 50, due: 6 }];
+  assert.ok(due(S, { ...S.bag }).includes('board'));
+  S.firstWeek.guide.off = false; assert.ok(!due(S, { ...S.bag }).includes('board'), 'the guide has the stage on day one');
+  S.firstWeek.guide.off = true; S.quests = []; assert.ok(!due(S, { ...S.bag }).includes('board'), 'nothing pinned up yet');
+});
+
+test('tool upgrades: the first bar says what bars are for; in town with enough, the Anvil', () => {
+  const S = fresh(), before = { ...S.bag };
+  S.bag.copperbar = 1;
+  assert.ok(due(S, before).includes('bars'));
+  assert.match(TIPS.find((t) => t.id === 'bars').text(S, tipFacts(S, before)), /5 copper bars and 2,000g/);
+  Object.assign(S, { map: 'town', time: 10 * 60, gold: 2000 }); S.bag.copperbar = 4;
+  assert.ok(!due(S, { ...S.bag }).includes('upgrade'), 'four bars are not enough');
+  S.bag.copperbar = 5; assert.ok(due(S, { ...S.bag }).includes('upgrade'));
+  S.upgrades.pick = 1; assert.ok(!due(S, { ...S.bag }).includes('upgrade'), 'not once a tool is upgraded');
+});
