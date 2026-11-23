@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v314: Tips for the quest board and tool upgrades
+- The quest board: from day 2, the first time you are in the village with requests pinned up, a card says what it is (bring what a neighbour asks within 5 days: paid at once, and they like you more) with an arrow at the board.
+- Bars: the first bar you get says what they are for: 5 copper bars and 2,000g at the Anvil for a wide hoe, a bigger can, or a stronger axe or pickaxe (read from the upgrade table, so it stays true).
+- A better tool: the first time you are in town before 4 pm with enough bars and gold for a first upgrade, an arrow points at the Anvil.
+- One arrow at a time: while a tip points somewhere, the first week's goal arrow waits.
+- New save data: none.
+
 ## v313: Say hello keeps to one neighbour
 - The day 3 arrow no longer jumps between neighbours as they walk about. It picks the nearest one who is out and stays on them; if they walk to another map it shows the way after them, and it only picks someone else once they go indoors.
 - It also points at a neighbour wherever you meet one, not only in the village (anyone counts for Say hello).

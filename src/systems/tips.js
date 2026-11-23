@@ -11,6 +11,7 @@ import { CROPS } from '../data/crops.js';
 import { SEASONS, SEASON_LENGTH } from '../data/seasons.js';
 import { TIPS, TIP_SHOW } from '../data/tips.js';
 import { energyOf } from './cooking.js';
+import { guideOn } from './guide.js';
 import { drawPointer } from '../render/guide.js';
 import { dateParts } from '../core/time.js';
 
@@ -28,7 +29,7 @@ export function tipFacts(S, before) {
     has: (test) => Object.keys(bag).some((k) => bag[k] > 0 && test(k)),
     energy: (k) => energyOf(k),
     food: gained.find((k) => energyOf(k) > 0) || null,
-    seasonLeft: SEASON_LENGTH - d + 1, next,
+    seasonLeft: SEASON_LENGTH - d + 1, next, guiding: guideOn(S),
     dying: Object.values(S.soil || {}).filter((t) => t.crop && !t.crop.dead && !CROPS[t.crop.type]?.seasons.includes(next)).length,
   };
   return f;
