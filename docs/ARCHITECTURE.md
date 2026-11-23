@@ -179,6 +179,7 @@ src/
     festivals.js      festival day logic, contests, market stall, decorations
     village.js        fountain flavour text
     homes.js          v76: entering neighbours' cottages (door hours, 2 hearts after dark)
+    wayfind.js        v312: exitToward(from, to) (the exit starting the fewest-maps way), doorOf(map, tile) (a building's door)
     tips.js           v311: first-time tips: tipFacts() (what just came into the bag, the season's end), dueTips(), the queue and G.tip, dismissTip(); its arrow at layer 1001
     guide.js          v308: the guided first day: advance() (steps done move on, never back), facts(), aimAt() (nearest grass, soil, dry seed, village exit, bed), skipGuide(); v310 farmAction() (the field's next action) and guideLine(); G.guide each frame for the HUD; arrow at layer 1001
     reach.js          v306: forgiving Use: reachTiles() (in front, under you, the side tiles nearest first), useTarget() (the first whose prompt depends on the tile; G.target each frame for the prompt and outline), inReach() for taps; interact.js act(at) uses it
@@ -416,6 +417,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 1001 | lively.js | Each light flickering at its own pace after dark (v302) |
 | 1001 | guide.js | The guided first day's arrow on the spot to go to (v308) |
 | 1001 | tips.js | A first-time tip's arrow (the Anvil, the shipping bin) (v311) |
+| 1001 | firstweek.js | The first week's goal arrow (v312); all three arrows use render/guide.js drawPointer, a chevron at the view's edge when off screen |
 
 The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after layers up to 999 (not in caves or houses); after 8 pm it opens around the player. Layers 1000 and up draw over it. Indoors, indoors.js draws its own dark at 990 from the same keyframes (`lightAt()` in renderer.js), with pools cut out around LIGHTS (v100).
 

@@ -10,6 +10,7 @@ import { $, esc } from './dom.js';
 
 function render() {
   const el = $('#goal'), list = hud.goal && !guideOn() ? tracked() : [];   // v308: the guide's line stands in for it
+  G.goalArrow = hud.goal;   // v312: the first week's arrow follows the Objective setting (systems/firstweek.js)
   el.hidden = !list.length;
   if (!list.length) return;
   const more = list.length > 1 ? `<span> +${list.length - 1} in the journal</span>` : '';

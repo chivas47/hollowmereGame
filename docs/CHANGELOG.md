@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v312: Arrows for the first week's goals
+- Days 2 to 7 now show the way, like the guided first day: an arrow at the thing to do on the goal's map (a dry seed for Water the rows, a neighbour who is out for Say hello, the nearest forage in the Wilds, the shipping bin, the cave mouth), and on any other map an arrow at the exit that starts the shortest way there, even across several maps (the town through the village, the Wilds through the farm, out of the farmhouse by its door).
+- When the spot is off screen, a chevron on a dark disc sits at the edge of the view pointing toward it. The guide's and the tips' arrows do the same now.
+- With no neighbour out where you are, Say hello points the way to where some are.
+- Off with the Objective setting, like the corner goal.
+- New save data: none.
+
 ## v311: First-time tips
 - The first time something new happens, a small card at the top of the field says in a line or two what it is for and what to do. Once per farm; Got it closes it, or it goes after 18 seconds. Never blocks play, and waits while a dialog is open.
 - A geode: Corvin at the Anvil in town cracks it for 25g (9 am to 4 pm). Next time you are in town with one before 4 pm, an arrow points at the Anvil's door.
