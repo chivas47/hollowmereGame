@@ -6,6 +6,7 @@ import { G } from '../src/core/game.js';
 import { newState, merge } from '../src/core/state.js';
 import { MAPS } from '../src/data/maps.js';
 import { TIPS } from '../src/data/tips.js';
+import { PLACEABLES } from '../src/data/crafting.js';
 import { tipFacts, dueTips } from '../src/systems/tips.js';
 
 const fresh = () => { const S = newState(); S.firstWeek.arrived = true; G.S = S; return S; };
@@ -47,7 +48,8 @@ test('every tip reads short and plain, and every arrow has a tile to point at', 
     const text = t.text(S, f);
     assert.ok(text.length <= 170, `${t.id}: ${text.length} characters`);
     assert.ok(!/—/.test(text + t.title), `${t.id}: no em dashes`);
-    if (t.aim) assert.ok(MAPS[t.aim.map].grid.some((row) => row.includes(t.aim.tile)), `${t.id}: ${t.aim.tile} on ${t.aim.map}`);
+    if (t.aim?.map) assert.ok(MAPS[t.aim.map].grid.some((row) => row.includes(t.aim.tile)), `${t.id}: ${t.aim.tile} on ${t.aim.map}`);
+    if (t.aim?.placed) assert.ok(PLACEABLES[t.aim.placed], `${t.id}: ${t.aim.placed} can be placed`);
   }
 });
 
@@ -76,4 +78,21 @@ test('tool upgrades: the first bar says what bars are for; in town with enough, 
   assert.ok(!due(S, { ...S.bag }).includes('upgrade'), 'four bars are not enough');
   S.bag.copperbar = 5; assert.ok(due(S, { ...S.bag }).includes('upgrade'));
   S.upgrades.pick = 1; assert.ok(!due(S, { ...S.bag }).includes('upgrade'), 'not once a tool is upgraded');
+});
+
+test('the furnace: in the kit, set down (an arrow at it), and ore with no coal', async () => {
+  const { aimOf } = await import('../src/systems/tips.js');
+  const S = fresh();
+  S.kit.furnace = 1;
+  assert.ok(due(S, { ...S.bag }).includes('furnaceKit'));
+  assert.match(TIPS.find((t) => t.id === 'furnaceKit').text(S, tipFacts(S, {})), /kit \(7\).*Space/);
+  S.kit.furnace = 0; S.placed['8,9'] = { kind: 'furnace' };
+  const ids = due(S, { ...S.bag });
+  assert.ok(ids.includes('furnace') && !ids.includes('furnaceKit'));
+  assert.match(TIPS.find((t) => t.id === 'furnace').text(S, tipFacts(S, {})), /Put in \(5 ore and 1 coal\).*Collect/);
+  S.map = 'farm'; assert.deepEqual(aimOf(S, { placed: 'furnace' }), { tx: 8, ty: 9 }, 'the arrow at your furnace');
+  S.map = 'village'; assert.equal(aimOf(S, { placed: 'furnace' }), null, 'no arrow off its map');
+  S.bag.copper = 5; S.bag.coal = 0;
+  assert.ok(due(S, { ...S.bag }).includes('coal'));
+  S.bag.coal = 1; assert.ok(!due(S, { ...S.bag }).includes('coal'), 'not with coal in the bag');
 });

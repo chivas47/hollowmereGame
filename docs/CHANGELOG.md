@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v315: Tips for the furnace
+- Crafted and still in your kit: a card says to pick the kit (7), face open farm grass and press Use to set it down.
+- Set down: a card says how to smelt (press Use, pick Put in with 5 ore and 1 coal; the bar is ready at once, pick Collect), with an arrow at your furnace while you are on its map.
+- Ore but no coal: where coal comes from (stone in the Hollow, or 150g at the Anvil).
+- Your first bar then gets the Bars card (v314), which says what it buys.
+- New save data: none.
+
 ## v314: Tips for the quest board and tool upgrades
 - The quest board: from day 2, the first time you are in the village with requests pinned up, a card says what it is (bring what a neighbour asks within 5 days: paid at once, and they like you more) with an arrow at the board.
 - Bars: the first bar you get says what they are for: 5 copper bars and 2,000g at the Anvil for a wide hoe, a bigger can, or a stronger axe or pickaxe (read from the upgrade table, so it stays true).
