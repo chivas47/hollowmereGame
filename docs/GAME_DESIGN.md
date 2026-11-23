@@ -25,7 +25,7 @@ Esc or the Menu button opens a wooden board of picture tiles (pixel icons in ren
 | Tile | Page |
 |---|---|
 | Sound | Sound, music, ambience volume, footsteps |
-| Display | HUD size, text size, contrast, HUD mode, objective, prompts, tips |
+| Display | HUD size, text size, contrast, layout (v322, wide screens), HUD mode, objective, prompts, tips |
 | Effects | Particles, shake, hit-stop, motion speed |
 | Controls | Keys (rebind by clicking), the controller's buttons |
 | Farms | The Farms dialog (three slots), New farm |
@@ -1133,6 +1133,8 @@ Small, and only what matters right now. Nothing here touches the economy.
 
 HUD size: 100% to 140%, never smaller (HUD text stays 16 px or larger). Full, minimal or hidden: V or the menu. Settings live in the browser, not the save.
 
+v322 (roadmap 115): Layout, on a wide screen with a mouse. Over the field: the field fills the window (at 1280 x 800 about 43% more of it than beside), the clock and meters float top right, the five menu buttons in a slim column on the left, the hotbar at the foot, and the Basket line is not shown (the hotbar shows what you hold). Each panel turns see-through while your farmer is under it, and they hide while a cutscene plays. Beside the field: the side column as before. A browser new to the game starts over the field; one that already has a farm keeps the side column until its player switches (Nuno: on for new players, existing players keep what they know). Phones and touch screens keep their own layouts.
+
 Phones held upright (v132): the field takes only its own height under the meters, the hotbar sits right under it, and the pad and Use button sit at the bottom of the screen by your thumbs. A long place name is cut short before it reaches the gold. Under 600 px wide the menu buttons drop their key hints. v289 (roadmap 95d): the Camera setting (Menu, Display; kept per browser): far shows the classic 24 x 16 tiles, near 18 x 12 (data/camera.js), each tile a third bigger; auto is near on a touch screen with a side under 600 px. 18 x 12 keeps the fishing meter in view and 9 tiles either side of you, more than a creature's 7-tile chase range. The view follows you on every map, as large maps always did. v290 (roadmap 95c): on a phone held sideways at 19:10 or wider the hotbar is a column between the field and the meters, so the field takes the full height: 844 x 390 goes from a 390 x 260 field to 468 x 312, 915 x 412 from 423 x 282 to 516 x 344; squarer phones keep the row, which leaves them the bigger field. Known issue: a cutscene staged across all 24 tiles can cut off an actor at an edge with the near camera. v287 (roadmap 95a): held upright, the goal and notices sit under the hotbar (v288, roadmap 95b: under 720 px tall the clock is one line, the Holding line goes, the pad buttons are 44 px and the hotbar slimmer; the field takes that room first, then the goal line moves under the hotbar, while notices stay over the field unless 110 px are free), in the room above the thumbs, so nothing covers the field; a short phone (no 110 px between the hotbar and the pad, 640 px tall) keeps them over the field. Held sideways, notices show one at a time in a smaller font, as upright. On every screen the goal and notices turn see-through while your farmer is under them.
 
 v120: Text size, 100% to 150%, scales dialogs, the menu and the bag (the HUD has its own size); a card still fits the window and scrolls. Contrast puts solid black behind the objective, the Use prompt, messages and the basket line, with cream edges on the meters, buttons and hotbar slots. Signals no longer rest on colour alone: quality in the bag and chests shows as 1 to 3 pips (fine, prime, heirloom) in the tier's colour, a low meter is striped as well as red, and ripe crops and forage glint with a small cross instead of a single dot. The objective and the Use prompt now sit under open dialogs instead of over them.
@@ -1584,6 +1586,7 @@ Stardew 1.6 by role, original titles. Books are bag items you read; the booksell
 
 ## Known issues and open questions
 
+- v322: Over the field, the hotbar covers the field's bottom row and the clock its top right corner (they turn see-through while you are under them, but stay in the way of a click there). The polish sweep seeds a save before its dialog and panel stops, so those are photographed beside the field; its map stops (no farm) show the layout over it.
 - v321: A farm cannot move to Wide acres (Nuno: new farms only, for now). The balance bot plays it with the open field's plan (its field and machines in the homestead corner, buildings from the far corner): energy limits it before land does, so its gold is close to the open field's.
 - v319: A farm in its second week when a tip generation ships counts that generation as seen (it is past its first week). A save with a farmer profile left empty past day 1 (only test saves made by the balance bot) opens the new game screen on load.
 

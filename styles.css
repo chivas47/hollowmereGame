@@ -138,6 +138,28 @@ canvas#game{width:100%;height:100%;display:block;border-radius:4px;image-renderi
   .pill{justify-content:space-between}
 }
 
+/* v322 (roadmap 115): the HUD over the field (Display, Layout; data/hud.js). The field fills the window; the clock
+   and meters float top right, the menus in a slim column on the left, the hotbar at the foot. Each turns
+   see-through while your farmer walks under it (.dodge, ui/fieldnotes.js). Only on wide screens with a mouse. */
+.wide-only{display:none}
+@media (hover:hover) and (pointer:fine) and (min-width:900px) and (min-aspect-ratio:13/10){
+  .wide-only{display:inline-block}
+  .game.over{position:relative;max-width:none;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);grid-template-areas:"stage";gap:0}
+  .game.over > .stage{grid-area:stage}
+  .game.over > .clock,.game.over > .meters,.game.over > .menubar,.game.over > .bottom{position:absolute;z-index:8;transition:opacity .2s}   /* under dialogs (9, 10), cutscenes and the title, like the goal */
+  .game.over > .clock{top:12px;right:12px;width:calc(220px * var(--hud,1));padding:4px 10px}
+  .game.over > .clock h1{font-size:18px}
+  .game.over > .meters{right:12px;top:calc(12px + var(--clockh,128px));width:calc(220px * var(--hud,1));padding:6px 10px;gap:4px;background:rgba(43,33,26,.9)}
+  .game.over .meter{width:110px}
+  .game.over > .menubar{left:12px;top:50%;transform:translateY(-50%);width:auto}
+  .game.over .pill{gap:10px}
+  .game.over > .bottom{left:50%;bottom:8px;transform:translateX(-50%);max-width:calc(100% - 24px)}
+  .game.over .basket{display:none}
+  .game.over .toasts{bottom:calc(112px * var(--hud,1))}   /* above the hotbar */
+  .game.over > .clock.dodge,.game.over > .meters.dodge,.game.over > .menubar.dodge,.game.over > .bottom.dodge{opacity:.2}
+  body.in-cut .game.over > .clock,body.in-cut .game.over > .meters,body.in-cut .game.over > .menubar,body.in-cut .game.over > .bottom{visibility:hidden}   /* a cutscene has the whole field */
+}
+
 /* Phones */
 @media (max-width:600px){
   .game{grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto auto auto minmax(0,1fr) auto auto;gap:6px;grid-template-areas:"clock clock" "menu menu" "meters meters" "stage stage" "bar bar" "pad use"}
