@@ -7,6 +7,7 @@ import { T } from '../core/constants.js';
 import { on, emit } from '../core/events.js';
 import { addUpdater, addLayer } from '../core/registry.js';
 import { doorOf } from './wayfind.js';
+import { parsePlaceKey } from './world.js';
 import { CROPS } from '../data/crops.js';
 import { SEASONS, SEASON_LENGTH } from '../data/seasons.js';
 import { TIPS, TIP_SHOW } from '../data/tips.js';
@@ -30,6 +31,7 @@ export function tipFacts(S, before) {
     energy: (k) => energyOf(k),
     food: gained.find((k) => energyOf(k) > 0) || null,
     seasonLeft: SEASON_LENGTH - d + 1, next, guiding: guideOn(S),
+    placed: (kind) => Object.values(S.placed || {}).some((p) => p.kind === kind),   // v315
     dying: Object.values(S.soil || {}).filter((t) => t.crop && !t.crop.dead && !CROPS[t.crop.type]?.seasons.includes(next)).length,
   };
   return f;
@@ -38,6 +40,19 @@ export function tipFacts(S, before) {
 // The tips that should fire now: not shown before, not waiting already.
 export function dueTips(S, f) {
   return TIPS.filter((t) => !S.tips.includes(t.id) && !queue.some((q) => q.id === t.id) && shown?.id !== t.id && t.when(S, f));
+}
+
+// Where a tip's arrow goes on the map you are on: a building's door ({ map, tile }) or yours of a placed kind
+// ({ placed }, v315: the first one set down on this map), else nowhere.
+export function aimOf(S, aim) {
+  if (!aim) return null;
+  if (aim.placed) {
+    const k = Object.keys(S.placed || {}).find((key) => S.placed[key].kind === aim.placed && parsePlaceKey(key).map === S.map);
+    if (!k) return null;
+    const { x, y } = parsePlaceKey(k);
+    return { tx: x, ty: y };
+  }
+  return S.map === aim.map ? doorOf(S.map, aim.tile) : null;
 }
 
 export function dismissTip() { shown = null; left = 0; G.tip = null; }
@@ -59,7 +74,7 @@ addUpdater((dt) => {
     emit('sfx', 'ui');
   }
   if (shown && (left -= dt) <= 0) dismissTip();
-  G.tip = shown && { ...shown, aim: shown.aim && S.map === shown.aim.map ? doorOf(S.map, shown.aim.tile) : null };
+  G.tip = shown && { ...shown, aim: aimOf(S, shown.aim) };
 });
 on('game:loaded', () => { last = G.S?.bag ? { ...G.S.bag } : null; queue.length = 0; dismissTip(); });
 

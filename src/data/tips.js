@@ -9,7 +9,8 @@ import { CROPS } from './crops.js';
 import { SHOPS } from './town.js';
 import { CRACK_COST } from './guild.js';
 import { QUEST } from './quests.js';
-import { UPGRADES } from './upgrades.js';
+import { UPGRADES, COAL_COST } from './upgrades.js';
+import { MACHINES } from './crafting.js';
 import { fmtGold } from '../core/format.js';
 
 const smith = () => SHOPS.smithy.keeper;
@@ -52,5 +53,16 @@ TIPS.push(
     text: () => `Bars make tools better at the Anvil in town: ${FIRST_BARS} ${ITEMS[FIRST_BAR].name.toLowerCase()}s and ${fmtGold(FIRST.cost)} for a wide hoe, a bigger can, or a stronger axe or pickaxe.` },
   { id: 'upgrade', title: 'A better tool', when: (S) => S.map === 'town' && !upgraded(S) && (S.bag[FIRST_BAR] || 0) >= FIRST_BARS && S.gold >= FIRST.cost && S.time < 16 * 60,
     text: () => `You can afford your first upgrade. ${SHOPS.smithy.keeper} at the Anvil does it while you wait.`, aim: { map: 'town', tile: ')' } },
+);
+// v315 (roadmap 107): the furnace, from the kit to the first bar. f.placed(kind): one is set down somewhere; aim
+// { placed: kind }: the arrow at yours when you are on its map. The hint comes from MACHINES so it stays true.
+const ORES = ['copper', 'iron', 'gold', 'umbrite'];
+TIPS.push(
+  { id: 'furnaceKit', title: 'Your furnace', when: (S, f) => (S.kit?.furnace || 0) > 0 && !f.placed('furnace'),
+    text: () => `It waits in your kit. Pick the kit (${keyName('slot7')}), face open farm grass and press ${keyName('use')} to set it down.` },
+  { id: 'furnace', title: 'Smelting', when: (S, f) => f.placed('furnace'),
+    text: () => `Face the furnace, press ${keyName('use')} and pick Put in (${MACHINES.furnace.hint}). The bar is ready at once: pick Collect to take it.`, aim: { placed: 'furnace' } },
+  { id: 'coal', title: 'Coal', when: (S, f) => f.placed('furnace') && !(S.bag.coal > 0) && ORES.some((k) => (S.bag[k] || 0) >= 5),
+    text: () => `Each bar takes 1 coal. Break stone in the Hollow (some hold coal), or buy it at the Anvil for ${fmtGold(COAL_COST)}.` },
 );
 export const TIP_SHOW = 18;   // seconds a card stays up, unless dismissed sooner
