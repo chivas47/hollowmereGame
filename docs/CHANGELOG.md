@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v308: A guided first day
+- A new farmer is shown what to do, one small step at a time, right after the opening: till the grass, take the seeds, plant, take the can, water, plant and water the rest, walk to the village, say hello, and in the evening go to bed.
+- Each step is one short line at the top of the field with the key to press (keyboard, controller or touch, as you play). A yellow arrow bobs on the spot to go to, and the hotbar slot to pick pulses. Steps move on by themselves as you do them, and skip themselves if you already have.
+- Skip ends it at any time. Farms from before this version never see it.
+- It replaces the two notices that used to explain the first week in words; the first week's daily goals carry on in the corner once the guide is done.
+- New save data: firstWeek.guide (the step reached, and whether it is over).
+
 ## v307: The tile outline only for precise tools
 - The outline on the ground shows only while you hold the hoe, the watering can, seeds or the kit (placing), the tools where the exact tile matters. With anything else the prompt still says what Use will do, without the box.
 - Works for the second farmer's half too, by what they hold.

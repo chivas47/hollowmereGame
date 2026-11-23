@@ -85,6 +85,7 @@ src/
     crowd.js          v145: the festival crowd (v151: EARLY, SETUP, CLOSE): STATIONS (places in the square, the way they face, festival kinds, a mood), ROLES (jobs by festival kind), CROWD (minutes per place), CHAT
     homes.js          where each neighbour lives: door, cottage, door hours (v76); homeEntry() inside the front door (v97); shares: a home of more than one, its owner's door and inside, a spot each from the plan's spots (v166)
     ranch.js          Tamsin's pens on the village map and where her cows and sheep stand (v166)
+    guide.js          v308: GUIDE, the guided first day's steps (say, slot or use, map, aim, from, done(facts)), its closing line
     reach.js          v306: REACH: tools that stay exact on farmland, the weapon that stays exact everywhere, how far ahead side tiles are measured; v307 outline: the tools that show the tile outline (render/renderer.js)
     seats.js          v305: SEATS: which floor plan pieces, furniture shapes and tiles are seats, a placed seat's facing by turn, the walk-in delay and the seated pose
     venues.js         v98: VENUES, the buildings you walk into (shops, tavern, clinic, museum, ranch, town hall, theatre, lodge, Oasis, casino, coop, barn): where each stands, which tiles are its door, the dialog its counter opens, its floor plan; venueMap(), venueFront()
@@ -177,6 +178,7 @@ src/
     festivals.js      festival day logic, contests, market stall, decorations
     village.js        fountain flavour text
     homes.js          v76: entering neighbours' cottages (door hours, 2 hearts after dark)
+    guide.js          v308: the guided first day: advance() (steps done move on, never back), facts(), aimAt() (nearest grass, soil, dry seed, village exit, bed), skipGuide(); G.guide each frame for the HUD; arrow at layer 1001
     reach.js          v306: forgiving Use: reachTiles() (in front, under you, the side tiles nearest first), useTarget() (the first whose prompt depends on the tile; G.target each frame for the prompt and outline), inReach() for taps; interact.js act(at) uses it
     seats.js          v305: sitting on chairs, stools, benches, sofas and armchairs (data/seats.js): seatAt(), sit(), stand(), seated() (player.js draws the seated pose); Use or walking into a seat for 0.3 s; nothing saved
     venues.js         v98: entering buildings (the same hours and notes their doors gave), the counter that opens each dialog, and drawing and looking at every floor plan's pieces (cottages too); staff who are not villagers stand behind their counters while open
@@ -410,6 +412,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 1000+ | atmosphere.js | Fireflies (drawn after the light tint) |
 | 1001 | nightlights.js | Lit window glass and lamp heads, over the dark (v105) |
 | 1001 | lively.js | Each light flickering at its own pace after dark (v302) |
+| 1001 | guide.js | The guided first day's arrow on the spot to go to (v308) |
 
 The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after layers up to 999 (not in caves or houses); after 8 pm it opens around the player. Layers 1000 and up draw over it. Indoors, indoors.js draws its own dark at 990 from the same keyframes (`lightAt()` in renderer.js), with pools cut out around LIGHTS (v100).
 
