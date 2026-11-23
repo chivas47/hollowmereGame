@@ -13,7 +13,7 @@ import { slotKind } from '../data/hotbar.js';
 import { GUIDE, GUIDE_DONE, GUIDE_BACK, FARM, FIELD_GOAL } from '../data/guide.js';
 import { CROPS } from '../data/crops.js';
 import { dateParts } from '../core/time.js';
-import { drawGuideArrow } from '../render/guide.js';
+import { drawPointer } from '../render/guide.js';
 import { tileOf } from './world.js';
 
 const state = (S = G.S) => S.firstWeek.guide;
@@ -113,4 +113,4 @@ addUpdater((dt) => {
 on('game:loaded', () => { if (guideOn()) advance(G.S, true); G.guide = null; });
 
 // The arrow over the spot, above the evening tint so it shows at night too.
-addLayer(1001, (c) => { const a = G.guide?.aim; if (a && (!G.view || G.view === G.S)) drawGuideArrow(c, a.tx * T + T / 2, a.ty * T); });
+addLayer(1001, (c) => { const a = G.guide?.aim; if (a && (!G.view || G.view === G.S)) drawPointer(c, a.tx * T + T / 2, a.ty * T); });

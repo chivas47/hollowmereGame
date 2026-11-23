@@ -4,6 +4,13 @@
 import { G } from '../core/game.js';
 import { on, notify } from '../core/events.js';
 import { FIRST_WEEK } from '../data/firstweek.js';
+import { T } from '../core/constants.js';
+import { addUpdater, addLayer } from '../core/registry.js';
+import { drawPointer } from '../render/guide.js';
+import { exitToward, doorOf } from './wayfind.js';
+import { aimAt, guideOn } from './guide.js';
+import { NPCRT } from './npcs.js';
+import { tileOf } from './world.js';
 
 const W = () => G.S.firstWeek;
 
@@ -31,3 +38,31 @@ let ready = false;   // state:changed fires before a save is loaded too
 on('game:reset', () => { ready = false; });
 on('game:loaded', () => { checkWeek(true); ready = true; });
 on('state:changed', () => { if (ready) checkWeek(); });
+
+// v312 (roadmap 104): an arrow for the goal shown: on its map at the thing to do (data/firstweek.js aim), elsewhere at
+// the exit that starts the way there (systems/wayfind.js). Not while the guided first day runs (it has its own), and
+// off with the Objective setting (G.goalArrow, set by ui/goal.js). G.weekAim: { tx, ty } or null.
+const nearestOf = (S, list) => { const me = tileOf(S.x, S.y); let best = null, bd = Infinity; for (const p of list) { const d = (p.tx - me.tx) ** 2 + (p.ty - me.ty) ** 2; if (d < bd) { bd = d; best = p; } } return best; };
+const HERE = {
+  till: (S) => aimAt('till', S),
+  dry: (S) => aimAt('dry', S) || (S.water === 0 ? aimAt('well', S) : null),
+  // a neighbour out on this map; none here, the way to a map where one is (the village first, then the town)
+  npc: (S) => nearestOf(S, NPCRT.filter((n) => n.map === S.map && n.visible && !n.inside).map((n) => tileOf(n.x, n.y)))
+    || ['village', 'town', ...new Set(NPCRT.map((n) => n.map))].filter((m) => m !== S.map && NPCRT.some((n) => n.map === m && n.visible && !n.inside)).map((m) => exitToward(S.map, m)).find(Boolean) || null,
+  forage: (S) => nearestOf(S, (S.forage || []).map((f) => ({ tx: f.x, ty: f.y }))) || aimAt('well', S),
+  bin: (S) => doorOf(S.map, 'B'),
+  cave: (S) => doorOf(S.map, 'M'),
+  town: () => null,
+};
+export function weekAim(S = G.S) {
+  const g = weekGoal();
+  if (!g) return null;
+  return S.map === g.map ? HERE[g.aim]?.(S) || null : exitToward(S.map, g.map);
+}
+let t = 0;
+addUpdater((dt) => {
+  if ((t -= dt) > 0) return;
+  t = 0.25;
+  G.weekAim = G.S?.firstWeek?.arrived && !guideOn() && !G.cut && G.goalArrow !== false ? weekAim() : null;
+});
+addLayer(1001, (c) => { const a = G.weekAim; if (a && (!G.view || G.view === G.S)) drawPointer(c, a.tx * T + T / 2, a.ty * T); });

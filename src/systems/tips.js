@@ -6,12 +6,12 @@ import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, emit } from '../core/events.js';
 import { addUpdater, addLayer } from '../core/registry.js';
-import { MAPS } from '../data/maps.js';
+import { doorOf } from './wayfind.js';
 import { CROPS } from '../data/crops.js';
 import { SEASONS, SEASON_LENGTH } from '../data/seasons.js';
 import { TIPS, TIP_SHOW } from '../data/tips.js';
 import { energyOf } from './cooking.js';
-import { drawGuideArrow } from '../render/guide.js';
+import { drawPointer } from '../render/guide.js';
 import { dateParts } from '../core/time.js';
 
 let last = null;            // the bag a moment ago
@@ -39,15 +39,6 @@ export function dueTips(S, f) {
   return TIPS.filter((t) => !S.tips.includes(t.id) && !queue.some((q) => q.id === t.id) && shown?.id !== t.id && t.when(S, f));
 }
 
-// The door of a building drawn with that tile: the middle of the bottom row of its block (a single tile is itself).
-function doorOf(S, ch) {
-  const g = MAPS[S.map]?.grid, at = [];
-  g?.forEach((row, y) => [...row].forEach((c, x) => { if (c === ch) at.push([x, y]); }));
-  if (!at.length) return null;
-  const bottom = Math.max(...at.map(([, y]) => y)), row = at.filter(([, y]) => y === bottom).map(([x]) => x);
-  return { tx: row[Math.floor(row.length / 2)], ty: bottom };
-}
-
 export function dismissTip() { shown = null; left = 0; G.tip = null; }
 
 let t = 0;
@@ -67,9 +58,9 @@ addUpdater((dt) => {
     emit('sfx', 'ui');
   }
   if (shown && (left -= dt) <= 0) dismissTip();
-  G.tip = shown && { ...shown, aim: shown.aim && S.map === shown.aim.map ? doorOf(S, shown.aim.tile) : null };
+  G.tip = shown && { ...shown, aim: shown.aim && S.map === shown.aim.map ? doorOf(S.map, shown.aim.tile) : null };
 });
 on('game:loaded', () => { last = G.S?.bag ? { ...G.S.bag } : null; queue.length = 0; dismissTip(); });
 
 // The tip's arrow, like the guide's, when you are on the map it points into.
-addLayer(1001, (c) => { const a = G.tip?.aim; if (a && (!G.view || G.view === G.S)) drawGuideArrow(c, a.tx * T + T / 2, a.ty * T); });
+addLayer(1001, (c) => { const a = G.tip?.aim; if (a && (!G.view || G.view === G.S)) drawPointer(c, a.tx * T + T / 2, a.ty * T); });
