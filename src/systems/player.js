@@ -15,6 +15,8 @@ import { DIRS, OPPOSITE } from '../core/constants.js';
 import { MOTION, HURT } from '../data/animation.js';
 import { tinted } from './health.js';
 import { rng } from '../render/pixel.js';
+import { seated } from './seats.js';
+import { SEATS } from '../data/seats.js';
 
 const SPEED = 62; // pixels per second
 
@@ -28,7 +30,7 @@ const SIDE = { left: 'down', right: 'down', up: 'left', down: 'right' };   // th
 addUpdater((dt) => {
   rest(dt);
   if (G.cut) return;   // v240: a cutscene moves you (systems/cutscene.js)
-  if (G.lock || rooted()) { G.moving = false; M.ease = 0; return; }   // v74: tool wind-ups hold you in place
+  if (G.lock || rooted() || seated()) { G.moving = false; M.ease = 0; return; }   // v74: tool wind-ups hold you in place; v305: so does a seat
   const S = G.S, k = G.keys;
   const dx = (k.right ? 1 : 0) - (k.left ? 1 : 0);
   const dy = (k.down ? 1 : 0) - (k.up ? 1 : 0);
@@ -106,9 +108,20 @@ const SWUNG = new Set(['hoe', 'pick', 'axe', 'can', 'sword', 'rod', 'pan']);
 const mine = () => G.fishing && !G.fishing.p2;   // v134: a line of yours, not the second farmer's
 export const rodBend = () => { const f = G.fishing; return f?.phase === 'reel' ? 25 + Math.sin(performance.now() / 90) * 6 : f?.phase === 'bite' ? 18 : Math.sin(performance.now() / 600) * 2; };
 
+// v305: seated (systems/seats.js): on the seat, facing its way, the legs hidden under its edge.
+function drawSeated(c, s) {
+  const pal = outfitPal(G.S.profile, G.S.outfit);
+  c.save(); c.beginPath(); c.rect(s.x - 12, s.y - 40, 24, 40 - SEATS.hide); c.clip();
+  drawPerson(c, s.x, s.y, s.dir, false, 0, pal, lean(s.x));
+  if (M.blink > 0) drawBlink(c, s.x, s.y, s.dir, pal);
+  c.restore();
+}
+
 addEntities(() => (G.youMap ? [] : [{   // v140: not drawn in their half when you are elsewhere
-  y: G.S.y,
+  y: seated() ? seated().y + (seated().dir === 'up' ? -6 : 1) : G.S.y,   // v305: behind a seat's back when facing away
   draw: (c) => {
+    const s = seated();
+    if (s) return drawSeated(c, s);
     if (tinted(G.hurtT)) return drawTinted(c, G.S.x, G.S.y, HURT.col, HURT.tintAlpha, (g) => (G.riding ? (drawHorse(g, G.S.x, G.S.y, G.S.dir, G.moving), drawBody(g, G.S.x, G.S.y - 7, false)) : drawBody(g, G.S.x, G.S.y, G.moving)));   // v281: red for a moment, then the blink
     if (G.hurtT > 0 && Math.floor(performance.now() / 80) % 2) return;   // blink while hurt
     if (G.riding) { drawHorse(c, G.S.x, G.S.y, G.S.dir, G.moving); drawBody(c, G.S.x, G.S.y - 7, false); return; }

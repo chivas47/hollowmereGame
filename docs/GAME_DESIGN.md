@@ -193,6 +193,7 @@ Short scenes played on the map for important moments (Stardew plays its events t
 - The kit slot places the selected crafted object on untilled farm grass. Press 7 again to switch. Face a placed object and press Use to open it (load, collect, pick up).
 - I opens the bag, C opens crafting.
 - V switches the HUD between full, minimal and hidden (v112).
+- v305: Use on a chair, stool, bench, sofa or armchair (or walking into one for 0.3 s) sits you on it, facing its way; any step, Use or tool stands you up. Your own placed seats open their dialog first (it has a Sit button). Only the first farmer sits.
 
 ## Values: the Stardew scale
 

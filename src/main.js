@@ -25,6 +25,7 @@ import './systems/chatter.js';
 import './systems/news.js';   // v153: what you did, for tomorrow's talk
 import './systems/homes.js';   // v76: the neighbours' cottages
 import './systems/venues.js';   // v98: buildings you walk into
+import './systems/seats.js';   // v305: sitting on chairs, sofas and benches
 import './systems/fishing.js';
 import './systems/upgrades.js';
 import './systems/livestock.js';
