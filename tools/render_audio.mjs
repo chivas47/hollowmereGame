@@ -12,12 +12,15 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, dirname, normalize, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
+import { execFileSync } from 'node:child_process';
+import { tmpdir } from 'node:os';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ONLY = process.argv.slice(2);
 const RATE = 22050, PEAK = 0.9;
 const { chromium } = createRequire(import.meta.url)('playwright');
 const { ALL_AUDIO, AUDIO_DIR } = await import(join(ROOT, 'src/data/audio.js'));
+const { TRACKS } = await import(join(ROOT, 'src/data/musicTracks.js'));   // v318: the music database
 
 const TYPES = { '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.html': 'text/html', '.png': 'image/png' };
 const server = createServer((req, res) => {
@@ -34,12 +37,12 @@ const page = await browser.newPage();
 await page.goto(BASE + 'render.html');
 
 // Records one sound in the page: kind picks the generator, len the seconds recorded, loop the seconds it repeats.
-const record = (kind, id, len, rate) => page.evaluate(async ([kind, id, len, rate]) => {
+const record = (kind, id, len, rate, gen = null) => page.evaluate(async ([kind, id, len, rate, gen]) => {
   const E = await import('/src/audio/engine.js');
   const off = new OfflineAudioContext(1, Math.ceil(len * rate), rate), restore = E.renderInto(off);
   let loop = null;
   try {
-    if (kind === 'music') loop = (await import('/src/audio/music.js')).renderSong(id);
+    if (kind === 'music') { loop = (await import('/src/audio/music.js')).renderSong(gen.recipe, gen.bars); if (!gen.loop) loop = null; }
     else if (kind === 'sfx') (await import('/src/audio/sfx.js')).SFX[id]();
     else if (kind === 'calls') (await import('/src/audio/ambience.js')).CALLS[id](1);
     else if (kind === 'footsteps') (await import('/src/audio/footsteps.js')).stepSound(id);
@@ -50,7 +53,7 @@ const record = (kind, id, len, rate) => page.evaluate(async ([kind, id, len, rat
   } finally { restore(); }
   const buf = await off.startRendering();
   return { data: Array.from(buf.getChannelData(0)), loop };
-}, [kind, id, len, rate]);
+}, [kind, id, len, rate, gen]);
 
 const LEN = { music: 16, ambience: 4.5, sfx: 3.2, calls: 2, footsteps: 0.6 };
 
@@ -83,6 +86,22 @@ function wav(samples) {
 }
 
 const gains = {};
+// v318: the music tracks (data/musicTracks.js), each from its generator recipe: loops folded, stingers trimmed, then
+// encoded to Ogg Vorbis with ffmpeg (a tenth of the WAV's size). The gain goes on the track's line in that file.
+const trackGains = {};
+for (const t of TRACKS) {
+  if (ONLY.length && !ONLY.includes(t.id)) continue;
+  const loop = t.loop !== false, s = shape('music', await record('music', t.id, loop ? 18 : 5, RATE, { recipe: t.gen, bars: t.bars || 4, loop }));
+  const peak = s.reduce((m, v) => Math.max(m, Math.abs(v)), 0) || 1;
+  for (let i = 0; i < s.length; i++) s[i] *= PEAK / peak;
+  const out = join(ROOT, AUDIO_DIR, t.file), tmp = join(tmpdir(), `hm-${t.id}.wav`);
+  mkdirSync(dirname(out), { recursive: true });
+  writeFileSync(tmp, wav(s));
+  if (out.endsWith('.ogg')) execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', tmp, '-c:a', 'libvorbis', '-q:a', '4', out]);
+  else writeFileSync(out, wav(s));
+  trackGains[t.id] = +(peak / PEAK).toPrecision(3);
+  console.log(`${t.file.padEnd(42)} ${(s.length / RATE).toFixed(2)} s  gain ${trackGains[t.id]}`);
+}
 for (const [kind, group] of Object.entries(ALL_AUDIO)) {
   for (const [id, entry] of Object.entries(group)) {
     if (ONLY.length && !ONLY.includes(id)) continue;
@@ -103,3 +122,14 @@ const dataPath = join(ROOT, 'src/data/audio.js');
 let src = readFileSync(dataPath, 'utf8');
 for (const [file, g] of Object.entries(gains)) src = src.replace(new RegExp(`(file: '${file.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}',\\s*gain: )[0-9.e-]+`), `$1${g}`);
 writeFileSync(dataPath, src);
+
+// v318: each track's gain on its line in data/musicTracks.js (added after its file the first time).
+const tracksPath = join(ROOT, 'src/data/musicTracks.js');
+let tsrc = readFileSync(tracksPath, 'utf8');
+for (const [id, gv] of Object.entries(trackGains)) {
+  tsrc = tsrc.split('\n').map((line) => {
+    if (!line.includes(`id: '${id}'`)) return line;
+    return /gain: [0-9.e-]+/.test(line) ? line.replace(/gain: [0-9.e-]+/, `gain: ${gv}`) : line.replace(/(file: '[^']+',)/, `$1 gain: ${gv},`);
+  }).join('\n');
+}
+writeFileSync(tracksPath, tsrc);

@@ -50,6 +50,7 @@ function show(view = 'main') {
 function begin() {
   $('#title').hidden = true;
   document.body.classList.remove('titling');
+  G.title = false;   // v318
   onBegin?.();
 }
 
@@ -80,6 +81,7 @@ $('#titleButtons').addEventListener('click', (e) => {
 // Opens the title screen; then(...) is called once a farm is chosen (G.S set), to start the game on it.
 export function openTitle(then) {
   onBegin = then;
+  G.title = true;   // v318: the main menu music (systems/musicDirector.js)
   const s = slotInfo(currentSlot());
   season = s ? dateParts(s.day).season : 'Spring';
   document.body.classList.add('titling');

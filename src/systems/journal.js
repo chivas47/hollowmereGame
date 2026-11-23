@@ -4,7 +4,7 @@
 // G.S.journal = { story: {id: day done, 0 = before v114}, log: [{ text, day }], seen: [world keys], pins: [{ map, text }],
 //   track: objective id | null, markers: bool }.
 import { G } from '../core/game.js';
-import { on, notify, changed } from '../core/events.js';
+import { on, emit, notify, changed } from '../core/events.js';
 import { dateParts } from '../core/time.js';
 import { ITEMS } from '../data/items.js';
 import { NPCS } from '../data/npcs.js';
@@ -64,7 +64,7 @@ function discover(map, quiet) {
   const k = worldKey(map);
   if (!WORLD[k] || seen(k)) return;
   J().seen.push(k);
-  if (!quiet) notify(`New place on your map: ${MAPS[k].name}.`);
+  if (!quiet) { notify(`New place on your map: ${MAPS[k].name}.`); emit('place:found', k); }   // v318: the discovery stinger
 }
 
 // Every objective in hand: { id, name, text (one line for the HUD), how, map, optional }.

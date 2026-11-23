@@ -8,15 +8,7 @@
 // fails to load, the game falls back to those generators (audio/sfx.js, music.js, ambience.js, footsteps.js).
 export const AUDIO_DIR = 'assets/audio/';
 
-// Music: one loop per mood (audio/music.js picks the mood: the season, the mine, festival days).
-export const MUSIC_FILES = {
-  Spring:   { file: 'music/spring-farm-theme.wav',     gain: 0.119, loop: true },
-  Summer:   { file: 'music/summer-farm-theme.wav',     gain: 0.12, loop: true },
-  Autumn:   { file: 'music/autumn-farm-theme.wav',     gain: 0.123, loop: true },
-  Winter:   { file: 'music/winter-farm-theme.wav',     gain: 0.121, loop: true },
-  mine:     { file: 'music/hollow-mine-theme.wav',     gain: 0.122, loop: true },
-  festival: { file: 'music/festival-square-theme.wav', gain: 0.12, loop: true },
-};
+// Music: see data/musicTracks.js (v318), which lists every track with its location, season, weather and time.
 
 // Sound effects, by the name systems emit ('sfx', name).
 export const SFX_FILES = {
@@ -87,4 +79,4 @@ export const STEP_FILES = {
   hoof:  { file: 'footsteps/horse-hoofbeat.wav',  gain: 0.0193, vary: 0.15 },
 };
 
-export const ALL_AUDIO = { music: MUSIC_FILES, sfx: SFX_FILES, ambience: BED_FILES, calls: CALL_FILES, footsteps: STEP_FILES };
+export const ALL_AUDIO = { sfx: SFX_FILES, ambience: BED_FILES, calls: CALL_FILES, footsteps: STEP_FILES };

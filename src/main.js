@@ -28,6 +28,7 @@ import './systems/reach.js';   // v306: Use reaches the nearest thing, not only 
 import './systems/seats.js';   // v305: sitting on chairs, sofas and benches
 import './systems/guide.js';   // v308: the guided first day
 import './systems/tips.js';   // v311: first-time tips
+import './systems/musicDirector.js';   // v318: which music plays (data/musicTracks.js); audio/music.js plays it
 import './systems/fishing.js';
 import './systems/upgrades.js';
 import './systems/livestock.js';
