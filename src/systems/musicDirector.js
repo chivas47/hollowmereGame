@@ -27,7 +27,7 @@ import { MINE } from './mine.js';
 const asList = (v) => (v == null ? [] : Array.isArray(v) ? v : [v]);
 export const categoriesOf = (t) => asList(t.category);
 const FIELDS = ['place', 'region', 'season', 'weather', 'time', 'festival', 'cutscene'];
-// v342: a floor range [from, to] (or [from] and deeper) matches the floor you are on.
+// v343: a floor range [from, to] (or [from] and deeper) matches the floor you are on.
 export const inFloors = (range, floor) => floor != null && floor >= range[0] && (range[1] == null || floor <= range[1]);
 
 // --- Context -------------------------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ function fight(S, now) {
   return { combat: on, boss: on && slimes.some((m) => m.hp > 0 && m.elite && Math.hypot(m.x - S.x, m.y - S.y) <= MUSIC.combatRange * 2 * T) };
 }
 
-// v342: where you are, as a place (the map, or the Hollow's zone) and its region.
+// v343: where you are, as a place (the map, or the Hollow's zone) and its region.
 const where = (map) => { const place = placeOf(map, MINE.zone); return { place, region: regionOf(place), floor: map === 'mine' ? MINE.floor : null }; };
 
 // The moment, as the director sees it.
@@ -81,7 +81,7 @@ export function pickTrack(c, mem = {}, rand = Math.random, tracks = TRACKS) {
     if (!fitting.length) continue;
     const best = Math.max(...fitting.map(specificity)), specific = fitting.filter((t) => specificity(t) === best);
     const top = Math.max(...specific.map((t) => t.priority || 0)), pool = specific.filter((t) => (t.priority || 0) === top);
-    const key = `${layer.id}:${c.place || c.cutscene || c.festival || ''}`;   // v342: memory per place
+    const key = `${layer.id}:${c.place || c.cutscene || c.festival || ''}`;   // v343: memory per place
     const why = (how) => `${layer.id} layer (${describe(c)}): ${how}; ${pool.length} of ${fitting.length} fitting at the most specific level`;
     if (mem.current && !mem.rotate && pool.some((t) => t.id === mem.current)) return { track: byId(mem.current), layer: layer.id, key, reason: why('still fits, keeps playing'), candidates: pool };
     const remembered = mem.lastFor?.[key];
@@ -141,7 +141,7 @@ export function skipTrack() { state.rotate = true; updateMusic('skipped', true);
 // What the director is doing, for the debug panel and tests.
 export const musicDebug = () => ({ context: musicContext(), track: state.current?.id || null, name: state.current?.name || null, layer: state.layer, reason: state.reason, candidates: state.candidates, playedFor: Math.round((now() - state.since) / 1000) });
 
-// Whether a track has played long enough to hand over (pure; v342: by time, so long and short tracks rotate alike).
+// Whether a track has played long enough to hand over (pure; v343: by time, so long and short tracks rotate alike).
 export const dueToRotate = (track, seconds) => seconds >= (track.rotateAfter ?? MUSIC.rotateAfter);
 
 // A loop of the current track ended (audio/music.js): once it has played long enough, another that fits as well.

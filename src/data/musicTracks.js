@@ -5,15 +5,15 @@
 // Each track:
 //   id        unique key (saved in the farm's music memory, so do not rename one lightly)
 //   name      a human name, shown in debug logs
-//   brief     v342: what to compose: the moment it plays in, mood, instruments, tempo and form (assets/audio/README.md
+//   brief     v343: what to compose: the moment it plays in, mood, instruments, tempo and form (assets/audio/README.md
 //             is written from it: node tools/audio_list.mjs --readme)
 //   file      under assets/audio/music/<folder>/<id>.ogg (any format the browser plays; README there); if it is
 //             missing the gen recipe plays instead
 //   category  what it is for, one or several of the LAYERS' categories below
-//   region    v342: the region it belongs to (REGIONS below: the farm, the village, the Duskmarch, the island...)
-//   floors    v342: [from, to] floors of a deep place (the Hollow), or [from] for that floor and every one below;
+//   region    v343: the region it belongs to (REGIONS below: the farm, the village, the Duskmarch, the island...)
+//   floors    v343: [from, to] floors of a deep place (the Hollow), or [from] for that floor and every one below;
 //             with a place, a depth band's track beats the place's plain one
-//   place     v342: one place or several (a map id, or a zone of the Hollow's map: PLACES below); a place's own track
+//   place     v343: one place or several (a map id, or a zone of the Hollow's map: MINE_ZONES below); a place's own track
 //             beats its region's, whatever the region's track is tagged with
 //   season    Spring, Summer, Autumn, Winter, or none (any season)
 //   weather   one or several of sun, rain, storm, snow, mist, or none (any weather)
@@ -27,7 +27,7 @@
 //   loop      repeats (default true for music; stingers play once)
 //   loopStart, loopEnd  v342: seconds into the file where the loop starts and ends, for a track with an intro that
 //             plays once (or a tail that does not loop). Leave them out to loop the whole file.
-//   rotateAfter  v342: seconds of play after which, at the end of a loop, another track that fits as well takes over
+//   rotateAfter  v343: seconds of play after which, at the end of a loop, another track that fits as well takes over
 //             (default MUSIC.rotateAfter). Counted in time, not loops, so a 10-second sketch and a 3-minute piece rotate alike
 //   gen       the generator recipe the file was recorded from (audio/music.js): root (MIDI), scale, bpm, lead, seed
 //
@@ -43,7 +43,7 @@ import { PEAK } from './nuts.js';
 const MAJ = [0, 2, 4, 7, 9], MIN = [0, 3, 5, 7, 10], DOR = [0, 2, 3, 7, 9], PHR = [0, 1, 5, 7, 8], LYD = [0, 2, 4, 6, 7, 9], HEX = [0, 2, 4, 5, 7, 9], BLU = [0, 3, 5, 6, 7, 10];
 const g = (root, scale, bpm, lead, seed) => ({ root, scale, bpm, lead, seed });
 
-// v342: the Hollow's depth bands (floors, inclusive; one number: that floor and every one below).
+// v343: the Hollow's depth bands (floors, inclusive; one number: that floor and every one below).
 export const HOLLOW_DEPTHS = { upper: [1, 39], middle: [40, 79], deep: [80] };
 // The Sunken Cavern's, from its own data so they move with it: above the Ember Vent's door, from the door down to
 // where umbrite is richest, and below. (Its creatures do not change with depth; only their strength and the ore.)
@@ -75,7 +75,7 @@ export const TRACKS = [
   { id: 'mountain_01', name: 'High Paths', brief: 'Cragmoor, the quarry and the railway: high paths, wind, wide views. Open fifths, acoustic guitar, low whistle or pan flute, a steady walking pulse.', file: 'music/wild/mountain_01.ogg', gain: 0.123, category: 'location', region: 'mountains', gen: g(60, HEX, 90, 'triangle', 313) },
   { id: 'exploration_01', name: 'Off the Map', brief: 'Ashgrove Wilds: off the beaten path, a little adventure. Driving but light: plucked strings, hand drums, flute; a sense of discovery.', file: 'music/wild/exploration_01.ogg', gain: 0.115, category: 'location', region: 'wilds', gen: g(57, DOR, 104, 'triangle', 317) },
   // Underground.
-  // v342: the Hollow by depth, in the bands its creatures and ore change at (data/weapons.js MONSTERS, cavern.js):
+  // v343: the Hollow by depth, in the bands its creatures and ore change at (data/weapons.js MONSTERS, cavern.js):
   // earth and copper above 40, soot puffs, moss slimes and lantern wisps from 40, gold and the Cavern's door from 80.
   { id: 'hollow_upper_01', name: 'The Hollow', brief: 'The Hollow, floors 1 to 39: earth, copper, crabs and moles. Mysterious, not yet threatening. Soft synth pads, low bass pulse, sparse percussion (drips, woodblocks), a simple modal melody on marimba or kalimba.', file: 'music/underground/hollow_upper_01.ogg', gain: 0.122, category: 'location', region: 'mines', place: 'hollow', floors: HOLLOW_DEPTHS.upper, gen: MOODS.mine },
   { id: 'hollow_middle_01', name: 'Lantern Dark', brief: 'The Hollow, floors 40 to 79: soot puffs, moss slimes, lantern wisps. Darker and colder than the upper floors: drones, glassy bell tones, slower and lower, a faint eerie lead.', file: 'music/underground/hollow_middle_01.ogg', gain: 0.122, category: 'location', region: 'mines', place: 'hollow', floors: HOLLOW_DEPTHS.middle, gen: g(48, PHR, 70, 'sine', 349) },
@@ -85,23 +85,23 @@ export const TRACKS = [
   { id: 'house_01', name: 'Home', brief: 'The farmhouse and attic: home. The warmest, simplest piece in the game. Solo piano or guitar, maybe a soft cello; slow and comforting.', file: 'music/indoors/house_01.ogg', gain: 0.122, category: 'location', region: 'house', gen: g(64, MAJ, 82, 'sine', 401) },
   { id: 'tavern_01', name: 'The Common Room', brief: 'The Lantern tavern: a lively pub evening. Folk band: fiddle, accordion, guitar, foot-stomp percussion; jolly and loose.', file: 'music/indoors/tavern_01.ogg', gain: 0.127, category: 'location', region: 'tavern', gen: g(62, BLU, 118, 'square', 409) },
   { id: 'shops_01', name: 'Open for Business', brief: 'Every working shop in town (store, smithy, carpentry, clinic, ranch, town hall, lodge): light and friendly background music. Pizzicato strings or ukulele, soft bells; unobtrusive, it plays while you browse menus.', file: 'music/indoors/shops_01.ogg', gain: 0.117, category: 'location', region: 'shops', gen: g(67, HEX, 104, 'triangle', 419) },
-  // v342: the two quieter rooms in town, each its own.
+  // v343: the two quieter rooms in town, each its own.
   { id: 'museum_01', name: 'Quiet Halls', brief: 'Hollowmere Museum: quiet halls of artifacts and donations. Calm and thoughtful: solo piano or harp, soft strings, a gentle sense of wonder. Very quiet dynamics.', file: 'music/indoors/museum_01.ogg', gain: 0.116, category: 'location', region: 'shops', place: 'inside_museum', gen: g(64, LYD, 72, 'sine', 421) },
   { id: 'theatre_01', name: 'House Lights', brief: 'The Starlight Picture House: a small old cinema. Nostalgic and charming: an old-time piano or small band (clarinet, upright bass, brushes), like the warm-up music before a film.', file: 'music/indoors/theatre_01.ogg', gain: 0.121, category: 'location', region: 'shops', place: 'inside_theatre', gen: g(62, HEX, 96, 'triangle', 431) },
-  // v342: the Hollow's deeper zones, each its own (the mine map is one map; the zone you are in is the place).
+  // v343: the Hollow's deeper zones, each its own (the mine map is one map; the zone you are in is the place).
   { id: 'cavern_upper_01', name: 'The Sunken Cavern', brief: 'The Sunken Cavern, floors 1 to 9: an ancient buried place of sand and ruins. Middle-eastern tinged modes (phrygian), low drones, hand drums, a reed or ney-like lead.', file: 'music/underground/cavern_upper_01.ogg', gain: 0.126, category: 'location', region: 'mines', place: 'cavern', floors: CAVERN_DEPTHS.upper, gen: g(49, PHR, 78, 'sine', 337) },
   { id: 'cavern_middle_01', name: 'Past the Ember Door', brief: 'The Sunken Cavern, floors 10 to 24, past the Ember Vent\'s door: heat rising, more urgent. Faster hand drums, darker drones, a rhythmic plucked figure.', file: 'music/underground/cavern_middle_01.ogg', gain: 0.118, category: 'location', region: 'mines', place: 'cavern', floors: CAVERN_DEPTHS.middle, gen: g(47, PHR, 84, 'triangle', 359) },
   { id: 'cavern_deep_01', name: 'Umbrite Veins', brief: 'The Sunken Cavern, floor 25 and deeper, where umbrite is richest: the hardest everyday place in the game. Driving and dangerous: pounding low percussion, distorted drones, a strained high lead.', file: 'music/underground/cavern_deep_01.ogg', gain: 0.12, category: 'location', region: 'mines', place: 'cavern', floors: CAVERN_DEPTHS.deep, gen: g(45, BLU, 90, 'square', 367) },
   { id: 'vent_climb_01', name: 'The Ember Vent', brief: 'The Ember Vent, floors 1 to 9: lava, cinder and fire. Hot and relentless: low brass or synth bass, anvil-like metallic hits, a fast pulse.', file: 'music/underground/vent_climb_01.ogg', gain: 0.12, category: 'location', region: 'mines', place: 'vent', floors: VENT_DEPTHS.climb, gen: g(51, BLU, 92, 'square', 347) },
   { id: 'vent_forge_01', name: 'The Forge', brief: 'The Ember Vent\'s forge room on floor 10: no monsters, a safe hearth after the climb. Warm and steady: low strings, a slow anvil rhythm, a calm melody. Relief.', file: 'music/underground/vent_forge_01.ogg', gain: 0.125, category: 'location', region: 'mines', place: 'vent', floors: VENT_DEPTHS.forge, gen: g(55, DOR, 72, 'triangle', 373) },
-  // v342: the Duskmarch, the wild country west of the village: each map its own, Mournfield darker after dark.
+  // v343: the Duskmarch, the wild country west of the village: each map its own, Mournfield darker after dark.
   { id: 'gloamwood_01', name: 'Gloamwood', brief: 'Gloamwood, the old woods west of the village: winding paths, easy to get lost, watched from the trees. Low flute, plucked strings, wooden percussion; dorian, a little uneasy but not scary.', file: 'music/duskmarch/gloamwood_01.ogg', gain: 0.116, category: 'location', region: 'duskmarch', place: 'gloamwood', gen: g(57, DOR, 86, 'triangle', 521) },
   { id: 'tangle_01', name: 'The Tangle', brief: 'The Tangle, a deeper thicket of dead ends west of Gloamwood. More claustrophobic than Gloamwood: closer harmonies, a repeating circular figure (as if walking in circles), sparse percussion.', file: 'music/duskmarch/tangle_01.ogg', gain: 0.114, category: 'location', region: 'duskmarch', place: 'tangle', gen: g(55, PHR, 80, 'triangle', 523) },
   { id: 'mournfield_01', name: 'Mournfield', brief: 'Mournfield, the valley\'s old graveyard, by day. Mournful and still, respectful: solo cello or violin, soft organ or harmonium, a distant bell.', file: 'music/duskmarch/mournfield_01.ogg', gain: 0.125, category: 'location', region: 'duskmarch', place: 'mournfield', gen: g(53, MIN, 66, 'sine', 541) },
   { id: 'mournfield_night_01', name: 'When the Dead Walk', brief: 'Mournfield after dark, when the dead rise. The day theme\'s mood turned eerie: tremolo strings, low choir pads, a slow uneven pulse. Unsettling, but leave room for combat music to take over in fights.', file: 'music/duskmarch/mournfield_night_01.ogg', gain: 0.122, category: 'location', region: 'duskmarch', place: 'mournfield', time: 'night', gen: g(50, PHR, 72, 'sine', 547) },
   // The shrine and the chapel crypt.
   { id: 'sacred_01', name: 'Old Stones', brief: 'The shrine and the chapel crypt: old stones, reverence and mystery. Choir pads or organ, a single bell, very slow; ancient-sounding modes.', file: 'music/sacred/sacred_01.ogg', gain: 0.118, category: 'location', region: 'sacred', gen: g(50, PHR, 64, 'sine', 503) },
-  // v342: across the sea (Rook's boat): the island, the dig site and the Smoke Peak.
+  // v343: across the sea (Rook's boat): the island, the dig site and the Smoke Peak.
   { id: 'island_01', name: 'Warm Water', brief: 'The island across the sea (Rook\'s boat): sunny, far from home, a holiday. Marimba, steel drum, nylon guitar, light shakers; lydian brightness.', file: 'music/island/island_01.ogg', gain: 0.122, category: 'location', region: 'island', gen: g(65, LYD, 104, 'triangle', 557) },
   { id: 'digsite_01', name: 'Bones in the Sand', brief: 'The island\'s dig site: bones and old secrets in the sand. Curious and adventurous: plucked strings, hand drums, a playful woodwind; a touch of mystery.', file: 'music/island/digsite_01.ogg', gain: 0.121, category: 'location', region: 'island', place: 'digsite', gen: g(62, DOR, 94, 'triangle', 563) },
   { id: 'peak_climb_01', name: 'The Smoke Peak', brief: 'The Smoke Peak, floors 1 to 9: the island\'s volcano dungeon. Tropical heat turned dangerous: tribal-style drums, low brass or synth, smoky drones.', file: 'music/island/peak_climb_01.ogg', gain: 0.117, category: 'location', region: 'island', place: 'peak', floors: PEAK_DEPTHS.climb, gen: g(52, BLU, 100, 'square', 569) },
@@ -152,7 +152,7 @@ export const LAYERS = [
   { id: 'default',  category: 'default',  active: () => true, ignore: ['region', 'place'] },
 ];
 
-// v342: places and regions. A place is where you are: the map, except on the Hollow's map, whose zone (systems/mine.js
+// v343: places and regions. A place is where you are: the map, except on the Hollow's map, whose zone (systems/mine.js
 // MINE.zone) is the place. Each place belongs to one region, whose tracks play wherever a place has none of its own.
 // A neighbour's cottage (home_*) counts as the village; animal buildings as the farm. Every place has music (tests).
 export const REGIONS = {

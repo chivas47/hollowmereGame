@@ -2,15 +2,20 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v343: Music by place and depth, briefs for every sound
+- Music follows where you are at two levels, place and region. Gloamwood, the Tangle and Mournfield (darker at night), the island, the dig site, the Dunes, the Oasis, the casino, the museum and the picture house now have music of their own; places without their own play their region's, and every place in the game has one or the other.
+- Every dungeon's music follows its depth: the Hollow at floors 1 to 39, 40 to 79, 80 and deeper (where its creatures and ore change); the Sunken Cavern at 1 to 9, 10 to 24 (from the Ember Vent's door), 25 and deeper (where umbrite is richest); the Ember Vent and the Smoke Peak for the climb, then their quiet room at the top (the forge, the summit).
+- A track rotates to another that fits as well after about five minutes of play (at the end of a loop), not after three loops, so long pieces and short ones change alike.
+- Footsteps have four takes of every surface (and the horse's hooves), birdsong four calls, and the hoe, watering can, axe, pickaxe, weeds cut, thunder, rain on the glass, fire crackle and cave drips three each, so the sounds you hear most no longer repeat exactly. Each cave drip now sounds a little different.
+- Every track has a written composing brief (when it plays, mood, instruments, tempo, form), and every effect, footstep and ambient sound a recording brief (character, length, how often it plays, how many variants); `assets/audio/README.md` is written from them.
+- New save data: none.
+
 ## v342: Audio ready for composed music
 - Every sound file now sits in a folder by kind and is named by one rule: `music/farm/farm_spring_01.ogg`, `sfx/tools/hoe_till_soil_01.wav`, `sfx/footsteps/footstep_grass_01.wav`, `ambience/weather/rain_loop_01.wav`, `environment/waterfall_loop_01.wav`. `assets/audio/README.md` is a guide for composing and recording: folders, naming, formats, loudness, loops, a mood and instrument brief per season and place, and a table of every slot.
 - The Sound menu has a slider each for Master, Music, Ambience, Effects and Interface. Your old Ambience volume carries over. Footsteps now follow the Effects volume (they followed Ambience).
-- A sound can have several recordings: each play draws one at random and never repeats the last. Footsteps now have four takes of every surface (and the horse's hooves), birdsong four calls, and the hoe, watering can, axe, pickaxe, weeds cut, thunder, rain on the glass, fire crackle and cave drips three each, so the sounds you hear most no longer repeat exactly.
+- A sound can have several recordings: each play draws one at random and never repeats the last.
 - Ambience comes from rules by place, weather, season and time (`src/data/ambience.js`), several layers at once: wind under the rain and stronger in storms, a soft wind at night outdoors, and a new owl now and then on nights in the wild.
-- Music follows where you are at two levels, place and region. Gloamwood, the Tangle and Mournfield (darker at night), each zone of the Hollow (the Sunken Cavern by depth: above the Ember Vent's door, from it to floor 24, 25 and deeper where umbrite is richest; the Ember Vent's climb and its forge room; and the Hollow itself by depth: floors 1 to 39, 40 to 79, 80 and deeper, where its creatures and ore change), the island, the dig site, the Smoke Peak (the climb, and the summit), the Dunes, the Oasis, the casino, the museum and the picture house now have music of their own; places without their own play their region's, and every place in the game has one or the other.
-- A track rotates to another that fits as well after about five minutes of play (at the end of a loop), not after three loops, so long pieces and short ones change alike.
 - Music can open with an intro that plays once before the loop (`loopStart`, `loopEnd`).
-- Every track has a written composing brief (when it plays, mood, instruments, tempo, form), and every effect, footstep and ambient sound a recording brief (character, length, how often it plays, how many variants); the README is written from them.
 - `node tools/audio_list.mjs` lists every sound slot, missing files and recordings not yet listed.
 - New save data: none. Sound settings move to a new shape in the browser; old ones are read.
 

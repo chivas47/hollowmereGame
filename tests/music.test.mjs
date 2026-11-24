@@ -115,7 +115,7 @@ test('saves: the music memory survives a save and load; an old farm starts with 
   assert.deepEqual(merge(old).music, { history: [], lastFor: {} });
 });
 
-// v342: places and regions.
+// v343: places and regions.
 test('places beat their region: the Duskmarch maps, Mournfield at night, the Hollow\'s zones, across the sea', () => {
   const at = (place, o = {}) => id({ place, region: regionOf(place), map: place, ...o });
   assert.equal(at('gloamwood'), 'gloamwood_01'); assert.equal(at('tangle'), 'tangle_01');

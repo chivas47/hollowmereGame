@@ -1,5 +1,5 @@
 // v317 (roadmap 109): records the game's generated sounds into the files listed in src/data/audio.js and
-// src/data/musicTracks.js. v342: a pool's first file is always re-recorded; its other slots only while empty.
+// src/data/musicTracks.js. v343: a pool's first file is always re-recorded; its other slots only while empty.
 //   node tools/render_audio.mjs            every file (writes assets/audio/**.wav and the gains into src/data/audio.js)
 //   node tools/render_audio.mjs hoe rain   only these ids
 // Each sound is played by its own generator (audio/sfx.js, music.js, ambience.js, footsteps.js) into an offline audio
@@ -107,7 +107,7 @@ const todo = [];
 for (const [kind, group] of Object.entries(ALL_AUDIO)) {
   for (const [id, entry] of Object.entries(group)) {
     if (ONLY.length && !ONLY.includes(id)) continue;
-    // v342: a pool's first file is always recorded (its peak sets the entry's gain); its other slots only while they
+    // v343: a pool's first file is always recorded (its peak sets the entry's gain); its other slots only while they
     // have no file yet, each a fresh take of the generator (footsteps and calls vary from take to take), so a
     // variant you recorded is never overwritten.
     filesOf(entry).forEach((f, i) => { if (i === 0 || !existsSync(join(ROOT, AUDIO_DIR, f))) todo.push({ kind, id, file: f, first: i === 0 }); });

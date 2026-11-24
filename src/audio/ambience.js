@@ -19,7 +19,7 @@ export const CALLS = {
   cricket: () => [0, 0.05, 0.1].forEach((at) => tone({ freq: 4300, dur: 0.025, type: 'square', vol: 0.008, at, bus: 'ambience' })),
   owl:     () => { tone({ freq: 410, slide: 370, dur: 0.32, type: 'sine', vol: 0.03, bus: 'ambience' }); tone({ freq: 400, slide: 340, dur: 0.5, type: 'sine', vol: 0.028, at: 0.45, bus: 'ambience' }); },   // v342
   gull:    () => { tone({ freq: 950, slide: 620, dur: 0.3, type: 'triangle', vol: 0.03, bus: 'ambience' }); tone({ freq: 900, slide: 600, dur: 0.25, type: 'triangle', vol: 0.025, at: 0.35, bus: 'ambience' }); },
-  drip:    () => { const f = 1300 + Math.random() * 450; tone({ freq: f, slide: f * 0.47, dur: 0.08 + Math.random() * 0.03, type: 'sine', vol: 0.04, bus: 'ambience' }); },   // v342: each drop a little different
+  drip:    () => { const f = 1300 + Math.random() * 450; tone({ freq: f, slide: f * 0.47, dur: 0.08 + Math.random() * 0.03, type: 'sine', vol: 0.04, bus: 'ambience' }); },   // v343: each drop a little different
   bell:    () => tone({ freq: 660, dur: 1.4, type: 'sine', vol: 0.02, bus: 'ambience' }),
   gust:    () => noise({ dur: 1.6, vol: 0.04, freq: 300, sweep: 900, bus: 'ambience' }),
   tap:     () => tone({ freq: 2400 + Math.random() * 1600, dur: 0.03, type: 'sine', vol: 0.012, bus: 'ambience' }),   // v100: rain on the glass

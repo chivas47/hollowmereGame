@@ -172,8 +172,8 @@ export const CALL_FILES = {
   },
 };
 
-// Footsteps by what is underfoot (audio/footsteps.js surfaceAt), and hooves on horseback. v342: in the effects group,
-// four takes of each so no two steps in a row sound alike.
+// Footsteps by what is underfoot (audio/footsteps.js surfaceAt), and hooves on horseback. v342: in the effects group;
+// v343: four takes of each, so no two steps in a row sound alike.
 export const STEP_FILES = {
   grass: {
     files: [
