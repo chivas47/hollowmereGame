@@ -7,6 +7,10 @@ Newest first. Version numbers match published versions of the playable page.
 - Once you are close (8 hearts), five new things Rook says join the usual lines.
 - Three lines for each season instead of one, rain lines of their own, and things Rook says when you meet them at their own places.
 - If you are already past 4 or 8 hearts, the new scenes play on your next talks, one at a time.
+## v325: Tavi has more to say
+- The next marriage candidate written up in depth (roadmap 113c). Two new heart scenes with Tavi: at 2 hearts, the wrong turning; at 6, the blank corner. Tavi now has a scene at every step from 2 to 10 hearts.
+- Once you are close (8 hearts), five new things Tavi says join the usual lines.
+- Three lines for each season instead of one, rain lines of their own, and things Tavi says when you meet them at their own places.
 ## v324: Odile has more to say
 - The next marriage candidate written up in depth (roadmap 113b). Two new heart scenes with Odile: at 2 hearts, a tangle on the step; at 6, the letter from the south. Odile now has a scene at every step from 2 to 10 hearts.
 - Once you are close (8 hearts), five new things Odile says join the usual lines.
