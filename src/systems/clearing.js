@@ -16,7 +16,7 @@ import { DEBRIS, ALDER, CREEP, START_CLUTTER, SWING, GRASS } from '../data/clear
 
 const TAP = { item: 'syrup', every: 8 };   // Stardew: a tapper on a maple fills in 9 days
 const tapNights = () => (has('tapper') ? 6 : TAP.every);   // v34: tapper
-import { LAYOUTS } from '../data/layouts.js';
+import { farmPlan } from '../data/layouts.js';
 import { drawDebris, drawAlder, drawFence, drawGate, drawFloor, drawTap } from '../render/sprites.js';
 import { useEnergy, placeKey, parsePlaceKey } from './world.js';
 import { swingAt } from './effects.js';
@@ -96,9 +96,9 @@ on('game:loaded', () => {
   const S = G.S;
   if (!S.debris) {   // a new farm, or a save from before v19
     S.debris = {};
-    const fresh = S.day === 1 && !Object.keys(S.soil).length, extra = fresh ? LAYOUTS[S.layout]?.perks?.alders || 0 : 0;
+    const fresh = S.day === 1 && !Object.keys(S.soil).length, extra = fresh ? farmPlan(S.layout, S.bigFarm).perks.alders || 0 : 0;
     const { grass = 0, ...rest } = fresh ? { ...START_CLUTTER.new, alder: START_CLUTTER.new.alder + extra } : START_CLUTTER.old;
-    const times = fresh ? LAYOUTS[S.layout]?.perks?.clutter || 1 : 1;   // v321 (roadmap 112b): a bigger farm starts with more
+    const times = fresh ? farmPlan(S.layout, S.bigFarm).perks.clutter || 1 : 1;   // v321 (roadmap 112b): a bigger farm starts with more
     scatter(Object.fromEntries(Object.entries(rest).map(([k, n]) => [k, n * times])));
     // v28: a new farm's grass grows in the animal yards, ready for the first animals to graze.
     const yards = [COOP.yard, BARN.yard].flatMap((yd) => { const t = []; for (let y = yd.y0; y <= yd.y1; y++) for (let x = yd.x0; x <= yd.x1; x++) if (grassTile(x, y)) t.push([x, y]); return t; });

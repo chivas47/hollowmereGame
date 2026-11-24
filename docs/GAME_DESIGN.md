@@ -86,6 +86,19 @@ v339 (roadmap 118a): the new game screen starts on Wide acres (64 x 48, `NEW_FAR
 | Meadow farm | Meadowlands | All grass | Starts with the coop built, 2 hens and 14 feed |
 | Wide acres (v321) | Standard, large | 64 x 48 (eight times the open field; Stardew's Standard Farm is about twice it): the same homestead corner, two ponds (54 water tiles), six groves and six boulders on the wild land | Room: about ten times the open field's grass. Starts with six times the clutter (366 pieces against 61, besides the yard grass) |
 
+v340 (roadmap 118b): every layout has a big version, 64 x 48 like Wide acres (`big` in data/layouts.js, `farmPlan(id, big)`), used by every farm started from v340 (`G.S.bigFarm`, set by startLayout). The small layout's own land stays where it was and the big land is added around it; a farm saved before v340 keeps 24 x 16 until roadmap 118c. Every big layout starts with six times the clutter, and every open tile can be walked to from the door (tests/big-layouts.test.mjs).
+
+| Big layout | Land added | Perk at the big size |
+|---|---|---|
+| Open field | Two groves in the far corners, three boulders | Most room to farm |
+| River farm | The stream runs on south, bends east and leaves by the south edge; a brook from the east (a ford across it) and a pool | Fish and refill at home |
+| Woodland farm | The wood runs the whole west side; a second stand in the north-east, a grove | 12 more alders at start, 4 forage a day in the wood (x 1 to 8), up to 8 stumps regrow each season |
+| Hill quarry | A 16 x 13 quarry in the east ringed by boulders, a grove | Up to 6 rocks a night, at most 24 |
+| Wild farm | Brush along the west, east and south edges, three thickets | 4 to 8 slimes after 8 pm |
+| Four corners | Old wood in the north-east, a 13 x 13 quarry in the south-west, a pond in the south-east | 3 rocks a night (cap 10), 4 stumps regrow each season |
+| Beach farm | A strand and the sea down the whole east side | Crates on 60% of mornings, cap 5 |
+| Meadow farm | Two groves, two boulders | Starts with the coop, 2 hens and 14 feed |
+
 Fainting on the farm (wild farm) wakes you on the doorstep and costs gold as in the mine.
 
 ## Pets and horse (v23)

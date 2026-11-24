@@ -5,11 +5,13 @@
 import { G } from '../core/game.js';
 import { on, emit } from '../core/events.js';
 import { MAPS, farmGrid, houseGrid, joinFarm } from '../data/maps.js';
-import { LAYOUTS, farmSize } from '../data/layouts.js';
+import { LAYOUTS, farmPlan } from '../data/layouts.js';
 import { forgetRoutes } from './routes.js';
 import { COOP } from '../data/upgrades.js';
 
 export const layout = () => LAYOUTS[G.S.layout] || LAYOUTS.open;
+// v340 (roadmap 118b): this farm's size, land and perks (small or big by G.S.bigFarm).
+export const plan = (S = G.S) => farmPlan(S.layout, S.bigFarm);
 
 // keep: leave furniture tiles ('Y') where the new grid has floor (a house change during play).
 // v320 (roadmap 112a): the grid takes the fresh one's size too (a farm of another layout, or another slot), still in
@@ -35,8 +37,8 @@ export function rebuildHouse(keep = false) {
 
 // v320 (roadmap 112a): the farm at its layout's size, with its edges joined to the wilds and the forest.
 export function buildFarm(id = G.S.layout) {
-  const { w, h } = farmSize(id), fresh = farmGrid(w, h);
-  (LAYOUTS[id] || LAYOUTS.open).apply(fresh);
+  const p = farmPlan(id, G.S.bigFarm), { w, h } = p.size, fresh = farmGrid(w, h);
+  p.apply(fresh);
   copyInto(MAPS.farm.grid, fresh, false);
   joinFarm(w, h);
   forgetRoutes();
@@ -49,8 +51,10 @@ on('game:loaded', () => {
 });
 
 // The layout's one-off start, applied when the new game screen is finished (before the farm loads).
+// v340 (roadmap 118b): every farm started from now on is big.
 export function startLayout(S) {
-  const st = LAYOUTS[S.layout]?.perks?.start;
+  S.bigFarm = true;
+  const st = plan(S).perks.start;
   if (!st) return;
   if (st.coop) S.built.coop = true;
   for (let i = 0; i < (st.hens || 0); i++) S.chickens.push({ name: COOP.names[i], pet: 0 });
