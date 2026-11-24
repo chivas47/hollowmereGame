@@ -58,8 +58,8 @@ plays there and beats any region track; a region track plays in every place of t
 | farm | farm, greenhouse, shed, coop, barn | by season, night, rain |
 | village | village, town, hedge maze, neighbours' cottages | by season, rain |
 | duskmarch | Gloamwood, the Tangle, Mournfield | one per place; Mournfield at night |
-| mines | the Hollow, the Sunken Cavern, the Ember Vent | one per zone; the Hollow by depth (floors 1 to 39, 40 to 79, 80 and deeper); the Cavern by depth (1 to 9, 10 to 24, 25 and deeper) |
-| island | the island, the dig site, the Smoke Peak | the island; the dig site and the peak their own |
+| mines | the Hollow, the Sunken Cavern, the Ember Vent | one per zone; the Hollow by depth (floors 1 to 39, 40 to 79, 80 and deeper); the Cavern by depth (1 to 9, 10 to 24, 25 and deeper); the Vent's climb (1 to 9) and forge room (10) |
+| island | the island, the dig site, the Smoke Peak | the island; the dig site its own; the peak's climb (1 to 9) and summit (10) |
 | desert | the Dunes, the Oasis, the Gilded Dune casino | the Dunes; the casino its own |
 | others | house, forest, beach, mountains, wilds, caves, sacred (shrine, crypt), tavern, shops | one each |
 
@@ -118,7 +118,7 @@ Valley (PROJECT_INSTRUCTIONS rule 1).
   time: 'night'`. No other code; it plays at night in the village from then on.
 - **Give one map its own music:** a track with `place: '<map id>'` (or a Hollow zone: `hollow`, `cavern`, `vent`,
   `peak`) beats everything its region has. A deep place can also go by depth: `floors: [40, 79]`, or `[80]` for 80
-  and deeper (the bands are `HOLLOW_DEPTHS` and `CAVERN_DEPTHS`). A new map goes in a region in `REGIONS`; a test fails if a map has no music.
+  and deeper (the bands are `HOLLOW_DEPTHS`, `CAVERN_DEPTHS`, `VENT_DEPTHS` and `PEAK_DEPTHS`). A new map goes in a region in `REGIONS`; a test fails if a map has no music.
 - **Add an ambience layer:** a file and an entry in `BED_FILES` or `CALL_FILES` (`src/data/audio.js`), a generator of
   the same id in `src/audio/ambience.js` (the fallback), and a rule in `src/data/ambience.js`.
 - **Add an effect:** a file and an entry in `SFX_FILES`, a generator in `src/audio/sfx.js`, and the game emitting it.
@@ -175,7 +175,8 @@ Ogg Vorbis, one file per track, named by its id. Several tracks that fit the sam
 | `music/underground/cavern_upper_01.ogg` | The Sunken Cavern | location; at cavern; floors 1 to 9; in mines | C# phrygian, 78 bpm | `cavern_upper_01` |
 | `music/underground/cavern_middle_01.ogg` | Past the Ember Door | location; at cavern; floors 10 to 24; in mines | B phrygian, 84 bpm | `cavern_middle_01` |
 | `music/underground/cavern_deep_01.ogg` | Umbrite Veins | location; at cavern; floors 25 and deeper; in mines | A blues, 90 bpm | `cavern_deep_01` |
-| `music/underground/vent_01.ogg` | The Ember Vent | location; at vent; in mines | D# blues, 92 bpm | `vent_01` |
+| `music/underground/vent_climb_01.ogg` | The Ember Vent | location; at vent; floors 1 to 9; in mines | D# blues, 92 bpm | `vent_climb_01` |
+| `music/underground/vent_forge_01.ogg` | The Forge | location; at vent; floors 10 and deeper; in mines | G dorian, 72 bpm | `vent_forge_01` |
 | `music/duskmarch/gloamwood_01.ogg` | Gloamwood | location; at gloamwood; in duskmarch | A dorian, 86 bpm | `gloamwood_01` |
 | `music/duskmarch/tangle_01.ogg` | The Tangle | location; at tangle; in duskmarch | G phrygian, 80 bpm | `tangle_01` |
 | `music/duskmarch/mournfield_01.ogg` | Mournfield | location; at mournfield; in duskmarch | F minor pentatonic, 66 bpm | `mournfield_01` |
@@ -183,7 +184,8 @@ Ogg Vorbis, one file per track, named by its id. Several tracks that fit the sam
 | `music/sacred/sacred_01.ogg` | Old Stones | location; in sacred | D phrygian, 64 bpm | `sacred_01` |
 | `music/island/island_01.ogg` | Warm Water | location; in island | F lydian, 104 bpm | `island_01` |
 | `music/island/digsite_01.ogg` | Bones in the Sand | location; at digsite; in island | D dorian, 94 bpm | `digsite_01` |
-| `music/island/peak_01.ogg` | The Smoke Peak | location; at peak; in island | E blues, 100 bpm | `peak_01` |
+| `music/island/peak_climb_01.ogg` | The Smoke Peak | location; at peak; floors 1 to 9; in island | E blues, 100 bpm | `peak_climb_01` |
+| `music/island/peak_summit_01.ogg` | Above the Smoke | location; at peak; floors 10 and deeper; in island | E lydian, 80 bpm | `peak_summit_01` |
 | `music/desert/desert_01.ogg` | Heat Shimmer | location; in desert | D phrygian, 96 bpm | `desert_01` |
 | `music/desert/casino_01.ogg` | The Gilded Dune | location; at inside_casino; in desert | C blues, 112 bpm | `casino_01` |
 | `music/default/default_01.ogg` | Hollowmere | default | E major pentatonic, 96 bpm | `default_01` |

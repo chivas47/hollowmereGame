@@ -36,6 +36,7 @@
 import { MOODS } from './music.js';
 import { CAVERN } from './cavern.js';
 import { VENT } from './forge.js';
+import { PEAK } from './nuts.js';
 
 const MAJ = [0, 2, 4, 7, 9], MIN = [0, 3, 5, 7, 10], DOR = [0, 2, 3, 7, 9], PHR = [0, 1, 5, 7, 8], LYD = [0, 2, 4, 6, 7, 9], HEX = [0, 2, 4, 5, 7, 9], BLU = [0, 3, 5, 6, 7, 10];
 const g = (root, scale, bpm, lead, seed) => ({ root, scale, bpm, lead, seed });
@@ -46,6 +47,10 @@ export const HOLLOW_DEPTHS = { upper: [1, 39], middle: [40, 79], deep: [80] };
 // where umbrite is richest, and below. (Its creatures do not change with depth; only their strength and the ore.)
 const UMBRITE_RICHEST = (() => { let n = 1; while (CAVERN.umbrite(n) < CAVERN.umbrite(1000) && n < 1000) n++; return n; })();
 export const CAVERN_DEPTHS = { upper: [1, VENT.doorFloor - 1], middle: [VENT.doorFloor, UMBRITE_RICHEST - 1], deep: [UMBRITE_RICHEST] };
+// The Ember Vent and the Smoke Peak are short climbs (ten floors) with a quiet room at the top, no rocks and no
+// monsters: the forge, the summit cache. The climb is one band, the top room the other.
+export const VENT_DEPTHS = { climb: [1, VENT.floors - 1], forge: [VENT.floors] };
+export const PEAK_DEPTHS = { climb: [1, PEAK.floors - 1], summit: [PEAK.floors] };
 
 export const TRACKS = [
   // The farm: the four original season themes, a second spring tune, a night and a rain variant.
@@ -82,7 +87,8 @@ export const TRACKS = [
   { id: 'cavern_upper_01', name: 'The Sunken Cavern', file: 'music/underground/cavern_upper_01.ogg', gain: 0.126, category: 'location', region: 'mines', place: 'cavern', floors: CAVERN_DEPTHS.upper, gen: g(49, PHR, 78, 'sine', 337) },
   { id: 'cavern_middle_01', name: 'Past the Ember Door', file: 'music/underground/cavern_middle_01.ogg', gain: 0.118, category: 'location', region: 'mines', place: 'cavern', floors: CAVERN_DEPTHS.middle, gen: g(47, PHR, 84, 'triangle', 359) },
   { id: 'cavern_deep_01', name: 'Umbrite Veins', file: 'music/underground/cavern_deep_01.ogg', gain: 0.12, category: 'location', region: 'mines', place: 'cavern', floors: CAVERN_DEPTHS.deep, gen: g(45, BLU, 90, 'square', 367) },
-  { id: 'vent_01', name: 'The Ember Vent', file: 'music/underground/vent_01.ogg', gain: 0.12, category: 'location', region: 'mines', place: 'vent', gen: g(51, BLU, 92, 'square', 347) },
+  { id: 'vent_climb_01', name: 'The Ember Vent', file: 'music/underground/vent_climb_01.ogg', gain: 0.12, category: 'location', region: 'mines', place: 'vent', floors: VENT_DEPTHS.climb, gen: g(51, BLU, 92, 'square', 347) },
+  { id: 'vent_forge_01', name: 'The Forge', file: 'music/underground/vent_forge_01.ogg', gain: 0.125, category: 'location', region: 'mines', place: 'vent', floors: VENT_DEPTHS.forge, gen: g(55, DOR, 72, 'triangle', 373) },
   // v342: the Duskmarch, the wild country west of the village: each map its own, Mournfield darker after dark.
   { id: 'gloamwood_01', name: 'Gloamwood', file: 'music/duskmarch/gloamwood_01.ogg', gain: 0.116, category: 'location', region: 'duskmarch', place: 'gloamwood', gen: g(57, DOR, 86, 'triangle', 521) },
   { id: 'tangle_01', name: 'The Tangle', file: 'music/duskmarch/tangle_01.ogg', gain: 0.114, category: 'location', region: 'duskmarch', place: 'tangle', gen: g(55, PHR, 80, 'triangle', 523) },
@@ -93,7 +99,8 @@ export const TRACKS = [
   // v342: across the sea (Rook's boat): the island, the dig site and the Smoke Peak.
   { id: 'island_01', name: 'Warm Water', file: 'music/island/island_01.ogg', gain: 0.122, category: 'location', region: 'island', gen: g(65, LYD, 104, 'triangle', 557) },
   { id: 'digsite_01', name: 'Bones in the Sand', file: 'music/island/digsite_01.ogg', gain: 0.121, category: 'location', region: 'island', place: 'digsite', gen: g(62, DOR, 94, 'triangle', 563) },
-  { id: 'peak_01', name: 'The Smoke Peak', file: 'music/island/peak_01.ogg', gain: 0.117, category: 'location', region: 'island', place: 'peak', gen: g(52, BLU, 100, 'square', 569) },
+  { id: 'peak_climb_01', name: 'The Smoke Peak', file: 'music/island/peak_climb_01.ogg', gain: 0.117, category: 'location', region: 'island', place: 'peak', floors: PEAK_DEPTHS.climb, gen: g(52, BLU, 100, 'square', 569) },
+  { id: 'peak_summit_01', name: 'Above the Smoke', file: 'music/island/peak_summit_01.ogg', gain: 0.125, category: 'location', region: 'island', place: 'peak', floors: PEAK_DEPTHS.summit, gen: g(64, LYD, 80, 'sine', 577) },
   // The Dunes, the Oasis and the casino.
   { id: 'desert_01', name: 'Heat Shimmer', file: 'music/desert/desert_01.ogg', gain: 0.115, category: 'location', region: 'desert', gen: g(62, PHR, 96, 'triangle', 509) },
   { id: 'casino_01', name: 'The Gilded Dune', file: 'music/desert/casino_01.ogg', gain: 0.12, category: 'location', region: 'desert', place: 'inside_casino', gen: g(60, BLU, 112, 'square', 571) },

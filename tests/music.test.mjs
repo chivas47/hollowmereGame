@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { G } from '../src/core/game.js';
 import { on } from '../src/core/events.js';
 import { newState, merge } from '../src/core/state.js';
-import { TRACKS, LAYERS, REGIONS, MINE_ZONES, CAVERN_DEPTHS, placeOf, regionOf, timeOf } from '../src/data/musicTracks.js';
+import { TRACKS, LAYERS, REGIONS, MINE_ZONES, CAVERN_DEPTHS, VENT_DEPTHS, PEAK_DEPTHS, placeOf, regionOf, timeOf } from '../src/data/musicTracks.js';
 import { MAPS } from '../src/data/maps.js';
 import { pickTrack, fits, categoriesOf, musicContext, updateMusic, musicDebug, dueToRotate } from '../src/systems/musicDirector.js';
 import { slimes } from '../src/systems/monsters.js';
@@ -120,8 +120,8 @@ test('places beat their region: the Duskmarch maps, Mournfield at night, the Hol
   const at = (place, o = {}) => id({ place, region: regionOf(place), map: place, ...o });
   assert.equal(at('gloamwood'), 'gloamwood_01'); assert.equal(at('tangle'), 'tangle_01');
   assert.equal(at('mournfield'), 'mournfield_01'); assert.equal(at('mournfield', { time: 'night' }), 'mournfield_night_01');
-  assert.equal(at('hollow', { floor: 1 }), 'hollow_upper_01'); assert.equal(at('cavern', { floor: 1 }), 'cavern_upper_01'); assert.equal(at('vent'), 'vent_01');
-  assert.equal(at('island'), 'island_01'); assert.equal(at('digsite'), 'digsite_01'); assert.equal(at('peak'), 'peak_01');
+  assert.equal(at('hollow', { floor: 1 }), 'hollow_upper_01'); assert.equal(at('cavern', { floor: 1 }), 'cavern_upper_01'); assert.equal(at('vent', { floor: 1 }), 'vent_climb_01');
+  assert.equal(at('island'), 'island_01'); assert.equal(at('digsite'), 'digsite_01'); assert.equal(at('peak', { floor: 1 }), 'peak_climb_01');
   assert.equal(at('desert'), 'desert_01'); assert.equal(at('inside_oasis'), 'desert_01', 'a place without its own: its region\'s');
   assert.equal(at('inside_casino'), 'casino_01'); assert.equal(at('wilds'), 'exploration_01');
   const place = { id: 'p', category: 'location', place: 'greenhouse' }, rain = { id: 'r', category: 'location', region: 'farm', weather: 'rain', time: 'morning', season: 'Spring' };
@@ -133,7 +133,7 @@ test('every place in the game has music of its own place or region, in every sea
   for (const p of places) {
     assert.ok(regionOf(p), `${p} belongs to a region`);
     for (const season of ['Spring', 'Summer', 'Autumn', 'Winter']) for (const time of ['morning', 'night']) {
-      const r = pick({ place: p, region: regionOf(p), map: p, season, time, floor: ['hollow', 'cavern'].includes(p) ? 1 : null });
+      const r = pick({ place: p, region: regionOf(p), map: p, season, time, floor: MINE_ZONES.includes(p) ? 1 : null });
       assert.equal(r?.layer, 'location', `${p}, ${season} ${time}: ${r?.track.id}`);
     }
   }
@@ -165,4 +165,11 @@ test('the Sunken Cavern by depth: above the Ember Vent\'s door, to where umbrite
   assert.equal(at(25), 'cavern_deep_01'); assert.equal(at(200), 'cavern_deep_01');
   assert.equal(pick({ place: 'cavern', region: 'mines', map: 'mine', floor: 31 }, { current: 'cavern_middle_01' }).track.id, 'cavern_deep_01', 'a shaft past 25 changes it');
   for (let f = 1; f <= 150; f++) assert.ok(at(f).startsWith('cavern_'), `floor ${f}`);
+});
+
+test('the Ember Vent and the Smoke Peak: the climb, then the quiet room at the top', () => {
+  assert.deepEqual(VENT_DEPTHS, { climb: [1, 9], forge: [10] }); assert.deepEqual(PEAK_DEPTHS, { climb: [1, 9], summit: [10] });
+  const at = (place, floor) => id({ place, region: regionOf(place), map: 'mine', floor });
+  assert.equal(at('vent', 1), 'vent_climb_01'); assert.equal(at('vent', 9), 'vent_climb_01'); assert.equal(at('vent', 10), 'vent_forge_01');
+  assert.equal(at('peak', 1), 'peak_climb_01'); assert.equal(at('peak', 9), 'peak_climb_01'); assert.equal(at('peak', 10), 'peak_summit_01');
 });
