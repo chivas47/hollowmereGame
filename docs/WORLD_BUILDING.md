@@ -13,7 +13,7 @@ through `docs/NPC_LIFE.md`. The items are the "A real world" track in `ROADMAP.m
   `data/maps.js`). Never use `W` and `H` for a map's size; they are the screen's. Mine floors stay one screen by
   design. The hidden grove (40 x 24, v158) is the first larger map; the village (40 x 28) and the town (40 x 24)
   followed in v159 (roadmap 75c, docs/sketches/75c-village.md), and the mere (40 x 28) in v160 (75d). The farm is
-  64 x 48 for every layout started from v340 (roadmap 118b, data/layouts.js `big`); older farms are 24 x 16.
+  64 x 48 for every layout (roadmap 118b, data/layouts.js `big`); farms from before grew east and south to it in v341 (118c).
 - **Grow east and south when you can.** Tiles keep their coordinates, so saved things (stumps, forage, placed
   objects, a farmer standing there) stay put and no migration is needed. Growing west or north shifts every
   coordinate on the map and needs a migration step (step 5).

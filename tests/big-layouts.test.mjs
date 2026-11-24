@@ -11,14 +11,14 @@ import '../src/systems/clearing.js';
 
 const built = (id, big) => { const p = farmPlan(id, big), g = farmGrid(p.size.w, p.size.h); p.apply(g); return g; };
 const grass = (g) => g.flat().filter((t) => t === 'g').length;
-const OLD_EDGE = new Set(['1,13', '1,14', '10,14']);   // the small farm's corner trees and the foot of its south path
+const OLD_EDGE = new Set(['1,13', '1,14', '10,14', '22,1', '22,2', '22,3', '22,13', '22,14']);   // the small farm's corner trees and the foot of its south path
 
 for (const id of Object.keys(LAYOUTS)) {
   test(`${id}: the big farm is ${BIG.w} x ${BIG.h} and keeps the small farm's own land where it was`, () => {
     const big = built(id, true), small = built(id, false);
     assert.equal(big.length, BIG.h); assert.equal(big[0].length, BIG.w);
     if (LAYOUTS[id].size) return;   // Wide acres is big either way
-    for (let y = 0; y < 15; y++) for (let x = 1; x < 22; x++) if (!OLD_EDGE.has(`${x},${y}`)) assert.equal(big[y][x], small[y][x], `${x},${y}`);
+    for (let y = 0; y < 15; y++) for (let x = 1; x < 23; x++) if (!OLD_EDGE.has(`${x},${y}`)) assert.equal(big[y][x], small[y][x], `${x},${y}`);
   });
 
   test(`${id}: every open tile of the big farm can be walked to from the door`, () => {
@@ -46,7 +46,7 @@ test('the big farms keep their kind: water, wood, quarry and sand grow with them
   }
 });
 
-test('a new farm starts big; a farm saved before keeps its size', () => {
+test('a new farm starts big; a farm saved at this version without the flag keeps its size', () => {
   G.S = newState(); G.S.layout = 'river'; startLayout(G.S); G.S.debris = undefined;
   emit('game:loaded');
   assert.equal(G.S.bigFarm, true);

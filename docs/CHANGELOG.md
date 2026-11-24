@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v341: Old farms grow
+- A farm started before v340 grows to its layout's big size, 64 x 48, the first time it loads. It grows east and south only, so your house, fields, crops, buildings, animals and everything you placed stay exactly where they were.
+- The road east to the wilds and the path south to the forest move out to the new edges; the old ones are now road and grass inside your farm.
+- The new land starts wild, with the same clutter a new big farm has (weeds, stones, twigs, stumps and alders), and the layout's own land: the river's stream runs on, the beach gets its sea, and so on. Your old land gets no new clutter.
+- A message says the farm has grown when you load it.
+- New save data: `grownFrom` (cleared once the new land is laid out). Saves move to version 11.
+
 ## v340: Every farm layout at the big size
 - Every farm layout now comes at 64 x 48, the size of Wide acres, for farms started from now on. Each keeps its kind on the bigger land: the river runs on south and a brook comes in from the east, the wood runs down the whole west side, the hill quarry gets a large quarry in the east, the beach has a strand and sea down the whole east side, four corners has a corner each, and the wild farm has brush all round.
 - The perks grow with the land: more forage and stumps in the woodland, more quarry rocks, more crates on the beach, more slimes on the wild farm. Every big farm starts with six times the clutter to clear.

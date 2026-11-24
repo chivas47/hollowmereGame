@@ -50,11 +50,12 @@ export function grassTile(x, y) {
 const walkable = (d) => !!DEBRIS[d.kind]?.walk;
 const hasSilo = () => Object.values(G.S.placed).some((p) => p.kind === 'silo');
 
-function randomFree(near = null) {
+function randomFree(near = null, only = null) {
   const out = [];
   const g = grid();
   for (let y = 0; y < g.length; y++) for (let x = 0; x < g[y].length; x++) {
     if (near && (Math.abs(x - near[0]) > 2 || Math.abs(y - near[1]) > 2)) continue;
+    if (only && !only(x, y)) continue;
     if (freeTile(x, y)) out.push([x, y]);
   }
   return out.length ? out[Math.floor(Math.random() * out.length)] : null;
@@ -78,9 +79,10 @@ function remove(k) {
 }
 // For farm layouts (systems/farmPerks.js): puts debris on a free ground tile.
 export function addDebris(x, y, d) { if (GROUND.has(grid()[y]?.[x]) && !G.S.debris[`${x},${y}`]) put(x, y, d); }
-function scatter(counts) {
+// only(x, y): v341 (roadmap 118c) limits it to some tiles (a grown farm's new land).
+function scatter(counts, only = null) {
   for (const [kind, n] of Object.entries(counts)) for (let i = 0; i < n; i++) {
-    const t = randomFree(); if (!t) return;
+    const t = randomFree(null, only); if (!t) return;
     put(...t, kind === 'alder' ? { kind, stage: ALDER.stages } : { kind });
   }
 }
@@ -110,6 +112,15 @@ on('game:loaded', () => {
     if (!GROUND.has(grid()[y]?.[x]) || S.soil[k] || S.placed[k]) { delete S.debris[k]; continue; }
     if (walkable(S.debris[k])) continue;
     written.set(k, grid()[y][x]); grid()[y][x] = 'Y';
+  }
+  // v341 (roadmap 118c): a farm saved small has grown to its layout's big size (core/migrations.js step 11). The new
+  // land, east and south of the old edges, starts as wild as a new big farm's (Nuno: the same clutter, not cleared).
+  if (S.grownFrom) {
+    const { w, h } = S.grownFrom, p = farmPlan(S.layout, S.bigFarm), times = Math.max(1, (p.perks.clutter || 1) - 1);
+    const { grass, ...rest } = { ...START_CLUTTER.new, alder: START_CLUTTER.new.alder + (p.perks.alders || 0) };
+    scatter(Object.fromEntries(Object.entries(rest).map(([k, n]) => [k, n * times])), (x, y) => x >= w - 1 || y >= h - 1);
+    S.grownFrom = null;
+    notify('Your farm has grown: new land to the east and south, wild and waiting to be cleared.');
   }
 });
 

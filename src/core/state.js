@@ -87,6 +87,7 @@ export function newState() {
     placed: {},                                         // "x,y" on the farm -> { kind, item, nights }; fruit trees add { age, fruit }
     giants: {},
     layout: 'open',                                     // farm layout (data/layouts.js), chosen on the new game screen
+    grownFrom: null,                                    // v341 (roadmap 118c): { w, h } the farm was before it grew on load; systems/clearing.js clutters the new land, then clears it
     bigFarm: false,                                     // v340 (roadmap 118b): the layout at its big size; set for every farm started from v340 (systems/layouts.js startLayout)
     farmForage: [],                                     // woodland layout: forage in the farm's wood today
     pet: null,                                          // the farm pet (systems/pets.js), made from the profile on load
