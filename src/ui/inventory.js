@@ -93,7 +93,7 @@ function otherTab(tab) {
     <h3>Rod <span class="role">bait, tackle and bobber</span></h3>${rod}
     <h3>Kit <span class="role">slot 7 places these</span></h3>${kit}`;
   if (tab === 'skills') return `<h3>Skills <span class="role">each level: ${Math.round(BONUS_PER_LEVEL * 100)}% chance of a bonus item</span></h3>${skills}`;
-  if (tab === 'wardrobe') return `<h3>Wardrobe <span class="role">sew clothes at a sewing machine</span></h3>${wardrobeHtml()}`;
+  if (tab === 'wardrobe') return `<h3>Wardrobe <span class="role">sew clothes at a sewing machine</span></h3>${G.partnerActing && G.P2 ? '<div class="btns"><button data-p2look>Name and look</button></div>' : ''}${wardrobeHtml()}`;   // v334: farmer two renames and restyles here
   if (tab === 'tools') return `<h3>Tools</h3>${tools}<h3>Seeds</h3>${seeds}<h3>Materials <span class="role">kept for upgrades</span></h3>${materials}`;
   return `<h3>Fish log <span class="role">${known} of ${Object.keys(FISH).length}</span></h3>${fish}`;
 }
@@ -245,6 +245,7 @@ $('#mbody').addEventListener('change', (e) => {
   G.S.bagView.sort = e.target.value; bag();
 });
 $('#mbody').addEventListener('click', (e) => {
+  if (e.target.closest('[data-p2look]')) { emit('ui:partnerLook'); return; }   // v334 (roadmap 116c): their own name and look
   const t = e.target.closest('[data-bagtab]'); if (t) { V.tab = t.dataset.bagtab; bag(); return; }
   const it = e.target.closest('[data-bagitem]');
   if (it) { V.sel = V.sel === it.dataset.bagitem && !V.cmp ? null : it.dataset.bagitem; bag(); $(`#mbody [data-bagitem="${CSS.escape(it.dataset.bagitem)}"]`)?.scrollIntoView({ block: 'nearest' }); return; }   // v235: the detail is in view beside or under the grid; the cell stays in view

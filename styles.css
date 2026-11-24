@@ -577,3 +577,10 @@ body.titling .game-only,body.titling #menu .game-only{display:none}
 .pill.guided,button.guided:not(.slot){animation:guidedBtn 1s ease-in-out infinite;box-shadow:0 0 0 3px var(--harvest)}
 @keyframes guidedBtn{50%{box-shadow:0 0 0 5px var(--harvest);filter:brightness(1.2)}}
 @media (prefers-reduced-motion:reduce){.pill.guided,button.guided:not(.slot){animation:none}}
+
+/* v334 (roadmap 116c): a name typed on buttons a controller can reach (ui/letterpad.js) */
+.letterpad{margin:4px 0 10px}
+.letterpad .padshow{display:inline-block;min-width:12ch;padding:4px 10px;border:2px solid var(--seam);border-radius:6px;background:rgba(255,255,255,.35);font-weight:600}
+.letterpad .padrow{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0}
+.letterpad .padkey{min-width:40px;min-height:40px;padding:0 6px;font-size:16px}
+.letterpad .padkey.wide{min-width:84px}

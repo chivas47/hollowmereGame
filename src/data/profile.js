@@ -8,6 +8,22 @@ export const LOOKS = {
 };
 export const PETS = { cat: 'Cat', dog: 'Dog', turtle: 'Turtle' };
 export const NAME_MAX = 16;
+// v334 (roadmap 116c): a name typed with a controller (ui/letterpad.js): the letters as rows of buttons the pad moves
+// between, then the marks and the keys. typeName() is the rule: a letter starts a word in capitals and goes on in small
+// letters (Rowan, Mary-Ann), so nobody has to find a shift key; space and the marks never start a name or come twice.
+export const NAME_PAD = { rows: ['ABCDEFGHI', 'JKLMNOPQR', 'STUVWXYZ'], marks: [' ', '-', "'"], keys: ['back', 'clear'] };
+export function typeName(name, key, max = NAME_MAX) {
+  const s = String(name || '');
+  if (key === 'back') return s.slice(0, -1);
+  if (key === 'clear') return '';
+  if (s.length >= max) return s;
+  if (NAME_PAD.marks.includes(key)) return !s || NAME_PAD.marks.includes(s.at(-1)) ? s : s + key;
+  if (!/^[A-Za-z]$/.test(key)) return s;
+  const starts = !s || s.at(-1) === ' ' || s.at(-1) === '-';
+  return s + (starts ? key.toUpperCase() : key.toLowerCase());
+}
+// A name as kept: trimmed, without a trailing mark, never empty (fallback: the name it had before).
+export const finishName = (name, fallback) => String(name || '').trim().replace(/[\s'-]+$/, '') || fallback;
 
 export const DEFAULT_PROFILE = {
   name: 'Farmer', farm: 'Hollowmere', favourite: 'a good harvest', pet: 'cat',
