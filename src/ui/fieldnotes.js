@@ -3,6 +3,7 @@
 // - Held upright, the goal and your notices move out of the field into #fieldNotes, under the hotbar, in the room
 //   above the thumb controls; they go back over the field in any other layout (and with a second farmer in).
 // - Anywhere, the goal and a farmer's notices turn see-through (.dodge) while that farmer stands under them.
+// - v322 (roadmap 115): with the HUD over the field, so do the clock, meters, menus and hotbar.
 import { G } from '../core/game.js';
 import { on } from '../core/events.js';
 import { addUpdater } from '../core/registry.js';
@@ -54,6 +55,7 @@ function farmerBox(v) {
 export const overlaps = (a, b) => !!a && !!b && a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
 const rectOf = (el) => { const r = el.getBoundingClientRect(); return r.width && r.height ? { x: r.x, y: r.y, w: r.width, h: r.height } : null; };
 
+const HUD_PANELS = ['.game > .clock', '.game > .meters', '.game > .menubar', '.game > .bottom'];   // v322: the panels that float over the field (children only: the cutscene has a .bottom bar too)
 let wait = 0;
 addUpdater((dt) => {
   if ((wait -= dt) > 0 || !G.S || !globalThis.document) return;
@@ -64,4 +66,9 @@ addUpdater((dt) => {
   goal?.classList.toggle('dodge', over(goal, boxes));
   mine?.classList.toggle('dodge', !!mine && !mine.classList.contains('incard') && [...mine.children].some((c) => over(c, boxes.slice(0, 1))));
   theirs?.classList.toggle('dodge', !!theirs && !theirs.classList.contains('incard') && [...theirs.children].some((c) => over(c, boxes.slice(1, 2))));
+  const floating = !!globalThis.document.querySelector('.game.over');
+  for (const sel of HUD_PANELS) {
+    const el = globalThis.document.querySelector(sel);
+    el?.classList.toggle('dodge', floating && boxes.some((b) => overlaps(rectOf(el), b)));
+  }
 });

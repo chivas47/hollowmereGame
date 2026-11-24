@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v322: A full-screen field
+- On a wide screen with a mouse the field can now fill the window, with the HUD over it: the clock and meters top right, the menu buttons in a slim column on the left, the hotbar at the foot. At 1280 x 800 that is about 43% more field.
+- The panels turn see-through while your farmer walks under them, and step aside for cutscenes.
+- Menu, Display, Layout switches between over the field and beside it (the side column as before). New players start over the field; if you already have a farm in this browser, nothing changes until you switch.
+- Over the field the Basket line is gone: the hotbar shows what you hold, and the Bag the rest.
+- Phones and touch screens keep their layouts.
+- New save data: none (the layout is a browser setting, like HUD size).
+
 ## v321: Wide acres
 - A new farm layout on the new game screen: Wide acres, 64 x 48 tiles, eight times the open field. The house, bin, well and workbench sit in the same corner as on every farm; beyond them is wild land with two ponds to fish, old groves and boulders, and six times the usual clutter to clear. The camera follows you across it.
 - Farms that already exist keep their layout.

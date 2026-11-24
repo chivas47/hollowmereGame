@@ -57,6 +57,7 @@ src/
     cutscenes.js      v240: CUTSCENE (skip hold, typing and walk speeds), CUTSCENES (each scene: where it plays, its steps, v241: where it ends; v244: values may be (S) => ... worked out when it plays)
     firstweek.js      v122: FIRST_WEEK (v241: ARRIVAL's pages became the opening cutscene) (a goal a day: name, hint, map, done(S))
     reckoning.js      v128: RECKONING (day, the gem to ask again, the reward, lamp thresholds, porch spots), RECKON_POINTS (Stardew's 21), RECKON_LINES
+    hud.js            v322: HUD_LAYOUTS (over the field, beside it), firstLayout(saved, hasFarm): a new player starts over the field, a browser with a farm keeps the side column
     partner.js        v129: PARTNER (the second farmer's name, speed, look, where they stand beside you); v130: what only you can do (yours)
     emotes.js         v124: EMOTES (each reaction's length and gesture), GIFT_EMOTE by taste tier, SIGH (rain)
     gamepad.js        v126: PAD_BUTTONS (standard layout to actions), PAD_LABELS, PAD (dead zone, menu repeat)
@@ -245,6 +246,7 @@ src/
     hints.js          the journal's Hints tab and the menu's Tips button (v101)
     clothing.js       sewing machine, dye pots and mannequin dialogs; the wardrobe in the bag
     creation.js       the new game screen (opens when G.S.profile is null)
+    hudPrefs.js       v112: HUD settings per browser (size, mode, text, contrast, camera); v322: layout, the .over class on .game (styles.css floats the clock, meters, menus and hotbar over the field on a wide screen with a mouse); fieldnotes.js turns each see-through under your farmer
     trader.js         the sewer trader's dialog (v45)
     town.js           the tavern, clinic and phone dialogs (v47); Sable's table (ui:sable, v62)
     family.js         naming a newborn, the town hall dialog (v53)
