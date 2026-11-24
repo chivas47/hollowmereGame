@@ -254,6 +254,11 @@ Profit per day = (sells - seed) / days, one harvest per seed.
 | Red cabbage | 100g | 6 | 207g | 17.8g | Summer (v336; Stardew's red cabbage, 9 days there) |
 | Cornflower | 100g | 7 | 140g | 5.7g | Summer (v336; a flower, Stardew's poppy) |
 | Marigold | 50g | 8 | 90g | 5.0g | Summer (v336; a flower, Stardew's summer spangle) |
+| Sweet potato | 60g | 6 | 120g | 10.0g | Autumn (v337; Stardew's yam, 10 days there) |
+| Pak choi | 50g | 4 | 80g | 7.5g | Autumn (v337; Stardew's bok choy) |
+| Buckwheat | 70g | 7 | 150g | 11.4g | Autumn (v337; Stardew's amaranth) |
+| Cardoon | 30g | 8 | 160g | 16.3g | Autumn (v337; Stardew's artichoke) |
+| Dahlia | 200g | 7 | 253g | 7.6g | Autumn (v337; a flower, Stardew's fairy rose, 12 days there) |
 
 v335 (roadmap 117): more crops, by Stardew's crops by role, a season a release. Crops of 8 days or less keep Stardew's numbers; longer ones grow in about 0.6 of its days with its profit per day kept. Flowers (the flower shape) sell, gift and give a little energy but are never jarred or juiced (data/crops.js PRESERVABLE); bee boxes will use them (117d). A crop may be sold in one place only: the Oasis (ruby stalk) or a festival's stall (strawberry, at the Egg Hunt in packs of 5, as Stardew's Egg Festival sells them).
 
@@ -271,6 +276,8 @@ Regrowing crops (the plant stays; regrow = days to the next harvest):
 | Lingonberry | 200g | 5 | 4 | 70g x2 | Autumn | Cranberries |
 | Strawberry | 100g | 8 | 4 | 120g | Spring (v335; seeds at the Egg Hunt only) | Strawberry |
 | Blackcurrant | 80g | 8 | 4 | 50g x3 | Summer (v336; 13 days in Stardew) | Blueberry |
+| Aubergine | 20g | 5 | 5 | 60g | Autumn (v337) | Eggplant |
+| Black grape | 60g | 6 | 3 | 80g | Autumn (v337; 10 days in Stardew) | Grape |
 
 Seed packets: wild seeds (40g, one per season, 6 days) grow one of that season's two forage items; mixed seeds (20g) become a random in-season crop when planted (any crop in the greenhouse).
 

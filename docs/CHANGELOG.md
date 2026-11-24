@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v337: More autumn crops
+- Seven new autumn crops: aubergine (fruits again every 5 days), black grape (again every 3), sweet potato, pak choi, buckwheat, cardoon, and a flower: dahlia.
+- New save data: none.
+
 ## v336: More summer crops
 - Four new summer crops: blackcurrant (three a harvest, again every 4 days), red cabbage, and two flowers: cornflower and marigold.
 - New save data: none.
