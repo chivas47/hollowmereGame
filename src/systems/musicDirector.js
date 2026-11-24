@@ -2,12 +2,14 @@
 // generator). It never touches audio: it emits 'music:play' { track, fade, layer, reason } when the right track
 // changes, and 'music:sting' { track } for one-off stingers. Everything it picks from is in data/musicTracks.js.
 //
-// The game's state becomes a context (musicContext): menu, cutscene, festival, boss, combat, fishing, location,
+// The game's state becomes a context (musicContext): menu, cutscene, festival, boss, combat, fishing, place, region,
 // season, weather, time. The first active layer with a fitting track wins (data/musicTracks.js LAYERS); within it the
-// most specific tracks, then the highest priority, then a weighted draw that avoids recent tracks. A track that
+// most specific tracks (a place's own before its region's), then the highest priority, then a weighted draw that
+// avoids recent tracks. A track that
 // still fits keeps playing (no restarts on a map change inside one location, or a weather change it has no variant
 // for); when a higher layer ends the context is worked out afresh, and the location's last track comes back only
-// if it still fits. After `plays` loops (audio/music.js reports each) another track of the same kind takes over.
+// if it still fits. After rotateAfter seconds, at the end of a loop (audio/music.js reports each), another track that
+// fits as well takes over.
 //
 // Event-driven: map changes, a new day, a loaded farm, cutscenes, festivals and fishing re-pick at once. Things that
 // drift without an event (the hour, a monster coming near, the title screen) are caught by a cheap check of the
@@ -17,13 +19,16 @@ import { G } from '../core/game.js';
 import { on, emit } from '../core/events.js';
 import { T } from '../core/constants.js';
 import { dateParts } from '../core/time.js';
-import { TRACKS, LAYERS, MUSIC, locationOf, timeOf } from '../data/musicTracks.js';
+import { TRACKS, LAYERS, MUSIC, placeOf, regionOf, timeOf } from '../data/musicTracks.js';
 import { festivalOn, hoursOf } from '../data/festivals.js';
 import { slimes, monstersOn } from './monsters.js';
+import { MINE } from './mine.js';
 
 const asList = (v) => (v == null ? [] : Array.isArray(v) ? v : [v]);
 export const categoriesOf = (t) => asList(t.category);
-const FIELDS = ['location', 'season', 'weather', 'time', 'festival', 'cutscene'];
+const FIELDS = ['place', 'region', 'season', 'weather', 'time', 'festival', 'cutscene'];
+// v343: a floor range [from, to] (or [from] and deeper) matches the floor you are on.
+export const inFloors = (range, floor) => floor != null && floor >= range[0] && (range[1] == null || floor <= range[1]);
 
 // --- Context -------------------------------------------------------------------------------------------------------
 let calmAt = 0;   // when combat last had a monster in range (for the calm-down delay)
@@ -35,6 +40,9 @@ function fight(S, now) {
   return { combat: on, boss: on && slimes.some((m) => m.hp > 0 && m.elite && Math.hypot(m.x - S.x, m.y - S.y) <= MUSIC.combatRange * 2 * T) };
 }
 
+// v343: where you are, as a place (the map, or the Hollow's zone) and its region.
+const where = (map) => { const place = placeOf(map, MINE.zone); return { place, region: regionOf(place), floor: map === 'mine' ? MINE.floor : null }; };
+
 // The moment, as the director sees it.
 export function musicContext(S = G.S, now = performance.now()) {
   if (G.title || !S) return { menu: true };
@@ -43,7 +51,7 @@ export function musicContext(S = G.S, now = performance.now()) {
   return {
     menu: false, cutscene: G.cut?.id || null, festival, ...fight(S, now),
     fishing: G.fishing?.phase === 'reel' && !G.fishing.p2,
-    location: locationOf(S.map), map: S.map, season: date.season, weather: S.weather || 'sun', time: timeOf(S.time),
+    ...where(S.map), map: S.map, season: date.season, weather: S.weather || 'sun', time: timeOf(S.time),
   };
 }
 
@@ -55,12 +63,13 @@ export function fits(t, c, ignore = []) {
     const want = asList(t[k]);
     if (want.length && !want.includes(c[k])) return false;
   }
-  return true;
+  return !t.floors || ignore.includes('place') || inFloors(t.floors, c.floor);
 }
 // How specific a track is: the fields it sets, weighted so a weather variant beats a seasonal one and a time variant
-// beats a seasonal one too (rain in the spring village plays the rainy village track, not the spring one).
-const WEIGHT = { cutscene: 32, festival: 32, location: 16, weather: 8, time: 4, season: 2 };
-const specificity = (t) => FIELDS.reduce((s, k) => s + (asList(t[k]).length ? WEIGHT[k] : 0), 0);
+// beats a seasonal one too (rain in the spring village plays the rainy village track, not the spring one), and a
+// place's own track beats every variant of its region's (32 > 16 + 8 + 4 + 2).
+const WEIGHT = { cutscene: 64, festival: 64, place: 32, region: 16, weather: 8, time: 4, season: 2, floors: 8 };
+const specificity = (t) => FIELDS.reduce((s, k) => s + (asList(t[k]).length ? WEIGHT[k] : 0), t.floors ? WEIGHT.floors : 0);
 
 // The pick for a context. mem: { current, history, lastFor, rotate }. Returns { track, layer, reason, candidates }
 // or null when nothing at all fits (the music then fades out).
@@ -72,7 +81,7 @@ export function pickTrack(c, mem = {}, rand = Math.random, tracks = TRACKS) {
     if (!fitting.length) continue;
     const best = Math.max(...fitting.map(specificity)), specific = fitting.filter((t) => specificity(t) === best);
     const top = Math.max(...specific.map((t) => t.priority || 0)), pool = specific.filter((t) => (t.priority || 0) === top);
-    const key = `${layer.id}:${c.location || c.cutscene || c.festival || ''}`;
+    const key = `${layer.id}:${c.place || c.cutscene || c.festival || ''}`;   // v343: memory per place
     const why = (how) => `${layer.id} layer (${describe(c)}): ${how}; ${pool.length} of ${fitting.length} fitting at the most specific level`;
     if (mem.current && !mem.rotate && pool.some((t) => t.id === mem.current)) return { track: byId(mem.current), layer: layer.id, key, reason: why('still fits, keeps playing'), candidates: pool };
     const remembered = mem.lastFor?.[key];
@@ -88,15 +97,16 @@ export function pickTrack(c, mem = {}, rand = Math.random, tracks = TRACKS) {
   return null;
 }
 const byId = (id) => TRACKS.find((t) => t.id === id);
-const describe = (c) => (c.menu ? 'main menu' : [c.cutscene && `cutscene ${c.cutscene}`, c.festival && `festival ${c.festival}`, c.boss && 'boss', c.combat && 'combat', c.fishing && 'fishing', c.location || `no location (${c.map})`, c.season, c.weather, c.time].filter(Boolean).join(', '));
+const describe = (c) => (c.menu ? 'main menu' : [c.cutscene && `cutscene ${c.cutscene}`, c.festival && `festival ${c.festival}`, c.boss && 'boss', c.combat && 'combat', c.fishing && 'fishing', c.place && `${c.place}${c.floor != null ? ` floor ${c.floor}` : ''} (${c.region || 'no region'})`, !c.place && `no place (${c.map})`, c.season, c.weather, c.time].filter(Boolean).join(', '));
 
 // --- Runtime -------------------------------------------------------------------------------------------------------
-const state = { current: null, layer: null, reason: '', key: '', ctxKey: '', plays: 0, rotate: false, candidates: [] };
+const state = { current: null, layer: null, reason: '', key: '', ctxKey: '', since: 0, rotate: false, candidates: [] };
 const mem = () => {
   if (!G.S) return { history: [], lastFor: {} };
   return (G.S.music ||= { history: [], lastFor: {} });
 };
 const debugOn = () => { try { return G.musicDebug || localStorage.getItem('hollowmere-music-debug') === '1'; } catch (e) { return !!G.musicDebug; } };
+const now = () => performance.now();
 const log = (...a) => { if (debugOn()) console.info('[music]', ...a); };
 
 // Re-picks if the context (or a rotation) calls for it. why: what triggered it, for the log.
@@ -110,9 +120,9 @@ export function updateMusic(why = 'check', force = false) {
   state.candidates = pick.candidates.map((t) => t.id);
   if (pick.track.id === state.current?.id) { state.reason = pick.reason; return; }
   const quick = ['combat', 'boss', 'fishing'].includes(pick.layer) || ['combat', 'boss', 'fishing'].includes(state.layer);
-  Object.assign(state, { current: pick.track, layer: pick.layer, reason: pick.reason, key: pick.key, plays: 0 });
+  Object.assign(state, { current: pick.track, layer: pick.layer, reason: pick.reason, key: pick.key, since: now() });
   m.history = [pick.track.id, ...m.history.filter((id) => id !== pick.track.id)].slice(0, MUSIC.history);
-  if (['special', 'location', 'season', 'default'].includes(pick.layer)) m.lastFor[pick.key] = pick.track.id;
+  if (['location', 'season', 'default'].includes(pick.layer)) m.lastFor[pick.key] = pick.track.id;
   log(`${pick.track.id} "${pick.track.name}" <- ${pick.reason} [${why}]`);
   emit('music:play', { track: pick.track, fade: quick ? MUSIC.fastFade : MUSIC.fade, layer: pick.layer, reason: pick.reason });
 }
@@ -129,13 +139,15 @@ export function sting(kind, why) {
 export function skipTrack() { state.rotate = true; updateMusic('skipped', true); }
 
 // What the director is doing, for the debug panel and tests.
-export const musicDebug = () => ({ context: musicContext(), track: state.current?.id || null, name: state.current?.name || null, layer: state.layer, reason: state.reason, candidates: state.candidates, plays: state.plays });
+export const musicDebug = () => ({ context: musicContext(), track: state.current?.id || null, name: state.current?.name || null, layer: state.layer, reason: state.reason, candidates: state.candidates, playedFor: Math.round((now() - state.since) / 1000) });
 
-// A loop of the current track ended (audio/music.js): after enough plays, another of the same kind.
+// Whether a track has played long enough to hand over (pure; v343: by time, so long and short tracks rotate alike).
+export const dueToRotate = (track, seconds) => seconds >= (track.rotateAfter ?? MUSIC.rotateAfter);
+
+// A loop of the current track ended (audio/music.js): once it has played long enough, another that fits as well.
 on('music:looped', (id) => {
   if (id !== state.current?.id) return;
-  state.plays++;
-  if (state.plays >= (state.current.plays ?? MUSIC.plays)) { state.rotate = true; updateMusic('rotation'); }
+  if (dueToRotate(state.current, (now() - state.since) / 1000)) { state.rotate = true; updateMusic('rotation'); }
 });
 for (const ev of ['map:changed', 'day:start', 'cutscene:start', 'cutscene:end', 'game:loaded', 'season:changed']) on(ev, () => updateMusic(ev));
 on('player:fainted', () => sting('gameover', 'fainted'));

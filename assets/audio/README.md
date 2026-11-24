@@ -7,8 +7,8 @@ change a file, or one line of data; no game code.
 
 | Part | File | Job |
 |---|---|---|
-| Music database | `src/data/musicTracks.js` | every track: what it is for (layer, place, season, weather, time, festival, cutscene), priority, weight, volume, loop points |
-| Music director | `src/systems/musicDirector.js` | picks the track for the moment by layer priority (menu, cutscene, festival, boss, combat, fishing, special place, location, season, default), most specific first, random among equals, never restarting what still fits |
+| Music database | `src/data/musicTracks.js` | every track: what it is for (layer, place, region, season, weather, time, festival, cutscene), priority, weight, volume, loop points; the places and regions |
+| Music director | `src/systems/musicDirector.js` | picks the track for the moment by layer priority (menu, cutscene, festival, boss, combat, fishing, place or region, season, default), most specific first, random among equals, never restarting what still fits |
 | Music player | `src/audio/music.js` | crossfades to it, loops it, plays stingers over a ducked background |
 | Ambience database | `src/data/ambience.js` | rules: which loops play how loud, and which calls play how often, by place, weather, season, time and nearness |
 | Ambience director | `src/systems/ambienceDirector.js` | turns the moment into those levels and chances |
@@ -25,7 +25,8 @@ now and then and your own steps; on a rainy day the music, rain, wind, thunder w
 ```
 assets/audio/
 ├── music/
-│   ├── farm/  village/  wild/  underground/  indoors/  special/   the places
+│   ├── farm/  village/  wild/  duskmarch/  underground/  indoors/   the places, by region
+│   ├── sacred/  island/  desert/
 │   ├── festivals/  story/  combat/  fishing/  menu/  default/     events, cutscenes, gameplay, screens
 │   └── stingers/                                                  short one-offs (victory, game over, a new place)
 ├── ambience/
@@ -46,6 +47,23 @@ assets/audio/
   spring farm tune is `farm_spring_02`, a night version `farm_night_01`.
 - The test suite fails on a file that breaks these rules or that no entry lists, so nothing gets lost.
 
+## Places and regions
+
+Music follows where you are at two levels. A **place** is the map you are on, or, in the Hollow, the zone (the Hollow,
+the Sunken Cavern, the Ember Vent, the Smoke Peak). Each place belongs to a **region**. A track tagged with a place
+plays there and beats any region track; a region track plays in every place of the region that has none of its own.
+
+| Region | Places | Own tracks |
+|---|---|---|
+| farm | farm, greenhouse, shed, coop, barn | by season, night, rain |
+| village | village, town, hedge maze, neighbours' cottages | by season, rain |
+| duskmarch | Gloamwood, the Tangle, Mournfield | one per place; Mournfield at night |
+| mines | the Hollow, the Sunken Cavern, the Ember Vent | one per zone; the Hollow by depth (floors 1 to 39, 40 to 79, 80 and deeper); the Cavern by depth (1 to 9, 10 to 24, 25 and deeper); the Vent's climb (1 to 9) and forge room (10) |
+| island | the island, the dig site, the Smoke Peak | the island; the dig site its own; the peak's climb (1 to 9) and summit (10) |
+| desert | the Dunes, the Oasis, the Gilded Dune casino | the Dunes; the Oasis and the casino their own |
+| shops | store, smithy, carpentry, clinic, ranch, town hall, lodge, museum, picture house | one shared; the museum and the picture house their own |
+| others | house, forest, beach, mountains, wilds, caves, sacred (shrine, crypt), tavern | one each |
+
 ## Composing and recording
 
 **Formats.** Ogg Vorbis for music and long loops (it loops without a gap; MP3 adds one). WAV, 16-bit, for short
@@ -63,7 +81,14 @@ length works; 1 to 3 minutes suits background music.
 
 **Variety.** Give an effect or a footstep several recordings: add `_02`, `_03` files and list them in its entry's
 `files`. Each play draws one at random and never repeats the last. `vary` also shifts the pitch a little per play.
-For music, add more tracks with the same fields: the director rotates between them every few loops (`plays`).
+For music, add more tracks with the same fields: they form a pool, one is drawn at random, and after about five
+minutes (`rotateAfter`, counted at the end of a loop) another takes over, so a 2-minute piece plays two or three times.
+
+**Briefs.** Every track has its own brief under *Music briefs* below (when it plays, the mood, instruments, tempo and
+form), and every effect, footstep and ambient sound its own recording brief (character, length, how often it plays,
+how many variants). Edit them in `src/data/musicTracks.js` and `src/data/audio.js`, then run
+`node tools/audio_list.mjs --readme`; the sections below are rewritten from the data. The table here is the overall
+musical palette.
 
 **Style.** Simple, memorable melodies, relaxed pacing, warm instruments, comfortable repetition, and a mood per
 season and place:
@@ -79,7 +104,12 @@ season and place:
 | Village | sociable | guitar, accordion, light percussion |
 | Forest, wilds | curious, open | flute, marimba, plucked strings |
 | Beach | breezy | ukulele, steel drum, guitar |
-| Mines, caves | mysterious | synth pads, low bass, sparse percussion |
+| The Hollow, caves | mysterious; each depth band darker and heavier than the one above | synth pads, low bass, sparse percussion |
+| Sunken Cavern, Ember Vent | deeper, hotter, more urgent | low drones, metallic percussion |
+| Gloamwood, the Tangle | lost, watchful | low flute, plucked strings, wood percussion |
+| Mournfield | mournful, still; darker at night | solo cello or violin, organ, distant bells |
+| Island, dig site | sunny, far from home | marimba, steel drum, nylon guitar |
+| Smoke Peak, the Dunes | heat, haze | hand drums, drones, a reed instrument |
 | Festivals | lively, celebratory | fiddle, banjo, drums |
 | Combat, boss | tense, driving | bass, percussion, synths |
 | Stingers | a short phrase (2 to 6 s) that ends on the home note | anything from the track it plays over |
@@ -91,8 +121,11 @@ Valley (PROJECT_INSTRUCTIONS rule 1).
 
 - **Replace a sound:** save the new file over the old one, same name. That is all.
 - **Add a variant:** save `footstep_grass_02.wav` next to `_01`, add it to `files` in `src/data/audio.js`.
-- **Add a track:** save `music/village/village_night_01.ogg`, add an entry to `TRACKS` with `location: 'village',
+- **Add a track:** save `music/village/village_night_01.ogg`, add an entry to `TRACKS` with `region: 'village',
   time: 'night'`. No other code; it plays at night in the village from then on.
+- **Give one map its own music:** a track with `place: '<map id>'` (or a Hollow zone: `hollow`, `cavern`, `vent`,
+  `peak`) beats everything its region has. A deep place can also go by depth: `floors: [40, 79]`, or `[80]` for 80
+  and deeper (the bands are `HOLLOW_DEPTHS`, `CAVERN_DEPTHS`, `VENT_DEPTHS` and `PEAK_DEPTHS`). A new map goes in a region in `REGIONS`; a test fails if a map has no music.
 - **Add an ambience layer:** a file and an entry in `BED_FILES` or `CALL_FILES` (`src/data/audio.js`), a generator of
   the same id in `src/audio/ambience.js` (the fallback), and a rule in `src/data/ambience.js`.
 - **Add an effect:** a file and an entry in `SFX_FILES`, a generator in `src/audio/sfx.js`, and the game emitting it.
@@ -109,7 +142,8 @@ instead (and warns in the console), so a broken file never makes the game silent
 They are placeholders recorded from the game's own sound generators by `tools/render_audio.mjs` (mono 22,050 Hz;
 16-bit WAV, music through ffmpeg to Ogg Vorbis). Run it again after changing a generator: `node tools/render_audio.mjs
 hoe rain` re-records only those ids, and only the first file of a pool, so your own variants are never touched. With
-no ids it re-records everything, overwriting the first file of every slot, including ones you replaced.
+no ids it re-records everything, overwriting the first file of every slot, including ones you replaced. The other
+files of a pool are recorded only while they are missing (a fresh take each), never overwritten.
 
 ### Credits
 
@@ -117,135 +151,1077 @@ None yet: every file is generated by the game.
 
 <!-- slots:start (written by tools/audio_list.mjs --readme) -->
 
-## Music
+## Music briefs
 
-Ogg Vorbis, one file per track, named by its id. Several tracks that fit the same moment make a pool (the director draws one and moves on after a few loops). Key and tempo are the generated placeholder's.
+One entry per track, grouped by folder: when it plays, its form, and what to compose. The brief is written in `src/data/musicTracks.js` (`brief`); the key and tempo are those of the generated placeholder, a starting point you can ignore. Several tracks that fit the same moment form a pool and take turns.
 
-| File | Track | Plays for | Placeholder key, tempo | Id |
-|---|---|---|---|---|
-| `music/farm/farm_spring_01.ogg` | Spring on the Farm | location, season; in farm; Spring | E major pentatonic, 100 bpm | `farm_spring_01` |
-| `music/farm/farm_spring_02.ogg` | First Shoots | location, season; in farm; Spring | D major pentatonic, 96 bpm | `farm_spring_02` |
-| `music/farm/farm_summer_01.ogg` | Summer on the Farm | location, season; in farm; Summer | G major pentatonic, 112 bpm | `farm_summer_01` |
-| `music/farm/farm_autumn_01.ogg` | Autumn on the Farm | location, season; in farm; Autumn | D dorian, 92 bpm | `farm_autumn_01` |
-| `music/farm/farm_winter_01.ogg` | Winter on the Farm | location, season; in farm; Winter | C minor pentatonic, 80 bpm | `farm_winter_01` |
-| `music/farm/farm_night_01.ogg` | Farm After Dark | location; in farm; night | A minor pentatonic, 70 bpm | `farm_night_01` |
-| `music/farm/farm_rain_01.ogg` | Rain on the Rows | location; in farm; rain, storm | B dorian, 84 bpm | `farm_rain_01` |
-| `music/village/village_spring_01.ogg` | Village in Spring | location; in village; Spring | G major hexatonic, 108 bpm | `village_spring_01` |
-| `music/village/village_summer_01.ogg` | Village in Summer | location; in village; Summer | A major pentatonic, 116 bpm | `village_summer_01` |
-| `music/village/village_autumn_01.ogg` | Village in Autumn | location; in village; Autumn | E dorian, 98 bpm | `village_autumn_01` |
-| `music/village/village_winter_01.ogg` | Village in Winter | location; in village; Winter | D minor pentatonic, 86 bpm | `village_winter_01` |
-| `music/village/village_rain_01.ogg` | Village in the Rain | location; in village; rain, storm | C dorian, 88 bpm | `village_rain_01` |
-| `music/wild/forest_01.ogg` | Under the Canopy | location; in forest | D dorian, 92 bpm | `forest_01` |
-| `music/wild/beach_01.ogg` | Tide Line | location; in beach | F lydian, 100 bpm | `beach_01` |
-| `music/wild/mountain_01.ogg` | High Paths | location; in mountains | C major hexatonic, 90 bpm | `mountain_01` |
-| `music/wild/exploration_01.ogg` | Off the Map | location; in wilds | A dorian, 104 bpm | `exploration_01` |
-| `music/underground/mines_01.ogg` | The Hollow | location; in mines | D phrygian, 72 bpm | `mines_01` |
-| `music/underground/caves_01.ogg` | Drip and Echo | location; in caves | C phrygian, 66 bpm | `caves_01` |
-| `music/indoors/house_01.ogg` | Home | location; in house | E major pentatonic, 82 bpm | `house_01` |
-| `music/indoors/tavern_01.ogg` | The Common Room | location; in tavern | D blues, 118 bpm | `tavern_01` |
-| `music/indoors/shops_01.ogg` | Open for Business | location; in shops | G major hexatonic, 104 bpm | `shops_01` |
-| `music/special/special_shrine_01.ogg` | Old Stones | special; in secret | D phrygian, 64 bpm | `special_shrine_01` |
-| `music/special/special_desert_01.ogg` | Heat Shimmer | special; in faraway | D phrygian, 96 bpm | `special_desert_01` |
-| `music/default/default_01.ogg` | Hollowmere | default | E major pentatonic, 96 bpm | `default_01` |
-| `music/festivals/festival_01.ogg` | Bunting and Lanterns | event | F major hexatonic, 124 bpm | `festival_01` |
-| `music/festivals/festival_spring_01.ogg` | Spring Fair | event; Spring | G major pentatonic, 128 bpm | `festival_spring_01` |
-| `music/festivals/festival_summer_01.ogg` | Midsummer | event; Summer | A lydian, 132 bpm | `festival_summer_01` |
-| `music/festivals/festival_autumn_01.ogg` | Maze Night | event; Autumn | D dorian, 112 bpm | `festival_autumn_01` |
-| `music/festivals/festival_winter_01.ogg` | Frostlight | event; Winter | E major hexatonic, 100 bpm | `festival_winter_01` |
-| `music/festivals/festival_harvest_01.ogg` | Harvest Home | event; festival grangefair, weighin | F major pentatonic, 120 bpm | `festival_harvest_01` |
-| `music/festivals/competition_01.ogg` | The Judges Walk | event; festival blossom, catch | G blues, 124 bpm | `competition_01` |
-| `music/story/story_01.ogg` | A Letter at Winter's End | cutscene | C lydian, 76 bpm | `story_01` |
-| `music/story/celebration_01.ogg` | The Whole Valley Gathers | cutscene; cutscene wedding | F major hexatonic, 112 bpm | `celebration_01` |
-| `music/combat/combat_01.ogg` | Teeth in the Dark | combat | E blues, 140 bpm | `combat_01` |
-| `music/combat/combat_02.ogg` | Hold the Line | combat | D phrygian, 146 bpm | `combat_02` |
-| `music/combat/boss_01.ogg` | The Golden One | boss | C phrygian, 152 bpm | `boss_01` |
-| `music/fishing/fishing_01.ogg` | Something on the Line | fishing | G major pentatonic, 132 bpm | `fishing_01` |
-| `music/menu/menu_01.ogg` | Hollowmere Farm | menu | E lydian, 88 bpm | `menu_01` |
-| `music/menu/credits_01.ogg` | Thank You for Playing | credits | D major pentatonic, 84 bpm | `credits_01` |
-| `music/stingers/sting_gameover.ogg` | Carried Home | sting:gameover (once) | A minor pentatonic, 70 bpm | `sting_gameover` |
-| `music/stingers/sting_victory.ogg` | Victory | sting:victory (once) | G major pentatonic, 120 bpm | `sting_victory` |
-| `music/stingers/sting_discovery.ogg` | A New Place | sting:discovery (once) | A lydian, 100 bpm | `sting_discovery` |
+### Farm (`music/farm/`)
+
+#### Spring on the Farm
+
+- File: `music/farm/farm_spring_01.ogg` (id `farm_spring_01`)
+- Plays: anywhere in the farm region (Farm, Greenhouse, Shed, The coop, The barn) without a track of its own, in Spring, and, in its season, anywhere without music of its own
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: E major pentatonic, 100 bpm
+
+The game's signature morning theme, heard more than any other track. Fresh and hopeful, a melody you can hum after one listen. Acoustic guitar carries it, flute answers, light marimba or glockenspiel on top. Medium-gentle tempo; 1.5 to 2.5 minutes, looping seamlessly.
+
+#### First Shoots
+
+- File: `music/farm/farm_spring_02.ogg` (id `farm_spring_02`)
+- Plays: anywhere in the farm region (Farm, Greenhouse, Shed, The coop, The barn) without a track of its own, in Spring, and, in its season, anywhere without music of its own
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: D major pentatonic, 96 bpm
+
+A second spring farm tune to rotate with Spring on the Farm. Same warmth, different shape: more pastoral and airy, as if the first shoots are up. Flute or recorder lead over fingerpicked guitar, soft strings underneath. Avoid quoting the first spring theme.
+
+#### Summer on the Farm
+
+- File: `music/farm/farm_summer_01.ogg` (id `farm_summer_01`)
+- Plays: anywhere in the farm region (Farm, Greenhouse, Shed, The coop, The barn) without a track of its own, in Summer, and, in its season, anywhere without music of its own
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: G major pentatonic, 112 bpm
+
+Bright, lazy, sunlit afternoons in the fields. Banjo or ukulele strumming, a whistled or fiddle melody, hand percussion (shaker, cajón). A little swing; relaxed, never rushed.
+
+#### Autumn on the Farm
+
+- File: `music/farm/farm_autumn_01.ogg` (id `farm_autumn_01`)
+- Plays: anywhere in the farm region (Farm, Greenhouse, Shed, The coop, The barn) without a track of its own, in Autumn, and, in its season, anywhere without music of its own
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: D dorian, 92 bpm
+
+Mellow and golden: harvest time, the year turning. Piano or nylon guitar melody, warm strings, clarinet or bassoon counter-line. Slightly slower than summer, a touch of wistfulness without sadness.
+
+#### Winter on the Farm
+
+- File: `music/farm/farm_winter_01.ogg` (id `farm_winter_01`)
+- Plays: anywhere in the farm region (Farm, Greenhouse, Shed, The coop, The barn) without a track of its own, in Winter, and, in its season, anywhere without music of its own
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: C minor pentatonic, 80 bpm
+
+Quiet, sparse, snow on the fields. Solo piano or celesta with soft pads and the occasional sleigh-bell or chime. Lots of space between notes; calm and cosy, not cold.
+
+#### Farm After Dark
+
+- File: `music/farm/farm_night_01.ogg` (id `farm_night_01`)
+- Plays: anywhere in the farm region (Farm, Greenhouse, Shed, The coop, The barn) without a track of its own, at night
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: A minor pentatonic, 70 bpm
+
+The farm after 8 pm in any season. Hushed and slow: soft piano, muted strings, a distant music-box or harp figure. Must sit under crickets and wind without competing; keep the mix soft and the low end light.
+
+#### Rain on the Rows
+
+- File: `music/farm/farm_rain_01.ogg` (id `farm_rain_01`)
+- Plays: anywhere in the farm region (Farm, Greenhouse, Shed, The coop, The barn) without a track of its own, in rain or storm
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: B dorian, 84 bpm
+
+Rain on the farm (and storms). Reflective, indoorsy even outdoors: Rhodes or felt piano, muted guitar, gentle brushed drums. Leave room for the rain sound in the high frequencies.
+
+### Village and town (`music/village/`)
+
+#### Village in Spring
+
+- File: `music/village/village_spring_01.ogg` (id `village_spring_01`)
+- Plays: anywhere in the village region (Hollowmere Village, Hollowmere Town, The hedge maze, neighbours' cottages) without a track of its own, in Spring
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: G major hexatonic, 108 bpm
+
+The village square in spring: sociable, neighbours chatting, market stalls opening. Guitar and accordion or concertina, light percussion, a cheerful walking bass. Busier than the farm themes but still relaxed.
+
+#### Village in Summer
+
+- File: `music/village/village_summer_01.ogg` (id `village_summer_01`)
+- Plays: anywhere in the village region (Hollowmere Village, Hollowmere Town, The hedge maze, neighbours' cottages) without a track of its own, in Summer
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: A major pentatonic, 116 bpm
+
+The village in summer: warm evenings, people out of doors. Upbeat folk band feel: fiddle, guitar, upright bass, tambourine. Danceable but easy.
+
+#### Village in Autumn
+
+- File: `music/village/village_autumn_01.ogg` (id `village_autumn_01`)
+- Plays: anywhere in the village region (Hollowmere Village, Hollowmere Town, The hedge maze, neighbours' cottages) without a track of its own, in Autumn
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: E dorian, 98 bpm
+
+The village in autumn: woodsmoke, apples, early dusk. Accordion or harmonium melody, plucked strings, a lilting 6/8 or slow waltz would suit.
+
+#### Village in Winter
+
+- File: `music/village/village_winter_01.ogg` (id `village_winter_01`)
+- Plays: anywhere in the village region (Hollowmere Village, Hollowmere Town, The hedge maze, neighbours' cottages) without a track of its own, in Winter
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: D minor pentatonic, 86 bpm
+
+The village in winter: lit windows, frost, people hurrying home. Piano and bells, soft strings, a gentle carol-like melody (original, not a real carol).
+
+#### Village in the Rain
+
+- File: `music/village/village_rain_01.ogg` (id `village_rain_01`)
+- Plays: anywhere in the village region (Hollowmere Village, Hollowmere Town, The hedge maze, neighbours' cottages) without a track of its own, in rain or storm
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: C dorian, 88 bpm
+
+Rain in the village. Cosy and unhurried, like watching the street from a café window. Muted trumpet or clarinet, brushed drums, soft piano chords.
+
+### The wild places (`music/wild/`)
+
+#### Under the Canopy
+
+- File: `music/wild/forest_01.ogg` (id `forest_01`)
+- Plays: anywhere in the forest region (Brackenwood, The hidden grove, The mere) without a track of its own
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: D dorian, 92 bpm
+
+Brackenwood, the hidden grove and the mere: tall trees, dappled light, curiosity. Flute and marimba, plucked strings, light woodblock. Slightly mysterious but welcoming.
+
+#### Tide Line
+
+- File: `music/wild/beach_01.ogg` (id `beach_01`)
+- Plays: anywhere in the beach region (Saltreach Beach) without a track of its own
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: F lydian, 100 bpm
+
+Saltreach Beach: breezy and open, gulls and surf underneath. Ukulele or steel-string guitar, steel drum or vibraphone, laid-back groove. Leave space for the surf loop.
+
+#### High Paths
+
+- File: `music/wild/mountain_01.ogg` (id `mountain_01`)
+- Plays: anywhere in the mountains region (Cragmoor, The quarry, The railway) without a track of its own
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: C major hexatonic, 90 bpm
+
+Cragmoor, the quarry and the railway: high paths, wind, wide views. Open fifths, acoustic guitar, low whistle or pan flute, a steady walking pulse.
+
+#### Off the Map
+
+- File: `music/wild/exploration_01.ogg` (id `exploration_01`)
+- Plays: anywhere in the wilds region (Ashgrove Wilds) without a track of its own
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: A dorian, 104 bpm
+
+Ashgrove Wilds: off the beaten path, a little adventure. Driving but light: plucked strings, hand drums, flute; a sense of discovery.
+
+### Underground: the Hollow, the Cavern, the Vent, caves (`music/underground/`)
+
+#### The Hollow
+
+- File: `music/underground/hollow_upper_01.ogg` (id `hollow_upper_01`)
+- Plays: at the Hollow, floors 1 to 39
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: D phrygian, 72 bpm
+
+The Hollow, floors 1 to 39: earth, copper, crabs and moles. Mysterious, not yet threatening. Soft synth pads, low bass pulse, sparse percussion (drips, woodblocks), a simple modal melody on marimba or kalimba.
+
+#### Lantern Dark
+
+- File: `music/underground/hollow_middle_01.ogg` (id `hollow_middle_01`)
+- Plays: at the Hollow, floors 40 to 79
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: C phrygian, 70 bpm
+
+The Hollow, floors 40 to 79: soot puffs, moss slimes, lantern wisps. Darker and colder than the upper floors: drones, glassy bell tones, slower and lower, a faint eerie lead.
+
+#### The Gold Seam
+
+- File: `music/underground/hollow_deep_01.ogg` (id `hollow_deep_01`)
+- Plays: at the Hollow, floors 80 and deeper
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: A# blues, 84 bpm
+
+The Hollow, floor 80 and deeper: gold, armoured creatures, the Cavern's door. Heavy and tense: deep bass ostinato, metallic percussion, dissonant pads. The most oppressive of the three.
+
+#### Drip and Echo
+
+- File: `music/underground/caves_01.ogg` (id `caves_01`)
+- Plays: anywhere in the caves region (Farm cave, The sewer) without a track of its own
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: C phrygian, 66 bpm
+
+The farm cave and the sewer: small, damp, echoing places. Sparse and atmospheric: plucked notes with long reverb, water-drop percussion, a low hum; calm rather than dangerous.
+
+#### The Sunken Cavern
+
+- File: `music/underground/cavern_upper_01.ogg` (id `cavern_upper_01`)
+- Plays: at the Sunken Cavern, floors 1 to 9
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: C# phrygian, 78 bpm
+
+The Sunken Cavern, floors 1 to 9: an ancient buried place of sand and ruins. Middle-eastern tinged modes (phrygian), low drones, hand drums, a reed or ney-like lead.
+
+#### Past the Ember Door
+
+- File: `music/underground/cavern_middle_01.ogg` (id `cavern_middle_01`)
+- Plays: at the Sunken Cavern, floors 10 to 24
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: B phrygian, 84 bpm
+
+The Sunken Cavern, floors 10 to 24, past the Ember Vent's door: heat rising, more urgent. Faster hand drums, darker drones, a rhythmic plucked figure.
+
+#### Umbrite Veins
+
+- File: `music/underground/cavern_deep_01.ogg` (id `cavern_deep_01`)
+- Plays: at the Sunken Cavern, floors 25 and deeper
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: A blues, 90 bpm
+
+The Sunken Cavern, floor 25 and deeper, where umbrite is richest: the hardest everyday place in the game. Driving and dangerous: pounding low percussion, distorted drones, a strained high lead.
+
+#### The Ember Vent
+
+- File: `music/underground/vent_climb_01.ogg` (id `vent_climb_01`)
+- Plays: at the Ember Vent, floors 1 to 9
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: D# blues, 92 bpm
+
+The Ember Vent, floors 1 to 9: lava, cinder and fire. Hot and relentless: low brass or synth bass, anvil-like metallic hits, a fast pulse.
+
+#### The Forge
+
+- File: `music/underground/vent_forge_01.ogg` (id `vent_forge_01`)
+- Plays: at the Ember Vent, floors 10 and deeper
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: G dorian, 72 bpm
+
+The Ember Vent's forge room on floor 10: no monsters, a safe hearth after the climb. Warm and steady: low strings, a slow anvil rhythm, a calm melody. Relief.
+
+### Indoors (`music/indoors/`)
+
+#### Home
+
+- File: `music/indoors/house_01.ogg` (id `house_01`)
+- Plays: anywhere in the house region (Farmhouse, Attic) without a track of its own
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: E major pentatonic, 82 bpm
+
+The farmhouse and attic: home. The warmest, simplest piece in the game. Solo piano or guitar, maybe a soft cello; slow and comforting.
+
+#### The Common Room
+
+- File: `music/indoors/tavern_01.ogg` (id `tavern_01`)
+- Plays: anywhere in the tavern region (The Lantern) without a track of its own
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: D blues, 118 bpm
+
+The Lantern tavern: a lively pub evening. Folk band: fiddle, accordion, guitar, foot-stomp percussion; jolly and loose.
+
+#### Open for Business
+
+- File: `music/indoors/shops_01.ogg` (id `shops_01`)
+- Plays: anywhere in the shops region (Fenn's Provisions, The Anvil, Bram's Carpentry, Hollowmere Clinic, Tamsin's Ranch Supply, Hollowmere Museum, Town hall, Wardens' Lodge, The Starlight Picture House) without a track of its own
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: G major hexatonic, 104 bpm
+
+Every working shop in town (store, smithy, carpentry, clinic, ranch, town hall, lodge): light and friendly background music. Pizzicato strings or ukulele, soft bells; unobtrusive, it plays while you browse menus.
+
+#### Quiet Halls
+
+- File: `music/indoors/museum_01.ogg` (id `museum_01`)
+- Plays: at Hollowmere Museum
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: E lydian, 72 bpm
+
+Hollowmere Museum: quiet halls of artifacts and donations. Calm and thoughtful: solo piano or harp, soft strings, a gentle sense of wonder. Very quiet dynamics.
+
+#### House Lights
+
+- File: `music/indoors/theatre_01.ogg` (id `theatre_01`)
+- Plays: at The Starlight Picture House
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: D major hexatonic, 96 bpm
+
+The Starlight Picture House: a small old cinema. Nostalgic and charming: an old-time piano or small band (clarinet, upright bass, brushes), like the warm-up music before a film.
+
+### The Duskmarch (west of the village) (`music/duskmarch/`)
+
+#### Gloamwood
+
+- File: `music/duskmarch/gloamwood_01.ogg` (id `gloamwood_01`)
+- Plays: at Gloamwood
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: A dorian, 86 bpm
+
+Gloamwood, the old woods west of the village: winding paths, easy to get lost, watched from the trees. Low flute, plucked strings, wooden percussion; dorian, a little uneasy but not scary.
+
+#### The Tangle
+
+- File: `music/duskmarch/tangle_01.ogg` (id `tangle_01`)
+- Plays: at The Tangle
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: G phrygian, 80 bpm
+
+The Tangle, a deeper thicket of dead ends west of Gloamwood. More claustrophobic than Gloamwood: closer harmonies, a repeating circular figure (as if walking in circles), sparse percussion.
+
+#### Mournfield
+
+- File: `music/duskmarch/mournfield_01.ogg` (id `mournfield_01`)
+- Plays: at Mournfield
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: F minor pentatonic, 66 bpm
+
+Mournfield, the valley's old graveyard, by day. Mournful and still, respectful: solo cello or violin, soft organ or harmonium, a distant bell.
+
+#### When the Dead Walk
+
+- File: `music/duskmarch/mournfield_night_01.ogg` (id `mournfield_night_01`)
+- Plays: at Mournfield, at night
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: D phrygian, 72 bpm
+
+Mournfield after dark, when the dead rise. The day theme's mood turned eerie: tremolo strings, low choir pads, a slow uneven pulse. Unsettling, but leave room for combat music to take over in fights.
+
+### Sacred places (`music/sacred/`)
+
+#### Old Stones
+
+- File: `music/sacred/sacred_01.ogg` (id `sacred_01`)
+- Plays: anywhere in the sacred region (The shrine, The chapel crypt) without a track of its own
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: D phrygian, 64 bpm
+
+The shrine and the chapel crypt: old stones, reverence and mystery. Choir pads or organ, a single bell, very slow; ancient-sounding modes.
+
+### Across the sea (`music/island/`)
+
+#### Warm Water
+
+- File: `music/island/island_01.ogg` (id `island_01`)
+- Plays: anywhere in the island region (The island, The dig site, the Smoke Peak) without a track of its own
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: F lydian, 104 bpm
+
+The island across the sea (Rook's boat): sunny, far from home, a holiday. Marimba, steel drum, nylon guitar, light shakers; lydian brightness.
+
+#### Bones in the Sand
+
+- File: `music/island/digsite_01.ogg` (id `digsite_01`)
+- Plays: at The dig site
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: D dorian, 94 bpm
+
+The island's dig site: bones and old secrets in the sand. Curious and adventurous: plucked strings, hand drums, a playful woodwind; a touch of mystery.
+
+#### The Smoke Peak
+
+- File: `music/island/peak_climb_01.ogg` (id `peak_climb_01`)
+- Plays: at the Smoke Peak, floors 1 to 9
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: E blues, 100 bpm
+
+The Smoke Peak, floors 1 to 9: the island's volcano dungeon. Tropical heat turned dangerous: tribal-style drums, low brass or synth, smoky drones.
+
+#### Above the Smoke
+
+- File: `music/island/peak_summit_01.ogg` (id `peak_summit_01`)
+- Plays: at the Smoke Peak, floors 10 and deeper
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: E lydian, 80 bpm
+
+The Smoke Peak's summit on floor 10: the climb is over, the cache is found, the view opens. Open, triumphant but calm: strings and marimba, a soaring melody.
+
+### The desert (`music/desert/`)
+
+#### Heat Shimmer
+
+- File: `music/desert/desert_01.ogg` (id `desert_01`)
+- Plays: anywhere in the desert region (The Dunes, The Oasis, The Gilded Dune) without a track of its own
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: D phrygian, 96 bpm
+
+The Dunes: heat haze, wind, endless sand. Hand drums, drones, a reed instrument (duduk-like) or bowed lead; slow, hypnotic.
+
+#### The Gilded Dune
+
+- File: `music/desert/casino_01.ogg` (id `casino_01`)
+- Plays: at The Gilded Dune
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: C blues, 112 bpm
+
+The Gilded Dune casino: a little glamorous, a little shady. Lounge jazz with a desert tint: brushed drums, upright bass, vibraphone or muted trumpet.
+
+#### Shade and Seeds
+
+- File: `music/desert/oasis_01.ogg` (id `oasis_01`)
+- Plays: at The Oasis
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: F major hexatonic, 92 bpm
+
+The Oasis shop in the desert: cool shade and rare seeds after the heat. Gentle and refreshing: harp or kalimba, soft hand percussion, a light flute; a breath of relief.
+
+### Fallback (`music/default/`)
+
+#### Hollowmere
+
+- File: `music/default/default_01.ogg` (id `default_01`)
+- Plays: anywhere with no music of its own
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: E major pentatonic, 96 bpm
+
+The fallback for anywhere without its own music (rare). A neutral, gentle Hollowmere theme: guitar and flute, works in any season or place.
+
+### Festivals (`music/festivals/`)
+
+#### Bunting and Lanterns
+
+- File: `music/festivals/festival_01.ogg` (id `festival_01`)
+- Plays: while a festival is on
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: F major hexatonic, 124 bpm
+
+Any festival without its own track: bunting, lanterns, crowds. Festive folk band: fiddle, accordion, drums; cheerful and busy.
+
+#### Spring Fair
+
+- File: `music/festivals/festival_spring_01.ogg` (id `festival_spring_01`)
+- Plays: while a festival is on, in Spring
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: G major pentatonic, 128 bpm
+
+Spring festivals (Egg Hunt, Ribbon Dance): playful and light. Flutes, pizzicato, tambourine; a dance tune.
+
+#### Midsummer
+
+- File: `music/festivals/festival_summer_01.ogg` (id `festival_summer_01`)
+- Plays: while a festival is on, in Summer
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: A lydian, 132 bpm
+
+Summer festivals (Summer Potluck): sunny, bustling, celebratory. Brass or fiddle lead, guitars, lively percussion.
+
+#### Maze Night
+
+- File: `music/festivals/festival_autumn_01.ogg` (id `festival_autumn_01`)
+- Plays: while a festival is on, in Autumn
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: D dorian, 112 bpm
+
+Autumn festivals (Maze Night, 10 pm in the hedge maze): mischievous and spooky-fun, never truly scary. Pizzicato, bassoon, xylophone, a swinging 6/8.
+
+#### Frostlight
+
+- File: `music/festivals/festival_winter_01.ogg` (id `festival_winter_01`)
+- Plays: while a festival is on, in Winter
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: E major hexatonic, 100 bpm
+
+Winter festivals (Frostlight Market, Longnight Feast): lanterns in the snow, warm cider. Bells, celesta, soft choir pads, strings; magical and cosy.
+
+#### Harvest Home
+
+- File: `music/festivals/festival_harvest_01.ogg` (id `festival_harvest_01`)
+- Plays: while a festival is on, festivals: grangefair, weighin
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: F major pentatonic, 120 bpm
+
+The Grange Fair and the Harvest Weigh-in: proud, generous, the year's work shown off. Big folk band: fiddle, banjo, accordion, drums; a stomping anthem.
+
+#### The Judges Walk
+
+- File: `music/festivals/competition_01.ogg` (id `competition_01`)
+- Plays: while a festival is on, festivals: blossom, catch
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: G blues, 124 bpm
+
+Judged contests (Blossom Show, Midsummer Catch): a little tension while the judges walk the rows. Light suspense with a playful edge: pizzicato, ticking percussion, a rising figure that resolves warmly.
+
+### Story scenes (`music/story/`)
+
+#### A Letter at Winter's End
+
+- File: `music/story/story_01.ogg` (id `story_01`)
+- Plays: during story scenes
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: C lydian, 76 bpm
+
+Story scenes and the opening, the letter that brings you to Hollowmere. Emotional and intimate: solo piano, then strings. Through-composed is fine; it loops if a scene runs long.
+
+#### The Whole Valley Gathers
+
+- File: `music/story/celebration_01.ogg` (id `celebration_01`)
+- Plays: during story scenes, scene: wedding
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: F major hexatonic, 112 bpm
+
+The wedding: the whole valley gathers. Joyful and moving: strings, piano, bells, a warm melody that swells.
+
+### Fights (`music/combat/`)
+
+#### Teeth in the Dark
+
+- File: `music/combat/combat_01.ogg` (id `combat_01`)
+- Plays: in fights
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: E blues, 140 bpm
+
+Fighting monsters anywhere. Tense and driving but not overwhelming (fights are short and frequent): bass ostinato, punchy drums, short synth or brass stabs. Starts strong, no long intro.
+
+#### Hold the Line
+
+- File: `music/combat/combat_02.ogg` (id `combat_02`)
+- Plays: in fights
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: D phrygian, 146 bpm
+
+A second fight track to rotate with Teeth in the Dark. Different colour: faster, more percussive, strings ostinato.
+
+#### The Golden One
+
+- File: `music/combat/boss_01.ogg` (id `boss_01`)
+- Plays: when an elite or boss is near in a fight
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: C phrygian, 152 bpm
+
+Elite and boss monsters. The biggest, most dramatic piece: full drums, brass or heavy synths, a strong motif.
+
+### Fishing (`music/fishing/`)
+
+#### Something on the Line
+
+- File: `music/fishing/fishing_01.ogg` (id `fishing_01`)
+- Plays: while reeling in a fish
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: G major pentatonic, 132 bpm
+
+Reeling in a fish (the minigame). Quick, bouncy, playful tension: pizzicato or banjo, a running bassline, light percussion. Short loop (30 to 60 s) since reels are brief.
+
+### Menus and credits (`music/menu/`)
+
+#### Hollowmere Farm
+
+- File: `music/menu/menu_01.ogg` (id `menu_01`)
+- Plays: on the main menu
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: E lydian, 88 bpm
+
+The main menu: the game's identity. A gentle, memorable main theme others can quote; guitar and piano, strings swelling a little. Loops while you choose a farm.
+
+#### Thank You for Playing
+
+- File: `music/menu/credits_01.ogg` (id `credits_01`)
+- Plays: during the credits
+- Form: loops; an intro can play once first (loopStart)
+- Placeholder: D major pentatonic, 84 bpm
+
+The end credits (not shown yet): a warm farewell. A fuller arrangement of the main theme; reflective and grateful.
+
+### Stingers (short, played once over the music) (`music/stingers/`)
+
+#### Carried Home
+
+- File: `music/stingers/sting_gameover.ogg` (id `sting_gameover`)
+- Plays: when you faint
+- Form: plays once, then the background music returns
+- Placeholder: A minor pentatonic, 70 bpm
+
+Played once when you faint and are carried home. 3 to 5 seconds, soft and sympathetic (not a harsh fail sound): a falling piano phrase ending on a quiet chord.
+
+#### Victory
+
+- File: `music/stingers/sting_victory.ogg` (id `sting_victory`)
+- Plays: when you defeat an elite
+- Form: plays once, then the background music returns
+- Placeholder: G major pentatonic, 120 bpm
+
+Played once over the music when you defeat an elite. 2 to 4 seconds, bright and triumphant: brass or bells, ending on the home note.
+
+#### A New Place
+
+- File: `music/stingers/sting_discovery.ogg` (id `sting_discovery`)
+- Plays: when you find a new place
+- Form: plays once, then the background music returns
+- Placeholder: A lydian, 100 bpm
+
+Played once when you find a new place. 2 to 4 seconds, wonder and curiosity: harp or celesta rising to a shimmering chord.
 
 ## Sound effects
 
-One-shots, played when something happens (the Effects volume; the menu click is Interface).
+One-shots, played when something happens. Record the variants a brief asks for as `_02`, `_03` and list them in `files`.
 
-| File | Plays for | Id in data/audio.js |
-|---|---|---|
-| `sfx/farming/weeds_cut_rustle_01.wav` | thick weeds cut with the weapon | `rustle` |
-| `sfx/tools/hoe_till_soil_01.wav` | the hoe tilling soil | `hoe` |
-| `sfx/tools/watering_can_pour_01.wav` | the watering can pouring | `can` |
-| `sfx/farming/seed_plant_01.wav` | a seed planted | `seed` |
-| `sfx/tools/axe_chop_wood_01.wav` | the axe chopping | `axe` |
-| `sfx/tools/pickaxe_strike_rock_01.wav` | the pickaxe striking rock | `pick` |
-| `sfx/combat/sword_swing_01.wav` | a sword swing | `sword` |
-| `sfx/combat/dagger_swing_01.wav` | a dagger swing | `swingDagger` |
-| `sfx/combat/club_swing_01.wav` | a club or hammer swing | `swingClub` |
-| `sfx/combat/weapon_hit_01.wav` | a blow landing on a creature | `hit` |
-| `sfx/combat/weapon_hit_critical_01.wav` | a critical hit | `crit` |
-| `sfx/combat/monster_defeated_01.wav` | a creature defeated | `slay` |
-| `sfx/combat/ground_slam_01.wav` | a weapon special slamming the ground | `slam` |
-| `sfx/combat/low_health_heartbeat_01.wav` | low health in a fight | `heartbeat` |
-| `sfx/items/item_pickup_01.wav` | picking something up | `pickup` |
-| `sfx/fishing/fish_bite_alert_01.wav` | a fish biting | `bite` |
-| `sfx/fishing/fish_caught_01.wav` | a fish caught | `catch` |
-| `sfx/fishing/fish_escaped_01.wav` | a fish getting away | `miss` |
-| `sfx/combat/player_hurt_01.wav` | the farmer hurt | `hurt` |
-| `sfx/items/coins_earned_01.wav` | gold earned | `coin` |
-| `sfx/jingles/skill_level_up_01.wav` | a skill levelling up | `levelup` |
-| `sfx/animals/animal_pet_01.wav` | petting an animal | `pet` |
-| `sfx/items/object_place_01.wav` | setting an object down | `place` |
-| `sfx/world/door_map_change_01.wav` | going through a door or onto another map | `door` |
-| `sfx/combat/bomb_explosion_01.wav` | a bomb | `boom` |
-| `sfx/world/thunder_rumble_01.wav` | thunder in a storm | `thunder` |
-| `sfx/animals/bird_take_off_01.wav` | a bird taking off | `flap` |
-| `sfx/ui/menu_click_01.wav` | menu buttons | `ui` |
-| `sfx/jingles/wishing_stone_chime_01.wav` | blessings, guide steps and tips | `chime` |
-| `sfx/world/lantern_water_splash_01.wav` | a lantern set on the water | `splash` |
-| `sfx/jingles/morning_wake_01.wav` | waking up to the morning report | `morning` |
+### `sfx/animals/`
+
+#### Petting an animal
+
+- File: `sfx/animals/animal_pet_01.wav` (id `pet`)
+- Form: one-shot
+- Volume: Effects
+
+Petting an animal. A soft affectionate chirp or rising coo, about 0.15 s. Warm, never squeaky.
+
+#### A bird taking off
+
+- File: `sfx/animals/bird_take_off_01.wav` (id `flap`)
+- Form: one-shot
+- Volume: Effects
+
+A bird taking off when you walk near. A quick flutter of wings, 0.15 to 0.25 s.
+
+### `sfx/combat/`
+
+#### A sword swing
+
+- File: `sfx/combat/sword_swing_01.wav` (id `sword`)
+- Form: one-shot
+- Volume: Effects
+
+A sword swing through the air. A clean whoosh, 0.15 to 0.25 s, mid-pitched. Played on every swing, hit or miss.
+
+#### A dagger swing
+
+- File: `sfx/combat/dagger_swing_01.wav` (id `swingDagger`)
+- Form: one-shot
+- Volume: Effects
+
+A dagger's quick stab or slash. A short, high, thin whip, under 0.15 s: faster and lighter than the sword.
+
+#### A club or hammer swing
+
+- File: `sfx/combat/club_swing_01.wav` (id `swingClub`)
+- Form: one-shot
+- Volume: Effects
+
+A club or hammer swing. A heavy, low, slow whoosh, 0.25 to 0.35 s, with weight at the end.
+
+#### A blow landing on a creature
+
+- File: `sfx/combat/weapon_hit_01.wav` (id `hit`)
+- Form: one-shot
+- Volume: Effects
+
+A blow landing on a creature. A short punchy thud with a soft squelch or crack, under 0.12 s. Plays with every hit, so tight and dry.
+
+#### A critical hit
+
+- File: `sfx/combat/weapon_hit_critical_01.wav` (id `crit`)
+- Form: one-shot
+- Volume: Effects
+
+A critical hit. The normal hit plus a bright metallic ring or sparkle on top, 0.15 to 0.25 s. Must stand out from a normal hit at once.
+
+#### A creature defeated
+
+- File: `sfx/combat/monster_defeated_01.wav` (id `slay`)
+- Form: one-shot
+- Volume: Effects
+
+A creature defeated. A soft poof or deflate with a small rising two-note chime, 0.2 to 0.4 s. Rewarding, never gory.
+
+#### A weapon special slamming the ground
+
+- File: `sfx/combat/ground_slam_01.wav` (id `slam`)
+- Form: one-shot
+- Volume: Effects
+
+A weapon special slamming the ground. A deep boom with rocks and dust, 0.3 to 0.5 s, strong low end.
+
+#### Low health in a fight
+
+- File: `sfx/combat/low_health_heartbeat_01.wav` (id `heartbeat`)
+- Form: one-shot
+- Volume: Effects
+
+Low health in a fight. Two soft low heartbeat thumps (lub-dub), about 0.3 s, repeated by the game. Felt more than heard; no high frequencies.
+
+#### The farmer hurt
+
+- File: `sfx/combat/player_hurt_01.wav` (id `hurt`)
+- Form: one-shot
+- Volume: Effects
+
+The farmer taking damage. A short low grunt-like tone or impact with a slight down-bend, 0.15 to 0.25 s. No real voice recording (the farmer has no voice).
+
+#### A bomb
+
+- File: `sfx/combat/bomb_explosion_01.wav` (id `boom`)
+- Form: one-shot
+- Volume: Effects
+
+A bomb exploding. A deep explosion with rubble, 0.6 to 1 s, strong low end but not painful.
+
+### `sfx/farming/`
+
+#### Thick weeds cut with the weapon
+
+- Files (a pool of 3): `sfx/farming/weeds_cut_rustle_01.wav`, `sfx/farming/weeds_cut_rustle_02.wav`, `sfx/farming/weeds_cut_rustle_03.wav` (id `rustle`)
+- Form: one-shot
+- Volume: Effects
+
+Cutting thick weeds with a weapon. A quick leafy swish and snap, 0.15 to 0.3 s. Heard in bursts while clearing, so keep it light; Record 3 variants.
+
+#### A seed planted
+
+- File: `sfx/farming/seed_plant_01.wav` (id `seed`)
+- Form: one-shot
+- Volume: Effects
+
+A seed pressed into the soil. A tiny soft pop or tap, under 0.1 s. Frequent and small; it should feel satisfying, not loud.
+
+### `sfx/fishing/`
+
+#### A fish biting
+
+- File: `sfx/fishing/fish_bite_alert_01.wav` (id `bite`)
+- Form: one-shot
+- Volume: Effects
+
+A fish biting: the reel starts now. A sharp alert, two quick plucks or a bobber plunk with a ping, about 0.2 s. Must cut through music and ambience.
+
+#### A fish caught
+
+- File: `sfx/fishing/fish_caught_01.wav` (id `catch`)
+- Form: one-shot
+- Volume: Effects
+
+A fish caught. A short rising fanfare, 0.4 to 0.6 s, bright plucked or bell tones. Celebratory but small.
+
+#### A fish getting away
+
+- File: `sfx/fishing/fish_escaped_01.wav` (id `miss`)
+- Form: one-shot
+- Volume: Effects
+
+A fish getting away. A soft falling slide or 'aww' plunk, 0.3 to 0.4 s. Disappointed, not punishing.
+
+### `sfx/items/`
+
+#### Picking something up
+
+- File: `sfx/items/item_pickup_01.wav` (id `pickup`)
+- Form: one-shot
+- Volume: Effects
+
+Picking anything up. A light, happy two-note blip or soft pluck, about 0.15 s. Extremely frequent: pleasant and quick, the game's most 'feel-good' tiny sound.
+
+#### Gold earned
+
+- File: `sfx/items/coins_earned_01.wav` (id `coin`)
+- Form: one-shot
+- Volume: Effects
+
+Gold earned (selling, rewards). Two bright coin chings, about 0.2 s. Classic and clean.
+
+#### Setting an object down
+
+- File: `sfx/items/object_place_01.wav` (id `place`)
+- Form: one-shot
+- Volume: Effects
+
+Setting an object, furniture or a building piece down. A soft wooden thud, about 0.1 s.
+
+### `sfx/jingles/`
+
+#### A skill levelling up
+
+- File: `sfx/jingles/skill_level_up_01.wav` (id `levelup`)
+- Form: one-shot
+- Volume: Effects
+
+A skill levelling up. A rising arpeggio jingle, 0.5 to 0.8 s, bells or plucked strings, ending on the home note. A proud moment.
+
+#### Blessings, guide steps and tips
+
+- File: `sfx/jingles/wishing_stone_chime_01.wav` (id `chime`)
+- Form: one-shot
+- Volume: Effects
+
+Blessings at the wishing stone, guide steps and tips. Two gentle bell or chime tones, about 0.6 s, a little magical.
+
+#### Waking up to the morning report
+
+- File: `sfx/jingles/morning_wake_01.wav` (id `morning`)
+- Form: one-shot
+- Volume: Effects
+
+Waking up to the morning report. A short bright 3-note morning jingle, 0.4 to 0.6 s, like a music-box or glockenspiel. Heard every in-game day: friendly, not alarm-like.
+
+### `sfx/tools/`
+
+#### The hoe tilling soil
+
+- Files (a pool of 3): `sfx/tools/hoe_till_soil_01.wav`, `sfx/tools/hoe_till_soil_02.wav`, `sfx/tools/hoe_till_soil_03.wav` (id `hoe`)
+- Form: one-shot
+- Volume: Effects
+
+The hoe biting into soil. A soft dull thunk with a little crumble of earth, 0.15 to 0.25 s. One of the most repeated sounds in the game (dozens a day): short, low, never harsh. Record 3 variants.
+
+#### The watering can pouring
+
+- Files (a pool of 3): `sfx/tools/watering_can_pour_01.wav`, `sfx/tools/watering_can_pour_02.wav`, `sfx/tools/watering_can_pour_03.wav` (id `can`)
+- Form: one-shot
+- Volume: Effects
+
+Watering a tile. A short gentle pour, water onto soil, 0.3 to 0.5 s. Very frequent: soft, no splash peak. 2 or 3 variants.
+
+#### The axe chopping
+
+- Files (a pool of 3): `sfx/tools/axe_chop_wood_01.wav`, `sfx/tools/axe_chop_wood_02.wav`, `sfx/tools/axe_chop_wood_03.wav` (id `axe`)
+- Form: one-shot
+- Volume: Effects
+
+The axe hitting wood (trees, stumps, twigs). A solid woody chock with a short resonance, 0.15 to 0.3 s. 3 variants; the last hit that fells a tree is the same sound.
+
+#### The pickaxe striking rock
+
+- Files (a pool of 3): `sfx/tools/pickaxe_strike_rock_01.wav`, `sfx/tools/pickaxe_strike_rock_02.wav`, `sfx/tools/pickaxe_strike_rock_03.wav` (id `pick`)
+- Form: one-shot
+- Volume: Effects
+
+The pickaxe striking stone or ore. A bright clink with a gritty crunch, 0.1 to 0.25 s. Heard hundreds of times in the mines: crisp but not piercing. 3 variants.
+
+### `sfx/ui/`
+
+#### Menu buttons
+
+- File: `sfx/ui/menu_click_01.wav` (id `ui`)
+- Form: one-shot
+- Volume: Interface
+
+Menu buttons and clicks. A tiny soft tick or wooden tap, under 0.05 s. Heard constantly in menus: almost subliminal (it plays at the Interface volume).
+
+### `sfx/world/`
+
+#### Going through a door or onto another map
+
+- File: `sfx/world/door_map_change_01.wav` (id `door`)
+- Form: one-shot
+- Volume: Effects
+
+Going through a door or onto another map. A short swing-and-latch or soft whoosh, 0.3 to 0.4 s. Very frequent: quiet and neutral.
+
+#### Thunder in a storm
+
+- Files (a pool of 3): `sfx/world/thunder_rumble_01.wav`, `sfx/world/thunder_rumble_02.wav`, `sfx/world/thunder_rumble_03.wav` (id `thunder`)
+- Form: one-shot
+- Volume: Effects
+
+Thunder with the lightning in a storm. A distant crack then a long rolling rumble, 2 to 3 s. Played over the rain loop; record 3 variants at different distances (near, middle, far).
+
+#### A lantern set on the water
+
+- File: `sfx/world/lantern_water_splash_01.wav` (id `splash`)
+- Form: one-shot
+- Volume: Effects
+
+A lantern set on the water. A soft small splash with a ripple, about 0.3 s.
 
 ## Footsteps
 
-One per step, by what is underfoot (the Effects volume; Steps turns them off). Pools are most worth it here.
+One per step, by what is underfoot (Steps in the menu turns them off). About four a second, so every step must be subtle, and variants matter most here.
 
-| File | Plays for | Id in data/audio.js |
-|---|---|---|
-| `sfx/footsteps/footstep_grass_01.wav` | walking on grass | `grass` |
-| `sfx/footsteps/footstep_dirt_path_01.wav` | walking on dirt paths | `path` |
-| `sfx/footsteps/footstep_sand_01.wav` | walking on sand | `sand` |
-| `sfx/footsteps/footstep_stone_01.wav` | walking on stone | `stone` |
-| `sfx/footsteps/footstep_wood_01.wav` | walking on wooden floors and the pier | `wood` |
-| `sfx/footsteps/footstep_snow_01.wav` | walking on snow | `snow` |
-| `sfx/footsteps/footstep_wet_ground_01.wav` | walking on wet ground in rain | `wet` |
-| `sfx/footsteps/horse_hoof_01.wav` | riding the horse | `hoof` |
+### `sfx/footsteps/`
+
+#### Walking on grass
+
+- Files (a pool of 4): `sfx/footsteps/footstep_grass_01.wav`, `sfx/footsteps/footstep_grass_02.wav`, `sfx/footsteps/footstep_grass_03.wav`, `sfx/footsteps/footstep_grass_04.wav` (id `grass`)
+- Form: one-shot; the game shifts its pitch up to 15% either way each play
+- Volume: Effects
+
+Walking on grass (the default outdoors). A soft brushy step, under 0.1 s. About 4 steps a second, so it must be very subtle. Record 4 variants.
+
+#### Walking on dirt paths
+
+- Files (a pool of 4): `sfx/footsteps/footstep_dirt_path_01.wav`, `sfx/footsteps/footstep_dirt_path_02.wav`, `sfx/footsteps/footstep_dirt_path_03.wav`, `sfx/footsteps/footstep_dirt_path_04.wav` (id `path`)
+- Form: one-shot; the game shifts its pitch up to 15% either way each play
+- Volume: Effects
+
+Walking on dirt paths and roads. A soft gritty crunch, under 0.1 s, a bit firmer than grass. 4 variants.
+
+#### Walking on sand
+
+- Files (a pool of 4): `sfx/footsteps/footstep_sand_01.wav`, `sfx/footsteps/footstep_sand_02.wav`, `sfx/footsteps/footstep_sand_03.wav`, `sfx/footsteps/footstep_sand_04.wav` (id `sand`)
+- Form: one-shot; the game shifts its pitch up to 15% either way each play
+- Volume: Effects
+
+Walking on sand (the beach, the Dunes, the island). A soft shifting hiss, under 0.12 s. 4 variants.
+
+#### Walking on stone
+
+- Files (a pool of 4): `sfx/footsteps/footstep_stone_01.wav`, `sfx/footsteps/footstep_stone_02.wav`, `sfx/footsteps/footstep_stone_03.wav`, `sfx/footsteps/footstep_stone_04.wav` (id `stone`)
+- Form: one-shot; the game shifts its pitch up to 15% either way each play
+- Volume: Effects
+
+Walking on stone (the quarry, caves, the Hollow, stone paths). A hard dry tap, under 0.08 s, slightly echoey underground. 4 variants.
+
+#### Walking on wooden floors and the pier
+
+- Files (a pool of 4): `sfx/footsteps/footstep_wood_01.wav`, `sfx/footsteps/footstep_wood_02.wav`, `sfx/footsteps/footstep_wood_03.wav`, `sfx/footsteps/footstep_wood_04.wav` (id `wood`)
+- Form: one-shot; the game shifts its pitch up to 15% either way each play
+- Volume: Effects
+
+Walking on wooden floors indoors, the pier and wood paths. A hollow wooden knock, under 0.1 s. 4 variants.
+
+#### Walking on snow
+
+- Files (a pool of 4): `sfx/footsteps/footstep_snow_01.wav`, `sfx/footsteps/footstep_snow_02.wav`, `sfx/footsteps/footstep_snow_03.wav`, `sfx/footsteps/footstep_snow_04.wav` (id `snow`)
+- Form: one-shot; the game shifts its pitch up to 15% either way each play
+- Volume: Effects
+
+Walking on snow outdoors in winter. A soft compressing crunch, under 0.15 s. 4 variants.
+
+#### Walking on wet ground in rain
+
+- Files (a pool of 4): `sfx/footsteps/footstep_wet_ground_01.wav`, `sfx/footsteps/footstep_wet_ground_02.wav`, `sfx/footsteps/footstep_wet_ground_03.wav`, `sfx/footsteps/footstep_wet_ground_04.wav` (id `wet`)
+- Form: one-shot; the game shifts its pitch up to 15% either way each play
+- Volume: Effects
+
+Walking on wet ground outdoors in rain. A soft squelchy splash, under 0.12 s. 4 variants.
+
+#### Riding the horse
+
+- Files (a pool of 4): `sfx/footsteps/horse_hoof_01.wav`, `sfx/footsteps/horse_hoof_02.wav`, `sfx/footsteps/horse_hoof_03.wav`, `sfx/footsteps/horse_hoof_04.wav` (id `hoof`)
+- Form: one-shot; the game shifts its pitch up to 15% either way each play
+- Volume: Effects
+
+Riding the horse. One hoofbeat clop on earth, under 0.1 s, played about 3 times a second. 4 variants.
 
 ## Ambient and environment loops
 
-Looped and faded with the scene: the levels are set by the rules in `src/data/ambience.js`.
+Looped and faded with the scene: the levels are set by the rules in `src/data/ambience.js`. Loops must join end to start without a click, and no single event should stand out (a repeat you can spot gets tiring).
 
-| File | Plays for | Id in data/audio.js |
-|---|---|---|
-| `ambience/weather/rain_loop_01.wav` | rain outdoors (and muffled indoors) | `rain` |
-| `ambience/weather/wind_loop_01.wav` | wind on windy maps, in winter, in rain and storms, and softly at night | `wind` |
-| `environment/waterfall_loop_01.wav` | near a waterfall | `falls` |
-| `ambience/water/sea_surf_loop_01.wav` | on the beach | `surf` |
-| `ambience/underground/cave_hum_loop_01.wav` | inside caves | `hum` |
-| `environment/hearth_fire_loop_01.wav` | near a hearth or stove | `fire` |
+### `ambience/underground/`
+
+#### Inside caves
+
+- File: `ambience/underground/cave_hum_loop_01.wav` (id `hum`)
+- Form: seamless loop
+- Volume: Ambience
+
+The air inside caves and the Hollow: a very low, soft hum or room tone, 10 to 20 s seamless loop. Felt rather than heard, under the music.
+
+### `ambience/water/`
+
+#### On the beach
+
+- File: `ambience/water/sea_surf_loop_01.wav` (id `surf`)
+- Form: seamless loop
+- Volume: Ambience
+
+Waves on the beach, 15 to 30 s seamless loop of gentle surf. The game also swells it slowly, so keep it even.
+
+### `ambience/weather/`
+
+#### Rain outdoors (and muffled indoors)
+
+- File: `ambience/weather/rain_loop_01.wav` (id `rain`)
+- Form: seamless loop
+- Volume: Ambience
+
+Steady rain outdoors, 10 to 30 s seamless loop. Even texture with no single drops or thunder standing out (a pattern you can hear repeat gets annoying fast). Plays at 70% in rain, 100% in storms, 25% (muffled) indoors.
+
+#### Wind on windy maps, in winter, in rain and storms, and softly at night
+
+- File: `ambience/weather/wind_loop_01.wav` (id `wind`)
+- Form: seamless loop
+- Volume: Ambience
+
+Wind outdoors: on the desert and quarry, in winter, in rain and storms, softly at night. 15 to 30 s seamless loop, gentle and broad, slowly rising and falling; no sharp gusts (those are a separate call).
+
+### `environment/`
+
+#### Near a waterfall
+
+- File: `environment/waterfall_loop_01.wav` (id `falls`)
+- Form: seamless loop
+- Volume: Ambience
+
+A waterfall, heard as you walk near (louder the closer). 10 to 20 s seamless loop of falling water, full and steady.
+
+#### Near a hearth or stove
+
+- File: `environment/hearth_fire_loop_01.wav` (id `fire`)
+- Form: seamless loop
+- Volume: Ambience
+
+A hearth or stove indoors, heard as you get near. 10 to 20 s seamless loop of a soft fire breath and low roar; the crackles are a separate call.
 
 ## Ambient calls
 
-One-shots at random moments while the scene suits them (rules in `src/data/ambience.js`).
+One-shots at random moments while the scene suits them (rules in `src/data/ambience.js`). Record them with a little distance and air, as heard from across a field.
 
-| File | Plays for | Id in data/audio.js |
-|---|---|---|
-| `ambience/nature/bird_chirp_01.wav` | birdsong by day | `bird` |
-| `ambience/nature/cricket_chirp_01.wav` | crickets at night | `cricket` |
-| `ambience/water/gull_cry_01.wav` | gulls at the shore | `gull` |
-| `ambience/underground/cave_drip_01.wav` | water dripping in caves | `drip` |
-| `ambience/town/town_bell_distant_01.wav` | a far bell in town | `bell` |
-| `ambience/weather/wind_gust_01.wav` | gusts on windy maps | `gust` |
-| `ambience/weather/rain_on_glass_01.wav` | rain tapping on a window | `tap` |
-| `ambience/nature/owl_hoot_01.wav` | an owl at night in the wild | `owl` |
-| `environment/fire_crackle_01.wav` | a fire crackling | `crackle` |
+### `ambience/nature/`
+
+#### Birdsong by day
+
+- Files (a pool of 4): `ambience/nature/bird_chirp_01.wav`, `ambience/nature/bird_chirp_02.wav`, `ambience/nature/bird_chirp_03.wav`, `ambience/nature/bird_chirp_04.wav` (id `bird`)
+- Form: one-shot; the game shifts its pitch up to 25% either way each play
+- Volume: Ambience
+
+Birdsong by day in the wild and in town (not in winter or rain). One short phrase of 2 to 4 chirps, 0.3 to 0.8 s. Record 4 different calls, as if from different birds, to make the world feel alive; the game varies the pitch too.
+
+#### Crickets at night
+
+- File: `ambience/nature/cricket_chirp_01.wav` (id `cricket`)
+- Form: one-shot; the game shifts its pitch up to 5% either way each play
+- Volume: Ambience
+
+Crickets on dry nights out of winter. One short chirp burst, under 0.2 s, played often; keep it soft and high.
+
+#### An owl at night in the wild
+
+- File: `ambience/nature/owl_hoot_01.wav` (id `owl`)
+- Form: one-shot; the game shifts its pitch up to 6% either way each play
+- Volume: Ambience
+
+An owl at night in the wild, rare. A soft two-note hoot, about 1 s, from a distance.
+
+### `ambience/town/`
+
+#### A far bell in town
+
+- File: `ambience/town/town_bell_distant_01.wav` (id `bell`)
+- Form: one-shot
+- Volume: Ambience
+
+A far bell in town by day, rare. One distant church-like bell strike with a long tail, 1 to 2 s, very soft.
+
+### `ambience/underground/`
+
+#### Water dripping in caves
+
+- Files (a pool of 3): `ambience/underground/cave_drip_01.wav`, `ambience/underground/cave_drip_02.wav`, `ambience/underground/cave_drip_03.wav` (id `drip`)
+- Form: one-shot; the game shifts its pitch up to 15% either way each play
+- Volume: Ambience
+
+Water dripping in caves. A single drop into a pool with a small echo, 0.1 to 0.3 s. 3 variants.
+
+### `ambience/water/`
+
+#### Gulls at the shore
+
+- File: `ambience/water/gull_cry_01.wav` (id `gull`)
+- Form: one-shot; the game shifts its pitch up to 10% either way each play
+- Volume: Ambience
+
+Gulls at the shore by day. One or two gull cries, 0.5 to 0.8 s, from a little distance.
+
+### `ambience/weather/`
+
+#### Gusts on windy maps
+
+- File: `ambience/weather/wind_gust_01.wav` (id `gust`)
+- Form: one-shot; the game shifts its pitch up to 10% either way each play
+- Volume: Ambience
+
+A gust on windy maps (the Dunes, the quarry). A swelling whoosh that fades, 1.5 to 2 s, over the wind loop.
+
+#### Rain tapping on a window
+
+- Files (a pool of 3): `ambience/weather/rain_on_glass_01.wav`, `ambience/weather/rain_on_glass_02.wav`, `ambience/weather/rain_on_glass_03.wav` (id `tap`)
+- Form: one-shot; the game shifts its pitch up to 30% either way each play
+- Volume: Ambience
+
+Rain tapping on a window, indoors while it rains outside. One tiny tick of a drop on glass, under 0.05 s, played very often. 3 variants.
+
+### `environment/`
+
+#### A fire crackling
+
+- Files (a pool of 3): `environment/fire_crackle_01.wav`, `environment/fire_crackle_02.wav`, `environment/fire_crackle_03.wav` (id `crackle`)
+- Form: one-shot; the game shifts its pitch up to 20% either way each play
+- Volume: Ambience
+
+A fire crackling near a hearth or stove. One to three small pops and snaps, under 0.3 s, played often. 3 variants.
 
 <!-- slots:end -->

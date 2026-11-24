@@ -10,21 +10,22 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const { AUDIO_DIR, SFX_FILES, BED_FILES, CALL_FILES, STEP_FILES, filesOf } = await import(join(ROOT, 'src/data/audio.js'));
-const { TRACKS } = await import(join(ROOT, 'src/data/musicTracks.js'));
+const { TRACKS, REGIONS } = await import(join(ROOT, 'src/data/musicTracks.js'));
+const { MAPS } = await import(join(ROOT, 'src/data/maps.js'));
 const DIR = join(ROOT, AUDIO_DIR);
 
 const NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const MODES = { '0,2,4,7,9': 'major pentatonic', '0,3,5,7,10': 'minor pentatonic', '0,2,3,7,9': 'dorian', '0,1,5,7,8': 'phrygian', '0,2,4,6,7,9': 'lydian', '0,2,4,5,7,9': 'major hexatonic', '0,3,5,6,7,10': 'blues' };
 const list = (v) => (v == null ? [] : [].concat(v));
-const where = (t) => [list(t.category).join(', '), t.location && `in ${t.location}`, list(t.season).join(', '), list(t.weather).join(', '), list(t.time).join(', '),
+const where = (t) => [list(t.category).join(', '), t.place && `at ${list(t.place).join(', ')}`, t.floors && `floors ${t.floors[0]}${t.floors[1] ? ` to ${t.floors[1]}` : ' and deeper'}`, t.region && `in ${t.region}`, list(t.season).join(', '), list(t.weather).join(', '), list(t.time).join(', '),
   t.festival && `festival ${list(t.festival).join(', ')}`, t.cutscene && `cutscene ${list(t.cutscene).join(', ')}`].filter(Boolean).join('; ');
 const feel = (t) => (t.gen ? `${NOTES[t.gen.root % 12]} ${MODES[t.gen.scale.join(',')] || 'scale'}, ${t.gen.bpm} bpm` : '');
 
 const GROUPS = [
-  { title: 'Sound effects', note: 'One-shots, played when something happens (the Effects volume; the menu click is Interface).', entries: SFX_FILES },
-  { title: 'Footsteps', note: 'One per step, by what is underfoot (the Effects volume; Steps turns them off). Pools are most worth it here.', entries: STEP_FILES },
-  { title: 'Ambient and environment loops', note: 'Looped and faded with the scene: the levels are set by the rules in `src/data/ambience.js`.', entries: BED_FILES },
-  { title: 'Ambient calls', note: 'One-shots at random moments while the scene suits them (rules in `src/data/ambience.js`).', entries: CALL_FILES },
+  { title: 'Sound effects', note: 'One-shots, played when something happens. Record the variants a brief asks for as `_02`, `_03` and list them in `files`.', entries: SFX_FILES, bus: 'sfx' },
+  { title: 'Footsteps', note: 'One per step, by what is underfoot (Steps in the menu turns them off). About four a second, so every step must be subtle, and variants matter most here.', entries: STEP_FILES, bus: 'sfx' },
+  { title: 'Ambient and environment loops', note: 'Looped and faded with the scene: the levels are set by the rules in `src/data/ambience.js`. Loops must join end to start without a click, and no single event should stand out (a repeat you can spot gets tiring).', entries: BED_FILES, bus: 'ambience' },
+  { title: 'Ambient calls', note: 'One-shots at random moments while the scene suits them (rules in `src/data/ambience.js`). Record them with a little distance and air, as heard from across a field.', entries: CALL_FILES, bus: 'ambience' },
 ];
 
 function walk(d) { return readdirSync(d).flatMap((f) => { const p = join(d, f); return statSync(p).isDirectory() ? walk(p) : [p]; }); }
@@ -33,13 +34,52 @@ const onDisk = walk(DIR).map((p) => relative(DIR, p).split('\\').join('/')).filt
 const missing = [...listed].filter((f) => !existsSync(join(DIR, f)));
 const extra = onDisk.filter((f) => !listed.has(f));
 
+const FOLDERS = { farm: 'Farm', village: 'Village and town', wild: 'The wild places', duskmarch: 'The Duskmarch (west of the village)', underground: 'Underground: the Hollow, the Cavern, the Vent, caves', indoors: 'Indoors', sacred: 'Sacred places', island: 'Across the sea', desert: 'The desert', festivals: 'Festivals', story: 'Story scenes', combat: 'Fights', fishing: 'Fishing', menu: 'Menus and credits', default: 'Fallback', stingers: 'Stingers (short, played once over the music)' };
+const ZONES = { hollow: 'the Hollow', cavern: 'the Sunken Cavern', vent: 'the Ember Vent', peak: 'the Smoke Peak' };
+const placeName = (p) => ZONES[p] || MAPS[p]?.name || p;
+const LAYER_WHEN = { menu: 'on the main menu', credits: 'during the credits', cutscene: 'during story scenes', event: 'while a festival is on', boss: 'when an elite or boss is near in a fight', combat: 'in fights', fishing: 'while reeling in a fish', default: 'anywhere with no music of its own' };
+function when(t) {
+  const cat = list(t.category), sting = cat.find((c) => c.startsWith('sting:'));
+  const parts = [];
+  if (sting) parts.push({ gameover: 'when you faint', victory: 'when you defeat an elite', discovery: 'when you find a new place' }[sting.slice(6)]);
+  else if (t.place) parts.push(`at ${list(t.place).map(placeName).join(', ')}`);
+  else if (t.region) parts.push(`anywhere in the ${t.region} region (${REGIONS[t.region].map(placeName).join(', ')}${t.region === 'village' ? ', neighbours\' cottages' : ''}) without a track of its own`);
+  else parts.push(cat.map((c) => LAYER_WHEN[c]).filter(Boolean).join('; '));
+  if (t.floors) parts.push(`floors ${t.floors[0]}${t.floors[1] ? ` to ${t.floors[1]}` : ' and deeper'}`);
+  if (t.season) parts.push(`in ${list(t.season).join(' or ')}`);
+  if (t.time) parts.push(`at ${list(t.time).join(' or ')}`);
+  if (t.weather) parts.push(`in ${list(t.weather).join(' or ')}`);
+  if (t.festival) parts.push(`festivals: ${list(t.festival).join(', ')}`);
+  if (t.cutscene) parts.push(`scene: ${list(t.cutscene).join(', ')}`);
+  if (cat.includes('season') && t.region) parts.push('and, in its season, anywhere without music of its own');
+  return parts.join(', ');
+}
+
 function tables() {
-  const out = ['## Music', '', 'Ogg Vorbis, one file per track, named by its id. Several tracks that fit the same moment make a pool (the director draws one and moves on after a few loops). Key and tempo are the generated placeholder\'s.', '',
-    '| File | Track | Plays for | Placeholder key, tempo | Id |', '|---|---|---|---|---|'];
-  for (const t of TRACKS) out.push(`| \`${t.file}\` | ${t.name} | ${where(t)}${t.loop === false ? ' (once)' : ''} | ${feel(t)} | \`${t.id}\` |`);
+  const out = ['## Music briefs', '', 'One entry per track, grouped by folder: when it plays, its form, and what to compose. The brief is written in `src/data/musicTracks.js` (`brief`); the key and tempo are those of the generated placeholder, a starting point you can ignore. Several tracks that fit the same moment form a pool and take turns.'];
+  const byFolder = {};
+  for (const t of TRACKS) (byFolder[t.file.split('/')[1]] ||= []).push(t);
+  for (const [folder, tracks] of Object.entries(byFolder)) {
+    out.push('', `### ${FOLDERS[folder] || folder} (\`music/${folder}/\`)`);
+    for (const t of tracks) {
+      out.push('', `#### ${t.name}`, '', `- File: \`${t.file}\` (id \`${t.id}\`)`, `- Plays: ${when(t)}`,
+        `- Form: ${t.loop === false ? 'plays once, then the background music returns' : 'loops; an intro can play once first (loopStart)'}`);
+      if (t.gen) out.push(`- Placeholder: ${feel(t)}`);
+      out.push('', t.brief || '');
+    }
+  }
   for (const g of GROUPS) {
-    out.push('', `## ${g.title}`, '', g.note, '', '| File | Plays for | Id in data/audio.js |', '|---|---|---|');
-    for (const [id, e] of Object.entries(g.entries)) out.push(`| ${filesOf(e).map((f) => `\`${f}\``).join('<br>')} | ${e.about || ''} | \`${id}\` |`);
+    out.push('', `## ${g.title}`, '', g.note);
+    let folder = null;
+    const dirOf = (e) => filesOf(e)[0].split('/').slice(0, -1).join('/');
+    for (const [id, e] of Object.entries(g.entries).sort(([, a], [, b]) => dirOf(a).localeCompare(dirOf(b)))) {
+      const files = filesOf(e), dir = files[0].split('/').slice(0, -1).join('/');
+      if (dir !== folder) { folder = dir; out.push('', `### \`${dir}/\``); }
+      const about = e.about ? e.about[0].toUpperCase() + e.about.slice(1) : id;
+      out.push('', `#### ${about}`, '', `- File${files.length > 1 ? `s (a pool of ${files.length})` : ''}: ${files.map((f) => `\`${f}\``).join(', ')} (id \`${id}\`)`,
+        `- Form: ${e.loop ? 'seamless loop' : 'one-shot'}${e.vary ? `; the game shifts its pitch up to ${Math.round(e.vary * 100)}% either way each play` : ''}`,
+        `- Volume: ${{ sfx: 'Effects', ambience: 'Ambience', ui: 'Interface' }[e.bus || g.bus]}`, '', e.brief || '');
+    }
   }
   return out.join('\n');
 }

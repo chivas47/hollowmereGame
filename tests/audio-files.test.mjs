@@ -55,5 +55,17 @@ test('files follow the naming rules, sit in their kind\'s folder, and nothing un
 test('the README lists every file, written from the data (node tools/audio_list.mjs --readme)', () => {
   const readme = readFileSync(join(DIR, 'README.md'), 'utf8');
   for (const e of entries) assert.ok(readme.includes(`\`${e.file}\``), e.file);
-  for (const [id, e] of Object.entries(SFX_FILES)) assert.ok(e.about && readme.includes(e.about), `${id} says what it is for`);
+  for (const [id, e] of Object.values(ALL_AUDIO).flatMap((g) => Object.entries(g))) assert.ok(e.brief?.length > 40 && readme.includes(e.brief), `${id} has a recording brief in the README`);
+  for (const t of TRACKS) assert.ok(t.brief?.length > 60 && readme.includes(t.brief), `${t.id} has a composing brief in the README`);
+});
+
+test('pools: four takes of every footstep and of birdsong, three of the busiest tools, weeds, thunder and ambient calls, and every take different', () => {
+  for (const [id, e] of Object.entries(STEP_FILES)) assert.equal(e.files.length, 4, id);
+  for (const id of ['hoe', 'can', 'axe', 'pick', 'rustle', 'thunder']) assert.equal(SFX_FILES[id].files.length, 3, id);
+  for (const id of ['tap', 'crackle', 'drip']) assert.equal(CALL_FILES[id].files.length, 3, id);
+  assert.equal(CALL_FILES.bird.files.length, 4, 'birdsong: four calls');
+  for (const [id, e] of Object.values(ALL_AUDIO).flatMap((g) => Object.entries(g))) {
+    if (e.files.length < 2) continue;
+    assert.equal(new Set(e.files.map((f) => readFileSync(join(DIR, f)).toString('base64'))).size, e.files.length, `${id}: the takes differ`);
+  }
 });
