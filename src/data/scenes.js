@@ -132,6 +132,29 @@ export const SCENES = {
     },
   },
   odile: {
+    // v324 (roadmap 113b): the missing heart scenes, at their door
+    2: {
+      title: "A tangle on the step",
+      text: [
+        "Odile is sitting on her doorstep with a net heaped in her lap like a sleeping dog. Half of it is one enormous knot.",
+        "\"Ducks,\" she says, before you can ask. \"Three of them. They got in and could not get out, and in the end neither could I.\" She holds up the needle. \"You have younger eyes.\"",
+      ],
+      choices: [
+        { label: "Sit down and work the knot from the other side", pts: 40, reply: "You pick at it from your end while she picks from hers. It takes the best part of an hour. When it finally falls open she nods once, which from Odile is a speech. \"Come by when the next ducks get in.\"" },
+        { label: "Tell her to cut it and start again", pts: 15, reply: "\"My mother tied this net,\" Odile says, not unkindly. \"You do not cut your mother's knots.\" She bends over it again, and you leave her to it. She does not seem to mind the company while it lasts." },
+      ],
+    },
+    6: {
+      title: "The letter from the south",
+      text: [
+        "Odile is outside her cottage holding a letter she has clearly read many times. The paper has gone soft at the folds.",
+        "\"My brother. He wants me to come home and fish the big boats with him.\" She looks at the pond road, then at you. \"I have been here six years. Nobody here has ever asked me to stay. That is how it should be. I just wonder.\"",
+      ],
+      choices: [
+        { label: "Tell her plainly you would miss her", pts: 70, reply: "She folds the letter very small and puts it in her pocket. \"Well,\" she says. \"That is one person.\" She does not say anything else, but the next morning there is a fresh grayling on your doorstep wrapped in a leaf." },
+        { label: "Tell her to do what makes her happy", pts: 35, reply: "\"Sensible,\" Odile says. \"Everybody says that.\" She looks at the letter a while longer. \"I think the pond makes me happy. And the mist. And a few people. I will write and tell him so.\"" },
+      ],
+    },
     4: {
       title: 'Knots at dawn',
       text: [
