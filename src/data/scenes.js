@@ -179,6 +179,29 @@ export const SCENES = {
     },
   },
   tavi: {
+    // v325 (roadmap 113c): the missing heart scenes, at their door
+    2: {
+      title: "The wrong turning",
+      text: [
+        "Tavi is standing outside the cottage with a map in both hands, turning it one way and then the other, frowning at the lane.",
+        "\"This path is supposed to go to the mill. I drew it to the mill. I walked it yesterday and it went to Bram's woodpile.\" Tavi looks up at you. \"Either the path moved or I did. Which is worse?\"",
+      ],
+      choices: [
+        { label: "Offer to walk it with Tavi and check", pts: 40, reply: "You walk the lane together, Tavi counting steps out loud. Halfway along there is a fork nobody ever drew. \"There!\" Tavi marks it with a flourish. \"You found a whole path. I am naming it after you. Quietly. On my own copy.\"" },
+        { label: "Tell Tavi the woodpile is a fine place to end up", pts: 15, reply: "Tavi laughs despite everything. \"It is, actually. Bram gives you tea if you look lost.\" The map gets folded away for now. \"I will find the fork tomorrow. Probably.\"" },
+      ],
+    },
+    6: {
+      title: "The blank corner",
+      text: [
+        "Tavi has spread a big map on the step and is sitting beside it with a pencil, not drawing. One corner, up by the old mine mouth, is empty.",
+        "\"Everyone asks why I never drew that bit. I went up once, when I was new. I got lost in the dark for a whole night.\" Tavi taps the blank paper. \"I tell people it is unfinished. Really I am scared of it.\"",
+      ],
+      choices: [
+        { label: "Say you will go up there together, in daylight", pts: 70, reply: "Tavi goes quiet for a long moment, then nods. \"In daylight. With a lantern anyway. And you.\" The pencil comes out. A tiny dot appears at the edge of the blank corner. \"That is where we start.\"" },
+        { label: "Tell Tavi some places can stay blank", pts: 35, reply: "\"Can they?\" Tavi looks at the corner as if it might answer. \"My father would have hated that.\" A small smile. \"Maybe that is a reason to leave it. For now.\"" },
+      ],
+    },
     4: {
       title: 'A page in the wind',
       text: [

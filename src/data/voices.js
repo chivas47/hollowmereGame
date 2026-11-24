@@ -90,8 +90,20 @@ export const VOICES = {
       ['Is that tree new? It is not on any map. Hold on, I need to write that down.', 'I count my steps everywhere. Two thousand from the fountain to your gate. Roughly.', 'Old maps have dragons in the corners. Mine have question marks. Same idea.', 'My compass points a bit west near the Hollow. Either the compass is wrong or the Hollow is.'],
       ['I fell in the stream again mapping the ford. That is three times. The ford is now very accurate.', 'Kit wants me to draw a bridge that does not exist yet. Maps are for what is, Kit.', 'Aldous wants a cross for every bone ever found. I have run out of crosses.', 'I tried mapping the mere. It kept moving. Garrow says that is the reeds, not the water.'],
       ['I keep one map nobody else sees. It has the places I like. Your porch is on it.', 'My father made maps for the army. I make them so people can find each other. I think that is better.', 'When I was small I thought the edge of a map was the edge of the world. You make me want to go past it.', 'If I ever get lost, really lost, I hope it is somewhere near here.'],
+      // v325 (roadmap 113c): once you are close
+      ["I drew your farm again last night. From memory. I got every fence right. I checked this morning, very early, from the road.", "When I am mapping and something beautiful happens, a fox or a rainbow, I turn round to tell you. You are never there. I keep doing it.", "I used to think a map was finished when every path was on it. Now I think it is finished when someone you love can use it.", "You are the only person who has ever asked to see my private map. I said no. I am going to say yes soon.", "If you go anywhere far, tell me first. I will draw you the way there. And the way back, which is more important."],
     ],
-    season: { Spring: 'Spring. Every path I drew last year is under mud. Start again.', Summer: 'Summer. The long days are best for mapping. My nose is permanently pink.', Autumn: 'Autumn. The leaves come down and suddenly I can see where everything is.', Winter: 'Winter. Snow hides the paths, so I draw the old ones from memory and hope.' },
+    season: {   // v325: a few each
+      Spring: ['Spring. Every path I drew last year is under mud. Start again.', "The stream changes its mind every spring. I have to redraw the ford. The ford does not care.", "Spring is when people ask me for maps. Planting, walking, courting. I draw all three."],
+      Summer: ['Summer. The long days are best for mapping. My nose is permanently pink.', "In summer I walk the high paths at dawn before the heat. The whole valley is laid out like a page.", "Summer storms wash the chalk marks off my posts. Then I walk everything twice."],
+      Autumn: ['Autumn. The leaves come down and suddenly I can see where everything is.', "The bracken goes brown in autumn and suddenly I can see the old walls under it. Hundreds of years of walls.", "Autumn light is low and long. Every bump in the ground throws a shadow. Best season for hills."],
+      Winter: ['Winter. Snow hides the paths, so I draw the old ones from memory and hope.', "Winter is for ink. All the pencil from the year, inked by the stove. My fingers go blue and black.", "Snow shows every footprint. Foxes, hares, Juno. I have learnt more about paths in one snowy week than in a summer."],
+    },
+    rain: ["You cannot map in this. The ink runs. I am inking last week instead.", "Rain days I sort my old maps by year. Some of the paths on the first ones are gone now. That makes me sad and glad.", "I like the sound of rain on my roof when I am drawing. It feels like the valley is being washed for a new page."],
+    places: {
+      wilds: ["The old mine mouth is just up there. It is still the one thing I have not drawn.", "I paced this whole meadow once. Four thousand two hundred steps round. Do not ask why."],
+      mountain: ["From up here you can see where every path goes. That is why I come. And the wind.", "I left a chalk mark on that rock three summers ago. Look, still there. Like a signature."],
+    },
     snow: 'Snow! Every path is gone. It is like the valley has been handed back blank.',
     birthday: 'My birthday. I am going to map the whole Wilds in one day. Or try. Mostly try.',
     bday: "{name}'s birthday! I am drawing them a map to their own front door. As a joke. A nice joke.",
