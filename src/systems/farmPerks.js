@@ -7,22 +7,22 @@ import { addInteraction, addLayer, addUpdater } from '../core/registry.js';
 import { today } from '../core/time.js';
 import { MAPS, farmGrid } from '../data/maps.js';
 import { FORAGE } from '../data/forage.js';
-import { CRATE, farmSize } from '../data/layouts.js';
+import { CRATE } from '../data/layouts.js';
 import { drawForage } from '../render/sprites.js';
-import { layout } from './layouts.js';
+import { plan } from './layouts.js';
 import { addDebris, freeTile } from './clearing.js';
 import { addItem, rollSkillQuality } from './quality.js';
 import { skillLevel } from './skills.js';
 import { has } from './professions.js';
 import { spawnSlimes } from './monsters.js';
 
-const perks = () => layout().perks || {};
+const perks = () => plan().perks;
 const tilesOf = (t) => { const out = [], g = MAPS.farm.grid; g.forEach((row, y) => row.forEach((v, x) => { if (v === t) out.push([x, y]); })); return out; };
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
 const debrisOn = (kinds) => Object.values(G.S.debris || {}).filter((d) => kinds.includes(d.kind)).length;
 // The layout's own quarry floor, rocks or not (the live grid shows a rock as 'Y').
 // v321: built at the layout's own size (roadmap 112b)
-function quarryTiles() { const { w, h } = farmSize(G.S.layout), base = farmGrid(w, h); layout().apply(base); const out = []; base.forEach((row, y) => row.forEach((t, x) => { if (t === 'q') out.push([x, y]); })); return out; }
+function quarryTiles() { const p = plan(), { w, h } = p.size, base = farmGrid(w, h); p.apply(base); const out = []; base.forEach((row, y) => row.forEach((t, x) => { if (t === 'q') out.push([x, y]); })); return out; }
 
 on('day:start', (report) => {
   const p = perks(), S = G.S;

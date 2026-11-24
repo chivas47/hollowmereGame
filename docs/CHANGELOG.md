@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v340: Every farm layout at the big size
+- Every farm layout now comes at 64 x 48, the size of Wide acres, for farms started from now on. Each keeps its kind on the bigger land: the river runs on south and a brook comes in from the east, the wood runs down the whole west side, the hill quarry gets a large quarry in the east, the beach has a strand and sea down the whole east side, four corners has a corner each, and the wild farm has brush all round.
+- The perks grow with the land: more forage and stumps in the woodland, more quarry rocks, more crates on the beach, more slimes on the wild farm. Every big farm starts with six times the clutter to clear.
+- The house, bin, well and workbench corner is the same as before, and the small layout's own pond, stream, trees or quarry stay where they were.
+- Farms already started keep their size for now; they grow in the next update (roadmap 118c).
+- New save data: `bigFarm` (true for farms started from v340).
+
 ## v339: The big farm by default
 - A new farm now starts on Wide acres, the 64 x 48 farm, and it is the first choice on the new game screen. Before, the small open field was picked unless you chose otherwise, so most new farms never saw the bigger land.
 - The other layouts are still there, one click away. They grow to the bigger size next (roadmap 118b), and farms already started grow after that (118c).
