@@ -9,7 +9,7 @@ import { CLINIC_BED } from '../data/maps.js';
 import { SHOPS, CLINIC } from '../data/town.js';
 import { moveBox, placePlayer } from './world.js';
 import { defense } from './clothing.js';
-import { asThem } from './partner.js';
+import { asThem, asPartnerStats } from './partner.js';
 import { fmtGold } from '../core/format.js';
 import { HURT } from '../data/animation.js';
 
@@ -40,7 +40,7 @@ export function hurtPartner(dmg, fromX, fromY) {
   const p = G.P2, P = G.S.partner;
   if (!p || p.hurtT > 0 || G.paused || G.dialog.p2) return;
   if (p.block > 0) { p.hurtT = INVULNERABLE / 2; emit('player:blocked', { x: fromX, y: fromY, who: 'p2' }); return; }   // v231: their block
-  const n = taken(dmg);
+  const n = asPartnerStats(() => taken(dmg));   // v332: their own professions (the acrobat)
   P.hp = Math.max(0, P.hp - n);
   p.hurtT = INVULNERABLE;
   emit('sfx', 'hurt');
@@ -55,7 +55,7 @@ export function hurtPartner(dmg, fromX, fromY) {
 function faintPartner() {
   const S = G.S, P = S.partner, bill = Math.min(CLINIC.billMax, Math.floor(S.gold * CLINIC.billShare)), inMine = G.P2.map === 'mine';
   S.gold -= bill;
-  P.hp = Math.round(S.maxHp / 2);
+  P.hp = Math.round(P.maxHp / 2);   // v332: their own top
   G.P2.hurtT = 0;
   asThem(() => {
     placePlayer(CLINIC_BED.map, CLINIC_BED.x, CLINIC_BED.y, CLINIC_BED.dir);
@@ -87,4 +87,4 @@ function faint() {
 }
 
 addUpdater((dt) => { if (G.hurtT > 0) G.hurtT -= dt; if (G.P2?.hurtT > 0) G.P2.hurtT -= dt; });
-on('day:start', () => { G.S.hp = G.S.maxHp; G.S.partner.hp = G.S.maxHp; });
+on('day:start', () => { G.S.hp = G.S.maxHp; });   // v332: farmer two's to their own top (systems/partner.js)

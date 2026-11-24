@@ -26,5 +26,16 @@ export function emit(event, data) {
   (handlers[event] || []).forEach((fn) => fn(data));
 }
 
-export const changed = () => emit('state:changed');
+// v332: while changes are held (holdChanges), changed() only notes one is due; it is sent once when the hold ends.
+// systems/partner.js holds them while farmer two's stats are swapped into G.S, so the HUD and everything else
+// listening never reads the second farmer's values in your place.
+let held = 0, due = false;
+export const changed = () => { if (held) due = true; else emit('state:changed'); };
+export function holdChanges(fn) {
+  held++;
+  try { return fn(); } finally {
+    held--;
+    if (!held && due) { due = false; emit('state:changed'); }
+  }
+}
 export const notify = (msg) => emit('toast', msg);

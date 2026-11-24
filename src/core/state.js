@@ -41,7 +41,8 @@ export function newState() {
     news: { day: 0, yesterday: {}, today: { museumAt: 0, spouseAt: null, quests: [], skills: [] } },   // v153: what you did, for the neighbours to talk about (systems/news.js)
     // v130: the second farmer's energy (systems/partner.js); full each morning. v142: their name and look, where
     // they stood (at: { map, x, y, dir } or null), their hotbar slot, and picked: they have played on this farm.
-    partner: { energy: 270, hp: 100, name: PARTNER.name, look: { ...PARTNER.look }, at: null, slot: 0, picked: false },
+    partner: { energy: 270, hp: 100, name: PARTNER.name, look: { ...PARTNER.look }, at: null, slot: 0, picked: false,
+      skills: Object.fromEntries(Object.keys(SKILLS).map((k) => [k, 0])), professions: {}, energyBonus: 0, maxEnergy: 270, maxHp: 100 },   // v332 (roadmap 116a): their own skills (systems/partner.js OWN_STATS)
     hints: true,        // v101: the stuck-tool tip and the morning report's tip (systems/hints.js)
     traditions: { blessed: 0, floated: [] },   // v110: the day the wishing stone was last touched, the years a lantern was floated
     blessing: null,     // v110: today's blessing { id, until, ...effects } (systems/traditions.js, read by buffs.js)
@@ -184,6 +185,8 @@ export function merge(saved) {
   s.news = { day: sn.day || 0, yesterday: { ...(sn.yesterday || {}) }, today: { museumAt: st.museumAt || 0, spouseAt: st.spouseAt || null, quests: [...(st.quests || [])], skills: [...(st.skills || [])] } };
   s.partner = { ...newState().partner, energy: s.maxEnergy, hp: s.maxHp, ...(saved.partner || {}) };   // v143: hp   // v130; v131: a farm with a bigger energy bar starts them at its top
   s.partner.look = { ...PARTNER.look, ...(saved.partner?.look || {}) };   // v142
+  s.partner.skills = { ...newState().partner.skills, ...(saved.partner?.skills || {}) };   // v332; a save from before is decided by migration 10
+  s.partner.professions = Object.fromEntries(Object.entries(saved.partner?.professions || {}).map(([k, v]) => [k, Array.isArray(v) ? [...v] : []]));
   if (s.partner.at && !MAPS[s.partner.at.map]) s.partner.at = null;
   if (!Array.isArray(s.bagFav)) s.bagFav = [];   // v113
   s.bagView = { ...newState().bagView, ...(saved.bagView || {}) };

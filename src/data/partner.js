@@ -1,7 +1,8 @@
 // v129: local two-player (systems/partner.js): a second farmer on a second controller. Same screen (every map
 // fits one), same speed as you; they go where you go when you change map. They join each session with A and
 // leave with B or when their controller does. v130: they use tools and talk with their own energy (saved, as
-// G.S.partner) and hotbar slot; the bag, gold and everything else are shared. v131: their own prompt and
+// G.S.partner) and hotbar slot; the bag, gold and everything else are shared. v332: their own skills and
+// professions too (systems/partner.js OWN_STATS). v131: their own prompt and
 // energy bar; your bed ends the day for both.
 export const PARTNER = {
   name: 'Farmer two',

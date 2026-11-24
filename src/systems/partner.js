@@ -17,9 +17,14 @@
 // while you wait in bed the night comes at once. Passing out at 2 am still takes you both home.
 // v134: they fish too (systems/fishing.js), one line at a time; their line holds them still and draws from their rod.
 // v136: they ride the horse too (systems/stable.js), when you are not on it.
+// v332 (roadmap 116a): their own skills and professions (Stardew co-op; Nuno). OWN_STATS live in G.S.partner and are
+// swapped into G.S with their place for their Use (asPartner), and alone (asPartnerStats) for what happens to them
+// outside it: the morning, loading, a monster's hit, their fishing line. Every system that reads G.S.skills or
+// G.S.professions (bonus items, tool energy, the catch bar, prices) so works for them unchanged. Gold, the bag,
+// tools, books and mastery stay shared (73a).
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
-import { on, notify, changed, emit } from '../core/events.js';
+import { on, notify, changed, emit, holdChanges } from '../core/events.js';
 import { addUpdater, addEntities } from '../core/registry.js';
 import { PARTNER } from '../data/partner.js';
 import { HOTBAR, slotKind } from '../data/hotbar.js';
@@ -36,6 +41,9 @@ import { lean } from './wind.js';
 import { act } from './interact.js';
 import { stepAnim, playAnim } from './animation.js';
 import { rodBend } from './player.js';
+import { syncEnergyBonus } from './skills.js';
+import { syncHealth, pending } from './professions.js';
+import { recalcStats } from './upgrades.js';
 
 G.P2 = null;   // { map, x, y, dir, moving, walkT, keys, slot, anim } (energy lives in G.S.partner, saved)
 G.bed = { you: false, p2: false };   // v142: who lies in bed waiting for the other
@@ -117,18 +125,36 @@ export function partnerSlot(step) {
 
 // Swaps the second farmer's map, place, facing, slot, energy and swing into play for fn, then back. While
 // tethered, if fn takes them through a door, you are set down beside them on the other side.
-function asPartner(fn) {
-  const p = G.P2, S = G.S, me = { map: S.map, x: S.x, y: S.y, dir: S.dir, slot: S.slot, energy: S.energy, anim: G.anim }, from = p.map;
-  Object.assign(S, { map: p.map, x: p.x, y: p.y, dir: p.dir, slot: p.slot, energy: S.partner.energy }); G.anim = p.anim; G.partnerActing = true;
-  try { fn(); } finally {
+function asPartner(fn) { return holdChanges(() => asPartnerNow(fn)); }   // v332: changes are sent once you are you again
+function asPartnerNow(fn) {
+  if (G.partnerActing) return fn();   // already them (a nested call): swapping again would hand everything back
+  const p = G.P2, S = G.S, me = { map: S.map, x: S.x, y: S.y, dir: S.dir, slot: S.slot, anim: G.anim }, from = p.map;
+  Object.assign(S, { map: p.map, x: p.x, y: p.y, dir: p.dir, slot: p.slot }); swapStats(); G.anim = p.anim; G.partnerActing = true;
+  try { return fn(); } finally {
     G.partnerActing = false;
     const moved = S.map !== from, follow = moved && PARTNER.tethered;
     const spot = follow ? { map: S.map, ...besideYou() } : me;   // through a door: you come too, beside them (G.S is them here)
-    Object.assign(p, { map: S.map, x: S.x, y: S.y, dir: S.dir, slot: S.slot, anim: G.anim }); S.partner.energy = S.energy;
-    Object.assign(S, { map: spot.map, x: spot.x, y: spot.y, dir: me.dir, slot: me.slot, energy: me.energy }); G.anim = me.anim;
+    Object.assign(p, { map: S.map, x: S.x, y: S.y, dir: S.dir, slot: S.slot, anim: G.anim }); swapStats();
+    Object.assign(S, { map: spot.map, x: spot.x, y: spot.y, dir: me.dir, slot: me.slot }); G.anim = me.anim;
     afterPartner();
   }
 }
+
+// v332 (roadmap 116a): what is each farmer's own. Their values wait in G.S.partner while you play.
+export const OWN_STATS = ['skills', 'professions', 'energyBonus', 'maxEnergy', 'maxHp', 'energy', 'hp'];
+let statsSwapped = false;
+function swapStats() {
+  const S = G.S, P = S.partner;
+  for (const k of OWN_STATS) [S[k], P[k]] = [P[k], S[k]];
+  statsSwapped = !statsSwapped;
+}
+// fn with farmer two's stats in G.S (place and map stay yours), whether or not they are playing right now.
+export function asPartnerStats(fn) {
+  if (statsSwapped) return fn();
+  return holdChanges(() => { swapStats(); try { return fn(); } finally { swapStats(); } });
+}
+// fn as the farmer named (who: 'p2' or 'you'): their whole self while they play, else just their stats.
+export const asFarmer = (who, fn) => (who !== 'p2' ? fn() : G.P2 ? asPartner(fn) : asPartnerStats(fn));
 
 const atBed = () => { const { tx, ty } = facing(); return G.S.map === 'house' && tileAt(tx, ty) === 'Z'; };
 
@@ -203,7 +229,15 @@ function afterPartner() {
 on('day:report', () => { if (G.P2) Object.assign(G.P2, { map: G.S.map }, besideYou(), { dir: G.S.dir, moving: false }); });   // they wake beside you
 on('game:reset', () => { G.P2 = null; });
 on('day:start', () => { G.bed = { you: false, p2: false }; });
-on('day:start', (report) => { G.S.partner.energy = report.passedOut ? Math.round(G.S.maxEnergy * 0.6) : G.S.maxEnergy; });   // they sleep when you do
+on('day:start', (report) => asPartnerStats(() => {   // they sleep when you do; v332: to their own top
+  recalcStats(); syncHealth();
+  G.S.energy = report.passedOut ? Math.round(G.S.maxEnergy * 0.6) : G.S.maxEnergy;
+  G.S.hp = G.S.maxHp;
+}));
+// v332: a profession they left for later is offered again each morning they play, in their own half.
+on('day:start', () => { if (G.P2 && asPartnerStats(pending)) asPartner(() => emit('ui:profession')); });
+// v332: their energy and health tops follow their own skills, worked out on loading as yours are.
+on('game:loaded', () => asPartnerStats(() => { syncEnergyBonus(); syncHealth(); }));   // they sleep when you do
 
 const SWUNG = new Set(['hoe', 'pick', 'axe', 'can', 'sword', 'rod', 'pan']);
 function drawPartner(c) {
