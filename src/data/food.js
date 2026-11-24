@@ -37,6 +37,13 @@ export const RAW_FOOD = {
   redcabbage: 75,  // red cabbage
   cornflower: 45,  // poppy
   marigold: 45,    // summer spangle
+  aubergine: 20,   // eggplant (v337, roadmap 117c)
+  blackgrape: 38,  // grape
+  sweetpotato: 45, // yam
+  pakchoi: 25,     // bok choy
+  buckwheat: 50,   // amaranth
+  cardoon: 30,     // artichoke
+  dahlia: 45,      // fairy rose
   // forage
   leek: 40,        // leek
   sorrel: 25,      // dandelion

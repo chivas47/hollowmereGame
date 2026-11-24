@@ -15,7 +15,8 @@ import { harvest } from '../src/systems/farming.js';
 import { freshFarm } from './setup.mjs';
 
 const NEW = ['potato', 'kale', 'garlic', 'strawberry', 'bluebell', 'primrose',   // 117a spring
-  'blackcurrant', 'redcabbage', 'cornflower', 'marigold'];   // 117b summer
+  'blackcurrant', 'redcabbage', 'cornflower', 'marigold',   // 117b summer
+  'aubergine', 'blackgrape', 'sweetpotato', 'pakchoi', 'buckwheat', 'cardoon', 'dahlia'];   // 117c autumn
 
 test('every crop shape has its frame on the crop sheet, and the sheet is as wide as its columns', () => {
   for (const [k, c] of Object.entries(CROPS)) assert.ok(CROPS_SHEET.cols[c.shape] !== undefined, `${k}: ${c.shape}`);
@@ -34,6 +35,7 @@ test('each new crop is an item with energy, grows in its season, and keeps the S
   }
   assert.ok(Object.values(CROPS).filter((c) => !c.packet && c.seasons.includes('Spring')).length >= 13, 'spring has room to choose');
   assert.ok(Object.values(CROPS).filter((c) => !c.packet && c.seasons.includes('Summer')).length >= 13, 'summer too');
+  assert.ok(Object.values(CROPS).filter((c) => !c.packet && c.seasons.includes('Autumn')).length >= 15, 'and autumn');
 });
 
 test('flowers are sold and eaten but never jarred or juiced, and the machines refuse them', () => {

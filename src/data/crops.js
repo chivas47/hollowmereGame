@@ -49,6 +49,17 @@ export const CROPS = {
   redcabbage:   { name: 'Red cabbage',  days: 6, seed: 100, sell: 207, color: '#8a3a6a', top: null,      line: '#5a2448', shape: 'leafy',  seasons: ['Summer'] },
   cornflower:   { name: 'Cornflower',   days: 7, seed: 100, sell: 140, color: '#4f7fe0', top: '#2a3a8a', line: null,      shape: 'flower', seasons: ['Summer'], flower: true },
   marigold:     { name: 'Marigold',     days: 8, seed: 50,  sell: 90,  color: '#f0a020', top: '#c05a10', line: null,      shape: 'flower', seasons: ['Summer'], flower: true },
+  // v337 (roadmap 117c): autumn, Stardew's autumn crops by role: eggplant (5 days, 20g, sells 60g, again every 5),
+  // grape (10, 60g, 80g, again every 3; here 6 days), yam (10, 60g, 160g; here 6 days, its 10g a day kept), bok choy
+  // (4, 50g, 80g), amaranth (7, 70g, 150g), artichoke (8, 30g, 160g) and the fairy rose (12, 200g, 290g; here 7 days,
+  // its 7.5g a day kept).
+  aubergine:   { name: 'Aubergine',    days: 5, seed: 20,  sell: 60,  color: '#5a2a6a', top: null,      line: '#3a1a48', shape: 'pod',    seasons: ['Autumn'], regrow: 5 },
+  blackgrape:  { name: 'Black grape',  days: 6, seed: 60,  sell: 80,  color: '#3a2448', top: null,      line: null,      shape: 'pod',    seasons: ['Autumn'], regrow: 3 },
+  sweetpotato: { name: 'Sweet potato', days: 6, seed: 60,  sell: 120, color: '#c8603a', top: '#6f9a4a', line: null,      shape: 'root',   seasons: ['Autumn'] },
+  pakchoi:     { name: 'Pak choi',     days: 4, seed: 50,  sell: 80,  color: '#8fc06a', top: null,      line: '#e8f0d8', shape: 'leafy',  seasons: ['Autumn'] },
+  buckwheat:   { name: 'Buckwheat',    days: 7, seed: 70,  sell: 150, color: '#c84a5a', top: null,      line: '#8a3a3a', shape: 'leafy',  seasons: ['Autumn'] },
+  cardoon:     { name: 'Cardoon',      days: 8, seed: 30,  sell: 160, color: '#8aa88a', top: '#9a6ab8', line: null,      shape: 'round',  seasons: ['Autumn'] },
+  dahlia:      { name: 'Dahlia',       days: 7, seed: 200, sell: 253, color: '#d84a7a', top: '#f0c040', line: null,      shape: 'flower', seasons: ['Autumn'], flower: true },
   // v32: the premium summer crop (Stardew's starfruit: 400g seed, 13 days, sells 750g); helper huts need 9.
   gleamfruit: { name: 'Gleamfruit', days: 13, seed: 400, sell: 750, color: '#f2d14a', top: '#7fbf5a', line: '#c9a43a', shape: 'round', seasons: ['Summer'] },
   // v30, for the mill (Stardew: wheat 10g seed, 4 days, sells 25g, summer and autumn; beet 20g, 6 days, 100g, autumn).
