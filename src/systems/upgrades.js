@@ -1,5 +1,6 @@
 // Bram's workbench: tool and house upgrades, and ordering the coop.
 import { G } from '../core/game.js';
+import { haveIngredient, takeIngredient } from './ingredients.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { UPGRADES, COOP, COAL_COST, MATERIAL_COST, tier } from '../data/upgrades.js';
 import { ITEMS } from '../data/items.js';
@@ -23,8 +24,8 @@ on('game:loaded', () => {
 
 export const nextTier = (key) => UPGRADES[key].tiers[G.S.upgrades[key] + 1] || null;
 
-export const hasNeeds = (needs = {}) => Object.entries(needs).every(([k, n]) => G.S.bag[k] >= n);
-const takeNeeds = (needs = {}) => Object.entries(needs).forEach(([k, n]) => { G.S.bag[k] -= n; });
+export const hasNeeds = (needs = {}) => Object.entries(needs).every(([k, n]) => haveIngredient(k) >= n);   // v338: FILLS
+const takeNeeds = (needs = {}) => Object.entries(needs).forEach(([k, n]) => takeIngredient(k, n));
 export const affordable = (cost, needs) => G.S.gold >= cost && hasNeeds(needs);
 
 export function buyUpgrade(key) {

@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v338: Flower honey
+- A bee box with a ripe flower within 5 tiles makes that flower's honey, worth 100g plus twice the flower (dahlia honey 606g).
+- Every honey works in honey recipes (the plainest is used first) and pleases neighbours who love honey.
+- New save data: none.
+
 ## v337: More autumn crops
 - Seven new autumn crops: aubergine (fruits again every 5 days), black grape (again every 3), sweet potato, pak choi, buckwheat, cardoon, and a flower: dahlia.
 - New save data: none.

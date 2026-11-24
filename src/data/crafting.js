@@ -113,7 +113,7 @@ export const RECIPES = {
   eggpress:   { cost: 0, needs: { wood: 15, stone: 15, copperbar: 1 }, desc: 'Turns an egg into egg spread (190g) overnight.' },
   loom:       { cost: 0, needs: { wood: 60, fiber: 30 }, desc: 'Weaves 5 fiber into a cloth overnight.' },
   oilpress:   { cost: 0, needs: { gel: 20, wood: 20, ironbar: 1 }, desc: 'Presses sweet corn into corn oil (100g) overnight.' },
-  beebox:     { cost: 0, needs: { wood: 40, coal: 8, ironbar: 1 }, desc: 'Bees make meadow honey (100g) every 4 nights, outside winter.' },
+  beebox:     { cost: 0, needs: { wood: 40, coal: 8, ironbar: 1 }, desc: 'Bees make meadow honey (100g) every 4 nights, outside winter. A ripe flower within 5 tiles makes it that flower\'s honey, worth more.' },
   treetap:    { cost: 0, needs: { wood: 40, copperbar: 2 }, desc: 'Fix it to a grown alder: alder syrup (180g) every 8 nights. Chopping the tree gives the tap back.' },
   gemcopier:  { cost: 0, needs: { stone: 50, ironbar: 3, stormcell: 1 }, desc: 'Copies a gem again and again: quartz every night, violet stone every 2.' },
   dryer:      { cost: 0, needs: { wood: 30, copperbar: 1, stone: 20 }, desc: 'Dries 5 fruit or 5 Hollow caps overnight (worth 7.5 times one, plus 25).' },
@@ -192,7 +192,8 @@ export const MACHINES = {
   eggpress:   { accepts: (k) => k in EGG_SPREAD, product: (k) => EGG_SPREAD[k], nights: 1, hint: 'an egg' },
   loom:       { accepts: (k) => k === 'fiber' || k === 'wool', takes: (k) => ({ [k]: k === 'wool' ? 1 : 5 }), product: () => 'cloth', nights: 1, hint: '5 fiber or a wool' },
   oilpress:   { accepts: (k) => k === 'corn' || k === 'truffle', product: (k) => (k === 'truffle' ? 'truffleoil' : 'oil'), nights: 1, hint: 'sweet corn or a truffle' },
-  beebox:     { accepts: () => false, auto: { item: 'honey', every: 4, winter: false }, product: () => 'honey', nights: 0, hint: 'nothing: the bees do the work' },
+  // v338: flower: within that many tiles (straight-line, as Stardew's 5) the nearest ripe flower makes its own honey.
+  beebox:     { accepts: () => false, auto: { item: 'honey', every: 4, winter: false, flower: 5 }, product: () => 'honey', nights: 0, hint: 'nothing: the bees do the work' },
   gemcopier:  { accepts: (k) => !!MINERALS[k]?.gem, product: (k) => k, nights: (k) => COPY_NIGHTS[k] || 1, repeat: true, hint: 'a gem' },
   recycler:   { accepts: (k) => k in RECYCLE, product: (k) => { let r = Math.random(); for (const [it, c] of RECYCLE[k]) { if (r < c) return it; r -= c; } return RECYCLE[k][0][0]; }, nights: 1, hint: 'trash from the pond' },   // v41
   dryer:      { accepts: (k) => k in FRUIT || k === 'mushroom', takes: (k) => ({ [k]: 5 }), product: (k) => `dried_${k}`, nights: 1, hint: '5 fruit or 5 Hollow caps' },

@@ -85,3 +85,49 @@ test('a crop sold in one place is sold only there: strawberries at the Egg Hunt 
   } else assert.fail('the Egg Hunt stall sells strawberry seeds on its day');
   G.S = null;
 });
+
+// v338 (roadmap 117d): flower honey.
+test('a bee box with a ripe flower within 5 tiles makes that flower\'s honey; the nearest wins; none gives meadow honey', async () => {
+  const { flowerNear } = await import('../src/systems/artisan.js');
+  const { emit } = await import('../src/core/events.js');
+  freshFarm({ day: 30 });   // summer
+  const ripe = (type) => ({ w: true, crop: { type, age: CROPS[type].days } });
+  G.S.soil['8,5'] = ripe('marigold');     // 3 tiles away
+  G.S.soil['6,5'] = ripe('cornflower');   // 1 tile away: nearer
+  G.S.soil['5,6'] = { w: true, crop: { type: 'cornflower', age: 1 } };   // not ripe: ignored
+  assert.equal(flowerNear('farm', 5, 5, 5), 'cornflower');
+  delete G.S.soil['6,5'];
+  assert.equal(flowerNear('farm', 5, 5, 5), 'marigold');
+  assert.equal(flowerNear('farm', 5, 5, 2), null, 'out of reach');
+  G.S.placed['5,5'] = { kind: 'beebox', timer: 1 };
+  emit('day:end', {});
+  assert.equal(G.S.placed['5,5'].item, 'honey_marigold');
+  assert.equal(ITEMS.honey_marigold.sell, 100 + 2 * CROPS.marigold.sell, 'Stardew: 100g + twice the flower');
+  G.S.placed['5,5'] = { kind: 'beebox', timer: 1 };
+  G.S.soil = {};
+  emit('day:end', {});
+  assert.equal(G.S.placed['5,5'].item, 'honey', 'no flower: meadow honey');
+  G.S = null;
+});
+
+test('flower honey counts as honey in recipes and gifts, and the plainest is used first', async () => {
+  const { cook, learn } = await import('../src/systems/cooking.js');
+  const { craftable, craft } = await import('../src/systems/crafting.js');
+  const { giftTier } = await import('../src/systems/npcs.js');
+  const { NPCS } = await import('../src/data/npcs.js');
+  freshFarm();
+  G.S.upgrades.house = 1; learn('honeycake');
+  Object.assign(G.S.bag, { flour: 2, egg: 2, honey: 1, honey_dahlia: 1, honey_bluebell: 1 });
+  assert.ok(cook('honeycake'));
+  assert.equal(G.S.bag.honey, 0, 'meadow honey goes first');
+  assert.ok(cook('honeycake'));
+  assert.equal(G.S.bag.honey_bluebell, 0, 'then the cheapest flower honey');
+  assert.equal(G.S.bag.honey_dahlia, 1);
+  Object.assign(G.S.bag, { hardwood: 1, fiber: 20 });
+  assert.equal(craftable('homecharm'), 1);
+  assert.equal(craft('homecharm'), 1);
+  assert.equal(G.S.bag.honey_dahlia, 0);
+  const ines = NPCS.find((n) => n.id === 'ines');
+  assert.equal(giftTier(ines, 'honey_dahlia'), giftTier(ines, 'honey'), 'Ines loves any honey');
+  G.S = null;
+});

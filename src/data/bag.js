@@ -41,7 +41,7 @@ export const ITEM_KIND = Object.fromEntries(Object.entries(ITEMS).map(([k, it]) 
   [k, FLAG_KIND(it) || (it.material && !['animal', 'food'].includes(TABLE_KIND[k]) ? 'material' : TABLE_KIND[k] || 'other')]));
 
 // Artisan goods and roe take the colour of what they were made from: wine_plum looks like a plum.
-export const MADE_FROM = ['jar_', 'wine_', 'juice_', 'dried_', 'smoked_', 'roe_', 'aged_'];
+export const MADE_FROM = ['jar_', 'wine_', 'juice_', 'dried_', 'smoked_', 'roe_', 'aged_', 'honey_'];   // v338: flower honey
 export function madeFrom(k) {
   const p = MADE_FROM.find((x) => k.startsWith(x)), base = p && k.slice(p.length);
   return base && ITEMS[base] ? base : null;

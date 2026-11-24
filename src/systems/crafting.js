@@ -3,6 +3,7 @@ import { G } from '../core/game.js';
 import { changed, notify, emit } from '../core/events.js';
 import { RECIPES, PLACEABLES } from '../data/crafting.js';
 import { affordable } from './upgrades.js';
+import { haveIngredient, takeIngredient } from './ingredients.js';
 import { CROPS } from '../data/crops.js';
 import { skillLevel } from './skills.js';
 import { ITEMS } from '../data/items.js';
@@ -19,7 +20,7 @@ export function craftable(key) {
   const S = G.S, rc = RECIPES[key];
   if (!rc || !learnt(rc)) return 0;
   const most = (have, each) => (each > 0 ? Math.floor((have || 0) / each) : Infinity);
-  const n = Math.min(most(S.gold, rc.cost), ...Object.entries(rc.needs).map(([k, m]) => most(S.bag[k], m)),
+  const n = Math.min(most(S.gold, rc.cost), ...Object.entries(rc.needs).map(([k, m]) => most(haveIngredient(k), m)),
     ...Object.entries(rc.seeds || {}).map(([k, m]) => most(S.seeds[k], m)));
   return Number.isFinite(n) ? n : 0;
 }
@@ -29,7 +30,7 @@ export function craft(key, times = 1) {
   const S = G.S, rc = RECIPES[key], t = Math.min(times, craftable(key));
   if (!rc || t < 1 || !affordable(rc.cost, rc.needs) || !seedsOk(rc)) return 0;
   S.gold -= rc.cost * t;
-  Object.entries(rc.needs).forEach(([k, n]) => { S.bag[k] -= n * t; });
+  Object.entries(rc.needs).forEach(([k, n]) => takeIngredient(k, n * t));
   Object.entries(rc.seeds || {}).forEach(([k, n]) => { S.seeds[k] -= n * t; });
   const n = (rc.makes || 1) * t;
   if (rc.item) {   // v41: bait and tackle go to the bag
