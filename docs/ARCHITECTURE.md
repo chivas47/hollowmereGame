@@ -305,7 +305,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | Function | Purpose | Notes |
 |---|---|---|
 | `addInteraction(priority, fn)` | What Use does. `fn({tx, ty, tile, mapId, item})` returns `true` to claim the press. | Highest priority runs first. |
-| `addLayer(z, fn)` | Draw something every frame. `fn(ctx)`. | z < 50 under characters, z >= 50 over. (97b: duskmarch.js at 8, the Duskmarch's wash, mist and light flecks.) |
+| `addLayer(z, fn)` | Draw something every frame. `fn(ctx)`. | z < 50 under characters, z >= 50 over. (97b: duskmarch.js at 8, the Duskmarch's wash, mist and light flecks. 97c: catacombs.js at 9, spikes and fallen floor; at 985, flames, the ossuary's dark and the Gravewarden's bar.) |
 | `addEntities(fn)` | Return `[{ y, draw(ctx) }]` for y-sorted things. | Player, NPCs, chickens, slimes. |
 | `addUpdater(fn)` | Per-frame logic, `fn(dt)` in seconds. | Skipped while `G.paused`. |
 | `addPrompt(priority, fn)` | The HUD's Use prompt (v112). `fn({tx, ty, tile, mapId, item})` returns a short phrase ("Talk to Ines") or null; it must not change anything. v306: systems/reach.js also uses prompts to pick which nearby tile Use acts on, so anything Use can do on a tile should have a prompt, or it is only reached when it is in front. | Use the same priority as the matching `addInteraction`, so the prompt names what Use would actually do. |
@@ -377,7 +377,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 62 | clearing.js | Any tool aimed at farm debris or an alder |
 | 62 | shortcuts.js | Any tool aimed at the fallen trunk on a shortcut (the axe chops, others read the hint) (v106) |
 | 62 | quarry.js | Anything aimed at the broken quarry bridge on the mountain (reads what mends it) (v238) |
-| 64 | duskmarch.js | The Tangle's chest, the crypt door and the great sarcophagus (97a) |
+| 64 | catacombs.js | The Tangle's chest, Gloamwood's mossy stone, the chapel crypt and north tomb doors, the tomb's chest and bier, and in the catacombs the sconces, levers, plaque, brazier, gates and sarcophagus (97a, 97c) |
 | 62 | duskmarch.js | Any tool but the weapon aimed at the Duskmarch's thick weeds (reads how to cut them; the weapon's swing cuts them, v303) |
 | 61 | forage.js | Any tool aimed at a weed in the Wilds (fiber) |
 | 59 | giants.js | Any tool aimed at a giant crop (chop with hoe, pickaxe or sword) |
@@ -557,7 +557,9 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | ħ, ǧ, ƀ | hedge, garden bed, bench (v159: the village and the town; props drawn on grass, render/tiles.js) | yes |
 | ψ | thick weeds in the Duskmarch's woods, cut by a weapon swing, back each morning (v303, systems/duskmarch.js) | yes, until cut |
 | ɤ, ɮ, ɯ, ɸ, ʇ | Mournfield's headstone, crypt roof, crypt front, railing, dead tree (v303, data/duskmarch.js) | yes |
-| ʊ, ʖ, ʞ, ʡ, ʚ, ʛ, ʜ | the Tangle's chest (shut, open), the crypt door (locked, open), a coffin, the great sarcophagus (shut, open) (97a, set from G.S.dusk by systems/duskmarch.js) | yes |
+| ʊ, ʖ, ʞ, ʡ, ʚ, ʛ, ʜ | the Tangle's and the north tomb's chest (shut, open), the crypt door (locked, open; the north tomb's always open), a coffin, the great sarcophagus (shut, open) (97a, set from G.S.dusk by systems/catacombs.js) | yes |
+| ʩ, ʫ, ʬ, ʭ, ʮ, ʯ, ʲ, ʳ, ʴ, ʵ, ʶ, ʷ | the catacombs' gate (shut), sconce (unlit, lit), lever (up, down), plaque, pit, brazier (unlit, lit), bier (with its piece, empty), bone wall (97c, data/catacombs.js) | yes |
+| ʪ, ʰ, ʱ | a raised gate, a spike plate (hurts while its spikes are up), cracked floor (falls to ʲ a moment after you step on it) (97c) | no |
 | ʋ, β | reeds, the boathouse's walls (v160: the mere; systems/mere.js answers its door) | yes |
 | ƃ, ǫ, ƫ, ǥ, ȟ, ȸ, ƥ | scenery props: bush, boulder, stump, woodpile, hay, barrels, planter (v195; data/scenery.js PROPS, written when the maps are built; art in render/scenery.js; tree stands use T) | yes |
 

@@ -97,6 +97,15 @@ export const MIGRATIONS = [
     s.bigFarm = true;
     s.grownFrom = { w: W, h: H };
   } },
+  // v12 (97c): the chapel crypt became the catacombs (60 x 40) and the key came in three pieces. A farm that already
+  // had the key keeps it (its pieces counted found); one that took the blade has every step of the catacombs done, so
+  // its gates stand open. A farmer saved inside the old one-room crypt steps out onto Mournfield by its door.
+  { v: 12, run(s, saved) {
+    const d = saved.dusk || {};
+    if (d.key) s.dusk.pieces = ['tangle', 'gloam', 'barrow'];
+    if (d.blade) s.dusk.cata = { sconces: [0, 1, 2, 3], levers: true, brazier: true, gallery: true, waves: true, boss: true };
+    if (s.map === 'crypt') Object.assign(s, { map: 'mournfield', x: 19 * T + 8, y: 16 * T + 12, dir: 'down' });
+  } },
 ];
 
 export const SAVE_VERSION = MIGRATIONS[MIGRATIONS.length - 1].v;

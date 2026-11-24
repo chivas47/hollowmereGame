@@ -14,8 +14,8 @@
 
 export const WEED = 'ψ';                   // thick weeds: solid until cut
 export const HEADSTONE = 'ɤ', CRYPT_ROOF = 'ɮ', CRYPT_FRONT = 'ɯ', RAILING = 'ɸ', DEADTREE = 'ʇ';
-// v303 (roadmap 97a): the key chain. An old chest at the Tangle's deepest dead end holds the crypt key; the key opens
-// the door of Mournfield's chapel crypt; inside, past its dead, the great sarcophagus holds the gravewarden's blade.
+// v303 (roadmap 97a): the key chain's tiles. 97c: the Tangle's chest holds one of three pieces of the crypt key
+// (data/catacombs.js); the chapel crypt behind the door is a dungeon of six zones, the blade at its end.
 export const CHEST = 'ʊ', CHEST_OPEN = 'ʖ', CRYPT_DOOR = 'ʞ', CRYPT_DOOR_OPEN = 'ʡ', COFFIN = 'ʚ', SARCOPHAGUS = 'ʛ', SARCOPHAGUS_OPEN = 'ʜ';
 export const DUSK_TILES = [WEED, HEADSTONE, CRYPT_ROOF, CRYPT_FRONT, RAILING, DEADTREE, CHEST, CHEST_OPEN, CRYPT_DOOR, CRYPT_DOOR_OPEN, COFFIN, SARCOPHAGUS, SARCOPHAGUS_OPEN];
 export const DUSK_SIZE = { gloamwood: { w: 48, h: 32 }, tangle: { w: 40, h: 32 }, mournfield: { w: 48, h: 32 } };
@@ -152,23 +152,9 @@ function deepest(m, starts) {
   return best;
 }
 
-// The crypt under Mournfield's chapel: a one-screen tomb (24 x 16), rows of coffins, the great sarcophagus at the back.
-// door: the tile on Mournfield you face to go in (stand: below it); land: where you arrive inside; out: its exit.
-// Its dead are there whenever you go in: NIGHT's kinds, CRYPT.n of them. Stardew by role: the Bone Sword (20 to 30
-// damage, a skeleton's sword) refitted like the claymore (20 to 32 is our 22): 21, half again against the dead.
-export const CRYPT = {
-  door: { x: 19, y: 15 }, stand: { x: 19, y: 16 }, land: { x: 11, y: 11 }, out: { x: 11, y: 12 },
-  sarcophagus: { x: 11, y: 3 }, chest: { x: 0, y: 0 }, n: [4, 5], blade: 'gravewarden',
-};
-export function cryptGrid() {
-  const m = blank(24, 16, 'X');
-  fill(m, 4, 2, 19, 11, 'f');
-  for (const y of [4, 6, 8]) for (const x of [5, 7, 9, 14, 16, 18]) m[y][x] = COFFIN;
-  for (const [x, y] of [[4, 2], [19, 2], [4, 11], [19, 11]]) m[y][x] = 'X';   // the corners' pillars
-  m[CRYPT.sarcophagus.y][CRYPT.sarcophagus.x] = SARCOPHAGUS;
-  m[CRYPT.out.y][CRYPT.out.x] = 'E';
-  return m;
-}
+// The chapel crypt's door on Mournfield (stand: below it) and the Tangle chest's tile (set by tangleGrid). 97c: the
+// catacombs behind the door, the north tomb and the key's three pieces are in data/catacombs.js.
+export const CRYPT = { door: { x: 19, y: 15 }, stand: { x: 19, y: 16 }, chest: { x: 0, y: 0 } };
 
 // Mournfield: dead trees round a railed yard; rows of headstones on either side of two crossing walks; three
 // crypts; the old west end gone back to weeds and dead trees, which is where the Tangle path comes in.

@@ -12,10 +12,7 @@ import { motion } from '../core/motion.js';
 import { drawMood } from '../render/dusk.js';
 import { MAPS, sizeOf } from '../data/maps.js';
 import { MONSTERS } from '../data/weapons.js';
-import { WEED, DUSK_MAPS, DUSK_CREATURES, NIGHT, WEED_DROPS, CRYPT, CHEST, CHEST_OPEN, CRYPT_DOOR, CRYPT_DOOR_OPEN, SARCOPHAGUS, SARCOPHAGUS_OPEN } from '../data/duskmarch.js';
-import { WEAPONS } from '../data/weapons.js';
-import { placePlayer } from './world.js';
-import { giveFind } from './gear.js';
+import { WEED, DUSK_MAPS, DUSK_CREATURES, NIGHT, WEED_DROPS } from '../data/duskmarch.js';
 import { spawnSlimes, slimes, monstersOn } from './monsters.js';
 import { addItem } from './quality.js';
 import { burst } from './animation.js';
@@ -109,52 +106,7 @@ addUpdater(() => {
 on('day:start', () => { night.day = -1; });
 on('game:reset', () => { night.day = -1; night.told = -1; });
 
-// ---- 97a: the key chain. G.S.dusk = { key, door, blade }: the key found, the crypt door unlocked, the blade taken. ----
-function setPieces() {
-  const d = G.S?.dusk || {}, set = (map, { x, y }, t) => { MAPS[map].grid[y][x] = t; };
-  set('tangle', CRYPT.chest, d.key ? CHEST_OPEN : CHEST);
-  set('mournfield', CRYPT.door, d.door ? CRYPT_DOOR_OPEN : CRYPT_DOOR);
-  set('crypt', CRYPT.sarcophagus, d.blade ? SARCOPHAGUS_OPEN : SARCOPHAGUS);
-  emit('world:changed');
-}
-on('game:loaded', () => { G.S.dusk = { key: false, door: false, blade: false, ...(G.S.dusk || {}) }; setPieces(); });
-on('game:reset', () => { if (G.S) setPieces(); });
-
-export function openChest() {
-  const S = G.S;
-  if (S.dusk.key) { notify('The old chest is empty.'); return; }
-  S.dusk.key = true; setPieces(); emit('sfx', 'chime');
-  notify('Under the moss, an old chest. Inside: a heavy iron key, green with age, stamped with a chapel. Mournfield has a chapel crypt.');
-  changed();
-}
-export function useCryptDoor() {
-  const S = G.S;
-  if (!S.dusk.door) {
-    if (!S.dusk.key) { notify('The crypt door is locked. Its keyhole is green with age. They say the sexton lost his key in the Tangle.'); return; }
-    S.dusk.door = true; setPieces();
-    notify('The old key turns, grinding. The crypt door swings open.');
-  }
-  emit('sfx', 'door');
-  placePlayer('crypt', CRYPT.land.x, CRYPT.land.y, 'up');
-  emit('map:changed', 'crypt');
-}
-export function openSarcophagus() {
-  const S = G.S;
-  if (S.dusk.blade) { notify('The great sarcophagus lies open and empty.'); return; }
-  S.dusk.blade = true; setPieces(); emit('sfx', 'levelup');
-  giveFind(CRYPT.blade, 'Beneath the lid, on the bones of the old gravewarden, you found');
-  notify(`The ${WEAPONS[CRYPT.blade].name.toLowerCase()} strikes the dead half again as hard.`);
-  changed();
-}
-addInteraction(64, ({ tx, ty, mapId }) => {
-  const t = MAPS[mapId]?.grid[ty]?.[tx];
-  if (mapId === 'tangle' && (t === CHEST || t === CHEST_OPEN)) { openChest(); return true; }
-  if (mapId === 'mournfield' && (t === CRYPT_DOOR || t === CRYPT_DOOR_OPEN)) { useCryptDoor(); return true; }
-  if (mapId === 'crypt' && (t === SARCOPHAGUS || t === SARCOPHAGUS_OPEN)) { openSarcophagus(); return true; }
-  return false;
-});
-// The crypt's dead are there each time you go in.
-on('map:changed', (id) => { if (id === 'crypt') populate('crypt', between(CRYPT.n), NIGHT.kinds, false); });
+// 97a's key chain moved to systems/catacombs.js (97c: the key in three pieces, the north tomb, the catacombs).
 
 // 97b: the maps' mood over the ground, under everyone (render/dusk.js).
 addLayer(8, (c) => {

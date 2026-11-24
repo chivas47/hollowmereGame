@@ -5,6 +5,7 @@ import { SHRINE } from '../data/books.js';
 import { CHIMES } from '../data/nuts.js';
 import { DECOR_SHEETS, BUILDING_SHEETS, PROPS_SHEET, GREENHOUSE_SHEET, VARIANTS_SHEET, DUSK_SHEET } from '../data/sprites.js';
 import { cryptPart } from '../data/duskmarch.js';
+import { CATA } from '../data/catacombs.js';   // 97c: which carving each lever has
 import { BUILDINGS } from '../data/buildings.js';
 import { RANCH_PEN } from '../data/ranch.js';
 import { ready, sheet } from './sheets.js';
@@ -1110,6 +1111,79 @@ function sarcophagus(g, x, y, p, open = false) {
   else { r(g, X + 1, Y + 1, 14, 4, '#8a8680'); r(g, X + 7, Y + 2, 2, 2, '#c9a43a'); }
 }
 
+// 97c: the catacombs (data/catacombs.js): gates (shut, raised), sconces, levers under their carvings, the plaque,
+// spike plates, cracked floor, the pit, the brazier, the bier and the ossuary's walls of stacked bones. Flames and
+// rising spikes are drawn each frame over these (render/catacombs.js).
+function gate(g, x, y, p, open = false) {
+  const X = x * T, Y = y * T;
+  if (open) { r(g, X, Y, T, 3, '#2b2a2e'); for (let i = 1; i < T; i += 4) r(g, X + i, Y + 3, 2, 2, '#4a4950'); return; }
+  r(g, X, Y + 14, T, 2, 'rgba(0,0,0,.35)');
+  for (let i = 1; i < T; i += 4) { r(g, X + i, Y, 2, 15, '#3a393f'); r(g, X + i, Y, 1, 15, '#6a6870'); r(g, X + i, Y + 14, 2, 2, '#2b2a2e'); }
+  r(g, X, Y + 4, T, 2, '#4a4950'); r(g, X, Y + 10, T, 2, '#4a4950'); r(g, X, Y + 4, T, 1, '#7a7880');
+}
+function sconce(g, x, y, p, lit = false) {
+  const X = x * T, Y = y * T;
+  r(g, X + 5, Y + 9, 6, 2, '#2b2a2e'); r(g, X + 7, Y + 11, 2, 4, '#2b2a2e'); r(g, X + 6, Y + 6, 4, 4, '#4a3a2e'); r(g, X + 6, Y + 6, 4, 1, lit ? '#e9862a' : '#2a2018');
+}
+const MARKS = {   // a carving above each lever, 5 x 4 px
+  owl: (g, X, Y) => { r(g, X, Y, 5, 4, '#2a2620'); r(g, X + 1, Y + 1, 1, 1, '#c9a43a'); r(g, X + 3, Y + 1, 1, 1, '#c9a43a'); r(g, X + 2, Y + 3, 1, 1, '#c9a43a'); },
+  key: (g, X, Y) => { r(g, X, Y + 1, 2, 2, '#c9a43a'); r(g, X + 2, Y + 2, 3, 1, '#c9a43a'); r(g, X + 4, Y + 3, 1, 1, '#c9a43a'); },
+  bell: (g, X, Y) => { r(g, X + 1, Y, 3, 3, '#c9a43a'); r(g, X, Y + 3, 5, 1, '#c9a43a'); },
+  crow: (g, X, Y) => { r(g, X, Y + 1, 5, 1, '#1a1612'); r(g, X + 1, Y + 2, 3, 1, '#1a1612'); r(g, X + 3, Y, 1, 1, '#1a1612'); r(g, X + 4, Y + 1, 1, 1, '#c9a43a'); },
+};
+function lever(g, x, y, p, down = false) {
+  const X = x * T, Y = y * T, mark = CATA.levers.find((l) => l.x === x && l.y === y)?.mark;
+  r(g, X + 4, Y + 7, 8, 8, '#55524d'); r(g, X + 5, Y + 8, 6, 6, '#3a3834'); r(g, X + 7, Y + 10, 2, 2, '#2b2a2e');
+  if (down) { r(g, X + 7, Y + 11, 2, 5, '#6a6870'); r(g, X + 6, Y + 14, 4, 2, '#8a2a22'); }
+  else { r(g, X + 7, Y + 5, 2, 6, '#6a6870'); r(g, X + 6, Y + 4, 4, 2, '#8a2a22'); }
+  if (MARKS[mark]) MARKS[mark](g, X + 5, Y + 1);
+}
+function plaque(g, x, y) {
+  const X = x * T, Y = y * T;
+  r(g, X + 2, Y + 4, 12, 10, '#7a5a2a'); r(g, X + 3, Y + 5, 10, 8, '#a5753f'); r(g, X + 3, Y + 5, 10, 1, '#c9a43a');
+  for (const j of [7, 9, 11]) r(g, X + 4, Y + j, 8, 1, '#5a3a1a');
+}
+function spikePlate(g, x, y) {
+  const X = x * T, Y = y * T;
+  r(g, X + 1, Y + 1, 14, 14, '#4a4744'); r(g, X + 1, Y + 1, 14, 1, '#5e5a55'); r(g, X + 1, Y + 14, 14, 1, '#33302d');
+  for (let i = 0; i < 4; i++) for (let j = 0; j < 2; j++) r(g, X + 2 + i * 4, Y + 7 + j * 6, 2, 1, '#1a1814');
+}
+function crumble(g, x, y) {
+  const X = x * T, Y = y * T, R = rng(x * 211 + y * 97);
+  r(g, X, Y, T, T, '#5a544c'); r(g, X, Y, T, 1, '#6e675e');
+  for (let i = 0; i < 3; i++) { const a = R() * 12 | 0, b = R() * 12 | 0; r(g, X + 2 + a, Y + 2 + b, 3 + (R() * 4 | 0), 1, '#2a2620'); r(g, X + 2 + a, Y + 3 + b, 1, 2, '#2a2620'); }
+}
+function pit(g, x, y) {
+  const X = x * T, Y = y * T;
+  r(g, X, Y, T, T, '#07060b'); r(g, X + (x % 3) * 4, Y + 6 + (y % 2) * 4, 2, 1, '#14121c');
+}
+function brazier(g, x, y, p, lit = false) {
+  const X = x * T, Y = y * T;
+  r(g, X + 3, Y + 14, 10, 2, 'rgba(0,0,0,.35)'); r(g, X + 7, Y + 9, 2, 6, '#3a393f'); r(g, X + 4, Y + 14, 8, 1, '#3a393f');
+  r(g, X + 2, Y + 6, 12, 4, '#4a4950'); r(g, X + 3, Y + 6, 10, 1, '#6a6870');
+  r(g, X + 4, Y + 5, 8, 2, lit ? '#e9862a' : '#2a2620'); if (lit) r(g, X + 6, Y + 5, 3, 1, '#ffd25a');
+}
+function bier(g, x, y, p, empty = false) {
+  const X = x * T, Y = y * T;
+  r(g, X + 1, Y + 14, 14, 2, 'rgba(0,0,0,.35)'); r(g, X + 1, Y + 5, 14, 10, '#6e6a63'); r(g, X + 1, Y + 5, 14, 2, '#8a8680'); r(g, X + 2, Y + 12, 12, 1, '#55524d');
+  if (!empty) { r(g, X + 5, Y + 4, 6, 2, '#5d6a52'); r(g, X + 5, Y + 4, 2, 2, '#8aa070'); r(g, X + 10, Y + 3, 1, 1, '#fff1b8'); }
+}
+function bones(g, x, y) {   // a wall of stacked bones: rows of long bones, their knobbed ends out, skulls set among them
+  const X = x * T, Y = y * T, R = rng(x * 131 + y * 71);
+  r(g, X, Y, T, T, '#231f1a');
+  g.save(); g.beginPath(); g.rect(X, Y, T, T); g.clip();
+  for (let j = 0; j < 4; j++) {
+    const py = Y + j * 4, off = (j % 2) * 4;
+    for (let i = -1; i < 3; i++) {
+      const px = X + off + i * 8;
+      if (R() < 0.22) { r(g, px + 2, py, 5, 4, '#d8cfb8'); r(g, px + 3, py + 1, 1, 1, '#231f1a'); r(g, px + 5, py + 1, 1, 1, '#231f1a'); r(g, px + 3, py + 3, 3, 1, '#a89e86'); }
+      else { const c = R() < 0.5 ? '#b8ae96' : '#9e9480'; r(g, px + 1, py + 1, 7, 2, c); r(g, px, py, 2, 4, c); r(g, px + 7, py, 2, 4, c); r(g, px + 1, py + 1, 7, 1, '#cfc6ae'); }
+    }
+  }
+  g.restore();
+  r(g, X, Y, T, 1, 'rgba(255,255,255,.08)'); r(g, X, Y + 15, T, 1, 'rgba(0,0,0,.5)');
+}
+
 // v89: the things on cave and special tiles, without their ground (PROP_GROUND says what lies under each), so a
 // tile set can draw the ground (render/renderer.js). CAVE_ART draws both, as before.
 export const PROP_ART = {
@@ -1127,6 +1201,8 @@ export const PROP_ART = {
   'ʂ': stall,   // v165
   'ψ': weedClump, 'ɤ': headstone, 'ɮ': cryptRoof, 'ɯ': cryptFront, 'ɸ': railing, 'ʇ': deadTree,   // v303
   'ʊ': oldChest, 'ʖ': oldChestOpen, 'ʞ': cryptDoor, 'ʡ': cryptDoorOpen, 'ʚ': coffin, 'ʛ': sarcophagus, 'ʜ': (g, x, y, p) => sarcophagus(g, x, y, p, true),   // 97a
+  'ʩ': gate, 'ʪ': (g, x, y, p) => gate(g, x, y, p, true), 'ʫ': sconce, 'ʬ': (g, x, y, p) => sconce(g, x, y, p, true), 'ʭ': lever, 'ʮ': (g, x, y, p) => lever(g, x, y, p, true),   // 97c
+  'ʯ': plaque, 'ʰ': spikePlate, 'ʱ': crumble, 'ʲ': pit, 'ʳ': brazier, 'ʴ': (g, x, y, p) => brazier(g, x, y, p, true), 'ʵ': bier, 'ʶ': (g, x, y, p) => bier(g, x, y, p, true), 'ʷ': bones,
   ...SCENERY_ART,   // v195: bushes, boulders, stumps, woodpiles, hay, barrels, planters (render/scenery.js)
 };
 // The ground under each prop: a cave's floor or wall, grass (with the salt its blades and flowers use) or sand.
@@ -1138,6 +1214,8 @@ export const PROP_GROUND = {
   'ħ': 'grass:67', 'ǧ': 'grass:71', 'ƀ': 'grass:73', 'ʋ': 'grass:79', 'β': 'grass:83', 'ʂ': 'grass:89', 'ɲ': 'grass:97',
   'ψ': 'grass:109', 'ɤ': 'grass:113', 'ɮ': 'grass:127', 'ɯ': 'grass:131', 'ɸ': 'grass:137', 'ʇ': 'grass:139',   // v303
   'ʊ': 'grass:149', 'ʖ': 'grass:149', 'ʞ': 'grass:151', 'ʡ': 'grass:151', 'ʚ': 'floor', 'ʛ': 'floor', 'ʜ': 'floor',   // 97a
+  'ʩ': 'floor', 'ʪ': 'floor', 'ʫ': 'wall', 'ʬ': 'wall', 'ʭ': 'wall', 'ʮ': 'wall', 'ʯ': 'wall', 'ʰ': 'floor', 'ʱ': 'floor', 'ʲ': 'floor',   // 97c
+  'ʳ': 'floor', 'ʴ': 'floor', 'ʵ': 'floor', 'ʶ': 'floor', 'ʷ': 'floor',
   ...Object.fromEntries(Object.keys(SCENERY_ART).map((t, i) => [t, `grass:${101 + 2 * i}`])),   // v195
 };
 function propGround(t, g, x, y, p) {

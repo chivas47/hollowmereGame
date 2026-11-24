@@ -79,6 +79,7 @@ import './systems/guild.js';
 import './systems/bestiary.js';   // 85c: kinds met and their drops
 import './systems/nightfolk.js';   // 85j: seasonal night creatures
 import './systems/duskmarch.js';   // v303: the woods and graveyard west of the village and town
+import './systems/catacombs.js';   // 97c: the crypt key in three pieces, the north tomb, the chapel catacombs
 import './systems/forge.js';
 import './systems/books.js';
 import './systems/pots.js';

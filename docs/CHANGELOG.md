@@ -2,6 +2,15 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v344: The crypt key in three pieces, the north tomb, the chapel catacombs
+- The chapel crypt key is broken in three. The Tangle's old chest wakes the thicket when you lift its lid (seven of the woods' creatures round it; beat them, then open it); Gloamwood's mossy stone gives its piece only after 8 pm, and the dead climb out to guard it; the third lies on a bier at the back of Mournfield's north tomb. Corvin at the Anvil joins the three into the key.
+- Mournfield's north mausoleum is open to anyone: the north tomb, three rooms of the dead, a chest of grave goods once (5 iron, 4 coal, 2 geodes, 3 bone shards) and the bier.
+- The chapel crypt is now the chapel catacombs (60 x 40), six zones and the warden's chamber: the entry hall (the dead each visit); the ossuary, a dark maze of bone walls lit only by the four sconces you light (all four raise its gate); the lever hall (four levers under carvings, pulled in the order a plaque's verse gives; a wrong pull snaps them back and wakes the dead); the brazier (light it and it mends you once a visit, and the chapel door brings you down to it from then on); the spike corridor (spikes rise in a wave you time); the crumbling gallery (cracked floor over a pit falls a moment after you step on it; a fall costs health and puts you back at its start; reaching the far side braces it for good); the sealed hall (its gates shut on three waves of the dead). Then the Gravewarden, a huge grave rattler (320 health) that calls up the dead at two thirds and one third of its health and grows quicker at the end. It guards the sarcophagus and the gravewarden blade; once it falls a gate opens straight back to the entry hall.
+- The dead underground are tougher than Mournfield's at night (1.6 times the health, 1.25 times the damage).
+- Every solved step is saved; a step under way (a fight, levers half pulled, floor falling) starts over if you leave or faint.
+- Farms that already had the key keep it; farms that took the blade find every gate of the catacombs open. A farmer saved inside the old crypt steps out by its door.
+- New save data: `dusk.pieces`, `dusk.barrowChest`, `dusk.cata` (`sconces`, `levers`, `brazier`, `gallery`, `waves`, `boss`); save step 12.
+
 ## v343: Music by place and depth, briefs for every sound
 - Music follows where you are at two levels, place and region. Gloamwood, the Tangle and Mournfield (darker at night), the island, the dig site, the Dunes, the Oasis, the casino, the museum and the picture house now have music of their own; places without their own play their region's, and every place in the game has one or the other.
 - Every dungeon's music follows its depth: the Hollow at floors 1 to 39, 40 to 79, 80 and deeper (where its creatures and ore change); the Sunken Cavern at 1 to 9, 10 to 24 (from the Ember Vent's door), 25 and deeper (where umbrite is richest); the Ember Vent and the Smoke Peak for the climb, then their quiet room at the top (the forge, the summit).
