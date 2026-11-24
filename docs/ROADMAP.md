@@ -433,7 +433,7 @@ Nuno (November 2026): finish farmer two after the depth review. Asked: their own
 | Item | What | Kind | Status | Notes |
 |---|---|---|---|---|
 | 116a | Farmer two's own skills | feature | done (chivas47/hollowmereGame#347) | Their own skills and professions (systems/partner.js OWN_STATS, swapped into G.S for their actions and alone for loading, mornings, hits and their fishing line); their own energy and health tops; profession choices in their half; save step 10 (a farmer two who has played starts with a copy of yours). Changes are held while their stats are swapped in (core/events.js holdChanges), so the HUD never shows their values in yours. |
-| 116b | What farmer two does shows up for them | polish | queued | Their pickups fly to them, not you; their swings' sparks and particles show on their own map (GAME_DESIGN known issues v130, v140). |
+| 116b | What farmer two does shows up for them | polish | done (chivas47/hollowmereGame#348) | Every effect carries its map and every pickup whose it is (systems/animation.js onMap, flyGains); each half draws its own map's effects; their Use ends by flying their gains to them (not their prompt); a hit on them floats over them and does not shake you. Known issues v130 (pickups) and v140 (effects) closed. |
 | 116c | Naming farmer two with a controller | feature | queued | A letter picker their controller can drive, so they can have a name (known issue v142). |
 
 ## Done

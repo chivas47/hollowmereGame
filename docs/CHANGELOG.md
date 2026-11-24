@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v333: What farmer two does shows up for them
+- What farmer two harvests, digs up or catches now flies to them, with its "+n" label over their head, instead of flying across the screen to you.
+- Their swings' dust, sparks and splashes play on their own map, in their half of the screen, even when you are somewhere else.
+- A hit on farmer two shows its number over them and no longer shakes your screen.
+- New save data: none.
+
 ## v332: Farmer two's own skills
 - Farmer two now has their own skills and professions, as in Stardew's co-op. What they farm, fish, mine, forage and fight levels them up, not you.
 - Their levels give them their own bonus items, cheaper tool swings, a bigger catch bar and their own profession choices, shown in their half of the screen (and again each morning they play while one is left for later).

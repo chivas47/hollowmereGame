@@ -147,9 +147,11 @@ export function drawItem(c, k, cx, cy) {
   r(c, x - 2, y - 3, 4, 1, col); r(c, x - 3, y - 2, 6, 4, col); r(c, x - 2, y + 2, 4, 1, col); r(c, x - 2, y - 2, 1, 1, 'rgba(255,255,255,.7)');
 }
 
-// Particles, rings, flying pickups and labels (fx is G.fx from systems/animation.js).
-export function drawFx(c, fx, S) {
+// Particles, rings, flying pickups and labels (fx is G.fx from systems/animation.js). v333: only those on map, the
+// map being drawn; target(who) is where a pickup flies (you, or farmer two).
+export function drawFx(c, fx, map, target) {
   for (const q of fx.parts) {
+    if (q.map !== map) continue;
     c.globalAlpha = Math.max(0, Math.min(1, q.life / q.max * 1.5));
     if (q.slash) {   // v280: a blade's mark, thinning as it fades
       const k = q.life / q.max, h = q.len / 2 * (0.6 + 0.4 * k), dx = Math.cos(q.ang) * h, dy = Math.sin(q.ang) * h;
@@ -163,7 +165,8 @@ export function drawFx(c, fx, S) {
   }
   c.globalAlpha = 1;
   for (const u of fx.pickups) {
-    if (u.t < 0 || u.t >= u.pop + u.fly) continue;
+    if (u.map !== map || u.t < 0 || u.t >= u.pop + u.fly) continue;
+    const S = target(u.who);
     let x, y;
     if (u.t < u.pop) {   // v123: pops up and bounces once where it came from, skipping a little sideways
       const k = u.t / u.pop, hop = k < 0.65 ? Math.sin(k / 0.65 * Math.PI) : Math.sin((k - 0.65) / 0.35 * Math.PI) * 0.3;
@@ -177,6 +180,7 @@ export function drawFx(c, fx, S) {
   const FONT = 'bold 8px Verdana, sans-serif', BIG = 'bold 10px Verdana, sans-serif';
   c.font = FONT; c.textAlign = 'center'; c.lineWidth = 2.5; c.lineJoin = 'round'; c.strokeStyle = 'rgba(28,23,18,.9)';
   for (const f of fx.floats) {
+    if (f.map !== map) continue;
     const k = 1 - f.life / f.max, y = Math.round(f.y - f.rise * easeOut(k) - (f.pop ? Math.sin(Math.min(1, k * 4) * Math.PI) * 3 : 0));
     c.globalAlpha = Math.min(1, f.life / f.max * 3);
     if (f.big) c.font = BIG;

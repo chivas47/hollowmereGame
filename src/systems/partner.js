@@ -39,7 +39,7 @@ import { MAPS } from '../data/maps.js';
 import { promptFor } from '../core/registry.js';
 import { lean } from './wind.js';
 import { act } from './interact.js';
-import { stepAnim, playAnim } from './animation.js';
+import { stepAnim, playAnim, flyGains } from './animation.js';
 import { rodBend } from './player.js';
 import { syncEnergyBonus } from './skills.js';
 import { syncHealth, pending } from './professions.js';
@@ -125,12 +125,14 @@ export function partnerSlot(step) {
 
 // Swaps the second farmer's map, place, facing, slot, energy and swing into play for fn, then back. While
 // tethered, if fn takes them through a door, you are set down beside them on the other side.
-function asPartner(fn) { return holdChanges(() => asPartnerNow(fn)); }   // v332: changes are sent once you are you again
-function asPartnerNow(fn) {
+// v332: changes are sent once you are you again. v333: gains false for a look that changes nothing (their prompt).
+function asPartner(fn, { gains = true } = {}) { return holdChanges(() => asPartnerNow(fn, gains)); }
+function asPartnerNow(fn, gains) {
   if (G.partnerActing) return fn();   // already them (a nested call): swapping again would hand everything back
   const p = G.P2, S = G.S, me = { map: S.map, x: S.x, y: S.y, dir: S.dir, slot: S.slot, anim: G.anim }, from = p.map;
   Object.assign(S, { map: p.map, x: p.x, y: p.y, dir: p.dir, slot: p.slot }); swapStats(); G.anim = p.anim; G.partnerActing = true;
   try { return fn(); } finally {
+    if (gains) flyGains();   // v333 (roadmap 116b): what they gathered flies to them, from where they face, before you are you again
     G.partnerActing = false;
     const moved = S.map !== from, follow = moved && PARTNER.tethered;
     const spot = follow ? { map: S.map, ...besideYou() } : me;   // through a door: you come too, beside them (G.S is them here)
@@ -165,7 +167,7 @@ export function partnerPrompt() {
     const { tx, ty } = facing(), item = slotKind(G.S);
     const text = atBed() ? (G.bed.p2 ? null : 'Sleep') : promptFor({ tx, ty, tile: tileAt(tx, ty), mapId: G.S.map, item });
     out = { tx, ty, text };
-  });
+  }, { gains: false });
   return out;
 }
 
