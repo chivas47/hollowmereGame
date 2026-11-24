@@ -251,6 +251,29 @@ Object.assign(SCENES, {
       C('Write back: Every night', 80, 'She reads it by your lamp and laughs. "That is a lot of walking." "I know." "Good." She is already pulling you out of the door.'), true),
   },
   corvin: {
+    // v330 (roadmap 113h): the missing heart scenes, at their door
+    4: {
+      title: "A broken hinge",
+      text: [
+        "Corvin is at the Anvil door holding a tiny bent hinge, the kind from a child's toy box. He is turning it over with great care.",
+        "\"Kit brought it in,\" he says. \"Her box. Her mother's before her.\" His big fingers close round it. \"I can make a new one in ten minutes. Or I can mend this one, which will take all afternoon and might not work. What would you want, if it were yours?\"",
+      ],
+      choices: [
+        { label: "Mend the old one, even if it takes all afternoon", pts: 55, reply: "Corvin nods slowly, as if you passed a test he did not mean to set. He spends the whole afternoon at it with the finest tools he owns. When Kit comes back the hinge works perfectly. \"Thank you,\" he says to you later, gruff. \"I needed somebody to say it was worth it.\"" },
+        { label: "Make a new one that will last", pts: 25, reply: "\"Practical,\" Corvin says. \"Good.\" He makes the new one, beautifully. Then, when he thinks nobody is looking, he straightens the old hinge too and slips both into Kit's box. \"She can choose,\" he mutters." },
+      ],
+    },
+    8: {
+      title: "The cold forge",
+      text: [
+        "The Anvil is dark when you pass. Corvin is sitting on the step outside with the forge door shut behind him, which you have never seen.",
+        "\"Let it go out,\" he says. \"First time in eleven years.\" He looks at his hands. \"My father would have shouted the street down. I wanted to see if the world ended.\" A short laugh. \"It did not. It was just quiet. I thought you might sit in the quiet with me.\"",
+      ],
+      choices: [
+        { label: "Sit beside him until the stars come out", pts: 80, reply: "You sit together on the step while the street empties and the stars come out. Neither of you says much. When it is fully dark Corvin stands, stretches, and goes in to light the forge again. \"Better now,\" he says. \"I know what it is for.\"" },
+        { label: "Offer to help him light it again", pts: 40, reply: "\"Not yet,\" he says, and then, after a while: \"All right. Now.\" You hold the bellows while he builds the fire, and when it catches he lets out a breath he seems to have held for years. \"Thank you. For not making a fuss.\"" },
+      ],
+    },
     2: S('Sparks', ['Corvin is hammering at the anvil, sweating. A spark lands on his sleeve and he does not even notice it smouldering.'],
       C('Pat the spark out', 50, 'He blinks at his sleeve, then at you. "Huh. Thanks." He goes back to hammering, but slower, and he glances at you twice.'),
       C('Tell him his sleeve is on fire', 25, 'He slaps it out, unbothered. "Happens." Then, after a moment: "Good eyes."')),

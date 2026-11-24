@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v330: Corvin has more to say
+- The next marriage candidate written up in depth (roadmap 113h). Two new heart scenes with Corvin: at 4 hearts, a broken hinge; at 8, the cold forge. Corvin now has a scene at every step from 2 to 10 hearts.
+- Once you are close (8 hearts), five new things Corvin says join the usual lines.
+- Three lines for each season instead of one, rain lines of their own, and things Corvin says when you meet them at their own places.
+- If you are already past 4 or 8 hearts, the new scenes play on your next talks, one at a time.
+- New save data: none.
+
 ## v323: Ines has more to say
 - The first of the marriage candidates written up in depth (roadmap 113a). Two new heart scenes with Ines: at 2 hearts, the honesty table by her gate; at 6, a hive that has lost its queen. She now has a scene at every step from 2 to 10 hearts.
 - Once you are close (8 hearts), five new things she says join her usual lines.

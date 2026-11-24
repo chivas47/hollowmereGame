@@ -103,8 +103,20 @@ export const VOICES = {
       ['Copper is soft. Iron is honest. Gold is for people who want to look at things.', 'If it is broken, I fix it. If you broke it being stupid, I fix it slower.', 'Stand back from the quench. The steam does not care who you are.', 'My father worked this forge. So did his. I am the first who can read.'],
       ['Kit borrowed my tongs again. I found them in a machine that waters plants. It worked.', 'Hob\'s stew is the only thing in this town I do not have to fix.', 'Wilmot says my springs are nearly as good as his. Nearly. He will die before he says as good.', 'Aurel and I had lunch. He said "good bread." I said "yes." Best talk we have had all month.'],
       ['I do not talk much. The hammer does it for me. You seem to understand that.', 'My father hit me with a cold bar once for letting the fire die. I never let it die again. I never hit anyone.', 'I am making you a gate latch. A proper one. It will outlive the gate.', 'When you come in, I stop hammering. I do not do that for anybody else.'],
+      // v330 (roadmap 113h): once you are close
+      ["I made a little iron leaf this morning. No reason. It is on the shelf by the door. It is yours if you want it.", "When you come in, the forge sounds different. I do not know how. Maybe I hit softer.", "I have never been good with words. I have been thinking of some for you. They are not ready yet. Like a blade.", "My father thought a man should be hard all the way through. Iron is not. Good iron bends a little. You taught me that.", "Come by after closing one night. I will show you how to make a nail. It is the first thing I ever made. It is a start."],
     ],
-    season: { Spring: 'Spring. Everybody remembers their tools are broken at the same time. Queue.', Summer: 'Summer. The forge and the sun together. I drink a bucket of water a day.', Autumn: 'Autumn. Best working weather. Cool air, hot iron.', Winter: 'Winter. The warmest room in town is mine. People find excuses to visit.' },
+    season: {   // v330: a few each
+      Spring: ['Spring. Everybody remembers their tools are broken at the same time. Queue.', "Spring, every plough in the valley comes in bent. I straighten them in order of who brought me bread.", "First warm day I open both doors and let the breeze through. The sparks blow halfway to the hall."],
+      Summer: ['Summer. The forge and the sun together. I drink a bucket of water a day.', "Summer nights I work late when the air cools. You can hear the hammer from the beach, they tell me.", "Hot days I quench my own head in the trough between jobs. Children come to watch. It is the best show in town."],
+      Autumn: ['Autumn. Best working weather. Cool air, hot iron.', "Autumn is horseshoes. Every horse in the valley before the frost. I dream about hooves.", "In autumn I bank the forge every night instead of letting it cool. It is like tucking it in."],
+      Winter: ['Winter. The warmest room in town is mine. People find excuses to visit.', "In winter folk come in just to stand by the fire. I let them. I pretend I need help with the bellows.", "Winter iron rings different. Colder, brighter. I can hear the frost in it."],
+    },
+    rain: ["Forge does not care about the weather. Keep the door shut, the heat stays in.", "Rain on the Anvil roof is the only music I like. It keeps time with the hammer.", "Wet days folk bring me rusted things. Gates, hooks, knives. Rain is good for business. I am not complaining."],
+    places: {
+      "inside_smithy": ["Mind the bucket. Mind the tongs. Mind everything. Then come and stand by the fire.", "That anvil was my father's. He bought it the year I was born. We are the same age, it and me."],
+      "inside_tavern": ["The Lantern is the only place I sit down all day. Do not tell Lio. He thinks I come for his stew.", "I like this corner. My back to the wall, the fire in front. A smith's habits."],
+    },
     snow: 'Snow. Folk come in to stand by the forge and pretend they want a nail. I let them.',
     birthday: 'My birthday. I am going to make something nobody ordered. Just because.',
     bday: "It is {name}'s birthday. I made them a hook. For coats. People always need hooks.",
