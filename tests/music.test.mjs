@@ -122,7 +122,8 @@ test('places beat their region: the Duskmarch maps, Mournfield at night, the Hol
   assert.equal(at('mournfield'), 'mournfield_01'); assert.equal(at('mournfield', { time: 'night' }), 'mournfield_night_01');
   assert.equal(at('hollow', { floor: 1 }), 'hollow_upper_01'); assert.equal(at('cavern', { floor: 1 }), 'cavern_upper_01'); assert.equal(at('vent', { floor: 1 }), 'vent_climb_01');
   assert.equal(at('island'), 'island_01'); assert.equal(at('digsite'), 'digsite_01'); assert.equal(at('peak', { floor: 1 }), 'peak_climb_01');
-  assert.equal(at('desert'), 'desert_01'); assert.equal(at('inside_oasis'), 'desert_01', 'a place without its own: its region\'s');
+  assert.equal(at('desert'), 'desert_01'); assert.equal(at('inside_oasis'), 'oasis_01');
+  assert.equal(pickTrack(ctx({ place: 'inside_oasis', region: 'desert' }), {}, () => 0, TRACKS.filter((t) => t.id !== 'oasis_01')).track.id, 'desert_01', 'a place without its own: its region\'s');
   assert.equal(at('inside_casino'), 'casino_01'); assert.equal(at('wilds'), 'exploration_01');
   const place = { id: 'p', category: 'location', place: 'greenhouse' }, rain = { id: 'r', category: 'location', region: 'farm', weather: 'rain', time: 'morning', season: 'Spring' };
   assert.equal(pickTrack(ctx({ place: 'greenhouse', weather: 'rain' }), {}, () => 0, [place, rain]).track.id, 'p', 'a place\'s own beats the region\'s most specific variant');

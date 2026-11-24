@@ -60,7 +60,7 @@ plays there and beats any region track; a region track plays in every place of t
 | duskmarch | Gloamwood, the Tangle, Mournfield | one per place; Mournfield at night |
 | mines | the Hollow, the Sunken Cavern, the Ember Vent | one per zone; the Hollow by depth (floors 1 to 39, 40 to 79, 80 and deeper); the Cavern by depth (1 to 9, 10 to 24, 25 and deeper); the Vent's climb (1 to 9) and forge room (10) |
 | island | the island, the dig site, the Smoke Peak | the island; the dig site its own; the peak's climb (1 to 9) and summit (10) |
-| desert | the Dunes, the Oasis, the Gilded Dune casino | the Dunes; the casino its own |
+| desert | the Dunes, the Oasis, the Gilded Dune casino | the Dunes; the Oasis and the casino their own |
 | others | house, forest, beach, mountains, wilds, caves, sacred (shrine, crypt), tavern, shops | one each |
 
 ## Composing and recording
@@ -188,6 +188,7 @@ Ogg Vorbis, one file per track, named by its id. Several tracks that fit the sam
 | `music/island/peak_summit_01.ogg` | Above the Smoke | location; at peak; floors 10 and deeper; in island | E lydian, 80 bpm | `peak_summit_01` |
 | `music/desert/desert_01.ogg` | Heat Shimmer | location; in desert | D phrygian, 96 bpm | `desert_01` |
 | `music/desert/casino_01.ogg` | The Gilded Dune | location; at inside_casino; in desert | C blues, 112 bpm | `casino_01` |
+| `music/desert/oasis_01.ogg` | Shade and Seeds | location; at inside_oasis; in desert | F major hexatonic, 92 bpm | `oasis_01` |
 | `music/default/default_01.ogg` | Hollowmere | default | E major pentatonic, 96 bpm | `default_01` |
 | `music/festivals/festival_01.ogg` | Bunting and Lanterns | event | F major hexatonic, 124 bpm | `festival_01` |
 | `music/festivals/festival_spring_01.ogg` | Spring Fair | event; Spring | G major pentatonic, 128 bpm | `festival_spring_01` |

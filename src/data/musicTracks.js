@@ -101,9 +101,10 @@ export const TRACKS = [
   { id: 'digsite_01', name: 'Bones in the Sand', file: 'music/island/digsite_01.ogg', gain: 0.121, category: 'location', region: 'island', place: 'digsite', gen: g(62, DOR, 94, 'triangle', 563) },
   { id: 'peak_climb_01', name: 'The Smoke Peak', file: 'music/island/peak_climb_01.ogg', gain: 0.117, category: 'location', region: 'island', place: 'peak', floors: PEAK_DEPTHS.climb, gen: g(52, BLU, 100, 'square', 569) },
   { id: 'peak_summit_01', name: 'Above the Smoke', file: 'music/island/peak_summit_01.ogg', gain: 0.125, category: 'location', region: 'island', place: 'peak', floors: PEAK_DEPTHS.summit, gen: g(64, LYD, 80, 'sine', 577) },
-  // The Dunes, the Oasis and the casino.
+  // The Dunes, and its two rooms: the casino and the Oasis shop (each its own).
   { id: 'desert_01', name: 'Heat Shimmer', file: 'music/desert/desert_01.ogg', gain: 0.115, category: 'location', region: 'desert', gen: g(62, PHR, 96, 'triangle', 509) },
   { id: 'casino_01', name: 'The Gilded Dune', file: 'music/desert/casino_01.ogg', gain: 0.12, category: 'location', region: 'desert', place: 'inside_casino', gen: g(60, BLU, 112, 'square', 571) },
+  { id: 'oasis_01', name: 'Shade and Seeds', file: 'music/desert/oasis_01.ogg', gain: 0.116, category: 'location', region: 'desert', place: 'inside_oasis', gen: g(65, HEX, 92, 'triangle', 587) },
   // The season alone and the default, for anywhere without its own music.
   { id: 'default_01', name: 'Hollowmere', file: 'music/default/default_01.ogg', gain: 0.115, category: 'default', gen: g(64, MAJ, 96, 'triangle', 601) },
   // Festivals and events (they override everything but cutscenes).
