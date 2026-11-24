@@ -56,4 +56,5 @@ test('the README lists every file, written from the data (node tools/audio_list.
   const readme = readFileSync(join(DIR, 'README.md'), 'utf8');
   for (const e of entries) assert.ok(readme.includes(`\`${e.file}\``), e.file);
   for (const [id, e] of Object.entries(SFX_FILES)) assert.ok(e.about && readme.includes(e.about), `${id} says what it is for`);
+  for (const t of TRACKS) assert.ok(t.brief?.length > 60 && readme.includes(t.brief), `${t.id} has a composing brief in the README`);
 });
