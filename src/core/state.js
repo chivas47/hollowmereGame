@@ -93,7 +93,7 @@ export function newState() {
     dinnerYear: 0,                                      // v174: the year of the last birthday dinner
     statue: null,                                       // v169: { day, who, item } on a birthday, until collected (systems/statue.js)
     horse: null,                                        // { name, map, x, y } once the stable is built (systems/stable.js)
-    house: { wall: 0, floor: 0, renos: [], catalogue: false },   // farmhouse decor (systems/house.js)
+    house: { wall: 0, floor: 0, renos: [], catalogue: false, owned: [] },   // farmhouse decor (systems/house.js); v331: owned, every piece ever bought (the collection)
     wardrobe: { straw: true }, outfit: { shirt: null, pants: null, hat: 'straw', shoes: null }, dyes: {},   // clothing (systems/clothing.js)
     profile: null,                                      // farmer profile from the new game screen (data/profile.js); null until chosen
     weather: 'sun', forecast: null,                     // today's and tomorrow's weather (systems/weather.js); forecast rolled on load
@@ -235,6 +235,7 @@ export function merge(saved) {
   if (!s.giants || typeof s.giants !== 'object') s.giants = {};
   if (!LAYOUTS[s.layout]) s.layout = 'open';
   s.house = Object.assign(newState().house, saved.house || {});   // pre-v22 saves keep the original farm
+  s.house.owned = Array.isArray(s.house.owned) ? s.house.owned.filter((k) => typeof k === 'string') : [];   // v331; a save from before is credited by migration 9
   if (!Array.isArray(s.farmForage)) s.farmForage = [];
   // v21: saves from before character creation keep the look they had. A null profile is a new farm
   // that has not finished the new game screen yet, so it stays null and the screen opens again.

@@ -6,6 +6,7 @@ import { SEED_SLOT, OLD_SEED_SLOTS, OLD_FIRST_SEED_SLOT } from '../data/hotbar.j
 import { MAPS, SOLID } from '../data/maps.js';
 import { T } from './constants.js';
 import { farmStage } from './stage.js';
+import { FURNITURE } from '../data/furniture.js';
 
 export const MIGRATIONS = [
   // v1 (v118): everything from before saves had a version. Each check still looks at what the save
@@ -70,6 +71,14 @@ export const MIGRATIONS = [
   // before v122 replayed the guide). Every teaching feature judges old farms by core/stage.js farmStage.
   { v: 8, run(s, saved) {
     if (!saved.firstWeek?.guide) s.firstWeek.guide.off = farmStage(s) !== 'new';
+  } },
+  // v9 (v331, roadmap 114): the furniture collection (G.S.house.owned) starts with every piece the farm already has,
+  // placed anywhere or waiting in the kit, so a furnished house is not counted as empty.
+  { v: 9, run(s) {
+    const have = new Set(s.house.owned);
+    for (const p of Object.values(s.placed || {})) if (FURNITURE[p?.kind]) have.add(p.kind);
+    for (const [k, n] of Object.entries(s.kit || {})) if (n > 0 && FURNITURE[k]) have.add(k);
+    s.house.owned = [...have];
   } },
 ];
 

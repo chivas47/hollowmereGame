@@ -1,20 +1,50 @@
 // Inside the farmhouse: the front door leads in, the bed ends the day, the catalogue lectern sells
 // furniture, wallpaper and flooring, and furniture placed from the kit is drawn here. The grid itself
 // (rooms from the house upgrade and renovations) is rebuilt by systems/layouts.js.
-// G.S.house = { wall, floor, renos: [], catalogue: bool }.
+// G.S.house = { wall, floor, renos: [], catalogue: bool, owned: [kinds] }.
+// v331 (roadmap 114): the room sets and the weekly stock. Collector's pieces (stock 'week') are on sale only in the weeks
+// they are in weeklyStock(), and a piece once owned (G.S.house.owned, the collection) can be bought again at any time.
+// Everything here is worked out from the day, so the stock needs no save data and is the same on every farm.
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer, addEntities, addPrompt } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
-import { FURNITURE, WALLPAPERS, FLOORS, DECOR_COST, CATALOGUE_COST, RENOVATIONS, turnsOf } from '../data/furniture.js';
+import { FURNITURE, WALLPAPERS, FLOORS, DECOR_COST, CATALOGUE_COST, RENOVATIONS, SETS, WEEKLY, turnsOf } from '../data/furniture.js';
 import { drawFurniture } from '../render/sprites.js';
 import { placePlayer, parsePlaceKey, placeKey } from './world.js';
 import { reachTiles } from './reach.js';
 import { rebuildHouse } from './layouts.js';
 
 const free = () => G.S.house.catalogue;
-export const furniturePrice = (k) => (free() ? 0 : FURNITURE[k].cost);
+// v331: the full catalogue makes the pieces always on sale free; collector's pieces keep their price.
+export const furniturePrice = (k, S = G.S) => (S.house.catalogue && FURNITURE[k].stock !== 'week' ? 0 : FURNITURE[k].cost);
+
+// ---- v331 (roadmap 114): the weekly stock ----
+export const COLLECTORS = Object.keys(FURNITURE).filter((k) => FURNITURE[k].stock === 'week');
+const WEEKS_PER_ROUND = Math.ceil(COLLECTORS.length / WEEKLY.pieces);
+export const weekOf = (day) => Math.floor((day - 1) / WEEKLY.days);
+function shuffled(list, seed) {   // the same order for the same seed (a small integer hash, mulberry32)
+  let a = (seed * 2654435761) >>> 0;
+  const rnd = () => { a = (a + 0x6D2B79F5) >>> 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t ^= t + Math.imul(t ^ (t >>> 7), 61 | t); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  const out = [...list];
+  for (let i = out.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [out[i], out[j]] = [out[j], out[i]]; }
+  return out;
+}
+// The collector's pieces on sale on a day. The pieces are dealt in rounds of WEEKS_PER_ROUND weeks, each round a new
+// order, so every one comes round once a round and none twice.
+export function weeklyStock(day) {
+  const w = weekOf(day), round = Math.floor(w / WEEKS_PER_ROUND), at = (w % WEEKS_PER_ROUND) * WEEKLY.pieces;
+  return shuffled(COLLECTORS, round + 1).slice(at, at + WEEKLY.pieces);
+}
+export const stockDaysLeft = (day) => WEEKLY.days - ((day - 1) % WEEKLY.days);
+// Whether a piece can be bought today: always-on-sale pieces, this week's stock, and anything already collected.
+export const onSale = (k, S = G.S) => !!FURNITURE[k] && (FURNITURE[k].stock !== 'week' || S.house.owned.includes(k) || weeklyStock(S.day).includes(k));
+
+// ---- v331: the collection ----
+export const setPieces = (set) => Object.keys(FURNITURE).filter((k) => FURNITURE[k].set === set);
+export const setOwned = (set, S = G.S) => setPieces(set).filter((k) => S.house.owned.includes(k)).length;
+export const collected = (S = G.S) => ({ owned: S.house.owned.filter((k) => FURNITURE[k]).length, total: Object.keys(FURNITURE).length });
 
 export function enterHouse() {
   placePlayer('house', 11, 11, 'up');
@@ -26,10 +56,16 @@ export function enterHouse() {
 
 export function buyFurniture(k) {
   const S = G.S, cost = FURNITURE[k] ? furniturePrice(k) : Infinity;
-  if (S.gold < cost) return false;
+  if (S.gold < cost || !onSale(k)) return false;
   S.gold -= cost; S.kit[k] = (S.kit[k] || 0) + 1; S.kitSel = k;
   emit('sfx', 'coin');
   notify(`${FURNITURE[k].name} is in your kit (slot 7). Face the floor and press Use to place it.`);
+  if (!S.house.owned.includes(k)) {   // v331: a new piece for the collection
+    S.house.owned.push(k);
+    const set = FURNITURE[k].set;
+    if (SETS[set] && setOwned(set) === setPieces(set).length) notify(`You have the whole ${SETS[set].name} set.`);
+    emit('furniture:collected', k);
+  }
   changed();
   return true;
 }
@@ -50,7 +86,7 @@ export function buyCatalogue() {
   if (S.house.catalogue || S.gold < CATALOGUE_COST) return false;
   S.gold -= CATALOGUE_COST; S.house.catalogue = true;
   emit('sfx', 'coin');
-  notify('The full catalogue is yours: furniture, wallpaper and flooring are free from now on.');
+  notify('The full catalogue is yours: furniture (but the collector\'s pieces), wallpaper and flooring are free from now on.');
   changed();
   return true;
 }

@@ -39,7 +39,7 @@ src/
     clearing.js       WOODS (materials), DEBRIS, ALDER, CREEP, START_CLUTTER
     layouts.js        LAYOUTS (grid edits and perks per farm type; v320: size { w, h } for a farm larger than 24 x 16), farmSize(id), CRATE contents
     clothing.js       CLOTHES (slot, colour, tailoring item, defense), cloth
-    furniture.js      FURNITURE, WALLPAPERS, FLOORS, RENOVATIONS, catalogue prices
+    furniture.js      FURNITURE (v331: set, stock 'week'), SETS, WEEKLY, WALLPAPERS, FLOORS, RENOVATIONS, catalogue prices
     pets.js           PET friendship numbers, PET_LOOKS, PET_NAMES, PET_HATS
     profile.js        farmer profile: LOOKS, PETS, DEFAULT_PROFILE, playerPal()
     angling.js        CATCH (the catch bar), BAIT, TACKLE, BOBBERS, TRASH, RECYCLE, FISH_TREASURE (v41)
@@ -102,7 +102,7 @@ src/
     layouts.js        rebuilds the farm grid for G.S.layout on game:loaded (imported first), startLayout(); v320: buildFarm(id) builds it at the layout's size in place (data/maps.js farmGrid(w, h)), joins its edges (joinFarm: its exits, and the wilds' and forest's ways in) and resets neighbour routes
     farmPerks.js      layout perks: quarry rocks, crates, regrowing stumps, farm forage, farm slimes
     clothing.js       wardrobe, outfit, tailoring, dyeing, mannequins, shoe defense
-    house.js          the farmhouse: door, bed, catalogue sales, decor, renovations, furniture drawing, turning placed furniture (turnFurniture, R key, v99)
+    house.js          the farmhouse: door, bed, catalogue sales, decor, renovations, furniture drawing, turning placed furniture (turnFurniture, R key, v99); v331: weeklyStock(day) (collector's pieces in rounds, worked out from the day, no save data), onSale, the collection (G.S.house.owned; setOwned, collected)
     undo.js           undo of the player's own places, pick-ups and turns today (G.S.placed only; U, Ctrl+Z, the menu's Undo) (v99)
     hints.js          facts() and hintsNow() for the journal and the morning tip; the tool tip after three silent presses of Use (G.S.hints) (v101)
     journal.js        v114: story steps checked against the save, objectives() (main and optional, for the journal and the HUD), tracked(), the finished-quest log, places found, map pins, quest markers, recap() (G.S.journal)

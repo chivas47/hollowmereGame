@@ -1038,6 +1038,20 @@ const FURN_ART = {
   dyepots: (c, X, Y, a) => { [[0, '#5f8fb5'], [5, '#c8352f'], [10, '#e9c46a']].forEach(([o, col]) => { r(c, X + o, Y + 5, 6, 10, a); r(c, X + o, Y + 15, 6, 1, 'rgba(0,0,0,.3)'); r(c, X + o + 1, Y + 5, 4, 2, col); r(c, X + o, Y + 5, 6, 1, '#b5b1a8'); }); },
   mannequin: (c, X, Y, a, b) => { r(c, X + 7, Y + 9, 2, 6, b); r(c, X + 4, Y + 14, 8, 1, b); r(c, X + 5, Y + 1, 6, 8, a); r(c, X + 6, Y - 3, 4, 4, a); },
   chest: (c, X, Y, a, b) => { r(c, X + 2, Y + 5, 12, 10, a); r(c, X + 2, Y + 5, 12, 3, b); r(c, X + 7, Y + 7, 2, 3, '#3f3226'); },
+  // v331 (roadmap 114): the room sets' shapes, until the furniture sheet has loaded
+  bed: (c, X, Y, a, b) => { r(c, X + 1, Y + 3, 14, 11, a); r(c, X + 3, Y + 5, 10, 2, '#f4ead2'); r(c, X + 2, Y + 7, 12, 5, b); },
+  wardrobe: (c, X, Y, a, b) => { r(c, X + 1, Y - 1, 14, 16, a); r(c, X + 2, Y + 1, 5, 10, b); r(c, X + 9, Y + 1, 5, 10, b); r(c, X + 6, Y + 6, 1, 1, '#e9c46a'); r(c, X + 9, Y + 6, 1, 1, '#e9c46a'); },
+  stove: (c, X, Y, a, b) => { r(c, X + 5, Y - 2, 2, 5, '#2b211a'); r(c, X + 2, Y + 3, 12, 12, a); r(c, X + 3, Y + 5, 10, 4, '#2b211a'); r(c, X + 4, Y + 6, 8, 2, b); },
+  hutch: (c, X, Y, a, b) => { r(c, X + 1, Y + 2, 14, 13, a); [3, 7, 11].forEach((p) => r(c, X + p, Y + 3, 2, 2, b)); r(c, X + 1, Y + 8, 14, 1, '#3f3226'); },
+  crates: (c, X, Y, a, b) => { r(c, X + 1, Y + 7, 14, 8, a); r(c, X + 3, Y + 3, 7, 4, a); r(c, X + 4, Y + 2, 5, 1, b); r(c, X + 7, Y + 7, 2, 8, '#3f3226'); },
+  bench: (c, X, Y, a, b) => { r(c, X + 1, Y + 8, 14, 3, a); r(c, X + 1, Y + 7, 14, 1, b); r(c, X + 2, Y + 11, 2, 4, a); r(c, X + 12, Y + 11, 2, 4, a); },
+  shelf: (c, X, Y, a, b) => { r(c, X + 1, Y + 1, 14, 14, a); [3, 7, 11].forEach((o) => { r(c, X + 2, Y + o, 12, 3, '#3f3226'); r(c, X + 3, Y + o, 2, 3, b); r(c, X + 8, Y + o, 2, 3, b); }); },
+  candles: (c, X, Y, a, b) => { [3, 7, 11].forEach((p) => { r(c, X + p, Y + 3, 2, 5, a); r(c, X + p, Y + 1, 1, 2, '#ffd27a'); }); r(c, X + 2, Y + 8, 12, 2, b); r(c, X + 7, Y + 10, 2, 3, b); r(c, X + 5, Y + 13, 6, 2, b); },
+  vase: (c, X, Y, a, b) => { r(c, X + 5, Y + 2, 6, 3, a); r(c, X + 7, Y + 5, 1, 2, '#5da34a'); r(c, X + 4, Y + 7, 7, 7, b); },
+  rocker: (c, X, Y, a, b) => { r(c, X + 4, Y + 2, 7, 6, a); r(c, X + 3, Y + 7, 9, 2, b); r(c, X + 3, Y + 9, 1, 3, a); r(c, X + 11, Y + 9, 1, 3, a); r(c, X + 1, Y + 13, 13, 1, a); },
+  piano: (c, X, Y, a, b) => { r(c, X + 1, Y + 2, 14, 13, a); r(c, X + 1, Y + 7, 14, 2, b); [2, 4, 7, 9, 11].forEach((p) => r(c, X + p, Y + 8, 1, 1, '#2b211a')); },
+  fishbowl: (c, X, Y, a, b) => { r(c, X + 4, Y + 1, 8, 8, a); r(c, X + 6, Y + 4, 2, 2, b); r(c, X + 4, Y + 9, 8, 1, '#6e4626'); r(c, X + 5, Y + 10, 1, 5, '#6e4626'); r(c, X + 10, Y + 10, 1, 5, '#6e4626'); },
+  lantern: (c, X, Y, a, b) => { r(c, X + 5, Y, 6, 7, a); r(c, X + 6, Y + 2, 4, 4, b); r(c, X + 7, Y + 7, 2, 6, a); r(c, X + 5, Y + 13, 6, 2, a); },
 };
 export const FURN_SHAPES = Object.keys(FURN_ART);   // for tools/sprites/dump_code_art.mjs
 
