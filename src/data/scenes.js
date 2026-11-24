@@ -240,6 +240,29 @@ Object.assign(SCENES, {
       C('Say it aloud to her', 80, '"Yes," you say. She lets out a breath. "Good," she says. "I was going to have to rub it out before the morning."'), true),
   },
   juno: {
+    // v329 (roadmap 113g): the missing heart scenes, at their door
+    4: {
+      title: "The letter nobody claims",
+      text: [
+        "Juno is sitting on her doorstep in town, mailbag beside her, turning a battered envelope over and over in her hands.",
+        "\"Addressed to Hollowmere, no name,\" she says. \"Posted forty years ago. It came back from the city this morning. Forty years in a sorting room somewhere.\" She looks up. \"It is yours, I suppose. Your farm. Do you want it?\"",
+      ],
+      choices: [
+        { label: "Open it with her, right there", pts: 55, reply: "Inside is a seed packet and a note in faded ink: For whoever farms here next. Plant these by the door. Juno reads it over your shoulder and laughs, then goes very quiet. \"That is the best delivery I have ever made,\" she says. \"Forty years late and right on time.\"" },
+        { label: "Ask her to keep it for the museum", pts: 25, reply: "\"Very proper,\" says Juno. \"Very dull.\" But she tucks it carefully into the inside pocket of her coat, the one for important things. \"I will keep it safe. And if you ever want to open it, you know where to find me.\"" },
+      ],
+    },
+    8: {
+      title: "The round she walks alone",
+      text: [
+        "Juno is outside her cottage before dawn, lacing her boots. Her bag is empty. There is no round today; it is a holiday.",
+        "\"Every holiday I walk the whole round anyway,\" she says. \"No letters. Just the road. It is the only time I see it properly.\" She stands and holds out a hand. \"I have never asked anybody to come. Will you?\"",
+      ],
+      choices: [
+        { label: "Take her hand and walk the whole round", pts: 80, reply: "You walk every mile of it, village, farm, town and back, while the sun comes up. Juno points out things she has seen a thousand times: a gate that sings, a wall with a fossil in it. At your own gate she stops. \"This is my favourite stop,\" she says. \"It always was.\"" },
+        { label: "Walk her as far as your farm", pts: 40, reply: "You walk together as far as your gate, and she carries on alone, waving without looking back. Later she tells you the rest of the round felt longer than usual. \"Next holiday,\" she says, \"the whole thing. No excuses.\"" },
+      ],
+    },
     2: S('A heavy bag', ['Juno is sitting on the village steps with the mailbag spilled open around her. "The strap broke. Of course it did. On the longest round of the week."'],
       C('Carry half the round with her', 50, 'You walk the whole route together. She talks the entire way. At the end she grins and says, "Same time tomorrow?" She is only half joking.'),
       C('Knot the strap back together', 25, 'It holds. Mostly. "You are a lifesaver," she says, and dashes off before you can answer.')),
