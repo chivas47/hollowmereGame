@@ -27,6 +27,8 @@ import { MINE } from './mine.js';
 const asList = (v) => (v == null ? [] : Array.isArray(v) ? v : [v]);
 export const categoriesOf = (t) => asList(t.category);
 const FIELDS = ['place', 'region', 'season', 'weather', 'time', 'festival', 'cutscene'];
+// v342: a floor range [from, to] (or [from] and deeper) matches the floor you are on.
+export const inFloors = (range, floor) => floor != null && floor >= range[0] && (range[1] == null || floor <= range[1]);
 
 // --- Context -------------------------------------------------------------------------------------------------------
 let calmAt = 0;   // when combat last had a monster in range (for the calm-down delay)
@@ -39,7 +41,7 @@ function fight(S, now) {
 }
 
 // v342: where you are, as a place (the map, or the Hollow's zone) and its region.
-const where = (map) => { const place = placeOf(map, MINE.zone); return { place, region: regionOf(place) }; };
+const where = (map) => { const place = placeOf(map, MINE.zone); return { place, region: regionOf(place), floor: map === 'mine' ? MINE.floor : null }; };
 
 // The moment, as the director sees it.
 export function musicContext(S = G.S, now = performance.now()) {
@@ -61,13 +63,13 @@ export function fits(t, c, ignore = []) {
     const want = asList(t[k]);
     if (want.length && !want.includes(c[k])) return false;
   }
-  return true;
+  return !t.floors || ignore.includes('place') || inFloors(t.floors, c.floor);
 }
 // How specific a track is: the fields it sets, weighted so a weather variant beats a seasonal one and a time variant
 // beats a seasonal one too (rain in the spring village plays the rainy village track, not the spring one), and a
 // place's own track beats every variant of its region's (32 > 16 + 8 + 4 + 2).
-const WEIGHT = { cutscene: 64, festival: 64, place: 32, region: 16, weather: 8, time: 4, season: 2 };
-const specificity = (t) => FIELDS.reduce((s, k) => s + (asList(t[k]).length ? WEIGHT[k] : 0), 0);
+const WEIGHT = { cutscene: 64, festival: 64, place: 32, region: 16, weather: 8, time: 4, season: 2, floors: 8 };
+const specificity = (t) => FIELDS.reduce((s, k) => s + (asList(t[k]).length ? WEIGHT[k] : 0), t.floors ? WEIGHT.floors : 0);
 
 // The pick for a context. mem: { current, history, lastFor, rotate }. Returns { track, layer, reason, candidates }
 // or null when nothing at all fits (the music then fades out).
@@ -95,7 +97,7 @@ export function pickTrack(c, mem = {}, rand = Math.random, tracks = TRACKS) {
   return null;
 }
 const byId = (id) => TRACKS.find((t) => t.id === id);
-const describe = (c) => (c.menu ? 'main menu' : [c.cutscene && `cutscene ${c.cutscene}`, c.festival && `festival ${c.festival}`, c.boss && 'boss', c.combat && 'combat', c.fishing && 'fishing', c.place && `${c.place} (${c.region || 'no region'})`, !c.place && `no place (${c.map})`, c.season, c.weather, c.time].filter(Boolean).join(', '));
+const describe = (c) => (c.menu ? 'main menu' : [c.cutscene && `cutscene ${c.cutscene}`, c.festival && `festival ${c.festival}`, c.boss && 'boss', c.combat && 'combat', c.fishing && 'fishing', c.place && `${c.place}${c.floor != null ? ` floor ${c.floor}` : ''} (${c.region || 'no region'})`, !c.place && `no place (${c.map})`, c.season, c.weather, c.time].filter(Boolean).join(', '));
 
 // --- Runtime -------------------------------------------------------------------------------------------------------
 const state = { current: null, layer: null, reason: '', key: '', ctxKey: '', since: 0, rotate: false, candidates: [] };

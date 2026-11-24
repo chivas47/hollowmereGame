@@ -16,7 +16,7 @@ const DIR = join(ROOT, AUDIO_DIR);
 const NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const MODES = { '0,2,4,7,9': 'major pentatonic', '0,3,5,7,10': 'minor pentatonic', '0,2,3,7,9': 'dorian', '0,1,5,7,8': 'phrygian', '0,2,4,6,7,9': 'lydian', '0,2,4,5,7,9': 'major hexatonic', '0,3,5,6,7,10': 'blues' };
 const list = (v) => (v == null ? [] : [].concat(v));
-const where = (t) => [list(t.category).join(', '), t.place && `at ${list(t.place).join(', ')}`, t.region && `in ${t.region}`, list(t.season).join(', '), list(t.weather).join(', '), list(t.time).join(', '),
+const where = (t) => [list(t.category).join(', '), t.place && `at ${list(t.place).join(', ')}`, t.floors && `floors ${t.floors[0]}${t.floors[1] ? ` to ${t.floors[1]}` : ' and deeper'}`, t.region && `in ${t.region}`, list(t.season).join(', '), list(t.weather).join(', '), list(t.time).join(', '),
   t.festival && `festival ${list(t.festival).join(', ')}`, t.cutscene && `cutscene ${list(t.cutscene).join(', ')}`].filter(Boolean).join('; ');
 const feel = (t) => (t.gen ? `${NOTES[t.gen.root % 12]} ${MODES[t.gen.scale.join(',')] || 'scale'}, ${t.gen.bpm} bpm` : '');
 

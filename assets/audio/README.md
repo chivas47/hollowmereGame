@@ -58,7 +58,7 @@ plays there and beats any region track; a region track plays in every place of t
 | farm | farm, greenhouse, shed, coop, barn | by season, night, rain |
 | village | village, town, hedge maze, neighbours' cottages | by season, rain |
 | duskmarch | Gloamwood, the Tangle, Mournfield | one per place; Mournfield at night |
-| mines | the Hollow, the Sunken Cavern, the Ember Vent | one per zone |
+| mines | the Hollow, the Sunken Cavern, the Ember Vent | one per zone; the Hollow by depth: floors 1 to 39, 40 to 79, 80 and deeper |
 | island | the island, the dig site, the Smoke Peak | the island; the dig site and the peak their own |
 | desert | the Dunes, the Oasis, the Gilded Dune casino | the Dunes; the casino its own |
 | others | house, forest, beach, mountains, wilds, caves, sacred (shrine, crypt), tavern, shops | one each |
@@ -97,7 +97,7 @@ season and place:
 | Village | sociable | guitar, accordion, light percussion |
 | Forest, wilds | curious, open | flute, marimba, plucked strings |
 | Beach | breezy | ukulele, steel drum, guitar |
-| The Hollow, caves | mysterious | synth pads, low bass, sparse percussion |
+| The Hollow, caves | mysterious; each depth band darker and heavier than the one above | synth pads, low bass, sparse percussion |
 | Sunken Cavern, Ember Vent | deeper, hotter, more urgent | low drones, metallic percussion |
 | Gloamwood, the Tangle | lost, watchful | low flute, plucked strings, wood percussion |
 | Mournfield | mournful, still; darker at night | solo cello or violin, organ, distant bells |
@@ -117,7 +117,8 @@ Valley (PROJECT_INSTRUCTIONS rule 1).
 - **Add a track:** save `music/village/village_night_01.ogg`, add an entry to `TRACKS` with `region: 'village',
   time: 'night'`. No other code; it plays at night in the village from then on.
 - **Give one map its own music:** a track with `place: '<map id>'` (or a Hollow zone: `hollow`, `cavern`, `vent`,
-  `peak`) beats everything its region has. A new map goes in a region in `REGIONS`; a test fails if a map has no music.
+  `peak`) beats everything its region has. A deep place can also go by depth: `floors: [40, 79]`, or `[80]` for 80
+  and deeper (the Hollow's bands are `HOLLOW_DEPTHS`). A new map goes in a region in `REGIONS`; a test fails if a map has no music.
 - **Add an ambience layer:** a file and an entry in `BED_FILES` or `CALL_FILES` (`src/data/audio.js`), a generator of
   the same id in `src/audio/ambience.js` (the fallback), and a rule in `src/data/ambience.js`.
 - **Add an effect:** a file and an entry in `SFX_FILES`, a generator in `src/audio/sfx.js`, and the game emitting it.
@@ -164,7 +165,9 @@ Ogg Vorbis, one file per track, named by its id. Several tracks that fit the sam
 | `music/wild/beach_01.ogg` | Tide Line | location; in beach | F lydian, 100 bpm | `beach_01` |
 | `music/wild/mountain_01.ogg` | High Paths | location; in mountains | C major hexatonic, 90 bpm | `mountain_01` |
 | `music/wild/exploration_01.ogg` | Off the Map | location; in wilds | A dorian, 104 bpm | `exploration_01` |
-| `music/underground/hollow_01.ogg` | The Hollow | location; at hollow; in mines | D phrygian, 72 bpm | `hollow_01` |
+| `music/underground/hollow_upper_01.ogg` | The Hollow | location; at hollow; floors 1 to 39; in mines | D phrygian, 72 bpm | `hollow_upper_01` |
+| `music/underground/hollow_middle_01.ogg` | Lantern Dark | location; at hollow; floors 40 to 79; in mines | C phrygian, 70 bpm | `hollow_middle_01` |
+| `music/underground/hollow_deep_01.ogg` | The Gold Seam | location; at hollow; floors 80 and deeper; in mines | A# blues, 84 bpm | `hollow_deep_01` |
 | `music/underground/caves_01.ogg` | Drip and Echo | location; in caves | C phrygian, 66 bpm | `caves_01` |
 | `music/indoors/house_01.ogg` | Home | location; in house | E major pentatonic, 82 bpm | `house_01` |
 | `music/indoors/tavern_01.ogg` | The Common Room | location; in tavern | D blues, 118 bpm | `tavern_01` |

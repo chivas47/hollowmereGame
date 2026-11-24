@@ -9,6 +9,8 @@
 //             missing the gen recipe plays instead
 //   category  what it is for, one or several of the LAYERS' categories below
 //   region    v342: the region it belongs to (REGIONS below: the farm, the village, the Duskmarch, the island...)
+//   floors    v342: [from, to] floors of a deep place (the Hollow), or [from] for that floor and every one below;
+//             with a place, a depth band's track beats the place's plain one
 //   place     v342: one place or several (a map id, or a zone of the Hollow's map: PLACES below); a place's own track
 //             beats its region's, whatever the region's track is tagged with
 //   season    Spring, Summer, Autumn, Winter, or none (any season)
@@ -36,6 +38,9 @@ import { MOODS } from './music.js';
 const MAJ = [0, 2, 4, 7, 9], MIN = [0, 3, 5, 7, 10], DOR = [0, 2, 3, 7, 9], PHR = [0, 1, 5, 7, 8], LYD = [0, 2, 4, 6, 7, 9], HEX = [0, 2, 4, 5, 7, 9], BLU = [0, 3, 5, 6, 7, 10];
 const g = (root, scale, bpm, lead, seed) => ({ root, scale, bpm, lead, seed });
 
+// v342: the Hollow's depth bands (floors, inclusive; one number: that floor and every one below).
+export const HOLLOW_DEPTHS = { upper: [1, 39], middle: [40, 79], deep: [80] };
+
 export const TRACKS = [
   // The farm: the four original season themes, a second spring tune, a night and a rain variant.
   { id: 'farm_spring_01', name: 'Spring on the Farm', file: 'music/farm/farm_spring_01.ogg', gain: 0.119, category: ['location', 'season'], region: 'farm', season: 'Spring', gen: MOODS.Spring },
@@ -57,7 +62,11 @@ export const TRACKS = [
   { id: 'mountain_01', name: 'High Paths', file: 'music/wild/mountain_01.ogg', gain: 0.123, category: 'location', region: 'mountains', gen: g(60, HEX, 90, 'triangle', 313) },
   { id: 'exploration_01', name: 'Off the Map', file: 'music/wild/exploration_01.ogg', gain: 0.115, category: 'location', region: 'wilds', gen: g(57, DOR, 104, 'triangle', 317) },
   // Underground.
-  { id: 'hollow_01', name: 'The Hollow', file: 'music/underground/hollow_01.ogg', gain: 0.122, category: 'location', region: 'mines', place: 'hollow', gen: MOODS.mine },
+  // v342: the Hollow by depth, in the bands its creatures and ore change at (data/weapons.js MONSTERS, cavern.js):
+  // earth and copper above 40, soot puffs, moss slimes and lantern wisps from 40, gold and the Cavern's door from 80.
+  { id: 'hollow_upper_01', name: 'The Hollow', file: 'music/underground/hollow_upper_01.ogg', gain: 0.122, category: 'location', region: 'mines', place: 'hollow', floors: HOLLOW_DEPTHS.upper, gen: MOODS.mine },
+  { id: 'hollow_middle_01', name: 'Lantern Dark', file: 'music/underground/hollow_middle_01.ogg', gain: 0.122, category: 'location', region: 'mines', place: 'hollow', floors: HOLLOW_DEPTHS.middle, gen: g(48, PHR, 70, 'sine', 349) },
+  { id: 'hollow_deep_01', name: 'The Gold Seam', file: 'music/underground/hollow_deep_01.ogg', gain: 0.122, category: 'location', region: 'mines', place: 'hollow', floors: HOLLOW_DEPTHS.deep, gen: g(46, BLU, 84, 'square', 353) },
   { id: 'caves_01', name: 'Drip and Echo', file: 'music/underground/caves_01.ogg', gain: 0.123, category: 'location', region: 'caves', gen: g(48, PHR, 66, 'sine', 331) },
   // Indoors.
   { id: 'house_01', name: 'Home', file: 'music/indoors/house_01.ogg', gain: 0.122, category: 'location', region: 'house', gen: g(64, MAJ, 82, 'sine', 401) },

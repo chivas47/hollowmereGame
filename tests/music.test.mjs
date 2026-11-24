@@ -30,10 +30,10 @@ test('scenarios 4 and 5: a festival overrides; when it ends the village comes ba
 });
 
 test('scenarios 6 to 10: the mines, combat and back, a boss and away', () => {
-  const mine = { region: 'mines', place: 'hollow', map: 'mine' };
-  assert.equal(id(mine), 'hollow_01', '6: mine music');
+  const mine = { region: 'mines', place: 'hollow', map: 'mine', floor: 12 };
+  assert.equal(id(mine), 'hollow_upper_01', '6: mine music');
   assert.match(id({ ...mine, combat: true }), /^combat_0[12]$/, '7: combat');
-  assert.equal(id(mine, { current: 'combat_01', lastFor: { 'location:hollow': 'hollow_01' } }), 'hollow_01', '8: the mine again');
+  assert.equal(id(mine, { current: 'combat_01', lastFor: { 'location:hollow': 'hollow_upper_01' } }), 'hollow_upper_01', '8: the mine again');
   assert.equal(id({ ...mine, combat: true, boss: true }), 'boss_01', '9: a boss');
   assert.equal(id({ region: 'village', place: 'village', map: 'village' }, { current: 'boss_01' }), 'village_spring_01', '10: where you are now, worked out afresh');
 });
@@ -120,7 +120,7 @@ test('places beat their region: the Duskmarch maps, Mournfield at night, the Hol
   const at = (place, o = {}) => id({ place, region: regionOf(place), map: place, ...o });
   assert.equal(at('gloamwood'), 'gloamwood_01'); assert.equal(at('tangle'), 'tangle_01');
   assert.equal(at('mournfield'), 'mournfield_01'); assert.equal(at('mournfield', { time: 'night' }), 'mournfield_night_01');
-  assert.equal(at('hollow'), 'hollow_01'); assert.equal(at('cavern'), 'cavern_01'); assert.equal(at('vent'), 'vent_01');
+  assert.equal(at('hollow', { floor: 1 }), 'hollow_upper_01'); assert.equal(at('cavern'), 'cavern_01'); assert.equal(at('vent'), 'vent_01');
   assert.equal(at('island'), 'island_01'); assert.equal(at('digsite'), 'digsite_01'); assert.equal(at('peak'), 'peak_01');
   assert.equal(at('desert'), 'desert_01'); assert.equal(at('inside_oasis'), 'desert_01', 'a place without its own: its region\'s');
   assert.equal(at('inside_casino'), 'casino_01'); assert.equal(at('wilds'), 'exploration_01');
@@ -133,7 +133,7 @@ test('every place in the game has music of its own place or region, in every sea
   for (const p of places) {
     assert.ok(regionOf(p), `${p} belongs to a region`);
     for (const season of ['Spring', 'Summer', 'Autumn', 'Winter']) for (const time of ['morning', 'night']) {
-      const r = pick({ place: p, region: regionOf(p), map: p, season, time });
+      const r = pick({ place: p, region: regionOf(p), map: p, season, time, floor: p === 'hollow' ? 1 : null });
       assert.equal(r?.layer, 'location', `${p}, ${season} ${time}: ${r?.track.id}`);
     }
   }
@@ -143,4 +143,16 @@ test('every place in the game has music of its own place or region, in every sea
 test('rotation is by time played, so a short sketch and a long piece hand over alike', () => {
   assert.equal(dueToRotate({}, 299), false); assert.equal(dueToRotate({}, 300), true);
   assert.equal(dueToRotate({ rotateAfter: 60 }, 61), true);
+});
+
+test('the Hollow by depth: a track for each band, at the floors its creatures and ore change', () => {
+  const at = (floor, o = {}) => id({ place: 'hollow', region: 'mines', map: 'mine', floor, ...o });
+  assert.equal(at(1), 'hollow_upper_01'); assert.equal(at(39), 'hollow_upper_01');
+  assert.equal(at(40), 'hollow_middle_01'); assert.equal(at(79), 'hollow_middle_01');
+  assert.equal(at(80), 'hollow_deep_01'); assert.equal(at(140), 'hollow_deep_01', 'the last band has no floor');
+  assert.equal(at(45, {}), 'hollow_middle_01');
+  assert.match(id({ place: 'hollow', region: 'mines', map: 'mine', floor: 45, combat: true }), /^combat_0[12]$/, 'a fight still overrides');
+  assert.equal(pick({ place: 'hollow', region: 'mines', map: 'mine', floor: 45 }, { current: 'hollow_upper_01' }).track.id, 'hollow_middle_01', 'going down past 40 changes the music');
+  assert.equal(pick({ place: 'hollow', region: 'mines', map: 'mine', floor: 41 }, { current: 'hollow_middle_01' }).reason.includes('still fits'), true, 'within a band: no restart from floor to floor');
+  for (let f = 1; f <= 150; f++) assert.ok(id({ place: 'hollow', region: 'mines', map: 'mine', floor: f }).startsWith('hollow_'), `floor ${f} has Hollow music`);
 });
