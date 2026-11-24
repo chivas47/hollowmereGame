@@ -2,6 +2,10 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v336: More summer crops
+- Four new summer crops: blackcurrant (three a harvest, again every 4 days), red cabbage, and two flowers: cornflower and marigold.
+- New save data: none.
+
 ## v335: More spring crops
 - Six new spring crops: potato (sometimes gives two), kale, garlic, strawberry (fruits again every 4 days), and the first flowers: bluebell and primrose.
 - Strawberry seeds are sold only at the Egg Hunt's new stall, in packs of 5.

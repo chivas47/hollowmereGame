@@ -42,6 +42,13 @@ export const CROPS = {
   strawberry: { name: 'Strawberry', days: 8, seed: 100, sell: 120, color: '#d8303a', top: null,      line: null,      shape: 'pod',    seasons: ['Spring'], regrow: 4, shop: 'egghunt' },   // seeds only at the Egg Hunt stall, as Stardew's at the Egg Festival
   bluebell:   { name: 'Bluebell',   days: 7, seed: 30,  sell: 50,  color: '#5f7fd8', top: '#f4ead2', line: null,      shape: 'flower', seasons: ['Spring'], flower: true },
   primrose:   { name: 'Primrose',   days: 6, seed: 20,  sell: 30,  color: '#f0d860', top: '#e8862a', line: null,      shape: 'flower', seasons: ['Spring'], flower: true },
+  // v336 (roadmap 117b): summer, Stardew's summer crops by role: blueberry (13 days, 80g, sells 50g, 3 a harvest, again
+  // every 4; here 8 days, as the tomato and corn), red cabbage (9 days, 100g, 260g; here 6 days, its 17.8g a day kept),
+  // and the flowers (poppy 7, 100g, 140g; summer spangle 8, 50g, 90g).
+  blackcurrant: { name: 'Blackcurrant', days: 8, seed: 80,  sell: 50,  color: '#3a2a5a', top: null,      line: null,      shape: 'pod',    seasons: ['Summer'], regrow: 4, yield: 3 },
+  redcabbage:   { name: 'Red cabbage',  days: 6, seed: 100, sell: 207, color: '#8a3a6a', top: null,      line: '#5a2448', shape: 'leafy',  seasons: ['Summer'] },
+  cornflower:   { name: 'Cornflower',   days: 7, seed: 100, sell: 140, color: '#4f7fe0', top: '#2a3a8a', line: null,      shape: 'flower', seasons: ['Summer'], flower: true },
+  marigold:     { name: 'Marigold',     days: 8, seed: 50,  sell: 90,  color: '#f0a020', top: '#c05a10', line: null,      shape: 'flower', seasons: ['Summer'], flower: true },
   // v32: the premium summer crop (Stardew's starfruit: 400g seed, 13 days, sells 750g); helper huts need 9.
   gleamfruit: { name: 'Gleamfruit', days: 13, seed: 400, sell: 750, color: '#f2d14a', top: '#7fbf5a', line: '#c9a43a', shape: 'round', seasons: ['Summer'] },
   // v30, for the mill (Stardew: wheat 10g seed, 4 days, sells 25g, summer and autumn; beet 20g, 6 days, 100g, autumn).

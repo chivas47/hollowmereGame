@@ -33,6 +33,10 @@ export const RAW_FOOD = {
   strawberry: 50,  // strawberry
   bluebell: 45,    // blue jazz
   primrose: 45,    // tulip
+  blackcurrant: 25, // blueberry (v336, roadmap 117b)
+  redcabbage: 75,  // red cabbage
+  cornflower: 45,  // poppy
+  marigold: 45,    // summer spangle
   // forage
   leek: 40,        // leek
   sorrel: 25,      // dandelion
