@@ -4,9 +4,10 @@
 // for a new field belongs in newState() instead. Each step gets a test in tests/state.test.mjs.
 import { SEED_SLOT, OLD_SEED_SLOTS, OLD_FIRST_SEED_SLOT } from '../data/hotbar.js';
 import { MAPS, SOLID } from '../data/maps.js';
-import { T } from './constants.js';
+import { T, W, H } from './constants.js';
 import { farmStage } from './stage.js';
 import { FURNITURE } from '../data/furniture.js';
+import { LAYOUTS } from '../data/layouts.js';
 
 export const MIGRATIONS = [
   // v1 (v118): everything from before saves had a version. Each check still looks at what the save
@@ -87,6 +88,14 @@ export const MIGRATIONS = [
     if (saved.partner?.skills || !s.partner.picked) return;
     s.partner.skills = { ...s.skills };
     s.partner.professions = Object.fromEntries(Object.entries(s.professions || {}).map(([k, v]) => [k, [...v]]));
+  } },
+  // v11 (v341, roadmap 118c): Nuno: old farms grow. A farm saved at 24 x 16 becomes its layout's big size (data/layouts.js
+  // big). It grows east and south only, so every tile keeps its coordinates and nothing saved moves; the old edge's
+  // exits move out with joinFarm(). grownFrom tells systems/clearing.js to clutter the new land. Wide acres was big already.
+  { v: 11, run(s) {
+    if (s.bigFarm || LAYOUTS[s.layout]?.size) return;
+    s.bigFarm = true;
+    s.grownFrom = { w: W, h: H };
   } },
 ];
 

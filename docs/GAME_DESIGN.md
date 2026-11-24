@@ -86,7 +86,7 @@ v339 (roadmap 118a): the new game screen starts on Wide acres (64 x 48, `NEW_FAR
 | Meadow farm | Meadowlands | All grass | Starts with the coop built, 2 hens and 14 feed |
 | Wide acres (v321) | Standard, large | 64 x 48 (eight times the open field; Stardew's Standard Farm is about twice it): the same homestead corner, two ponds (54 water tiles), six groves and six boulders on the wild land | Room: about ten times the open field's grass. Starts with six times the clutter (366 pieces against 61, besides the yard grass) |
 
-v340 (roadmap 118b): every layout has a big version, 64 x 48 like Wide acres (`big` in data/layouts.js, `farmPlan(id, big)`), used by every farm started from v340 (`G.S.bigFarm`, set by startLayout). The small layout's own land stays where it was and the big land is added around it; a farm saved before v340 keeps 24 x 16 until roadmap 118c. Every big layout starts with six times the clutter, and every open tile can be walked to from the door (tests/big-layouts.test.mjs).
+v340 (roadmap 118b): every layout has a big version, 64 x 48 like Wide acres (`big` in data/layouts.js, `farmPlan(id, big)`), used by every farm started from v340 (`G.S.bigFarm`, set by startLayout). The small layout's own land stays where it was and the big land is added around it; a farm saved before v340 grew to it in v341 (roadmap 118c: save step 11 sets `bigFarm` and `grownFrom`; on load systems/clearing.js scatters five times the new-farm clutter on the new land only, x 23 and beyond or y 15 and beyond, and a notice says so). Every big layout starts with six times the clutter, and every open tile can be walked to from the door (tests/big-layouts.test.mjs).
 
 | Big layout | Land added | Perk at the big size |
 |---|---|---|
