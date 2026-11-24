@@ -25,6 +25,9 @@ export const FESTIVALS = [
     key: 'egghunt', name: 'Egg Hunt', season: 'Spring', day: 13, kind: 'hunt',
     intro: 'Painted eggs are hidden all over the village. Find nine before the whistle blows to win.',
     hunt: { eggs: 18, need: 9, seconds: 50, prize: 'eggwreath', gold: 1000 },
+    // v335 (roadmap 117a): strawberry seeds, only here (Stardew's Egg Festival sells them, 100g each). seeds: the crop,
+    // pack: how many a buy gives (cost is for the pack).
+    stall: [{ key: 'strawberry', label: 'Strawberry seeds (5)', cost: 500, desc: 'Plant them this spring: ripe in 8 days, then again every 4.', seeds: 'strawberry', pack: 5 }],
     lines: {
       ines: 'I painted half the eggs. The bees helped with the yellow ones.',
       bram: 'I hid one in the fountain once. Nobody found it for a week.',

@@ -34,7 +34,7 @@ export function harvest(s) {
   const type = s.crop.type;
   if (c.regrow) s.crop.age = (s.crop.need || c.days) - c.regrow;   // the plant stays and fruits again
   else s.crop = null;
-  const extra = !c.packet && has('bountiful') && Math.random() < 0.25 ? 1 : 0;   // v34: bountiful
+  const extra = (!c.packet && has('bountiful') && Math.random() < 0.25 ? 1 : 0) + (c.extra && Math.random() < c.extra ? 1 : 0);   // v34: bountiful; v335: the crop's own chance (potato)
   if (!c.packet && !c.regrow && has('seedsaver') && Math.random() < 0.2) G.S.seeds[type]++;   // v34: seedsaver
   return { item, n: n + extra, q };
 }

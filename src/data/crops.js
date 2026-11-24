@@ -6,6 +6,10 @@
 // shape: 'root' a bulb under leaves, 'round' a big gourd, 'leafy' a head of leaves,
 //        'pod' a bushy plant with hanging fruit or pods.
 // giant: a full 3x3 block of the ripe crop outdoors can merge overnight into one giant crop.
+// shop: sold only there: 'oasis' (systems/desert.js), or a festival's key, from its stall (data/festivals.js seeds).
+// v335 (roadmap 117): extra: the chance a harvest gives one more (Stardew's potato). flower: grown for its bloom (the
+// flower shape): sold and gifted, kept by bee boxes nearby, never jarred or juiced. Long crops grow in about 0.6 of
+// Stardew's days with its profit per day kept (melon 12 to 7 days); crops of 8 days or less keep Stardew's numbers.
 export const CROPS = {
   turnip:   { name: 'Turnip',       days: 4, seed: 25, sell: 40,  color: '#efe6f2', top: '#9b5bb5', line: null,      shape: 'root',  seasons: ['Spring', 'Autumn'] },
   radish:   { name: 'Radish',       days: 3, seed: 20, sell: 45,  color: '#d8484a', top: null,      line: null,      shape: 'root',  seasons: ['Spring', 'Summer'] },
@@ -29,6 +33,15 @@ export const CROPS = {
   // v33: fiber seeds (Stardew's: crafted, grow in any season and outdoors in winter in 7 days without water, 4 to 7 fiber).
   // crafted: not sold at the stall. dry: grows without watering.
   fiberseed: { name: 'Fiber seeds', days: 7, seed: 0, sell: 0, color: '#8fae5a', top: null, line: '#5d7a3a', shape: 'leafy', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], packet: 'fiber', produce: ['fiber'], amount: [4, 7], crafted: true, dry: true },
+  // v335 (roadmap 117a): spring, Stardew's spring crops by role: potato (6 days, 50g, sells 80g, a quarter of harvests
+  // give one more), kale (6, 70g, 110g), garlic (4, 40g, 60g), strawberry (8, 100g, 120g, again every 4), and the
+  // flowers (blue jazz 7, 30g, 50g; tulip 6, 20g, 30g).
+  potato:     { name: 'Potato',     days: 6, seed: 50,  sell: 80,  color: '#c9a46a', top: '#8fae5a', line: null,      shape: 'root',   seasons: ['Spring'], extra: 0.25 },
+  kale:       { name: 'Kale',       days: 6, seed: 70,  sell: 110, color: '#4f7f3a', top: null,      line: '#2f5a2a', shape: 'leafy',  seasons: ['Spring'] },
+  garlic:     { name: 'Garlic',     days: 4, seed: 40,  sell: 60,  color: '#efe8d8', top: '#b8a8c8', line: null,      shape: 'root',   seasons: ['Spring'] },
+  strawberry: { name: 'Strawberry', days: 8, seed: 100, sell: 120, color: '#d8303a', top: null,      line: null,      shape: 'pod',    seasons: ['Spring'], regrow: 4, shop: 'egghunt' },   // seeds only at the Egg Hunt stall, as Stardew's at the Egg Festival
+  bluebell:   { name: 'Bluebell',   days: 7, seed: 30,  sell: 50,  color: '#5f7fd8', top: '#f4ead2', line: null,      shape: 'flower', seasons: ['Spring'], flower: true },
+  primrose:   { name: 'Primrose',   days: 6, seed: 20,  sell: 30,  color: '#f0d860', top: '#e8862a', line: null,      shape: 'flower', seasons: ['Spring'], flower: true },
   // v32: the premium summer crop (Stardew's starfruit: 400g seed, 13 days, sells 750g); helper huts need 9.
   gleamfruit: { name: 'Gleamfruit', days: 13, seed: 400, sell: 750, color: '#f2d14a', top: '#7fbf5a', line: '#c9a43a', shape: 'round', seasons: ['Summer'] },
   // v30, for the mill (Stardew: wheat 10g seed, 4 days, sells 25g, summer and autumn; beet 20g, 6 days, 100g, autumn).
@@ -47,6 +60,8 @@ export const CROPS = {
 
 // Crops that are items (everything except seed packets).
 export const PRODUCE = Object.fromEntries(Object.entries(CROPS).filter(([, c]) => !c.packet));
+// v335: the crops machines take (flowers are not jarred or juiced).
+export const PRESERVABLE = Object.fromEntries(Object.entries(PRODUCE).filter(([, c]) => !c.flower));
 
 // Giant crops (Stardew scale): each night a ripe 3x3 block of a giant crop has a 1% chance to merge;
 // chopping one costs 3 swings of energy and yields 15 to 21 plain crops.

@@ -72,9 +72,10 @@ export function buyStall(key) {
   if (it.once && S.wish[it.once]) { notify('The stall has no more of those.'); return false; }
   S.gold -= it.cost;
   if (it.placeable) S.kit[it.key]++;
+  if (it.seeds) S.seeds[it.seeds] = (S.seeds[it.seeds] || 0) + (it.pack || 1);   // v335: a festival's seeds
   if (it.energy) S.energy = Math.min(S.maxEnergy, S.energy + it.energy);
   if (it.item) { S.bag[it.item] = (S.bag[it.item] || 0) + 1; if (it.once) S.wish[it.once] = true; }   // v35: the wishfruit
-  notify(it.placeable ? `Bought a ${it.label}. Place it on the farm from slot 7.` : it.item ? `Bought the ${it.label.toLowerCase()}. It is in your bag.` : `You drink the ${it.label.toLowerCase()}. Warmth spreads to your fingers.`);
+  notify(it.seeds ? `Bought ${it.label.toLowerCase()}. They are in your seed slot.` : it.placeable ? `Bought a ${it.label}. Place it on the farm from slot 7.` : it.item ? `Bought the ${it.label.toLowerCase()}. It is in your bag.` : `You drink the ${it.label.toLowerCase()}. Warmth spreads to your fingers.`);
   changed();
   return true;
 }

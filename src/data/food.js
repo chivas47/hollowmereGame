@@ -27,6 +27,12 @@ export const RAW_FOOD = {
   gleamfruit: 125, // starfruit
   beet: 30,        // beet
   frostkale: 50,   // kale
+  potato: 25,      // potato (v335, roadmap 117a)
+  kale: 50,        // kale
+  garlic: 20,      // garlic
+  strawberry: 50,  // strawberry
+  bluebell: 45,    // blue jazz
+  primrose: 45,    // tulip
   // forage
   leek: 40,        // leek
   sorrel: 25,      // dandelion

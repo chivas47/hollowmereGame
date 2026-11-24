@@ -12,7 +12,7 @@ from PIL import Image
 
 S = 16
 LAYERS = ['plant', 'fruit', 'top', 'line', 'shine']
-COLS = ['dead', 'seed', 'sprout', 'young', 'root', 'round', 'leafy', 'pod']
+COLS = ['dead', 'seed', 'sprout', 'young', 'root', 'round', 'leafy', 'pod', 'flower']   # v335: flower appended
 def hexc(h): h = h.lstrip('#'); return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
 PLANT = {'G': '#8fd06a', 'g': '#5da34a', 'd': '#3f7a3a', 'D': '#2c5a2c', 'T': '#9a7444', 't': '#6b4a2b',
          'S': '#e8d290', 's': '#b89a5a', 'K': '#7a6448'}
@@ -139,6 +139,25 @@ ART = {
     '......FFFf......',
     '......fFf.......',
     '.......f........',
+  ],
+  # v335 (roadmap 117a): flowers. F the petals (the crop's colour), O the heart (its top colour).
+  'flower': [
+    '................',
+    '...FF......FF...',
+    '..FOOF....FOOF..',
+    '..FOOF.FF.FOOF..',
+    '...FF.FOOF.FF...',
+    '...g..FOOF..g...',
+    '...g...FF...g...',
+    '..gGg...g..gGg..',
+    '...dg...g..gd...',
+    '....g.gGgg.g....',
+    '....dg.dg.gd....',
+    '.....dggggd.....',
+    '......dgd.......',
+    '.......g........',
+    '......KggK......',
+    '.....KKKKKK.....',
   ],
 }
 

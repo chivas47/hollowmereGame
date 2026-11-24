@@ -112,7 +112,8 @@ function festival() {
     const done = entry(f);
     html += done ? `<p class="gift">You found ${done.found} eggs${done.won ? ' and won' : ''}. See you next year.</p>`
       : `<p class="role">Find ${f.hunt.need} of the ${f.hunt.eggs} eggs in ${f.hunt.seconds} seconds: walk over them to pick them up. The first win earns the ${CLOTHES[f.hunt.prize].name.toLowerCase()}, later wins ${fmtGold(f.hunt.gold)}.</p><div class="btns"><button data-hunt>Start the hunt</button></div>`;
-  } else {
+  }
+  if (f.stall) {   // v335: any festival with a stall (the market's, the egg hunt's seeds)
     html += `<p class="role">You have <b>${fmtGold(G.S.gold)}</b>.</p>` + f.stall.map((it) => `<div class="shoprow"><div><b>${it.label}</b><span>${it.desc} ${fmtGold(it.cost)}</span></div><div class="btns"><button data-stall="${it.key}" ${G.S.gold < it.cost || (it.once && G.S.wish[it.once]) ? 'disabled' : ''}>Buy</button></div></div>`).join('');
   }
   openModal(html, [['Leave', closeModal, true]]);

@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v335: More spring crops
+- Six new spring crops: potato (sometimes gives two), kale, garlic, strawberry (fruits again every 4 days), and the first flowers: bluebell and primrose.
+- Strawberry seeds are sold only at the Egg Hunt's new stall, in packs of 5.
+- Flowers sell and make gifts, but go in no crock or barrel. They will matter to bee boxes soon.
+- The general store no longer sells a crop that belongs to another shop (the Oasis's ruby stalk, the festival's strawberries).
+- New save data: none.
+
 ## v334: Naming farmer two
 - Farmer two can now give themselves a name with their controller: their look dialog has a letter pad. Press A on a letter; each word starts with a capital on its own, so Mary-Ann needs no shift key. Space, hyphen, apostrophe, Delete and Clear are there too.
 - Done keeps the name; leave it empty and it stays as it was.

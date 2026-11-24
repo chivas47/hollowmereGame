@@ -10,10 +10,11 @@ import { priceMult } from './professions.js';
 import { fmtGold } from '../core/format.js';
 
 export const inSeason = (crop) => CROPS[crop].seasons.includes(today().season);
-export const canBuy = (crop, n) => !CROPS[crop].crafted && inSeason(crop) && G.S.gold >= CROPS[crop].seed * n;
+// v335: from: the shop selling it ('store', or a crop's own shop, data/crops.js shop); a crop sold elsewhere is not here.
+export const canBuy = (crop, n, from = 'store') => (CROPS[crop].shop || 'store') === from && !CROPS[crop].crafted && inSeason(crop) && G.S.gold >= CROPS[crop].seed * n;
 
-export function buy(crop, n) {
-  if (!canBuy(crop, n)) return false;
+export function buy(crop, n, from = 'store') {
+  if (!canBuy(crop, n, from)) return false;
   G.S.gold -= CROPS[crop].seed * n;
   G.S.seeds[crop] += n;
   emit('sfx', 'coin');

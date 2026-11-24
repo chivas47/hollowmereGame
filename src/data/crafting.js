@@ -1,6 +1,6 @@
 // Things you craft and place on the farm. Crafting costs materials and gold (Bram supplies the fittings).
 // kind: 'tree' a fruit tree sapling (data/trees.js), 'sprinkler' waters soil every morning, 'machine' turns an item into an artisan good, 'decor' just looks nice.
-import { PRODUCE, CROPS } from './crops.js';
+import { PRESERVABLE, CROPS } from './crops.js';   // v335: PRESERVABLE, the crops without the flowers
 import { FORAGE } from './forage.js';
 import { JAR_PREFIX } from './artisan.js';
 import { TREES, FRUIT } from './trees.js';
@@ -179,7 +179,7 @@ const COPY_NIGHTS = { violet: 2, ambergem: 2, emberquartz: 2, tidestone: 3, hear
 
 // Machines: accepts(itemKey) -> bool, product(itemKey) -> item key, nights to finish.
 export const MACHINES = {
-  crock: { accepts: (k) => k in PRODUCE || k in FRUIT || k in FORAGE || k.startsWith('roe_'), product: (k) => (k.startsWith('roe_') ? `aged_${k.slice(4)}` : JAR_PREFIX + k), nights: 3, hint: 'a crop, fruit, forage item or roe' },
+  crock: { accepts: (k) => k in PRESERVABLE || k in FRUIT || k in FORAGE || k.startsWith('roe_'), product: (k) => (k.startsWith('roe_') ? `aged_${k.slice(4)}` : JAR_PREFIX + k), nights: 3, hint: 'a crop, fruit, forage item or roe' },
   churn: { accepts: (k) => k === 'cowmilk', product: () => 'butter', nights: 1, hint: 'milk' },
   vat:   { accepts: (k) => k === 'goatmilk', product: () => 'cheese', nights: 1, hint: 'goat milk' },
   // Nothing goes in: a storm's lightning fills it (systems/weather.js).
@@ -188,7 +188,7 @@ export const MACHINES = {
   furnace: { accepts: (k) => ['copper', 'iron', 'gold', 'umbrite'].includes(k), takes: (k) => ({ [k]: 5, coal: 1 }), product: (k) => `${k}bar`, nights: 0, hint: '5 ore and 1 coal' },
   kiln:    { accepts: (k) => k === 'wood', takes: () => ({ wood: 10 }), product: () => 'coal', nights: 0, hint: '10 wood' },
   // v27. nights may depend on the item; auto: makes an item every so many nights with nothing put in; repeat: starts again after collecting.
-  brewbarrel: { accepts: (k) => k in FRUIT || k in PRODUCE, product: (k) => (k in FRUIT ? `wine_${k}` : `juice_${k}`), nights: (k) => (k in FRUIT ? 7 : 4), hint: 'a fruit or a vegetable' },
+  brewbarrel: { accepts: (k) => k in FRUIT || k in PRESERVABLE, product: (k) => (k in FRUIT ? `wine_${k}` : `juice_${k}`), nights: (k) => (k in FRUIT ? 7 : 4), hint: 'a fruit or a vegetable' },
   eggpress:   { accepts: (k) => k in EGG_SPREAD, product: (k) => EGG_SPREAD[k], nights: 1, hint: 'an egg' },
   loom:       { accepts: (k) => k === 'fiber' || k === 'wool', takes: (k) => ({ [k]: k === 'wool' ? 1 : 5 }), product: () => 'cloth', nights: 1, hint: '5 fiber or a wool' },
   oilpress:   { accepts: (k) => k === 'corn' || k === 'truffle', product: (k) => (k === 'truffle' ? 'truffleoil' : 'oil'), nights: 1, hint: 'sweet corn or a truffle' },
