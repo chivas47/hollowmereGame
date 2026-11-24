@@ -229,6 +229,29 @@ Object.assign(SCENES, {
       C('Tell him to keep rowing out', 80, '"Out where?" "Anywhere." He looks at you, then at the horizon, then rows. You come back in the dark, very late, very happy.'), true),
   },
   pell: {
+    // v328 (roadmap 113f): the missing heart scenes, at their door
+    4: {
+      title: "Homework",
+      text: [
+        "Pell is on the step of her cottage with a basket of slates on her knees and a frown you have seen on the children's faces.",
+        "\"I set them a story to write. What they want to be when they grow up.\" She holds one out. In careful chalk: When I grow up I want to be a farmer like the new one. \"There are four of these. Four. I thought you should know you are a bad influence.\"",
+      ],
+      choices: [
+        { label: "Ask to read the others too", pts: 55, reply: "She hands you the whole basket and watches you read every slate, even the one that just says DOG in very large letters. \"You read them like they matter,\" Pell says quietly. \"They do. Most people skim.\" She gives you a gold star from her pocket. It is a real one, paper." },
+        { label: "Promise to visit the class and tell them it is hard work", pts: 25, reply: "\"Yes, please, tell them about the mud,\" Pell says. \"Tell them about the mud a great deal.\" She is smiling, though. \"They will only want to be farmers more. That is how children work.\"" },
+      ],
+    },
+    8: {
+      title: "The letter in the drawer",
+      text: [
+        "Pell is sitting outside her cottage with an old envelope in her lap. Inside is a single page in a child's wobbly writing, years old.",
+        "\"The letter that made me stay,\" she says. \"Mira wrote it the first winter. She could not read in autumn. By Midwinter she could write me this.\" She hands it to you. It says: Thank you for teaching me. Please do not go. \"Mira is grown now. Do you know what she is doing? Teaching, in the city.\"",
+      ],
+      choices: [
+        { label: "Tell Pell that is the best thing you have ever heard", pts: 80, reply: "Pell takes the letter back and holds it against her chest for a moment. \"It is,\" she says. \"I have never said that out loud. It felt like boasting.\" She tucks it away. \"Thank you for letting me boast. Just this once.\"" },
+        { label: "Ask whether she ever thinks of following Mira", pts: 40, reply: "\"Every year,\" Pell admits. \"And every year a new child cannot read in autumn.\" She folds the letter. \"So I stay. There are worse reasons to stay somewhere. And lately one or two better ones.\"" },
+      ],
+    },
     2: S('Spelling test', ['Pell is in the town hall marking papers, surrounded by sharpened pencils. "Can you spell parsnip?" she asks without looking up. "The class cannot agree."'],
       C('Spell it slowly for her', 50, '"Thank you. Three of them are right, then." She makes a note. "You would be a good student. You pay attention."'),
       C('Ask what the children wrote instead', 25, 'She smiles and reads you three wrong spellings, each worse than the last. By the end you are both laughing.')),
