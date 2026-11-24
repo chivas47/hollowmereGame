@@ -940,7 +940,7 @@ Waking up to the morning report. A short bright 3-note morning jingle, 0.4 to 0.
 
 #### The hoe tilling soil
 
-- File: `sfx/tools/hoe_till_soil_01.wav` (id `hoe`)
+- Files (a pool of 3): `sfx/tools/hoe_till_soil_01.wav`, `sfx/tools/hoe_till_soil_02.wav`, `sfx/tools/hoe_till_soil_03.wav` (id `hoe`)
 - Form: one-shot
 - Volume: Effects
 
@@ -948,7 +948,7 @@ The hoe biting into soil. A soft dull thunk with a little crumble of earth, 0.15
 
 #### The watering can pouring
 
-- File: `sfx/tools/watering_can_pour_01.wav` (id `can`)
+- Files (a pool of 3): `sfx/tools/watering_can_pour_01.wav`, `sfx/tools/watering_can_pour_02.wav`, `sfx/tools/watering_can_pour_03.wav` (id `can`)
 - Form: one-shot
 - Volume: Effects
 
@@ -956,7 +956,7 @@ Watering a tile. A short gentle pour, water onto soil, 0.3 to 0.5 s. Very freque
 
 #### The axe chopping
 
-- File: `sfx/tools/axe_chop_wood_01.wav` (id `axe`)
+- Files (a pool of 3): `sfx/tools/axe_chop_wood_01.wav`, `sfx/tools/axe_chop_wood_02.wav`, `sfx/tools/axe_chop_wood_03.wav` (id `axe`)
 - Form: one-shot
 - Volume: Effects
 
@@ -964,7 +964,7 @@ The axe hitting wood (trees, stumps, twigs). A solid woody chock with a short re
 
 #### The pickaxe striking rock
 
-- File: `sfx/tools/pickaxe_strike_rock_01.wav` (id `pick`)
+- Files (a pool of 3): `sfx/tools/pickaxe_strike_rock_01.wav`, `sfx/tools/pickaxe_strike_rock_02.wav`, `sfx/tools/pickaxe_strike_rock_03.wav` (id `pick`)
 - Form: one-shot
 - Volume: Effects
 
@@ -1180,11 +1180,11 @@ A far bell in town by day, rare. One distant church-like bell strike with a long
 
 #### Water dripping in caves
 
-- File: `ambience/underground/cave_drip_01.wav` (id `drip`)
+- Files (a pool of 3): `ambience/underground/cave_drip_01.wav`, `ambience/underground/cave_drip_02.wav`, `ambience/underground/cave_drip_03.wav` (id `drip`)
 - Form: one-shot; the game shifts its pitch up to 15% either way each play
 - Volume: Ambience
 
-Water dripping in caves. A single drop into a pool with a small echo, 0.1 to 0.3 s. 2 or 3 variants.
+Water dripping in caves. A single drop into a pool with a small echo, 0.1 to 0.3 s. 3 variants.
 
 ### `ambience/water/`
 
@@ -1208,7 +1208,7 @@ A gust on windy maps (the Dunes, the quarry). A swelling whoosh that fades, 1.5 
 
 #### Rain tapping on a window
 
-- File: `ambience/weather/rain_on_glass_01.wav` (id `tap`)
+- Files (a pool of 3): `ambience/weather/rain_on_glass_01.wav`, `ambience/weather/rain_on_glass_02.wav`, `ambience/weather/rain_on_glass_03.wav` (id `tap`)
 - Form: one-shot; the game shifts its pitch up to 30% either way each play
 - Volume: Ambience
 
@@ -1218,7 +1218,7 @@ Rain tapping on a window, indoors while it rains outside. One tiny tick of a dro
 
 #### A fire crackling
 
-- File: `environment/fire_crackle_01.wav` (id `crackle`)
+- Files (a pool of 3): `environment/fire_crackle_01.wav`, `environment/fire_crackle_02.wav`, `environment/fire_crackle_03.wav` (id `crackle`)
 - Form: one-shot; the game shifts its pitch up to 20% either way each play
 - Volume: Ambience
 

@@ -59,9 +59,12 @@ test('the README lists every file, written from the data (node tools/audio_list.
   for (const t of TRACKS) assert.ok(t.brief?.length > 60 && readme.includes(t.brief), `${t.id} has a composing brief in the README`);
 });
 
-test('footsteps: four different takes of every surface, so no two steps in a row sound alike', () => {
-  for (const [id, e] of Object.entries(STEP_FILES)) {
-    assert.equal(e.files.length, 4, id);
-    assert.equal(new Set(e.files.map((f) => readFileSync(join(DIR, f)).toString('base64'))).size, 4, `${id}: the takes differ`);
+test('pools: four takes of every footstep, three of the busiest tools and ambient calls, and every take different', () => {
+  for (const [id, e] of Object.entries(STEP_FILES)) assert.equal(e.files.length, 4, id);
+  for (const id of ['hoe', 'can', 'axe', 'pick']) assert.equal(SFX_FILES[id].files.length, 3, id);
+  for (const id of ['tap', 'crackle', 'drip']) assert.equal(CALL_FILES[id].files.length, 3, id);
+  for (const [id, e] of Object.values(ALL_AUDIO).flatMap((g) => Object.entries(g))) {
+    if (e.files.length < 2) continue;
+    assert.equal(new Set(e.files.map((f) => readFileSync(join(DIR, f)).toString('base64'))).size, e.files.length, `${id}: the takes differ`);
   }
 });

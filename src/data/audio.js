@@ -25,11 +25,47 @@ export const filesOf = (e) => (e ? e.files || (e.file ? [e.file] : []) : []);
 // Sound effects, by the name systems emit ('sfx', name).
 export const SFX_FILES = {
   rustle:      { files: ['sfx/farming/weeds_cut_rustle_01.wav'], about: 'thick weeds cut with the weapon', brief: 'Cutting thick weeds with a weapon. A quick leafy swish and snap, 0.15 to 0.3 s. Heard in bursts while clearing, so keep it light; 2 or 3 variants help.', gain: 0.213 },
-  hoe:         { files: ['sfx/tools/hoe_till_soil_01.wav'], about: 'the hoe tilling soil', brief: 'The hoe biting into soil. A soft dull thunk with a little crumble of earth, 0.15 to 0.25 s. One of the most repeated sounds in the game (dozens a day): short, low, never harsh. Record 3 variants.', gain: 0.0748 },
-  can:         { files: ['sfx/tools/watering_can_pour_01.wav'], about: 'the watering can pouring', brief: 'Watering a tile. A short gentle pour, water onto soil, 0.3 to 0.5 s. Very frequent: soft, no splash peak. 2 or 3 variants.', gain: 0.192 },
+  hoe: {
+    files: [
+      'sfx/tools/hoe_till_soil_01.wav',
+      'sfx/tools/hoe_till_soil_02.wav',
+      'sfx/tools/hoe_till_soil_03.wav',
+    ],
+    about: 'the hoe tilling soil',
+    brief: 'The hoe biting into soil. A soft dull thunk with a little crumble of earth, 0.15 to 0.25 s. One of the most repeated sounds in the game (dozens a day): short, low, never harsh. Record 3 variants.',
+    gain: 0.0748,
+  },
+  can: {
+    files: [
+      'sfx/tools/watering_can_pour_01.wav',
+      'sfx/tools/watering_can_pour_02.wav',
+      'sfx/tools/watering_can_pour_03.wav',
+    ],
+    about: 'the watering can pouring',
+    brief: 'Watering a tile. A short gentle pour, water onto soil, 0.3 to 0.5 s. Very frequent: soft, no splash peak. 2 or 3 variants.',
+    gain: 0.192,
+  },
   seed:        { files: ['sfx/farming/seed_plant_01.wav'], about: 'a seed planted', brief: 'A seed pressed into the soil. A tiny soft pop or tap, under 0.1 s. Frequent and small; it should feel satisfying, not loud.', gain: 0.0809 },
-  axe:         { files: ['sfx/tools/axe_chop_wood_01.wav'], about: 'the axe chopping', brief: 'The axe hitting wood (trees, stumps, twigs). A solid woody chock with a short resonance, 0.15 to 0.3 s. 3 variants; the last hit that fells a tree is the same sound.', gain: 0.0692 },
-  pick:        { files: ['sfx/tools/pickaxe_strike_rock_01.wav'], about: 'the pickaxe striking rock', brief: 'The pickaxe striking stone or ore. A bright clink with a gritty crunch, 0.1 to 0.25 s. Heard hundreds of times in the mines: crisp but not piercing. 3 variants.', gain: 0.133 },
+  axe: {
+    files: [
+      'sfx/tools/axe_chop_wood_01.wav',
+      'sfx/tools/axe_chop_wood_02.wav',
+      'sfx/tools/axe_chop_wood_03.wav',
+    ],
+    about: 'the axe chopping',
+    brief: 'The axe hitting wood (trees, stumps, twigs). A solid woody chock with a short resonance, 0.15 to 0.3 s. 3 variants; the last hit that fells a tree is the same sound.',
+    gain: 0.0692,
+  },
+  pick: {
+    files: [
+      'sfx/tools/pickaxe_strike_rock_01.wav',
+      'sfx/tools/pickaxe_strike_rock_02.wav',
+      'sfx/tools/pickaxe_strike_rock_03.wav',
+    ],
+    about: 'the pickaxe striking rock',
+    brief: 'The pickaxe striking stone or ore. A bright clink with a gritty crunch, 0.1 to 0.25 s. Heard hundreds of times in the mines: crisp but not piercing. 3 variants.',
+    gain: 0.133,
+  },
   sword:       { files: ['sfx/combat/sword_swing_01.wav'], about: 'a sword swing', brief: 'A sword swing through the air. A clean whoosh, 0.15 to 0.25 s, mid-pitched. Played on every swing, hit or miss.', gain: 0.0407 },
   swingDagger: { files: ['sfx/combat/dagger_swing_01.wav'], about: 'a dagger swing', brief: 'A dagger\'s quick stab or slash. A short, high, thin whip, under 0.15 s: faster and lighter than the sword.', gain: 0.0639 },
   swingClub:   { files: ['sfx/combat/club_swing_01.wav'], about: 'a club or hammer swing', brief: 'A club or hammer swing. A heavy, low, slow whoosh, 0.25 to 0.35 s, with weight at the end.', gain: 0.0505 },
@@ -73,12 +109,39 @@ export const CALL_FILES = {
   bird:    { files: ['ambience/nature/bird_chirp_01.wav'], about: 'birdsong by day', brief: 'Birdsong by day in the wild and in town (not in winter or rain). One short phrase of 2 to 4 chirps, 0.3 to 0.8 s. Several species-like variants make the world feel alive; the game varies the pitch too.', gain: 0.0328, vary: 0.25 },
   cricket: { files: ['ambience/nature/cricket_chirp_01.wav'], about: 'crickets at night', brief: 'Crickets on dry nights out of winter. One short chirp burst, under 0.2 s, played often; keep it soft and high.', gain: 0.0092, vary: 0.05 },
   gull:    { files: ['ambience/water/gull_cry_01.wav'], about: 'gulls at the shore', brief: 'Gulls at the shore by day. One or two gull cries, 0.5 to 0.8 s, from a little distance.', gain: 0.0317, vary: 0.1 },
-  drip:    { files: ['ambience/underground/cave_drip_01.wav'], about: 'water dripping in caves', brief: 'Water dripping in caves. A single drop into a pool with a small echo, 0.1 to 0.3 s. 2 or 3 variants.', gain: 0.0432, vary: 0.15 },
+  drip: {
+    files: [
+      'ambience/underground/cave_drip_01.wav',
+      'ambience/underground/cave_drip_02.wav',
+      'ambience/underground/cave_drip_03.wav',
+    ],
+    about: 'water dripping in caves',
+    brief: 'Water dripping in caves. A single drop into a pool with a small echo, 0.1 to 0.3 s. 3 variants.',
+    gain: 0.0432, vary: 0.15,
+  },
   bell:    { files: ['ambience/town/town_bell_distant_01.wav'], about: 'a far bell in town', brief: 'A far bell in town by day, rare. One distant church-like bell strike with a long tail, 1 to 2 s, very soft.', gain: 0.0221 },
   gust:    { files: ['ambience/weather/wind_gust_01.wav'], about: 'gusts on windy maps', brief: 'A gust on windy maps (the Dunes, the quarry). A swelling whoosh that fades, 1.5 to 2 s, over the wind loop.', gain: 0.014, vary: 0.1 },
-  tap:     { files: ['ambience/weather/rain_on_glass_01.wav'], about: 'rain tapping on a window', brief: 'Rain tapping on a window, indoors while it rains outside. One tiny tick of a drop on glass, under 0.05 s, played very often. 3 variants.', gain: 0.013, vary: 0.3 },
+  tap: {
+    files: [
+      'ambience/weather/rain_on_glass_01.wav',
+      'ambience/weather/rain_on_glass_02.wav',
+      'ambience/weather/rain_on_glass_03.wav',
+    ],
+    about: 'rain tapping on a window',
+    brief: 'Rain tapping on a window, indoors while it rains outside. One tiny tick of a drop on glass, under 0.05 s, played very often. 3 variants.',
+    gain: 0.013, vary: 0.3,
+  },
   owl:     { files: ['ambience/nature/owl_hoot_01.wav'], about: 'an owl at night in the wild', brief: 'An owl at night in the wild, rare. A soft two-note hoot, about 1 s, from a distance.', gain: 0.0331, vary: 0.06 },   // v342: night in the wild
-  crackle: { files: ['environment/fire_crackle_01.wav'], about: 'a fire crackling', brief: 'A fire crackling near a hearth or stove. One to three small pops and snaps, under 0.3 s, played often. 3 variants.', gain: 0.0584, vary: 0.2 },
+  crackle: {
+    files: [
+      'environment/fire_crackle_01.wav',
+      'environment/fire_crackle_02.wav',
+      'environment/fire_crackle_03.wav',
+    ],
+    about: 'a fire crackling',
+    brief: 'A fire crackling near a hearth or stove. One to three small pops and snaps, under 0.3 s, played often. 3 variants.',
+    gain: 0.0584, vary: 0.2,
+  },
 };
 
 // Footsteps by what is underfoot (audio/footsteps.js surfaceAt), and hooves on horseback. v342: in the effects group,
