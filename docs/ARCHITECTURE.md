@@ -176,7 +176,8 @@ src/
     placeables.js     kit slot, placing/picking up crafted objects ('Y' tiles), drawing, lantern glow
     crafting.js       craft(): gold + materials -> kit
     sprinklers.js     water soil on day:start and on placement
-    artisan.js        load / collect machines, overnight processing
+    artisan.js        load / collect machines, overnight processing; v338: flowerNear (a bee box's flower honey)
+    ingredients.js    v338: haveIngredient / takeIngredient: a recipe's ingredient filled by any item that stands for it (data/items.js FILLS, an item's `as`)
     barn.js           barn placement, barn animals, hay
     skills.js         XP from 'gather' events, bonus items, energy milestones
     quests.js         quest board requests, deliver()

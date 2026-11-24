@@ -16,6 +16,7 @@ import { PROJECTS } from '../data/projects.js';
 import { NPCS } from '../data/npcs.js';
 import { recalcStats } from './upgrades.js';
 import { addItem } from './quality.js';
+import { haveIngredient, takeIngredient } from './ingredients.js';
 import { hearts } from './npcs.js';
 import { buff } from './buffs.js';
 import { skillLevel } from './skills.js';
@@ -23,7 +24,7 @@ import { SKILLS } from '../data/skills.js';
 export { buff, luck, speedMult, attackMult } from './buffs.js';
 
 export const knows = (k) => G.S.recipes.includes(k);
-const have = (k) => (G.S.bag[k] || 0) + (G.S.fridge[k] || 0);
+const have = (k) => haveIngredient(k, [G.S.bag, G.S.fridge]);   // v338: any honey for honey
 export const canCook = (k) => knows(k) && Object.entries(DISHES[k].needs).every(([i, n]) => have(i) >= n);
 export const kitchen = () => (G.S.upgrades.house || 0) >= 1;
 
@@ -38,10 +39,7 @@ export function learn(k, how) {
 // Uses the bag first, then the fridge.
 export function cook(k) {
   if (!kitchen() || !canCook(k)) return false;
-  for (const [i, n] of Object.entries(DISHES[k].needs)) {
-    const fromBag = Math.min(G.S.bag[i] || 0, n);
-    G.S.bag[i] -= fromBag; if (n > fromBag) G.S.fridge[i] -= n - fromBag;
-  }
+  for (const [i, n] of Object.entries(DISHES[k].needs)) takeIngredient(i, n, [G.S.bag, G.S.fridge]);
   addItem(k, 1);
   emit('sfx', 'pickup');
   changed();

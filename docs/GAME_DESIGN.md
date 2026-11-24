@@ -260,7 +260,7 @@ Profit per day = (sells - seed) / days, one harvest per seed.
 | Cardoon | 30g | 8 | 160g | 16.3g | Autumn (v337; Stardew's artichoke) |
 | Dahlia | 200g | 7 | 253g | 7.6g | Autumn (v337; a flower, Stardew's fairy rose, 12 days there) |
 
-v335 (roadmap 117): more crops, by Stardew's crops by role, a season a release. Crops of 8 days or less keep Stardew's numbers; longer ones grow in about 0.6 of its days with its profit per day kept. Flowers (the flower shape) sell, gift and give a little energy but are never jarred or juiced (data/crops.js PRESERVABLE); bee boxes will use them (117d). A crop may be sold in one place only: the Oasis (ruby stalk) or a festival's stall (strawberry, at the Egg Hunt in packs of 5, as Stardew's Egg Festival sells them).
+v335 (roadmap 117): more crops, by Stardew's crops by role, a season a release. Crops of 8 days or less keep Stardew's numbers; longer ones grow in about 0.6 of its days with its profit per day kept. Flowers (the flower shape) sell, gift and give a little energy but are never jarred or juiced (data/crops.js PRESERVABLE); bee boxes turn them into flower honey (v338, below). A crop may be sold in one place only: the Oasis (ruby stalk) or a festival's stall (strawberry, at the Egg Hunt in packs of 5, as Stardew's Egg Festival sells them).
 
 Fiber seeds (v33, Stardew's fiber seeds): crafted from 1 mixed seeds packet, 5 wood (for sap) and 1 stone (for clay). They grow outdoors in every season, need no water, and give 4 to 7 fiber after 7 days. Not sold at the stall. The Wilds grow 6 weeds a day; any tool cuts one for 1 fiber, free.
 
@@ -645,7 +645,7 @@ v101: once you can make more than one, the menu adds ×5 and All (as many as you
 | Egg press | 0 | 15 wood, 15 stone, 1 copper bar | Egg -> egg spread (190g) overnight |
 | Loom | 0 | 60 wood, 30 fiber | 5 fiber -> cloth overnight |
 | Oil press | 0 | 20 gel, 20 wood, 1 iron bar | Corn -> corn oil (100g) overnight |
-| Bee box | 0 | 40 wood, 8 coal, 1 iron bar | Meadow honey (100g) every 4 nights, not in winter |
+| Bee box | 0 | 40 wood, 8 coal, 1 iron bar | Meadow honey (100g) every 4 nights, not in winter; with a ripe flower within 5 tiles, that flower's honey (v338) |
 | Tree tap | 0 | 40 wood, 2 copper bars | Fixed to a grown alder: alder syrup (180g) every 8 nights |
 | Gem copier | 0 | 50 stone, 3 iron bars, 1 storm cell | Copies a gem (quartz 1 night, violet stone 2), then starts again |
 | Dryer | 0 | 30 wood, 1 copper bar, 20 stone | 5 fruit -> dried fruit (7.5 x + 25g); 5 mushrooms -> dried mushrooms |
@@ -653,6 +653,8 @@ v101: once you can make more than one, the menu adds ×5 and All (as many as you
 | Fish smoker | 0 | 20 wood, 1 iron bar | Fish + 1 coal -> smoked fish (2 x), ready at once |
 | Seed maker (v216, Farming 9) | 0 | 25 wood, 10 coal, 1 gold bar | A crop the seed stall sells -> 1 to 3 of its seeds (10% of the time also 1 to 5 mixed seeds), ready at once; seeds go to the seed pouch. Not the Oasis's ruby stalk, fiber seeds or seed packets |
 | Garden pot (v217) | 0 | 10 stone, 10 wood | Holds one crop on the farm, in the greenhouse or indoors (farmhouse, shed, attic). Indoors it grows in any season; outdoors it keeps to its crop's seasons, rain waters it and it withers when the season turns. Water it each day; fertilizer works in it. Picked up only when empty |
+
+v338 (roadmap 117d): flower honey, Stardew's bee house. When a bee box's honey is ready, the nearest ripe flower within 5 tiles (straight-line; soil or a garden pot on the same map) makes it that flower's honey, worth 100g + twice the flower: primrose 160g, bluebell 200g, marigold 280g, cornflower 380g, dahlia 606g. No flower: meadow honey. Any honey fills a recipe's honey (plainest first) and is taken as honey by a neighbour who names it (Ines loves it, Bram hates it): data/items.js FILLS, systems/ingredients.js.
 
 - Crafted objects go to the kit (slot 7). Placed on untilled farm grass only; not on the coop or barn footprint. They are solid. Picking one up returns it to the kit (machines only when empty).
 - Sprinklers also water their tiles the moment they are placed.

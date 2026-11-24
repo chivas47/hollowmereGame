@@ -1,11 +1,18 @@
 // Artisan goods made by machines (see data/crafting.js MACHINES).
 // Every crop, fruit and forage item gets a jarred version from the brine crock.
-import { PRESERVABLE } from './crops.js';
+import { PRODUCE, PRESERVABLE } from './crops.js';
 import { FORAGE } from './forage.js';
 import { FRUIT } from './trees.js';
 import { FISH } from './fish.js';
 
 export const JAR_PREFIX = 'jar_';
+// v338 (roadmap 117d): a bee box with a ripe flower near it makes that flower's honey: honey_bluebell. Stardew's
+// flower honey is worth 100g + twice the flower. Each stands for meadow honey in recipes and gifts (as, data/items.js FILLS).
+export const HONEY_PREFIX = 'honey_';
+export const flowerHoneyValue = (sell) => 100 + sell * 2;
+const FLOWERS = Object.fromEntries(Object.entries(PRODUCE).filter(([, c]) => c.flower));
+const flowerHoney = Object.fromEntries(Object.entries(FLOWERS).map(([k, c]) =>
+  [HONEY_PREFIX + k, { name: `${c.name} honey`, sell: flowerHoneyValue(c.sell), artisan: true, as: 'honey' }]));
 export const jarValue = (sell) => sell * 2 + 50;
 
 const jars = Object.fromEntries(Object.entries({ ...PRESERVABLE, ...FRUIT, ...FORAGE }).map(([k, it]) =>
@@ -28,6 +35,7 @@ export const ARTISAN = {
   mayo:   { name: 'Egg spread',   sell: 190, artisan: true },   // Stardew: mayonnaise
   oil:    { name: 'Corn oil',     sell: 100, artisan: true },
   honey:  { name: 'Meadow honey', sell: 100, artisan: true },   // Stardew: wild honey
+  ...flowerHoney,
   syrup:  { name: 'Alder syrup',  sell: 180, artisan: true },   // Stardew: maple syrup 200g, oak resin 150g
   // v30: the mill (Stardew: wheat flour 50g, sugar 50g; cooking ingredients more than goods to ship).
   flour:      { name: 'Wheat flour', sell: 50, artisan: true },

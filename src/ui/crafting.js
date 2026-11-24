@@ -61,7 +61,7 @@ function placedDialog() {
     if (c && !c.dead) html += '<p>Pick it up once the pot is empty.</p>';
   } else {
     const m = MACHINES[p.kind];
-    if (m.auto && !p.item) html += `<p>Makes ${ITEMS[m.auto.item].name.toLowerCase()} every ${m.auto.every} nights${m.auto.winter === false ? ', outside winter' : ''}. Next in ${p.timer ?? m.auto.every} night${(p.timer ?? m.auto.every) === 1 ? '' : 's'}.</p>`;
+    if (m.auto && !p.item) html += `<p>Makes ${ITEMS[m.auto.item].name.toLowerCase()} every ${m.auto.every} nights${m.auto.winter === false ? ', outside winter' : ''}${m.auto.flower ? `; a ripe flower within ${m.auto.flower} tiles makes it that flower's honey` : ''}. Next in ${p.timer ?? m.auto.every} night${(p.timer ?? m.auto.every) === 1 ? '' : 's'}.</p>`;
     else if (p.kind === 'lightningrod' && !p.item) html += '<p>Waits for a storm. When lightning strikes the farm it hits the rod first and leaves a storm cell (500g) to collect.</p>';
     else if (m.hatch && p.item && p.nights > 0) html += `<p>Keeping ${ITEMS[p.item].name.toLowerCase()} warm. It hatches in ${p.nights} night${p.nights === 1 ? '' : 's'}.</p>`;
     else if (m.hatch && p.item) html += `<p class="gift">The ${ITEMS[p.item].name.toLowerCase()} is hatching: a ${m.hatch[p.item] === 'slime' ? 'slime' : animalDef(m.hatch[p.item]).name.toLowerCase()}!</p><div class="btns"><button data-collect>Move it in</button></div>`;

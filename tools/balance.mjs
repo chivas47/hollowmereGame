@@ -204,7 +204,9 @@ const GH_CENTRES = []; for (const cy of [5, 8]) for (let cx = 3; cx <= 21; cx +=
 const GH_FIELD = GH_CENTRES.flatMap(([cx, cy]) => [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]].map(([a, b]) => [cx + a, cy + b]));
 const PLOTS = { farm: { field: FIELD, centres: CENTRES, well: [12, 3] }, greenhouse: { field: GH_FIELD, centres: GH_CENTRES, well: [2, 12] } };
 const TREE_SLOTS = [[8, 12], [10, 12], [12, 12], [9, 14], [11, 14], [13, 14]];   // clear of the animal yards
-const MACHINE_SLOTS = []; for (let y = 5; y <= 9; y++) for (let x = 1; x <= 5; x++) MACHINE_SLOTS.push([x, y]);
+// v338: rows 5 and 6 (the path above, a walkway on row 7 below) and row 8, so every machine has a side to stand on
+// (a packed 5x5 left the middle ones unreachable: never emptied, so they made nothing more).
+const MACHINE_SLOTS = []; for (const y of [5, 6, 8]) for (let x = 1; x <= 5; x++) MACHINE_SLOTS.push([x, y]);
 // v58: when the corner is full (or buildings wall its last tiles in), machines go along the farm's bottom edge, clear of the field.
 const SPARE_SLOTS = []; for (let x = 15; x <= 21; x++) SPARE_SLOTS.push([x, 13]);
 // Inside the shed (v30 shed map, floor x 4-19, y 3-11): rows of machines with walkways between and the door column free.
@@ -396,14 +398,14 @@ function simulate(runSeed) {
     // its room for buildings. Before that, the corner and then the spare tiles.
     const shed = S().built.shed === true;
     for (const kind of [...Object.keys(MACHINES), 'silo', 'gardenpot']) {   // v217: garden pots too
-      if (shed && kind !== 'lightningrod' && kind !== 'silo') {
+      if (shed && kind !== 'lightningrod' && kind !== 'silo' && kind !== 'beebox') {   // v338: bee boxes stay by the field for its flowers
         for (const [x, y] of SHED_SLOTS) {
           if (s.kit[kind] <= 0) break;
           if (s.placed[`shed:${x},${y}`]) continue;
           s.kitSel = kind; use('shed', x, y, 'kit');
         }
       }
-      for (const [x, y] of [...MACHINE_SLOTS, ...(shed ? [] : SPARE_SLOTS)]) {   // the spare tiles only once the corner is full or walled in
+      for (const [x, y] of [...MACHINE_SLOTS, ...(shed && kind !== 'beebox' ? [] : SPARE_SLOTS)]) {   // the spare tiles only once the corner is full or walled in (v338: bee boxes always may, they stay out)
         if (s.kit[kind] <= 0) break;
         if (s.placed[`${x},${y}`] || !clear('farm', x, y)) continue;
         s.kitSel = kind; use('farm', x, y, 'kit');
@@ -509,6 +511,27 @@ function simulate(runSeed) {
   };
   // Outdoors: the best crop that can still ripen this season. In the greenhouse: the best crop we
   // have seeds for or can buy now, whatever the season.
+  // v338 (roadmap 117d): flower honey. One field tile within reach (MACHINES.beebox.auto.flower) of each outdoor bee
+  // box (one tile serves every box near it) grows the flower whose honey sells best and can still bloom this season,
+  // and is left standing once ripe, for the bees.
+  function flowerTiles() {
+    const s = S(), r = MACHINES.beebox.auto.flower, out = [];
+    const d2 = ([ax, ay], [bx, by]) => (ax - bx) ** 2 + (ay - by) ** 2;
+    for (const [k, p] of Object.entries(s.placed)) {
+      if (p.kind !== 'beebox' || k.includes(':')) continue;
+      const at = k.split(',').map(Number);
+      if (out.some((t) => d2(t, at) <= r * r)) continue;
+      const near = FIELD.filter((t) => d2(t, at) <= r * r).sort((a, b) => d2(a, at) - d2(b, at))[0];
+      if (near) out.push(near);
+    }
+    return out;
+  }
+  const isFlowerTile = (map, x, y) => map === 'farm' && flowerTiles().some(([fx, fy]) => fx === x && fy === y);
+  function bestFlower() {
+    const d = today(), left = 28 - d.d;
+    return Object.keys(CROPS).filter((k) => CROPS[k].flower && !CROPS[k].shop && CROPS[k].seasons.includes(d.season) && CROPS[k].days <= left)
+      .sort((a, b) => CROPS[b].sell - CROPS[a].sell)[0] || null;
+  }
   function bestCrop(map) {
     const d = today(), left = 28 - d.d, s = S();
     const ok = map === 'greenhouse'
@@ -549,7 +572,7 @@ function simulate(runSeed) {
     return null;
   }
   function plant(map, x, y) {
-    const s = S(), crop = bundleCrop(map) || bestCrop(map);
+    const s = S(), crop = (isFlowerTile(map, x, y) && bestFlower()) || bundleCrop(map) || bestCrop(map);
     if (!crop) return false;
     // Spread rich soil booster first once the farm can afford it (it stays in the soil).
     const t = tile(map, x, y);
@@ -573,7 +596,7 @@ function simulate(runSeed) {
       const t = tile(map, x, y);
       if (!t?.crop) continue;
       if (t.crop.dead) { if (s.energy >= 1) { use(map, x, y, 'hoe'); spend(TIME.tile); } continue; }
-      if (t.crop.age >= (t.crop.need || CROPS[t.crop.type].days)) { use(map, x, y, 'hoe'); spend(TIME.tile); }
+      if (t.crop.age >= (t.crop.need || CROPS[t.crop.type].days) && !(CROPS[t.crop.type].flower && isFlowerTile(map, x, y))) { use(map, x, y, 'hoe'); spend(TIME.tile); }   // v338: the bees' flower stays
     }
     for (const [x, y] of field) {
       const t = tile(map, x, y);

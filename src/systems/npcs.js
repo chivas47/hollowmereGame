@@ -51,8 +51,10 @@ export const heartStr = (st) => '♥'.repeat(hearts(st)) + '♡'.repeat((st.marr
 
 // v48: how a neighbour takes a gift: their own lists first, then the universal tastes.
 const OWN = { loved: 'loves', liked: 'likes', disliked: 'dislikes', hated: 'hates' };
+// v338: an item that stands for another (data/items.js FILLS: flower honey for honey) is taken as that one by a
+// neighbour who names it, before the universal tastes.
 export function giftTier(def, item) {
-  for (const [tier, key] of Object.entries(OWN)) if (def[key]?.includes(item)) return tier;
+  for (const k of [item, ITEMS[item]?.as].filter(Boolean)) for (const [tier, key] of Object.entries(OWN)) if (def[key]?.includes(k)) return tier;
   for (const tier of ['loved', 'liked', 'disliked', 'hated']) if (UNIVERSAL[tier].includes(item)) return tier;
   return 'neutral';
 }
