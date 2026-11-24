@@ -204,9 +204,10 @@ const GH_CENTRES = []; for (const cy of [5, 8]) for (let cx = 3; cx <= 21; cx +=
 const GH_FIELD = GH_CENTRES.flatMap(([cx, cy]) => [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]].map(([a, b]) => [cx + a, cy + b]));
 const PLOTS = { farm: { field: FIELD, centres: CENTRES, well: [12, 3] }, greenhouse: { field: GH_FIELD, centres: GH_CENTRES, well: [2, 12] } };
 const TREE_SLOTS = [[8, 12], [10, 12], [12, 12], [9, 14], [11, 14], [13, 14]];   // clear of the animal yards
-// v338: rows 5 and 6 (the path above, a walkway on row 7 below) and row 8, so every machine has a side to stand on
-// (a packed 5x5 left the middle ones unreachable: never emptied, so they made nothing more).
-const MACHINE_SLOTS = []; for (const y of [5, 6, 8]) for (let x = 1; x <= 5; x++) MACHINE_SLOTS.push([x, y]);
+const MACHINE_SLOTS = []; for (let y = 5; y <= 9; y++) for (let x = 1; x <= 5; x++) MACHINE_SLOTS.push([x, y]);
+// v338 (roadmap 117d): bee boxes stand on the grass strip between the path and the field (row 5), spaced out: the
+// path above to stand on, the field's top row within reach for their flower, clear of the land buildings take.
+const BEE_SLOTS = [[8, 5], [11, 5], [14, 5]];
 // v58: when the corner is full (or buildings wall its last tiles in), machines go along the farm's bottom edge, clear of the field.
 const SPARE_SLOTS = []; for (let x = 15; x <= 21; x++) SPARE_SLOTS.push([x, 13]);
 // Inside the shed (v30 shed map, floor x 4-19, y 3-11): rows of machines with walkways between and the door column free.
@@ -405,7 +406,7 @@ function simulate(runSeed) {
           s.kitSel = kind; use('shed', x, y, 'kit');
         }
       }
-      for (const [x, y] of [...MACHINE_SLOTS, ...(shed && kind !== 'beebox' ? [] : SPARE_SLOTS)]) {   // the spare tiles only once the corner is full or walled in (v338: bee boxes always may, they stay out)
+      for (const [x, y] of kind === 'beebox' ? BEE_SLOTS : [...MACHINE_SLOTS, ...(shed ? [] : SPARE_SLOTS)]) {   // the spare tiles only once the corner is full or walled in; v338: bee boxes only on theirs
         if (s.kit[kind] <= 0) break;
         if (s.placed[`${x},${y}`] || !clear('farm', x, y)) continue;
         s.kitSel = kind; use('farm', x, y, 'kit');
@@ -509,8 +510,6 @@ function simulate(runSeed) {
     const harvests = left < c.days ? 0 : 1 + Math.floor((left - c.days) / c.regrow);
     return (harvests * c.sell * y - c.seed) / Math.max(left, c.days);
   };
-  // Outdoors: the best crop that can still ripen this season. In the greenhouse: the best crop we
-  // have seeds for or can buy now, whatever the season.
   // v338 (roadmap 117d): flower honey. One field tile within reach (MACHINES.beebox.auto.flower) of each outdoor bee
   // box (one tile serves every box near it) grows the flower whose honey sells best and can still bloom this season,
   // and is left standing once ripe, for the bees.
@@ -532,6 +531,8 @@ function simulate(runSeed) {
     return Object.keys(CROPS).filter((k) => CROPS[k].flower && !CROPS[k].shop && CROPS[k].seasons.includes(d.season) && CROPS[k].days <= left)
       .sort((a, b) => CROPS[b].sell - CROPS[a].sell)[0] || null;
   }
+  // Outdoors: the best crop that can still ripen this season. In the greenhouse: the best crop we
+  // have seeds for or can buy now, whatever the season.
   function bestCrop(map) {
     const d = today(), left = 28 - d.d, s = S();
     const ok = map === 'greenhouse'
