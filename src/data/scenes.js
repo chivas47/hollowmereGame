@@ -1,4 +1,4 @@
-// Heart scenes: the first talk after reaching 4 and 8 hearts plays a short scene with a choice.
+// Heart scenes: the first talk after reaching a heart level in SCENE_HEARTS plays a short scene with a choice.
 // Each choice adds friendship points and gets its own reply. Plain text, no em dashes.
 export const SCENE_HEARTS = [2, 4, 6, 8, 10, 14];
 // v245 (roadmap 84f): neighbours whose heart scenes play out on the map at their front door (systems/heartScenes.js);
@@ -61,6 +61,29 @@ export const HEART_STAGES = {
 
 export const SCENES = {
   ines: {
+    // v323 (roadmap 113a): the 2 and 6 heart scenes, at her gate
+    2: {
+      title: 'The honesty table',
+      text: [
+        'By Ines\'s gate stands a little table with six jars of honey and a tin for coins. Ines is frowning into the tin.',
+        '"Two coins, a button and a pressed daisy," she says. "Somebody paid me in daisy. I cannot decide if I am cross."',
+      ],
+      choices: [
+        { label: 'Buy a jar and pay a little over', pts: 40, reply: 'You drop the coins in. Ines hears the extra one land and gives you a long look. "The bees will hear about this," she says, and wraps the jar in a cloth so it will not knock on the way home.' },
+        { label: 'Tell her the daisy was probably a child', pts: 20, reply: '"Then it was a fair price," Ines says, and smooths the daisy flat on the table. "I will keep it in the ledger. Children are better customers than grown-ups, mostly."' },
+      ],
+    },
+    6: {
+      title: 'A quiet hive',
+      text: [
+        'Ines is kneeling at a hive by her cottage with the lid off. She is not wearing her veil. The hive is very quiet.',
+        '"No queen," she says softly. "They are not angry. They are lost. A hive without a queen just stops singing." She holds out the smoker without looking up. "Keep it puffing. Gently. I want to look for eggs."',
+      ],
+      choices: [
+        { label: 'Keep the smoke steady while she searches', pts: 70, reply: 'You work the bellows slow and even. Frame by frame she searches, and on the last one she stops. "There. One egg, still fresh. They can raise a new queen from it." Her voice wobbles. "Thank you for not talking. My mother never talked either."' },
+        { label: 'Offer to find her a new queen from town', pts: 35, reply: 'Ines shakes her head. "A bought queen is a stranger. They might kill her." Then she softens. "But you thought of it. That counts." She finds an egg on the last frame and lets out a long breath.' },
+      ],
+    },
     4: {
       title: 'A swarm in the hedge',
       text: [

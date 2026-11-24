@@ -407,7 +407,7 @@ export const OUTFITS = {
 // v146: what each neighbour says on a rain or storm day (instead of their usual line; a festival line still wins,
 // and partners and spouses keep their own words).
 export const RAIN_LINES = {
-  ines: 'The bees stay in when it rains, so I do too. The whole kitchen smells of honey.',
+  ines: 'The bees stay in when it rains, so I do too. The whole kitchen smells of honey.',   // v323: also in her own rain lines (data/voices.js)
   bram: 'Rain on a rest day. Best kind. I have a chair, a stove and nowhere to be.',
   odile: 'Fish bite in the rain, but my knees do not like it. Nets today, pond tomorrow.',
   tavi: 'You cannot map in this. The ink runs. I am inking last week instead.',

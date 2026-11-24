@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { NPCS, RAIN_LINES } from '../src/data/npcs.js';
-import { VOICES } from '../src/data/voices.js';
+import { VOICES, voiceLines } from '../src/data/voices.js';
 import { ABOUT } from '../src/data/topics.js';
 import { DATE_LINES, SPOUSE_LINES } from '../src/data/romance.js';
 import { ownLine, againLine, topicFor } from '../src/systems/topics.js';
@@ -11,7 +11,7 @@ import { ownLine, againLine, topicFor } from '../src/systems/topics.js';
 test('every neighbour has a full voice, and only neighbours do', () => {
   assert.deepEqual(Object.keys(VOICES).sort(), NPCS.map((n) => n.id).sort());
   for (const [id, v] of Object.entries(VOICES)) {
-    assert.equal(v.more.length, 3, id);
+    assert.ok(v.more.length === 3 || v.more.length === 4, id);   // v323: a fourth tier, close lines, for some
     for (const t of v.more) assert.ok(t.length >= 4, `${id}: 4 more lines a tier`);
     for (const s of ['Spring', 'Summer', 'Autumn', 'Winter']) assert.ok(v.season[s], `${id} ${s}`);
     assert.ok(v.snow && v.birthday && v.bday?.includes('{name}') && v.eve.includes('{festival}') && v.again.length >= 2, id);
@@ -23,21 +23,21 @@ test('no sentence is said by two people', () => {
   const add = (id, line) => { if (said.has(line) && said.get(line) !== id) assert.fail(`${id} and ${said.get(line)}: ${line}`); said.set(line, id); };
   for (const n of NPCS) {
     const v = VOICES[n.id];
-    [...n.lines.flat(), ...v.more.flat(), ...Object.values(v.season), v.snow, v.birthday, v.bday, v.eve, ...v.again, RAIN_LINES[n.id],
+    [...n.lines.flat(), ...voiceLines(v), RAIN_LINES[n.id],
       ...Object.values(ABOUT[n.id] || {}), ...(DATE_LINES[n.id] || []), ...(SPOUSE_LINES[n.id] || [])].filter(Boolean).forEach((l) => add(n.id, l));
   }
 });
 
 test('plain text: no em dashes, only the placeholders the dialog fills', () => {
-  for (const v of Object.values(VOICES)) for (const line of [...v.more.flat(), ...Object.values(v.season), v.snow, v.birthday, v.bday, v.eve, ...v.again]) {
+  for (const v of Object.values(VOICES)) for (const line of voiceLines(v)) {
     assert.ok(!line.includes('—'), line);
     for (const m of line.matchAll(/\{(\w+)\}/g)) assert.ok(['name', 'fav', 'festival'].includes(m[1]), line);
   }
 });
 
 test('a neighbour goes through their whole pool before repeating, and the two talks of a day differ', () => {
-  for (const n of NPCS) for (let tier = 0; tier < 3; tier++) {
-    const size = n.lines[tier].length + VOICES[n.id].more[tier].length;
+  for (const n of NPCS) for (let tier = 0; tier < VOICES[n.id].more.length; tier++) {
+    const size = (n.lines[tier]?.length || 0) + VOICES[n.id].more[tier].length + (tier === 3 ? n.lines[2].length + VOICES[n.id].more[2].length : 0);   // v323: close lines with the 5+ pool
     const seen = new Set();
     for (let k = 0; k < size; k++) seen.add(ownLine(n, tier, 1000 * size + Math.floor(k / 2), k % 2));
     assert.equal(seen.size, size, `${n.id} tier ${tier}: every line once in ${size} talks`);
