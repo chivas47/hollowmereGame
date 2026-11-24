@@ -218,6 +218,29 @@ Object.assign(SCENES, {
       C('Ask her to paint the two of you together', 80, '"I have already started," she admits, and pulls a sheet off a canvas in the corner. Two small figures on a hill. Side by side.'), true),
   },
   rook: {
+    // v327 (roadmap 113e): the missing heart scenes, at their door
+    4: {
+      title: "The oar that would not do",
+      text: [
+        "Rook is outside his cottage with a half-carved oar across two trestles and a heap of shavings round his boots. He is glaring at the blade.",
+        "\"Ash,\" he says. \"Good ash. Straight as a gull flies. And there is a knot right where the blade wants to be.\" He runs his thumb over it. \"Burn it, or carve round it. Tell me what you would do.\"",
+      ],
+      choices: [
+        { label: "Carve round it and keep the knot", pts: 55, reply: "Rook looks at you, then at the knot, then picks up the spokeshave. He works round it slow and careful until the knot sits in the blade like an eye. \"That is the best oar I have made,\" he says, surprised. \"It has a face now.\"" },
+        { label: "Start again with clean wood", pts: 25, reply: "\"That is what my father would have said.\" Rook puts the oar aside, but he does not burn it. \"Clean wood next time. This one I will keep for myself. I like a thing with a story in it.\"" },
+      ],
+    },
+    8: {
+      title: "Two miles out",
+      text: [
+        "Rook is sitting on his doorstep at dusk with a small carved boat in his hands, no bigger than a loaf. It is very old, the paint almost gone.",
+        "\"My father made this for me the summer before he went out and did not come back.\" He turns it over. There is a name scratched on the keel, too worn to read. \"I have never told anybody what it says. I am going to tell you, if you want to know.\"",
+      ],
+      choices: [
+        { label: "Say yes, and listen", pts: 80, reply: "He says the name softly. It is his own name, the way his father used to say it, with a word in front of it that means little one. Rook laughs, wet-eyed. \"Nobody has called me that in twenty years.\" He puts the boat in your hands. \"Look after it a while?\"" },
+        { label: "Tell him he does not have to say", pts: 40, reply: "\"I know,\" Rook says. \"That is why I want to.\" But he does not, not tonight. He sets the little boat on the step between you, and the two of you watch the sea until it is too dark to see it." },
+      ],
+    },
     2: S('A loose plank', ['Rook is on his back under a half-built hull, cursing at a plank that will not sit flat.', '"Hold that end. No, the other end. Yes. Now do not let go, whatever I say."'],
       C('Hold it until he is done', 50, 'You hold it for twenty minutes while he hammers and swears. When he slides out, he looks almost pleased. "Good grip. Come back tomorrow."'),
       C('Suggest a wedge under it', 25, 'He stops, considers, and jams a wedge in. It sits flat. "Huh," he says. "Fine. You can stay."')),

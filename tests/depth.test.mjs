@@ -9,7 +9,7 @@ import { MAPS } from '../src/data/maps.js';
 import { ownLine, topicFor, tierFor } from '../src/systems/topics.js';
 import { stageOf, heartScript } from '../src/systems/heartScenes.js';
 
-const DEEP = ['ines'];   // grows by one a PR (roadmap 113a to 113h)
+const DEEP = NPCS.map((n) => n.id).filter((id) => VOICES[id].more[3]);   // everyone written up to it (close lines mark them; roadmap 113)
 const def = (id) => NPCS.find((n) => n.id === id);
 const ctx = (over) => ({ day: 40, date: { season: 'Summer', d: 12 }, weather: 'sun', tomorrow: null, npcs: NPCS, ...over });
 
