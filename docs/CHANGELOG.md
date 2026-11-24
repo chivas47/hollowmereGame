@@ -2,6 +2,15 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v342: Audio ready for composed music
+- Every sound file now sits in a folder by kind and is named by one rule: `music/farm/farm_spring_01.ogg`, `sfx/tools/hoe_till_soil_01.wav`, `sfx/footsteps/footstep_grass_01.wav`, `ambience/weather/rain_loop_01.wav`, `environment/waterfall_loop_01.wav`. `assets/audio/README.md` is a guide for composing and recording: folders, naming, formats, loudness, loops, a mood and instrument brief per season and place, and a table of every slot.
+- The Sound menu has a slider each for Master, Music, Ambience, Effects and Interface. Your old Ambience volume carries over. Footsteps now follow the Effects volume (they followed Ambience).
+- A sound can have several recordings: each play draws one at random and never repeats the last.
+- Ambience comes from rules by place, weather, season and time (`src/data/ambience.js`), several layers at once: wind under the rain and stronger in storms, a soft wind at night outdoors, and a new owl now and then on nights in the wild.
+- Music can open with an intro that plays once before the loop (`loopStart`, `loopEnd`).
+- `node tools/audio_list.mjs` lists every sound slot, missing files and recordings not yet listed.
+- New save data: none. Sound settings move to a new shape in the browser; old ones are read.
+
 ## v341: Old farms grow
 - A farm started before v340 grows to its layout's big size, 64 x 48, the first time it loads. It grows east and south only, so your house, fields, crops, buildings, animals and everything you placed stay exactly where they were.
 - The road east to the wilds and the path south to the forest move out to the new edges; the old ones are now road and grass inside your farm.

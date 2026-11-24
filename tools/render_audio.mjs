@@ -1,4 +1,5 @@
-// v317 (roadmap 109): records the game's generated sounds into the files listed in src/data/audio.js.
+// v317 (roadmap 109): records the game's generated sounds into the files listed in src/data/audio.js and
+// src/data/musicTracks.js. v342: a pool records only its first file; the variants you add are never touched.
 //   node tools/render_audio.mjs            every file (writes assets/audio/**.wav and the gains into src/data/audio.js)
 //   node tools/render_audio.mjs hoe rain   only these ids
 // Each sound is played by its own generator (audio/sfx.js, music.js, ambience.js, footsteps.js) into an offline audio
@@ -19,7 +20,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ONLY = process.argv.slice(2);
 const RATE = 22050, PEAK = 0.9;
 const { chromium } = createRequire(import.meta.url)('playwright');
-const { ALL_AUDIO, AUDIO_DIR } = await import(join(ROOT, 'src/data/audio.js'));
+const { ALL_AUDIO, AUDIO_DIR, filesOf } = await import(join(ROOT, 'src/data/audio.js'));
 const { TRACKS } = await import(join(ROOT, 'src/data/musicTracks.js'));   // v318: the music database
 
 const TYPES = { '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.html': 'text/html', '.png': 'image/png' };
@@ -108,11 +109,11 @@ for (const [kind, group] of Object.entries(ALL_AUDIO)) {
     const s = shape(kind, await record(kind, id, LEN[kind], RATE));
     const peak = s.reduce((m, v) => Math.max(m, Math.abs(v)), 0) || 1;
     for (let i = 0; i < s.length; i++) s[i] *= PEAK / peak;
-    const out = join(ROOT, AUDIO_DIR, entry.file);
+    const file = filesOf(entry)[0], out = join(ROOT, AUDIO_DIR, file);   // v342: a pool's first file (the others are yours)
     mkdirSync(dirname(out), { recursive: true });
     writeFileSync(out, wav(s));
-    gains[entry.file] = +(peak / PEAK).toPrecision(3);
-    console.log(`${entry.file.padEnd(42)} ${(s.length / RATE).toFixed(2)} s  gain ${gains[entry.file]}`);
+    gains[file] = +(peak / PEAK).toPrecision(3);
+    console.log(`${file.padEnd(50)} ${(s.length / RATE).toFixed(2)} s  gain ${gains[file]}`);
   }
 }
 await browser.close(); server.close();
@@ -120,7 +121,7 @@ await browser.close(); server.close();
 // The gains into data/audio.js, on the line of each file written.
 const dataPath = join(ROOT, 'src/data/audio.js');
 let src = readFileSync(dataPath, 'utf8');
-for (const [file, g] of Object.entries(gains)) src = src.replace(new RegExp(`(file: '${file.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}',\\s*gain: )[0-9.e-]+`), `$1${g}`);
+for (const [file, g] of Object.entries(gains)) src = src.replace(new RegExp(`(files: \\['${file.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}'[^\\]]*\\],[^\\n]*?gain: )[0-9.e-]+`), `$1${g}`);
 writeFileSync(dataPath, src);
 
 // v318: each track's gain on its line in data/musicTracks.js (added after its file the first time).
