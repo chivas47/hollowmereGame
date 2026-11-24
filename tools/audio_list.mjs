@@ -22,10 +22,10 @@ const where = (t) => [list(t.category).join(', '), t.place && `at ${list(t.place
 const feel = (t) => (t.gen ? `${NOTES[t.gen.root % 12]} ${MODES[t.gen.scale.join(',')] || 'scale'}, ${t.gen.bpm} bpm` : '');
 
 const GROUPS = [
-  { title: 'Sound effects', note: 'One-shots, played when something happens (the Effects volume; the menu click is Interface).', entries: SFX_FILES },
-  { title: 'Footsteps', note: 'One per step, by what is underfoot (the Effects volume; Steps turns them off). Pools are most worth it here.', entries: STEP_FILES },
-  { title: 'Ambient and environment loops', note: 'Looped and faded with the scene: the levels are set by the rules in `src/data/ambience.js`.', entries: BED_FILES },
-  { title: 'Ambient calls', note: 'One-shots at random moments while the scene suits them (rules in `src/data/ambience.js`).', entries: CALL_FILES },
+  { title: 'Sound effects', note: 'One-shots, played when something happens. Record the variants a brief asks for as `_02`, `_03` and list them in `files`.', entries: SFX_FILES, bus: 'sfx' },
+  { title: 'Footsteps', note: 'One per step, by what is underfoot (Steps in the menu turns them off). About four a second, so every step must be subtle, and variants matter most here.', entries: STEP_FILES, bus: 'sfx' },
+  { title: 'Ambient and environment loops', note: 'Looped and faded with the scene: the levels are set by the rules in `src/data/ambience.js`. Loops must join end to start without a click, and no single event should stand out (a repeat you can spot gets tiring).', entries: BED_FILES, bus: 'ambience' },
+  { title: 'Ambient calls', note: 'One-shots at random moments while the scene suits them (rules in `src/data/ambience.js`). Record them with a little distance and air, as heard from across a field.', entries: CALL_FILES, bus: 'ambience' },
 ];
 
 function walk(d) { return readdirSync(d).flatMap((f) => { const p = join(d, f); return statSync(p).isDirectory() ? walk(p) : [p]; }); }
@@ -69,8 +69,17 @@ function tables() {
     }
   }
   for (const g of GROUPS) {
-    out.push('', `## ${g.title}`, '', g.note, '', '| File | Plays for | Id in data/audio.js |', '|---|---|---|');
-    for (const [id, e] of Object.entries(g.entries)) out.push(`| ${filesOf(e).map((f) => `\`${f}\``).join('<br>')} | ${e.about || ''} | \`${id}\` |`);
+    out.push('', `## ${g.title}`, '', g.note);
+    let folder = null;
+    const dirOf = (e) => filesOf(e)[0].split('/').slice(0, -1).join('/');
+    for (const [id, e] of Object.entries(g.entries).sort(([, a], [, b]) => dirOf(a).localeCompare(dirOf(b)))) {
+      const files = filesOf(e), dir = files[0].split('/').slice(0, -1).join('/');
+      if (dir !== folder) { folder = dir; out.push('', `### \`${dir}/\``); }
+      const about = e.about ? e.about[0].toUpperCase() + e.about.slice(1) : id;
+      out.push('', `#### ${about}`, '', `- File${files.length > 1 ? `s (a pool of ${files.length})` : ''}: ${files.map((f) => `\`${f}\``).join(', ')} (id \`${id}\`)`,
+        `- Form: ${e.loop ? 'seamless loop' : 'one-shot'}${e.vary ? `; the game shifts its pitch up to ${Math.round(e.vary * 100)}% either way each play` : ''}`,
+        `- Volume: ${{ sfx: 'Effects', ambience: 'Ambience', ui: 'Interface' }[e.bus || g.bus]}`, '', e.brief || '');
+    }
   }
   return out.join('\n');
 }

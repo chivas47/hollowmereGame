@@ -55,6 +55,6 @@ test('files follow the naming rules, sit in their kind\'s folder, and nothing un
 test('the README lists every file, written from the data (node tools/audio_list.mjs --readme)', () => {
   const readme = readFileSync(join(DIR, 'README.md'), 'utf8');
   for (const e of entries) assert.ok(readme.includes(`\`${e.file}\``), e.file);
-  for (const [id, e] of Object.entries(SFX_FILES)) assert.ok(e.about && readme.includes(e.about), `${id} says what it is for`);
+  for (const [id, e] of Object.values(ALL_AUDIO).flatMap((g) => Object.entries(g))) assert.ok(e.brief?.length > 40 && readme.includes(e.brief), `${id} has a recording brief in the README`);
   for (const t of TRACKS) assert.ok(t.brief?.length > 60 && readme.includes(t.brief), `${t.id} has a composing brief in the README`);
 });

@@ -10,7 +10,7 @@ Newest first. Version numbers match published versions of the playable page.
 - Music follows where you are at two levels, place and region. Gloamwood, the Tangle and Mournfield (darker at night), each zone of the Hollow (the Sunken Cavern by depth: above the Ember Vent's door, from it to floor 24, 25 and deeper where umbrite is richest; the Ember Vent's climb and its forge room; and the Hollow itself by depth: floors 1 to 39, 40 to 79, 80 and deeper, where its creatures and ore change), the island, the dig site, the Smoke Peak (the climb, and the summit), the Dunes, the Oasis, the casino, the museum and the picture house now have music of their own; places without their own play their region's, and every place in the game has one or the other.
 - A track rotates to another that fits as well after about five minutes of play (at the end of a loop), not after three loops, so long pieces and short ones change alike.
 - Music can open with an intro that plays once before the loop (`loopStart`, `loopEnd`).
-- Every track has a written composing brief (when it plays, mood, instruments, tempo, form); the README's music section is written from them.
+- Every track has a written composing brief (when it plays, mood, instruments, tempo, form), and every effect, footstep and ambient sound a recording brief (character, length, how often it plays, how many variants); the README is written from them.
 - `node tools/audio_list.mjs` lists every sound slot, missing files and recordings not yet listed.
 - New save data: none. Sound settings move to a new shape in the browser; old ones are read.
 

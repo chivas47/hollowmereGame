@@ -84,8 +84,11 @@ length works; 1 to 3 minutes suits background music.
 For music, add more tracks with the same fields: they form a pool, one is drawn at random, and after about five
 minutes (`rotateAfter`, counted at the end of a loop) another takes over, so a 2-minute piece plays two or three times.
 
-**Briefs.** Every track has its own brief under *Music briefs* below: when it plays, the mood, instruments, tempo
-and form. The table here is the overall palette.
+**Briefs.** Every track has its own brief under *Music briefs* below (when it plays, the mood, instruments, tempo and
+form), and every effect, footstep and ambient sound its own recording brief (character, length, how often it plays,
+how many variants). Edit them in `src/data/musicTracks.js` and `src/data/audio.js`, then run
+`node tools/audio_list.mjs --readme`; the sections below are rewritten from the data. The table here is the overall
+musical palette.
 
 **Style.** Simple, memorable melodies, relaxed pacing, warm instruments, comfortable repetition, and a mood per
 season and place:
@@ -734,84 +737,490 @@ Played once when you find a new place. 2 to 4 seconds, wonder and curiosity: har
 
 ## Sound effects
 
-One-shots, played when something happens (the Effects volume; the menu click is Interface).
+One-shots, played when something happens. Record the variants a brief asks for as `_02`, `_03` and list them in `files`.
 
-| File | Plays for | Id in data/audio.js |
-|---|---|---|
-| `sfx/farming/weeds_cut_rustle_01.wav` | thick weeds cut with the weapon | `rustle` |
-| `sfx/tools/hoe_till_soil_01.wav` | the hoe tilling soil | `hoe` |
-| `sfx/tools/watering_can_pour_01.wav` | the watering can pouring | `can` |
-| `sfx/farming/seed_plant_01.wav` | a seed planted | `seed` |
-| `sfx/tools/axe_chop_wood_01.wav` | the axe chopping | `axe` |
-| `sfx/tools/pickaxe_strike_rock_01.wav` | the pickaxe striking rock | `pick` |
-| `sfx/combat/sword_swing_01.wav` | a sword swing | `sword` |
-| `sfx/combat/dagger_swing_01.wav` | a dagger swing | `swingDagger` |
-| `sfx/combat/club_swing_01.wav` | a club or hammer swing | `swingClub` |
-| `sfx/combat/weapon_hit_01.wav` | a blow landing on a creature | `hit` |
-| `sfx/combat/weapon_hit_critical_01.wav` | a critical hit | `crit` |
-| `sfx/combat/monster_defeated_01.wav` | a creature defeated | `slay` |
-| `sfx/combat/ground_slam_01.wav` | a weapon special slamming the ground | `slam` |
-| `sfx/combat/low_health_heartbeat_01.wav` | low health in a fight | `heartbeat` |
-| `sfx/items/item_pickup_01.wav` | picking something up | `pickup` |
-| `sfx/fishing/fish_bite_alert_01.wav` | a fish biting | `bite` |
-| `sfx/fishing/fish_caught_01.wav` | a fish caught | `catch` |
-| `sfx/fishing/fish_escaped_01.wav` | a fish getting away | `miss` |
-| `sfx/combat/player_hurt_01.wav` | the farmer hurt | `hurt` |
-| `sfx/items/coins_earned_01.wav` | gold earned | `coin` |
-| `sfx/jingles/skill_level_up_01.wav` | a skill levelling up | `levelup` |
-| `sfx/animals/animal_pet_01.wav` | petting an animal | `pet` |
-| `sfx/items/object_place_01.wav` | setting an object down | `place` |
-| `sfx/world/door_map_change_01.wav` | going through a door or onto another map | `door` |
-| `sfx/combat/bomb_explosion_01.wav` | a bomb | `boom` |
-| `sfx/world/thunder_rumble_01.wav` | thunder in a storm | `thunder` |
-| `sfx/animals/bird_take_off_01.wav` | a bird taking off | `flap` |
-| `sfx/ui/menu_click_01.wav` | menu buttons | `ui` |
-| `sfx/jingles/wishing_stone_chime_01.wav` | blessings, guide steps and tips | `chime` |
-| `sfx/world/lantern_water_splash_01.wav` | a lantern set on the water | `splash` |
-| `sfx/jingles/morning_wake_01.wav` | waking up to the morning report | `morning` |
+### `sfx/animals/`
+
+#### Petting an animal
+
+- File: `sfx/animals/animal_pet_01.wav` (id `pet`)
+- Form: one-shot
+- Volume: Effects
+
+Petting an animal. A soft affectionate chirp or rising coo, about 0.15 s. Warm, never squeaky.
+
+#### A bird taking off
+
+- File: `sfx/animals/bird_take_off_01.wav` (id `flap`)
+- Form: one-shot
+- Volume: Effects
+
+A bird taking off when you walk near. A quick flutter of wings, 0.15 to 0.25 s.
+
+### `sfx/combat/`
+
+#### A sword swing
+
+- File: `sfx/combat/sword_swing_01.wav` (id `sword`)
+- Form: one-shot
+- Volume: Effects
+
+A sword swing through the air. A clean whoosh, 0.15 to 0.25 s, mid-pitched. Played on every swing, hit or miss.
+
+#### A dagger swing
+
+- File: `sfx/combat/dagger_swing_01.wav` (id `swingDagger`)
+- Form: one-shot
+- Volume: Effects
+
+A dagger's quick stab or slash. A short, high, thin whip, under 0.15 s: faster and lighter than the sword.
+
+#### A club or hammer swing
+
+- File: `sfx/combat/club_swing_01.wav` (id `swingClub`)
+- Form: one-shot
+- Volume: Effects
+
+A club or hammer swing. A heavy, low, slow whoosh, 0.25 to 0.35 s, with weight at the end.
+
+#### A blow landing on a creature
+
+- File: `sfx/combat/weapon_hit_01.wav` (id `hit`)
+- Form: one-shot
+- Volume: Effects
+
+A blow landing on a creature. A short punchy thud with a soft squelch or crack, under 0.12 s. Plays with every hit, so tight and dry.
+
+#### A critical hit
+
+- File: `sfx/combat/weapon_hit_critical_01.wav` (id `crit`)
+- Form: one-shot
+- Volume: Effects
+
+A critical hit. The normal hit plus a bright metallic ring or sparkle on top, 0.15 to 0.25 s. Must stand out from a normal hit at once.
+
+#### A creature defeated
+
+- File: `sfx/combat/monster_defeated_01.wav` (id `slay`)
+- Form: one-shot
+- Volume: Effects
+
+A creature defeated. A soft poof or deflate with a small rising two-note chime, 0.2 to 0.4 s. Rewarding, never gory.
+
+#### A weapon special slamming the ground
+
+- File: `sfx/combat/ground_slam_01.wav` (id `slam`)
+- Form: one-shot
+- Volume: Effects
+
+A weapon special slamming the ground. A deep boom with rocks and dust, 0.3 to 0.5 s, strong low end.
+
+#### Low health in a fight
+
+- File: `sfx/combat/low_health_heartbeat_01.wav` (id `heartbeat`)
+- Form: one-shot
+- Volume: Effects
+
+Low health in a fight. Two soft low heartbeat thumps (lub-dub), about 0.3 s, repeated by the game. Felt more than heard; no high frequencies.
+
+#### The farmer hurt
+
+- File: `sfx/combat/player_hurt_01.wav` (id `hurt`)
+- Form: one-shot
+- Volume: Effects
+
+The farmer taking damage. A short low grunt-like tone or impact with a slight down-bend, 0.15 to 0.25 s. No real voice recording (the farmer has no voice).
+
+#### A bomb
+
+- File: `sfx/combat/bomb_explosion_01.wav` (id `boom`)
+- Form: one-shot
+- Volume: Effects
+
+A bomb exploding. A deep explosion with rubble, 0.6 to 1 s, strong low end but not painful.
+
+### `sfx/farming/`
+
+#### Thick weeds cut with the weapon
+
+- File: `sfx/farming/weeds_cut_rustle_01.wav` (id `rustle`)
+- Form: one-shot
+- Volume: Effects
+
+Cutting thick weeds with a weapon. A quick leafy swish and snap, 0.15 to 0.3 s. Heard in bursts while clearing, so keep it light; 2 or 3 variants help.
+
+#### A seed planted
+
+- File: `sfx/farming/seed_plant_01.wav` (id `seed`)
+- Form: one-shot
+- Volume: Effects
+
+A seed pressed into the soil. A tiny soft pop or tap, under 0.1 s. Frequent and small; it should feel satisfying, not loud.
+
+### `sfx/fishing/`
+
+#### A fish biting
+
+- File: `sfx/fishing/fish_bite_alert_01.wav` (id `bite`)
+- Form: one-shot
+- Volume: Effects
+
+A fish biting: the reel starts now. A sharp alert, two quick plucks or a bobber plunk with a ping, about 0.2 s. Must cut through music and ambience.
+
+#### A fish caught
+
+- File: `sfx/fishing/fish_caught_01.wav` (id `catch`)
+- Form: one-shot
+- Volume: Effects
+
+A fish caught. A short rising fanfare, 0.4 to 0.6 s, bright plucked or bell tones. Celebratory but small.
+
+#### A fish getting away
+
+- File: `sfx/fishing/fish_escaped_01.wav` (id `miss`)
+- Form: one-shot
+- Volume: Effects
+
+A fish getting away. A soft falling slide or 'aww' plunk, 0.3 to 0.4 s. Disappointed, not punishing.
+
+### `sfx/items/`
+
+#### Picking something up
+
+- File: `sfx/items/item_pickup_01.wav` (id `pickup`)
+- Form: one-shot
+- Volume: Effects
+
+Picking anything up. A light, happy two-note blip or soft pluck, about 0.15 s. Extremely frequent: pleasant and quick, the game's most 'feel-good' tiny sound.
+
+#### Gold earned
+
+- File: `sfx/items/coins_earned_01.wav` (id `coin`)
+- Form: one-shot
+- Volume: Effects
+
+Gold earned (selling, rewards). Two bright coin chings, about 0.2 s. Classic and clean.
+
+#### Setting an object down
+
+- File: `sfx/items/object_place_01.wav` (id `place`)
+- Form: one-shot
+- Volume: Effects
+
+Setting an object, furniture or a building piece down. A soft wooden thud, about 0.1 s.
+
+### `sfx/jingles/`
+
+#### A skill levelling up
+
+- File: `sfx/jingles/skill_level_up_01.wav` (id `levelup`)
+- Form: one-shot
+- Volume: Effects
+
+A skill levelling up. A rising arpeggio jingle, 0.5 to 0.8 s, bells or plucked strings, ending on the home note. A proud moment.
+
+#### Blessings, guide steps and tips
+
+- File: `sfx/jingles/wishing_stone_chime_01.wav` (id `chime`)
+- Form: one-shot
+- Volume: Effects
+
+Blessings at the wishing stone, guide steps and tips. Two gentle bell or chime tones, about 0.6 s, a little magical.
+
+#### Waking up to the morning report
+
+- File: `sfx/jingles/morning_wake_01.wav` (id `morning`)
+- Form: one-shot
+- Volume: Effects
+
+Waking up to the morning report. A short bright 3-note morning jingle, 0.4 to 0.6 s, like a music-box or glockenspiel. Heard every in-game day: friendly, not alarm-like.
+
+### `sfx/tools/`
+
+#### The hoe tilling soil
+
+- File: `sfx/tools/hoe_till_soil_01.wav` (id `hoe`)
+- Form: one-shot
+- Volume: Effects
+
+The hoe biting into soil. A soft dull thunk with a little crumble of earth, 0.15 to 0.25 s. One of the most repeated sounds in the game (dozens a day): short, low, never harsh. Record 3 variants.
+
+#### The watering can pouring
+
+- File: `sfx/tools/watering_can_pour_01.wav` (id `can`)
+- Form: one-shot
+- Volume: Effects
+
+Watering a tile. A short gentle pour, water onto soil, 0.3 to 0.5 s. Very frequent: soft, no splash peak. 2 or 3 variants.
+
+#### The axe chopping
+
+- File: `sfx/tools/axe_chop_wood_01.wav` (id `axe`)
+- Form: one-shot
+- Volume: Effects
+
+The axe hitting wood (trees, stumps, twigs). A solid woody chock with a short resonance, 0.15 to 0.3 s. 3 variants; the last hit that fells a tree is the same sound.
+
+#### The pickaxe striking rock
+
+- File: `sfx/tools/pickaxe_strike_rock_01.wav` (id `pick`)
+- Form: one-shot
+- Volume: Effects
+
+The pickaxe striking stone or ore. A bright clink with a gritty crunch, 0.1 to 0.25 s. Heard hundreds of times in the mines: crisp but not piercing. 3 variants.
+
+### `sfx/ui/`
+
+#### Menu buttons
+
+- File: `sfx/ui/menu_click_01.wav` (id `ui`)
+- Form: one-shot
+- Volume: Interface
+
+Menu buttons and clicks. A tiny soft tick or wooden tap, under 0.05 s. Heard constantly in menus: almost subliminal (it plays at the Interface volume).
+
+### `sfx/world/`
+
+#### Going through a door or onto another map
+
+- File: `sfx/world/door_map_change_01.wav` (id `door`)
+- Form: one-shot
+- Volume: Effects
+
+Going through a door or onto another map. A short swing-and-latch or soft whoosh, 0.3 to 0.4 s. Very frequent: quiet and neutral.
+
+#### Thunder in a storm
+
+- File: `sfx/world/thunder_rumble_01.wav` (id `thunder`)
+- Form: one-shot
+- Volume: Effects
+
+Thunder with the lightning in a storm. A distant crack then a long rolling rumble, 2 to 3 s. Played over the rain loop; vary the distance across 2 or 3 variants.
+
+#### A lantern set on the water
+
+- File: `sfx/world/lantern_water_splash_01.wav` (id `splash`)
+- Form: one-shot
+- Volume: Effects
+
+A lantern set on the water. A soft small splash with a ripple, about 0.3 s.
 
 ## Footsteps
 
-One per step, by what is underfoot (the Effects volume; Steps turns them off). Pools are most worth it here.
+One per step, by what is underfoot (Steps in the menu turns them off). About four a second, so every step must be subtle, and variants matter most here.
 
-| File | Plays for | Id in data/audio.js |
-|---|---|---|
-| `sfx/footsteps/footstep_grass_01.wav` | walking on grass | `grass` |
-| `sfx/footsteps/footstep_dirt_path_01.wav` | walking on dirt paths | `path` |
-| `sfx/footsteps/footstep_sand_01.wav` | walking on sand | `sand` |
-| `sfx/footsteps/footstep_stone_01.wav` | walking on stone | `stone` |
-| `sfx/footsteps/footstep_wood_01.wav` | walking on wooden floors and the pier | `wood` |
-| `sfx/footsteps/footstep_snow_01.wav` | walking on snow | `snow` |
-| `sfx/footsteps/footstep_wet_ground_01.wav` | walking on wet ground in rain | `wet` |
-| `sfx/footsteps/horse_hoof_01.wav` | riding the horse | `hoof` |
+### `sfx/footsteps/`
+
+#### Walking on grass
+
+- File: `sfx/footsteps/footstep_grass_01.wav` (id `grass`)
+- Form: one-shot; the game shifts its pitch up to 15% either way each play
+- Volume: Effects
+
+Walking on grass (the default outdoors). A soft brushy step, under 0.1 s. About 4 steps a second, so it must be very subtle. Record 4 variants.
+
+#### Walking on dirt paths
+
+- File: `sfx/footsteps/footstep_dirt_path_01.wav` (id `path`)
+- Form: one-shot; the game shifts its pitch up to 15% either way each play
+- Volume: Effects
+
+Walking on dirt paths and roads. A soft gritty crunch, under 0.1 s, a bit firmer than grass. 4 variants.
+
+#### Walking on sand
+
+- File: `sfx/footsteps/footstep_sand_01.wav` (id `sand`)
+- Form: one-shot; the game shifts its pitch up to 15% either way each play
+- Volume: Effects
+
+Walking on sand (the beach, the Dunes, the island). A soft shifting hiss, under 0.12 s. 4 variants.
+
+#### Walking on stone
+
+- File: `sfx/footsteps/footstep_stone_01.wav` (id `stone`)
+- Form: one-shot; the game shifts its pitch up to 15% either way each play
+- Volume: Effects
+
+Walking on stone (the quarry, caves, the Hollow, stone paths). A hard dry tap, under 0.08 s, slightly echoey underground. 4 variants.
+
+#### Walking on wooden floors and the pier
+
+- File: `sfx/footsteps/footstep_wood_01.wav` (id `wood`)
+- Form: one-shot; the game shifts its pitch up to 15% either way each play
+- Volume: Effects
+
+Walking on wooden floors indoors, the pier and wood paths. A hollow wooden knock, under 0.1 s. 4 variants.
+
+#### Walking on snow
+
+- File: `sfx/footsteps/footstep_snow_01.wav` (id `snow`)
+- Form: one-shot; the game shifts its pitch up to 15% either way each play
+- Volume: Effects
+
+Walking on snow outdoors in winter. A soft compressing crunch, under 0.15 s. 4 variants.
+
+#### Walking on wet ground in rain
+
+- File: `sfx/footsteps/footstep_wet_ground_01.wav` (id `wet`)
+- Form: one-shot; the game shifts its pitch up to 15% either way each play
+- Volume: Effects
+
+Walking on wet ground outdoors in rain. A soft squelchy splash, under 0.12 s. 4 variants.
+
+#### Riding the horse
+
+- File: `sfx/footsteps/horse_hoof_01.wav` (id `hoof`)
+- Form: one-shot; the game shifts its pitch up to 15% either way each play
+- Volume: Effects
+
+Riding the horse. One hoofbeat clop on earth, under 0.1 s, played about 3 times a second. 2 to 4 variants.
 
 ## Ambient and environment loops
 
-Looped and faded with the scene: the levels are set by the rules in `src/data/ambience.js`.
+Looped and faded with the scene: the levels are set by the rules in `src/data/ambience.js`. Loops must join end to start without a click, and no single event should stand out (a repeat you can spot gets tiring).
 
-| File | Plays for | Id in data/audio.js |
-|---|---|---|
-| `ambience/weather/rain_loop_01.wav` | rain outdoors (and muffled indoors) | `rain` |
-| `ambience/weather/wind_loop_01.wav` | wind on windy maps, in winter, in rain and storms, and softly at night | `wind` |
-| `environment/waterfall_loop_01.wav` | near a waterfall | `falls` |
-| `ambience/water/sea_surf_loop_01.wav` | on the beach | `surf` |
-| `ambience/underground/cave_hum_loop_01.wav` | inside caves | `hum` |
-| `environment/hearth_fire_loop_01.wav` | near a hearth or stove | `fire` |
+### `ambience/underground/`
+
+#### Inside caves
+
+- File: `ambience/underground/cave_hum_loop_01.wav` (id `hum`)
+- Form: seamless loop
+- Volume: Ambience
+
+The air inside caves and the Hollow: a very low, soft hum or room tone, 10 to 20 s seamless loop. Felt rather than heard, under the music.
+
+### `ambience/water/`
+
+#### On the beach
+
+- File: `ambience/water/sea_surf_loop_01.wav` (id `surf`)
+- Form: seamless loop
+- Volume: Ambience
+
+Waves on the beach, 15 to 30 s seamless loop of gentle surf. The game also swells it slowly, so keep it even.
+
+### `ambience/weather/`
+
+#### Rain outdoors (and muffled indoors)
+
+- File: `ambience/weather/rain_loop_01.wav` (id `rain`)
+- Form: seamless loop
+- Volume: Ambience
+
+Steady rain outdoors, 10 to 30 s seamless loop. Even texture with no single drops or thunder standing out (a pattern you can hear repeat gets annoying fast). Plays at 70% in rain, 100% in storms, 25% (muffled) indoors.
+
+#### Wind on windy maps, in winter, in rain and storms, and softly at night
+
+- File: `ambience/weather/wind_loop_01.wav` (id `wind`)
+- Form: seamless loop
+- Volume: Ambience
+
+Wind outdoors: on the desert and quarry, in winter, in rain and storms, softly at night. 15 to 30 s seamless loop, gentle and broad, slowly rising and falling; no sharp gusts (those are a separate call).
+
+### `environment/`
+
+#### Near a waterfall
+
+- File: `environment/waterfall_loop_01.wav` (id `falls`)
+- Form: seamless loop
+- Volume: Ambience
+
+A waterfall, heard as you walk near (louder the closer). 10 to 20 s seamless loop of falling water, full and steady.
+
+#### Near a hearth or stove
+
+- File: `environment/hearth_fire_loop_01.wav` (id `fire`)
+- Form: seamless loop
+- Volume: Ambience
+
+A hearth or stove indoors, heard as you get near. 10 to 20 s seamless loop of a soft fire breath and low roar; the crackles are a separate call.
 
 ## Ambient calls
 
-One-shots at random moments while the scene suits them (rules in `src/data/ambience.js`).
+One-shots at random moments while the scene suits them (rules in `src/data/ambience.js`). Record them with a little distance and air, as heard from across a field.
 
-| File | Plays for | Id in data/audio.js |
-|---|---|---|
-| `ambience/nature/bird_chirp_01.wav` | birdsong by day | `bird` |
-| `ambience/nature/cricket_chirp_01.wav` | crickets at night | `cricket` |
-| `ambience/water/gull_cry_01.wav` | gulls at the shore | `gull` |
-| `ambience/underground/cave_drip_01.wav` | water dripping in caves | `drip` |
-| `ambience/town/town_bell_distant_01.wav` | a far bell in town | `bell` |
-| `ambience/weather/wind_gust_01.wav` | gusts on windy maps | `gust` |
-| `ambience/weather/rain_on_glass_01.wav` | rain tapping on a window | `tap` |
-| `ambience/nature/owl_hoot_01.wav` | an owl at night in the wild | `owl` |
-| `environment/fire_crackle_01.wav` | a fire crackling | `crackle` |
+### `ambience/nature/`
+
+#### Birdsong by day
+
+- File: `ambience/nature/bird_chirp_01.wav` (id `bird`)
+- Form: one-shot; the game shifts its pitch up to 25% either way each play
+- Volume: Ambience
+
+Birdsong by day in the wild and in town (not in winter or rain). One short phrase of 2 to 4 chirps, 0.3 to 0.8 s. Several species-like variants make the world feel alive; the game varies the pitch too.
+
+#### Crickets at night
+
+- File: `ambience/nature/cricket_chirp_01.wav` (id `cricket`)
+- Form: one-shot; the game shifts its pitch up to 5% either way each play
+- Volume: Ambience
+
+Crickets on dry nights out of winter. One short chirp burst, under 0.2 s, played often; keep it soft and high.
+
+#### An owl at night in the wild
+
+- File: `ambience/nature/owl_hoot_01.wav` (id `owl`)
+- Form: one-shot; the game shifts its pitch up to 6% either way each play
+- Volume: Ambience
+
+An owl at night in the wild, rare. A soft two-note hoot, about 1 s, from a distance.
+
+### `ambience/town/`
+
+#### A far bell in town
+
+- File: `ambience/town/town_bell_distant_01.wav` (id `bell`)
+- Form: one-shot
+- Volume: Ambience
+
+A far bell in town by day, rare. One distant church-like bell strike with a long tail, 1 to 2 s, very soft.
+
+### `ambience/underground/`
+
+#### Water dripping in caves
+
+- File: `ambience/underground/cave_drip_01.wav` (id `drip`)
+- Form: one-shot; the game shifts its pitch up to 15% either way each play
+- Volume: Ambience
+
+Water dripping in caves. A single drop into a pool with a small echo, 0.1 to 0.3 s. 2 or 3 variants.
+
+### `ambience/water/`
+
+#### Gulls at the shore
+
+- File: `ambience/water/gull_cry_01.wav` (id `gull`)
+- Form: one-shot; the game shifts its pitch up to 10% either way each play
+- Volume: Ambience
+
+Gulls at the shore by day. One or two gull cries, 0.5 to 0.8 s, from a little distance.
+
+### `ambience/weather/`
+
+#### Gusts on windy maps
+
+- File: `ambience/weather/wind_gust_01.wav` (id `gust`)
+- Form: one-shot; the game shifts its pitch up to 10% either way each play
+- Volume: Ambience
+
+A gust on windy maps (the Dunes, the quarry). A swelling whoosh that fades, 1.5 to 2 s, over the wind loop.
+
+#### Rain tapping on a window
+
+- File: `ambience/weather/rain_on_glass_01.wav` (id `tap`)
+- Form: one-shot; the game shifts its pitch up to 30% either way each play
+- Volume: Ambience
+
+Rain tapping on a window, indoors while it rains outside. One tiny tick of a drop on glass, under 0.05 s, played very often. 3 variants.
+
+### `environment/`
+
+#### A fire crackling
+
+- File: `environment/fire_crackle_01.wav` (id `crackle`)
+- Form: one-shot; the game shifts its pitch up to 20% either way each play
+- Volume: Ambience
+
+A fire crackling near a hearth or stove. One to three small pops and snaps, under 0.3 s, played often. 3 variants.
 
 <!-- slots:end -->
