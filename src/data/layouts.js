@@ -75,6 +75,10 @@ export const LAYOUTS = {
   },
 };
 
+// v339 (roadmap 118a): the layout the new game screen starts on (and lists first). A save with no layout is
+// still 'open' (core/state.js newState), so old farms keep theirs.
+export const NEW_FARM_LAYOUT = 'wide';
+
 export const farmSize = (id) => LAYOUTS[id]?.size || { w: W, h: H };
 
 // What a washed-up crate can hold: item -> [min, max]. One is picked.
