@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v331: Rooms that feel lived in
+- 40 new pieces of furniture on thirteen new shapes: beds, wardrobes, stoves, plate hutches, crates, benches, shelves, candles, vases, rocking chairs, pianos, a fishbowl and lanterns.
+- Every piece belongs to a room set: cottage parlour, kitchen, bedroom, study, seaside, woodland and workroom. The catalogue shows one set at a time and how much of it you have.
+- This week: 16 collector's pieces come to the catalogue four at a time, changing every week. Every one comes round within four weeks, and once you own one you can buy it again any time. The full catalogue does not make these free.
+- The catalogue counts your collection and tells you when a set is complete. Old farms start with the furniture they already have.
+- New save data: house.owned (every piece ever bought). Save step 9.
+
 ## v330: Corvin has more to say
 - The next marriage candidate written up in depth (roadmap 113h). Two new heart scenes with Corvin: at 4 hearts, a broken hinge; at 8, the cold forge. Corvin now has a scene at every step from 2 to 10 hearts.
 - Once you are close (8 hearts), five new things Corvin says join the usual lines.

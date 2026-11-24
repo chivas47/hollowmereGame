@@ -118,7 +118,8 @@ const { buyChicken, collectEggs, buyFeed, flock } = await load('systems/coop.js'
 const { PROJECTS } = await load('data/projects.js');
 const { funded, fundProject } = await load('systems/projects.js');
 const { RENOVATIONS } = await load('data/furniture.js');   // v170
-const { buyRenovation } = await load('systems/house.js');
+const { buyRenovation, buyFurniture, weeklyStock, onSale } = await load('systems/house.js');
+const { FURNITURE } = await load('data/furniture.js');   // v331
 const { orderBarn, buyAnimal, buyHay, collectMilk, herd } = await load('systems/barn.js');
 const { SITES, findSite, siteAt, noFit } = await load('systems/sites.js');
 const { millIn, millCollect } = await load('systems/mill.js');
@@ -178,6 +179,7 @@ const median = (a) => { const b = [...a].sort((x, y) => x - y); return b.length 
 const dayName = (d) => { const p = dateParts(d); return `${p.season} ${p.d}${p.year > 1 ? `, Y${p.year}` : ''}`; };
 const spend = (m) => { S().time += m; };
 const late = () => S().time >= BEDTIME;
+const DECOR_SPARE = 50000;   // v331: gold kept beyond the next goal before the bot buys furniture
 
 function standFacing(map, tx, ty) {
   for (const [dir, [dx, dy]] of Object.entries(DIRS)) {
@@ -317,6 +319,17 @@ function simulate(runSeed) {
     }
     if (goals.length) return;
     if (log.goalsDone === null) log.goalsDone = S().day;
+  }
+
+  // v331 (roadmap 114): furnishing, like a player once the farm pays well. With DECOR_SPARE more than the next goal costs,
+  // one new piece a day at the catalogue: this week's collector's pieces first (they go away), then the cheapest piece
+  // always on sale that the farm does not have yet. It does not place them (the house is not in the simulation).
+  function decorate() {
+    const s = S(), g = GOAL[nextGoal()], spare = s.gold - (g?.cost() || 0) - DECOR_SPARE;
+    if (spare <= 0) return;
+    const want = (k) => onSale(k, s) && !s.house.owned.includes(k) && FURNITURE[k].cost <= spare;
+    const k = weeklyStock(s.day).find(want) || Object.keys(FURNITURE).filter((x) => !FURNITURE[x].stock && want(x)).sort((a, b) => FURNITURE[a].cost - FURNITURE[b].cost)[0];
+    if (k) track('furniture', () => buyFurniture(k));
   }
 
   // Whether botSite would find a spot, without clearing anything.
@@ -894,6 +907,7 @@ function simulate(runSeed) {
     let reserved = reserves();
     machines(reserved);
     purchases(today().season === 'Winter' ? 0 : 150);
+    decorate();
     geodes();   // v46: the smithy shuts at 16:00, so geodes go on the morning trip
     stockSeeds();
     stockForWinter();
