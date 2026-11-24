@@ -78,6 +78,20 @@ export function spawnSlimes(map, n, kind = 'slime', keep = false) {
   }
 }
 on('day:start', () => { slimes.length = 0; });
+// 97c: creatures at set tiles of a map (the catacombs' rooms and waves, an ambush round a chest), added to those
+// already there. list: [{ kind, x, y }] in tiles. Returns the new creatures, so the caller can toughen or watch them.
+export function spawnAt(map, list) {
+  if (slimeMap !== map) { slimes.length = 0; slimeMap = map; }
+  const made = [];
+  for (const { kind, x, y } of list) {
+    const pack = MONSTERS[kind]?.pack, k = pack ? pack[0] + Math.floor(Math.random() * (pack[1] - pack[0] + 1)) : 1;
+    for (let i = 0; i < k; i++) {
+      const m = { ...make(kind, 1, x * T + 8 + (i % 3 - 1) * 6, y * T + 12 + (Math.floor(i / 3) - 0.5) * 6, Math.random), color: MONSTERS[kind].color };
+      slimes.push(m); made.push(m);
+    }
+  }
+  return made;
+}
 
 function step(m, vx, vy, dist) {
   // v257: phasers and the storm wing pass over walls, as flyers do.
@@ -452,16 +466,23 @@ addInteraction(58, ({ item }) => {
 });
 
 addEntities(() => (G.S.map !== slimeMap ? [] : slimes.map((m) => ({
-  y: m.y, draw: (c) => struck(c, m, () => (m.elite && !m.hidden && !untouchable(m) && drawElite(c, m), !m.kind || m.kind === 'slime' ? drawSlime(c, m.x, m.y, m.color, m.hurt > 0, m.hop % HOP < HOP_ACTIVE ? (m.hop % HOP) / HOP_ACTIVE : 0)
+  y: m.y, draw: (c) => grown(c, m, () => struck(c, m, () => (m.elite && !m.hidden && !untouchable(m) && drawElite(c, m), !m.kind || m.kind === 'slime' ? drawSlime(c, m.x, m.y, m.color, m.hurt > 0, m.hop % HOP < HOP_ACTIVE ? (m.hop % HOP) / HOP_ACTIVE : 0)
     : MONSTERS[m.kind].move === 'split' ? drawSplitter(c, m)
     : m.ph ? drawPhaser(c, m)
     : m.cs ? drawCharger(c, m)
     : m.hidden ? drawMonster(c, m.x, m.y, SHEET.kinds[m.kind]?.sleep || 'crabrock', MONSTERS[m.kind].disguise || ROCK_GREY, false, 0)   // v269: its own sleeping shape (the gourd's pumpkin)   // v253: a mimic asleep looks like a rock (v261: the gourd lurker a pumpkin)
     : m.bs === 'sink' ? drawSinking(c, m)   // v267
     : m.bs && m.bs !== 'up' ? drawMound(c, m.x + (m.bs === 'rise' ? (Math.floor(m.bt * 30) % 2 ? 1 : -1) : 0), m.y, m.hop, m.kind === 'lurker' ? 'lava' : 'earth', shellOf(m))   // v253: a burrower's mound (shaking: the tell); v254: a lava ripple
-    : drawMonster(c, m.x, m.y, m.kind, m.aim && Math.floor(m.st * 14) % 2 === 0 ? MONSTERS[m.kind].glow || m.color : m.color, m.hurt > 0, m.hop, !!m.face))),   // v255: a spitter flashes before it spits (v264: in its glow colour, not white)
+    : drawMonster(c, m.x, m.y, m.kind, m.aim && Math.floor(m.st * 14) % 2 === 0 ? MONSTERS[m.kind].glow || m.color : m.color, m.hurt > 0, m.hop, !!m.face)))),   // v255: a spitter flashes before it spits (v264: in its glow colour, not white)
 })).concat(shots.map((s) => ({ y: s.y + 8, draw: (c) => drawShot(c, s.x, s.y, s.color) })))));
 const ROCK_GREY = '#8a8580';
+// 97c: a creature drawn bigger (the Gravewarden, m.scale), from its feet.
+function grown(c, m, draw) {
+  if (!m.scale) return draw();
+  c.save(); c.translate(m.x, m.y); c.scale(m.scale, m.scale); c.translate(-m.x, -m.y);
+  draw();
+  c.restore();
+}
 // v280 (roadmap 93a): a creature just struck squashes and hops (data/animation.js STRUCK), easing back over its
 // hurt time; drawn about its feet so it stays on its spot.
 export function struckPose(m) {

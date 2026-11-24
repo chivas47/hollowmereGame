@@ -16,5 +16,5 @@ export const WORLD = {
   island: [2, 3], digsite: [3, 3],
 };
 // Rooms and caves show as the place you enter them from.
-export const WORLD_PARENT = { house: 'farm', cave: 'farm', shed: 'farm', greenhouse: 'farm', maze: 'village', sewer: 'village', shrine: 'wilds', mine: 'wilds', crypt: 'mournfield',
+export const WORLD_PARENT = { house: 'farm', cave: 'farm', shed: 'farm', greenhouse: 'farm', maze: 'village', sewer: 'village', shrine: 'wilds', mine: 'wilds', crypt: 'mournfield', barrow: 'mournfield',
   ...Object.fromEntries(Object.entries(HOMES).filter(([, h]) => h.cottage).map(([id, h]) => [homeMap(id), h.map])) };   // v76: the neighbours' cottages

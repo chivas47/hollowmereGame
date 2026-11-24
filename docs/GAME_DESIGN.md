@@ -400,6 +400,8 @@ West of the village and the town. Stardew's Secret Woods and the Wilderness farm
 | Gloamwood | 48 x 32 | village west (rows 4 and 20); Tangle (2); Mournfield (north) | Winding woods, a still pool, Brackenwood's forage (4 a day), weeds, day creatures |
 | The Tangle | 40 x 32 | Gloamwood (2); Mournfield (north) | One-tile ways and dead ends, a stone glade, Brackenwood's forage (3 a day), weeds, day creatures |
 | Mournfield | 48 x 32 | town west (row 8); Tangle and Gloamwood (south) | About 95 headstones, three crypts, a railed yard, an overgrown west end; the dead rise after 8 pm |
+| The north tomb | 28 x 18 | Mournfield's north mausoleum (40, 5), always open | Three rooms of the dead, a chest of grave goods (once), the bier with the barrow piece of the key (97c) |
+| The chapel catacombs | 60 x 40 | Mournfield's chapel crypt door (19, 15), with the key | Six zones and the warden's chamber (97c, below) |
 
 Weeds (Stardew's weeds and scythe): solid until a weapon swing reaches them, no energy; fiber 50%, mixed seeds 3%, 5 health 6% when hurt, 1 foraging XP. They grow back each morning.
 
@@ -412,7 +414,20 @@ Weeds (Stardew's weeds and scythe): solid until a weapon swing reaches them, no 
 | Barrow shambler | Mournfield, night | walk, slow | 30 | 15 | 14 | bone shard, cloth, gloommote |
 | Mourning haunt | Mournfield, night | phase | 16 | 10 | 12 | wisp silk, gloommote, sunmote |
 
-The key chain (97a): an old chest at the Tangle's farthest dead end (found by walking distance from every way in) holds the crypt key. The key opens the chapel crypt's door in Mournfield (19, 15); inside (24 x 16) are 4 to 5 of the night's dead each visit, and the great sarcophagus gives the gravewarden blade once: sword, 21 damage (Stardew's bone sword, 20 to 30, refitted like the claymore to our greatsword), 1.5 times against grave rattlers, barrow shamblers, mourning haunts, bone walkers and sand wraiths. The crusader enchantment stacks with it.
+The key chain (97a, 97c): the crypt key is in three pieces. The Tangle's old chest (its farthest dead end, found by walking distance from every way in) wakes the thicket the first time you lift its lid: 7 of the woods' creatures within 5 tiles; once they are gone it gives the thicket piece. Gloamwood's mossy stone (8, 4) gives the moss piece only from 8 pm, after 5 of the dead it calls up are gone. The north tomb's bier gives the barrow piece. Corvin joins them at the Anvil (inside, not by phone). The key opens the chapel crypt door (19, 15). Leaving a map mid-fight starts that guard over.
+
+| Catacombs zone | Challenge | Saved when |
+|---|---|---|
+| 1 Entry hall | 2 rattlers and a shambler each visit | never (every visit) |
+| 2 Ossuary | a dark maze of bone walls (seeded, the same in every game), 5 dead; four sconces at far dead ends | all four lit: its gate rises |
+| 3 Lever hall | levers under an owl, a key, a bell and a crow; the plaque's verse gives bell, crow, owl, key; a wrong pull: all reset, 2 rattlers | the right order: its gate rises |
+| Brazier room | light it: full health once a visit | lit: the chapel door lands you here |
+| 4 Spike corridor | 10 x 3 plates rise in a wave (2 s cycle, 0.8 s up, 0.15 s a column), 14 damage | (always) |
+| 5 Crumbling gallery | cracked floor over a pit falls 0.45 s after you step on it; two false turns; 2 haunts; a fall: 12 damage, back to the start | the far side reached: braced for good |
+| 6 Sealed hall | gates shut on three waves (3, 4, 6 of the dead) | all three beaten |
+| Warden's chamber | the Gravewarden: 320 health, 18 damage, 2 rattlers at 66% and 33%, quicker below 33%; the gate shuts behind you | it falls: the sarcophagus opens, a gate back to the entry hall |
+
+The dead below ground (the north tomb and the catacombs) have 1.6 times the health and 1.25 times the damage of Mournfield's night. The sarcophagus gives the gravewarden blade once: sword, 21 damage (Stardew's bone sword, 20 to 30, refitted like the claymore to our greatsword), 1.5 times against grave rattlers, barrow shamblers, mourning haunts, bone walkers and sand wraiths. The crusader enchantment stacks with it. Stardew by role: the Skull Key chain (a key won in one dungeon opens the next); the north tomb's chest is a treasure floor's chest (a handful of ore, coal and geodes).
 
 The woods hold 4 to 7 creatures, back each time you walk in. Mournfield: 3 to 4 at nightfall, 1 to 2 more every 30 minutes, at most 10. Strength sits beside the Hollow's floors 10 to 25 (Stardew's wilderness night monsters sit beside its early to middle mine floors).
 

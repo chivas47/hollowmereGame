@@ -16,6 +16,7 @@ import { DEFAULT_PROFILE } from '../data/profile.js';
 import { PARTNER } from '../data/partner.js';
 import { LAYOUTS } from '../data/layouts.js';
 import { SAVE_VERSION, migrate } from './migrations.js';
+import { PIECE_KEYS } from '../data/catacombs.js';   // 97c
 
 const STARTING_SEEDS = { turnip: 6, radish: 3 };
 
@@ -59,7 +60,8 @@ export function newState() {
     forage: [], forageDay: 0,
     wildWeeds: [],      // v33: weeds in the Wilds, cut for fiber (systems/forage.js)
     cutWeeds: {}, cutDay: 0,
-    dusk: { key: false, door: false, blade: false },   // 97a: the crypt key found, its door unlocked, the blade taken   // v303: the Duskmarch's weeds cut today, by map (systems/duskmarch.js)
+    dusk: { key: false, door: false, blade: false, pieces: [], barrowChest: false,   // 97a: the crypt key whole, its door unlocked, the blade taken; 97c: its pieces found, the north tomb's chest
+      cata: { sconces: [], levers: false, brazier: false, gallery: false, waves: false, boss: false } },   // 97c: each step of the catacombs solved (systems/catacombs.js)   // v303: the Duskmarch's weeds cut today, by map (systems/duskmarch.js)
     fishLog: {},        // fish key -> number caught
     upgrades: { can: 0, hoe: 0, axe: 0, rod: 0, house: 0, pick: 0, pan: 0 },   // tier index per upgrade line
     waterBonus: 0, maxEnergy: 270,                      // derived stats, see systems/upgrades.js
@@ -158,7 +160,11 @@ export function merge(saved) {
   s.built = Object.assign(newState().built, saved.built || {});
   if (!Array.isArray(s.forage)) s.forage = [];
   if (!Array.isArray(s.wildWeeds)) s.wildWeeds = [];
-  s.dusk = { key: !!saved.dusk?.key, door: !!saved.dusk?.door, blade: !!saved.dusk?.blade };   // 97a
+  { const d = saved.dusk || {}, c = d.cata || {};   // 97a; 97c: the pieces and the catacombs' steps, junk dropped
+    s.dusk = { key: !!d.key, door: !!d.door, blade: !!d.blade, barrowChest: !!d.barrowChest,
+      pieces: [...new Set((Array.isArray(d.pieces) ? d.pieces : []).filter((p) => PIECE_KEYS.includes(p)))],
+      cata: { sconces: [...new Set((Array.isArray(c.sconces) ? c.sconces : []).filter((i) => Number.isInteger(i) && i >= 0 && i < 4))],
+        ...Object.fromEntries(['levers', 'brazier', 'gallery', 'waves', 'boss'].map((k) => [k, !!c[k]])) } }; }
   s.cutWeeds = Object.fromEntries(Object.entries(saved.cutWeeds && typeof saved.cutWeeds === 'object' ? saved.cutWeeds : {}).filter(([, v]) => Array.isArray(v)).map(([k, v]) => [k, v.filter((t) => typeof t === 'string')]));   // v303
   if (!Array.isArray(s.chickens)) s.chickens = [];
   if (!s.projects || typeof s.projects !== 'object') s.projects = {};

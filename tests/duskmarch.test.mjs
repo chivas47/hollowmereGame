@@ -107,12 +107,10 @@ test('an old save without the field loads with nothing cut; junk in the field is
   assert.deepEqual(merge({ cutWeeds: { gloamwood: ['3,4', 7], tangle: 'x' } }).cutWeeds, { gloamwood: ['3,4'] });
 });
 
-// Roadmap 97a: the key chain. The chest at the Tangle's deepest dead end holds the key; the key opens Mournfield's
-// chapel crypt; the great sarcophagus inside holds the gravewarden blade, which hits the dead half again as hard.
-test('the key chain: chest in the Tangle, the crypt door, the blade in the sarcophagus', async () => {
-  const { CRYPT, CHEST, CHEST_OPEN, CRYPT_DOOR, SARCOPHAGUS } = await import('../src/data/duskmarch.js');
-  const { openChest, useCryptDoor, openSarcophagus } = await import('../src/systems/duskmarch.js');
-  const { WEAPONS } = await import('../src/data/weapons.js');
+// Roadmap 97a: the Tangle's old chest sits at its deepest dead end, a long walk from every way in. 97c: it now holds
+// one of three pieces of the crypt key (tests/catacombs.test.mjs walks the whole chain).
+test("the Tangle's old chest sits at a dead end a long walk from every way in", async () => {
+  const { CRYPT, CHEST } = await import('../src/data/duskmarch.js');
   freshFarm(); emit('game:loaded');
   const { x, y } = CRYPT.chest, g = MAPS.tangle.grid;
   assert.equal(g[y][x], CHEST);
@@ -124,24 +122,6 @@ test('the key chain: chest in the Tangle, the crypt door, the blade in the sarco
     return d.get(`${x},${y}`);
   };
   for (const e of Object.keys(MAPS.tangle.exits)) assert.ok(steps(e.split(',').map(Number)) >= 30, `a long walk from ${e}: ${steps(e.split(',').map(Number))}`);
-  assert.equal(MAPS.mournfield.grid[CRYPT.door.y][CRYPT.door.x], CRYPT_DOOR);
-  placePlayer('mournfield', CRYPT.stand.x, CRYPT.stand.y, 'up');
-  useCryptDoor();
-  assert.equal(G.S.map, 'mournfield', 'locked without the key');
-  openChest();
-  assert.ok(G.S.dusk.key); assert.equal(g[y][x], CHEST_OPEN);
-  useCryptDoor();
-  assert.equal(G.S.map, 'crypt'); assert.ok(G.S.dusk.door);
-  assert.ok(slimes.length >= CRYPT.n[0], 'the crypt has its dead');
-  assert.equal(MAPS.crypt.grid[CRYPT.sarcophagus.y][CRYPT.sarcophagus.x], SARCOPHAGUS);
-  openSarcophagus();
-  assert.ok(G.S.weapons.includes('gravewarden') && G.S.dusk.blade);
-  openSarcophagus();
-  assert.equal(G.S.weapons.filter((w) => w === 'gravewarden').length, 1, 'only once');
-  assert.equal(WEAPONS.gravewarden.damage, 21);
-  const s = merge(JSON.parse(JSON.stringify(G.S)));
-  assert.deepEqual(s.dusk, { key: true, door: true, blade: true }, 'saved');
-  assert.deepEqual(merge({}).dusk, { key: false, door: false, blade: false }, 'an old save starts with none');
 });
 
 test('the gravewarden blade hits the dead half again as hard, and nothing else harder', async () => {

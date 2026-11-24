@@ -166,7 +166,7 @@ export const REGIONS = {
   duskmarch: ['gloamwood', 'tangle', 'mournfield'],
   mines: ['hollow', 'cavern', 'vent'],
   caves: ['cave', 'sewer'],
-  sacred: ['shrine', 'crypt'],
+  sacred: ['shrine', 'crypt', 'barrow'],
   island: ['island', 'digsite', 'peak'],
   desert: ['desert', 'inside_oasis', 'inside_casino'],
   tavern: ['inside_tavern'],

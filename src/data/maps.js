@@ -34,12 +34,13 @@ import { INTERIORS, interiorGrid, doorOf } from './interiors.js';
 import { VENUES, venueMap } from './venues.js';
 import { MERE } from './mere.js';
 import { PROPS, PROP_TILES } from './scenery.js';
-import { DUSK_TILES, DUSK_EXITS, DUSK_WAYS_IN, CRYPT, gloamwoodGrid, tangleGrid, mournfieldGrid, cryptGrid } from './duskmarch.js';   // v303
+import { DUSK_TILES, DUSK_EXITS, DUSK_WAYS_IN, CRYPT, gloamwoodGrid, tangleGrid, mournfieldGrid } from './duskmarch.js';   // v303
+import { CATA_SOLID, CATA, BARROW, cataGrid, barrowGrid } from './catacombs.js';   // 97c
 
 // v156 (roadmap 75g): a map's size in tiles, read from its grid, so a map can be larger than the screen (W x H).
 export const sizeOf = (id) => { const g = MAPS[id]?.grid; return g?.length ? { w: g[0].length, h: g.length } : { w: W, h: H }; };
 
-export const SOLID = new Set([...Object.values(PROP_TILES), ...DUSK_TILES, 'ħ', 'ǧ', 'ƀ', 'β', 'ʋ', 'ʂ', 'ɲ', 'ʘ', 'ʌ', 'ŧ', 'Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'ǂ', 'ǀ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
+export const SOLID = new Set([...Object.values(PROP_TILES), ...DUSK_TILES, ...CATA_SOLID, 'ħ', 'ǧ', 'ƀ', 'β', 'ʋ', 'ʂ', 'ɲ', 'ʘ', 'ʌ', 'ŧ', 'Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'ǂ', 'ǀ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
 
 // v158: w and h for a map larger than the screen (roadmap 75i); the camera follows you across it.
 function emptyGrid(w = W, h = H) {
@@ -533,8 +534,11 @@ export const MAPS = {
   gloamwood: { name: 'Gloamwood', salt: 101, grid: gloamwoodGrid(), objects: [], exits: duskExits('gloamwood') },
   tangle: { name: 'The Tangle', salt: 103, grid: tangleGrid(), objects: [], exits: duskExits('tangle') },
   mournfield: { name: 'Mournfield', salt: 107, grid: mournfieldGrid(), objects: [], exits: duskExits('mournfield') },
-  crypt: { name: 'The chapel crypt', salt: 109, base: 'cave', grid: cryptGrid(), objects: [],   // 97a: its door is faced (systems/duskmarch.js)
-    exits: { [`${CRYPT.out.x},${CRYPT.out.y}`]: { to: 'mournfield', x: CRYPT.stand.x, y: CRYPT.stand.y, dir: 'down' } } },
+  // 97c: the chapel catacombs (six zones and the warden's chamber) and the north tomb; their doors are faced (systems/catacombs.js)
+  crypt: { name: 'The chapel catacombs', salt: 109, base: 'cave', grid: cataGrid(), objects: [],
+    exits: { [`${CATA.out.x},${CATA.out.y}`]: { to: 'mournfield', x: CRYPT.stand.x, y: CRYPT.stand.y, dir: 'down' } } },
+  barrow: { name: 'The north tomb', salt: 111, base: 'cave', grid: barrowGrid(), objects: [],
+    exits: { [`${BARROW.out.x},${BARROW.out.y}`]: { to: 'mournfield', x: BARROW.stand.x, y: BARROW.stand.y, dir: 'down' } } },
   ...homeMaps(),   // v76: the neighbours' cottages
   ...venueMaps(),   // v98: shops, halls and farm buildings
 };
