@@ -232,8 +232,20 @@ export const VOICES = {
       ['Mind the tar. It does not come off. Ask my trousers.', 'A boat is a thousand small decisions. Get one wrong and the sea tells you.', 'I steam the planks till they bend. Too much and they crack. Same as people.', 'You can sit on that crate. It is the only one that will not tip.'],
       ['Garrow says my keel is too shallow. He has said that for twenty years. My boats float.', 'Wren keeps the good brushes back for me and pretends it is an accident.', 'Odile and I argued about a knot for an hour. Then we went fishing. She was right.', 'I painted a hull blue last week. Then another blue. Wren says I am a menace to blue.'],
       ['My father drowned two miles out. I build boats so they come back. That is all it has ever been.', 'When I launch this one I am going to name it. I am thinking of naming it after somebody. Not saying who.', 'Most folk look at the sea and see danger. You look at it like I do. Like a door.', 'Come out with me one calm morning. I will show you what the valley looks like from the water.'],
+      // v327 (roadmap 113e): once you are close
+      ["I put a new seat in the boat. Room for two. I told Lio it was for balance. Lio did not believe me either.", "When the sea is flat and the light is right I think of you. Which is most mornings. I am starting to wonder if it is the sea.", "I have never been scared of the water. I am scared of a day you are not on the beach. That is new.", "My father said you only know a boat when it has carried you through bad weather. I would like to know you that well.", "Next calm night I will row you out past the point. Nobody goes there. The stars come right down to the water."],
     ],
-    season: { Spring: 'Spring. Caulking season. Everything leaks after winter, including me.', Summer: 'Summer. Calm seas, long days. Best time to test a hull and worst time to wear tar.', Autumn: 'Autumn storms. I watch the beach and count boats.', Winter: 'Winter. Too rough to launch. I carve oars by the stove and dream about spring.' },
+    season: {   // v327: a few each
+      Spring: ['Spring. Caulking season. Everything leaks after winter, including me.', "Spring tides come right up the beach and leave all sorts behind. Rope, floats, once a whole door. I keep everything.", "First warm day of spring I put the boats out to air. The whole beach smells of tar and I could not be happier."],
+      Summer: ['Summer. Calm seas, long days. Best time to test a hull and worst time to wear tar.', "Summer, the bay is full of little boats with folk who cannot row. I sit on the sand and wait to rescue them.", "Hot days I work under the hull in the shade. It is the coolest place on the beach and nobody can find me."],
+      Autumn: ['Autumn storms. I watch the beach and count boats.', "Autumn gales take a boat a year off this coast. I build one a year. I am not sure who is winning.", "In autumn the seals come close in. One of them watches me work. I have started talking to her."],
+      Winter: ['Winter. Too rough to launch. I carve oars by the stove and dream about spring.', "Winter sea is grey and heavy as lead. You respect it. You do not go out for fun.", "I steam planks in winter, over the big kettle. The whole cottage fogs up. Bram calls it the bathhouse."],
+    },
+    rain: ["You do not paint a boat in the rain. You sit and look at it through the window.", "Rain is fine on the sea. It is the wind you watch. Today there is no wind. I might still go out.", "Rainy days I sharpen every tool I own. A blunt chisel in good weather is worse than a sharp one in the rain."],
+    places: {
+      beach: ["That hull up on the blocks is my seventh boat. The first six are still floating. I check.", "I can tell you the weather tomorrow from the way the sand sits. Ask me. I am right more than the almanac."],
+      forest: ["I come up here to choose wood before I need it. A tree tells you if it wants to be a boat.", "That oak there. In thirty years someone will make a keel of her. Not me. I hope they are careful."],
+    },
     snow: 'Snow on the sand. The beach looks like nobody has ever stood on it.',
     birthday: 'My birthday. I am going to row out and back and not build anything. Probably.',
     bday: "{name}'s birthday today. I carved them a little boat. It floats. Mostly.",
