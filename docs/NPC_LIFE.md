@@ -114,5 +114,6 @@ and goodbyes for when you keep talking. Rules a new neighbour or line must keep 
   day (the first and second talk), reshuffled each time through. The third talk on a day is a goodbye.
 - **No two people say the same sentence.** Shared news (a wedding, a win, a museum gift) comes in several wordings,
   one per speaker; everything else is personal. The test fails on any sentence two neighbours share.
+- **Depth (v323, roadmap 113).** `more[3]` close lines (8+ hearts, dealt with the 5+ pool), `season` as a list, `rain` (a list, replaces their line in `RAIN_LINES`) and `places` ({ map: [lines] }) are optional. `voiceLines(v)` lists every line for the tests; `tests/depth.test.mjs` holds the list of neighbours written up to it (`DEEP`) and checks each has scenes at 2 to 10, at least 4 close lines, 3 rain lines, 3 lines a season and places that are real maps.
 - **Write the person, not the topic.** A season line from Tamsin is about calving, from Wilmot about brass in the cold.
 

@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v323: Ines has more to say
+- The first of the marriage candidates written up in depth (roadmap 113a). Two new heart scenes with Ines: at 2 hearts, the honesty table by her gate; at 6, a hive that has lost its queen. She now has a scene at every step from 2 to 10 hearts.
+- Once you are close (8 hearts), five new things she says join her usual lines.
+- Three lines for each season instead of one, her own rain lines, and things she says when you meet her among her bees in the Wilds or on the beach on a Saturday.
+- If you are already past 2 or 6 hearts with her, the new scenes play on your next talks, one at a time.
+- New save data: none.
+
 ## v322: A full-screen field
 - On a wide screen with a mouse the field can now fill the window, with the HUD over it: the clock and meters top right, the menu buttons in a slim column on the left, the hotbar at the foot. At 1280 x 800 that is about 43% more field.
 - The panels turn see-through while your farmer walks under them, and step aside for cutscenes.

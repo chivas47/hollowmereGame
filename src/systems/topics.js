@@ -7,15 +7,16 @@ import { SKILLS } from '../data/skills.js';
 import { RAIN_LINES } from '../data/npcs.js';
 import { areFriends } from '../data/friends.js';
 import { ITEMS } from '../data/items.js';
-import { VOICES, SEASON_CHANCE } from '../data/voices.js';
+import { VOICES, SEASON_CHANCE, PLACE_CHANCE } from '../data/voices.js';
 
 // The same 0 to 1 for a neighbour on a day (which line, whether they mention a friend).
 export const pick = (day, seed, salt) => { let h = Math.imul(day * 31 + seed * 977 + salt, 2654435761) >>> 0; h ^= h >>> 15; return (Math.imul(h, 2246822507) >>> 0) / 4294967296; };
 
 // def: the speaker (data/npcs.js). ctx: { day, date: { season, d }, weather, tomorrow (a festival or null),
-// npcs (all of data/npcs.js), news (v153: systems/news.js yesterday(), or null) }. Returns a line, or null.
+// npcs (all of data/npcs.js), news (v153: systems/news.js yesterday(), or null), map (v323: where you meet them) }.
+// Returns a line, or null.
 // v295: their own words where they have them (data/voices.js), the shared ones otherwise.
-export function topicFor(def, { day, date, weather, tomorrow, npcs, news = null }) {
+export function topicFor(def, { day, date, weather, tomorrow, npcs, news = null, map = null }) {
   const born = (n) => n.birthday?.season === date.season && n.birthday.d === date.d, v = VOICES[def.id] || {};
   if (born(def)) return v.birthday || BIRTHDAY.mine[Math.floor(pick(day, def.seed, 1) * BIRTHDAY.mine.length)];
   const bday = npcs.find((n) => n.id !== def.id && born(n));
@@ -26,14 +27,20 @@ export function topicFor(def, { day, date, weather, tomorrow, npcs, news = null 
   const heard = news && newsLine(def, news, npcs, pick(day, def.seed, 4) < NEWS.chance);
   if (heard) return heard;
   if (tomorrow) return v.eve ? `${v.eve.replace('{festival}', tomorrow.name)} ${tomorrow.intro}` : EVE.replace('{name}', tomorrow.name).replace('{intro}', tomorrow.intro);
-  if (date.d === 1) return v.season?.[date.season] || SEASON_START[date.season];
-  if ((weather === 'rain' || weather === 'storm') && RAIN_LINES[def.id]) return RAIN_LINES[def.id];
+  const season = oneOf(v.season?.[date.season], day, def.seed, 8);   // v323: a line or a list of them
+  if (date.d === 1) return season || SEASON_START[date.season];
+  if (weather === 'rain' || weather === 'storm') { const r = oneOf(v.rain, day, def.seed, 9) || RAIN_LINES[def.id]; if (r) return r; }   // v323: their own rain lines
   if (weather === 'snow') return v.snow || SNOW[Math.floor(pick(day, def.seed, 2) * SNOW.length)];
+  const here = v.places?.[map];   // v323: one of their own places
+  if (here?.length && pick(day, def.seed, 7) < PLACE_CHANCE) return oneOf(here, day, def.seed, 10);
   const about = ABOUT[def.id];
   if (about && pick(day, def.seed, 3) < ABOUT_CHANCE) { const lines = Object.values(about); return lines[Math.floor(pick(day, def.seed, 5) * lines.length)]; }   // v295: any of their friends
-  if (v.season?.[date.season] && pick(day, def.seed, 6) < SEASON_CHANCE) return v.season[date.season];
+  if (season && pick(day, def.seed, 6) < SEASON_CHANCE) return season;
   return null;
 }
+
+// v323: a single line as it is, or one of a list, the same all day.
+const oneOf = (lines, day, seed, salt) => (Array.isArray(lines) ? lines[Math.floor(pick(day, seed, salt) * lines.length)] : lines) || null;
 
 // v295: one of a shared line's wordings: always the same for a neighbour, different for the next one along.
 const said = (lines, def) => (Array.isArray(lines) ? lines[def.seed % lines.length] : lines);
@@ -57,7 +64,8 @@ function newsLine(def, n, npcs, some) {
 // tier. Each day has two slots, the first talk and the second; the pool is dealt out in a shuffled order that changes
 // every time through, so nothing repeats until everything has been said. nth: 0 the day's first talk, 1 the second.
 export function ownLine(def, tier, day, nth = 0) {
-  const pool = [...(def.lines?.[tier] || []), ...(VOICES[def.id]?.more?.[tier] || [])];
+  const tierPool = (t) => [...(def.lines?.[t] || []), ...(VOICES[def.id]?.more?.[t] || [])];
+  const pool = tier === 3 ? [...tierPool(3), ...tierPool(2)] : tierPool(tier);   // v323: close lines join the 5+ pool
   if (!pool.length) return '';
   const at = (k) => {
     const round = Math.floor(k / pool.length), order = pool.map((_, i) => i);
@@ -69,6 +77,10 @@ export function ownLine(def, tier, day, nth = 0) {
   const second = at(day * 2 + 1);
   return pool[second === first ? (first + 1) % pool.length : second];   // a new shuffle can deal the same line twice in a day
 }
+
+// v323: which pool a neighbour talks from at h hearts: 0 strangers, 1 from 2 hearts, 2 from 5, 3 from 8 for those
+// with close lines (data/voices.js more[3]).
+export const tierFor = (def, h) => (h >= 8 && VOICES[def.id]?.more?.[3]?.length ? 3 : h >= 5 ? 2 : h >= 2 ? 1 : 0);
 
 // v295: what they say when you talk to them a third time or more the same day: one of their own goodbyes.
 export const againLine = (def, day, nth) => { const a = VOICES[def.id]?.again; return a?.length ? a[(day + nth) % a.length] : null; };

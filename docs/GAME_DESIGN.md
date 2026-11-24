@@ -520,6 +520,8 @@ The roommate (v53): the Lamplighter, the sewer trader, is now a villager (no que
 
 Heart scenes (data/scenes.js): the first talk after reaching 4 and 8 hearts plays a scene with two choices. The warmer choice gives 60 points at 4 hearts and 80 at 8; the other gives 25 and 50. Scenes: Ines, a swarm in the hedge and the honey ledger; Bram, the bin hinge and the old porch plans; Odile, mending nets at dawn and the boat south; Tavi, a runaway map page and the finished map. v245 (roadmap 84f): for Ines, Bram, Odile and Tavi (v246: and Esme, Rook and Pell; v247: and Juno and Corvin, so every neighbour) they play out on the map (systems/heartScenes.js): where the words set them (data/scenes.js HEART_STAGES), else at their front door; the same lines, choices and points; skipping stops at the choice, and Use answers only once the choice has been up half a second.
 
+v323 (roadmap 113): neighbours with more to say, the marriage candidates first, one a release (Ines in 113a). A candidate written up to it has a heart scene at every step from 2 to 10 hearts (the warmer choice: 40, 60, 70, 80 at 2, 4, 6, 8), close lines from 8 hearts that join the 5+ pool, several season lines and rain lines (one a day), and lines about their own places, said now and then when you meet them there (a third of the days with nothing more pressing). A farm already past a new scene's hearts sees it on a later talk, one scene a talk, as with any scene not yet seen.
+
 ### The town and its shops (v46)
 
 Hollowmere Town, up a lane from the village's north edge (10, 0). The farm's stall and workbench now only point the way. Hours and closing days are Stardew's for the same roles; every shop shuts on a festival day. The 1st of each season is a Monday; the HUD shows the weekday.

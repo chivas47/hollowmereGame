@@ -7,8 +7,18 @@
 //   snow: their word on a snowy day; birthday: on their own birthday; bday: on someone else's ({name}: whose; a friend
 //   still tells you what they love, data/topics.js BIRTHDAY.friend); eve: the day before a festival, before its intro
 //   again: when you talk to them again the same day, after they have said their piece
+// v323 (roadmap 113): depth, for anyone written up to it (the marriage candidates first), all optional:
+//   more[3]: lines once you are close (8+ hearts), dealt together with the 5+ pool so those lines stay in the mix
+//   season: a line or a list of lines per season (one a day, by day)
+//   rain: their own words on a rainy day (a list, one a day), instead of the one line in data/npcs.js RAIN_LINES
+//   places: { map id: [lines] }, now and then when you meet them there (PLACE_CHANCE)
 // How often, on a day with nothing else to say, a neighbour mentions the season instead of their own news.
 export const SEASON_CHANCE = 1 / 6;
+// v323: how often a neighbour met at one of their own places talks about it (on a day with nothing more pressing).
+export const PLACE_CHANCE = 1 / 3;
+// v323: every line a voice holds, for tests and tools (no two people may share one).
+export const voiceLines = (v) => [...v.more.flat(), ...Object.values(v.season).flat(), v.snow, v.birthday, v.bday, v.eve, ...v.again,
+  ...(v.rain || []), ...Object.values(v.places || {}).flat()].filter(Boolean);
 
 export const VOICES = {
   ines: {
@@ -16,8 +26,20 @@ export const VOICES = {
       ['If one lands on you, stand still and think kind thoughts. It works more than you would expect.', 'I sell honey from a table by my gate. Pay what you think is fair; the bees do not count.', "Clover, then lime, then heather. You can taste the whole year in a shelf of jars.", "I wear the veil for the bees' sake, not mine. They get embarrassed."],
       ['A hive swarmed on Tuesday. I followed it halfway to the Wilds in my slippers.', 'Tamsin says her cows give better milk when my bees work her clover. I think she is being polite. I hope she is not.', 'I talk to the hives every morning. You tell them the news, or they sulk. Old rule.', 'Nell and I swapped seedlings for honey again. Neither of us knows who is winning.'],
       ['I told the bees about you. Properly, the way you tell them about family.', 'My mother kept the first hive. When she passed I nearly let them go. I am glad I did not.', 'There is a jar on my shelf with your name on it. I am waiting for a good year to fill it.', 'Come out to the hives at dusk one evening. The sound they make then, you will not forget it.'],
+      // v323 (roadmap 113a): once you are close
+      ['I caught myself humming at the hives this morning. The bees hum back, so I can never tell who started it.', 'You smell a little of smoke and clover today. That means you have been near my bees, or near me. Both, I hope.', 'My mother said a keeper knows the right person by how the bees settle round them. Mine settle round you. I am only telling you what I saw.', 'Some evenings I walk to your gate and back without knocking. Just to see the lamp on.', 'When the season is done I am going to teach you to cut comb. Properly, with the warm knife. It is a thing I have only ever shown family.'],
     ],
-    season: { Spring: 'Spring. The bees wake hungry and cross, and so do I.', Summer: 'Summer. The hives roar all day. I can hear them from my kitchen.', Autumn: "Autumn. Time to take the honey and leave them enough for winter. Greed kills hives.", Winter: 'Winter. I wrap the hives in straw and put my ear to them. Still humming. Good.' },
+    season: {   // v323: a few each
+      Spring: ['Spring. The bees wake hungry and cross, and so do I.', 'The willows are out by the stream. Willow pollen is the first good meal the bees get all year.', 'I split two hives this spring. One went quietly. The other told me exactly what it thought of me.'],
+      Summer: ['Summer. The hives roar all day. I can hear them from my kitchen.', 'The lime trees past the east road are in flower. Lime honey is pale and sharp. Nell says it tastes like a sneeze.', 'Hot days, I put out shallow dishes of water with stones in, so the bees can drink without drowning.'],
+      Autumn: ["Autumn. Time to take the honey and leave them enough for winter. Greed kills hives.", 'Ivy is the last flower of the year. The bees go mad for it. The honey sets hard as soap.', 'I melt the old comb down for candles now. The cottage smells like a church for a week.'],
+      Winter: ['Winter. I wrap the hives in straw and put my ear to them. Still humming. Good.', 'In winter I knock on each hive and listen. A hum means all is well. Silence means I sit down for a while.', 'I mend frames by the stove all winter. It is slow work, and I like slow work.'],
+    },
+    rain: ['The bees stay in when it rains, so I do too. The whole kitchen smells of honey.', 'Rain on the hives sounds like a drum. They will be grumpy tomorrow. So will the clover.', 'I put a tile on each hive roof when it rains. My mother called them hats. I still call them hats.'],
+    places: {
+      wilds: ['My bees forage out here when the meadow flowers. I like to come and watch them work. It is only polite.', 'See that one on the thistle? Mine. You can tell by the way she does not hurry.'],
+      beach: ['Saturdays I sit here with Nell and say nothing. It is the best conversation of my week.', 'Bees will not cross open sea. I like that about them. They know where home is.'],
+    },
     snow: 'Snow on the hives. They are warm inside, all huddled round the queen. Like us round a stove.',
     birthday: 'My birthday. I am going to eat honey straight off the comb with my fingers. Do not tell anyone.',
     bday: "It is {name}'s birthday. I am taking them a jar of the good honey. The dark one.",

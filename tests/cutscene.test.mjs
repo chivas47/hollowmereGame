@@ -315,7 +315,7 @@ test('heart scenes of staged neighbours play at their door: lines, a choice that
   freshFarm({ map: 'farm', x: 100, y: 100, profile: { name: 'Rowan', farm: 'Fernhill' } });
   emit('game:reset');
   const n = npcs.NPCRT.find((x) => x.id === 'ines');
-  G.S.npcs.ines.pts = 4 * 100 + 10; G.S.npcs.ines.talked = G.S.day;
+  G.S.npcs.ines.pts = 4 * 100 + 10; G.S.npcs.ines.talked = G.S.day; G.S.npcs.ines.scenes = [2];   // v323: her 2-heart scene seen
   const before = G.S.npcs.ines.pts;
   npcs.startTalk(n);
   update(0);
