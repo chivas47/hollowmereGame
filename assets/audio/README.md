@@ -1144,11 +1144,11 @@ One-shots at random moments while the scene suits them (rules in `src/data/ambie
 
 #### Birdsong by day
 
-- File: `ambience/nature/bird_chirp_01.wav` (id `bird`)
+- Files (a pool of 4): `ambience/nature/bird_chirp_01.wav`, `ambience/nature/bird_chirp_02.wav`, `ambience/nature/bird_chirp_03.wav`, `ambience/nature/bird_chirp_04.wav` (id `bird`)
 - Form: one-shot; the game shifts its pitch up to 25% either way each play
 - Volume: Ambience
 
-Birdsong by day in the wild and in town (not in winter or rain). One short phrase of 2 to 4 chirps, 0.3 to 0.8 s. Several species-like variants make the world feel alive; the game varies the pitch too.
+Birdsong by day in the wild and in town (not in winter or rain). One short phrase of 2 to 4 chirps, 0.3 to 0.8 s. Record 4 different calls, as if from different birds, to make the world feel alive; the game varies the pitch too.
 
 #### Crickets at night
 

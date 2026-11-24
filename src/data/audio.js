@@ -106,7 +106,17 @@ export const BED_FILES = {
 
 // Ambient calls: one-off sounds at random moments, by the rules in data/ambience.js.
 export const CALL_FILES = {
-  bird:    { files: ['ambience/nature/bird_chirp_01.wav'], about: 'birdsong by day', brief: 'Birdsong by day in the wild and in town (not in winter or rain). One short phrase of 2 to 4 chirps, 0.3 to 0.8 s. Several species-like variants make the world feel alive; the game varies the pitch too.', gain: 0.0328, vary: 0.25 },
+  bird: {
+    files: [
+      'ambience/nature/bird_chirp_01.wav',
+      'ambience/nature/bird_chirp_02.wav',
+      'ambience/nature/bird_chirp_03.wav',
+      'ambience/nature/bird_chirp_04.wav',
+    ],
+    about: 'birdsong by day',
+    brief: 'Birdsong by day in the wild and in town (not in winter or rain). One short phrase of 2 to 4 chirps, 0.3 to 0.8 s. Record 4 different calls, as if from different birds, to make the world feel alive; the game varies the pitch too.',
+    gain: 0.0328, vary: 0.25,
+  },
   cricket: { files: ['ambience/nature/cricket_chirp_01.wav'], about: 'crickets at night', brief: 'Crickets on dry nights out of winter. One short chirp burst, under 0.2 s, played often; keep it soft and high.', gain: 0.0092, vary: 0.05 },
   gull:    { files: ['ambience/water/gull_cry_01.wav'], about: 'gulls at the shore', brief: 'Gulls at the shore by day. One or two gull cries, 0.5 to 0.8 s, from a little distance.', gain: 0.0317, vary: 0.1 },
   drip: {
