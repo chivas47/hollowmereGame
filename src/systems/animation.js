@@ -1,6 +1,9 @@
 // v74: the animation module. Player action poses (tool swings, weapon combos, casting, placing, the crafted pose),
 // pickups that fly into the player with a "+n Name" label, particles (dirt, chips, sparks, dust, splashes), damage
 // numbers and screen shake. Logic only; art is in render/animation.js. Nothing here is saved.
+// v333 (roadmap 116b): every effect knows the map it happened on (map), and a pickup whose it is (who), so each half
+// of split screen draws its own map's effects and farmer two's gains fly to them. An effect takes G.S.map when made
+// (farmer two's map during their Use, systems/partner.js), or the map given to onMap() for one made outside a Use.
 import { G } from '../core/game.js';
 import { T, DIRS } from '../core/constants.js';
 import { on } from '../core/events.js';
@@ -33,23 +36,30 @@ export const shake = (mag, t = 0.18) => { if (motion.shake && (!G.shake || G.sha
 // Holds the current swing still for a moment on contact (hit-stop).
 export const holdSwing = (t) => { if (G.anim && motion.hitstop) G.anim.hold = Math.max(G.anim.hold, t); };
 
+let fxMap = null;
+const here = () => fxMap ?? G.S.map;
+// fn's effects belong to map (a hit on farmer two, a creature falling: events that say where they happened).
+export function onMap(map, fn) { const was = fxMap; fxMap = map; try { return fn(); } finally { fxMap = was; } }
+// The farmer a pickup flies to (or a label rises over): you, or farmer two while they are in.
+const target = (who) => (who === 'p2' && G.P2 ? G.P2 : G.S);
+
 // n particles from x, y. opts: speed, up (initial lift), size, life, gravity, shrink, spread (angle range around `angle`).
 export function burst(x, y, cols, n, o = {}) {
   const lv = MOTION_LEVELS[motion.particles], want = lv.share ? Math.max(1, Math.round(n * lv.share)) : 0;   // v125
   for (let i = 0; i < want && G.fx.parts.length < lv.cap; i++) {
     const a = (o.angle ?? -Math.PI / 2) + (rand() - 0.5) * (o.spread ?? Math.PI * 2), sp = (o.speed ?? 40) * (0.5 + rand() * 0.7);
     const life = (o.life ?? 0.4) * (0.7 + rand() * 0.6);
-    G.fx.parts.push({ x, y, z: o.z ?? 0, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp * 0.6, vz: (o.up ?? 30) * (0.6 + rand() * 0.8), g: o.gravity ?? 160,
+    G.fx.parts.push({ map: here(), x, y, z: o.z ?? 0, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp * 0.6, vz: (o.up ?? 30) * (0.6 + rand() * 0.8), g: o.gravity ?? 160,
       size: o.size ?? 2, col: cols[Math.floor(rand() * cols.length)], life, max: life, shrink: o.shrink, drag: o.drag ?? 0 });
   }
 }
-export const ring = (x, y, col, rad = 12, life = 0.3) => { if (G.fx.parts.length < MOTION_LEVELS[motion.particles].cap) G.fx.parts.push({ ring: true, x, y, col, rad, life, max: life }); };
+export const ring = (x, y, col, rad = 12, life = 0.3) => { if (G.fx.parts.length < MOTION_LEVELS[motion.particles].cap) G.fx.parts.push({ map: here(), ring: true, x, y, col, rad, life, max: life }); };
 // v280 (roadmap 93a): a blade's mark, a bright line across (x, y) at angle ang (radians), shrinking as it fades.
-export const slash = (x, y, ang, col = SLASH.col, len = SLASH.len) => { if (G.fx.parts.length < MOTION_LEVELS[motion.particles].cap) G.fx.parts.push({ slash: true, x, y, ang, len, col, life: SLASH.life, max: SLASH.life }); };
+export const slash = (x, y, ang, col = SLASH.col, len = SLASH.len) => { if (G.fx.parts.length < MOTION_LEVELS[motion.particles].cap) G.fx.parts.push({ map: here(), slash: true, x, y, ang, len, col, life: SLASH.life, max: SLASH.life }); };
 export function floatText(x, y, text, col = '#fffbe8', o = {}) {
   if (G.fx.floats.length > 24) G.fx.floats.shift();
   if (o.stack) y -= 9 * G.fx.floats.filter((f) => f.stack && f.max - f.life < 0.5).length;   // labels in a burst stack up
-  G.fx.floats.push({ stack: o.stack, x, y, text, col, life: o.life ?? 0.8, max: o.life ?? 0.8, rise: o.rise ?? 12, pop: o.pop, big: o.big });
+  G.fx.floats.push({ map: here(), stack: o.stack, x, y, text, col, life: o.life ?? 0.8, max: o.life ?? 0.8, rise: o.rise ?? 12, pop: o.pop, big: o.big });
 }
 
 // Impact particles where a tool lands.
@@ -68,31 +78,40 @@ let last = {}, ready = false, dropAt = null;
 const snapshot = () => { last = { ...G.S.bag }; };
 on('game:loaded', () => { snapshot(); ready = false; G.anim = null; G.fx = { parts: [], floats: [], pickups: [] }; });
 on('game:reset', () => { G.anim = null; G.fx = { parts: [], floats: [], pickups: [] }; });
-on('map:changed', () => { if (mover() === 'you') { G.fx.pickups.length = 0; G.fx.parts.length = 0; G.fx.floats.length = 0; } G.anim = null; });   // v140: G.anim is the mover's
+// v333: effects on a map neither farmer is on any more are dropped; the rest play on where they are.
+on('map:changed', () => {
+  const kept = (e) => e.map === G.S.map || e.map === G.P2?.map;
+  for (const k of ['pickups', 'parts', 'floats']) G.fx[k] = G.fx[k].filter(kept);
+  G.anim = null;   // v140: G.anim is the mover's
+});
 // v264 (87d): a defeat bursts in what the creature is made of (data/animation.js MATERIAL), with a soft flash.
 const stuff = (kind, color) => { const m = MATERIALS[MATERIAL[kind] || 'fur']; return { ...m, cols: m.cols || [color || '#7fbf5a', '#ffffff', color || '#7fbf5a'] }; };
-on('monster:slain', ({ x, y, kind, color }) => {
+on('monster:slain', ({ x, y, kind, color, map }) => onMap(map ?? null, () => {   // v333: on the map it fell on
   dropAt = { x, y: y - 6, at: performance.now() };
   const m = stuff(kind, color);
   burst(x, y - 6, m.cols, 16, { speed: 50, up: m.up, size: 2, life: 0.6, gravity: m.gravity, shrink: true });
   burst(x, y - 4, IMPACT.slain, 5, { speed: 20, up: 10, size: 3, life: 0.35, gravity: 0, shrink: true });
   ring(x, y - 2, 'rgba(255,255,255,.55)', 9, 0.25);
-});
-on('state:changed', () => {
+}));
+on('state:changed', () => flyGains());
+// What came into the bag since the last look flies in, from the faced tile (or where a creature fell), to whoever is
+// acting: you, or farmer two when systems/partner.js calls this at the end of their Use (G.S is them then).
+export function flyGains() {
   if (!G.S?.bag) return;
   if (G.paused || G.dialog.you || G.dialog.p2 || !ready) { snapshot(); return; }   // v141: dialogs no longer pause in two-player   // shops, dialogs and loading change the bag without a gather
   const f = G.lastUse || facing(), src = dropAt && performance.now() - dropAt.at < 300 ? dropAt : { x: f.tx * T + 8, y: f.ty * T + 6 };
+  const who = G.partnerActing && G.P2 ? 'p2' : 'you';
   let shown = 0;
   for (const k of Object.keys(G.S.bag)) {
     const n = (G.S.bag[k] || 0) - (last[k] || 0);
-    if (n > 0 && ITEMS[k] && shown < PICKUP.max) pickup(k, n, src.x, src.y, shown++, false);
+    if (n > 0 && ITEMS[k] && shown < PICKUP.max) pickup(k, n, src.x, src.y, shown++, false, who);
   }
   snapshot();
-});
+}
 // v123: each pops out, bounces where it came from (sx: how far it skips sideways), then flies in.
-function pickup(key, n, x, y, i, kit) {
+function pickup(key, n, x, y, i, kit, who = G.partnerActing && G.P2 ? 'p2' : 'you') {
   const name = kit ? PLACEABLES[key]?.name : ITEMS[key]?.name;
-  G.fx.pickups.push({ key, n, kit, name, x: x + i * 3, y, sx: (rand() - 0.5) * 2 * PICKUP.scatter, t: -i * 0.06, pop: PICKUP.pop, fly: PICKUP.fly, hop: PICKUP.hop + i * 2 });
+  G.fx.pickups.push({ map: here(), who, key, n, kit, name, x: x + i * 3, y, sx: (rand() - 0.5) * 2 * PICKUP.scatter, t: -i * 0.06, pop: PICKUP.pop, fly: PICKUP.fly, hop: PICKUP.hop + i * 2 });
 }
 // v71's 'picked': a placed object taken back up flies to the player too.
 on('picked', (p) => { if (ready && p?.kind) { const f = facing(); pickup(p.kind, 1, f.tx * T + 8, f.ty * T + 8, 0, true); } });
@@ -126,8 +145,15 @@ on('monster:hit', ({ x, y, dmg, crit, kx, ky, kind, color, blade }) => {
   if (crit) shake(2, 0.15);
 });
 // v281 (roadmap 93b): the hurt you took, as a red number over whoever took it (on your map).
-on('player:hurt', ({ n, x, y, map }) => { if (G.S && map === G.S.map) floatText(x, y - 22, `-${n}`, HURT.col, { life: 0.9, rise: 14, pop: true, big: true }); });
-on('sfx', (k) => { if (k === 'hurt' && G.S) { shake(2.5, 0.2); burst(G.S.x, G.S.y - 8, ['#ff6b6b', '#ffd0d0'], 6, { speed: 35, up: 15, size: 1, life: 0.3, gravity: 0 }); } });
+// v333: over whoever took it, on their map; only your own hurt shakes the screen.
+on('player:hurt', ({ who, n, x, y, map }) => {
+  if (!G.S) return;
+  onMap(map, () => {
+    floatText(x, y - 22, `-${n}`, HURT.col, { life: 0.9, rise: 14, pop: true, big: true });
+    burst(x, y - 8, ['#ff6b6b', '#ffd0d0'], 6, { speed: 35, up: 15, size: 1, life: 0.3, gravity: 0 });
+  });
+  if (who !== 'p2') shake(2.5, 0.2);
+});
 
 // ---- placing: a crouch, a pop of dust and a ring ----
 on('placed', ({ map, x, y }) => {
@@ -189,20 +215,21 @@ addUpdater((dt) => {
   G.fx.floats = G.fx.floats.filter((f) => f.life > 0);
   for (const u of G.fx.pickups) {
     const was = u.t, end = u.pop + u.fly; u.t += fdt;
-    if (was < end && u.t >= end) {   // landed in the bag
-      floatText(G.S.x, G.S.y - 22, `+${u.n} ${u.name || ''}`, '#fffbe8', { life: PICKUP.label, rise: 14, pop: true, stack: true });
-      burst(G.S.x, G.S.y - 14, IMPACT.hit, 4, { speed: 20, up: 10, size: 1, life: 0.3, gravity: 0 });
-      G.bounce = 0.15;
-    }
+    if (was < end && u.t >= end) onMap(u.map, () => {   // landed in the bag: over whoever caught it (v333)
+      const t = target(u.who);
+      floatText(t.x, t.y - 22, `+${u.n} ${u.name || ''}`, '#fffbe8', { life: PICKUP.label, rise: 14, pop: true, stack: true });
+      burst(t.x, t.y - 14, IMPACT.hit, 4, { speed: 20, up: 10, size: 1, life: 0.3, gravity: 0 });
+      if (u.who !== 'p2') G.bounce = 0.15;
+    });
   }
   G.fx.pickups = G.fx.pickups.filter((u) => u.t < u.pop + u.fly);
   for (const [k, t] of perks) {   // v123: drips off a watered crop
     perks.set(k, t + fdt);
     if (t > PERK.dripFor) { perks.delete(k); continue; }
     const [map, at] = k.split(':'), [x, y] = at.split(',').map(Number);
-    if (map === G.S.map && rand() < fdt * PERK.drips / PERK.dripFor) burst(x * T + 3 + rand() * 10, y * T + 5 + rand() * 4, IMPACT.water, 1, { speed: 2, up: 0, size: 1, life: 0.35, gravity: 90, z: 4 });
+    if ((map === G.S.map || map === G.P2?.map) && rand() < fdt * PERK.drips / PERK.dripFor) onMap(map, () => burst(x * T + 3 + rand() * 10, y * T + 5 + rand() * 4, IMPACT.water, 1, { speed: 2, up: 0, size: 1, life: 0.35, gravity: 90, z: 4 }));
   }
   if (G.bounce > 0) G.bounce -= fdt;
 });
 
-addLayer(61, (c) => { if (!G.youMap) drawFx(c, G.fx, G.S); });   // v140: effects belong to your map
+addLayer(61, (c) => drawFx(c, G.fx, G.S.map, target));   // v333: each half draws the effects of the map it shows (G.S.map while it draws)
