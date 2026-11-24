@@ -64,8 +64,21 @@ export const VOICES = {
       ['A good knot holds when you need it and lets go when you ask. Most people are worse than that.', 'I tie nets in the evening. My hands do it; my head goes elsewhere.', 'Do not walk on the pond bank after rain. It slides, and so do you.', 'My mother mended nets for forty boats. I mend for six. Nets are better now. Boats are not.'],
       ['I saw a heron take a fish bigger than its head this morning. It looked surprised too.', 'Rook ties a bowline backwards. It holds. It still offends me.', 'I caught nothing yesterday and it was a good day. People do not understand that.', 'If you ever tear your line, bring it here. I will splice it so you cannot find the join.'],
       ['I do not say much to most people. You make it easy. I have not decided if I like that.', 'My mother would have liked you. She liked anyone who was up before the light.', 'Some mornings I think about going back south. Then the mist comes off the pond and I stay.', 'Here. A net needle. My mother\'s. I have two. Do not lose it.'],
+      // v324 (roadmap 113b): once you are close
+      ["I caught a grayling this morning and my first thought was to show you. That has never happened before. I did not care for it.", "You are the only person I let walk on the bank while I fish. Even the herons have to wait.", "I sleep better since you came. I do not know why. I have decided not to ask.", "My mother said a good net is mostly holes. I think a good life might be the same. Room for what matters to swim in.", "If you ever want to learn the pond properly, every stone and every deep bit, I will teach you. Slowly. It takes years."],
     ],
-    season: { Spring: 'Spring. The pond is cold and the fish are hungry. Best fishing of the year, if your fingers work.', Summer: 'Summer. The fish go deep and sulk. I fish at dawn or not at all.', Autumn: 'Autumn. The grayling are fat and slow. I feel the same.', Winter: 'Winter. Ice at the edges. I mend nets by the fire and wait.' },
+    season: {   // v324: a few each
+      Spring: ['Spring. The pond is cold and the fish are hungry. Best fishing of the year, if your fingers work.', "The ice goes off the pond all at once, with a sound like a sigh. I wait for it every year.", "Spring nets are the worst. Winter weed in every mesh. My hands smell of it until May."],
+      Summer: ['Summer. The fish go deep and sulk. I fish at dawn or not at all.', "Summer evenings the midges come up off the water like smoke. I fish anyway. They eat me anyway.", "Children paddle in the shallows all summer and scare every fish. I pretend to be cross."],
+      Autumn: ['Autumn. The grayling are fat and slow. I feel the same.', "The mist sits on the pond till noon in autumn. You cast into nothing and hope.", "Autumn is when I mend every net I own. All of them. It takes the whole season."],
+      Winter: ['Winter. Ice at the edges. I mend nets by the fire and wait.', "In winter I cut a hole in the ice at the far end. The fish come to the light. So do I, I suppose.", "Long winter evenings I teach Esme knots. She ties them beautifully and cannot untie a single one."],
+    },
+    rain: ["Fish bite in the rain, but my knees do not like it. Nets today, pond tomorrow.", "Rain on the pond is the only time it is noisy. Thousands of little rings. I like to watch it from the door.", "Wet days I mend nets by the Lantern window. Esme draws me. I have stopped minding."],
+    places: {
+      wilds: ["This is my pond. Not on paper. But the fish know me, and the mist does.", "Stand there and do not talk and you will see the grayling rise. Most people talk."],
+      beach: ["Sea nets are coarse. Pond nets are fine. I mend both. The sea is less patient with mistakes.", "My brother fishes a sea like this one, far south. I come here when I think about him."],
+      "inside_tavern": ["The window seat is mine. Everyone knows. Even Lio does not argue.", "The light through that window is good for knots. The cider is good for the rest."],
+    },
     snow: 'Snow on the pond. Everything goes grey and quiet. My favourite kind of morning.',
     birthday: 'My birthday. I am going to sit by the pond and not catch anything on purpose.',
     bday: "It is {name}'s birthday. I will say happy birthday. Once. Quietly.",
