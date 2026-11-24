@@ -354,7 +354,7 @@ test('Use pressed the moment a choice appears does not answer it', async () => {
   const npcs = await import('../src/systems/npcs.js');
   freshFarm({ map: 'farm' });
   emit('game:reset');
-  G.S.npcs.tavi.pts = 410; G.S.npcs.tavi.talked = G.S.day;
+  G.S.npcs.tavi.pts = 410; G.S.npcs.tavi.talked = G.S.day; G.S.npcs.tavi.scenes = [2];   // v325: the 2-heart scene seen
   npcs.startTalk(npcs.NPCRT.find((x) => x.id === 'tavi'));
   update(0);
   G.useHeld = true; for (let i = 0; i < 60 && !G.cut.choice; i++) update(0.05); G.useHeld = false;
