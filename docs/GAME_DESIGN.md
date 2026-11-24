@@ -246,6 +246,13 @@ Profit per day = (sells - seed) / days, one harvest per seed.
 | Wheat | 10g | 4 | 25g | 3.8g | Summer, Autumn (v30; flour at the mill) |
 | Beet | 20g | 6 | 100g | 13.3g | Autumn (v30; sugar at the mill) |
 | Gleamfruit | 400g | 13 | 750g | 26.9g | Summer (v32; Stardew's starfruit) |
+| Potato | 50g | 6 | 80g | 8.3g with the extra | Spring (v335; Stardew's potato: a quarter of harvests give one more) |
+| Kale | 70g | 6 | 110g | 6.7g | Spring (v335; Stardew's kale) |
+| Garlic | 40g | 4 | 60g | 5.0g | Spring (v335; Stardew's garlic) |
+| Bluebell | 30g | 7 | 50g | 2.9g | Spring (v335; a flower, Stardew's blue jazz) |
+| Primrose | 20g | 6 | 30g | 1.7g | Spring (v335; a flower, Stardew's tulip) |
+
+v335 (roadmap 117): more crops, by Stardew's crops by role, a season a release. Crops of 8 days or less keep Stardew's numbers; longer ones grow in about 0.6 of its days with its profit per day kept. Flowers (the flower shape) sell, gift and give a little energy but are never jarred or juiced (data/crops.js PRESERVABLE); bee boxes will use them (117d). A crop may be sold in one place only: the Oasis (ruby stalk) or a festival's stall (strawberry, at the Egg Hunt in packs of 5, as Stardew's Egg Festival sells them).
 
 Fiber seeds (v33, Stardew's fiber seeds): crafted from 1 mixed seeds packet, 5 wood (for sap) and 1 stone (for clay). They grow outdoors in every season, need no water, and give 4 to 7 fiber after 7 days. Not sold at the stall. The Wilds grow 6 weeds a day; any tool cuts one for 1 fiber, free.
 
@@ -259,6 +266,7 @@ Regrowing crops (the plant stays; regrow = days to the next harvest):
 | Sweet corn | 150g | 9 | 4 | 50g | Summer, Autumn | Corn |
 | Broccoli | 60g | 6 | 4 | 70g | Autumn | Broccoli |
 | Lingonberry | 200g | 5 | 4 | 70g x2 | Autumn | Cranberries |
+| Strawberry | 100g | 8 | 4 | 120g | Spring (v335; seeds at the Egg Hunt only) | Strawberry |
 
 Seed packets: wild seeds (40g, one per season, 6 days) grow one of that season's two forage items; mixed seeds (20g) become a random in-season crop when planted (any crop in the greenhouse).
 

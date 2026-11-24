@@ -36,7 +36,7 @@ export const HORSE = { sheet: 'horse', size: 24, origin: [-12, -24] };
 // colour (only drawn when it has one), line to its line colour (or its colour).
 export const CROPS_SHEET = {
   sheet: 'crops', size: 16, layers: ['plant', 'fruit', 'top', 'line', 'shine'],
-  cols: { dead: 0, seed: 1, sprout: 2, young: 3, root: 4, round: 5, leafy: 6, pod: 7 },
+  cols: { dead: 0, seed: 1, sprout: 2, young: 3, root: 4, round: 5, leafy: 6, pod: 7, flower: 8 },   // v335: flower
 };
 
 // v82 forage.png: 16x16 frames over the tile, 8 a row, in this order (forage not listed is drawn in code).

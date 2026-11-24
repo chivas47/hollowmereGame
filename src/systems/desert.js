@@ -46,7 +46,7 @@ addInteraction(72, ({ tile, mapId }) => {
 
 // ---- The Oasis ----
 export const oasisSeeds = () => Object.keys(CROPS).filter((k) => CROPS[k].shop === 'oasis');
-export const buySeeds = (k, n) => (CROPS[k]?.shop === 'oasis' ? buy(k, n) : false);
+export const buySeeds = (k, n) => buy(k, n, 'oasis');   // v335: buy() checks the crop is the Oasis's
 export function buyOasis(key) {
   const S = G.S, o = OASIS.goods.find((x) => x.key === key);
   if (!o || S.gold < o.cost) return false;

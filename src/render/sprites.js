@@ -41,6 +41,12 @@ export function drawSoilBed(c, soil) {
 
 // Ripe art per crop shape (see data/crops.js).
 const RIPE_ART = {
+  // v335 (roadmap 117a): three heads on stems, the petals the crop's colour and the hearts its top colour.
+  flower: (c, X, Y, cx, d) => {
+    r(c, cx, Y + 6, 1, 9, '#4f9440'); r(c, cx - 4, Y + 5, 1, 6, '#4f9440'); r(c, cx + 4, Y + 5, 1, 6, '#4f9440');
+    for (const [dx, dy] of [[-4, 2], [4, 2], [0, 4]]) { r(c, cx + dx - 1, Y + dy - 1, 3, 3, d.color); r(c, cx + dx, Y + dy, 1, 1, d.top || '#f4ead2'); }
+    r(c, cx - 3, Y + 10, 3, 2, '#5da34a'); r(c, cx + 1, Y + 9, 3, 2, '#5da34a');
+  },
   round: (c, X, Y, cx, d) => {
     r(c, cx - 5, Y + 7, 10, 7, d.color); r(c, cx - 6, Y + 8, 12, 5, d.color);
     r(c, cx - 2, Y + 7, 1, 7, d.line); r(c, cx + 2, Y + 7, 1, 7, d.line);

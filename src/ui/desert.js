@@ -21,7 +21,7 @@ function coach() {
 function oasis() {
   const S = G.S;
   const seeds = oasisSeeds().map((k) => row(`${CROPS[k].name} seeds`, `${fmtGold(CROPS[k].seed)} each. ${CROPS[k].days} days, ${CROPS[k].seasons.join(' and ')}. You have ${S.seeds[k] || 0}.`,
-    `<button data-oseed="${k}" ${canBuy(k, 1) ? '' : 'disabled'}>Buy 1</button><button data-oseed="${k}" data-n="5" ${canBuy(k, 5) ? '' : 'disabled'}>Buy 5</button>`)).join('');
+    `<button data-oseed="${k}" ${canBuy(k, 1, 'oasis') ? '' : 'disabled'}>Buy 1</button><button data-oseed="${k}" data-n="5" ${canBuy(k, 5, 'oasis') ? '' : 'disabled'}>Buy 5</button>`)).join('');
   const goods = OASIS.goods.map((o) => row(ITEMS[o.key].name, g(o.cost), `<button data-ogood="${o.key}" ${S.gold < o.cost ? 'disabled' : ''}>Buy</button>`)).join('');
   openModal(`<h2>${OASIS.name}</h2><p class="role">${OASIS.keeper} fans herself behind the counter. "Seeds you won't find in town, and cold things for the heat." You have <b>${g(S.gold)}</b>.</p><h3>Seeds</h3>${seeds}<h3>Goods</h3>${goods}`, [['Leave', closeModal, true]]);
 }

@@ -436,6 +436,17 @@ Nuno (November 2026): finish farmer two after the depth review. Asked: their own
 | 116b | What farmer two does shows up for them | polish | done (chivas47/hollowmereGame#348) | Every effect carries its map and every pickup whose it is (systems/animation.js onMap, flyGains); each half draws its own map's effects; their Use ends by flying their gains to them (not their prompt); a hit on them floats over them and does not shake you. Known issues v130 (pickups) and v140 (effects) closed. |
 | 116c | Naming farmer two with a controller | feature | done (chivas47/hollowmereGame#349) | A letter pad of buttons (ui/letterpad.js, reusable for any name field) their controller drives with the dialog's own focus moves; typeName() capitalises each word so no shift key is needed; a draft kept on Done; Name and look on their Wardrobe tab opens it again. Known issue v142 closed. |
 
+## More crops (November 2026)
+
+Nuno (November 2026): more crops, from the review (28 against Stardew's 46). By Stardew's crops by role, a season a PR, our own real-plant names (none of Stardew's own inventions). Long crops in about 0.6 of Stardew's days with its profit per day kept; short ones keep its numbers.
+
+| Item | What | Kind | Status | Notes |
+|---|---|---|---|---|
+| 117a | More spring crops | feature | in progress | Potato (extra: a quarter give one more), kale, garlic, strawberry (regrows; seeds only at the Egg Hunt stall, as Stardew's Egg Festival), bluebell and primrose (the first flowers: a flower shape on the crop sheet; never jarred or juiced, data/crops.js PRESERVABLE). buy() now refuses a crop sold elsewhere (canBuy from). |
+| 117b | More summer crops | feature | queued | Blackcurrant (Stardew's blueberry: regrows, 3 a harvest), red cabbage, and two flowers: cornflower (poppy) and marigold (summer spangle). |
+| 117c | More autumn crops | feature | queued | Aubergine (eggplant, regrows), black grape (grape, regrows), sweet potato (yam), pak choi (bok choy), buckwheat (amaranth), cardoon (artichoke), and dahlia (fairy rose). |
+| 117d | Flower honey | feature | queued | Stardew's bee house: a bee box with a ripe flower near it makes that flower's honey, worth more by the flower. |
+
 ## Done
 
 | Item | PR |
