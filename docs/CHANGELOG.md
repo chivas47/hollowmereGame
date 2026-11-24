@@ -7,6 +7,8 @@ Newest first. Version numbers match published versions of the playable page.
 - The Sound menu has a slider each for Master, Music, Ambience, Effects and Interface. Your old Ambience volume carries over. Footsteps now follow the Effects volume (they followed Ambience).
 - A sound can have several recordings: each play draws one at random and never repeats the last.
 - Ambience comes from rules by place, weather, season and time (`src/data/ambience.js`), several layers at once: wind under the rain and stronger in storms, a soft wind at night outdoors, and a new owl now and then on nights in the wild.
+- Music follows where you are at two levels, place and region. Gloamwood, the Tangle and Mournfield (darker at night), each zone of the Hollow (the Hollow, the Sunken Cavern, the Ember Vent), the island, the dig site, the Smoke Peak, the Dunes and the casino now have music of their own; places without their own play their region's, and every place in the game has one or the other.
+- A track rotates to another that fits as well after about five minutes of play (at the end of a loop), not after three loops, so long pieces and short ones change alike.
 - Music can open with an intro that plays once before the loop (`loopStart`, `loopEnd`).
 - `node tools/audio_list.mjs` lists every sound slot, missing files and recordings not yet listed.
 - New save data: none. Sound settings move to a new shape in the browser; old ones are read.

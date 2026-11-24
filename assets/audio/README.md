@@ -7,8 +7,8 @@ change a file, or one line of data; no game code.
 
 | Part | File | Job |
 |---|---|---|
-| Music database | `src/data/musicTracks.js` | every track: what it is for (layer, place, season, weather, time, festival, cutscene), priority, weight, volume, loop points |
-| Music director | `src/systems/musicDirector.js` | picks the track for the moment by layer priority (menu, cutscene, festival, boss, combat, fishing, special place, location, season, default), most specific first, random among equals, never restarting what still fits |
+| Music database | `src/data/musicTracks.js` | every track: what it is for (layer, place, region, season, weather, time, festival, cutscene), priority, weight, volume, loop points; the places and regions |
+| Music director | `src/systems/musicDirector.js` | picks the track for the moment by layer priority (menu, cutscene, festival, boss, combat, fishing, place or region, season, default), most specific first, random among equals, never restarting what still fits |
 | Music player | `src/audio/music.js` | crossfades to it, loops it, plays stingers over a ducked background |
 | Ambience database | `src/data/ambience.js` | rules: which loops play how loud, and which calls play how often, by place, weather, season, time and nearness |
 | Ambience director | `src/systems/ambienceDirector.js` | turns the moment into those levels and chances |
@@ -25,7 +25,8 @@ now and then and your own steps; on a rainy day the music, rain, wind, thunder w
 ```
 assets/audio/
 ├── music/
-│   ├── farm/  village/  wild/  underground/  indoors/  special/   the places
+│   ├── farm/  village/  wild/  duskmarch/  underground/  indoors/   the places, by region
+│   ├── sacred/  island/  desert/
 │   ├── festivals/  story/  combat/  fishing/  menu/  default/     events, cutscenes, gameplay, screens
 │   └── stingers/                                                  short one-offs (victory, game over, a new place)
 ├── ambience/
@@ -46,6 +47,22 @@ assets/audio/
   spring farm tune is `farm_spring_02`, a night version `farm_night_01`.
 - The test suite fails on a file that breaks these rules or that no entry lists, so nothing gets lost.
 
+## Places and regions
+
+Music follows where you are at two levels. A **place** is the map you are on, or, in the Hollow, the zone (the Hollow,
+the Sunken Cavern, the Ember Vent, the Smoke Peak). Each place belongs to a **region**. A track tagged with a place
+plays there and beats any region track; a region track plays in every place of the region that has none of its own.
+
+| Region | Places | Own tracks |
+|---|---|---|
+| farm | farm, greenhouse, shed, coop, barn | by season, night, rain |
+| village | village, town, hedge maze, neighbours' cottages | by season, rain |
+| duskmarch | Gloamwood, the Tangle, Mournfield | one per place; Mournfield at night |
+| mines | the Hollow, the Sunken Cavern, the Ember Vent | one per zone |
+| island | the island, the dig site, the Smoke Peak | the island; the dig site and the peak their own |
+| desert | the Dunes, the Oasis, the Gilded Dune casino | the Dunes; the casino its own |
+| others | house, forest, beach, mountains, wilds, caves, sacred (shrine, crypt), tavern, shops | one each |
+
 ## Composing and recording
 
 **Formats.** Ogg Vorbis for music and long loops (it loops without a gap; MP3 adds one). WAV, 16-bit, for short
@@ -63,7 +80,8 @@ length works; 1 to 3 minutes suits background music.
 
 **Variety.** Give an effect or a footstep several recordings: add `_02`, `_03` files and list them in its entry's
 `files`. Each play draws one at random and never repeats the last. `vary` also shifts the pitch a little per play.
-For music, add more tracks with the same fields: the director rotates between them every few loops (`plays`).
+For music, add more tracks with the same fields: they form a pool, one is drawn at random, and after about five
+minutes (`rotateAfter`, counted at the end of a loop) another takes over, so a 2-minute piece plays two or three times.
 
 **Style.** Simple, memorable melodies, relaxed pacing, warm instruments, comfortable repetition, and a mood per
 season and place:
@@ -79,7 +97,12 @@ season and place:
 | Village | sociable | guitar, accordion, light percussion |
 | Forest, wilds | curious, open | flute, marimba, plucked strings |
 | Beach | breezy | ukulele, steel drum, guitar |
-| Mines, caves | mysterious | synth pads, low bass, sparse percussion |
+| The Hollow, caves | mysterious | synth pads, low bass, sparse percussion |
+| Sunken Cavern, Ember Vent | deeper, hotter, more urgent | low drones, metallic percussion |
+| Gloamwood, the Tangle | lost, watchful | low flute, plucked strings, wood percussion |
+| Mournfield | mournful, still; darker at night | solo cello or violin, organ, distant bells |
+| Island, dig site | sunny, far from home | marimba, steel drum, nylon guitar |
+| Smoke Peak, the Dunes | heat, haze | hand drums, drones, a reed instrument |
 | Festivals | lively, celebratory | fiddle, banjo, drums |
 | Combat, boss | tense, driving | bass, percussion, synths |
 | Stingers | a short phrase (2 to 6 s) that ends on the home note | anything from the track it plays over |
@@ -91,8 +114,10 @@ Valley (PROJECT_INSTRUCTIONS rule 1).
 
 - **Replace a sound:** save the new file over the old one, same name. That is all.
 - **Add a variant:** save `footstep_grass_02.wav` next to `_01`, add it to `files` in `src/data/audio.js`.
-- **Add a track:** save `music/village/village_night_01.ogg`, add an entry to `TRACKS` with `location: 'village',
+- **Add a track:** save `music/village/village_night_01.ogg`, add an entry to `TRACKS` with `region: 'village',
   time: 'night'`. No other code; it plays at night in the village from then on.
+- **Give one map its own music:** a track with `place: '<map id>'` (or a Hollow zone: `hollow`, `cavern`, `vent`,
+  `peak`) beats everything its region has. A new map goes in a region in `REGIONS`; a test fails if a map has no music.
 - **Add an ambience layer:** a file and an entry in `BED_FILES` or `CALL_FILES` (`src/data/audio.js`), a generator of
   the same id in `src/audio/ambience.js` (the fallback), and a rule in `src/data/ambience.js`.
 - **Add an effect:** a file and an entry in `SFX_FILES`, a generator in `src/audio/sfx.js`, and the game emitting it.
@@ -139,13 +164,23 @@ Ogg Vorbis, one file per track, named by its id. Several tracks that fit the sam
 | `music/wild/beach_01.ogg` | Tide Line | location; in beach | F lydian, 100 bpm | `beach_01` |
 | `music/wild/mountain_01.ogg` | High Paths | location; in mountains | C major hexatonic, 90 bpm | `mountain_01` |
 | `music/wild/exploration_01.ogg` | Off the Map | location; in wilds | A dorian, 104 bpm | `exploration_01` |
-| `music/underground/mines_01.ogg` | The Hollow | location; in mines | D phrygian, 72 bpm | `mines_01` |
+| `music/underground/hollow_01.ogg` | The Hollow | location; at hollow; in mines | D phrygian, 72 bpm | `hollow_01` |
 | `music/underground/caves_01.ogg` | Drip and Echo | location; in caves | C phrygian, 66 bpm | `caves_01` |
 | `music/indoors/house_01.ogg` | Home | location; in house | E major pentatonic, 82 bpm | `house_01` |
 | `music/indoors/tavern_01.ogg` | The Common Room | location; in tavern | D blues, 118 bpm | `tavern_01` |
 | `music/indoors/shops_01.ogg` | Open for Business | location; in shops | G major hexatonic, 104 bpm | `shops_01` |
-| `music/special/special_shrine_01.ogg` | Old Stones | special; in secret | D phrygian, 64 bpm | `special_shrine_01` |
-| `music/special/special_desert_01.ogg` | Heat Shimmer | special; in faraway | D phrygian, 96 bpm | `special_desert_01` |
+| `music/underground/cavern_01.ogg` | The Sunken Cavern | location; at cavern; in mines | C# phrygian, 78 bpm | `cavern_01` |
+| `music/underground/vent_01.ogg` | The Ember Vent | location; at vent; in mines | D# blues, 92 bpm | `vent_01` |
+| `music/duskmarch/gloamwood_01.ogg` | Gloamwood | location; at gloamwood; in duskmarch | A dorian, 86 bpm | `gloamwood_01` |
+| `music/duskmarch/tangle_01.ogg` | The Tangle | location; at tangle; in duskmarch | G phrygian, 80 bpm | `tangle_01` |
+| `music/duskmarch/mournfield_01.ogg` | Mournfield | location; at mournfield; in duskmarch | F minor pentatonic, 66 bpm | `mournfield_01` |
+| `music/duskmarch/mournfield_night_01.ogg` | When the Dead Walk | location; at mournfield; in duskmarch; night | D phrygian, 72 bpm | `mournfield_night_01` |
+| `music/sacred/sacred_01.ogg` | Old Stones | location; in sacred | D phrygian, 64 bpm | `sacred_01` |
+| `music/island/island_01.ogg` | Warm Water | location; in island | F lydian, 104 bpm | `island_01` |
+| `music/island/digsite_01.ogg` | Bones in the Sand | location; at digsite; in island | D dorian, 94 bpm | `digsite_01` |
+| `music/island/peak_01.ogg` | The Smoke Peak | location; at peak; in island | E blues, 100 bpm | `peak_01` |
+| `music/desert/desert_01.ogg` | Heat Shimmer | location; in desert | D phrygian, 96 bpm | `desert_01` |
+| `music/desert/casino_01.ogg` | The Gilded Dune | location; at inside_casino; in desert | C blues, 112 bpm | `casino_01` |
 | `music/default/default_01.ogg` | Hollowmere | default | E major pentatonic, 96 bpm | `default_01` |
 | `music/festivals/festival_01.ogg` | Bunting and Lanterns | event | F major hexatonic, 124 bpm | `festival_01` |
 | `music/festivals/festival_spring_01.ogg` | Spring Fair | event; Spring | G major pentatonic, 128 bpm | `festival_spring_01` |
