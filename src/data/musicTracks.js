@@ -34,12 +34,18 @@
 // season (Mournfield's own track beats anything of the Duskmarch's; in the rain the rainy village track beats the
 // spring village track, which beats the plain village track), so a missing variant falls back to the plainer one.
 import { MOODS } from './music.js';
+import { CAVERN } from './cavern.js';
+import { VENT } from './forge.js';
 
 const MAJ = [0, 2, 4, 7, 9], MIN = [0, 3, 5, 7, 10], DOR = [0, 2, 3, 7, 9], PHR = [0, 1, 5, 7, 8], LYD = [0, 2, 4, 6, 7, 9], HEX = [0, 2, 4, 5, 7, 9], BLU = [0, 3, 5, 6, 7, 10];
 const g = (root, scale, bpm, lead, seed) => ({ root, scale, bpm, lead, seed });
 
 // v342: the Hollow's depth bands (floors, inclusive; one number: that floor and every one below).
 export const HOLLOW_DEPTHS = { upper: [1, 39], middle: [40, 79], deep: [80] };
+// The Sunken Cavern's, from its own data so they move with it: above the Ember Vent's door, from the door down to
+// where umbrite is richest, and below. (Its creatures do not change with depth; only their strength and the ore.)
+const UMBRITE_RICHEST = (() => { let n = 1; while (CAVERN.umbrite(n) < CAVERN.umbrite(1000) && n < 1000) n++; return n; })();
+export const CAVERN_DEPTHS = { upper: [1, VENT.doorFloor - 1], middle: [VENT.doorFloor, UMBRITE_RICHEST - 1], deep: [UMBRITE_RICHEST] };
 
 export const TRACKS = [
   // The farm: the four original season themes, a second spring tune, a night and a rain variant.
@@ -73,7 +79,9 @@ export const TRACKS = [
   { id: 'tavern_01', name: 'The Common Room', file: 'music/indoors/tavern_01.ogg', gain: 0.127, category: 'location', region: 'tavern', gen: g(62, BLU, 118, 'square', 409) },
   { id: 'shops_01', name: 'Open for Business', file: 'music/indoors/shops_01.ogg', gain: 0.117, category: 'location', region: 'shops', gen: g(67, HEX, 104, 'triangle', 419) },
   // v342: the Hollow's deeper zones, each its own (the mine map is one map; the zone you are in is the place).
-  { id: 'cavern_01', name: 'The Sunken Cavern', file: 'music/underground/cavern_01.ogg', gain: 0.126, category: 'location', region: 'mines', place: 'cavern', gen: g(49, PHR, 78, 'sine', 337) },
+  { id: 'cavern_upper_01', name: 'The Sunken Cavern', file: 'music/underground/cavern_upper_01.ogg', gain: 0.126, category: 'location', region: 'mines', place: 'cavern', floors: CAVERN_DEPTHS.upper, gen: g(49, PHR, 78, 'sine', 337) },
+  { id: 'cavern_middle_01', name: 'Past the Ember Door', file: 'music/underground/cavern_middle_01.ogg', gain: 0.118, category: 'location', region: 'mines', place: 'cavern', floors: CAVERN_DEPTHS.middle, gen: g(47, PHR, 84, 'triangle', 359) },
+  { id: 'cavern_deep_01', name: 'Umbrite Veins', file: 'music/underground/cavern_deep_01.ogg', gain: 0.12, category: 'location', region: 'mines', place: 'cavern', floors: CAVERN_DEPTHS.deep, gen: g(45, BLU, 90, 'square', 367) },
   { id: 'vent_01', name: 'The Ember Vent', file: 'music/underground/vent_01.ogg', gain: 0.12, category: 'location', region: 'mines', place: 'vent', gen: g(51, BLU, 92, 'square', 347) },
   // v342: the Duskmarch, the wild country west of the village: each map its own, Mournfield darker after dark.
   { id: 'gloamwood_01', name: 'Gloamwood', file: 'music/duskmarch/gloamwood_01.ogg', gain: 0.116, category: 'location', region: 'duskmarch', place: 'gloamwood', gen: g(57, DOR, 86, 'triangle', 521) },
