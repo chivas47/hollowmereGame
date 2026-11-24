@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v332: Farmer two's own skills
+- Farmer two now has their own skills and professions, as in Stardew's co-op. What they farm, fish, mine, forage and fight levels them up, not you.
+- Their levels give them their own bonus items, cheaper tool swings, a bigger catch bar and their own profession choices, shown in their half of the screen (and again each morning they play while one is left for later).
+- Their skill milestones raise their own energy bar, and combat their own health. The HUD shows each farmer's own top.
+- Gold, the bag, tools, books and mastery stay shared.
+- On a farm where farmer two has already played, they start with a copy of your skills, so nothing they earned is lost. A farmer two who never played there starts at level 0.
+- New save data: partner.skills, partner.professions (and their energy and health tops). Save step 10.
+
 ## v331: Rooms that feel lived in
 - 40 new pieces of furniture on thirteen new shapes: beds, wardrobes, stoves, plate hutches, crates, benches, shelves, candles, vases, rocking chairs, pianos, a fishbowl and lanterns.
 - Every piece belongs to a room set: cottage parlour, kitchen, bedroom, study, seaside, woodland and workroom. The catalogue shows one set at a time and how much of it you have.

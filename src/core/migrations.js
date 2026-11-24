@@ -80,6 +80,14 @@ export const MIGRATIONS = [
     for (const [k, n] of Object.entries(s.kit || {})) if (n > 0 && FURNITURE[k]) have.add(k);
     s.house.owned = [...have];
   } },
+  // v10 (v332, roadmap 116a): farmer two's own skills. One who has already played on this farm (partner.picked) shared
+  // yours until now, so starts with a copy of them and nothing they earned is lost; one who never has starts new, as a
+  // farmhand joining a Stardew farm does. Their energy and health tops follow from these on loading.
+  { v: 10, run(s, saved) {
+    if (saved.partner?.skills || !s.partner.picked) return;
+    s.partner.skills = { ...s.skills };
+    s.partner.professions = Object.fromEntries(Object.entries(s.professions || {}).map(([k, v]) => [k, [...v]]));
+  } },
 ];
 
 export const SAVE_VERSION = MIGRATIONS[MIGRATIONS.length - 1].v;

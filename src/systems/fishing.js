@@ -20,6 +20,7 @@ import { r } from '../render/pixel.js';
 import { drawBubble } from '../render/sprites.js';
 import { useEnergy, mover } from './world.js';
 import { skillLevel } from './skills.js';
+import { asFarmer } from './partner.js';
 
 const ENERGY = 8, BITE_WINDOW = 1.1;
 const WATER = new Set(['O']);
@@ -198,7 +199,9 @@ function reel(f, dt) {
 
 addUpdater((dt) => {
   const f = G.fishing;
-  if (!f) return;
+  if (f) asFarmer(f.p2 ? 'p2' : 'you', () => workLine(f, dt));   // v332: farmer two's line by their own skill, and the catch is theirs
+});
+function workLine(f, dt) {
   if (f.phase === 'wait') {
     f.t -= dt;
     if (f.t <= 0) {
@@ -210,7 +213,7 @@ addUpdater((dt) => {
     f.t -= dt;
     if (f.t <= 0) { notify('Something nibbled, then got away.'); emit('sfx', 'miss'); end(); }
   } else reel(f, dt);
-});
+}
 
 // The ice hole, drawn on the frozen water in winter (v163: wherever one is cut).
 addLayer(12, (c) => {

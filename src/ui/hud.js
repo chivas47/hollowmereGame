@@ -28,7 +28,7 @@ function render() {
   meter('#energy', S.energy, S.maxEnergy);
   $('#energy').classList.toggle('low', S.energy < S.maxEnergy * 0.25);
   $('#energy2').parentElement.hidden = !G.P2;   // v131: the second farmer's, while they play
-  if (G.P2) { meter('#energy2', S.partner.energy, S.maxEnergy); $('#energy2').classList.toggle('low', S.partner.energy < S.maxEnergy * 0.25); }
+  if (G.P2) { meter('#energy2', S.partner.energy, S.partner.maxEnergy); $('#energy2').classList.toggle('low', S.partner.energy < S.partner.maxEnergy * 0.25); }   // v332: their own top
   meter('#water', S.water, S.maxw);
   meter('#health', S.hp, S.maxHp);
   $('#health').classList.toggle('low', S.hp < S.maxHp * 0.25);
@@ -36,8 +36,8 @@ function render() {
   $('#health').parentElement.hidden = S.hp >= S.maxHp && monstersOn() !== S.map;
   // v143: farmer two's health, by the same rule on their own map
   const P = S.partner;
-  $('#health2').parentElement.hidden = !G.P2 || (P.hp >= S.maxHp && monstersOn() !== G.P2.map);
-  if (G.P2) { meter('#health2', P.hp, S.maxHp); $('#health2').classList.toggle('low', P.hp < S.maxHp * 0.25); }
+  $('#health2').parentElement.hidden = !G.P2 || (P.hp >= P.maxHp && monstersOn() !== G.P2.map);
+  if (G.P2) { meter('#health2', P.hp, P.maxHp); $('#health2').classList.toggle('low', P.hp < P.maxHp * 0.25); }
   $('#water').parentElement.hidden = slotKind(S) !== 'can';
   const extra = EXTRA.find((e) => e.maps.includes(S.map));   // a second currency, only where it is spent
   $('#extra').hidden = !extra;

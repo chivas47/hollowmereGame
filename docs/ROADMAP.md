@@ -426,6 +426,16 @@ Nuno (November 2026): a review against modern cozy farming games found the game 
 | 114 | Rooms that feel lived in | feature | done (chivas47/hollowmereGame#346) | Nuno (November 2026): about 40 new pieces in sets per room and a rotating stock to collect; neighbours commenting on the house later. Built: 40 pieces on 13 new shapes (tools/sprites/furniture.py), seven room sets (data/furniture.js SETS), 16 collector's pieces in a weekly stock (systems/house.js weeklyStock, from the day: no save data), the collection (G.S.house.owned, save step 9), the catalogue by set with This week; the balance bot buys furniture once well off. |
 | 115 | A full-screen field | feature | done (chivas47/hollowmereGame#337) | Nuno (November 2026): a Display setting, on for new players. Built: Layout over the field or beside it (data/hud.js, a browser setting); over: the field fills the window, clock and meters top right, menus in a slim left column, hotbar at the foot, no Basket line; panels see-through under your farmer and hidden in cutscenes; a browser that already has a farm keeps the side column. Wide screens with a mouse only. |
 
+## The second farmer, finished (November 2026)
+
+Nuno (November 2026): finish farmer two after the depth review. Asked: their own skills (Stardew co-op) or keep sharing yours; Nuno chose their own. Gold, bag and tools stay shared (73a).
+
+| Item | What | Kind | Status | Notes |
+|---|---|---|---|---|
+| 116a | Farmer two's own skills | feature | done (chivas47/hollowmereGame#347) | Their own skills and professions (systems/partner.js OWN_STATS, swapped into G.S for their actions and alone for loading, mornings, hits and their fishing line); their own energy and health tops; profession choices in their half; save step 10 (a farmer two who has played starts with a copy of yours). Changes are held while their stats are swapped in (core/events.js holdChanges), so the HUD never shows their values in yours. |
+| 116b | What farmer two does shows up for them | polish | queued | Their pickups fly to them, not you; their swings' sparks and particles show on their own map (GAME_DESIGN known issues v130, v140). |
+| 116c | Naming farmer two with a controller | feature | queued | A letter picker their controller can drive, so they can have a name (known issue v142). |
+
 ## Done
 
 | Item | PR |

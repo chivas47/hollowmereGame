@@ -20,7 +20,7 @@ export function skillProgress(key) {
 const energyFromSkills = () => Object.keys(SKILLS)
   .reduce((sum, k) => sum + MILESTONES.filter((m) => skillLevel(k) >= m).length * ENERGY_PER_MILESTONE, 0);
 
-function syncEnergyBonus() {
+export function syncEnergyBonus() {   // v332: exported, farmer two's too (systems/partner.js)
   G.S.energyBonus = energyFromSkills();
   recalcStats();
 }

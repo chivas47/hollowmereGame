@@ -19,7 +19,7 @@ src/
     state.js          newState(), merge(saved), load(), save({ night }) (localStorage), restoreMorning(), exportSave(), importSave(text); v127: currentSlot(), slotInfo(n), useSlot(n)
     migrations.js     v118: MIGRATIONS (ordered save upgrades), SAVE_VERSION, migrate(s, saved); merge() runs it
     stage.js          v319: farmStage(s) ('new', 'learning', 'settled'), LEARNING_DAYS, catchUp(seen, catalogue, fromGen, stage): how old farms meet teaching added later
-    events.js         on(event, fn), emit(event, data), changed(), notify(msg)
+    events.js         on(event, fn), emit(event, data), changed(), notify(msg); v332: holdChanges(fn) sends one state:changed when fn ends
     host.js           v233: isItchHost(hostname, referrer), onItch (false in Node)
     controls.js       v119: key bindings per browser: actionOf(code), keyName(action) for messages, bind(), resetControls()
     motion.js         v125: motion settings per browser: particles, shake, hit-stop, cosmetic speed; setMotion()
@@ -108,7 +108,7 @@ src/
     journal.js        v114: story steps checked against the save, objectives() (main and optional, for the journal and the HUD), tracked(), the finished-quest log, places found, map pins, quest markers, recap() (G.S.journal)
     firstweek.js      v122: weekGoal() (the open goal), checkWeek(); goals read from the save; journal.js shows the goal first
     reckoning.js      v128: score(), the morning judgement, the carved lid's daily gleamfruit, askAgain() (through npcs.js addGiftHook), the porch lamps layer
-    partner.js        v143: G.S.partner.hp (health.js hurtPartner). v142: G.S.partner saves their name, look, place (at), slot and picked; placeBed() (their bed), bedtime() and G.bed (the night when both are in bed). v129: G.P2 (the live farmer): join(), leave(), partnerKeys(), besideYou(); walks, follows map:changed, drawn; v130: partnerUse() runs act() as them (asPartner swaps position, slot, energy and swing into G.S), partnerSlot(); S.partner.energy; v131: partnerPrompt() for ui/prompt.js, your bed only; v134: G.partnerActing while act() runs as them, their rod and line; v136: G.P2.riding (systems/stable.js rider())
+    partner.js        v143: G.S.partner.hp (health.js hurtPartner). v142: G.S.partner saves their name, look, place (at), slot and picked; placeBed() (their bed), bedtime() and G.bed (the night when both are in bed). v129: G.P2 (the live farmer): join(), leave(), partnerKeys(), besideYou(); walks, follows map:changed, drawn; v130: partnerUse() runs act() as them (asPartner swaps position, slot, energy and swing into G.S), partnerSlot(); S.partner.energy; v131: partnerPrompt() for ui/prompt.js, your bed only; v134: G.partnerActing while act() runs as them, their rod and line; v136: G.P2.riding (systems/stable.js rider()); v332: OWN_STATS (skills, professions, energyBonus, maxEnergy, maxHp, energy, hp) live in G.S.partner and are swapped into G.S for their Use and alone by asPartnerStats(fn); asFarmer(who, fn) runs fn as either farmer (their fishing line, their profession dialog); changes are held while swapped
     emotes.js         v124: emote(id, kind), emoteOf(id), gestureOffset(); npcs.js and chatter.js (v145) start them, npcs.js draws them
     pets.js           the farm pet: wandering, pats, the water bowl, gifts, hats
     stable.js         stable building, horse riding, following between maps, whistle; v136: either farmer rides, one at a time (rider())

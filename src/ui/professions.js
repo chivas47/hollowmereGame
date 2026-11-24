@@ -3,9 +3,11 @@ import { on, notify } from '../core/events.js';
 import { PROFESSIONS } from '../data/professions.js';
 import { SKILLS } from '../data/skills.js';
 import { pending, choose } from '../systems/professions.js';
-import { openModal, closeModal, modalOpen } from './modal.js';
+import { openModal, closeModal, dialogOf } from './modal.js';
 import { $ } from './dom.js';
 import { keyName } from '../core/controls.js';
+import { G } from '../core/game.js';
+import { asFarmer } from '../systems/partner.js';
 
 function professionDialog() {
   const p = pending();
@@ -16,11 +18,13 @@ function professionDialog() {
 }
 
 // Wait for any open dialog (the morning report, a level-up during a harvest dialog) to close first.
-let waiting = null;
+// v332 (roadmap 116a): each farmer picks their own, in their own half; who is remembered while it waits.
+const waiting = { you: null, p2: null };
 on('ui:profession', () => {
-  if (!modalOpen()) { professionDialog(); return; }
-  if (waiting) return;
-  waiting = setInterval(() => { if (!modalOpen()) { clearInterval(waiting); waiting = null; professionDialog(); } }, 400);
+  const who = G.partnerActing && G.P2 ? 'p2' : 'you', open = () => asFarmer(who, professionDialog);
+  if (!dialogOf(who)) { open(); return; }
+  if (waiting[who]) return;
+  waiting[who] = setInterval(() => { if (!dialogOf(who)) { clearInterval(waiting[who]); waiting[who] = null; open(); } }, 400);
 });
 
 $('#mbody').addEventListener('click', (e) => {
