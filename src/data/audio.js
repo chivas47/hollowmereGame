@@ -81,16 +81,97 @@ export const CALL_FILES = {
   crackle: { files: ['environment/fire_crackle_01.wav'], about: 'a fire crackling', brief: 'A fire crackling near a hearth or stove. One to three small pops and snaps, under 0.3 s, played often. 3 variants.', gain: 0.0584, vary: 0.2 },
 };
 
-// Footsteps by what is underfoot (audio/footsteps.js surfaceAt), and hooves on horseback. v342: in the effects group.
+// Footsteps by what is underfoot (audio/footsteps.js surfaceAt), and hooves on horseback. v342: in the effects group,
+// four takes of each so no two steps in a row sound alike.
 export const STEP_FILES = {
-  grass: { files: ['sfx/footsteps/footstep_grass_01.wav'], about: 'walking on grass', brief: 'Walking on grass (the default outdoors). A soft brushy step, under 0.1 s. About 4 steps a second, so it must be very subtle. Record 4 variants.', gain: 0.0217, vary: 0.15 },
-  path:  { files: ['sfx/footsteps/footstep_dirt_path_01.wav'], about: 'walking on dirt paths', brief: 'Walking on dirt paths and roads. A soft gritty crunch, under 0.1 s, a bit firmer than grass. 4 variants.', gain: 0.0272, vary: 0.15 },
-  sand:  { files: ['sfx/footsteps/footstep_sand_01.wav'], about: 'walking on sand', brief: 'Walking on sand (the beach, the Dunes, the island). A soft shifting hiss, under 0.12 s. 4 variants.', gain: 0.0365, vary: 0.15 },
-  stone: { files: ['sfx/footsteps/footstep_stone_01.wav'], about: 'walking on stone', brief: 'Walking on stone (the quarry, caves, the Hollow, stone paths). A hard dry tap, under 0.08 s, slightly echoey underground. 4 variants.', gain: 0.021, vary: 0.15 },
-  wood:  { files: ['sfx/footsteps/footstep_wood_01.wav'], about: 'walking on wooden floors and the pier', brief: 'Walking on wooden floors indoors, the pier and wood paths. A hollow wooden knock, under 0.1 s. 4 variants.', gain: 0.0187, vary: 0.15 },
-  snow:  { files: ['sfx/footsteps/footstep_snow_01.wav'], about: 'walking on snow', brief: 'Walking on snow outdoors in winter. A soft compressing crunch, under 0.15 s. 4 variants.', gain: 0.0332, vary: 0.15 },
-  wet:   { files: ['sfx/footsteps/footstep_wet_ground_01.wav'], about: 'walking on wet ground in rain', brief: 'Walking on wet ground outdoors in rain. A soft squelchy splash, under 0.12 s. 4 variants.', gain: 0.0183, vary: 0.15 },
-  hoof:  { files: ['sfx/footsteps/horse_hoof_01.wav'], about: 'riding the horse', brief: 'Riding the horse. One hoofbeat clop on earth, under 0.1 s, played about 3 times a second. 2 to 4 variants.', gain: 0.0193, vary: 0.15 },
+  grass: {
+    files: [
+      'sfx/footsteps/footstep_grass_01.wav',
+      'sfx/footsteps/footstep_grass_02.wav',
+      'sfx/footsteps/footstep_grass_03.wav',
+      'sfx/footsteps/footstep_grass_04.wav',
+    ],
+    about: 'walking on grass',
+    brief: 'Walking on grass (the default outdoors). A soft brushy step, under 0.1 s. About 4 steps a second, so it must be very subtle. Record 4 variants.',
+    gain: 0.0217, vary: 0.15,
+  },
+  path:  {
+    files: [
+      'sfx/footsteps/footstep_dirt_path_01.wav',
+      'sfx/footsteps/footstep_dirt_path_02.wav',
+      'sfx/footsteps/footstep_dirt_path_03.wav',
+      'sfx/footsteps/footstep_dirt_path_04.wav',
+    ],
+    about: 'walking on dirt paths',
+    brief: 'Walking on dirt paths and roads. A soft gritty crunch, under 0.1 s, a bit firmer than grass. 4 variants.',
+    gain: 0.0272, vary: 0.15,
+  },
+  sand:  {
+    files: [
+      'sfx/footsteps/footstep_sand_01.wav',
+      'sfx/footsteps/footstep_sand_02.wav',
+      'sfx/footsteps/footstep_sand_03.wav',
+      'sfx/footsteps/footstep_sand_04.wav',
+    ],
+    about: 'walking on sand',
+    brief: 'Walking on sand (the beach, the Dunes, the island). A soft shifting hiss, under 0.12 s. 4 variants.',
+    gain: 0.0365, vary: 0.15,
+  },
+  stone: {
+    files: [
+      'sfx/footsteps/footstep_stone_01.wav',
+      'sfx/footsteps/footstep_stone_02.wav',
+      'sfx/footsteps/footstep_stone_03.wav',
+      'sfx/footsteps/footstep_stone_04.wav',
+    ],
+    about: 'walking on stone',
+    brief: 'Walking on stone (the quarry, caves, the Hollow, stone paths). A hard dry tap, under 0.08 s, slightly echoey underground. 4 variants.',
+    gain: 0.021, vary: 0.15,
+  },
+  wood:  {
+    files: [
+      'sfx/footsteps/footstep_wood_01.wav',
+      'sfx/footsteps/footstep_wood_02.wav',
+      'sfx/footsteps/footstep_wood_03.wav',
+      'sfx/footsteps/footstep_wood_04.wav',
+    ],
+    about: 'walking on wooden floors and the pier',
+    brief: 'Walking on wooden floors indoors, the pier and wood paths. A hollow wooden knock, under 0.1 s. 4 variants.',
+    gain: 0.0187, vary: 0.15,
+  },
+  snow:  {
+    files: [
+      'sfx/footsteps/footstep_snow_01.wav',
+      'sfx/footsteps/footstep_snow_02.wav',
+      'sfx/footsteps/footstep_snow_03.wav',
+      'sfx/footsteps/footstep_snow_04.wav',
+    ],
+    about: 'walking on snow',
+    brief: 'Walking on snow outdoors in winter. A soft compressing crunch, under 0.15 s. 4 variants.',
+    gain: 0.0332, vary: 0.15,
+  },
+  wet:   {
+    files: [
+      'sfx/footsteps/footstep_wet_ground_01.wav',
+      'sfx/footsteps/footstep_wet_ground_02.wav',
+      'sfx/footsteps/footstep_wet_ground_03.wav',
+      'sfx/footsteps/footstep_wet_ground_04.wav',
+    ],
+    about: 'walking on wet ground in rain',
+    brief: 'Walking on wet ground outdoors in rain. A soft squelchy splash, under 0.12 s. 4 variants.',
+    gain: 0.0183, vary: 0.15,
+  },
+  hoof:  {
+    files: [
+      'sfx/footsteps/horse_hoof_01.wav',
+      'sfx/footsteps/horse_hoof_02.wav',
+      'sfx/footsteps/horse_hoof_03.wav',
+      'sfx/footsteps/horse_hoof_04.wav',
+    ],
+    about: 'riding the horse',
+    brief: 'Riding the horse. One hoofbeat clop on earth, under 0.1 s, played about 3 times a second. 4 variants.',
+    gain: 0.0193, vary: 0.15,
+  },
 };
 
 export const ALL_AUDIO = { sfx: SFX_FILES, ambience: BED_FILES, calls: CALL_FILES, footsteps: STEP_FILES };

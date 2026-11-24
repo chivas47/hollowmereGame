@@ -142,7 +142,8 @@ instead (and warns in the console), so a broken file never makes the game silent
 They are placeholders recorded from the game's own sound generators by `tools/render_audio.mjs` (mono 22,050 Hz;
 16-bit WAV, music through ffmpeg to Ogg Vorbis). Run it again after changing a generator: `node tools/render_audio.mjs
 hoe rain` re-records only those ids, and only the first file of a pool, so your own variants are never touched. With
-no ids it re-records everything, overwriting the first file of every slot, including ones you replaced.
+no ids it re-records everything, overwriting the first file of every slot, including ones you replaced. The other
+files of a pool are recorded only while they are missing (a fresh take each), never overwritten.
 
 ### Credits
 
@@ -1013,7 +1014,7 @@ One per step, by what is underfoot (Steps in the menu turns them off). About fou
 
 #### Walking on grass
 
-- File: `sfx/footsteps/footstep_grass_01.wav` (id `grass`)
+- Files (a pool of 4): `sfx/footsteps/footstep_grass_01.wav`, `sfx/footsteps/footstep_grass_02.wav`, `sfx/footsteps/footstep_grass_03.wav`, `sfx/footsteps/footstep_grass_04.wav` (id `grass`)
 - Form: one-shot; the game shifts its pitch up to 15% either way each play
 - Volume: Effects
 
@@ -1021,7 +1022,7 @@ Walking on grass (the default outdoors). A soft brushy step, under 0.1 s. About 
 
 #### Walking on dirt paths
 
-- File: `sfx/footsteps/footstep_dirt_path_01.wav` (id `path`)
+- Files (a pool of 4): `sfx/footsteps/footstep_dirt_path_01.wav`, `sfx/footsteps/footstep_dirt_path_02.wav`, `sfx/footsteps/footstep_dirt_path_03.wav`, `sfx/footsteps/footstep_dirt_path_04.wav` (id `path`)
 - Form: one-shot; the game shifts its pitch up to 15% either way each play
 - Volume: Effects
 
@@ -1029,7 +1030,7 @@ Walking on dirt paths and roads. A soft gritty crunch, under 0.1 s, a bit firmer
 
 #### Walking on sand
 
-- File: `sfx/footsteps/footstep_sand_01.wav` (id `sand`)
+- Files (a pool of 4): `sfx/footsteps/footstep_sand_01.wav`, `sfx/footsteps/footstep_sand_02.wav`, `sfx/footsteps/footstep_sand_03.wav`, `sfx/footsteps/footstep_sand_04.wav` (id `sand`)
 - Form: one-shot; the game shifts its pitch up to 15% either way each play
 - Volume: Effects
 
@@ -1037,7 +1038,7 @@ Walking on sand (the beach, the Dunes, the island). A soft shifting hiss, under 
 
 #### Walking on stone
 
-- File: `sfx/footsteps/footstep_stone_01.wav` (id `stone`)
+- Files (a pool of 4): `sfx/footsteps/footstep_stone_01.wav`, `sfx/footsteps/footstep_stone_02.wav`, `sfx/footsteps/footstep_stone_03.wav`, `sfx/footsteps/footstep_stone_04.wav` (id `stone`)
 - Form: one-shot; the game shifts its pitch up to 15% either way each play
 - Volume: Effects
 
@@ -1045,7 +1046,7 @@ Walking on stone (the quarry, caves, the Hollow, stone paths). A hard dry tap, u
 
 #### Walking on wooden floors and the pier
 
-- File: `sfx/footsteps/footstep_wood_01.wav` (id `wood`)
+- Files (a pool of 4): `sfx/footsteps/footstep_wood_01.wav`, `sfx/footsteps/footstep_wood_02.wav`, `sfx/footsteps/footstep_wood_03.wav`, `sfx/footsteps/footstep_wood_04.wav` (id `wood`)
 - Form: one-shot; the game shifts its pitch up to 15% either way each play
 - Volume: Effects
 
@@ -1053,7 +1054,7 @@ Walking on wooden floors indoors, the pier and wood paths. A hollow wooden knock
 
 #### Walking on snow
 
-- File: `sfx/footsteps/footstep_snow_01.wav` (id `snow`)
+- Files (a pool of 4): `sfx/footsteps/footstep_snow_01.wav`, `sfx/footsteps/footstep_snow_02.wav`, `sfx/footsteps/footstep_snow_03.wav`, `sfx/footsteps/footstep_snow_04.wav` (id `snow`)
 - Form: one-shot; the game shifts its pitch up to 15% either way each play
 - Volume: Effects
 
@@ -1061,7 +1062,7 @@ Walking on snow outdoors in winter. A soft compressing crunch, under 0.15 s. 4 v
 
 #### Walking on wet ground in rain
 
-- File: `sfx/footsteps/footstep_wet_ground_01.wav` (id `wet`)
+- Files (a pool of 4): `sfx/footsteps/footstep_wet_ground_01.wav`, `sfx/footsteps/footstep_wet_ground_02.wav`, `sfx/footsteps/footstep_wet_ground_03.wav`, `sfx/footsteps/footstep_wet_ground_04.wav` (id `wet`)
 - Form: one-shot; the game shifts its pitch up to 15% either way each play
 - Volume: Effects
 
@@ -1069,11 +1070,11 @@ Walking on wet ground outdoors in rain. A soft squelchy splash, under 0.12 s. 4 
 
 #### Riding the horse
 
-- File: `sfx/footsteps/horse_hoof_01.wav` (id `hoof`)
+- Files (a pool of 4): `sfx/footsteps/horse_hoof_01.wav`, `sfx/footsteps/horse_hoof_02.wav`, `sfx/footsteps/horse_hoof_03.wav`, `sfx/footsteps/horse_hoof_04.wav` (id `hoof`)
 - Form: one-shot; the game shifts its pitch up to 15% either way each play
 - Volume: Effects
 
-Riding the horse. One hoofbeat clop on earth, under 0.1 s, played about 3 times a second. 2 to 4 variants.
+Riding the horse. One hoofbeat clop on earth, under 0.1 s, played about 3 times a second. 4 variants.
 
 ## Ambient and environment loops
 

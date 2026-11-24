@@ -1,5 +1,5 @@
 // v317 (roadmap 109): records the game's generated sounds into the files listed in src/data/audio.js and
-// src/data/musicTracks.js. v342: a pool records only its first file; the variants you add are never touched.
+// src/data/musicTracks.js. v342: a pool's first file is always re-recorded; its other slots only while empty.
 //   node tools/render_audio.mjs            every file (writes assets/audio/**.wav and the gains into src/data/audio.js)
 //   node tools/render_audio.mjs hoe rain   only these ids
 // Each sound is played by its own generator (audio/sfx.js, music.js, ambience.js, footsteps.js) into an offline audio
@@ -103,17 +103,26 @@ for (const t of TRACKS) {
   trackGains[t.id] = +(peak / PEAK).toPrecision(3);
   console.log(`${t.file.padEnd(42)} ${(s.length / RATE).toFixed(2)} s  gain ${trackGains[t.id]}`);
 }
+const todo = [];
 for (const [kind, group] of Object.entries(ALL_AUDIO)) {
   for (const [id, entry] of Object.entries(group)) {
     if (ONLY.length && !ONLY.includes(id)) continue;
+    // v342: a pool's first file is always recorded (its peak sets the entry's gain); its other slots only while they
+    // have no file yet, each a fresh take of the generator (footsteps and calls vary from take to take), so a
+    // variant you recorded is never overwritten.
+    filesOf(entry).forEach((f, i) => { if (i === 0 || !existsSync(join(ROOT, AUDIO_DIR, f))) todo.push({ kind, id, file: f, first: i === 0 }); });
+  }
+}
+for (const { kind, id, file, first } of todo) {
+  {
     const s = shape(kind, await record(kind, id, LEN[kind], RATE));
     const peak = s.reduce((m, v) => Math.max(m, Math.abs(v)), 0) || 1;
     for (let i = 0; i < s.length; i++) s[i] *= PEAK / peak;
-    const file = filesOf(entry)[0], out = join(ROOT, AUDIO_DIR, file);   // v342: a pool's first file (the others are yours)
+    const out = join(ROOT, AUDIO_DIR, file);
     mkdirSync(dirname(out), { recursive: true });
     writeFileSync(out, wav(s));
-    gains[file] = +(peak / PEAK).toPrecision(3);
-    console.log(`${file.padEnd(50)} ${(s.length / RATE).toFixed(2)} s  gain ${gains[file]}`);
+    if (first) gains[file] = +(peak / PEAK).toPrecision(3);
+    console.log(`${file.padEnd(50)} ${(s.length / RATE).toFixed(2)} s${first ? `  gain ${gains[file]}` : '  (variant)'}`);
   }
 }
 await browser.close(); server.close();
