@@ -4,7 +4,7 @@ import { G } from '../core/game.js';
 import { on, emit, changed } from '../core/events.js';
 import { save } from '../core/state.js';
 import { LOOKS, PETS, NAME_MAX, DEFAULT_PROFILE, playerPal } from '../data/profile.js';
-import { LAYOUTS } from '../data/layouts.js';
+import { LAYOUTS, NEW_FARM_LAYOUT } from '../data/layouts.js';
 import { PET_LOOKS, PET_NAMES } from '../data/pets.js';
 import { HAIR_STYLES, BEARDS, lookOf } from '../data/people.js';
 import { drawPerson, drawPet } from '../render/sprites.js';
@@ -13,7 +13,7 @@ import { startLayout } from '../systems/layouts.js';
 import { openModal, closeModal } from './modal.js';
 import { $, $$, esc } from './dom.js';
 
-let draft = null, farmKind = 'open';
+let draft = null, farmKind = NEW_FARM_LAYOUT;
 
 function preview() {
   const c = $('#cPreview'); if (!c) return;
@@ -63,7 +63,7 @@ function finish() {
 }
 
 export function openCreation() {
-  draft = { ...structuredClone(DEFAULT_PROFILE), petLook: 0 }; farmKind = 'open';
+  draft = { ...structuredClone(DEFAULT_PROFILE), petLook: 0 }; farmKind = NEW_FARM_LAYOUT;
   openModal(`<h2>A new farm</h2>
     <p class="role">The old plot below Hollowmere is yours now. Tell the village who is moving in.</p>
     <div class="create">
@@ -82,7 +82,8 @@ export function openCreation() {
     <div class="pick"><span>Starting pet</span>${Object.entries(PETS).map(([k, n]) => `<button data-pet="${k}">${n}</button>`).join('')}</div>
     <div class="pick"><span>Pet look</span><canvas id="cPetPreview" width="16" height="16"></canvas>${[0, 1, 2].map((i) => `<button class="swatch" data-pet-look="${i}" aria-label="Look ${i + 1}"></button>`).join('')}
       <label class="petname">Pet name <input id="cPetName" maxlength="${NAME_MAX}" autocomplete="off"></label></div>
-    <div class="pick"><span>Farm</span>${Object.entries(LAYOUTS).map(([k, l]) => `<button data-layout="${k}">${l.name}</button>`).join('')}</div>
+    <div class="pick"><span>Farm</span>${Object.entries(LAYOUTS).sort(   // v339 (roadmap 118a): the new farm's layout first
+      ([a], [b]) => (b === NEW_FARM_LAYOUT) - (a === NEW_FARM_LAYOUT)).map(([k, l]) => `<button data-layout="${k}">${l.name}</button>`).join('')}</div>
     <p class="role" id="cLayoutDesc"></p>`,
   [['Start farming', finish, true]]);
   $('#cName')?.focus({ preventScroll: true });

@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v339: The big farm by default
+- A new farm now starts on Wide acres, the 64 x 48 farm, and it is the first choice on the new game screen. Before, the small open field was picked unless you chose otherwise, so most new farms never saw the bigger land.
+- The other layouts are still there, one click away. They grow to the bigger size next (roadmap 118b), and farms already started grow after that (118c).
+- Farms already started keep their layout.
+- New save data: none.
+
 ## v338: Flower honey
 - A bee box with a ripe flower within 5 tiles makes that flower's honey, worth 100g plus twice the flower (dahlia honey 606g).
 - Every honey works in honey recipes (the plainest is used first) and pleases neighbours who love honey.

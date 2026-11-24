@@ -447,6 +447,16 @@ Nuno (November 2026): more crops, from the review (28 against Stardew's 46). By 
 | 117c | More autumn crops | feature | done ([#352](https://github.com/chivas47/hollowmereGame/pull/352)) | Aubergine (eggplant, regrows), black grape (grape, regrows), sweet potato (yam), pak choi (bok choy), buckwheat (amaranth), cardoon (artichoke), and dahlia (fairy rose). |
 | 117d | Flower honey | feature | done ([#353](https://github.com/chivas47/hollowmereGame/pull/353)) | Stardew's bee house: a bee box with a ripe flower near it makes that flower's honey, worth more by the flower. |
 
+## Bigger farms everywhere (November 2026)
+
+Nuno (November 2026): after playing, the farm still looked small next to Stardew's. 112 added the big farm only as one optional layout (Wide acres) behind an `open` default, and old farms could not move. Nuno chose all three fixes, one PR each, in this order.
+
+| Item | What | Kind | Status | Notes |
+|---|---|---|---|---|
+| 118a | The big farm by default | feature | in progress (chivas47/hollowmereGame#354) | The new game screen starts on Wide acres, listed first; the other layouts stay one click away. Old saves keep `open` (newState's default for a save with no layout). |
+| 118b | Every layout at the big size | feature | queued | River, woodland, quarry, wild, four corners, beach and meadow rebuilt at about 64 x 48, each keeping its theme (its water, wood or rock spread over the larger land), the homestead corner unchanged. Only farms started after it. |
+| 118c | Old farms grow | feature | queued | Nuno overturned 112's "old farms keep theirs": a farm saved at 24 x 16 grows east and south to its layout's new size on load. Existing tiles keep their coordinates (WORLD_BUILDING: grow east and south), so crops, buildings and objects stay put; a save step moves the exits' landing tiles, and the new land gets the layout's wild ground and clutter (Nuno, November 2026: the same clutter a new big farm starts with, not cleared). |
+
 ## Done
 
 | Item | PR |
