@@ -220,8 +220,20 @@ export const VOICES = {
       ['Do not look at the canvas yet. It is at the ugly stage. Every painting has one.', 'I mix my own greens. The shop greens are too cheerful.', 'The forest is never the same colour twice. That is the whole reason I came.', 'If I stare at you, I am not being rude. I am working out your shadows.'],
       ['Odile knows the name of every rock on the shore. I am painting them in order. Slowly.', 'Ysolde will not weave my green and I will not paint her ochre. We are very happy.', 'Lio played while I painted the fountain. The painting came out sad. The song was sad too.', 'Thorne let me paint his hut. I gave it a better roof. He has not forgiven me.'],
       ['In the city I painted rich people\'s dogs. Here I paint what I love. I am poorer and much happier.', 'I tried to paint you once from memory. I got your hands wrong. I need you to sit for me.', 'You see things. Most people walk through the forest. You stop.', 'When I have a show, there will be one painting that is not for sale. You know which.'],
+      // v326 (roadmap 113d): once you are close
+      ["I mixed a new colour this morning and named it after the light on your field at six o'clock. It is not for sale either.", "When you stand still in the forest I want to paint you. When you walk away I want to paint that. It is very inconvenient.", "My hands do not shake when you are near. They always shake a little. I noticed it last week.", "I used to paint so people would look at me. Now I paint so I can look at things properly. You did that.", "Come and sit in the studio one evening. You do not have to do anything. I just like painting with you in the room."],
     ],
-    season: { Spring: 'Spring. Seventeen greens in one hedge. I need more paint.', Summer: 'Summer light is flat at noon. I paint at dawn and dusk and nap in between.', Autumn: 'Autumn. The best palette of the year. Even my mistakes look good.', Winter: 'Winter. White is not white. It is blue, grey, pink. Look closer.' },
+    season: {   // v326: a few each
+      Spring: ['Spring. Seventeen greens in one hedge. I need more paint.', "The blossom lasts a week. I paint like a mad thing all week and then sleep for two days.", "Spring rain makes every colour louder. I keep a canvas by the door for when it stops."],
+      Summer: ['Summer light is flat at noon. I paint at dawn and dusk and nap in between.', "Summer evenings on the beach the sea goes pink, then gold, then a blue I cannot mix. I keep trying.", "In summer I paint outdoors and the flies land in the paint. They are in half my summer work. Little signatures."],
+      Autumn: ['Autumn. The best palette of the year. Even my mistakes look good.', "Autumn leaves fall on my palette. I paint them in. Fair is fair.", "The forest in autumn is too much. Too many colours. I paint one leaf, very carefully, and call it the forest."],
+      Winter: ['Winter. White is not white. It is blue, grey, pink. Look closer.', "Winter light comes in sideways through my window and lies across the floor like a cat. I paint the floor.", "I clean every brush I own in winter. It takes days. I find colours on them from years ago."],
+    },
+    rain: ["I am drawing the regulars while they are trapped in here. Do not tell them.", "Rain on the window makes everything outside look like a painting already. Lazy of it.", "Wet days I stretch canvases and listen to the rain. It is the most peaceful work there is."],
+    places: {
+      forest: ["This clearing has the best light in the valley at four o'clock. I have painted it forty times. It is different every time.", "Shh. There is a deer just past those birches. I have been painting her for a week. She does not sit still either."],
+      beach: ["I come here at dusk to watch the colours go. Everyone else comes to watch the sea. I watch the sky.", "The sand here is three colours if you look. Grey, gold and a pink nobody believes."],
+    },
     snow: 'Snow. Everyone thinks it is white. Go and look at the shadows. They are violet.',
     birthday: 'My birthday. I am going to paint something terrible on purpose and enjoy it.',
     bday: "It is {name}'s birthday. I have done a small sketch of them. Flattering. Slightly.",
