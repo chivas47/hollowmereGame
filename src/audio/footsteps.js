@@ -1,6 +1,6 @@
 // Footsteps (v109): a soft step for every few pixels you walk, sounding like what is underfoot (data/atmosphere.js
 // STEPS): grass, dirt path, sand, stone, wooden floors and the pier, snow in winter, wet ground in rain; hooves on
-// horseback. On the ambient bus, so the Ambience slider sets their volume; Steps in the menu turns them off.
+// horseback. v342: in the effects group (the Effects slider); Steps in the menu turns them off.
 import { G } from '../core/game.js';
 import { T } from '../core/constants.js';
 import { addUpdater } from '../core/registry.js';
@@ -36,7 +36,7 @@ export function surfaceAt(mapId, x, y) {
 export function stepSound(kind) {   // v317: also recorded by tools/render_audio.mjs (assets/audio/footsteps)
   const vary = 0.85 + Math.random() * 0.3;
   for (const [filter, freq, dur, vol, sweep] of STEPS[kind] || STEPS.grass) {
-    noise({ filter, freq: freq * vary, dur, vol: vol * (0.8 + Math.random() * 0.4), sweep: sweep ? sweep * vary : null, bus: 'ambient' });
+    noise({ filter, freq: freq * vary, dur, vol: vol * (0.8 + Math.random() * 0.4), sweep: sweep ? sweep * vary : null, bus: 'sfx' });
   }
 }
 
@@ -52,5 +52,5 @@ addUpdater(() => {
   if (settings.steps === false || !settings.sfx) return;
   const kind = G.riding ? 'hoof' : surfaceAt(S.map, Math.floor(S.x / T), Math.floor(S.y / T));
   stats.steps++;
-  if (!playFile(STEP_FILES[kind] || STEP_FILES.grass, { bus: 'ambient', vol: 0.8 + Math.random() * 0.4 })) stepSound(kind);   // v317: the file, else generated
+  if (!playFile(STEP_FILES[kind] || STEP_FILES.grass, { bus: 'sfx', vol: 0.8 + Math.random() * 0.4 })) stepSound(kind);   // v317: the file, else generated
 });

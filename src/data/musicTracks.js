@@ -5,7 +5,8 @@
 // Each track:
 //   id        unique key (saved in the farm's music memory, so do not rename one lightly)
 //   name      a human name, shown in debug logs
-//   file      under assets/audio/ (any format the browser plays); if it is missing the gen recipe plays instead
+//   file      under assets/audio/music/<folder>/<id>.ogg (any format the browser plays; README there); if it is
+//             missing the gen recipe plays instead
 //   category  what it is for, one or several of the LAYERS' categories below
 //   location  the location group it belongs to (LOCATIONS below), or none
 //   season    Spring, Summer, Autumn, Winter, or none (any season)
@@ -18,6 +19,8 @@
 //   volume    the designer's level for this track, 0 to 1 (default 1)
 //   gain      the level the file was mastered for (written by tools/render_audio.mjs; with volume, sets loudness)
 //   loop      repeats (default true for music; stingers play once)
+//   loopStart, loopEnd  v342: seconds into the file where the loop starts and ends, for a track with an intro that
+//             plays once (or a tail that does not loop). Leave them out to loop the whole file.
 //   plays     loops before the director moves on to another track of the same kind (variety; default 3)
 //   gen       the generator recipe the file was recorded from (audio/music.js): root (MIDI), scale, bpm, lead, seed
 //
@@ -32,59 +35,59 @@ const g = (root, scale, bpm, lead, seed) => ({ root, scale, bpm, lead, seed });
 
 export const TRACKS = [
   // The farm: the four original season themes, a second spring tune, a night and a rain variant.
-  { id: 'farm_spring_01', name: 'Spring on the Farm', file: 'music/spring-farm-theme.ogg', gain: 0.119, category: ['location', 'season'], location: 'farm', season: 'Spring', gen: MOODS.Spring },
-  { id: 'farm_spring_02', name: 'First Shoots', file: 'music/spring-farm-theme-2.ogg', gain: 0.119, category: ['location', 'season'], location: 'farm', season: 'Spring', gen: g(62, MAJ, 96, 'triangle', 113) },
-  { id: 'farm_summer_01', name: 'Summer on the Farm', file: 'music/summer-farm-theme.ogg', gain: 0.12, category: ['location', 'season'], location: 'farm', season: 'Summer', gen: MOODS.Summer },
-  { id: 'farm_autumn_01', name: 'Autumn on the Farm', file: 'music/autumn-farm-theme.ogg', gain: 0.123, category: ['location', 'season'], location: 'farm', season: 'Autumn', gen: MOODS.Autumn },
-  { id: 'farm_winter_01', name: 'Winter on the Farm', file: 'music/winter-farm-theme.ogg', gain: 0.121, category: ['location', 'season'], location: 'farm', season: 'Winter', gen: MOODS.Winter },
-  { id: 'farm_night_01', name: 'Farm After Dark', file: 'music/farm-night-theme.ogg', gain: 0.123, category: 'location', location: 'farm', time: 'night', gen: g(57, MIN, 70, 'sine', 131) },
-  { id: 'farm_rain_01', name: 'Rain on the Rows', file: 'music/farm-rain-theme.ogg', gain: 0.121, category: 'location', location: 'farm', weather: ['rain', 'storm'], gen: g(59, DOR, 84, 'sine', 137) },
+  { id: 'farm_spring_01', name: 'Spring on the Farm', file: 'music/farm/farm_spring_01.ogg', gain: 0.119, category: ['location', 'season'], location: 'farm', season: 'Spring', gen: MOODS.Spring },
+  { id: 'farm_spring_02', name: 'First Shoots', file: 'music/farm/farm_spring_02.ogg', gain: 0.119, category: ['location', 'season'], location: 'farm', season: 'Spring', gen: g(62, MAJ, 96, 'triangle', 113) },
+  { id: 'farm_summer_01', name: 'Summer on the Farm', file: 'music/farm/farm_summer_01.ogg', gain: 0.12, category: ['location', 'season'], location: 'farm', season: 'Summer', gen: MOODS.Summer },
+  { id: 'farm_autumn_01', name: 'Autumn on the Farm', file: 'music/farm/farm_autumn_01.ogg', gain: 0.123, category: ['location', 'season'], location: 'farm', season: 'Autumn', gen: MOODS.Autumn },
+  { id: 'farm_winter_01', name: 'Winter on the Farm', file: 'music/farm/farm_winter_01.ogg', gain: 0.121, category: ['location', 'season'], location: 'farm', season: 'Winter', gen: MOODS.Winter },
+  { id: 'farm_night_01', name: 'Farm After Dark', file: 'music/farm/farm_night_01.ogg', gain: 0.123, category: 'location', location: 'farm', time: 'night', gen: g(57, MIN, 70, 'sine', 131) },
+  { id: 'farm_rain_01', name: 'Rain on the Rows', file: 'music/farm/farm_rain_01.ogg', gain: 0.121, category: 'location', location: 'farm', weather: ['rain', 'storm'], gen: g(59, DOR, 84, 'sine', 137) },
   // The village and town: one per season, and rain.
-  { id: 'village_spring_01', name: 'Village in Spring', file: 'music/village-spring-theme.ogg', gain: 0.121, category: 'location', location: 'village', season: 'Spring', gen: g(67, HEX, 108, 'triangle', 211) },
-  { id: 'village_summer_01', name: 'Village in Summer', file: 'music/village-summer-theme.ogg', gain: 0.12, category: 'location', location: 'village', season: 'Summer', gen: g(69, MAJ, 116, 'square', 223) },
-  { id: 'village_autumn_01', name: 'Village in Autumn', file: 'music/village-autumn-theme.ogg', gain: 0.122, category: 'location', location: 'village', season: 'Autumn', gen: g(64, DOR, 98, 'triangle', 227) },
-  { id: 'village_winter_01', name: 'Village in Winter', file: 'music/village-winter-theme.ogg', gain: 0.122, category: 'location', location: 'village', season: 'Winter', gen: g(62, MIN, 86, 'sine', 229) },
-  { id: 'village_rain_01', name: 'Village in the Rain', file: 'music/village-rain-theme.ogg', gain: 0.121, category: 'location', location: 'village', weather: ['rain', 'storm'], gen: g(60, DOR, 88, 'sine', 233) },
+  { id: 'village_spring_01', name: 'Village in Spring', file: 'music/village/village_spring_01.ogg', gain: 0.121, category: 'location', location: 'village', season: 'Spring', gen: g(67, HEX, 108, 'triangle', 211) },
+  { id: 'village_summer_01', name: 'Village in Summer', file: 'music/village/village_summer_01.ogg', gain: 0.12, category: 'location', location: 'village', season: 'Summer', gen: g(69, MAJ, 116, 'square', 223) },
+  { id: 'village_autumn_01', name: 'Village in Autumn', file: 'music/village/village_autumn_01.ogg', gain: 0.122, category: 'location', location: 'village', season: 'Autumn', gen: g(64, DOR, 98, 'triangle', 227) },
+  { id: 'village_winter_01', name: 'Village in Winter', file: 'music/village/village_winter_01.ogg', gain: 0.122, category: 'location', location: 'village', season: 'Winter', gen: g(62, MIN, 86, 'sine', 229) },
+  { id: 'village_rain_01', name: 'Village in the Rain', file: 'music/village/village_rain_01.ogg', gain: 0.121, category: 'location', location: 'village', weather: ['rain', 'storm'], gen: g(60, DOR, 88, 'sine', 233) },
   // Wild places.
-  { id: 'forest_01', name: 'Under the Canopy', file: 'music/forest-theme.ogg', gain: 0.118, category: 'location', location: 'forest', gen: g(62, DOR, 92, 'triangle', 307) },
-  { id: 'beach_01', name: 'Tide Line', file: 'music/beach-theme.ogg', gain: 0.118, category: 'location', location: 'beach', gen: g(65, LYD, 100, 'sine', 311) },
-  { id: 'mountain_01', name: 'High Paths', file: 'music/mountain-theme.ogg', gain: 0.123, category: 'location', location: 'mountains', gen: g(60, HEX, 90, 'triangle', 313) },
-  { id: 'exploration_01', name: 'Off the Map', file: 'music/exploration-theme.ogg', gain: 0.115, category: 'location', location: 'wilds', gen: g(57, DOR, 104, 'triangle', 317) },
+  { id: 'forest_01', name: 'Under the Canopy', file: 'music/wild/forest_01.ogg', gain: 0.118, category: 'location', location: 'forest', gen: g(62, DOR, 92, 'triangle', 307) },
+  { id: 'beach_01', name: 'Tide Line', file: 'music/wild/beach_01.ogg', gain: 0.118, category: 'location', location: 'beach', gen: g(65, LYD, 100, 'sine', 311) },
+  { id: 'mountain_01', name: 'High Paths', file: 'music/wild/mountain_01.ogg', gain: 0.123, category: 'location', location: 'mountains', gen: g(60, HEX, 90, 'triangle', 313) },
+  { id: 'exploration_01', name: 'Off the Map', file: 'music/wild/exploration_01.ogg', gain: 0.115, category: 'location', location: 'wilds', gen: g(57, DOR, 104, 'triangle', 317) },
   // Underground.
-  { id: 'mines_01', name: 'The Hollow', file: 'music/hollow-mine-theme.ogg', gain: 0.122, category: 'location', location: 'mines', gen: MOODS.mine },
-  { id: 'caves_01', name: 'Drip and Echo', file: 'music/cave-theme.ogg', gain: 0.123, category: 'location', location: 'caves', gen: g(48, PHR, 66, 'sine', 331) },
+  { id: 'mines_01', name: 'The Hollow', file: 'music/underground/mines_01.ogg', gain: 0.122, category: 'location', location: 'mines', gen: MOODS.mine },
+  { id: 'caves_01', name: 'Drip and Echo', file: 'music/underground/caves_01.ogg', gain: 0.123, category: 'location', location: 'caves', gen: g(48, PHR, 66, 'sine', 331) },
   // Indoors.
-  { id: 'house_01', name: 'Home', file: 'music/farmhouse-theme.ogg', gain: 0.122, category: 'location', location: 'house', gen: g(64, MAJ, 82, 'sine', 401) },
-  { id: 'tavern_01', name: 'The Common Room', file: 'music/tavern-theme.ogg', gain: 0.127, category: 'location', location: 'tavern', gen: g(62, BLU, 118, 'square', 409) },
-  { id: 'shops_01', name: 'Open for Business', file: 'music/shop-theme.ogg', gain: 0.117, category: 'location', location: 'shops', gen: g(67, HEX, 104, 'triangle', 419) },
+  { id: 'house_01', name: 'Home', file: 'music/indoors/house_01.ogg', gain: 0.122, category: 'location', location: 'house', gen: g(64, MAJ, 82, 'sine', 401) },
+  { id: 'tavern_01', name: 'The Common Room', file: 'music/indoors/tavern_01.ogg', gain: 0.127, category: 'location', location: 'tavern', gen: g(62, BLU, 118, 'square', 409) },
+  { id: 'shops_01', name: 'Open for Business', file: 'music/indoors/shops_01.ogg', gain: 0.117, category: 'location', location: 'shops', gen: g(67, HEX, 104, 'triangle', 419) },
   // Special places (they outrank the season and everything below).
-  { id: 'special_shrine_01', name: 'Old Stones', file: 'music/shrine-and-graveyard-theme.ogg', gain: 0.118, category: 'special', location: 'secret', gen: g(50, PHR, 64, 'sine', 503) },
-  { id: 'special_desert_01', name: 'Heat Shimmer', file: 'music/desert-and-island-theme.ogg', gain: 0.115, category: 'special', location: 'faraway', gen: g(62, PHR, 96, 'triangle', 509) },
+  { id: 'special_shrine_01', name: 'Old Stones', file: 'music/special/special_shrine_01.ogg', gain: 0.118, category: 'special', location: 'secret', gen: g(50, PHR, 64, 'sine', 503) },
+  { id: 'special_desert_01', name: 'Heat Shimmer', file: 'music/special/special_desert_01.ogg', gain: 0.115, category: 'special', location: 'faraway', gen: g(62, PHR, 96, 'triangle', 509) },
   // The season alone and the default, for anywhere without its own music.
-  { id: 'default_01', name: 'Hollowmere', file: 'music/default-theme.ogg', gain: 0.115, category: 'default', gen: g(64, MAJ, 96, 'triangle', 601) },
+  { id: 'default_01', name: 'Hollowmere', file: 'music/default/default_01.ogg', gain: 0.115, category: 'default', gen: g(64, MAJ, 96, 'triangle', 601) },
   // Festivals and events (they override everything but cutscenes).
-  { id: 'festival_01', name: 'Bunting and Lanterns', file: 'music/festival-square-theme.ogg', gain: 0.12, category: 'event', gen: MOODS.festival },
-  { id: 'festival_spring_01', name: 'Spring Fair', file: 'music/spring-festival-theme.ogg', gain: 0.118, category: 'event', season: 'Spring', gen: g(67, MAJ, 128, 'square', 701) },
-  { id: 'festival_summer_01', name: 'Midsummer', file: 'music/summer-festival-theme.ogg', gain: 0.122, category: 'event', season: 'Summer', gen: g(69, LYD, 132, 'square', 709) },
-  { id: 'festival_autumn_01', name: 'Maze Night', file: 'music/autumn-festival-theme.ogg', gain: 0.114, category: 'event', season: 'Autumn', gen: g(62, DOR, 112, 'triangle', 719) },
-  { id: 'festival_winter_01', name: 'Frostlight', file: 'music/winter-festival-theme.ogg', gain: 0.123, category: 'event', season: 'Winter', gen: g(64, HEX, 100, 'sine', 727) },
-  { id: 'festival_harvest_01', name: 'Harvest Home', file: 'music/harvest-festival-theme.ogg', gain: 0.107, category: 'event', festival: ['grangefair', 'weighin'], priority: 1, gen: g(65, MAJ, 120, 'triangle', 733) },
-  { id: 'competition_01', name: 'The Judges Walk', file: 'music/competition-theme.ogg', gain: 0.119, category: 'event', festival: ['blossom', 'catch'], priority: 1, gen: g(67, BLU, 124, 'square', 739) },
+  { id: 'festival_01', name: 'Bunting and Lanterns', file: 'music/festivals/festival_01.ogg', gain: 0.12, category: 'event', gen: MOODS.festival },
+  { id: 'festival_spring_01', name: 'Spring Fair', file: 'music/festivals/festival_spring_01.ogg', gain: 0.118, category: 'event', season: 'Spring', gen: g(67, MAJ, 128, 'square', 701) },
+  { id: 'festival_summer_01', name: 'Midsummer', file: 'music/festivals/festival_summer_01.ogg', gain: 0.122, category: 'event', season: 'Summer', gen: g(69, LYD, 132, 'square', 709) },
+  { id: 'festival_autumn_01', name: 'Maze Night', file: 'music/festivals/festival_autumn_01.ogg', gain: 0.114, category: 'event', season: 'Autumn', gen: g(62, DOR, 112, 'triangle', 719) },
+  { id: 'festival_winter_01', name: 'Frostlight', file: 'music/festivals/festival_winter_01.ogg', gain: 0.123, category: 'event', season: 'Winter', gen: g(64, HEX, 100, 'sine', 727) },
+  { id: 'festival_harvest_01', name: 'Harvest Home', file: 'music/festivals/festival_harvest_01.ogg', gain: 0.107, category: 'event', festival: ['grangefair', 'weighin'], priority: 1, gen: g(65, MAJ, 120, 'triangle', 733) },
+  { id: 'competition_01', name: 'The Judges Walk', file: 'music/festivals/competition_01.ogg', gain: 0.119, category: 'event', festival: ['blossom', 'catch'], priority: 1, gen: g(67, BLU, 124, 'square', 739) },
   // Cutscenes and story (they override everything).
-  { id: 'story_01', name: 'A Letter at Winter\'s End', file: 'music/story-theme.ogg', gain: 0.121, category: 'cutscene', gen: g(60, LYD, 76, 'sine', 801) },
-  { id: 'celebration_01', name: 'The Whole Valley Gathers', file: 'music/celebration-theme.ogg', gain: 0.118, category: 'cutscene', cutscene: ['wedding'], priority: 1, gen: g(65, HEX, 112, 'triangle', 809) },
+  { id: 'story_01', name: 'A Letter at Winter\'s End', file: 'music/story/story_01.ogg', gain: 0.121, category: 'cutscene', gen: g(60, LYD, 76, 'sine', 801) },
+  { id: 'celebration_01', name: 'The Whole Valley Gathers', file: 'music/story/celebration_01.ogg', gain: 0.118, category: 'cutscene', cutscene: ['wedding'], priority: 1, gen: g(65, HEX, 112, 'triangle', 809) },
   // Gameplay.
-  { id: 'combat_01', name: 'Teeth in the Dark', file: 'music/combat-theme.ogg', gain: 0.121, category: 'combat', gen: g(52, BLU, 140, 'square', 901) },
-  { id: 'combat_02', name: 'Hold the Line', file: 'music/combat-theme-2.ogg', gain: 0.119, category: 'combat', gen: g(50, PHR, 146, 'square', 907) },
-  { id: 'boss_01', name: 'The Golden One', file: 'music/boss-theme.ogg', gain: 0.101, category: 'boss', gen: g(48, PHR, 152, 'square', 911) },
-  { id: 'fishing_01', name: 'Something on the Line', file: 'music/fishing-theme.ogg', gain: 0.113, category: 'fishing', gen: g(67, MAJ, 132, 'triangle', 919) },
+  { id: 'combat_01', name: 'Teeth in the Dark', file: 'music/combat/combat_01.ogg', gain: 0.121, category: 'combat', gen: g(52, BLU, 140, 'square', 901) },
+  { id: 'combat_02', name: 'Hold the Line', file: 'music/combat/combat_02.ogg', gain: 0.119, category: 'combat', gen: g(50, PHR, 146, 'square', 907) },
+  { id: 'boss_01', name: 'The Golden One', file: 'music/combat/boss_01.ogg', gain: 0.101, category: 'boss', gen: g(48, PHR, 152, 'square', 911) },
+  { id: 'fishing_01', name: 'Something on the Line', file: 'music/fishing/fishing_01.ogg', gain: 0.113, category: 'fishing', gen: g(67, MAJ, 132, 'triangle', 919) },
   // Screens.
-  { id: 'menu_01', name: 'Hollowmere Farm', file: 'music/main-menu-theme.ogg', gain: 0.119, category: 'menu', gen: g(64, LYD, 88, 'triangle', 1001) },
-  { id: 'credits_01', name: 'Thank You for Playing', file: 'music/credits-theme.ogg', gain: 0.119, category: 'credits', gen: g(62, MAJ, 84, 'sine', 1009) },
+  { id: 'menu_01', name: 'Hollowmere Farm', file: 'music/menu/menu_01.ogg', gain: 0.119, category: 'menu', gen: g(64, LYD, 88, 'triangle', 1001) },
+  { id: 'credits_01', name: 'Thank You for Playing', file: 'music/menu/credits_01.ogg', gain: 0.119, category: 'credits', gen: g(62, MAJ, 84, 'sine', 1009) },
   // Stingers: short, played once over a ducked background, then the background returns.
-  { id: 'sting_gameover', name: 'Carried Home', file: 'music/game-over-sting.ogg', gain: 0.124, category: 'sting:gameover', loop: false, gen: g(57, MIN, 70, 'sine', 1101), bars: 1 },
-  { id: 'sting_victory', name: 'Victory', file: 'music/victory-sting.ogg', gain: 0.124, category: 'sting:victory', loop: false, gen: g(67, MAJ, 120, 'square', 1109), bars: 1 },
-  { id: 'sting_discovery', name: 'A New Place', file: 'music/discovery-sting.ogg', gain: 0.105, category: 'sting:discovery', loop: false, gen: g(69, LYD, 100, 'triangle', 1117), bars: 1 },
+  { id: 'sting_gameover', name: 'Carried Home', file: 'music/stingers/sting_gameover.ogg', gain: 0.124, category: 'sting:gameover', loop: false, gen: g(57, MIN, 70, 'sine', 1101), bars: 1 },
+  { id: 'sting_victory', name: 'Victory', file: 'music/stingers/sting_victory.ogg', gain: 0.124, category: 'sting:victory', loop: false, gen: g(67, MAJ, 120, 'square', 1109), bars: 1 },
+  { id: 'sting_discovery', name: 'A New Place', file: 'music/stingers/sting_discovery.ogg', gain: 0.105, category: 'sting:discovery', loop: false, gen: g(69, LYD, 100, 'triangle', 1117), bars: 1 },
 ];
 
 // The layers, highest first: the first layer that has a fitting track wins (spec: cutscenes, festivals, boss and

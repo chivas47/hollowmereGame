@@ -11,7 +11,7 @@ import { MUSIC_VOLUME } from '../data/music.js';
 import { MUSIC, WEATHER_VOLUME, NIGHT_VOLUME } from '../data/musicTracks.js';
 import { rng } from '../render/pixel.js';
 import { audio, tone, hz, stats } from './engine.js';
-import { playFile, bufferOf } from './files.js';
+import { playFile, ready } from './files.js';
 
 const STEPS = 16, AHEAD = 0.3;
 const cache = {};
@@ -64,15 +64,13 @@ function startVoice(track, fade, loop = track.loop !== false) {
   fader.gain.setValueAtTime(0.0001, t); fader.gain.linearRampToValueAtTime(level(track), t + Math.max(0.05, fade));
   fader.connect(a.music);
   const v = { track, fader, kind: 'gen', step: 0, nextAt: t + 0.05, loop, fadeUntil: t + Math.max(0.05, fade) };
-  const file = bufferOf(track);
-  if (file) {
-    const f = playFile(track, { bus: 'music', to: fader, loop });
-    if (f) {
-      v.kind = 'file'; v.src = f.src;
-      const each = file.duration * 1000;
-      if (loop) v.loopTimer = setInterval(() => emit('music:looped', track.id), each);
-      else v.endsIn = file.duration;
-    }
+  const f = ready(track) && playFile(track, { bus: 'music', to: fader, loop });
+  if (f) {
+    v.kind = 'file'; v.src = f.src;
+    // v342: a track with an intro loops from loopStart to loopEnd; the intro plays once, before the first loop ends.
+    const end = track.loopEnd > 0 ? Math.min(track.loopEnd, f.buffer.duration) : f.buffer.duration, each = (end - (track.loopStart || 0)) * 1000;
+    if (loop) v.loopTimer = setTimeout(function next() { if (v.stopped) return; emit('music:looped', track.id); v.loopTimer = setTimeout(next, each); }, end * 1000);
+    else v.endsIn = f.buffer.duration;
   }
   if (v.kind === 'gen' && !loop) { const s = song(track.gen, track.bars || 4); v.endsIn = s.lead.length * s.stepDur + 0.6; }
   return v;
@@ -83,7 +81,7 @@ function stopVoice(v, fade) {
   const t = a.ctx.currentTime;
   v.fader.gain.cancelScheduledValues(t); v.fader.gain.setValueAtTime(Math.max(0.0001, v.fader.gain.value), t);
   v.fader.gain.linearRampToValueAtTime(0.0001, t + Math.max(0.05, fade));
-  clearInterval(v.loopTimer); v.stopped = true;
+  clearTimeout(v.loopTimer); v.stopped = true;
   setTimeout(() => { try { v.src?.stop(); } catch (e) { /* already stopped */ } v.fader.disconnect(); }, fade * 1000 + 300);
 }
 
@@ -131,7 +129,7 @@ function tick() {
   if (!voice || voice.stopped) return;
   if (voice.kind === 'gen') {
     // the file arrived: hand over to it (the same tune) with a short crossfade
-    if (bufferOf(voice.track)) { const old = voice; voice = startVoice(old.track, 1); stopVoice(old, 1); return; }
+    if (ready(voice.track)) { const old = voice; voice = startVoice(old.track, 1); stopVoice(old, 1); return; }
     schedule(voice);
   } else stats.notes++;   // a file is sounding (tests count it)
   refresh(2);

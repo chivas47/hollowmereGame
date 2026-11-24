@@ -1,38 +1,29 @@
-// Web Audio plumbing: one context, a master, effects, music and ambient bus, and two primitives (tone, noise).
-// v100: the ambient bus has its own volume (settings.ambient, 0 to 1) and is silent while Sound is off.
+// Web Audio plumbing: one context, a master and one bus per volume group (music, ambience, sfx, ui; audio/mixer.js
+// sets their levels), and the primitives every sound is made of (tone, noise, bed, playBuffer).
 // The context starts on the first key press or tap (browsers block audio before that).
-// Settings are a per-browser convenience in localStorage, not part of the save.
-const KEY = 'hollowmere-audio';
+import { attach, settings, setSetting, setVolume } from './mixer.js';
+import { VOLUME_GROUPS } from '../data/audio.js';
+export { settings, setSetting, setVolume };   // v342: the mixer owns the settings; kept here for old imports
 let ctx = null, buses = null;
-export const settings = { sfx: true, music: true, ambient: 1, steps: true };   // v109: steps (footsteps)
-try { Object.assign(settings, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { /* storage unavailable */ }
 
 export const stats = { sfx: 0, notes: 0 };   // counters for tests
 
 export function audio() { return ctx && buses ? { ctx, ...buses } : null; }
+
+const makeBuses = (c, out) => {
+  const master = c.createGain(); master.connect(out);
+  const b = { master };
+  for (const g of VOLUME_GROUPS) { b[g] = c.createGain(); b[g].connect(master); }
+  return b;
+};
 
 export function unlock() {
   if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return; }
   const AC = window.AudioContext || window.webkitAudioContext;
   if (!AC) return;
   ctx = new AC();
-  const master = ctx.createGain(), sfx = ctx.createGain(), music = ctx.createGain(), ambient = ctx.createGain();
-  sfx.connect(master); music.connect(master); ambient.connect(master); master.connect(ctx.destination);
-  buses = { master, sfx, music, ambient };
-  apply();
-}
-
-function apply() {
-  if (!buses) return;
-  buses.sfx.gain.value = settings.sfx ? 1 : 0;
-  buses.music.gain.value = settings.music ? 1 : 0;
-  buses.ambient.gain.value = settings.sfx ? Math.max(0, Math.min(1, +settings.ambient || 0)) : 0;
-}
-
-export function setSetting(key, on) {   // on: a flag, or the ambient volume
-  settings[key] = on;
-  try { localStorage.setItem(KEY, JSON.stringify(settings)); } catch (e) { /* storage unavailable */ }
-  apply();
+  buses = makeBuses(ctx, ctx.destination);
+  attach(buses, ctx);
 }
 
 const hz = (midi) => 440 * 2 ** ((midi - 69) / 12);
@@ -69,17 +60,19 @@ export function bed({ filter = 'lowpass', freq = 800, q = 0.7 }) {
   noise({ dur: 0.01, vol: 0.0001 });   // builds the shared buffer
   const src = a.ctx.createBufferSource(), f = a.ctx.createBiquadFilter(), g = a.ctx.createGain();
   src.buffer = noiseBuf; src.loop = true; f.type = filter; f.frequency.value = freq; f.Q.value = q; g.gain.value = 0;
-  src.connect(f); f.connect(g); g.connect(a.ambient); src.start();   // v100: on the ambient bus
+  src.connect(f); f.connect(g); g.connect(a.ambience); src.start();   // v100: on the ambience bus
   g.stop = () => { try { src.stop(); } catch (e) { /* already stopped */ } };   // v317: a file bed can take over
   return g;
 }
 
 // v317 (roadmap 109): a decoded sound file (audio/files.js) on a bus. vol: its level; rate: playback speed (pitch
-// with it, for variety); loop: until stopped. Returns { src, gain } to fade or stop, or null without audio.
-export function playBuffer(buffer, { bus = 'sfx', vol = 1, rate = 1, loop = false, at = 0, to = null } = {}) {
+// with it, for variety); loop: until stopped. v342: loopStart and loopEnd (seconds) loop only that part, so a track
+// can open with an intro that plays once. Returns { src, gain } to fade or stop, or null without audio.
+export function playBuffer(buffer, { bus = 'sfx', vol = 1, rate = 1, loop = false, at = 0, to = null, loopStart = 0, loopEnd = 0 } = {}) {
   const a = audio(); if (!a || !buffer) return null;
   const t = a.ctx.currentTime + at, src = a.ctx.createBufferSource(), g = a.ctx.createGain();
   src.buffer = buffer; src.loop = loop; src.playbackRate.value = rate; g.gain.value = vol;
+  if (loop && (loopStart > 0 || loopEnd > 0)) { src.loopStart = loopStart; src.loopEnd = loopEnd > loopStart ? loopEnd : buffer.duration; }
   src.connect(g); g.connect(to || a[bus]); src.start(t);
   return { src, gain: g };
 }
@@ -88,7 +81,6 @@ export function playBuffer(buffer, { bus = 'sfx', vol = 1, rate = 1, loop = fals
 // until the returned function puts the real one back.
 export function renderInto(off) {
   const was = [ctx, buses, noiseBuf];
-  const bus = () => { const n = off.createGain(); n.connect(off.destination); return n; };
-  ctx = off; buses = { master: off.destination, sfx: bus(), music: bus(), ambient: bus() }; noiseBuf = null;
+  ctx = off; buses = makeBuses(off, off.destination); noiseBuf = null;
   return () => { [ctx, buses, noiseBuf] = was; };
 }
