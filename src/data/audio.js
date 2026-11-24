@@ -24,7 +24,16 @@ export const filesOf = (e) => (e ? e.files || (e.file ? [e.file] : []) : []);
 
 // Sound effects, by the name systems emit ('sfx', name).
 export const SFX_FILES = {
-  rustle:      { files: ['sfx/farming/weeds_cut_rustle_01.wav'], about: 'thick weeds cut with the weapon', brief: 'Cutting thick weeds with a weapon. A quick leafy swish and snap, 0.15 to 0.3 s. Heard in bursts while clearing, so keep it light; 2 or 3 variants help.', gain: 0.213 },
+  rustle: {
+    files: [
+      'sfx/farming/weeds_cut_rustle_01.wav',
+      'sfx/farming/weeds_cut_rustle_02.wav',
+      'sfx/farming/weeds_cut_rustle_03.wav',
+    ],
+    about: 'thick weeds cut with the weapon',
+    brief: 'Cutting thick weeds with a weapon. A quick leafy swish and snap, 0.15 to 0.3 s. Heard in bursts while clearing, so keep it light; Record 3 variants.',
+    gain: 0.213,
+  },
   hoe: {
     files: [
       'sfx/tools/hoe_till_soil_01.wav',
@@ -85,7 +94,16 @@ export const SFX_FILES = {
   place:       { files: ['sfx/items/object_place_01.wav'], about: 'setting an object down', brief: 'Setting an object, furniture or a building piece down. A soft wooden thud, about 0.1 s.', gain: 0.0244 },
   door:        { files: ['sfx/world/door_map_change_01.wav'], about: 'going through a door or onto another map', brief: 'Going through a door or onto another map. A short swing-and-latch or soft whoosh, 0.3 to 0.4 s. Very frequent: quiet and neutral.', gain: 0.0242 },
   boom:        { files: ['sfx/combat/bomb_explosion_01.wav'], about: 'a bomb', brief: 'A bomb exploding. A deep explosion with rubble, 0.6 to 1 s, strong low end but not painful.', gain: 0.12 },
-  thunder:     { files: ['sfx/world/thunder_rumble_01.wav'], about: 'thunder in a storm', brief: 'Thunder with the lightning in a storm. A distant crack then a long rolling rumble, 2 to 3 s. Played over the rain loop; vary the distance across 2 or 3 variants.', gain: 0.113 },
+  thunder: {
+    files: [
+      'sfx/world/thunder_rumble_01.wav',
+      'sfx/world/thunder_rumble_02.wav',
+      'sfx/world/thunder_rumble_03.wav',
+    ],
+    about: 'thunder in a storm',
+    brief: 'Thunder with the lightning in a storm. A distant crack then a long rolling rumble, 2 to 3 s. Played over the rain loop; record 3 variants at different distances (near, middle, far).',
+    gain: 0.113,
+  },
   flap:        { files: ['sfx/animals/bird_take_off_01.wav'], about: 'a bird taking off', brief: 'A bird taking off when you walk near. A quick flutter of wings, 0.15 to 0.25 s.', gain: 0.0207 },
   ui:          { files: ['sfx/ui/menu_click_01.wav'], about: 'menu buttons', brief: 'Menu buttons and clicks. A tiny soft tick or wooden tap, under 0.05 s. Heard constantly in menus: almost subliminal (it plays at the Interface volume).', bus: 'ui', gain: 0.0493 },
   chime:       { files: ['sfx/jingles/wishing_stone_chime_01.wav'], about: 'blessings, guide steps and tips', brief: 'Blessings at the wishing stone, guide steps and tips. Two gentle bell or chime tones, about 0.6 s, a little magical.', gain: 0.059 },

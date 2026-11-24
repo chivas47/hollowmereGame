@@ -844,11 +844,11 @@ A bomb exploding. A deep explosion with rubble, 0.6 to 1 s, strong low end but n
 
 #### Thick weeds cut with the weapon
 
-- File: `sfx/farming/weeds_cut_rustle_01.wav` (id `rustle`)
+- Files (a pool of 3): `sfx/farming/weeds_cut_rustle_01.wav`, `sfx/farming/weeds_cut_rustle_02.wav`, `sfx/farming/weeds_cut_rustle_03.wav` (id `rustle`)
 - Form: one-shot
 - Volume: Effects
 
-Cutting thick weeds with a weapon. A quick leafy swish and snap, 0.15 to 0.3 s. Heard in bursts while clearing, so keep it light; 2 or 3 variants help.
+Cutting thick weeds with a weapon. A quick leafy swish and snap, 0.15 to 0.3 s. Heard in bursts while clearing, so keep it light; Record 3 variants.
 
 #### A seed planted
 
@@ -992,11 +992,11 @@ Going through a door or onto another map. A short swing-and-latch or soft whoosh
 
 #### Thunder in a storm
 
-- File: `sfx/world/thunder_rumble_01.wav` (id `thunder`)
+- Files (a pool of 3): `sfx/world/thunder_rumble_01.wav`, `sfx/world/thunder_rumble_02.wav`, `sfx/world/thunder_rumble_03.wav` (id `thunder`)
 - Form: one-shot
 - Volume: Effects
 
-Thunder with the lightning in a storm. A distant crack then a long rolling rumble, 2 to 3 s. Played over the rain loop; vary the distance across 2 or 3 variants.
+Thunder with the lightning in a storm. A distant crack then a long rolling rumble, 2 to 3 s. Played over the rain loop; record 3 variants at different distances (near, middle, far).
 
 #### A lantern set on the water
 
