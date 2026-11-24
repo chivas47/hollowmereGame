@@ -443,7 +443,7 @@ Nuno (November 2026): more crops, from the review (28 against Stardew's 46). By 
 | Item | What | Kind | Status | Notes |
 |---|---|---|---|---|
 | 117a | More spring crops | feature | done (chivas47/hollowmereGame#350) | Potato (extra: a quarter give one more), kale, garlic, strawberry (regrows; seeds only at the Egg Hunt stall, as Stardew's Egg Festival), bluebell and primrose (the first flowers: a flower shape on the crop sheet; never jarred or juiced, data/crops.js PRESERVABLE). buy() now refuses a crop sold elsewhere (canBuy from). |
-| 117b | More summer crops | feature | in progress | Blackcurrant (Stardew's blueberry: regrows, 3 a harvest), red cabbage, and two flowers: cornflower (poppy) and marigold (summer spangle). |
+| 117b | More summer crops | feature | done ([#351](https://github.com/chivas47/hollowmereGame/pull/351)) | Blackcurrant (Stardew's blueberry: regrows, 3 a harvest), red cabbage, and two flowers: cornflower (poppy) and marigold (summer spangle). |
 | 117c | More autumn crops | feature | queued | Aubergine (eggplant, regrows), black grape (grape, regrows), sweet potato (yam), pak choi (bok choy), buckwheat (amaranth), cardoon (artichoke), and dahlia (fairy rose). |
 | 117d | Flower honey | feature | queued | Stardew's bee house: a bee box with a ripe flower near it makes that flower's honey, worth more by the flower. |
 
