@@ -6,6 +6,10 @@ Newest first. Version numbers match published versions of the playable page.
 - The next marriage candidate written up in depth (roadmap 113g). Two new heart scenes with Juno: at 4 hearts, the letter nobody claims; at 8, the round she walks alone. Juno now has a scene at every step from 2 to 10 hearts.
 - Once you are close (8 hearts), five new things Juno says join the usual lines.
 - Three lines for each season instead of one, rain lines of their own, and things Juno says when you meet them at their own places.
+## v328: Pell has more to say
+- The next marriage candidate written up in depth (roadmap 113f). Two new heart scenes with Pell: at 4 hearts, homework; at 8, the letter in the drawer. Pell now has a scene at every step from 2 to 10 hearts.
+- Once you are close (8 hearts), five new things Pell says join the usual lines.
+- Three lines for each season instead of one, rain lines of their own, and things Pell says when you meet them at their own places.
 ## v327: Rook has more to say
 - The next marriage candidate written up in depth (roadmap 113e). Two new heart scenes with Rook: at 4 hearts, the oar that would not do; at 8, two miles out. Rook now has a scene at every step from 2 to 10 hearts.
 - Once you are close (8 hearts), five new things Rook says join the usual lines.
