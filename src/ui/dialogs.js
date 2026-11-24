@@ -8,7 +8,9 @@ import { newState, save } from '../core/state.js';
 import { CROPS } from '../data/crops.js';
 import { ITEMS } from '../data/items.js';
 import { bedtime } from '../systems/partner.js';   // v142: with farmer two in, you may wait for them in bed
-import { LOOKS } from '../data/profile.js';
+import { LOOKS, finishName } from '../data/profile.js';
+import { PARTNER } from '../data/partner.js';
+import { letterPadHtml, wireLetterPad } from './letterpad.js';
 import { HAIR_STYLES, BEARDS, lookOf } from '../data/people.js';
 import { buy, canBuy, inSeason, buySupply, canBuySupply } from '../systems/economy.js';
 import { SUPPLIES, PLACEABLES } from '../data/crafting.js';
@@ -67,14 +69,20 @@ on('ui:sleep', () => {
 
 // v142: the first time farmer two joins on a farm they pick a shirt and hair (opened as them, in their half).
 // v229 (polish 77n): and a hair style, a beard and glasses, as on the new game screen (data/people.js).
+// v334 (roadmap 116c): and their name, typed on a letter pad their controller drives (ui/letterpad.js). It opens again
+// from the Wardrobe tab of their Bag.
 on('ui:partnerLook', () => {
   const P = G.S.partner, row = (part, label) => `<div class="pick"><span>${label}</span>${LOOKS[part].map((v) =>
     `<button class="swatch" aria-pressed="${P.look[part] === v}" data-plook="${part}" data-v="${v}" style="background:${v}" aria-label="${label} ${v}"></button>`).join('')}</div>`;
   const L = lookOf(P.look), styles = (field, label, options, now) => `<div class="pick"><span>${label}</span>${Object.entries(options).map(([k, n]) =>
     `<button aria-pressed="${now === k}" data-plook="${field}" data-v="${k}">${n}</button>`).join('')}</div>`;
-  openModal(`<h2>${esc(P.name)}</h2><p>Pick a look for the second farmer. It is kept with this farm.</p>${row('shirt', 'Shirt')}${row('hair', 'Hair')}
+  // The name is typed into a draft and kept on Done; the default name is a placeholder, so the pad starts empty.
+  const was = P.name;
+  let typed = P.name === PARTNER.name ? '' : P.name;
+  openModal(`<h2 data-p2title>${esc(P.name)}</h2><p>A name and a look for the second farmer. They are kept with this farm.</p>${letterPadHtml('p2name', typed)}${row('shirt', 'Shirt')}${row('hair', 'Hair')}
     ${styles('hairStyle', 'Hair style', HAIR_STYLES, L.hair)}${styles('beard', 'Beard', { '': 'None', ...BEARDS }, L.beard || '')}${styles('glasses', 'Glasses', { '': 'No', yes: 'Yes' }, L.extras.includes('glasses') ? 'yes' : '')}`,
-    [['Done', closeModal, true]]);
+    [['Done', () => { P.name = finishName(typed, was || PARTNER.name); closeModal(); changed(); }, true]]);
+  wireLetterPad(document, 'p2name', () => typed, (v) => { typed = v; $$('[data-p2title]').forEach((h) => { h.textContent = v || was || PARTNER.name; }); });
   $$('[data-plook]').forEach((b) => b.addEventListener('click', () => {
     const field = b.dataset.plook, v = b.dataset.v;
     if (field === 'hairStyle') Object.assign(P.look, { hairStyle: v, long: v === 'long' });   // long kept for older code

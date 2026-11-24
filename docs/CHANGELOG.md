@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v334: Naming farmer two
+- Farmer two can now give themselves a name with their controller: their look dialog has a letter pad. Press A on a letter; each word starts with a capital on its own, so Mary-Ann needs no shift key. Space, hyphen, apostrophe, Delete and Clear are there too.
+- Done keeps the name; leave it empty and it stays as it was.
+- Farmer two can change their name and look any time from Name and look on the Wardrobe tab of their Bag.
+- New save data: none (the name was already kept).
+
 ## v333: What farmer two does shows up for them
 - What farmer two harvests, digs up or catches now flies to them, with its "+n" label over their head, instead of flying across the screen to you.
 - Their swings' dust, sparks and splashes play on their own map, in their half of the screen, even when you are somewhere else.

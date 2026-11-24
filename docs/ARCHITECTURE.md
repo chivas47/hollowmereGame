@@ -246,6 +246,7 @@ src/
     hints.js          the journal's Hints tab and the menu's Tips button (v101)
     clothing.js       sewing machine, dye pots and mannequin dialogs; the wardrobe in the bag
     creation.js       the new game screen (opens when G.S.profile is null)
+    letterpad.js      v334: letterPadHtml(id, value), wireLetterPad(root, id, get, set): a name typed on buttons a controller reaches (data/profile.js NAME_PAD, typeName, finishName)
     hudPrefs.js       v112: HUD settings per browser (size, mode, text, contrast, camera); v322: layout, the .over class on .game (styles.css floats the clock, meters, menus and hotbar over the field on a wide screen with a mouse); fieldnotes.js turns each see-through under your farmer
     trader.js         the sewer trader's dialog (v45)
     town.js           the tavern, clinic and phone dialogs (v47); Sable's table (ui:sable, v62)
