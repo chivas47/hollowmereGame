@@ -253,6 +253,29 @@ Object.assign(SCENES.tavi, {
 });
 Object.assign(SCENES, {
   esme: {
+    // v326 (roadmap 113d): the missing heart scenes, at their door
+    4: {
+      title: "The colour of the door",
+      text: [
+        "Esme is outside her cottage with a tin of paint, staring at her own front door. Half of it is green. The other half is still grey.",
+        "\"I have been standing here an hour,\" she says. \"Green felt right this morning. Now it feels like a shout.\" She hands you the brush without asking. \"You decide. I cannot be trusted with my own door.\"",
+      ],
+      choices: [
+        { label: "Paint the rest green and tell her it is brave", pts: 55, reply: "You finish the door in long even strokes. Esme steps back, then further back, then all the way to the lane. \"Brave,\" she says. \"Yes. A brave door.\" She paints a tiny bee in the corner, low down, where only you will notice it." },
+        { label: "Suggest she sleeps on it", pts: 25, reply: "\"Wise,\" says Esme, and leaves the door half done for three days. When she finally finishes it, green, she tells everyone it was your idea to wait. \"And it was right. It always looks better the third morning.\"" },
+      ],
+    },
+    8: {
+      title: "The painting she will not sell",
+      text: [
+        "Esme is wrapping canvases in brown paper on her doorstep. A dealer from the city is coming tomorrow. One canvas stands apart, face to the wall.",
+        "\"He will want that one most,\" she says. \"Everybody does. It is the best thing I have done.\" She turns it round. It is your farm at dawn, the mist just lifting, a small figure at the gate. \"I am not selling it. I wanted you to see why.\"",
+      ],
+      choices: [
+        { label: "Tell her it should hang somewhere she can see it every day", pts: 80, reply: "\"Somewhere I can see it every day,\" Esme repeats, and looks at you for a long moment. \"Yes. That is the right answer.\" She carries it back inside and hangs it over her bed. The dealer leaves with everything else and a very sour face." },
+        { label: "Tell her the money could buy a year of paint", pts: 40, reply: "She laughs. \"A year of paint, and nothing to paint it with.\" She wraps the canvas again, but more carefully than the others, and slides it under her bed. \"Some things are not for a year. Some things are for good.\"" },
+      ],
+    },
     2: S('Wet paint', ['You find Esme in the forest glaring at a canvas. A smear of green runs right through the middle of it.', '"A crow landed on it," she says. "Of course it did." She holds out a brush. "Well? You might as well try."'],
       C('Paint something into the smear', 50, 'You turn the smear into a clumsy frog. Esme stares at it, then laughs out loud for the first time since you have known her. "I am keeping that."'),
       C('Help her clean it off', 25, 'You scrape and wipe together. The canvas is saved, mostly. "Thank you," she says, a little stiff. But she looks at you differently afterwards.')),
