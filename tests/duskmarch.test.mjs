@@ -8,7 +8,7 @@ import { emit } from '../src/core/events.js';
 import { runUpdaters } from '../src/core/registry.js';
 import { merge } from '../src/core/state.js';
 import { MAPS, SOLID } from '../src/data/maps.js';
-import { MONSTERS } from '../src/data/weapons.js';
+import { MONSTERS, livesIn } from '../src/data/monsters.js';
 import { whereLives } from '../src/data/bestiary.js';
 import { WEED, DUSK_MAPS, DUSK_CREATURES, NIGHT } from '../src/data/duskmarch.js';
 import { slimes } from '../src/systems/monsters.js';
@@ -17,7 +17,7 @@ import { enterMine, leaveMine } from '../src/systems/mine.js';
 import { placePlayer } from '../src/systems/world.js';
 import { freshFarm } from './setup.mjs';
 
-const WILD = Object.keys(MONSTERS).filter((k) => MONSTERS[k].wildOnly);
+const WILD = Object.keys(MONSTERS).filter((k) => livesIn(k, 'duskmarch'));
 const enter = (map, x, y, time = 10 * 60) => {
   G.S.time = time; G.paused = false; G.dialog = { you: false, p2: false }; G.P2 = null;
   placePlayer(map, x, y, 'down'); emit('map:changed', map);

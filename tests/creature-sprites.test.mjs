@@ -3,12 +3,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { MONSTERS } from '../src/data/weapons.js';
+import { MONSTERS, livesIn } from '../src/data/monsters.js';
 import { MONSTERS as SHEET } from '../src/data/sprites.js';
 
 const png = readFileSync(new URL('../assets/sprites/monsters.png', import.meta.url));
 const width = png.readUInt32BE(16), height = png.readUInt32BE(20);
-const hollow = Object.keys(MONSTERS).filter((k) => !MONSTERS[k].cavernOnly && !MONSTERS[k].ventOnly && !MONSTERS[k].surfaceOnly && !MONSTERS[k].wildOnly);   // v303: not the Duskmarch's
+const hollow = Object.keys(MONSTERS).filter((k) => livesIn(k, 'hollow'));   // v303: not the Duskmarch's
 const lum = (hex) => { const n = parseInt(hex.slice(1), 16); return 0.3 * (n >> 16) + 0.59 * ((n >> 8) & 255) + 0.11 * (n & 255); };
 const FLOOR = '#3b3430';   // the Hollow's floor (render/tiles.js CAVE_COLS.rock)
 
@@ -41,7 +41,7 @@ test('the Hollow\'s dark kinds have an outline lighter than the floor and than t
 });
 
 // Roadmap 87c2: the deep dungeons' kinds each have a shape of their own (polish find 41), and the dark ones a rim.
-const deep = Object.keys(MONSTERS).filter((k) => MONSTERS[k].cavernOnly || MONSTERS[k].ventOnly);
+const deep = Object.keys(MONSTERS).filter((k) => !livesIn(k, 'hollow') && (livesIn(k, 'cavern') || livesIn(k, 'vent')));
 test('no deep kind borrows another kind\'s shape', () => {
   assert.equal(deep.length, 17);
   const shapes = deep.map((k) => SHEET.kinds[k].shape || k);
@@ -58,7 +58,7 @@ test('the deep dungeons\' dark kinds have a lighter outline', () => {
 // Roadmap 87c3: the night creatures have shapes of their own; the gourd lurker sleeps as a pumpkin (find 42) and the
 // firefly moth glows.
 test('every creature has a shape of its own now', () => {
-  const night = Object.keys(MONSTERS).filter((k) => MONSTERS[k].surfaceOnly);
+  const night = Object.keys(MONSTERS).filter((k) => livesIn(k, 'night'));
   assert.deepEqual(night.sort(), ['bramble', 'frostwisp', 'gourd', 'moth']);
   for (const k of night) assert.ok(!SHEET.kinds[k].shape && SHEET.layers.includes(`${k}.body`), `${k} has its own bands`);
   const all = Object.keys(MONSTERS).map((k) => SHEET.kinds[k].shape || k);

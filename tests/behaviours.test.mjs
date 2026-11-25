@@ -5,7 +5,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { G } from '../src/core/game.js';
 import { runUpdaters } from '../src/core/registry.js';
-import { MONSTERS, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR } from '../src/data/weapons.js';
+import { MONSTERS, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR, livesIn, statAt } from '../src/data/monsters.js';
+const isOnly = (k, zone) => String(MONSTERS[k].zones) === zone;   // lives there and nowhere else
 import { MAPS, SOLID } from '../src/data/maps.js';
 import { T } from '../src/core/constants.js';
 import { MONSTERS as SHEET } from '../src/data/sprites.js';
@@ -24,7 +25,7 @@ function one(kind, gap) {
   spawnSlimes('farm', 1);
   slimes.length = 1;
   const m = slimes[0], d = MONSTERS[kind];
-  Object.assign(m, { kind, hp: d.hp(10), dmg: d.dmg(10), speed: d.speed(10), x: G.S.x + gap, y: G.S.y, tx: G.S.x + gap, ty: G.S.y, kx: 0, ky: 0, frozen: 0, color: d.color });
+  Object.assign(m, { kind, hp: statAt(kind, 'hp', 10), dmg: statAt(kind, 'dmg', 10), speed: statAt(kind, 'speed', 10), x: G.S.x + gap, y: G.S.y, tx: G.S.x + gap, ty: G.S.y, kx: 0, ky: 0, frozen: 0, color: d.color });
   if (d.move === 'mimic') m.hidden = true;
   if (d.move === 'burrow') { m.bs = 'under'; m.bt = BURROW.under; }
   return m;
@@ -112,11 +113,11 @@ test('soot puffs weave toward you', () => {
 // Roadmap 85d2: the same three ways in the deep dungeons.
 test('the deep dungeons get a burrower and two swarms of their own', () => {
   assert.equal(MONSTERS.lurker.move, 'burrow');
-  assert.ok(MONSTERS.lurker.ventOnly);
+  assert.ok(isOnly('lurker', 'vent'));
   assert.equal(MONSTERS.dustdevil.move, 'swarm');
-  assert.ok(MONSTERS.dustdevil.cavernOnly);
+  assert.ok(isOnly('dustdevil', 'cavern'));
   assert.equal(MONSTERS.ashswarm.move, 'swarm');
-  assert.ok(MONSTERS.ashswarm.ventOnly);
+  assert.ok(isOnly('ashswarm', 'vent'));
   assert.ok(SHEET.layers.includes('lurker.body') && SHEET.kinds.lurker);
   for (const k of ['dustdevil', 'ashswarm']) assert.ok(SHEET.layers.includes(`${k}.body`), `${k} has a shape of its own (v268)`);
   freshFarm();
@@ -141,9 +142,9 @@ test('a lava lurker burrows like a mole', () => {
 // Roadmap 85e1: shooters.
 test('three spitters, one in each dungeon, each with its own shape', () => {
   assert.equal(MONSTERS.spitter.move, 'shoot');
-  assert.ok(MONSTERS.spitter.from >= 70 && !MONSTERS.spitter.cavernOnly && !MONSTERS.spitter.ventOnly);
-  assert.ok(MONSTERS.sandspitter.cavernOnly);
-  assert.ok(MONSTERS.cragspitter.ventOnly);
+  assert.ok(MONSTERS.spitter.from >= 70 && !livesIn('spitter', 'cavern') && !livesIn('spitter', 'vent'));
+  assert.ok(isOnly('sandspitter', 'cavern'));
+  assert.ok(isOnly('cragspitter', 'vent'));
   for (const k of ['spitter', 'sandspitter', 'cragspitter']) {
     assert.ok(SHEET.layers.includes(`${SHEET.kinds[k].shape || k}.glow`), `${k}: a shape with a mouth (v268: its own in the deep dungeons)`);
     assert.equal(SHEET.kinds[k].glow, MONSTERS[k].glow, `${k}'s mouth is the colour of its globs`);
@@ -214,7 +215,7 @@ test('a big moss slime splits in two smaller ones that do not split again', () =
   assert.equal(kids.length, SPLIT.n);
   for (const k of kids) {
     assert.ok(k.small);
-    assert.equal(k.hp, Math.ceil(MONSTERS.mossslime.hp(30) * SPLIT.hp));
+    assert.equal(k.hp, Math.ceil(statAt('mossslime', 'hp', 30) * SPLIT.hp));
   }
   kids.forEach((k) => hitMonster(k, 1e6));
   assert.equal(slimes.filter((o) => o.kind === 'mossslime').length, 0, 'the pieces stay down');
@@ -224,7 +225,7 @@ test('a big moss slime splits in two smaller ones that do not split again', () =
 test('splitters keep to their places and draw as slimes', () => {
   assert.equal(MONSTERS.mossslime.move, 'split');
   assert.ok(MONSTERS.mossslime.from >= 20 && MONSTERS.mossslime.to <= 60);
-  assert.ok(MONSTERS.emberslime.ventOnly);
+  assert.ok(isOnly('emberslime', 'vent'));
   assert.ok(SHEET.layers.includes('emberslime.glow'), 'the ember slime has its own bands, cracks glowing (v268)');
   assert.ok(SHEET.layers.includes('mossslime.body'), 'the moss slime has bands of its own (v265: a moss cap)');
 });
@@ -233,10 +234,10 @@ test('splitters keep to their places and draw as slimes', () => {
 test('five new kinds: two phasers, two shellbacks and a flying swarm, each in its place', () => {
   assert.equal(MONSTERS.wisp.move, 'phase');
   assert.ok(MONSTERS.wisp.from >= 50 && MONSTERS.wisp.to <= 80);
-  assert.ok(MONSTERS.shade.cavernOnly && MONSTERS.shade.move === 'phase');
+  assert.ok(isOnly('shade', 'cavern') && MONSTERS.shade.move === 'phase');
   assert.ok(MONSTERS.shellback.armored && MONSTERS.shellback.from >= 85);
-  assert.ok(MONSTERS.cragshell.armored && MONSTERS.cragshell.ventOnly);
-  assert.ok(MONSTERS.stormwing.fly && MONSTERS.stormwing.move === 'swarm' && MONSTERS.stormwing.ventOnly);
+  assert.ok(MONSTERS.cragshell.armored && isOnly('cragshell', 'vent'));
+  assert.ok(MONSTERS.stormwing.fly && MONSTERS.stormwing.move === 'swarm' && isOnly('stormwing', 'vent'));
   for (const [k, shape] of [['wisp', 'wisp'], ['shade', 'shade'], ['shellback', 'shell'], ['cragshell', 'cragshell'], ['stormwing', 'stormwing']]) assert.equal(SHEET.kinds[k].shape || k, shape);   // v268: the deep ones their own
 });
 

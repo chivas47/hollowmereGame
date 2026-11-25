@@ -1,5 +1,5 @@
 // Monsters in the mine (and slimes on the wild farm after dark, systems/farmPerks.js), and the weapon in slot 5.
-// v36: monster kinds by floor (data/weapons.js MONSTERS): slimes hop, mites crawl, bats and serpents fly over walls,
+// v36: monster kinds by floor (data/monsters.js MONSTERS): slimes hop, mites crawl, bats and serpents fly over walls,
 // bone walkers walk. The weapon is the one chosen in the bag (systems/gear.js); rings change hits, drops and healing.
 import { G } from '../core/game.js';
 import { T, DIRS } from '../core/constants.js';
@@ -7,7 +7,8 @@ import { on, emit, changed, notify } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
 import { MAPS, SOLID, sizeOf } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
-import { UNDEAD, MONSTERS, MONSTER_COUNT, RARE_DROP, DROP_POOL, SPECIALS, CHARGE, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR, BUSY, ELITE } from '../data/weapons.js';
+import { RARE_DROP, DROP_POOL, SPECIALS } from '../data/weapons.js';
+import { UNDEAD, MONSTERS, MONSTER_COUNT, CHARGE, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR, BUSY, ELITE, statsAt, statAt, kindsFor } from '../data/monsters.js';
 import { SAVAGE } from '../data/guild.js';
 import { CAVERN } from '../data/cavern.js';
 import { VENT } from '../data/forge.js';
@@ -36,7 +37,7 @@ const BOX = { l: 4, r: 4, t: 3, b: 1 };   // v73: swept and sliding like the pla
 function make(kind, floor, px, py, R) {
   const d = MONSTERS[kind];
   const m = { kind, x: px, y: py, tx: px, ty: py, kx: 0, ky: 0, hurt: 0, hop: R() * HOP, floor,
-    hp: d.hp(floor), dmg: d.dmg(floor), speed: d.speed(floor), color: d.color || SLIME.colors[floor > 10 ? 2 : floor > 5 ? 1 : 0] };
+    ...statsAt(kind, floor), color: d.color || SLIME.colors[floor > 10 ? 2 : floor > 5 ? 1 : 0] };
   if (d.move === 'mimic') m.hidden = true;                          // v253: a rock until woken
   if (d.move === 'burrow' || d.burrow) { m.bs = 'under'; m.bt = BURROW.under; }  // v253: under the floor (v266: the burrow beetle too)
   if (d.move === 'shoot') m.st = SHOOT.every * (0.5 + R() * 0.5);    // v255: staggered first shots
@@ -49,7 +50,7 @@ on('mine:floor', ({ floor: n, rng: R, zone, eff: floor, busy }) => {
   slimes.length = 0; slimeMap = 'mine'; busyFloor = !!busy;
   // v38: in the Sunken Cavern only its own monsters and those marked cavern, at the cavern's strength.
   const cav = zone === 'cavern', peak = zone === 'peak', vent = zone === 'vent' || peak, g = MAPS.mine.grid, D = MONSTERS;   // v67: the peak has the vent's monsters
-  const kinds = Object.keys(D).filter((k) => (vent ? D[k].vent || D[k].ventOnly : cav ? D[k].cavern || D[k].cavernOnly : !D[k].cavernOnly && !D[k].ventOnly && !D[k].surfaceOnly && !D[k].wildOnly && floor >= D[k].from && floor <= (D[k].to ?? Infinity)));   // v253: to; v261: not the night creatures
+  const kinds = kindsFor(zone, floor);   // v345: by each kind's zones (data/monsters.js)
   let count = peak ? (n >= PEAK.floors ? 0 : PEAK.monsters(n)) : vent ? (n >= VENT.floors ? 0 : VENT.monsters(n)) : cav ? CAVERN.monsters(n) : MONSTER_COUNT(floor);   // v39: the forge room is safe
   const theme = busy ? kinds[Math.floor(R() * kinds.length)] : null;   // v259: a busy floor is all one kind, more of them
   if (busy) count = Math.min(BUSY.max, Math.round(count * BUSY.mult));
@@ -251,8 +252,8 @@ export function challenge(m) {
 }
 
 // v256 (roadmap 85e2): a big splitter falls into SPLIT.n small ones, spread a little apart and pushed outward.
-function splitUp(m, d) {
-  const hp = Math.max(1, Math.ceil(d.hp(m.floor || 1) * SPLIT.hp));
+function splitUp(m) {
+  const hp = Math.max(1, Math.ceil(statAt(m.kind, 'hp', m.floor || 1) * SPLIT.hp));
   for (let i = 0; i < SPLIT.n; i++) {
     const a = (i / SPLIT.n) * Math.PI * 2 + Math.random(), ux = Math.cos(a), uy = Math.sin(a);
     slimes.push({ ...m, x: m.x + ux * SPLIT.spread, y: m.y + uy * SPLIT.spread, tx: m.x, ty: m.y, hp, small: true, hurt: 0.25, kx: ux * 80, ky: uy * 80, hop: Math.random() * HOP, frozen: 0 });
@@ -332,7 +333,7 @@ const HAY = ['fiber', 'cloth', 'coal'];
 function defeat(m) {
   slimes.splice(slimes.indexOf(m), 1);
   const d = MONSTERS[m.kind || 'slime'], times = wearing('thiefring') ? 2 : 1;
-  if (d.move === 'split' && !m.small) splitUp(m, d);   // v256: a big slime falls into smaller ones
+  if (d.move === 'split' && !m.small) splitUp(m);   // v256: a big slime falls into smaller ones
   const got = rollLoot(m.kind || 'slime', Math.random, times);   // 85a: each kind's loot table
   if (m.elite) { const e = ELITE.essences[Math.floor(Math.random() * ELITE.essences.length)]; got[e] = (got[e] || 0) + times; }   // v260: an elite's sure essence
   for (const [k, n] of Object.entries(got)) G.S.bag[k] = (G.S.bag[k] || 0) + n;

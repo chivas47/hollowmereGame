@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { G } from '../src/core/game.js';
-import { BUSY, MONSTER_COUNT } from '../src/data/weapons.js';
+import { BUSY, MONSTER_COUNT } from '../src/data/monsters.js';
 import { MAPS } from '../src/data/maps.js';
 import { MINE, enterMine, leaveMine } from '../src/systems/mine.js';
 import { slimes, hitMonster } from '../src/systems/monsters.js';

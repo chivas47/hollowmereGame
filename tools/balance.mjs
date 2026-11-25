@@ -106,7 +106,7 @@ const { freeTile, grassTile } = await load('systems/clearing.js');
 const { cutWildWeed } = await load('systems/forage.js');
 const { WEATHER_ITEMS } = await load('data/weather.js');
 const { LOOT_ITEMS, LOOT } = await load('data/loot.js');   // roadmap 85a: monster materials, an income line of their own
-const { MONSTERS } = await load('data/weapons.js');
+const { MONSTERS, livesIn } = await load('data/monsters.js');
 const { act } = await load('systems/interact.js');
 const { sleep } = await load('systems/days.js');
 const { placePlayer, tileAt, tileOf, soilOf, placeKey, parsePlaceKey } = await load('systems/world.js');
@@ -768,7 +768,9 @@ function simulate(runSeed) {
     if (pondShort().gel) out.gel = pondShort().gel;
     return out;
   };
-  const lootFloors = (item) => Object.keys(MONSTERS).filter((k) => !MONSTERS[k].cavernOnly && !MONSTERS[k].ventOnly && !MONSTERS[k].surfaceOnly && (LOOT[k] || []).some(([it]) => it === item))
+  // v345: only kinds that live in the Hollow (the Duskmarch's used to count as floor 1, so the bot hunted their
+  // gloommotes and cloth on a floor where nothing drops them).
+  const lootFloors = (item) => Object.keys(MONSTERS).filter((k) => livesIn(k, 'hollow') && (LOOT[k] || []).some(([it]) => it === item))
     .map((k) => Math.max(1, MONSTERS[k].from));
   function slimeHunt() {
     const item = Object.keys(lootNeeds())[0], fs = item && lootFloors(item);

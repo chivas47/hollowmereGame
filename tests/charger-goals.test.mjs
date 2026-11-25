@@ -6,7 +6,8 @@ import { G } from '../src/core/game.js';
 import { emit } from '../src/core/events.js';
 import { runUpdaters } from '../src/core/registry.js';
 import { GOALS, SAVAGE } from '../src/data/guild.js';
-import { MONSTERS, RINGS, SPECIALS } from '../src/data/weapons.js';
+import { RINGS, SPECIALS } from '../src/data/weapons.js';
+import { MONSTERS, livesIn } from '../src/data/monsters.js';
 import { CLOTHES } from '../src/data/clothing.js';
 import { ITEMS } from '../src/data/items.js';
 import { HOTBAR } from '../src/data/hotbar.js';
@@ -17,7 +18,7 @@ import { slimes, spawnSlimes, hitMonster } from '../src/systems/monsters.js';
 import { placePlayer } from '../src/systems/world.js';
 import { freshFarm } from './setup.mjs';
 
-const CHARGERS = Object.keys(MONSTERS).filter((k) => MONSTERS[k].move === 'charge' && !MONSTERS[k].wildOnly);   // v303: the dungeons' chargers (the Duskmarch's bristle hog has no Guild goal yet)
+const CHARGERS = Object.keys(MONSTERS).filter((k) => MONSTERS[k].move === 'charge' && !livesIn(k, 'duskmarch'));   // v303: the dungeons' chargers (the Duskmarch's bristle hog has no Guild goal yet)
 const charged = Object.values(GOALS).filter((g) => g.kinds);
 const kill = (kind, n = 1) => { for (let i = 0; i < n; i++) emit('monster:slain', { kind, x: 0, y: 0, map: 'mine' }); };
 

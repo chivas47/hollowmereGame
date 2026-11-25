@@ -2,6 +2,15 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v345: Every creature in one table
+- Nothing changes in play: every creature has the same health, damage, speed, XP, drops and haunts as before (a test checks the stats on 62 floors against the old ones).
+- Every creature now lives in one entry in `src/data/monsters.js`: where it lives (`zones`: hollow, cavern, vent, wildfarm, night, duskmarch, plus `from` and `to` floors in the Hollow), how it fights, its stats and its loot. Stats are plain numbers (`12`, or `[12, 3]` for 12 plus 1 every 3 floors, with an optional cap) instead of code, so a balance patch only changes numbers.
+- The spawns, the Bestiary, the night creatures and the balance bot all read the same `zones` list. Before, six separate flags (`cavern`, `cavernOnly`, `vent`, `ventOnly`, `surfaceOnly`, `wildOnly`) were each checked their own way in several places.
+- `undead` is now a flag on each creature rather than a separate list.
+- `node tools/monster_stats.mjs` prints every creature's numbers; `--fixture` saves them for the tests after a deliberate change, so a balance patch shows up in the pull request's diff.
+- The balance bot only looks for monster materials on Hollow floors where a Hollow creature drops them. Before, the Duskmarch's creatures counted as floor 1. This run's report is unchanged.
+- New save data: none.
+
 ## v344: The crypt key in three pieces, the north tomb, the chapel catacombs
 - The chapel crypt key is broken in three. The Tangle's old chest wakes the thicket when you lift its lid (seven of the woods' creatures round it; beat them, then open it); Gloamwood's mossy stone gives its piece only after 8 pm, and the dead climb out to guard it; the third lies on a bier at the back of Mournfield's north tomb. Corvin at the Anvil joins the three into the key.
 - Mournfield's north mausoleum is open to anyone: the north tomb, three rooms of the dead, a chest of grave goods once (5 iron, 4 coal, 2 geodes, 3 bone shards) and the bier.

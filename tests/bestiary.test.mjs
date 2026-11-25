@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { G } from '../src/core/game.js';
 import { runUpdaters } from '../src/core/registry.js';
 import { merge } from '../src/core/state.js';
-import { MONSTERS } from '../src/data/weapons.js';
+import { MONSTERS } from '../src/data/monsters.js';
 import { HOW, whereLives, BESTIARY_ORDER } from '../src/data/bestiary.js';
 import { slimes, spawnSlimes, hitMonster } from '../src/systems/monsters.js';
 import '../src/systems/bestiary.js';

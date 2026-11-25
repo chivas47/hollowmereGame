@@ -9,7 +9,7 @@ import { RECIPES } from '../src/data/crafting.js';
 import { DISHES } from '../src/data/cooking.js';
 import { ITEMS } from '../src/data/items.js';
 import { LOOT, LOOT_ITEMS } from '../src/data/loot.js';
-import { MONSTERS } from '../src/data/weapons.js';
+import { MONSTERS, livesIn } from '../src/data/monsters.js';
 import { CLOTHES } from '../src/data/clothing.js';
 import { craft, learnt } from '../src/systems/crafting.js';
 import { knows } from '../src/systems/cooking.js';
@@ -29,7 +29,7 @@ test('the stand-ins are gone: Stardew\'s monster materials, refitted to ours', (
 });
 
 test('every monster material has a use, and each one the Hollow alone can supply', () => {
-  const hollow = Object.keys(MONSTERS).filter((k) => !MONSTERS[k].cavernOnly && !MONSTERS[k].ventOnly && !MONSTERS[k].surfaceOnly);
+  const hollow = Object.keys(MONSTERS).filter((k) => livesIn(k, 'hollow'));
   for (const it of Object.keys(LOOT_ITEMS)) {
     const used = Object.values(RECIPES).some((rc) => rc.needs[it]) || Object.values(DISHES).some((d) => d.needs[it]) || Object.values(CLOTHES).some((c) => c.from === it);   // v257: wisp silk is tailored
     assert.ok(used, `${it} has a use`);
