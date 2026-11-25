@@ -158,43 +158,45 @@ export const MONSTERS = {
     'bristle.body', 'bristle.line', 'bristle.ink', 'wasp.body', 'wasp.line', 'wasp.ink', 'stump.body', 'stump.line',
     'stump.ink', 'stumpsleep.body', 'stumpsleep.line', 'stumpsleep.ink', 'rattler.body', 'rattler.line', 'rattler.ink',
     'shambler.body', 'shambler.line', 'shambler.ink', 'haunt.body', 'haunt.glow', 'haunt.line', 'haunt.ink'],
+  // v349: code: the drawing in code (render/sprites.js CODE_ART) a kind shows until this sheet loads, or if it never
+  // does: its own, or one it grew from (the sand bull a boar's). Every creature names one (tests/creature-sprites.test.mjs).
   kinds: {
-    mite: { shadow: [-5, 10, 0.35], rim: '#a8845a' }, bat: { shadow: [-3, 6, 0.25], bob: 6, rim: '#8f7aa8' }, skeleton: { shadow: [-4, 8, 0.35] },
-    wraith: { shadow: [-4, 8, 0.35], sway: 3 }, rex: { shadow: [-4, 8, 0.25], bob: 5 },
-    sprite: { shadow: [-3, 6, 0.25], bob: 7, glow: '#ffd98a' }, golem: { shadow: [-6, 12, 0.35], glow: '#e9862a', rim: '#a8786a' },
-    serpent: { shadow: [-4, 8, 0.25], bob: 3 }, slime: { shadow: [-4, 9, 0.35] },
+    mite: { code: 'mite', shadow: [-5, 10, 0.35], rim: '#a8845a' }, bat: { code: 'bat', shadow: [-3, 6, 0.25], bob: 6, rim: '#8f7aa8' }, skeleton: { code: 'skeleton', shadow: [-4, 8, 0.35] },
+    wraith: { code: 'wraith', shadow: [-4, 8, 0.35], sway: 3 }, rex: { code: 'rex', shadow: [-4, 8, 0.25], bob: 5 },
+    sprite: { code: 'sprite', shadow: [-3, 6, 0.25], bob: 7, glow: '#ffd98a' }, golem: { code: 'golem', shadow: [-6, 12, 0.35], glow: '#e9862a', rim: '#a8786a' },
+    serpent: { code: 'serpent', shadow: [-4, 8, 0.25], bob: 3 }, slime: { code: 'slime', shadow: [-4, 9, 0.35] },
     // v228: the chargers, four shapes drawn once (shape) and tinted per kind; they face the way they go.
-    beetle: { shape: 'beetle', shadow: [-6, 12, 0.35], rim: '#9a88b0' }, scuttler: { shadow: [-6, 12, 0.35] },
-    boar: { shape: 'boar', shadow: [-8, 16, 0.35] }, bull: { shadow: [-8, 16, 0.35] },
-    ram: { shape: 'ram', shadow: [-8, 16, 0.35], glow: '#6f6862' }, magmaram: { shadow: [-8, 16, 0.35], glow: '#e9862a', rim: '#94786e' },
-    gloomhound: { shape: 'hound', shadow: [-8, 16, 0.3], glow: '#8a6ad0', rim: '#7f76a8' }, hound: { shape: 'cinder', shadow: [-8, 16, 0.3], glow: '#e9862a', rim: '#a8665a' },
+    beetle: { code: 'charger', shape: 'beetle', shadow: [-6, 12, 0.35], rim: '#9a88b0' }, scuttler: { code: 'charger', shadow: [-6, 12, 0.35] },
+    boar: { code: 'charger', shape: 'boar', shadow: [-8, 16, 0.35] }, bull: { code: 'charger', shadow: [-8, 16, 0.35] },
+    ram: { code: 'charger', shape: 'ram', shadow: [-8, 16, 0.35], glow: '#6f6862' }, magmaram: { code: 'charger', shadow: [-8, 16, 0.35], glow: '#e9862a', rim: '#94786e' },
+    gloomhound: { code: 'charger', shape: 'hound', shadow: [-8, 16, 0.3], glow: '#8a6ad0', rim: '#7f76a8' }, hound: { code: 'charger', shape: 'cinder', shadow: [-8, 16, 0.3], glow: '#e9862a', rim: '#a8665a' },
     // v253 (85d1): the pebble crab awake and asleep (a rock), the burrow mole up, the soot puff.
-    crab: { shadow: [-6, 12, 0.35] }, crabrock: { shadow: [-6, 12, 0.35] }, mole: { shadow: [-6, 12, 0.35] }, puff: { shadow: [-2, 4, 0.25], bob: 7, rim: '#8a8070' },
+    crab: { code: 'crab', shadow: [-6, 12, 0.35] }, crabrock: { code: 'crabrock', shadow: [-6, 12, 0.35] }, mole: { code: 'mole', shadow: [-6, 12, 0.35] }, puff: { code: 'puff', shadow: [-2, 4, 0.25], bob: 7, rim: '#8a8070' },
     // v254 (85d2): the lava lurker up out of its pool; dust devils and the ash swarm are the soot puff's shape, tinted.
-    lurker: { shadow: [-6, 12, 0.3] }, dustdevil: { shadow: [-2, 4, 0.25], bob: 7, rim: '#2e2014' }, ashswarm: { shadow: [-2, 4, 0.25], bob: 7, rim: '#a89490' },
+    lurker: { code: 'lurker', shadow: [-6, 12, 0.3] }, dustdevil: { code: 'puff', shadow: [-2, 4, 0.25], bob: 7, rim: '#2e2014' }, ashswarm: { code: 'puff', shadow: [-2, 4, 0.25], bob: 7, rim: '#a89490' },
     // v255 (85e1): the spitters, one shape tinted per kind; the glow (its mouth) is the colour of its globs.
-    spitter: { shape: 'spitter', shadow: [-6, 12, 0.35], glow: '#b07ae0', rim: '#9a88b0' }, sandspitter: { shadow: [-6, 12, 0.35], glow: '#e9c46a', rim: '#2e2014' },
-    cragspitter: { shadow: [-6, 12, 0.35], glow: '#e9862a', rim: '#9a827a' },
+    spitter: { code: 'spitter', shape: 'spitter', shadow: [-6, 12, 0.35], glow: '#b07ae0', rim: '#9a88b0' }, sandspitter: { code: 'spitter', shadow: [-6, 12, 0.35], glow: '#e9c46a', rim: '#2e2014' },
+    cragspitter: { code: 'spitter', shadow: [-6, 12, 0.35], glow: '#e9862a', rim: '#9a827a' },
     // v256 (85e2): splitting slimes are the slime's bands in their own colours (drawn bigger while whole); v265: the moss
     // slime has its own (a moss cap). rim (v265): the Hollow's dark kinds get a lighter outline (the deep ones in 87c2).
-    mossslime: { shadow: [-4, 9, 0.35] }, emberslime: { shadow: [-4, 9, 0.35], glow: '#ffd98a' },
+    mossslime: { code: 'slime', shadow: [-4, 9, 0.35] }, emberslime: { code: 'slime', shadow: [-4, 9, 0.35], glow: '#ffd98a' },
     // v257 (85f): the phasers (a wisp with a glowing heart), the armored (a heavy shell), the storm wing (a bat, tinted).
-    wisp: { shape: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#ffe08a' }, shade: { shadow: [-3, 6, 0.2], bob: 3, glow: '#b07ae0', rim: '#9a90b8' },
-    shellback: { shape: 'shell', shadow: [-7, 14, 0.35] }, cragshell: { shadow: [-7, 14, 0.35], rim: '#9a8a82' },
-    stormwing: { shadow: [-3, 6, 0.25], bob: 6, glow: '#9fd8f0', rim: '#7a8ab0' },
+    wisp: { code: 'wisp', shape: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#ffe08a' }, shade: { code: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#b07ae0', rim: '#9a90b8' },
+    shellback: { code: 'shell', shape: 'shell', shadow: [-7, 14, 0.35] }, cragshell: { code: 'shell', shadow: [-7, 14, 0.35], rim: '#9a8a82' },
+    stormwing: { code: 'bat', shadow: [-3, 6, 0.25], bob: 6, glow: '#9fd8f0', rim: '#7a8ab0' },
     // v268 (87c2): every deep kind has its own shape now (the cinder hound's is 'cinder'; the gloom hound keeps
     // 'hound'), the dark ones a lighter rim and the two sand-coloured ones (dust devils, sand spitter) a darker one
-    // so they stand off the Cavern's sand. CODE_LIKE in render/sprites.js: the shape the code art borrows before the sheet loads.
+    // so they stand off the Cavern's sand.
     // v261 (85j): the seasonal creatures.
     // v269 (87c3): each its own shape. halo: a soft light drawn round it (the firefly moth); sleep: the shape a mimic
     // shows while asleep, tinted to its disguise colour (the gourd lurker's pumpkin; others the pebble crab's rock).
-    bramble: { shadow: [-2, 4, 0.25], bob: 7 }, moth: { shadow: [-3, 6, 0.2], bob: 6, glow: '#fff3a0', halo: '#fff3a0' },
-    gourd: { shadow: [-6, 12, 0.35], sleep: 'gourdsleep' }, gourdsleep: { shadow: [-6, 12, 0.35] },
-    frostwisp: { shadow: [-3, 6, 0.2], bob: 3, glow: '#9fd8f0' },
+    bramble: { code: 'puff', shadow: [-2, 4, 0.25], bob: 7 }, moth: { code: 'bat', shadow: [-3, 6, 0.2], bob: 6, glow: '#fff3a0', halo: '#fff3a0' },
+    gourd: { code: 'crab', shadow: [-6, 12, 0.35], sleep: 'gourdsleep' }, gourdsleep: { code: 'crabrock', shadow: [-6, 12, 0.35] },
+    frostwisp: { code: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#9fd8f0' },
     // v303: the Duskmarch's creatures; the stump lurker sleeps as a plain stump.
-    bristle: { shadow: [-8, 16, 0.35] }, wasp: { shadow: [-2, 4, 0.25], bob: 7 },
-    stump: { shadow: [-6, 12, 0.35], sleep: 'stumpsleep' }, stumpsleep: { shadow: [-6, 12, 0.35] },
-    rattler: { shadow: [-4, 8, 0.35] }, gravewarden: { shadow: [-4, 8, 0.35], shape: 'rattler' }, shambler: { shadow: [-5, 10, 0.35] }, haunt: { shadow: [-3, 6, 0.2], bob: 3, glow: '#8ae0d0' },   // v347: the Gravewarden wears the rattler's shape, drawn twice as big
+    bristle: { code: 'charger', shadow: [-8, 16, 0.35] }, wasp: { code: 'puff', shadow: [-2, 4, 0.25], bob: 7 },
+    stump: { code: 'crab', shadow: [-6, 12, 0.35], sleep: 'stumpsleep' }, stumpsleep: { code: 'crabrock', shadow: [-6, 12, 0.35] },
+    rattler: { code: 'skeleton', shadow: [-4, 8, 0.35] }, gravewarden: { code: 'skeleton', shadow: [-4, 8, 0.35], shape: 'rattler' }, shambler: { code: 'skeleton', shadow: [-5, 10, 0.35] }, haunt: { code: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#8ae0d0' },   // v347: the Gravewarden wears the rattler's shape, drawn twice as big
   },
 };
 

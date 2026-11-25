@@ -91,3 +91,23 @@ test('the warnings are heard: a charger winding up, a spitter gathering a shot',
   for (let i = 0; i < 5; i++) runUpdaters(0.02);
   assert.ok(sounds.some((s) => s?.id === 'spitCharge'), 'the glow');
 });
+
+// v348: how near you come before a creature notices you is its own (data/monsters.js notice, default NOTICE).
+test('each creature notices you at its own distance', async () => {
+  const { NOTICE, noticeOf } = await import('../src/data/monsters.js');
+  for (const k of KINDS) assert.ok(MONSTERS[k].notice === undefined || MONSTERS[k].notice > 0, `${k}: notice`);
+  assert.equal(noticeOf('skeleton'), MONSTERS.skeleton.notice ?? NOTICE);
+  const was = MONSTERS.skeleton.notice;
+  try {
+    MONSTERS.skeleton.notice = 40;
+    let m = near('skeleton', 60); const x0 = m.x;
+    runUpdaters(0.05);
+    assert.ok(!sounds.some((s) => s?.id === 'boneAlert'), 'beyond its notice: no alert');
+    assert.ok(!(m.x < x0 - 0.5), 'and it does not come for you');
+    MONSTERS.skeleton.notice = 200;
+    m = near('skeleton', 150); const x1 = m.x;
+    runUpdaters(0.05);
+    assert.ok(sounds.some((s) => s?.id === 'boneAlert'), 'within a longer notice: it cries out');
+    assert.ok(m.x < x1, 'and comes for you');
+  } finally { if (was === undefined) delete MONSTERS.skeleton.notice; else MONSTERS.skeleton.notice = was; }
+});

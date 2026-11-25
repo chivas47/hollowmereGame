@@ -691,106 +691,101 @@ function halo(c, px, py, color, t) {
   for (const [rad, a] of [[11, 0.07], [7, 0.1], [4, 0.14]]) { c.globalAlpha = a * p; c.beginPath(); c.arc(Math.round(px), Math.round(py), rad, 0, Math.PI * 2); c.fill(); }
   c.restore();
 }
-// v268 (87c2): until the sheet loads, kinds with their own shape draw as the shape they grew from.
-const CODE_LIKE = { scuttler: 'beetle', bull: 'boar', magmaram: 'ram', dustdevil: 'puff', ashswarm: 'puff', sandspitter: 'spitter',
-  cragspitter: 'spitter', shade: 'wisp', cragshell: 'shell', stormwing: 'bat',
-  bramble: 'puff', moth: 'bat', gourd: 'crab', gourdsleep: 'crabrock', frostwisp: 'wisp',   // v269
-  bristle: 'boar', wasp: 'puff', stump: 'crab', stumpsleep: 'crabrock', rattler: 'skeleton', gravewarden: 'skeleton', shambler: 'skeleton', haunt: 'wisp' };   // v303
-// v228: flip faces it left (chargers face the way they go).
+// v228: flip faces it left (chargers face the way they go). Until the sheet loads (or if it never does) a kind is
+// drawn in code: v349, the drawing its sheet entry names (data/sprites.js MONSTERS.kinds code, CODE_ART below).
 export function drawMonster(c, px, py, kind, color, hurt, t, flip = false) {
   const k = MONSTERS.kinds[kind] || {};
   if (k.halo) halo(c, px, py - 12 + (k.bob ? -Math.round(Math.sin(t * k.bob) * 2) : 0), k.halo, t);   // v269: the firefly moth's light
   if (sheetMonster(c, px + (k.sway ? Math.round(Math.sin(t * k.sway)) : 0), py, kind, color, hurt, Math.floor(t * 8) % 4,
     k.bob ? -Math.round(Math.sin(t * k.bob) * 2) : 0, flip)) return;
-  const x = Math.round(px), base = Math.round(py), col = hurt ? '#ffffff' : color, f = Math.floor(t * 8) % 2;
-  if (k.shape === 'slime' || kind === 'mossslime' || kind === 'emberslime') return drawSlime(c, px, py, color, hurt, 0);   // v256: splitting slimes
-  const shape = (CODE_LIKE[kind] ? MONSTERS.kinds[CODE_LIKE[kind]] : k).shape;   // v268: a deep kind borrows a Hollow one's code art
-  kind = CODE_LIKE[kind] || kind;
-  if (['puff', 'spitter', 'wisp', 'shell', 'bat', 'crab'].includes(shape)) kind = shape;   // v261: crab (the gourd lurker)   // v257: wisp, shell, bat shapes   // v254: dust devils and the ash swarm draw as a puff; v255: spitters
-  else if (shape) {   // v228: a charger before the sheet loads: a low body, a head the way it faces
+  (CODE_ART[k.code] || CODE_ART.serpent)({ c, px, py, x: Math.round(px), base: Math.round(py), color, col: hurt ? '#ffffff' : color, hurt, t, f: Math.floor(t * 8) % 2, flip, k });
+}
+// v349: the creatures drawn in code, by name (a kind's sheet entry names its own in `code`). Each gets
+// { c, px, py, x, base (rounded px, py), color, col (white while hurt), hurt, t, f (the two-step frame), flip, k (its sheet entry) }.
+export const CODE_ART = {
+  slime: ({ c, px, py, color, hurt }) => drawSlime(c, px, py, color, hurt, 0),   // v256: splitting slimes
+  charger: ({ c, x, base, col, f, flip }) => {   // v228: a charger: a low body, a head the way it faces
     const s = flip ? -1 : 1;
     r(c, x - 7, base - 1, 14, 1, 'rgba(0,0,0,.35)'); r(c, x - 6, base - 8, 12, 6, col); r(c, x + (s > 0 ? 4 : -8), base - 9, 4, 5, col);
     r(c, x + (s > 0 ? 6 : -7), base - 8, 1, 1, '#2b211a'); r(c, x - 5 + f, base - 2, 2, 2, '#2b211a'); r(c, x + 3 - f, base - 2, 2, 2, '#2b211a');
-    return;
-  }
-  if (kind === 'crabrock') {   // v253: a mimic asleep, a plain grey rock
+  },
+  crabrock: ({ c, x, base, col }) => {   // v253: a mimic asleep, a plain grey rock
     r(c, x - 6, base - 1, 12, 1, 'rgba(0,0,0,.35)'); r(c, x - 6, base - 8, 12, 7, col); r(c, x - 4, base - 10, 8, 2, col); r(c, x - 3, base - 9, 3, 1, 'rgba(255,255,255,.35)');
-    return;
-  }
-  if (kind === 'crab') {   // v253: a pebble crab awake, a shell on legs with two claws
+  },
+  crab: ({ c, x, base, col, f }) => {   // v253: a pebble crab awake, a shell on legs with two claws
     r(c, x - 6, base - 1, 12, 1, 'rgba(0,0,0,.35)'); r(c, x - 5, base - 9, 10, 6, col); r(c, x - 8, base - 7 - f, 3, 3, col); r(c, x + 5, base - 7 - (1 - f), 3, 3, col);
     r(c, x - 2, base - 10, 1, 1, '#2b211a'); r(c, x + 1, base - 10, 1, 1, '#2b211a'); [-5, -2, 1, 4].forEach((lx, i) => r(c, x + lx, base - 3 + ((i + f) % 2), 1, 2, '#2b211a'));
-    return;
-  }
-  if (kind === 'mole') {   // v253: a burrow mole up out of its hole
+  },
+  mole: ({ c, x, base, col, f }) => {   // v253: a burrow mole up out of its hole
     r(c, x - 6, base - 1, 12, 1, 'rgba(0,0,0,.35)'); r(c, x - 5, base - 3, 10, 2, '#5a4632'); r(c, x - 4, base - 11, 8, 8, col);
     r(c, x - 2, base - 9, 1, 1, '#2b211a'); r(c, x + 1, base - 9, 1, 1, '#2b211a'); r(c, x - 1, base - 7, 2, 1, '#e2707a'); r(c, x - 6, base - 6 + f, 2, 2, '#e8d0b0'); r(c, x + 4, base - 6 + (1 - f), 2, 2, '#e8d0b0');
-    return;
-  }
-  if (kind === 'wisp') {   // v257: a lantern wisp, a pale drifting flame with a bright heart
+  },
+  wisp: ({ c, x, base, col, hurt, t, f, k }) => {   // v257: a lantern wisp, a pale drifting flame with a bright heart
     const y = base - 14 + Math.round(Math.sin(t * 3) * 1);
     r(c, x - 2, base - 1, 4, 1, 'rgba(0,0,0,.2)'); r(c, x - 4, y, 8, 8, col); r(c, x - 3, y - 2, 6, 2, col); r(c, x - 1, y - 4 + f, 2, 2, col);
     r(c, x - 2, y + 2, 4, 4, hurt ? '#ffffff' : k.glow || '#ffe08a'); r(c, x - 3, y + 8, 2, 2 - f, col); r(c, x + 1, y + 8, 2, 1 + f, col);
-    return;
-  }
-  if (kind === 'shell') {   // v257: a shellback, a low domed shell on stubby legs
+  },
+  shell: ({ c, x, base, col, f }) => {   // v257: a shellback, a low domed shell on stubby legs
     r(c, x - 7, base - 1, 14, 1, 'rgba(0,0,0,.35)'); r(c, x - 7, base - 8, 14, 6, col); r(c, x - 5, base - 10, 10, 2, col);
     r(c, x - 4, base - 9, 8, 1, 'rgba(255,255,255,.25)'); r(c, x + 6, base - 6, 3, 3, col); r(c, x + 7, base - 5, 1, 1, '#1c1712');
     [-6, -2, 2].forEach((lx, i) => r(c, x + lx, base - 2 + ((i + f) % 2), 2, 2, '#2b211a'));
-    return;
-  }
-  if (kind === 'spitter') {   // v255: a hooded spitter with a glowing mouth
+  },
+  spitter: ({ c, x, base, col, hurt, f, k }) => {   // v255: a hooded spitter with a glowing mouth
     r(c, x - 6, base - 1, 12, 1, 'rgba(0,0,0,.35)'); r(c, x - 5, base - 12, 10, 10, col); r(c, x - 3, base - 14, 6, 2, col);
     r(c, x - 2, base - 10, 1, 1, '#1c1712'); r(c, x + 1, base - 10, 1, 1, '#1c1712'); r(c, x - 1, base - 7 - f, 2, 2 + f, hurt ? '#ffffff' : k.glow || '#e9862a');
-    return;
-  }
-  if (kind === 'lurker') {   // v254: a lava lurker, a red head up out of a glowing pool
+  },
+  lurker: ({ c, x, base, col, f }) => {   // v254: a lava lurker, a red head up out of a glowing pool
     r(c, x - 6, base - 3, 12, 3, '#e9862a'); r(c, x - 4, base - 2, 8, 1, '#ffd98a'); r(c, x - 3, base - 11, 6, 8, col); r(c, x - 4, base - 9, 8, 4, col);
     r(c, x - 2, base - 9, 1, 1, '#ffd98a'); r(c, x + 1, base - 9, 1, 1, '#ffd98a'); r(c, x - 1, base - 6 + f, 2, 1, '#2b211a');
-    return;
-  }
-  if (kind === 'puff') {   // v253: a soot puff, a little ball of smoke with two bright eyes
+  },
+  puff: ({ c, x, base, col, t, f }) => {   // v253: a soot puff, a little ball of smoke with two bright eyes
     const y = base - 10 + Math.round(Math.sin(t * 7) * 2);
     r(c, x - 2, base - 1, 4, 1, 'rgba(0,0,0,.25)'); r(c, x - 3, y, 6, 5, col); r(c, x - 4, y + 1, 8, 3, col); r(c, x - 1 - f, y - 1, 2, 1, col);
     r(c, x - 2, y + 2, 1, 1, '#f0cc6a'); r(c, x + 1, y + 2, 1, 1, '#f0cc6a');
-    return;
-  }
-  if (kind === 'mite') {
+  },
+  mite: ({ c, x, base, col, f }) => {
     r(c, x - 5, base - 1, 10, 1, 'rgba(0,0,0,.35)'); r(c, x - 4, base - 6, 8, 5, col); r(c, x - 3, base - 7, 6, 1, col);
     [-4, -1, 2].forEach((lx, i) => r(c, x + lx, base - 1 - ((i + f) % 2), 2, 1, '#2b211a')); r(c, x + 2, base - 5, 1, 1, '#e9c46a');
-  } else if (kind === 'bat') {
+  },
+  bat: ({ c, x, base, col, t, f }) => {
     const y = base - 14 + Math.round(Math.sin(t * 6) * 2);
     r(c, x - 3, base - 1, 6, 1, 'rgba(0,0,0,.25)'); r(c, x - 2, y, 4, 4, col);
     if (f) { r(c, x - 7, y, 5, 2, col); r(c, x + 2, y, 5, 2, col); } else { r(c, x - 6, y + 2, 4, 2, col); r(c, x + 2, y + 2, 4, 2, col); }
     r(c, x - 1, y + 1, 1, 1, '#e2707a'); r(c, x + 1, y + 1, 1, 1, '#e2707a');
-  } else if (kind === 'skeleton') {
+  },
+  skeleton: ({ c, x, base, col, f }) => {
     r(c, x - 4, base - 1, 8, 1, 'rgba(0,0,0,.35)'); r(c, x - 3, base - 16, 6, 5, col); r(c, x - 2, base - 14, 1, 1, '#2b211a'); r(c, x + 1, base - 14, 1, 1, '#2b211a');
     r(c, x - 1, base - 11, 2, 6, col); [-4, -3, 2, 3].forEach((lx) => r(c, x + lx - 0.5, base - 10, 1, 1, col)); r(c, x - 3, base - 9, 6, 1, col);
     r(c, x - 2 - f, base - 5, 1, 5, col); r(c, x + 1 + f, base - 5, 1, 5, col);
-  } else if (kind === 'wraith') {   // v38: a sand wraith, wrapped and swaying
+  },
+  wraith: ({ c, x, base, col, t, f }) => {   // v38: a sand wraith, wrapped and swaying
     const sw = Math.round(Math.sin(t * 3));
     r(c, x - 4, base - 1, 8, 1, 'rgba(0,0,0,.35)'); r(c, x - 3 + sw, base - 16, 6, 6, col); r(c, x - 4, base - 10, 8, 9, col);
     for (let i = 0; i < 4; i++) r(c, x - 4, base - 14 + i * 3, 8, 1, 'rgba(0,0,0,.18)');
     r(c, x - 2 + sw, base - 13, 1, 1, '#e9862a'); r(c, x + 1 + sw, base - 13, 1, 1, '#e9862a'); r(c, x - 3 - f, base - 2, 2, 2, col); r(c, x + 1 + f, base - 2, 2, 2, col);
-  } else if (kind === 'rex') {   // v38: a scorch rex, a small winged lizard
+  },
+  rex: ({ c, x, base, col, t, f }) => {   // v38: a scorch rex, a small winged lizard
     const y = base - 13 + Math.round(Math.sin(t * 5) * 2);
     r(c, x - 4, base - 1, 8, 1, 'rgba(0,0,0,.25)'); r(c, x - 4, y, 9, 5, col); r(c, x + 4, y - 2, 4, 4, col); r(c, x + 6, y - 1, 1, 1, '#e9c46a');
     r(c, x - 7, y + 2, 3, 2, col); if (f) { r(c, x - 3, y - 4, 6, 3, '#e9862a'); } else { r(c, x - 3, y + 4, 6, 2, '#e9862a'); }
-  } else if (kind === 'sprite') {   // v39: a magma sprite, a flickering ember with wings
+  },
+  sprite: ({ c, x, base, col, hurt, t, f }) => {   // v39: a magma sprite, a flickering ember with wings
     const y = base - 14 + Math.round(Math.sin(t * 7) * 2);
     r(c, x - 3, base - 1, 6, 1, 'rgba(0,0,0,.25)'); r(c, x - 3, y, 6, 6, col); r(c, x - 2, y + 1, 4, 4, hurt ? '#ffffff' : '#ffd98a');
     if (f) { r(c, x - 7, y + 1, 4, 2, '#c8352f'); r(c, x + 3, y + 1, 4, 2, '#c8352f'); } else { r(c, x - 6, y + 3, 3, 2, '#c8352f'); r(c, x + 3, y + 3, 3, 2, '#c8352f'); }
-  } else if (kind === 'golem') {   // v39: an ember golem, a slow heap of basalt with a glowing core
+  },
+  golem: ({ c, x, base, col, hurt, f }) => {   // v39: an ember golem, a slow heap of basalt with a glowing core
     r(c, x - 6, base - 1, 12, 1, 'rgba(0,0,0,.35)'); r(c, x - 5, base - 15, 10, 13, col); r(c, x - 7, base - 12, 2, 6, col); r(c, x + 5, base - 12, 2, 6, col);
     r(c, x - 2, base - 10, 4, 3, hurt ? '#ffffff' : '#e9862a'); r(c, x - 3, base - 14, 2, 1, '#ffd98a'); r(c, x + 1, base - 14, 2, 1, '#ffd98a');
     r(c, x - 4 - f, base - 2, 3, 2, col); r(c, x + 1 + f, base - 2, 3, 2, col);
-  } else {   // serpent
+  },
+  serpent: ({ c, x, base, col, t }) => {
     const y = base - 12 + Math.round(Math.sin(t * 3) * 2);
     r(c, x - 4, base - 1, 8, 1, 'rgba(0,0,0,.25)');
     for (let i = 0; i < 5; i++) r(c, x - 8 + i * 3, y + Math.round(Math.sin(t * 6 + i) * 2), 4, 4, col);
     r(c, x + 7, y - 1, 4, 4, col); r(c, x + 9, y, 1, 1, '#e9c46a');
-  }
-}
+  },
+};
 
 // v265: kind: the slime's or a splitting slime's own bands (the moss slime's moss cap). Frames: resting, landing
 // (the last fifth of a hop), taking off (the first fifth), mid-hop.

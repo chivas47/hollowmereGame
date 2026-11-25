@@ -8,7 +8,7 @@ import { addUpdater, addInteraction, addEntities, addLayer } from '../core/regis
 import { MAPS, SOLID, sizeOf } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
 import { RARE_DROP, DROP_POOL, SPECIALS } from '../data/weapons.js';
-import { UNDEAD, MONSTERS, MONSTER_COUNT, CHARGE, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR, BUSY, ELITE, statsAt, statAt, kindsFor, hasTag, pickKind } from '../data/monsters.js';
+import { UNDEAD, MONSTERS, MONSTER_COUNT, CHARGE, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR, BUSY, ELITE, statsAt, statAt, kindsFor, hasTag, pickKind, noticeOf } from '../data/monsters.js';
 import { heard, MONSTER_SOUNDS } from '../data/audio.js';
 import { SAVAGE } from '../data/guild.js';
 import { CAVERN } from '../data/cavern.js';
@@ -29,7 +29,7 @@ import { playAnim, shake, holdSwing, ring, burst } from './animation.js';
 import { motion } from '../core/motion.js';
 import { r } from '../render/pixel.js';   // v260: the elite's ring
 
-const AGGRO = 110, HOP = 1.2, HOP_ACTIVE = 0.5, TOUCH = 11;
+const HOP = 1.2, HOP_ACTIVE = 0.5, TOUCH = 11;
 export const slimes = [];   // every monster on the map (named before v36, when there were only slimes); exported for tests
 let slimeMap = 'mine';     // the map the current slimes live on
 
@@ -181,8 +181,8 @@ function beetleTurn(m, d, vx, vy, dt) {
   m.bt -= dt;
   if (m.bs === 'sink') { if (m.bt <= 0) { m.bs = 'under'; m.bt = BURROW.rest + BURROW.under; } return true; }
   if (m.bs === 'under') {
-    if (d < AGGRO) underStep(m, vx, vy, m.speed * 2 * dt);
-    if (d < AGGRO && (d < BURROW.rise || m.bt <= 0)) { m.bs = 'rise'; m.bt = BURROW.tell; emit('monster:rise', { x: m.x, y: m.y, kind: m.kind }); }   // v346: the shake is heard
+    if (d < noticeOf(m.kind)) underStep(m, vx, vy, m.speed * 2 * dt);
+    if (d < noticeOf(m.kind) && (d < BURROW.rise || m.bt <= 0)) { m.bs = 'rise'; m.bt = BURROW.tell; emit('monster:rise', { x: m.x, y: m.y, kind: m.kind }); }   // v346: the shake is heard
     return true;
   }
   if (m.bt > 0) return true;
@@ -202,8 +202,8 @@ function burrowTurn(m, d, vx, vy, dt) {
   m.bt -= dt;
   if (m.bs === 'sink') { if (m.bt <= 0) { m.bs = 'under'; m.bt = BURROW.rest + BURROW.under; } return true; }
   if (m.bs === 'under') {
-    if (d < AGGRO) underStep(m, vx, vy, m.speed * dt);
-    if (d < AGGRO && (d < BURROW.rise || m.bt <= 0)) { m.bs = 'rise'; m.bt = BURROW.tell; emit('monster:rise', { x: m.x, y: m.y, kind: m.kind }); }   // v346: the shake is heard
+    if (d < noticeOf(m.kind)) underStep(m, vx, vy, m.speed * dt);
+    if (d < noticeOf(m.kind) && (d < BURROW.rise || m.bt <= 0)) { m.bs = 'rise'; m.bt = BURROW.tell; emit('monster:rise', { x: m.x, y: m.y, kind: m.kind }); }   // v346: the shake is heard
     return true;
   }
   if (m.bs === 'rise') { if (m.bt <= 0) { m.bs = 'up'; m.bt = BURROW.up; emit('monster:surface', { x: m.x, y: m.y, kind: m.kind }); } return true; }
@@ -227,7 +227,7 @@ function underStep(m, vx, vy, dist) {
 // to move, or null to wander as usual.
 export const shots = [];   // globs in flight: {x, y, vx, vy, t, dmg, color, back}
 function shootTurn(m, d, dx, dy, dt, f) {
-  if (d >= AGGRO) return null;
+  if (d >= noticeOf(m.kind)) return null;
   m.face = dx < 0;
   m.st -= dt;
   if (m.aim) {
@@ -308,7 +308,7 @@ addUpdater((dt) => {
     const f = farmers.reduce((a, b) => (Math.hypot(b.x - m.x, b.y - m.y) < Math.hypot(a.x - m.x, a.y - m.y) ? b : a));
     const dx = f.x - m.x, dy = f.y - m.y, d = Math.hypot(dx, dy);
     let vx = 0, vy = 0;
-    if (d < AGGRO) { if (d > 1) { vx = dx / d; vy = dy / d; } }
+    if (d < noticeOf(m.kind)) { if (d > 1) { vx = dx / d; vy = dy / d; } }
     else {
       const wx = m.tx - m.x, wy = m.ty - m.y, wd = Math.hypot(wx, wy);
       if (wd < 2) { m.tx = m.x + (Math.random() - 0.5) * 64; m.ty = m.y + (Math.random() - 0.5) * 64; }
@@ -321,8 +321,8 @@ addUpdater((dt) => {
     }
     if (move === 'burrow' && burrowTurn(m, d, vx, vy, dt)) continue;   // v253: under the floor, nothing touches
     if (MONSTERS[m.kind || 'slime'].burrow && beetleTurn(m, d, vx, vy, dt)) continue;   // v266: the burrow beetle
-    if (move === 'phase') { m.pt -= dt; if (m.pt <= 0) { m.ph = m.ph === 'faint' ? 'solid' : 'faint'; m.pt = PHASE[m.ph]; if (d < AGGRO) emit('monster:phase', { x: m.x, y: m.y, kind: m.kind }); } }   // v257 (v346: heard when near)
-    if (d < AGGRO && !m.alerted && !untouchable(m)) { m.alerted = true; cry(`${MONSTERS[m.kind].voice}Alert`, m.x, m.y); }   // v346: it notices you
+    if (move === 'phase') { m.pt -= dt; if (m.pt <= 0) { m.ph = m.ph === 'faint' ? 'solid' : 'faint'; m.pt = PHASE[m.ph]; if (d < noticeOf(m.kind)) emit('monster:phase', { x: m.x, y: m.y, kind: m.kind }); } }   // v257 (v346: heard when near)
+    if (d < noticeOf(m.kind) && !m.alerted && !untouchable(m)) { m.alerted = true; cry(`${MONSTERS[m.kind].voice}Alert`, m.x, m.y); }   // v346: it notices you
     if (move === 'burrow') { /* up: it stands its ground */ }
     else if (move === 'charge' && chargeTurn(m, d, dx, dy, dt)) { /* v228: the charger moved itself */ }
     else if (move === 'hop' || move === 'split') { if (active) step(m, vx, vy, m.speed * 1.6 * dt); }   // v256: splitters hop
