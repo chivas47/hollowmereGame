@@ -70,7 +70,12 @@ test('undead is a tag on the kind', () => {
 // v346: spawn weights (v352: set by role; kinds left at 1 still draw evenly among themselves).
 test('spawn weights: a weighted draw, per zone, and even when every weight is 1', async () => {
   const { pickKind, spawnShare, weightIn } = await import('../src/data/monsters.js');
-  for (const k of KINDS) { const w = MONSTERS[k].weight; assert.ok(w === undefined || typeof w === 'number' ? !(w < 0) : Object.keys(w).every((z) => ZONES.includes(z) && w[z] >= 0), `${k}: weight`); }
+  // v353: a weight is a number, bands by depth [[from, w], ...] rising, or either per zone.
+  const okOne = (v) => (typeof v === 'number' ? v >= 0 : Array.isArray(v) && v.length > 0 && v.every(([f, x], i) => f >= 1 && x >= 0 && (!i || f > v[i - 1][0])));
+  for (const k of KINDS) {
+    const w = MONSTERS[k].weight;
+    assert.ok(w === undefined || okOne(w) || (typeof w === 'object' && !Array.isArray(w) && Object.entries(w).every(([z, v]) => ZONES.includes(z) && okOne(v))), `${k}: weight`);
+  }
   const kinds = ['slime', 'mite', 'bat', 'skeleton'];   // all weight 1
   for (let i = 0; i < kinds.length; i++) assert.equal(pickKind(kinds, 'hollow', () => (i + 0.5) / kinds.length), kinds[i], 'weight 1: the even draw');
   const share = spawnShare('hollow', 60);
@@ -105,4 +110,23 @@ test('tuning: swarms are a fair share of bodies, early floors are not half mimic
     if (d.move === 'charge') assert.ok(noticeOf(k) > CHARGE.range, `${k} comes for you before it charges`);
     if (d.move === 'burrow') assert.ok(noticeOf(k) > BURROW.rise, `${k} tracks you before it rises`);
   }
+});
+
+// v353: weights in bands by depth: common early, rare deep (or the other way), floor by floor of its own zone.
+test('weights in bands by depth follow the floor of their zone', async () => {
+  const { weightIn, spawnShare, pickKind } = await import('../src/data/monsters.js');
+  const was = MONSTERS.slime.weight;
+  try {
+    MONSTERS.slime.weight = { hollow: [[1, 3], [30, 1], [60, 0.5]] };
+    assert.equal(weightIn('slime', 'hollow', 1), 3); assert.equal(weightIn('slime', 'hollow', 29), 3);
+    assert.equal(weightIn('slime', 'hollow', 30), 1); assert.equal(weightIn('slime', 'hollow', 59), 1);
+    assert.equal(weightIn('slime', 'hollow', 60), 0.5); assert.equal(weightIn('slime', 'hollow', 150), 0.5);
+    assert.equal(weightIn('slime', 'cavern', 5), 1, 'a zone without bands is untouched');
+    assert.ok(spawnShare('hollow', 1).slime > spawnShare('hollow', 90).slime, 'commoner early than deep');
+    assert.equal(pickKind(['slime', 'mite'], 'hollow', () => 0.7, 1), 'slime', 'floor 1: 3 to 1');
+    assert.equal(pickKind(['slime', 'mite'], 'hollow', () => 0.7, 90), 'mite', 'floor 90: 0.5 to 1');
+    MONSTERS.slime.weight = [[5, 2]];
+    assert.equal(weightIn('slime', 'hollow', 1), 2, 'above the first band: the first band');
+    assert.equal(weightIn('slime', 'vent', 9), 2, 'bands without a zone apply everywhere');
+  } finally { if (was === undefined) delete MONSTERS.slime.weight; else MONSTERS.slime.weight = was; }
 });
