@@ -78,3 +78,21 @@ test('the gourd lurker sleeps as a pumpkin, other mimics as a rock', () => {
 test('the firefly moth glows', () => {
   assert.ok(SHEET.layers.includes('moth.glow') && SHEET.kinds.moth.glow && SHEET.kinds.moth.halo);
 });
+
+// v349: until the sheet loads (or if it never does) every creature is drawn in code, by the drawing its sheet entry
+// names (`code`); before, a list in render/sprites.js named some and the crag shellback's pointed nowhere and threw.
+test('every creature and mimic disguise names a code drawing that exists, and draws without the sheet', async () => {
+  globalThis.performance ??= { now: () => 0 };
+  const { CODE_ART, drawMonster } = await import('../src/render/sprites.js');
+  const sleeps = Object.values(SHEET.kinds).map((k) => k.sleep).filter(Boolean);
+  for (const k of [...Object.keys(MONSTERS), ...sleeps]) {
+    assert.ok(SHEET.kinds[k], `${k} has a sheet entry`);
+    assert.ok(CODE_ART[SHEET.kinds[k].code], `${k}: code drawing ${SHEET.kinds[k].code}`);
+  }
+  const drawn = [], c = new Proxy({}, { get: (t, p) => (p in t ? t[p] : (...a) => { if (p === 'fillRect') drawn.push(a); }), set: (t, p, v) => { t[p] = v; return true; } });
+  for (const k of Object.keys(MONSTERS)) {
+    drawn.length = 0;
+    assert.doesNotThrow(() => drawMonster(c, 50, 50, k, '#808080', false, 0.3), k);
+    assert.ok(drawn.length > 0, `${k} draws something`);
+  }
+});
