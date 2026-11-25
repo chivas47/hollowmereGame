@@ -4,7 +4,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { G } from '../src/core/game.js';
-import { MONSTERS } from '../src/data/weapons.js';
+import { MONSTERS } from '../src/data/monsters.js';
 import { ITEMS } from '../src/data/items.js';
 import { ITEM_KIND } from '../src/data/bag.js';
 import { LOOT, LOOT_ITEMS, rollLoot, lootPerDefeat } from '../src/data/loot.js';

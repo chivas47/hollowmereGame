@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { G } from '../src/core/game.js';
 import { on } from '../src/core/events.js';
-import { MONSTERS } from '../src/data/weapons.js';
+import { MONSTERS } from '../src/data/monsters.js';
 import { MATERIAL, MATERIALS } from '../src/data/animation.js';
 import { slimes, spawnSlimes, hitMonster } from '../src/systems/monsters.js';
 import { placePlayer } from '../src/systems/world.js';

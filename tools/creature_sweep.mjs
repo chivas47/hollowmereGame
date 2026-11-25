@@ -33,7 +33,7 @@ const server = createServer(async (req, res) => {
 await new Promise((ok) => server.listen(0, '127.0.0.1', ok));
 const BASE = `http://127.0.0.1:${server.address().port}/`;
 
-const { MONSTERS } = await import(join(ROOT, 'src/data/weapons.js'));
+const { MONSTERS } = await import(join(ROOT, 'src/data/monsters.js'));
 const { BESTIARY_ORDER } = await import(join(ROOT, 'src/data/bestiary.js'));
 const KINDS = BESTIARY_ORDER.filter((k) => !ONLY.length || ONLY.includes(k));
 const STATES = ['standing', 'tell', 'hurt', 'falling'];
@@ -67,12 +67,12 @@ async function stage(kind, state) {
     const { G } = await import('/src/core/game.js');
     const { T } = await import('/src/core/constants.js');
     const { MAPS, SOLID } = await import('/src/data/maps.js');
-    const { MONSTERS } = await import('/src/data/weapons.js');
+    const { MONSTERS } = await import('/src/data/monsters.js');
     const { enterMine } = await import('/src/systems/mine.js');
     const { slimes, hitMonster } = await import('/src/systems/monsters.js');
     const { views } = await import('/src/render/views.js');
     const d = MONSTERS[kind];
-    const zone = d.cavernOnly ? 'cavern' : d.ventOnly ? 'vent' : 'hollow';
+    const zone = ['hollow', 'cavern', 'vent'].find((z) => d.zones.includes(z)) || 'hollow';
     G.S.hp = G.S.maxHp = 99999; G.S.brazier = false;
     enterMine(zone === 'hollow' ? Math.max(1, d.from || 1, Math.min(d.to || 999, (d.from || 1) + 2)) : 3, zone);
     const g = MAPS.mine.grid;

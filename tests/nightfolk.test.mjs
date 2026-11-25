@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { G } from '../src/core/game.js';
 import { runUpdaters } from '../src/core/registry.js';
-import { MONSTERS, NIGHTFOLK } from '../src/data/weapons.js';
+import { MONSTERS, NIGHTFOLK, livesIn } from '../src/data/monsters.js';
 import { SEASONS, SEASON_LENGTH } from '../src/data/seasons.js';
 import { GOALS } from '../src/data/guild.js';
 import { whereLives } from '../src/data/bestiary.js';
@@ -15,7 +15,7 @@ import { enterMine, leaveMine } from '../src/systems/mine.js';
 import { placePlayer } from '../src/systems/world.js';
 import { freshFarm } from './setup.mjs';
 
-const NIGHT = Object.keys(MONSTERS).filter((k) => MONSTERS[k].surfaceOnly);
+const NIGHT = Object.keys(MONSTERS).filter((k) => livesIn(k, 'night'));
 
 test('one kind a season, each in the night goal, each with a card line', () => {
   assert.deepEqual(SEASONS.map((s) => nightKind(s)).sort(), [...NIGHT].sort());

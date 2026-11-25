@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { G } from '../src/core/game.js';
 import { runUpdaters } from '../src/core/registry.js';
 import { HOTBAR } from '../src/data/hotbar.js';
-import { MONSTERS, CHARGE, BURROW } from '../src/data/weapons.js';
+import { MONSTERS, CHARGE, BURROW, statAt } from '../src/data/monsters.js';
 import { slimes, spawnSlimes, hitMonster, untouchable } from '../src/systems/monsters.js';
 import { resetSpecials } from '../src/systems/specials.js';
 import { placePlayer } from '../src/systems/world.js';
@@ -23,7 +23,7 @@ function one(kind, gap = 50, extra = {}) {
   slimes.length = 1;
   const m = slimes[0], d = MONSTERS[kind];
   for (const f of ['cs', 'bs', 'bt', 'hidden']) delete m[f];
-  Object.assign(m, { kind, hp: 1000, dmg: d.dmg(10), speed: d.speed(10), x: G.S.x + gap, y: G.S.y, kx: 0, ky: 0, frozen: 0, rest: 0, ...extra });
+  Object.assign(m, { kind, hp: 1000, dmg: statAt(kind, 'dmg', 10), speed: statAt(kind, 'speed', 10), x: G.S.x + gap, y: G.S.y, kx: 0, ky: 0, frozen: 0, rest: 0, ...extra });
   return m;
 }
 
@@ -41,8 +41,8 @@ test('a rush bends toward you, but no faster than the turn rate', () => {
 test('chargers have twice the health they had', () => {
   assert.equal(CHARGE.tough, 2);
   const before = { beetle: (f) => 4 + Math.floor(f / 4), boar: (f) => 8 + Math.floor(f / 3), magmaram: (f) => 70 + Math.floor(f / 2) };
-  for (const [k, hp] of Object.entries(before)) for (const f of [6, 40, 120]) assert.equal(MONSTERS[k].hp(f), 2 * hp(f), `${k} on floor ${f}`);
-  for (const k of CHARGERS) assert.ok(MONSTERS[k].hp(50) >= 2 * 4, k);
+  for (const [k, hp] of Object.entries(before)) for (const f of [6, 40, 120]) assert.equal(statAt(k, 'hp', f), 2 * hp(f), `${k} on floor ${f}`);
+  for (const k of CHARGERS) assert.ok(statAt(k, 'hp', 50) >= 2 * 4, k);
 });
 
 test('the burrow beetle starts under the floor, slides after you untouchable, rises and charges at once', () => {

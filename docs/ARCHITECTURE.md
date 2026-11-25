@@ -72,7 +72,8 @@ src/
     hidden.js         GATES (grove log, railway rubble, sewer key), GROVE stumps, SPRING, TRADER stock (v45)
     cavern.js         CAVERN (the Sunken Cavern's door, strength, ores, shafts, chests), HOLLOW_GOLD (v38)
     guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
-    loot.js           v250 (roadmap 85a): LOOT tables per monster kind, LOOT_ITEMS (the six monster materials), rollLoot(), lootPerDefeat()
+    monsters.js       v345: MONSTERS, every creature in one entry (name, zones, Hollow floors, move, plain-number hp/dmg/speed, xp, colours, loot, undead); statAt()/statsAt(), livesIn(), kindsFor(zone, floor) (the spawn list), kindsIn(); how each move works (CHARGE, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR); NIGHTFOLK, MONSTER_COUNT, BUSY, ELITE, UNDEAD
+    loot.js           v250 (roadmap 85a): LOOT_ITEMS (the six monster materials), LOOT (v345: each kind's loot rows, read from data/monsters.js), rollLoot(), lootPerDefeat()
     bestiary.js       v252 (roadmap 85c): HOW each way of moving fights, whereLives(kind), BESTIARY_ORDER
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item, underSky()
     atmosphere.js     LIGHT keyframes, WATERFALLS, WILDLIFE, AMBIENCE by area (v72); indoor LIGHTS, HOUSE_WINDOWS, CRACKLE_RANGE (v100); WATER (v102); WIND, CLOTHESLINES (v103); SEASONAL, SEASONAL_MAX (v104); STEPS, STEP_EVERY, HOOF_EVERY (v109); NIGHT_LIGHTS (v105)
@@ -290,11 +291,13 @@ tools/
   release.mjs         v233: dist/hollowmere-itch.zip for itch.io: only the game's files, index.html at the root, itch's limits checked
   render_audio.mjs    v317: records the generated sounds into assets/audio/ (v342: a pool's first file only)
   audio_list.mjs      v342: every sound slot and its files (ok, missing, not listed); --readme writes assets/audio/README.md's tables
+  monster_stats.mjs   v345: every creature's stats on sample floors, XP and drops per defeat; --fixture rewrites tests/fixtures/monster-stats.json after an intended stat change
   check_interiors.mjs v97: checks every cottage (v98: and building) floor plan (size, rectangles, wall pieces on a wall face, every tile and piece reachable from the door, the owner's spot); run by CI
   sprites/          v82: scripts that build the placeholder sheets in assets/sprites/ (see its README.md)
 tests/                v117: unit tests, node --test 'tests/*.test.mjs' (run by CI)
   setup.mjs           freshFarm() (a new G.S) and withRolls() (fixed Math.random rolls)
   *.test.mjs          one file per area: state, saves (old saves and storage), time, quality, economy
+  fixtures/           v345: monster-stats.json, the creatures' stats the tests hold them to (tools/monster_stats.mjs --fixture)
   saves/              v118: real saves from v15, v50, v90 and v117, made by each version's own simulator
 ```
 
@@ -571,6 +574,7 @@ Soil is per map: `soilOf(mapId)` returns `G.S.soil` (farm) or `G.S.greenSoil` (g
 
 - **Crop:** entry in `data/crops.js` (add `regrow`, `yield` or `packet` as needed). `CROPS` is everything plantable; `PRODUCE` is the crops that are items (no seed packets): use `PRODUCE` for anything about items.
 - **Fish:** entry in `data/fish.js`.
+- **Creature (v345):** one entry in `data/monsters.js` MONSTERS: `zones` (and `from`/`to` for the Hollow), `move`, stats as numbers or `[base, every, cap]`, `xp`, `loot` rows, `color`. Spawns, the Bestiary and the drops read it from there; add its art in `data/sprites.js` MONSTERS.kinds and a `MATERIAL` (data/animation.js). Run `node tools/monster_stats.mjs --fixture` so the stats test knows the new kind. A balance patch is an edit of the numbers plus the same command; the fixture's diff shows what changed.
 - **Forage:** entry in `data/forage.js` plus art in `FORAGE_ART` (render/sprites.js).
 - **Neighbour:** entry in `data/npcs.js` (farm path), a home in `data/homes.js` and, for a cottage, a floor plan in `data/interiors.js` (the `home_<id>` inside is built from it; run `node tools/check_interiors.mjs`), a routine in `data/schedules.js` and scenes in `data/scenes.js`. Routine spots are only the places that matter: neighbours find their own way around anything solid and from map to map (systems/routes.js); a spot may be a solid counter they stand behind.
 - **Upgrade tier:** append to a line in `data/upgrades.js`; read effects with `tier(G.S, 'line')`.

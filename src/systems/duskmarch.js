@@ -11,7 +11,7 @@ import { addUpdater, addInteraction, addLayer } from '../core/registry.js';
 import { motion } from '../core/motion.js';
 import { drawMood } from '../render/dusk.js';
 import { MAPS, sizeOf } from '../data/maps.js';
-import { MONSTERS } from '../data/weapons.js';
+import { MONSTERS } from '../data/monsters.js';
 import { WEED, DUSK_MAPS, DUSK_CREATURES, NIGHT, WEED_DROPS } from '../data/duskmarch.js';
 import { spawnSlimes, slimes, monstersOn } from './monsters.js';
 import { addItem } from './quality.js';

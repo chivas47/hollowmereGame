@@ -5,10 +5,10 @@ import { G } from '../core/game.js';
 import { on, notify } from '../core/events.js';
 import { addUpdater } from '../core/registry.js';
 import { today } from '../core/time.js';
-import { MONSTERS, NIGHTFOLK } from '../data/weapons.js';
+import { MONSTERS, NIGHTFOLK, kindsIn } from '../data/monsters.js';
 import { spawnSlimes } from './monsters.js';
 
-export const nightKind = (season = today().season) => Object.keys(MONSTERS).find((k) => MONSTERS[k].surfaceOnly && MONSTERS[k].season === season);
+export const nightKind = (season = today().season) => kindsIn('night').find((k) => MONSTERS[k].season === season);
 const nights = {};   // map -> the day its creatures last came out
 addUpdater(() => {
   const S = G.S, map = S?.map;

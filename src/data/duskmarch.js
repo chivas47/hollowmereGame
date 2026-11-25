@@ -201,7 +201,7 @@ export function mournfieldGrid() {
   return m;
 }
 
-// The woods' and graveyard's creatures (data/weapons.js MONSTERS, wildOnly). day: out at any hour, made each time you
+// The woods' and graveyard's creatures (data/monsters.js MONSTERS, zone duskmarch). day: out at any hour, made each time you
 // come in (Zelda's way: they are back when you return); night: from NIGHT.from in Mournfield, a few at first and
 // more rising every NIGHT.every game minutes up to NIGHT.max. Counts are bodies (a swarm's pack counts each).
 export const DUSK_CREATURES = {

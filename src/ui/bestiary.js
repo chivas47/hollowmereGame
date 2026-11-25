@@ -2,7 +2,7 @@
 // you have defeated, its slaying goal and its drops (each shown once it has dropped for you). Kinds not yet met
 // show as "???" and count toward the "still to meet" line.
 import { G } from '../core/game.js';
-import { MONSTERS } from '../data/weapons.js';
+import { MONSTERS } from '../data/monsters.js';
 import { SLIME } from '../data/minerals.js';
 import { ITEMS } from '../data/items.js';
 import { GOALS } from '../data/guild.js';

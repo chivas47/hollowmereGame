@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { G } from '../src/core/game.js';
 import { merge } from '../src/core/state.js';
-import { MONSTERS, ELITE } from '../src/data/weapons.js';
+import { MONSTERS, ELITE, statAt } from '../src/data/monsters.js';
 import { enterMine, leaveMine } from '../src/systems/mine.js';
 import { slimes, hitMonster } from '../src/systems/monsters.js';
 import { setBrazier } from '../src/systems/guild.js';
@@ -12,7 +12,7 @@ import '../src/systems/bestiary.js';
 import { freshFarm } from './setup.mjs';
 
 const spawned = (floors) => { const out = []; for (let d = 1; d <= 8; d++) for (const f of floors) { G.S.day = d; enterMine(f); out.push(...slimes.map((m) => ({ ...m }))); } return out; };
-const base = (m) => MONSTERS[m.kind].hp(m.floor);
+const base = (m) => statAt(m.kind, 'hp', m.floor);
 
 test('cold, the brazier changes nothing', () => {
   freshFarm();

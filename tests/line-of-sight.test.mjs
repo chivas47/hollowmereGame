@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { G } from '../src/core/game.js';
 import { T } from '../src/core/constants.js';
 import { MAPS, SOLID } from '../src/data/maps.js';
-import { MONSTERS, BURROW } from '../src/data/weapons.js';
+import { MONSTERS, BURROW } from '../src/data/monsters.js';
 import { slimes, spawnSlimes, strikeArea, hitMonster, inSight } from '../src/systems/monsters.js';
 import { placePlayer } from '../src/systems/world.js';
 import { freshFarm } from './setup.mjs';

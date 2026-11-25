@@ -822,7 +822,7 @@ Slot 5 (no hotbar change) swings the weapon chosen in the bag. Damage is Stardew
   | Umbrite band (combat 9) | 5 umbrite bars, 50 sunmote, 50 gloommote | a ring: the ember and glow rings at once (1,000g) | iridium band |
 
   Wisp silk has no use yet; it comes with the lantern wisp (85f). Chitin, leatherwing and bone shards are universally disliked as gifts, like gel and ore.
-- v228 chargers (data/weapons.js CHARGE, systems/monsters.js chargeTurn). Within 72 px and rested, a charger stops and winds up (it flashes and shakes: the tell), aiming at you until it goes; then it rushes in a straight line, hurting 1.5 times as much on contact; then it stands winded, open to hits. One that runs into a wall or a rock, or into your sword's block, stands dazed (stars over it) for longer. Between charges it walks after you and rests 2 s. Two rush twice in a row, the second wind-up shorter.
+- v228 chargers (data/monsters.js CHARGE, systems/monsters.js chargeTurn). Within 72 px and rested, a charger stops and winds up (it flashes and shakes: the tell), aiming at you until it goes; then it rushes in a straight line, hurting 1.5 times as much on contact; then it stands winded, open to hits. One that runs into a wall or a rock, or into your sword's block, stands dazed (stars over it) for longer. Between charges it walks after you and rests 2 s. Two rush twice in a row, the second wind-up shorter.
 
   | Charger | Where | Health | Damage | Wind-up, rush, length | Winded / dazed | XP |
   |---|---|---|---|---|---|---|
@@ -844,7 +844,7 @@ Slot 5 (no hotbar change) swings the weapon chosen in the bag. Damage is Stardew
 
 ### Mimics, burrowers and swarms (v253, roadmap 85d1)
 
-Three new ways to fight (data/weapons.js MIMIC, BURROW; systems/monsters.js), Stardew's by role, each with a kind of its own. `to` keeps a kind to a band of floors, as Stardew's rock crabs, duggies and dust sprites keep to theirs.
+Three new ways to fight (data/monsters.js MIMIC, BURROW; systems/monsters.js), Stardew's by role, each with a kind of its own. `to` keeps a kind to a band of floors, as Stardew's rock crabs, duggies and dust sprites keep to theirs.
 
 | Kind | Floors | Way | Health | Damage | XP | Loot | Stardew counterpart |
 |---|---|---|---|---|---|---|---|
@@ -867,7 +867,7 @@ Three new ways to fight (data/weapons.js MIMIC, BURROW; systems/monsters.js), St
 
 ### Spitters (v255, roadmap 85e1)
 
-Shooters (data/weapons.js SHOOT, systems/monsters.js shootTurn), Stardew's shooting mages and squid kids by role. A spitter keeps 48 to 96 px from you, backing off when you close in. Every 2.4 s it glows for 0.45 s (the tell), then spits a glob at you: 95 px/s, gone after 2 s or at the first wall or rock, hurting as the spitter's own damage. Step aside, or block with the sword: a blocked glob goes back the way it came and hits the first monster it reaches for three quarters of its damage.
+Shooters (data/monsters.js SHOOT, systems/monsters.js shootTurn), Stardew's shooting mages and squid kids by role. A spitter keeps 48 to 96 px from you, backing off when you close in. Every 2.4 s it glows for 0.45 s (the tell), then spits a glob at you: 95 px/s, gone after 2 s or at the first wall or rock, hurting as the spitter's own damage. Step aside, or block with the sword: a blocked glob goes back the way it came and hits the first monster it reaches for three quarters of its damage.
 
 | Kind | Where | Health | Damage | XP | Loot |
 |---|---|---|---|---|---|
@@ -879,7 +879,7 @@ One shape, tinted per kind; its mouth glows the colour of its globs. The roadmap
 
 ### Splitting slimes (v256, roadmap 85e2)
 
-Stardew's big slimes by role (data/weapons.js SPLIT). A big one hops like a slime and is drawn half again as big. When it falls it splits into 2 small ones of its kind with 40% of its health and half its XP each, which do not split again. Every piece rolls its own loot and counts toward the lodge and the Bestiary.
+Stardew's big slimes by role (data/monsters.js SPLIT). A big one hops like a slime and is drawn half again as big. When it falls it splits into 2 small ones of its kind with 40% of its health and half its XP each, which do not split again. Every piece rolls its own loot and counts toward the lodge and the Bestiary.
 
 | Kind | Where | Health (whole) | Damage | XP (whole / piece) | Loot (each) |
 |---|---|---|---|---|---|
@@ -890,7 +890,7 @@ They use the slime's bands in their own colours. The sketch gave the moss slime 
 
 ### Phasers and the armored (v257, roadmap 85f)
 
-The last two ways to fight from the creatures plan (data/weapons.js PHASE, ARMOR):
+The last two ways to fight from the creatures plan (data/monsters.js PHASE, ARMOR):
 
 - Phase (Stardew's ghosts): drifts over walls and rocks, 2.2 s solid then 1.6 s faded. Faded, it can neither hurt you nor be hurt; it flickers in the last 0.4 s before it changes.
 - Armored (Stardew's armored bug): swords and daggers do a quarter of their damage and push it a quarter as far (Nuno's rule); clubs, bombs, the blast ring and globs sent back do it all. A blade's hit clangs.
@@ -921,7 +921,7 @@ One goal for each way of fighting added in 85d to 85f, each counting every kind 
 
 ### Busy floors (v259, roadmap 85h)
 
-Stardew's infested floors by role (data/weapons.js BUSY). From Hollow floor 10, any floor that is not a fifth (the lift's stops stay safe) is busy one time in 15. A busy floor holds 2.5 times the usual count, up to 18 creatures, all of one kind drawn from that floor's own (a pack still comes as a pack). No rock hides its ladder: when the last creature is down, a ladder opens on open floor near the middle. A notice says so on arrival. Only the Hollow has them for now; the Sunken Cavern, Ember Vent and Smoke Peak are unchanged.
+Stardew's infested floors by role (data/monsters.js BUSY). From Hollow floor 10, any floor that is not a fifth (the lift's stops stay safe) is busy one time in 15. A busy floor holds 2.5 times the usual count, up to 18 creatures, all of one kind drawn from that floor's own (a pack still comes as a pack). No rock hides its ladder: when the last creature is down, a ladder opens on open floor near the middle. A notice says so on arrival. Only the Hollow has them for now; the Sunken Cavern, Ember Vent and Smoke Peak are unchanged.
 
 ### The challenge brazier and elites (v260, roadmap 85i)
 

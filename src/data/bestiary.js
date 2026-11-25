@@ -1,6 +1,6 @@
 // Roadmap 85c: the Bestiary, the journal's Creatures tab. Where each monster lives and how to fight it, worked out
-// from its data (data/weapons.js MONSTERS) so a new kind gets a card without a new entry here.
-import { MONSTERS } from './weapons.js';
+// from its data (data/monsters.js MONSTERS) so a new kind gets a card without a new entry here.
+import { MONSTERS } from './monsters.js';
 
 // How each way of moving fights, and what to do about it. One plain line each.
 export const HOW = {
@@ -19,20 +19,24 @@ export const HOW = {
   shoot: 'Keeps its distance and spits a glob at you after a short glow. Step aside, or block with the sword to send it back.',
 };
 
-// Where a kind turns up, in words: the same rules as the spawns in systems/monsters.js.
+// Where a kind turns up, in words, from its zones (the same list the spawns read). The night creatures and the
+// Duskmarch's have a sentence of their own; the others list their places.
+const PLACES = {
+  hollow: (d) => (d.to ? `the Hollow, floors ${d.from} to ${d.to}` : d.from > 1 ? `the Hollow from floor ${d.from}` : 'the Hollow'),
+  cavern: () => 'the Sunken Cavern',
+  vent: () => ['the Ember Vent', 'Smoke Peak'],
+  wildfarm: () => 'the wild farm after dark',
+};
 export function whereLives(kind) {
-  const d = MONSTERS[kind], out = [];
+  const d = MONSTERS[kind];
   if (d.lives) return d.lives;   // v303: the Duskmarch's creatures
-  if (d.surfaceOnly) return `Comes out after dark in the Wilds and on the farms, on ${d.season.toLowerCase()} nights.`;   // v261
-  if (!d.cavernOnly && !d.ventOnly) out.push(d.to ? `the Hollow, floors ${d.from} to ${d.to}` : d.from > 1 ? `the Hollow from floor ${d.from}` : 'the Hollow');   // v253: to
-  if (d.cavern || d.cavernOnly) out.push('the Sunken Cavern');
-  if (d.vent || d.ventOnly) out.push('the Ember Vent', 'Smoke Peak');
-  if (kind === 'slime') out.push('the wild farm after dark');
+  if (d.zones.includes('night')) return `Comes out after dark in the Wilds and on the farms, on ${d.season.toLowerCase()} nights.`;   // v261
+  const out = d.zones.flatMap((z) => PLACES[z]?.(d) ?? []);
   return `Lives in ${out.length > 1 ? `${out.slice(0, -1).join(', ')} and ${out[out.length - 1]}` : out[0]}.`;
 }
 
-// The Bestiary's order: the Hollow's kinds by the floor they start on, then the Cavern's, then the Vent's.
-export const BESTIARY_ORDER = Object.keys(MONSTERS).sort((a, b) => {
-  const rank = (k) => (MONSTERS[k].wildOnly ? 4 : MONSTERS[k].surfaceOnly ? 3 : MONSTERS[k].ventOnly ? 2 : MONSTERS[k].cavernOnly ? 1 : 0);   // v261: the night creatures last
-  return rank(a) - rank(b) || MONSTERS[a].from - MONSTERS[b].from;
-});
+// The Bestiary's order: by home zone (the first of ZONES a kind lives in: the Hollow's, then the Cavern's, the Vent's,
+// the night creatures, the Duskmarch's), the Hollow's by the floor they start on.
+const RANK = { hollow: 0, cavern: 1, vent: 2, wildfarm: 0, night: 3, duskmarch: 4 };
+const rank = (k) => Math.min(...MONSTERS[k].zones.map((z) => RANK[z]));
+export const BESTIARY_ORDER = Object.keys(MONSTERS).sort((a, b) => rank(a) - rank(b) || (MONSTERS[a].from ?? 0) - (MONSTERS[b].from ?? 0));

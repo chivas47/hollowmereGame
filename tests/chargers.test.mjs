@@ -7,7 +7,8 @@ import { G } from '../src/core/game.js';
 import { T } from '../src/core/constants.js';
 import { runUpdaters } from '../src/core/registry.js';
 import { HOTBAR } from '../src/data/hotbar.js';
-import { MONSTERS, CHARGE } from '../src/data/weapons.js';
+import { MONSTERS, CHARGE, livesIn, statAt, kindsFor } from '../src/data/monsters.js';
+const isOnly = (k, zone) => String(MONSTERS[k].zones) === zone;   // lives there and nowhere else
 import { MONSTERS as SHEET } from '../src/data/sprites.js';
 import { ITEMS } from '../src/data/items.js';
 import { LOOT } from '../src/data/loot.js';
@@ -16,7 +17,7 @@ import { special, resetSpecials } from '../src/systems/specials.js';
 import { placePlayer } from '../src/systems/world.js';
 import { freshFarm } from './setup.mjs';
 
-const CHARGERS = Object.keys(MONSTERS).filter((k) => MONSTERS[k].move === 'charge' && !MONSTERS[k].wildOnly);   // v303: the dungeons' chargers (the Duskmarch's bristle hog has no Guild goal yet)
+const CHARGERS = Object.keys(MONSTERS).filter((k) => MONSTERS[k].move === 'charge' && !livesIn(k, 'duskmarch'));   // v303: the dungeons' chargers (the Duskmarch's bristle hog has no Guild goal yet)
 const tick = (s, dt = 0.02) => { for (let t = 0; t < s; t += dt) runUpdaters(dt); };
 
 // One charger of a kind on open farm grass, `gap` px to your right, at full health and away from walls.
@@ -26,17 +27,17 @@ function face(kind, gap = 40) {
   placePlayer('farm', 6, 9, 'right');
   spawnSlimes('farm', 1);
   const m = slimes[0], d = MONSTERS[kind];
-  Object.assign(m, { kind, hp: 1000, dmg: d.dmg(10), speed: d.speed(10), x: G.S.x + gap, y: G.S.y, kx: 0, ky: 0, frozen: 0, cs: undefined, rest: 0 });
+  Object.assign(m, { kind, hp: 1000, dmg: statAt(kind, 'dmg', 10), speed: statAt(kind, 'speed', 10), x: G.S.x + gap, y: G.S.y, kx: 0, ky: 0, frozen: 0, cs: undefined, rest: 0 });
   return m;
 }
 
 test('eight chargers, two to four per zone, each drawn and dropping a real item', () => {
   assert.equal(CHARGERS.length, 8);
-  const hollow = CHARGERS.filter((k) => !MONSTERS[k].cavernOnly && !MONSTERS[k].ventOnly);
+  const hollow = CHARGERS.filter((k) => livesIn(k, 'hollow'));
   assert.equal(hollow.length, 4);
   assert.ok(hollow.some((k) => MONSTERS[k].from < 30) && hollow.some((k) => MONSTERS[k].from >= 30), 'shallow and deep');
-  assert.equal(CHARGERS.filter((k) => MONSTERS[k].cavernOnly).length, 2);
-  assert.equal(CHARGERS.filter((k) => MONSTERS[k].ventOnly).length, 2);
+  assert.equal(CHARGERS.filter((k) => isOnly(k, 'cavern')).length, 2);
+  assert.equal(CHARGERS.filter((k) => isOnly(k, 'vent')).length, 2);
   for (const k of CHARGERS) {
     const s = SHEET.kinds[k];
     const shape = s?.shape || k;   // v268: the deep chargers have shapes of their own
@@ -112,10 +113,7 @@ test('double chargers rush twice before they rest', () => {
 });
 
 test('they appear on their floors and zones', () => {
-  const kinds = (zone, floor) => {
-    const D = MONSTERS, vent = zone === 'vent' || zone === 'peak', cav = zone === 'cavern';
-    return Object.keys(D).filter((k) => (vent ? D[k].vent || D[k].ventOnly : cav ? D[k].cavern || D[k].cavernOnly : !D[k].cavernOnly && !D[k].ventOnly && floor >= D[k].from));
-  };
+  const kinds = kindsFor;   // v345: the spawns' own list
   assert.ok(kinds('hollow', 6).includes('beetle') && !kinds('hollow', 5).includes('beetle'));
   assert.ok(kinds('hollow', 60).includes('gloomhound'));
   assert.ok(kinds('cavern', 1).includes('scuttler') && kinds('cavern', 1).includes('bull'));
