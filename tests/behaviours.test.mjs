@@ -121,7 +121,8 @@ test('the deep dungeons get a burrower and two swarms of their own', () => {
   assert.ok(SHEET.layers.includes('lurker.body') && SHEET.kinds.lurker);
   for (const k of ['dustdevil', 'ashswarm']) assert.ok(SHEET.layers.includes(`${k}.body`), `${k} has a shape of its own (v268)`);
   freshFarm();
-  const kinds = (zone) => { const out = new Set(); for (let i = 1; i <= 9; i++) { enterMine(i, zone); slimes.forEach((m) => out.add(m.kind)); } return out; };
+  // v352: floors are seeded by floor and day, and swarms are rarer now (weight 0.4): visit each floor on three days.
+  const kinds = (zone) => { const out = new Set(); for (let day = 1; day <= 3; day++) { G.S.day = day; for (let i = 1; i <= 9; i++) { enterMine(i, zone); slimes.forEach((m) => out.add(m.kind)); } } return out; };
   const cavern = kinds('cavern'), vent = kinds('vent');
   assert.ok(cavern.has('dustdevil') && !cavern.has('lurker') && !cavern.has('ashswarm'));
   assert.ok(vent.has('lurker') && vent.has('ashswarm') && !vent.has('dustdevil'));

@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v352: Creatures tuned: how often they appear, how far they see you
+- Swarms (soot puffs, dust devils, ash swarms, storm wings) turn up less often. A swarm is 4 or 5 creatures at once, so at even odds soot puffs were over a third of everything on Hollow floor 45; now under a fifth.
+- Floors 1 and 2 are mostly slimes: the pebble crab is half as likely, so new players are not met by rocks that bite half the time.
+- Signature and tough creatures (lantern wisps, tomb shades, shellbacks, sand bulls, magma rams, ember slimes, gloom hounds) are rarer, so they stay memorable; middle ones (moss slimes, stone rams, spitters, moles, lava lurkers, golems, scorch rex) a little rarer. The Hollow serpent is rarer in the Ember Vent than in the Hollow. The everyday creatures keep their odds.
+- How far creatures notice you now depends on what they are: flyers see you from about ten tiles, ghosts, thorn wasps and spitters from about nine (spitters now notice you before you are in their range), chargers from eight, burrowers wait closer to ambush, and slow crawlers and tanks (mites, golems, shellbacks, barrow shamblers) let you sneak by at five. The Gravewarden watches its whole chamber.
+- How hard a blow pushes creatures is unchanged for now.
+- New save data: none.
+
 ## v351: Health and damage on the Bestiary cards
 - Each creature's card in the journal's Creatures tab now says how tough it is and how hard it hits where you meet it: one number for creatures that are always the same ("Health 18, hits for 12."), a range over the floors a creature keeps to ("Health 6 to 19, hits for 5 to 25." for the pebble crab, floors 1 to 40), and "or more" for those that grow stronger the deeper you go.
 - The numbers come from the creature's own entry, so a balance patch updates the cards with it. They are the base numbers: the challenge brazier and the catacombs' tougher dead make them stronger.

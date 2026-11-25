@@ -67,11 +67,11 @@ test('undead is a tag on the kind', () => {
   assert.ok(UNDEAD.includes('skeleton') && UNDEAD.includes('haunt') && !UNDEAD.includes('slime'));
 });
 
-// v346: spawn weights. Every kind is weight 1 today, so floors are exactly what an even draw made.
+// v346: spawn weights (v352: set by role; kinds left at 1 still draw evenly among themselves).
 test('spawn weights: a weighted draw, per zone, and even when every weight is 1', async () => {
   const { pickKind, spawnShare, weightIn } = await import('../src/data/monsters.js');
   for (const k of KINDS) { const w = MONSTERS[k].weight; assert.ok(w === undefined || typeof w === 'number' ? !(w < 0) : Object.keys(w).every((z) => ZONES.includes(z) && w[z] >= 0), `${k}: weight`); }
-  const kinds = kindsFor('hollow', 60);
+  const kinds = ['slime', 'mite', 'bat', 'skeleton'];   // all weight 1
   for (let i = 0; i < kinds.length; i++) assert.equal(pickKind(kinds, 'hollow', () => (i + 0.5) / kinds.length), kinds[i], 'weight 1: the even draw');
   const share = spawnShare('hollow', 60);
   assert.ok(Math.abs(Object.values(share).reduce((a, b) => a + b, 0) - 1) < 1e-9);
@@ -79,10 +79,30 @@ test('spawn weights: a weighted draw, per zone, and even when every weight is 1'
   try {
     MONSTERS.slime.weight = { hollow: 3, vent: 0 };
     assert.equal(weightIn('slime', 'hollow'), 3); assert.equal(weightIn('slime', 'cavern'), 1, 'a zone left out counts 1');
-    const s = spawnShare('hollow', 1);   // the slime and the pebble crab
-    assert.equal(s.slime, 0.75); assert.equal(s.crab, 0.25);
-    assert.equal(pickKind(['slime', 'crab'], 'hollow', () => 0.74), 'slime'); assert.equal(pickKind(['slime', 'crab'], 'hollow', () => 0.76), 'crab');
+    const s = spawnShare('hollow', 1), crab = weightIn('crab', 'hollow');   // the slime and the pebble crab
+    assert.equal(s.slime, 3 / (3 + crab)); assert.equal(s.crab, crab / (3 + crab));
+    const cut = 3 / (3 + crab);
+    assert.equal(pickKind(['slime', 'crab'], 'hollow', () => cut - 0.01), 'slime'); assert.equal(pickKind(['slime', 'crab'], 'hollow', () => cut + 0.01), 'crab');
     MONSTERS.slime.weight = 0;
     assert.equal(pickKind(['slime', 'crab'], 'hollow', () => 0), 'crab', 'weight 0: never picked');
   } finally { if (was === undefined) delete MONSTERS.slime.weight; else MONSTERS.slime.weight = was; }
+});
+
+// v352: the reasons behind the weights and notice distances, kept true by any later tuning.
+test('tuning: swarms are a fair share of bodies, early floors are not half mimics, attackers notice before they strike', async () => {
+  const { spawnShare, noticeOf, SHOOT, CHARGE, BURROW } = await import('../src/data/monsters.js');
+  const bodies = (zone, floor, k) => {   // a kind's share of the bodies on a floor (a swarm's pack counts each)
+    const s = spawnShare(zone, floor), n = (x) => (MONSTERS[x].pack ? (MONSTERS[x].pack[0] + MONSTERS[x].pack[1]) / 2 : 1);
+    const all = Object.entries(s).reduce((a, [x, p]) => a + p * n(x), 0);
+    return s[k] * n(k) / all;
+  };
+  assert.ok(bodies('hollow', 45, 'puff') < 0.25, `soot puffs ${bodies('hollow', 45, 'puff').toFixed(2)} of floor 45`);
+  assert.ok(bodies('cavern', 1, 'dustdevil') < 0.25, 'dust devils');
+  assert.ok(bodies('hollow', 1, 'crab') < 0.4, 'floor 1 is mostly slimes, not hidden crabs');
+  for (const k of KINDS) {
+    const d = MONSTERS[k];
+    if (d.move === 'shoot') assert.ok(noticeOf(k) > SHOOT.far, `${k} notices you before you are in its range`);
+    if (d.move === 'charge') assert.ok(noticeOf(k) > CHARGE.range, `${k} comes for you before it charges`);
+    if (d.move === 'burrow') assert.ok(noticeOf(k) > BURROW.rise, `${k} tracks you before it rises`);
+  }
 });
