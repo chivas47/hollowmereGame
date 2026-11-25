@@ -13,6 +13,9 @@
 // zones: where it spawns (ZONES below). from / to: the Hollow floors it lives on (only with 'hollow').
 // move: how it fights (systems/monsters.js; the Bestiary's data/bestiary.js HOW). xp: combat XP a defeat gives.
 // color: its body colour (slimes take theirs from the floor); glow: a second colour (a spitter's glob, a wisp's light).
+// weight: how often it is picked among the kinds of a floor (default 1, all equal; 2 is twice as often, 0.25 a
+//   quarter as often). A number, or one per zone ({ hollow: 1, vent: 0.3 }; zones left out count 1). spawnShare()
+//   gives the resulting odds, and tools/monster_stats.mjs prints them.
 // mound: what a burrower's mound looks like, 'earth' (the default) or 'lava'.
 // loot: rows of [item, chance, min, max], each rolled on its own at every defeat (data/loot.js rollLoot); Stardew by
 // role: each kind drops a material of its own and sometimes the ore of its floors.
@@ -204,6 +207,24 @@ export function kindsFor(zone, floor) {
   return list.filter((k) => floor >= MONSTERS[k].from && floor <= (MONSTERS[k].to ?? Infinity));
 }
 export const kindsIn = (zone) => BY_ZONE[zoneOf(zone)] || [];
+// v345: a kind's spawn weight in a zone (weight above).
+export function weightIn(kind, zone) {
+  const w = MONSTERS[kind].weight;
+  return typeof w === 'number' ? w : w?.[zoneOf(zone)] ?? 1;
+}
+// v345: one kind drawn from `kinds` by their weights in `zone`, with one roll of R (a floor's seeded rng). With every
+// weight 1 it picks exactly what an even draw did, so floors stay as they were until a weight changes.
+export function pickKind(kinds, zone, R = Math.random) {
+  const total = kinds.reduce((a, k) => a + weightIn(k, zone), 0);
+  let t = R() * total;
+  for (const k of kinds) if ((t -= weightIn(k, zone)) < 0) return k;
+  return kinds[kinds.length - 1];
+}
+// v345: each kind's chance to be picked on a floor ({ kind: share }, summing to 1).
+export function spawnShare(zone, floor) {
+  const kinds = kindsFor(zone, floor), total = kinds.reduce((a, k) => a + weightIn(k, zone), 0);
+  return Object.fromEntries(kinds.map((k) => [k, total ? weightIn(k, zone) / total : 0]));
+}
 
 // v345: whether a kind belongs to a family (TAGS).
 export const hasTag = (kind, tag) => !!MONSTERS[kind]?.tags.includes(tag);
