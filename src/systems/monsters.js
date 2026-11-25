@@ -4,7 +4,7 @@
 import { G } from '../core/game.js';
 import { T, DIRS } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
+import { addUpdater, addInteraction, addEntities, addLayer } from '../core/registry.js';
 import { MAPS, SOLID, sizeOf } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
 import { RARE_DROP, DROP_POOL, SPECIALS } from '../data/weapons.js';
@@ -16,7 +16,7 @@ import { VENT } from '../data/forge.js';
 import { PEAK } from '../data/nuts.js';
 import { ITEMS } from '../data/items.js';
 import { rollLoot } from '../data/loot.js';
-import { drawSlime, drawMonster, drawDazed, drawMound, drawShot } from '../render/sprites.js';
+import { drawSlime, drawMonster, drawDazed, drawMound, drawShot, drawBossBar } from '../render/sprites.js';
 import { MONSTERS as SHEET } from '../data/sprites.js';
 import { moveBox, occupied, mover } from './world.js';
 import { hurtPlayer, hurtPartner } from './health.js';
@@ -82,6 +82,32 @@ export function spawnSlimes(map, n, kind = 'slime', keep = false) {
 on('day:start', () => { slimes.length = 0; });
 // 97c: creatures at set tiles of a map (the catacombs' rooms and waves, an ambush round a chest), added to those
 // already there. list: [{ kind, x, y }] in tiles. Returns the new creatures, so the caller can toughen or watch them.
+// v347: a boss (a MONSTERS entry with `boss`) at tile (x, y) of a map: its own stats, drawn big, with its health bar
+// and calls (bossTurn below). Returns it.
+export function spawnBoss(map, kind, x, y) {
+  const b = MONSTERS[kind].boss, [m] = spawnAt(map, [{ kind, x, y }]);
+  return Object.assign(m, { maxHp: m.hp, scale: b.scale, boss: true, marks: [...b.marks] });
+}
+// v347: how creatures rise on a map when a boss calls them: a place can set its own (where they may stand, how tough
+// its dead are; systems/catacombs.js); elsewhere they rise round the boss. fn(map, [[kind, x, y]]) returns them.
+const risers = {};
+export const riseOn = (map, fn) => { risers[map] = fn; };
+const rise = (map, list) => (risers[map] || ((mp, l) => spawnAt(mp, l.map(([kind, x, y]) => ({ kind, x, y })))))(map, list);
+// A boss's turn: past each health mark it calls up its creatures round it; below its rage it moves faster.
+function bossTurn(m) {
+  const b = MONSTERS[m.kind].boss;
+  if (m.marks.length && m.hp / m.maxHp <= m.marks[0]) {
+    m.marks.shift();
+    const [kind, n] = b.calls, bx = Math.floor(m.x / T), by = Math.floor(m.y / T);
+    rise(slimeMap, Array.from({ length: n }, (_, i) => [kind, bx + (i % 2 ? 2 : -2), by + 1]));
+    if (b.callLine && G.S.map === slimeMap) notify(b.callLine);
+    emit('boss:call', { kind: m.kind, x: m.x, y: m.y });
+  }
+  if (m.hp / m.maxHp <= b.rage) m.speed = b.rageSpeed;
+}
+addUpdater(() => { for (const m of slimes) if (m.boss && m.hp > 0) bossTurn(m); });
+addLayer(986, (c) => { if (G.S.map === slimeMap) for (const m of slimes) if (m.boss) drawBossBar(c, m); });   // over the catacombs' dark (985)
+
 export function spawnAt(map, list) {
   if (slimeMap !== map) { slimes.length = 0; slimeMap = map; }
   const made = [];

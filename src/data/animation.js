@@ -85,7 +85,7 @@ export const PLACE = { dur: 0.25 };
 // gel takes the creature's own colour. Unlisted kinds use 'fur'.
 export const MATERIAL = {
   slime: 'gel', mossslime: 'gel', emberslime: 'gel', spitter: 'gel', sandspitter: 'gel', cragspitter: 'gel',
-  skeleton: 'bone', wraith: 'bone', rattler: 'bone', shambler: 'bone',   // v303
+  skeleton: 'bone', wraith: 'bone', rattler: 'bone', shambler: 'bone', gravewarden: 'bone',   // v303
   sprite: 'ember', golem: 'ember', hound: 'ember', magmaram: 'ember', lurker: 'ember', rex: 'ember',
   mite: 'chitin', beetle: 'chitin', crab: 'chitin', scuttler: 'chitin', shellback: 'chitin', cragshell: 'chitin', gourd: 'chitin',
   puff: 'smoke', dustdevil: 'sand', ashswarm: 'smoke',

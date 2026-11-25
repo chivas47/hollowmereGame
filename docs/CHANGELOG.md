@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v347: The Gravewarden is a creature of its own
+- The Gravewarden has its own Bestiary card (last, after the Duskmarch's creatures) and its own count of defeats; it used to count as a grave rattler.
+- It is worth what a named guardian should be: 100 combat XP (was a rattler's 10) and 6 to 10 bone shards, 1 to 2 iron and a gloommote half the time (was a rattler's drops). Its health, damage, calls and rage are as before.
+- The boss music now plays in its fight; it only played for elites.
+- Its health bar is drawn by the creature system and sits above its head at any size.
+- For future bosses: a boss is a creature entry with a `boss` block (size, health marks, what it calls, rage) and a `lives` line. Its calls, rage, health bar and boss music work wherever it is spawned (`spawnBoss`); the catacombs only say where it rises and how their dead stand up (`riseOn`).
+- New save data: none.
+
 ## v346: Creature families, creature sounds, spawn weights
 - Creatures make their own sounds. Each kind has a voice (slime, bug, beast, bone, ghost, ember or plant): a cry when it notices you and another as it falls. The warnings are heard: a charger winding up, a spitter gathering a shot, a burrower's mound shaking. So are a burrower digging down, a mimic waking, a shell cracking or turning a blade, a charger hitting a wall, a big slime splitting and a ghost fading. Sounds are quieter the further off the creature is, and silent from another map. The burrowers and shells no longer borrow the hoe and pickaxe.
 - The slime ward now keeps every slime off you, moss and ember slimes included (it only worked on plain slimes).

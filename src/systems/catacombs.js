@@ -15,10 +15,10 @@ import { PIECES, PIECE_KEYS, AMBUSH, STONE, TOUGH, BARROW, CATA, GATES, SCONCES,
   PLAQUE, SPIKES, CRUMBLE, PIT, BRAZIER, BRAZIER_LIT, BIER, BIER_EMPTY, cataZone, barrowRoom, spikeUp } from '../data/catacombs.js';
 import { placePlayer } from './world.js';
 import { giveFind } from './gear.js';
-import { spawnAt, slimes } from './monsters.js';
+import { spawnAt, slimes, spawnBoss, riseOn } from './monsters.js';
 import { addItem } from './quality.js';
 import { hurtPlayer } from './health.js';
-import { drawDark, drawFlame, drawSpikes, drawGallery, drawBossBar } from '../render/catacombs.js';
+import { drawDark, drawFlame, drawSpikes, drawGallery } from '../render/catacombs.js';
 
 export const freshDusk = () => ({ key: false, door: false, blade: false, pieces: [], barrowChest: false,
   cata: { sconces: [], levers: false, brazier: false, gallery: false, waves: false, boss: false } });
@@ -31,9 +31,9 @@ const PLATES = MAPS.crypt.grid.flatMap((row, y) => row.flatMap((t, x) => (t === 
 
 // What is under way, never saved.
 export const run = { t: 0, zones: new Set(), fight: null, wave: 0, foes: [], next: 0, pulled: [], cracking: new Map(), fallen: new Set(),
-  ambush: null, ambushBeaten: false, guard: null, guardBeaten: false, warmed: false, boss: null, marks: [] };
+  ambush: null, ambushBeaten: false, guard: null, guardBeaten: false, warmed: false, boss: null };
 function resetRun() {
-  Object.assign(run, { zones: new Set(), fight: null, wave: 0, foes: [], next: 0, pulled: [], ambush: null, ambushBeaten: false, guard: null, guardBeaten: false, warmed: false, boss: null, marks: [] });
+  Object.assign(run, { zones: new Set(), fight: null, wave: 0, foes: [], next: 0, pulled: [], ambush: null, ambushBeaten: false, guard: null, guardBeaten: false, warmed: false, boss: null });
   run.cracking.clear(); run.fallen.clear();
 }
 
@@ -271,9 +271,8 @@ function startWave() {
   notify(run.wave === 0 ? 'The gates slam shut behind you. The dead come up out of the floor!' : run.wave === CATA.waves.length - 1 ? 'The last of them rise!' : 'More of them rise!');
 }
 function startBoss() {
-  const B = CATA.boss, [m] = spawnAt('crypt', [{ kind: B.kind, x: B.x, y: B.y }]);
-  Object.assign(m, { hp: B.hp, maxHp: B.hp, dmg: B.dmg, speed: B.speed, scale: B.scale, boss: true, color: '#cfc4a8' });
-  run.boss = m; run.marks = [...B.at]; run.foes = [m];
+  const B = CATA.boss, m = spawnBoss('crypt', B.kind, B.x, B.y);   // v347: its stats, calls and rage are its creature entry's
+  run.boss = m; run.foes = [m];
   emit('sfx', 'hurt');
   notify('The gate drops behind you. Something huge rises from beside the sarcophagus: the Gravewarden!');
 }
@@ -331,22 +330,16 @@ addUpdater((dt) => {
   // the warden's chamber
   if (zone === 'warden' && !c.boss && !run.fight && x <= 27) { run.fight = 'boss'; setPieces(); startBoss(); }
   if (run.fight === 'boss') {
-    const B = CATA.boss, m = run.boss;
+    const m = run.boss;
     if (!slimes.includes(m)) {
       c.boss = true; run.fight = null; run.boss = null; run.foes = []; setPieces(); emit('sfx', 'levelup');
       notify('The Gravewarden falls apart in a clatter of old bones. The sarcophagus lid shifts, and a gate opens to the west.');
       changed();
-    } else {
-      if (run.marks.length && m.hp / m.maxHp <= run.marks[0]) {
-        run.marks.shift();
-        const [bx, by] = [Math.floor(m.x / T), Math.floor(m.y / T)];
-        raise('crypt', Array.from({ length: B.summon }, (_, i) => ['rattler', bx + (i ? 2 : -2), by + 1]));
-        notify('The Gravewarden strikes the floor, and the dead answer!');
-      }
-      if (m.hp / m.maxHp <= B.rage) m.speed = B.rageSpeed;
     }
   }
 });
+// v347: the dead a boss calls rise as the catacombs' own do (on open floor, tougher underground), and it is said.
+for (const map of ['crypt', 'barrow']) riseOn(map, (mp, list) => raise(mp, list));
 
 // The catacombs' look: the ossuary's dark, lit sconces and the brazier, spikes, fallen floor, the warden's bar.
 addLayer(9, (c) => {
@@ -363,5 +356,4 @@ addLayer(985, (c) => {
   if (C().brazier) drawFlame(c, CATA.brazier.x, CATA.brazier.y, run.t, true);
   const oss = CATA.zones.find((z) => z.id === 'ossuary').rect;
   drawDark(c, oss, lit.map(([x, y]) => ({ x: x * T + 8, y: y * T + 10, r: T * 4.5 })), S, run.t);
-  if (run.boss && slimes.includes(run.boss)) drawBossBar(c, run.boss);
 });

@@ -100,10 +100,9 @@ export const CATA = {
     [['rattler', 32, 35], ['rattler', 40, 35], ['shambler', 33, 31], ['shambler', 39, 31]],
     [['shambler', 32, 27], ['shambler', 40, 35], ['haunt', 36, 28], ['haunt', 36, 34], ['rattler', 31, 31], ['rattler', 41, 31]],
   ],
-  // The Gravewarden: a grave rattler grown huge (drawn `scale` times as big). Stardew by role: a dungeon's named
-  // guardian, about ten of its floor's creatures in one; it calls up `summon` rattlers each time its health falls
-  // past a mark in `at`, and grows quicker below `rage` of its health.
-  boss: { kind: 'rattler', x: 23, y: 30, hp: 320, dmg: 18, speed: 20, scale: 2, at: [0.66, 0.33], summon: 2, rage: 0.33, rageSpeed: 30 },
+  // The warden's chamber's guardian and where it rises. v347: its stats, calls and rage are its own creature entry
+  // (data/monsters.js MONSTERS.gravewarden boss).
+  boss: { kind: 'gravewarden', x: 23, y: 30 },
   sarcophagus: { x: 23, y: 27 },
   blade: 'gravewarden',
 };

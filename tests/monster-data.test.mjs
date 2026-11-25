@@ -30,7 +30,13 @@ test('every kind is well formed', () => {
     if (livesIn(k, 'hollow')) assert.ok(d.from >= 1 && (d.to ?? Infinity) >= d.from, `${k}: Hollow floors`);
     else assert.equal(d.from, undefined, `${k}: from only means something in the Hollow`);
     assert.equal(!!d.season, livesIn(k, 'night'), `${k}: a night creature has a season, and only it`);
-    assert.equal(!!d.lives, livesIn(k, 'duskmarch'), `${k}: a Duskmarch creature has its Bestiary line, and only it`);
+    assert.equal(!!d.lives, livesIn(k, 'duskmarch') || livesIn(k, 'lair'), `${k}: a Duskmarch creature or a boss has its Bestiary line, and only they`);
+    assert.equal(!!d.boss, livesIn(k, 'lair'), `${k}: a boss lives in its lair, and only a boss`);
+    if (d.boss) {
+      assert.ok(d.boss.scale >= 1 && d.boss.rage > 0 && d.boss.rageSpeed > 0, `${k}: boss size and rage`);
+      assert.ok(d.boss.marks.every((x, i, a) => x > 0 && x < 1 && (!i || x < a[i - 1])), `${k}: marks fall from full health`);
+      assert.ok(MONSTERS[d.boss.calls[0]] && d.boss.calls[1] >= 1, `${k}: calls a real kind`);
+    }
     if (d.move === 'swarm') assert.ok(d.pack?.[0] >= 1 && d.pack[1] >= d.pack[0], `${k}: a swarm has a pack`);
     if (d.move === 'charge') for (const f of ['windup', 'rush', 'time', 'recover', 'range', 'times', 'stun']) assert.ok(d[f] > 0, `${k}: charger ${f}`);
   }

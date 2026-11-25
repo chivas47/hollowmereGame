@@ -695,7 +695,7 @@ function halo(c, px, py, color, t) {
 const CODE_LIKE = { scuttler: 'beetle', bull: 'boar', magmaram: 'ram', dustdevil: 'puff', ashswarm: 'puff', sandspitter: 'spitter',
   cragspitter: 'spitter', shade: 'wisp', cragshell: 'shell', stormwing: 'bat',
   bramble: 'puff', moth: 'bat', gourd: 'crab', gourdsleep: 'crabrock', frostwisp: 'wisp',   // v269
-  bristle: 'boar', wasp: 'puff', stump: 'crab', stumpsleep: 'crabrock', rattler: 'skeleton', shambler: 'skeleton', haunt: 'wisp' };   // v303
+  bristle: 'boar', wasp: 'puff', stump: 'crab', stumpsleep: 'crabrock', rattler: 'skeleton', gravewarden: 'skeleton', shambler: 'skeleton', haunt: 'wisp' };   // v303
 // v228: flip faces it left (chargers face the way they go).
 export function drawMonster(c, px, py, kind, color, hurt, t, flip = false) {
   const k = MONSTERS.kinds[kind] || {};
@@ -1119,4 +1119,10 @@ export function drawForageArt(c, X, Y, type) {
   const F = FORAGE_SHEET, i = F.order.indexOf(type);
   if (i >= 0 && ready(F.sheet)) return frame(c, sheet(F.sheet).img, i % F.per, F.size, X, Y, Math.floor(i / F.per));
   (FORAGE_ART[type] || FORAGE_ART.leek)(c, X, Y, X + 8);
+}
+
+// v347: a boss's health over its head (any MONSTERS entry with `boss`), raised with its size.
+export function drawBossBar(c, m) {
+  const w = 40, x = Math.round(m.x - w / 2), y = Math.round(m.y - 22 * (m.scale || 1)), k = Math.max(0, m.hp / m.maxHp);
+  r(c, x - 1, y - 1, w + 2, 6, '#120e0b'); r(c, x, y, w, 4, '#3a2a2a'); r(c, x, y, Math.round(w * k), 4, '#c8352f'); r(c, x, y, Math.round(w * k), 1, '#e9862a');
 }

@@ -61,8 +61,14 @@ test('every creature has a shape of its own now', () => {
   const night = Object.keys(MONSTERS).filter((k) => livesIn(k, 'night'));
   assert.deepEqual(night.sort(), ['bramble', 'frostwisp', 'gourd', 'moth']);
   for (const k of night) assert.ok(!SHEET.kinds[k].shape && SHEET.layers.includes(`${k}.body`), `${k} has its own bands`);
-  const all = Object.keys(MONSTERS).map((k) => SHEET.kinds[k].shape || k);
+  const all = Object.keys(MONSTERS).filter((k) => !MONSTERS[k].boss).map((k) => SHEET.kinds[k].shape || k);
   assert.deepEqual(all.filter((s, i) => all.indexOf(s) !== i), [], 'no two kinds share a shape (polish find 41)');
+  // v347: a boss may wear its kin's shape, drawn bigger and in its own colour (the Gravewarden, a rattler grown huge).
+  for (const k of Object.keys(MONSTERS).filter((x) => MONSTERS[x].boss)) {
+    const kin = SHEET.kinds[k].shape || k;
+    assert.ok(MONSTERS[k].boss.scale >= 1.5 || kin === k, `${k} stands apart by size`);
+    if (MONSTERS[kin]) assert.notEqual(MONSTERS[k].color, MONSTERS[kin].color, `${k} has its own colour`);
+  }
 });
 test('the gourd lurker sleeps as a pumpkin, other mimics as a rock', () => {
   assert.equal(SHEET.kinds.gourd.sleep, 'gourdsleep');
