@@ -1,6 +1,7 @@
 // Combat expansion, part 2 (v37): the Wardens' Lodge in the Wilds, bombs, Hollow treasure chests and geodes.
 // Stardew by role, original names: the lodge is the adventurers' guild, Warden Hale its keeper.
 import { CHEST_BOOKS } from './books.js';
+import { kindsWhere, DUNGEONS } from './monsters.js';   // v350: goals pick their kinds by query
 
 // The lodge opens once you have been down the Hollow. tile: the cabin's tiles in the Wilds (data/maps.js).
 export const LODGE = {
@@ -24,36 +25,40 @@ export const LODGE_SHOP = [
 ];
 
 // Slaying goals (Stardew's monster eradication goals): defeat n of a kind, then claim the reward from Hale once.
+// v350: who: which kinds count, as a query (data/monsters.js kindsWhere): { kind } for one, or { move, zones, tag }
+// for a family of them ("the chargers of the Hollow", "swarms in the dungeons"); `kinds` is worked out from it.
 // Stardew: 1,000 slimes (slime charmer ring), 80 cave insects (insect head), 200 bats (vampire ring),
 // 50 skeletons (skeleton mask), 250 serpents (napalm ring).
 export const GOALS = {
-  slime:    { n: 1000, reward: 'slimeward', label: 'slimes' },
-  mite:     { n: 80,   reward: 'mitefang',  label: 'Hollow mites' },
-  bat:      { n: 200,  reward: 'leechring', label: 'cave bats' },
-  skeleton: { n: 50,   reward: 'bonemask',  label: 'bone walkers' },
-  serpent:  { n: 250,  reward: 'blastring', label: 'Hollow serpents' },
+  slime:    { who: { kind: 'slime' }, n: 1000, reward: 'slimeward', label: 'slimes' },
+  mite:     { who: { kind: 'mite' }, n: 80,   reward: 'mitefang',  label: 'Hollow mites' },
+  bat:      { who: { kind: 'bat' }, n: 200,  reward: 'leechring', label: 'cave bats' },
+  skeleton: { who: { kind: 'skeleton' }, n: 50,   reward: 'bonemask',  label: 'bone walkers' },
+  serpent:  { who: { kind: 'serpent' }, n: 250,  reward: 'blastring', label: 'Hollow serpents' },
   // v38. Stardew: 100 mummies (arcane hat), 50 pepper rex (knight's helmet).
-  wraith:   { n: 100,  reward: 'veilhat',   label: 'sand wraiths' },
-  rex:      { n: 50,   reward: 'crestedhelm', label: 'scorch rex' },
+  wraith:   { who: { kind: 'wraith' }, n: 100,  reward: 'veilhat',   label: 'sand wraiths' },
+  rex:      { who: { kind: 'rex' }, n: 50,   reward: 'crestedhelm', label: 'scorch rex' },
   // v39. Stardew: 150 magma sprites (a phone for Marlon); ours gives a trinket.
-  sprite:   { n: 150,  reward: 'magpie',    label: 'magma sprites' },
-  // v230: v228's chargers, one goal a zone; kinds: every kind that counts toward it. Stardew: 150 void spirits
+  sprite:   { who: { kind: 'sprite' }, n: 150,  reward: 'magpie',    label: 'magma sprites' },
+  // v230: v228's chargers, one goal a zone. Stardew: 150 void spirits
   // (shadow brutes among them: the savage ring), 30 duggies (the hard hat); the vent's is ours, for the sword block.
-  hollowchargers: { n: 150, kinds: ['beetle', 'boar', 'ram', 'gloomhound'], reward: 'savagering', label: 'chargers in the Hollow' },
-  sandchargers:   { n: 60,  kinds: ['scuttler', 'bull'], reward: 'hornhelm', label: 'chargers in the Sunken Cavern' },
-  ventchargers:   { n: 60,  kinds: ['hound', 'magmaram'], reward: 'bracering', label: 'chargers in the Ember Vent' },
+  hollowchargers: { who: { move: 'charge', zones: ['hollow'] }, n: 150, reward: 'savagering', label: 'chargers in the Hollow' },
+  sandchargers:   { who: { move: 'charge', zones: ['cavern'] }, n: 60, reward: 'hornhelm', label: 'chargers in the Sunken Cavern' },
+  ventchargers:   { who: { move: 'charge', zones: ['vent'] }, n: 60, reward: 'bracering', label: 'chargers in the Ember Vent' },
   // v258 (roadmap 85f's kinds, 85g): one goal a way of fighting. Stardew: 60 rock crabs (crabshell ring), 30 duggies
   // (hard hat), 500 dust sprites (burglar's ring); the rest are ours, sized like its goals of the same depth.
-  mimics:    { n: 60,  kinds: ['crab'], reward: 'stonering', label: 'pebble crabs' },
-  burrowers: { n: 30,  kinds: ['mole', 'lurker'], reward: 'diggercap', label: 'burrow moles and lava lurkers' },
-  swarms:    { n: 500, kinds: ['puff', 'dustdevil', 'ashswarm', 'stormwing'], reward: 'thiefring', label: 'swarming creatures' },
-  shooters:  { n: 100, kinds: ['spitter', 'sandspitter', 'cragspitter'], reward: 'tidering', label: 'spitters' },
-  splitters: { n: 200, kinds: ['mossslime', 'emberslime'], reward: 'mossring', label: 'moss and ember slimes (pieces count)' },
-  phasers:   { n: 100, kinds: ['wisp', 'shade'], reward: 'glowring', label: 'lantern wisps and tomb shades' },
-  armored:   { n: 60,  kinds: ['shellback', 'cragshell'], reward: 'shellring', label: 'shellbacks' },
+  mimics:    { who: { move: 'mimic', zones: DUNGEONS }, n: 60, reward: 'stonering', label: 'pebble crabs' },
+  burrowers: { who: { move: 'burrow', zones: DUNGEONS }, n: 30, reward: 'diggercap', label: 'burrow moles and lava lurkers' },
+  swarms:    { who: { move: 'swarm', zones: DUNGEONS }, n: 500, reward: 'thiefring', label: 'swarming creatures' },
+  shooters:  { who: { move: 'shoot', zones: DUNGEONS }, n: 100, reward: 'tidering', label: 'spitters' },
+  splitters: { who: { move: 'split', zones: DUNGEONS }, n: 200, reward: 'mossring', label: 'moss and ember slimes (pieces count)' },
+  phasers:   { who: { move: 'phase', zones: DUNGEONS }, n: 100, reward: 'glowring', label: 'lantern wisps and tomb shades' },
+  armored:   { who: { move: 'armored', zones: DUNGEONS }, n: 60, reward: 'shellring', label: 'shellbacks' },
   // v261 (85j): the seasonal night creatures, all four seasons together.
-  nightfolk: { n: 50,  kinds: ['bramble', 'moth', 'gourd', 'frostwisp'], reward: 'leechring', label: 'creatures of the night (any season)' },
+  nightfolk: { who: { zones: ['night'] }, n: 50, reward: 'leechring', label: 'creatures of the night (any season)' },
 };
+// v350: each goal's kinds, picked by its query (data/monsters.js kindsWhere), so a new kind that fits counts.
+for (const g of Object.values(GOALS)) g.kinds = kindsWhere(g.who);
 // v230: the savage ring's burst of speed after a defeat: seconds, and food-buff speed points (data/cooking.js BUFF).
 export const SAVAGE = { time: 3, speed: 2 };
 

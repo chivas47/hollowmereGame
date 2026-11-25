@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v350: Guild goals by kind of creature, knockback per creature
+- The Wardens' Lodge slaying goals now say which creatures count by what they are ("chargers in the Hollow", "swarms in the dungeons", "the creatures of the night") instead of a written list of names. Every goal counts exactly the creatures it did before; a creature added later that fits a goal counts toward it with no list to edit.
+- Each creature can be pushed more or less by a blow (`knockback` in `src/data/monsters.js`, default 1): swings, bombs, the blast ring and the sword's block all respect it. Every creature still uses 1, so nothing changes in play yet; a balance patch can make golems and guardians hold their ground.
+- `node tools/monster_stats.mjs` shows each creature's knockback.
+- New save data: none.
+
 ## v349: Each creature names its own stand-in drawing
 - Fixed: the crag shellback (Ember Vent) could stop the game's drawing with an error in the moments before the creature sprites finished loading, or for good if they failed to load. It now draws as a shellback.
 - Every creature's sprite entry (`src/data/sprites.js`) names the drawing in code it shows until the sprite sheet loads (`code`), from one named set in `src/render/sprites.js` (`CODE_ART`). A new creature picks one there; no code to change. Before, a list inside the drawing code chose for some creatures and others fell through to whatever came last.

@@ -22,6 +22,8 @@
 // notice: how near you come (px) before it notices you: it chases (or keeps its distance, or comes up from under
 //   the floor), cries its alert and is heard fading in and out. Default NOTICE; a balance patch can give a kind its
 //   own (Stardew's bats and ghosts sense you from further off than its slow crawlers).
+// knockback: how far a blow pushes it, times the usual (default 1; 0.5 half as far, 0 not at all: Stardew's heavy
+//   golems and guardians barely move). Every push it takes is scaled: swings, bombs, the blast ring, a sword's block.
 // mound: what a burrower's mound looks like, 'earth' (the default) or 'lava'.
 // loot: rows of [item, chance, min, max], each rolled on its own at every defeat (data/loot.js rollLoot); Stardew by
 // role: each kind drops a material of its own and sometimes the ore of its floors.
@@ -226,6 +228,17 @@ export const kindsIn = (zone) => BY_ZONE[zoneOf(zone)] || [];
 // v348: how near you come before a kind notices you (notice above), in px: about seven tiles.
 export const NOTICE = 110;
 export const noticeOf = (kind) => MONSTERS[kind]?.notice ?? NOTICE;
+// v350: how far a blow pushes a kind, times the usual (knockback above).
+export const knockbackOf = (kind) => MONSTERS[kind]?.knockback ?? 1;
+// v350: the dungeons, for a query that means "in the Hollow, the Sunken Cavern or the Ember Vent".
+export const DUNGEONS = ['hollow', 'cavern', 'vent'];
+// v350: the kinds a query picks, in MONSTERS order: { kind } one kind; or any of { move, zones (lives in any of
+// them), tag } together. A Guild goal is a query (data/guild.js), so a new kind that fits counts with no list to edit.
+export function kindsWhere(q) {
+  if (q.kind) return MONSTERS[q.kind] ? [q.kind] : [];
+  return Object.keys(MONSTERS).filter((k) => (!q.move || MONSTERS[k].move === q.move)
+    && (!q.zones || q.zones.some((z) => livesIn(k, z))) && (!q.tag || hasTag(k, q.tag)));
+}
 // v346: a kind's spawn weight in a zone (weight above).
 export function weightIn(kind, zone) {
   const w = MONSTERS[kind].weight;

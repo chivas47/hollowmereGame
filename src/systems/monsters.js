@@ -8,7 +8,7 @@ import { addUpdater, addInteraction, addEntities, addLayer } from '../core/regis
 import { MAPS, SOLID, sizeOf } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
 import { RARE_DROP, DROP_POOL, SPECIALS } from '../data/weapons.js';
-import { UNDEAD, MONSTERS, MONSTER_COUNT, CHARGE, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR, BUSY, ELITE, statsAt, statAt, kindsFor, hasTag, pickKind, noticeOf } from '../data/monsters.js';
+import { UNDEAD, MONSTERS, MONSTER_COUNT, CHARGE, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR, BUSY, ELITE, statsAt, statAt, kindsFor, hasTag, pickKind, noticeOf, knockbackOf } from '../data/monsters.js';
 import { heard, MONSTER_SOUNDS } from '../data/audio.js';
 import { SAVAGE } from '../data/guild.js';
 import { CAVERN } from '../data/cavern.js';
@@ -389,7 +389,8 @@ export function hitMonster(m, dmg, kx = 0, ky = 0, crit = false) {
     emit('monster:crack', { x: m.x, y: m.y });
     return;
   }
-  m.hp -= dmg; m.hurt = 0.25; m.kx = kx; m.ky = ky;
+  const kb = knockbackOf(m.kind);   // v350: heavy kinds are pushed less
+  m.hp -= dmg; m.hurt = 0.25; m.kx = kx * kb; m.ky = ky * kb;
   emit('monster:hit', { x: m.x, y: m.y, dmg, crit, kx, ky, kind: m.kind || 'slime', color: m.color, blade: blading });   // v264: kind and colour for the chips; v280: blade, a weapon's blow (a slash mark)
   if (slimeMap === G.S.map) emit('sfx', m.hp <= 0 ? 'slay' : crit ? 'crit' : 'hit');   // v280: a blow you can hear
   if (m.hp <= 0) defeat(m);
@@ -483,7 +484,7 @@ export function strikeArea(cx, cy, reach, mult, knock = 1, dir = null, stun = 0)
 // v227: a monster that touches you while you block (the sword's special) is thrown back instead of hurting you.
 function blocked(m, f) {
   const dx = m.x - f.x, dy = m.y - f.y, d = Math.hypot(dx, dy) || 1, kn = SPECIALS.sword.knock;
-  m.kx = (dx / d) * kn; m.ky = (dy / d) * kn;
+  m.kx = (dx / d) * kn * knockbackOf(m.kind); m.ky = (dy / d) * kn * knockbackOf(m.kind);   // v350: heavy kinds are thrown less
   if (motion.hitstop) m.frozen = Math.max(m.frozen || 0, HIT_STOP);
   if (f === G.S) G.hurtT = Math.max(G.hurtT, SPECIALS.sword.after); else f.hurtT = Math.max(f.hurtT || 0, SPECIALS.sword.after);   // v231
   if (m.cs === 'charge') daze(m, MONSTERS[m.kind].stun);   // v228: a blocked charge leaves it dazed
