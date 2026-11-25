@@ -19,6 +19,9 @@
 // boss: a named guardian (systems/monsters.js spawnBoss): drawn `scale` times as big with a health bar, boss music
 //   while it lives; each time its health falls past a share in `marks` it calls up `calls` [kind, n] round it; below
 //   `rage` of its health it moves at `rageSpeed`. callLine: what you are told when it calls.
+// notice: how near you come (px) before it notices you: it chases (or keeps its distance, or comes up from under
+//   the floor), cries its alert and is heard fading in and out. Default NOTICE; a balance patch can give a kind its
+//   own (Stardew's bats and ghosts sense you from further off than its slow crawlers).
 // mound: what a burrower's mound looks like, 'earth' (the default) or 'lava'.
 // loot: rows of [item, chance, min, max], each rolled on its own at every defeat (data/loot.js rollLoot); Stardew by
 // role: each kind drops a material of its own and sometimes the ore of its floors.
@@ -220,6 +223,9 @@ export function kindsFor(zone, floor) {
   return list.filter((k) => floor >= MONSTERS[k].from && floor <= (MONSTERS[k].to ?? Infinity));
 }
 export const kindsIn = (zone) => BY_ZONE[zoneOf(zone)] || [];
+// v348: how near you come before a kind notices you (notice above), in px: about seven tiles.
+export const NOTICE = 110;
+export const noticeOf = (kind) => MONSTERS[kind]?.notice ?? NOTICE;
 // v346: a kind's spawn weight in a zone (weight above).
 export function weightIn(kind, zone) {
   const w = MONSTERS[kind].weight;

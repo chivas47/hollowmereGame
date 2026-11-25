@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v348: Each creature notices you at its own distance
+- How near you come before a creature notices you (it chases, keeps its distance or comes up from under the floor, and cries its alert) is now a number on each creature: `notice` in `src/data/monsters.js`, in pixels.
+- Every creature still uses the old distance, 110 px (about seven tiles), so nothing changes in play yet. A balance patch can give bats and ghosts a longer reach and slow crawlers a shorter one by editing one number each.
+- `node tools/monster_stats.mjs` shows each creature's notice distance.
+- New save data: none.
+
 ## v347: The Gravewarden is a creature of its own
 - The Gravewarden has its own Bestiary card (last, after the Duskmarch's creatures) and its own count of defeats; it used to count as a grave rattler.
 - It is worth what a named guardian should be: 100 combat XP (was a rattler's 10) and 6 to 10 bone shards, 1 to 2 iron and a gloommote half the time (was a rattler's drops). Its health, damage, calls and rage are as before.
