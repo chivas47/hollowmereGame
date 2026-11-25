@@ -31,8 +31,8 @@ export const forgeCost = (n) => 10 + 5 * n;   // cinder shards for the (n+1)th g
 export const ENCHANT_COST = { cinder: 20, starstone: 1 };
 export const WEAPON_ENCHANTS = {
   vampiric:  { name: 'Vampiric',   desc: 'Each defeat heals 3 health.' },                 // Stardew vampiric
-  crusader:  { name: 'Crusader',   desc: '+50% damage to bone walkers and sand wraiths.' }, // crusader (undead)
-  bugkiller: { name: 'Bug killer', desc: 'Double damage to mites.' },                       // bug killer
+  crusader:  { name: 'Crusader',   desc: '+50% damage to the undead (bone walkers, wraiths, the dead of Mournfield).' }, // crusader (undead)
+  bugkiller: { name: 'Bug killer', desc: 'Double damage to bugs (mites, beetles, wasps, shellbacks).' },                       // bug killer
   haymaker:  { name: 'Haymaker',   desc: 'Monsters sometimes drop fiber, cloth or coal.' }, // haymaker (drops)
 };
 export const TOOL_ENCHANTS = {

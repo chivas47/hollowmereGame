@@ -8,7 +8,8 @@ import { addUpdater, addInteraction, addEntities } from '../core/registry.js';
 import { MAPS, SOLID, sizeOf } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
 import { RARE_DROP, DROP_POOL, SPECIALS } from '../data/weapons.js';
-import { UNDEAD, MONSTERS, MONSTER_COUNT, CHARGE, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR, BUSY, ELITE, statsAt, statAt, kindsFor } from '../data/monsters.js';
+import { UNDEAD, MONSTERS, MONSTER_COUNT, CHARGE, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR, BUSY, ELITE, statsAt, statAt, kindsFor, hasTag } from '../data/monsters.js';
+import { heard, MONSTER_SOUNDS } from '../data/audio.js';
 import { SAVAGE } from '../data/guild.js';
 import { CAVERN } from '../data/cavern.js';
 import { VENT } from '../data/forge.js';
@@ -110,7 +111,7 @@ export function chargeTurn(m, d, dx, dy, dt) {
   const k = MONSTERS[m.kind];
   if (!m.cs) {
     m.rest = Math.max(0, (m.rest || 0) - dt);
-    if (d < k.range && m.rest <= 0) { m.cs = 'windup'; m.ct = k.windup; m.cn = k.times; }
+    if (d < k.range && m.rest <= 0) { windup(m, k.windup); m.cn = k.times; }
     if (dx) m.face = dx < 0;
     return false;   // walks after you as a walker does
   }
@@ -127,7 +128,7 @@ export function chargeTurn(m, d, dx, dy, dt) {
     const hit = moveBox(m, m.cdx * k.rush * dt, m.cdy * k.rush * dt, BOX);
     if (hit.x || hit.y) { daze(m, k.stun); emit('monster:bump', { x: m.x, y: m.y }); return true; }
     if (m.ct <= 0) {
-      if (--m.cn > 0) { m.cs = 'windup'; m.ct = k.windup * 0.6; }   // the next rush comes quicker
+      if (--m.cn > 0) windup(m, k.windup * 0.6);   // the next rush comes quicker
       else { m.cs = 'recover'; m.ct = k.recover; }
     }
     return true;
@@ -155,16 +156,18 @@ function beetleTurn(m, d, vx, vy, dt) {
   if (m.bs === 'sink') { if (m.bt <= 0) { m.bs = 'under'; m.bt = BURROW.rest + BURROW.under; } return true; }
   if (m.bs === 'under') {
     if (d < AGGRO) underStep(m, vx, vy, m.speed * 2 * dt);
-    if (d < AGGRO && (d < BURROW.rise || m.bt <= 0)) { m.bs = 'rise'; m.bt = BURROW.tell; }
+    if (d < AGGRO && (d < BURROW.rise || m.bt <= 0)) { m.bs = 'rise'; m.bt = BURROW.tell; emit('monster:rise', { x: m.x, y: m.y, kind: m.kind }); }   // v345: the shake is heard
     return true;
   }
   if (m.bt > 0) return true;
   const k = MONSTERS[m.kind];
-  m.bs = 'up'; m.cs = 'windup'; m.ct = k.windup; m.cn = k.times;
+  m.bs = 'up'; windup(m, k.windup); m.cn = k.times;
   emit('monster:surface', { x: m.x, y: m.y, kind: m.kind });
   return false;
 }
 const daze = (m, t) => { m.cs = 'dazed'; m.ct = t; m.cn = 0; };
+// v345: a charger starts its wind-up (the tell), and you hear it.
+function windup(m, t) { m.cs = 'windup'; m.ct = t; emit('monster:windup', { x: m.x, y: m.y, kind: m.kind }); }
 
 // v253 (roadmap 85d1): a burrower's turn (data/weapons.js BURROW). m.bs: under (a mound sliding after you, below the
 // rocks), rise (the mound shakes: the tell), up (out and fighting), for m.bt seconds each. Returns true while it
@@ -174,7 +177,7 @@ function burrowTurn(m, d, vx, vy, dt) {
   if (m.bs === 'sink') { if (m.bt <= 0) { m.bs = 'under'; m.bt = BURROW.rest + BURROW.under; } return true; }
   if (m.bs === 'under') {
     if (d < AGGRO) underStep(m, vx, vy, m.speed * dt);
-    if (d < AGGRO && (d < BURROW.rise || m.bt <= 0)) { m.bs = 'rise'; m.bt = BURROW.tell; }
+    if (d < AGGRO && (d < BURROW.rise || m.bt <= 0)) { m.bs = 'rise'; m.bt = BURROW.tell; emit('monster:rise', { x: m.x, y: m.y, kind: m.kind }); }   // v345: the shake is heard
     return true;
   }
   if (m.bs === 'rise') { if (m.bt <= 0) { m.bs = 'up'; m.bt = BURROW.up; emit('monster:surface', { x: m.x, y: m.y, kind: m.kind }); } return true; }
@@ -211,7 +214,7 @@ function shootTurn(m, d, dx, dy, dt, f) {
     }
     return [0, 0];
   }
-  if (m.st <= 0) { m.aim = true; m.st = SHOOT.tell; return [0, 0]; }
+  if (m.st <= 0) { m.aim = true; m.st = SHOOT.tell; emit('monster:aim', { x: m.x, y: m.y, kind: m.kind }); return [0, 0]; }   // v345: the glow is heard
   if (d < SHOOT.near) return [-dx / d, -dy / d];
   if (d > SHOOT.far) return [dx / d, dy / d];
   return [0, 0];
@@ -292,7 +295,8 @@ addUpdater((dt) => {
     }
     if (move === 'burrow' && burrowTurn(m, d, vx, vy, dt)) continue;   // v253: under the floor, nothing touches
     if (MONSTERS[m.kind || 'slime'].burrow && beetleTurn(m, d, vx, vy, dt)) continue;   // v266: the burrow beetle
-    if (move === 'phase') { m.pt -= dt; if (m.pt <= 0) { m.ph = m.ph === 'faint' ? 'solid' : 'faint'; m.pt = PHASE[m.ph]; } }   // v257
+    if (move === 'phase') { m.pt -= dt; if (m.pt <= 0) { m.ph = m.ph === 'faint' ? 'solid' : 'faint'; m.pt = PHASE[m.ph]; if (d < AGGRO) emit('monster:phase', { x: m.x, y: m.y, kind: m.kind }); } }   // v257 (v345: heard when near)
+    if (d < AGGRO && !m.alerted && !untouchable(m)) { m.alerted = true; cry(`${MONSTERS[m.kind].voice}Alert`, m.x, m.y); }   // v345: it notices you
     if (move === 'burrow') { /* up: it stands its ground */ }
     else if (move === 'charge' && chargeTurn(m, d, dx, dy, dt)) { /* v228: the charger moved itself */ }
     else if (move === 'hop' || move === 'split') { if (active) step(m, vx, vy, m.speed * 1.6 * dt); }   // v256: splitters hop
@@ -306,7 +310,7 @@ addUpdater((dt) => {
     }
     if (untouchable(m)) { if (G.S.map !== slimeMap) return; continue; }   // v257: a faded phaser passes through you
     if (d < TOUCH && (f === G.S ? G.block : f.block) > 0) blocked(m, f);   // v227: the sword's block (v231: either farmer's)
-    else if (d < TOUCH && !(m.kind === 'slime' && wearing('slimeward'))) (f === G.P2 ? hurtPartner : hurtPlayer)(m.dmg * (m.cs === 'charge' ? CHARGE.hit : 1), m.x, m.y);   // v36: the slime ward; v143: whoever it reached; v228: a charge hits harder
+    else if (d < TOUCH && !(hasTag(m.kind, 'slime') && wearing('slimeward'))) (f === G.P2 ? hurtPartner : hurtPlayer)(m.dmg * (m.cs === 'charge' ? CHARGE.hit : 1), m.x, m.y);   // v36: the slime ward; v143: whoever it reached; v228: a charge hits harder
     if (G.S.map !== slimeMap) return;   // fainting moved us out
   }
 });
@@ -328,7 +332,7 @@ export function damageOf() {
   return weapon().damage * attackMult() * (has('fighter') ? 1.1 : 1) * (has('brute') ? 1.15 : 1) * (wearing('emberring') ? 1.1 : 1) * forgeBonus().damage * (G.S.mastery.claimed.includes('combat') ? 1.15 : 1) * tierMult();   // v39: heartstones; v40: combat mastery; v282: its tier
 }
 // v39: weapon enchantments that change damage against a kind.
-export const versus = (kind) => { const e = weaponEnchant(), u = weapon().undead && UNDEAD.includes(kind) ? weapon().undead : 1; return u * (e === 'crusader' && UNDEAD.includes(kind) ? 1.5 : e === 'bugkiller' && kind === 'mite' ? 2 : 1); };   // 97a: the gravewarden blade
+export const versus = (kind) => { const e = weaponEnchant(), u = weapon().undead && UNDEAD.includes(kind) ? weapon().undead : 1; return u * (e === 'crusader' && UNDEAD.includes(kind) ? 1.5 : e === 'bugkiller' && hasTag(kind, 'bug') ? 2 : 1); };   // 97a: the gravewarden blade
 const HAY = ['fiber', 'cloth', 'coal'];
 function defeat(m) {
   slimes.splice(slimes.indexOf(m), 1);
@@ -473,7 +477,7 @@ addEntities(() => (G.S.map !== slimeMap ? [] : slimes.map((m) => ({
     : m.cs ? drawCharger(c, m)
     : m.hidden ? drawMonster(c, m.x, m.y, SHEET.kinds[m.kind]?.sleep || 'crabrock', MONSTERS[m.kind].disguise || ROCK_GREY, false, 0)   // v269: its own sleeping shape (the gourd's pumpkin)   // v253: a mimic asleep looks like a rock (v261: the gourd lurker a pumpkin)
     : m.bs === 'sink' ? drawSinking(c, m)   // v267
-    : m.bs && m.bs !== 'up' ? drawMound(c, m.x + (m.bs === 'rise' ? (Math.floor(m.bt * 30) % 2 ? 1 : -1) : 0), m.y, m.hop, m.kind === 'lurker' ? 'lava' : 'earth', shellOf(m))   // v253: a burrower's mound (shaking: the tell); v254: a lava ripple
+    : m.bs && m.bs !== 'up' ? drawMound(c, m.x + (m.bs === 'rise' ? (Math.floor(m.bt * 30) % 2 ? 1 : -1) : 0), m.y, m.hop, MONSTERS[m.kind].mound || 'earth', shellOf(m))   // v253: a burrower's mound (shaking: the tell); v254: a lava ripple
     : drawMonster(c, m.x, m.y, m.kind, m.aim && Math.floor(m.st * 14) % 2 === 0 ? MONSTERS[m.kind].glow || m.color : m.color, m.hurt > 0, m.hop, !!m.face)))),   // v255: a spitter flashes before it spits (v264: in its glow colour, not white)
 })).concat(shots.map((s) => ({ y: s.y + 8, draw: (c) => drawShot(c, s.x, s.y, s.color) })))));
 const ROCK_GREY = '#8a8580';
@@ -507,7 +511,7 @@ function drawSinking(c, m) {
   c.save(); c.beginPath(); c.rect(m.x - 24, m.y - 40, 48, 38); c.clip();
   drawMonster(c, m.x, m.y + Math.round(k * 16), m.kind, m.color, false, m.hop, !!m.face);
   c.restore();
-  if (k > 0.3) drawMound(c, m.x, m.y, m.hop, m.kind === 'lurker' ? 'lava' : 'earth', shellOf(m));
+  if (k > 0.3) drawMound(c, m.x, m.y, m.hop, MONSTERS[m.kind].mound || 'earth', shellOf(m));
 }
 // v260: an elite: a pulsing gold ring at its feet and a spark over it, drawn before the monster.
 function drawElite(c, m) {
@@ -548,13 +552,21 @@ function drawCharger(c, m) {
 for (const ev of ['monster:wake', 'monster:crack']) on(ev, ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 3, IMPACT.stone, 6, { speed: 35, up: 25, size: 1, life: 0.35, shrink: true }); });
 // v264 (87d): a burrower breaking the floor throws up a spray of earth (or lava, for the lurker).
 // v267: digging down: a small spray and the dig sound; coming up: the sound too.
-on('monster:dig', ({ x, y, kind }) => { if (G.S.map !== slimeMap) return; burst(x, y - 2, kind === 'lurker' ? ['#ffd98a', '#e9862a'] : IMPACT.dirt, 6, { speed: 25, up: 25, size: 1, life: 0.35, shrink: true }); emit('sfx', 'hoe'); });
-on('monster:surface', ({ x, y }) => { if (G.S.map === slimeMap) emit('sfx', 'hoe'); });
-on('monster:surface', ({ x, y, kind }) => { if (G.S.map === slimeMap) burst(x, y - 2, kind === 'lurker' ? ['#ffd98a', '#e9862a', '#8a2a22'] : IMPACT.dirt, 14, { speed: 45, up: 55, size: 2, life: 0.5, shrink: true }); });
-on('monster:crack', () => emit('sfx', 'pick'));
-on('monster:clang', ({ x, y }) => { if (G.S.map !== slimeMap) return; burst(x, y - 6, IMPACT.stone, 4, { speed: 50, up: 20, size: 1, life: 0.2, shrink: true }); emit('sfx', 'pick'); });
+on('monster:dig', ({ x, y, kind }) => { if (G.S.map !== slimeMap) return; burst(x, y - 2, MONSTERS[kind]?.mound === 'lava' ? ['#ffd98a', '#e9862a'] : IMPACT.dirt, 6, { speed: 25, up: 25, size: 1, life: 0.35, shrink: true }) });
+on('monster:surface', ({ x, y, kind }) => { if (G.S.map === slimeMap) burst(x, y - 2, MONSTERS[kind]?.mound === 'lava' ? ['#ffd98a', '#e9862a', '#8a2a22'] : IMPACT.dirt, 14, { speed: 45, up: 55, size: 2, life: 0.5, shrink: true }); });
+on('monster:clang', ({ x, y }) => { if (G.S.map !== slimeMap) return; burst(x, y - 6, IMPACT.stone, 4, { speed: 50, up: 20, size: 1, life: 0.2, shrink: true }); });
 on('monster:split', ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 4, IMPACT.stone, 8, { speed: 45, up: 30, size: 2, life: 0.4, shrink: true }); });
 on('monster:spit', ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 8, IMPACT.stone, 3, { speed: 20, up: 10, size: 1, life: 0.25, shrink: true }); });
 // v228: a charger setting off kicks up dust; one that runs into a wall shakes the ground.
 on('monster:charge', ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 2, IMPACT.stone, 5, { speed: 30, up: 15, size: 1, life: 0.35, shrink: true }); });
-on('monster:bump', ({ x, y }) => { if (G.S.map !== slimeMap) return; burst(x, y - 4, IMPACT.stone, 10, { speed: 60, up: 35, size: 2, life: 0.45, shrink: true }); shake(1.5, 0.12); emit('sfx', 'pick'); });
+on('monster:bump', ({ x, y }) => { if (G.S.map !== slimeMap) return; burst(x, y - 4, IMPACT.stone, 10, { speed: 60, up: 35, size: 2, life: 0.45, shrink: true }); shake(1.5, 0.12); });
+
+// v345: the creatures' own sounds, played where they happen (data/audio.js HEARING): quieter further off, nothing from
+// another map. MONSTER_SOUNDS maps each creature event to its sound; voices add each kind's alert and death cry.
+export function cry(id, x, y) {
+  if (G.S.map !== slimeMap) return;
+  const vol = heard(Math.hypot(x - G.S.x, y - G.S.y));
+  if (vol > 0) emit('sfx', { id, vol });
+}
+for (const [ev, id] of Object.entries(MONSTER_SOUNDS)) on(ev, ({ x, y }) => cry(id, x, y));
+on('monster:slain', ({ kind, x, y }) => cry(`${MONSTERS[kind].voice}Death`, x, y));

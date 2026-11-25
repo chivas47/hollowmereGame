@@ -98,7 +98,7 @@ test('a beetle digging down and coming up is heard, and is not counted as slain'
   m.cs = 'recover'; m.ct = 0.02;
   tick(0.06);
   assert.equal(m.bs, 'sink');
-  assert.ok(heard.includes('hoe'), 'the dig sound');
+  assert.ok(heard.some((s) => s?.id === 'burrowDig'), 'the dig sound, heard where it digs');
   assert.deepEqual(slain, [], 'digging down is not a defeat');
   assert.ok(slimes.includes(m));
 });

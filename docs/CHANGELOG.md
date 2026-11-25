@@ -2,11 +2,15 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
-## v345: Every creature in one table
-- Nothing changes in play: every creature has the same health, damage, speed, XP, drops and haunts as before (a test checks the stats on 62 floors against the old ones).
+## v345: Every creature in one table, families and creature sounds
+- Creatures make their own sounds. Each kind has a voice (slime, bug, beast, bone, ghost, ember or plant): a cry when it notices you and another as it falls. The warnings are heard: a charger winding up, a spitter gathering a shot, a burrower's mound shaking. So are a burrower digging down, a mimic waking, a shell cracking or turning a blade, a charger hitting a wall, a big slime splitting and a ghost fading. Sounds are quieter the further off the creature is, and silent from another map. The burrowers and shells no longer borrow the hoe and pickaxe.
+- The slime ward now keeps every slime off you, moss and ember slimes included (it only worked on plain slimes).
+- The bug killer enchantment now doubles damage to every bug: mites, burrow beetles, dune scuttlers, shellbacks, crag shellbacks, thorn wasps and firefly moths (it only worked on mites).
+- Otherwise nothing changes in play: every creature has the same health, damage, speed, XP, drops and haunts as before (a test checks the stats on 62 floors against the old ones).
 - Every creature now lives in one entry in `src/data/monsters.js`: where it lives (`zones`: hollow, cavern, vent, wildfarm, night, duskmarch, plus `from` and `to` floors in the Hollow), how it fights, its stats and its loot. Stats are plain numbers (`12`, or `[12, 3]` for 12 plus 1 every 3 floors, with an optional cap) instead of code, so a balance patch only changes numbers.
 - The spawns, the Bestiary, the night creatures and the balance bot all read the same `zones` list. Before, six separate flags (`cavern`, `cavernOnly`, `vent`, `ventOnly`, `surfaceOnly`, `wildOnly`) were each checked their own way in several places.
-- `undead` is now a flag on each creature rather than a separate list.
+- Rules read families (`tags`: slime, bug, undead) instead of creature names, so a new slime or bug is covered by the ring and the enchantment with no code. `undead` is a tag now, not a separate list. The lava lurker's mound is a `mound: 'lava'` field, not a name check.
+- `node tools/render_audio.mjs` recorded the 25 new sounds into `assets/audio/sfx/creatures/`, each with a recording brief in `assets/audio/README.md` for a sound designer to replace.
 - `node tools/monster_stats.mjs` prints every creature's numbers; `--fixture` saves them for the tests after a deliberate change, so a balance patch shows up in the pull request's diff.
 - The balance bot only looks for monster materials on Hollow floors where a Hollow creature drops them. Before, the Duskmarch's creatures counted as floor 1. This run's report is unchanged.
 - New save data: none.

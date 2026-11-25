@@ -56,7 +56,7 @@ test('spawn lists come from zones and floors', () => {
   assert.equal(kindsIn('night').length, 4, 'one night creature a season');
 });
 
-test('undead is a flag on the kind', () => {
-  assert.deepEqual(UNDEAD, KINDS.filter((k) => MONSTERS[k].undead));
+test('undead is a tag on the kind', () => {
+  assert.deepEqual(UNDEAD, KINDS.filter((k) => MONSTERS[k].tags.includes('undead')));
   assert.ok(UNDEAD.includes('skeleton') && UNDEAD.includes('haunt') && !UNDEAD.includes('slime'));
 });
