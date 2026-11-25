@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v351: Health and damage on the Bestiary cards
+- Each creature's card in the journal's Creatures tab now says how tough it is and how hard it hits where you meet it: one number for creatures that are always the same ("Health 18, hits for 12."), a range over the floors a creature keeps to ("Health 6 to 19, hits for 5 to 25." for the pebble crab, floors 1 to 40), and "or more" for those that grow stronger the deeper you go.
+- The numbers come from the creature's own entry, so a balance patch updates the cards with it. They are the base numbers: the challenge brazier and the catacombs' tougher dead make them stronger.
+- Cards for creatures not met yet still show "???".
+- New save data: none.
+
 ## v350: Guild goals by kind of creature, knockback per creature
 - The Wardens' Lodge slaying goals now say which creatures count by what they are ("chargers in the Hollow", "swarms in the dungeons", "the creatures of the night") instead of a written list of names. Every goal counts exactly the creatures it did before; a creature added later that fits a goal counts toward it with no list to edit.
 - Each creature can be pushed more or less by a blow (`knockback` in `src/data/monsters.js`, default 1): swings, bombs, the blast ring and the sword's block all respect it. Every creature still uses 1, so nothing changes in play yet; a balance patch can make golems and guardians hold their ground.

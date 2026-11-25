@@ -1,6 +1,9 @@
 // Roadmap 85c: the Bestiary, the journal's Creatures tab. Where each monster lives and how to fight it, worked out
 // from its data (data/monsters.js MONSTERS) so a new kind gets a card without a new entry here.
-import { MONSTERS } from './monsters.js';
+import { MONSTERS, statAt } from './monsters.js';
+import { CAVERN } from './cavern.js';
+import { VENT } from './forge.js';
+import { PEAK } from './nuts.js';
 
 // How each way of moving fights, and what to do about it. One plain line each.
 export const HOW = {
@@ -40,3 +43,28 @@ export function whereLives(kind) {
 const RANK = { hollow: 0, cavern: 1, vent: 2, wildfarm: 0, night: 3, duskmarch: 4, lair: 5 };   // v347: the bosses last
 const rank = (k) => Math.min(...MONSTERS[k].zones.map((z) => RANK[z]));
 export const BESTIARY_ORDER = Object.keys(MONSTERS).sort((a, b) => rank(a) - rank(b) || (MONSTERS[a].from ?? 0) - (MONSTERS[b].from ?? 0));
+
+// v351: how strong a kind is where you meet it, for its card. Stats grow with the Hollow-floor strength of where it
+// spawns (data/monsters.js statAt): a Hollow kind's floors, the Sunken Cavern's from its first floor down (no
+// bottom), the Ember Vent's and the Smoke Peak's ten floors. Kinds that only live above ground or in a lair are met
+// at strength 1. Returns [lo, hi] floors, hi null when there is no deepest.
+export function strengthRange(kind) {
+  const d = MONSTERS[kind], spans = [];
+  if (d.zones.includes('hollow')) spans.push([d.from, d.to ?? null]);
+  if (d.zones.includes('cavern')) spans.push([CAVERN.eff(1), null]);
+  if (d.zones.includes('vent')) spans.push([Math.min(VENT.eff(1), PEAK.eff(1)), Math.max(VENT.eff(VENT.floors - 1), PEAK.eff(PEAK.floors - 1))]);
+  if (!spans.length) return [1, 1];
+  return [Math.min(...spans.map((s) => s[0])), spans.some((s) => s[1] === null) ? null : Math.max(...spans.map((s) => s[1]))];
+}
+// The card's line: "Health 7, hits for 9." or with a range where it grows ("Health 7 to 20"), or "or more" where
+// it keeps growing deeper. Base numbers: the challenge brazier and the catacombs' tougher dead add to them.
+export function strengthLine(kind) {
+  const [lo, hi] = strengthRange(kind);
+  const part = (stat) => {
+    const a = statAt(kind, stat, lo);
+    if (hi === null) return statAt(kind, stat, lo + 200) > a ? `${a} or more` : `${a}`;
+    const b = statAt(kind, stat, hi);
+    return b > a ? `${a} to ${b}` : `${a}`;
+  };
+  return `Health ${part('hp')}, hits for ${part('dmg')}.`;
+}

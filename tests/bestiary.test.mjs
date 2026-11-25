@@ -48,3 +48,16 @@ test('the Bestiary is saved, and an old save meets every kind it has defeated', 
   const again = merge(JSON.parse(JSON.stringify({ ...s, bestiary: { seen: ['bat'], drops: { bat: ['leatherwing'] }, elites: ['bat'] } })));
   assert.deepEqual(again.bestiary, { seen: ['bat'], drops: { bat: ['leatherwing'] }, elites: ['bat'] });   // v260: elites
 });
+
+// v351: each card says how strong the creature is where you meet it.
+test('a card gives health and damage over the floors it lives on', async () => {
+  const { strengthLine, strengthRange } = await import('../src/data/bestiary.js');
+  const { statAt } = await import('../src/data/monsters.js');
+  assert.equal(strengthLine('rattler'), `Health ${MONSTERS.rattler.hp}, hits for ${MONSTERS.rattler.dmg}.`, 'fixed: one number each');
+  assert.equal(strengthLine('gravewarden'), 'Health 320, hits for 18.');
+  assert.deepEqual(strengthRange('crab'), [1, 40]);
+  assert.equal(strengthLine('crab'), `Health ${statAt('crab', 'hp', 1)} to ${statAt('crab', 'hp', 40)}, hits for ${statAt('crab', 'dmg', 1)} to ${statAt('crab', 'dmg', 40)}.`, 'a band of floors: a range');
+  assert.match(strengthLine('bat'), /^Health \d+ or more, hits for \d+ or more\.$/, 'no deepest floor: "or more"');
+  assert.equal(strengthRange('wraith')[0], 102, 'the Sunken Cavern from its first floor');
+  for (const k of Object.keys(MONSTERS)) assert.match(strengthLine(k), /^Health \d+.*, hits for \d+.*\.$/, k);
+});
