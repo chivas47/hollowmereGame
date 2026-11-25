@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v353: Spawn weights can change with depth
+- A creature's spawn weight can now be bands by depth (`weight: { hollow: [[1, 3], [30, 1], [60, 0.5]] }`): from each floor of its zone down, its own weight. A creature can be common on the first floors and rare deep, or the other way, without changing every floor at once.
+- Bands count the floors of their own zone (Hollow, Sunken Cavern, Ember Vent, Smoke Peak floor numbers), not their strength.
+- No creature uses bands yet, so every floor spawns exactly as before (checked on 208 floors). `node tools/monster_stats.mjs --spawns hollow 1` shows a floor's odds with them.
+- New save data: none.
+
 ## v352: Creatures tuned: how often they appear, how far they see you
 - Swarms (soot puffs, dust devils, ash swarms, storm wings) turn up less often. A swarm is 4 or 5 creatures at once, so at even odds soot puffs were over a third of everything on Hollow floor 45; now under a fifth.
 - Floors 1 and 2 are mostly slimes: the pebble crab is half as likely, so new players are not met by rocks that bite half the time.

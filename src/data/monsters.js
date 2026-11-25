@@ -14,8 +14,11 @@
 // move: how it fights (systems/monsters.js; the Bestiary's data/bestiary.js HOW). xp: combat XP a defeat gives.
 // color: its body colour (slimes take theirs from the floor); glow: a second colour (a spitter's glob, a wisp's light).
 // weight: how often it is picked among the kinds of a floor (default 1, all equal; 2 is twice as often, 0.25 a
-//   quarter as often). A number, or one per zone ({ hollow: 1, vent: 0.3 }; zones left out count 1). spawnShare()
-//   gives the resulting odds, and tools/monster_stats.mjs prints them.
+//   quarter as often). A number, or one per zone ({ hollow: 1, vent: 0.3 }; zones left out count 1). v353: any of
+//   those can instead be bands by depth, [[from, w], ...] in rising order: from that floor of its zone down (a Hollow,
+//   Cavern, Vent or Peak floor number, not the strength), w applies, so { hollow: [[1, 2], [30, 1], [60, 0.5]] } is
+//   common early and rare deep; floors above the first band take the first band's weight. spawnShare() gives the
+//   resulting odds, and tools/monster_stats.mjs prints them.
 // boss: a named guardian (systems/monsters.js spawnBoss): drawn `scale` times as big with a health bar, boss music
 //   while it lives; each time its health falls past a share in `marks` it calls up `calls` [kind, n] round it; below
 //   `rage` of its health it moves at `rageSpeed`. callLine: what you are told when it calls.
@@ -244,23 +247,27 @@ export function kindsWhere(q) {
   return Object.keys(MONSTERS).filter((k) => (!q.move || MONSTERS[k].move === q.move)
     && (!q.zones || q.zones.some((z) => livesIn(k, z))) && (!q.tag || hasTag(k, q.tag)));
 }
-// v346: a kind's spawn weight in a zone (weight above).
-export function weightIn(kind, zone) {
-  const w = MONSTERS[kind].weight;
-  return typeof w === 'number' ? w : w?.[zoneOf(zone)] ?? 1;
+// v346: a kind's spawn weight in a zone (weight above); v353: on floor n of that zone, for weights in bands by depth.
+export function weightIn(kind, zone, n = 1) {
+  const w = MONSTERS[kind].weight, v = typeof w === 'number' || Array.isArray(w) ? w : w?.[zoneOf(zone)] ?? 1;
+  if (!Array.isArray(v)) return v;
+  let out = v[0][1];
+  for (const [from, x] of v) if (n >= from) out = x;
+  return out;
 }
 // v346: one kind drawn from `kinds` by their weights in `zone`, with one roll of R (a floor's seeded rng). With every
 // weight 1 it picks exactly what an even draw did, so floors stay as they were until a weight changes.
-export function pickKind(kinds, zone, R = Math.random) {
-  const total = kinds.reduce((a, k) => a + weightIn(k, zone), 0);
+// v353: n, the floor of its zone (for weights in bands by depth).
+export function pickKind(kinds, zone, R = Math.random, n = 1) {
+  const total = kinds.reduce((a, k) => a + weightIn(k, zone, n), 0);
   let t = R() * total;
-  for (const k of kinds) if ((t -= weightIn(k, zone)) < 0) return k;
+  for (const k of kinds) if ((t -= weightIn(k, zone, n)) < 0) return k;
   return kinds[kinds.length - 1];
 }
-// v346: each kind's chance to be picked on a floor ({ kind: share }, summing to 1).
+// v346: each kind's chance to be picked on a floor ({ kind: share }, summing to 1). floor: the floor of its zone.
 export function spawnShare(zone, floor) {
-  const kinds = kindsFor(zone, floor), total = kinds.reduce((a, k) => a + weightIn(k, zone), 0);
-  return Object.fromEntries(kinds.map((k) => [k, total ? weightIn(k, zone) / total : 0]));
+  const kinds = kindsFor(zone, floor), total = kinds.reduce((a, k) => a + weightIn(k, zone, floor), 0);
+  return Object.fromEntries(kinds.map((k) => [k, total ? weightIn(k, zone, floor) / total : 0]));
 }
 
 // v346: whether a kind belongs to a family (TAGS).

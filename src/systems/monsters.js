@@ -53,12 +53,12 @@ on('mine:floor', ({ floor: n, rng: R, zone, eff: floor, busy }) => {
   const cav = zone === 'cavern', peak = zone === 'peak', vent = zone === 'vent' || peak, g = MAPS.mine.grid, D = MONSTERS;   // v67: the peak has the vent's monsters
   const kinds = kindsFor(zone, floor);   // v345: by each kind's zones (data/monsters.js)
   let count = peak ? (n >= PEAK.floors ? 0 : PEAK.monsters(n)) : vent ? (n >= VENT.floors ? 0 : VENT.monsters(n)) : cav ? CAVERN.monsters(n) : MONSTER_COUNT(floor);   // v39: the forge room is safe
-  const theme = busy ? pickKind(kinds, zone, R) : null;   // v259: a busy floor is all one kind, more of them
+  const depth = n, theme = busy ? pickKind(kinds, zone, R, depth) : null;   // v353: depth, the zone's floor, for weights in bands   // v259: a busy floor is all one kind, more of them
   if (busy) count = Math.min(BUSY.max, Math.round(count * BUSY.mult));
   for (let guard = 0; slimes.length < count && guard < 500; guard++) {
     const x = 1 + Math.floor(R() * (g[0].length - 2)), y = 1 + Math.floor(R() * (g.length - 2));   // v157: the floor's own size
     if (g[y][x] !== 'f' || (x < 7 && y < 6)) continue;
-    const kind = theme || pickKind(kinds, zone, R), pack = D[kind].pack;
+    const kind = theme || pickKind(kinds, zone, R, depth), pack = D[kind].pack;
     const n = Math.min(pack ? pack[0] + Math.floor(R() * (pack[1] - pack[0] + 1)) : 1, busy ? count - slimes.length : Infinity);   // v253: a swarm is a pack in one slot; v259: a busy floor stops at its count
     for (let i = 0; i < n; i++) slimes.push(challenge({ ...make(kind, floor, x * T + 8 + (i % 3 - 1) * 6, y * T + 12 + (Math.floor(i / 3) - 0.5) * 6, R), zone }));
   }

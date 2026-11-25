@@ -24,7 +24,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     const zone = process.argv[sp + 1] || 'hollow', floor = +(process.argv[sp + 2] || 1);
     const share = Object.entries(spawnShare(zone, floor)).sort((a, b) => b[1] - a[1]);
     console.log(`${zone} floor ${floor}: ${share.length} kinds`);
-    for (const [k, s] of share) console.log(`${k.padEnd(12)} weight ${String(weightIn(k, zone)).padEnd(5)} ${(s * 100).toFixed(1)}%`);
+    for (const [k, s] of share) console.log(`${k.padEnd(12)} weight ${String(weightIn(k, zone, floor)).padEnd(5)} ${(s * 100).toFixed(1)}%`);
   } else if (process.argv.includes('--fixture')) {
     const path = fileURLToPath(new URL('../tests/fixtures/monster-stats.json', import.meta.url));
     writeFileSync(path, JSON.stringify(fixture()));
@@ -35,7 +35,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     const rows = Object.keys(MONSTERS).map((k) => {
       const d = MONSTERS[k], [a, b] = at(k), s = (st) => (statAt(k, st, a) === statAt(k, st, b) ? `${statAt(k, st, a)}` : `${statAt(k, st, a)}-${statAt(k, st, b)}`);
       const loot = Object.entries(lootPerDefeat(k)).map(([it, n]) => `${it} ${n.toFixed(2)}`).join(', ');
-      return [k, d.zones.join('+'), d.zones.includes('hollow') ? `${d.from}-${d.to ?? ''}` : `(${a}-${b})`, d.move, typeof d.weight === 'object' ? JSON.stringify(d.weight) : d.weight ?? 1, noticeOf(k), knockbackOf(k), s('hp'), s('dmg'), s('speed'), d.xp, loot];
+      return [k, d.zones.join('+'), d.zones.includes('hollow') ? `${d.from}-${d.to ?? ''}` : `(${a}-${b})`, d.move, typeof d.weight === 'object' ? JSON.stringify(d.weight).replace(/"/g, '') : d.weight ?? 1, noticeOf(k), knockbackOf(k), s('hp'), s('dmg'), s('speed'), d.xp, loot];
     });
     const head = ['kind', 'zones', 'floors', 'move', 'weight', 'notice', 'knockback', 'hp', 'dmg', 'speed', 'xp', 'drops per defeat'];
     const w = head.map((h, i) => Math.max(h.length, ...rows.map((r) => String(r[i]).length)));
