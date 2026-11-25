@@ -1,7 +1,7 @@
 // Sound effects. Systems emit 'sfx' (name) and a few other events; this file turns them into sound.
 import { on } from '../core/events.js';
-import { tone, noise, stats, audio } from './engine.js';
-import { SFX_FILES } from '../data/audio.js';
+import { tone, noise, stats, audio, atLevel } from './engine.js';
+import { SFX_FILES, HEARING } from '../data/audio.js';
 import { playFile } from './files.js';
 
 export const SFX = {   // v317: exported for tools/render_audio.mjs, which records each into assets/audio/sfx
@@ -37,12 +37,45 @@ export const SFX = {   // v317: exported for tools/render_audio.mjs, which recor
   chime:   () => [1175, 1568].forEach((f, i) => tone({ freq: f, dur: 0.5, type: 'sine', vol: 0.05, at: i * 0.18 })),   // v110: the wishing stone
   splash:  () => noise({ dur: 0.3, vol: 0.08, filter: 'lowpass', freq: 700, sweep: 200 }),   // v110: a lantern on the water
   morning: () => [784, 988, 1175].forEach((f, i) => tone({ freq: f, dur: 0.25, type: 'sine', vol: 0.06, at: i * 0.12 })),
+  // v346: the creatures' own sounds (data/audio.js briefs). The warnings first.
+  chargeWindup: () => { noise({ dur: 0.5, vol: 0.12, filter: 'bandpass', freq: 220, sweep: 900 }); tone({ freq: 70, dur: 0.5, type: 'sawtooth', vol: 0.05, slide: 140 }); noise({ dur: 0.08, vol: 0.1, freq: 1800, filter: 'bandpass', at: 0.38 }); },
+  chargeBump:   () => { noise({ dur: 0.3, vol: 0.28, freq: 180, sweep: 60 }); tone({ freq: 85, dur: 0.18, type: 'sine', vol: 0.14, slide: 45 }); },
+  spitCharge:   () => { tone({ freq: 220, dur: 0.4, type: 'triangle', vol: 0.06, slide: 660 }); noise({ dur: 0.4, vol: 0.06, filter: 'bandpass', freq: 500, sweep: 1600 }); },
+  spit:         () => { noise({ dur: 0.06, vol: 0.18, filter: 'bandpass', freq: 1200 }); tone({ freq: 520, dur: 0.1, type: 'sine', vol: 0.07, slide: 180 }); noise({ dur: 0.12, vol: 0.05, filter: 'highpass', freq: 2500, at: 0.04 }); },
+  burrowDig:    () => { noise({ dur: 0.35, vol: 0.18, freq: 900, sweep: 160 }); noise({ dur: 0.06, vol: 0.08, filter: 'bandpass', freq: 2200, at: 0.1 }); },
+  burrowRise:   () => { noise({ dur: 0.45, vol: 0.14, freq: 140, sweep: 700 }); tone({ freq: 55, dur: 0.4, type: 'sine', vol: 0.1, slide: 90 }); noise({ dur: 0.1, vol: 0.18, freq: 1200, filter: 'bandpass', at: 0.4 }); },
+  shellCrack:   () => { noise({ dur: 0.05, vol: 0.22, filter: 'bandpass', freq: 2600 }); tone({ freq: 320, dur: 0.12, type: 'triangle', vol: 0.07, slide: 200, at: 0.02 }); },
+  shellClang:   () => { tone({ freq: 740, dur: 0.18, type: 'square', vol: 0.04, slide: 700 }); tone({ freq: 1110, dur: 0.14, type: 'triangle', vol: 0.04 }); noise({ dur: 0.05, vol: 0.12, filter: 'bandpass', freq: 3000 }); },
+  mimicWake:    () => { [0, 0.07, 0.15].forEach((at) => noise({ dur: 0.07, vol: 0.12, freq: 600, filter: 'bandpass', at })); [0.25, 0.3, 0.35].forEach((at) => tone({ freq: 2400, dur: 0.02, type: 'square', vol: 0.03, at })); },
+  slimeSplit:   () => { tone({ freq: 180, dur: 0.22, type: 'sine', vol: 0.12, slide: 420 }); tone({ freq: 300, dur: 0.08, type: 'sine', vol: 0.1, at: 0.22, slide: 160 }); tone({ freq: 340, dur: 0.08, type: 'sine', vol: 0.1, at: 0.28, slide: 180 }); },
+  phaseShift:   () => { noise({ dur: 0.45, vol: 0.05, filter: 'bandpass', freq: 1800, sweep: 600 }); tone({ freq: 880, dur: 0.4, type: 'sine', vol: 0.025, slide: 1320 }); },
+  // Each voice: Alert (it notices you), Death (under the defeat chime).
+  slimeAlert:   () => tone({ freq: 240, dur: 0.14, type: 'sine', vol: 0.12, slide: 480 }),
+  slimeDeath:   () => { tone({ freq: 360, dur: 0.22, type: 'sine', vol: 0.12, slide: 110 }); noise({ dur: 0.1, vol: 0.08, filter: 'lowpass', freq: 600 }); },
+  bugAlert:     () => [0, 0.03, 0.06, 0.09, 0.12].forEach((at) => noise({ dur: 0.02, vol: 0.1, filter: 'bandpass', freq: 3200, at })),
+  bugDeath:     () => { noise({ dur: 0.1, vol: 0.18, filter: 'bandpass', freq: 1800, sweep: 600 }); noise({ dur: 0.02, vol: 0.1, filter: 'bandpass', freq: 3500, at: 0.16 }); },
+  beastAlert:   () => { noise({ dur: 0.24, vol: 0.12, filter: 'bandpass', freq: 400, sweep: 900 }); tone({ freq: 150, dur: 0.22, type: 'sawtooth', vol: 0.05, slide: 230 }); },
+  beastDeath:   () => { tone({ freq: 300, dur: 0.28, type: 'sawtooth', vol: 0.05, slide: 110 }); noise({ dur: 0.2, vol: 0.08, filter: 'bandpass', freq: 500, sweep: 200 }); },
+  boneAlert:    () => [0, 0.05, 0.09, 0.14, 0.2].forEach((at, i) => tone({ freq: 900 + (i % 2) * 300, dur: 0.03, type: 'square', vol: 0.04, at })),
+  boneDeath:    () => [0, 0.06, 0.1, 0.17, 0.22, 0.3].forEach((at, i) => { tone({ freq: 700 - i * 60, dur: 0.04, type: 'square', vol: 0.04, at }); noise({ dur: 0.03, vol: 0.06, filter: 'bandpass', freq: 1500, at }); }),
+  ghostAlert:   () => { tone({ freq: 330, dur: 0.4, type: 'sine', vol: 0.06, slide: 495 }); noise({ dur: 0.4, vol: 0.04, filter: 'bandpass', freq: 1000, sweep: 1600 }); },
+  ghostDeath:   () => { tone({ freq: 520, dur: 0.45, type: 'sine', vol: 0.06, slide: 1400 }); noise({ dur: 0.4, vol: 0.05, filter: 'highpass', freq: 2000, sweep: 5000 }); },
+  emberAlert:   () => { noise({ dur: 0.25, vol: 0.12, filter: 'highpass', freq: 1500, sweep: 4000 }); [0.03, 0.09, 0.16].forEach((at) => noise({ dur: 0.015, vol: 0.12, filter: 'bandpass', freq: 3000, at })); },
+  emberDeath:   () => { noise({ dur: 0.4, vol: 0.1, filter: 'highpass', freq: 3000, sweep: 800 }); noise({ dur: 0.15, vol: 0.1, freq: 300, at: 0.05 }); },
+  plantAlert:   () => { tone({ freq: 140, dur: 0.2, type: 'sawtooth', vol: 0.04, slide: 110 }); noise({ dur: 0.2, vol: 0.08, filter: 'highpass', freq: 1800, sweep: 900, at: 0.05 }); },
+  plantDeath:   () => { noise({ dur: 0.05, vol: 0.2, filter: 'bandpass', freq: 1400 }); noise({ dur: 0.3, vol: 0.08, filter: 'highpass', freq: 1800, sweep: 700, at: 0.04 }); },
 };
 
+// name: an effect's id, or v346 { id, vol } for one heard from a distance (a creature's sound; vol 0 to 1). The same
+// distant sound does not play again within HEARING.gap s, so a pack does not stack into a roar.
+const lastAt = {};
 export function play(name) {
-  if (!SFX[name] || !audio()) return;
+  const id = typeof name === 'string' ? name : name?.id, vol = typeof name === 'string' ? 1 : name?.vol ?? 1;
+  const a = audio();
+  if (!SFX[id] || !a || vol <= 0) return;
+  if (typeof name !== 'string') { if (a.ctx.currentTime - (lastAt[id] ?? -1) < HEARING.gap) return; lastAt[id] = a.ctx.currentTime; }
   stats.sfx++;
-  if (!playFile(SFX_FILES[name])) SFX[name]();   // v317: the file (on its entry's bus), or the generated sound until it loads
+  if (!playFile(SFX_FILES[id], { vol })) atLevel(vol, SFX[id]);   // v317: the file (on its entry's bus), or the generated sound until it loads
 }
 
 on('sfx', play);

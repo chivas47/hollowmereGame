@@ -33,7 +33,7 @@ assets/audio/
 │   ├── weather/  nature/  water/  underground/  town/             loops and calls of a place and its weather
 ├── environment/                                                   things you walk up to: the waterfall, a hearth
 └── sfx/
-    ├── tools/  farming/  combat/  fishing/  items/  animals/  world/  jingles/  ui/
+    ├── tools/  farming/  combat/  creatures/  fishing/  items/  animals/  world/  jingles/  ui/
     └── footsteps/
 ```
 
@@ -478,7 +478,7 @@ Mournfield after dark, when the dead rise. The day theme's mood turned eerie: tr
 #### Old Stones
 
 - File: `music/sacred/sacred_01.ogg` (id `sacred_01`)
-- Plays: anywhere in the sacred region (The shrine, The chapel crypt) without a track of its own
+- Plays: anywhere in the sacred region (The shrine, The chapel catacombs, The north tomb) without a track of its own
 - Form: loops; an intro can play once first (loopStart)
 - Placeholder: D phrygian, 64 bpm
 
@@ -839,6 +839,208 @@ The farmer taking damage. A short low grunt-like tone or impact with a slight do
 - Volume: Effects
 
 A bomb exploding. A deep explosion with rubble, 0.6 to 1 s, strong low end but not painful.
+
+### `sfx/creatures/`
+
+#### A charger winding up
+
+- File: `sfx/creatures/charge_windup_01.wav` (id `chargeWindup`)
+- Form: one-shot
+- Volume: Effects
+
+A charging creature winding up to rush you: the warning. A rising snort and scrape of hooves or claws on stone, 0.4 to 0.6 s, building toward the end. Must read at once as "it is about to charge" over the music.
+
+#### A charger hitting a wall
+
+- File: `sfx/creatures/charge_bump_01.wav` (id `chargeBump`)
+- Form: one-shot
+- Volume: Effects
+
+A charging creature crashing into a wall or rock and staggering. A heavy dull body thud with a little rubble, 0.2 to 0.35 s, low and blunt (not the bright pickaxe clink).
+
+#### A spitter gathering a shot
+
+- File: `sfx/creatures/spit_charge_01.wav` (id `spitCharge`)
+- Form: one-shot
+- Volume: Effects
+
+A spitter gathering a glob before it fires: the warning. A short rising wet gurgle with a faint glow-like shimmer, 0.3 to 0.45 s. Must cut through a fight.
+
+#### A spitter firing a glob
+
+- File: `sfx/creatures/spit_glob_01.wav` (id `spit`)
+- Form: one-shot
+- Volume: Effects
+
+A spitter firing a glob. A quick wet pop or "ptoo" with a small airy tail, 0.12 to 0.2 s.
+
+#### A burrower digging down
+
+- File: `sfx/creatures/burrow_dig_01.wav` (id `burrowDig`)
+- Form: one-shot
+- Volume: Effects
+
+A burrowing creature digging down out of sight. A short downward scrape of loose earth and pebbles, 0.25 to 0.4 s, fading as it goes under.
+
+#### A burrower about to come up
+
+- File: `sfx/creatures/burrow_rise_01.wav` (id `burrowRise`)
+- Form: one-shot
+- Volume: Effects
+
+A burrowing creature about to break the floor: the warning while its mound shakes. A rising rumble and crumble of earth, 0.4 to 0.55 s, ending in a small burst.
+
+#### A mimic's shell cracking
+
+- File: `sfx/creatures/shell_crack_01.wav` (id `shellCrack`)
+- Form: one-shot
+- Volume: Effects
+
+The first hit on a creature disguised as a rock or a pumpkin, cracking its shell. A stony crack with a hollow knock, 0.12 to 0.2 s.
+
+#### A blade glancing off a shell
+
+- File: `sfx/creatures/shell_clang_01.wav` (id `shellClang`)
+- Form: one-shot
+- Volume: Effects
+
+A sword or dagger glancing off an armoured shell, doing little harm. A dull metallic clank with a short ring, 0.15 to 0.25 s: it should sound like the blade was the wrong tool.
+
+#### A mimic waking up
+
+- File: `sfx/creatures/mimic_wake_01.wav` (id `mimicWake`)
+- Form: one-shot
+- Volume: Effects
+
+A creature that sat as a rock (or a stump, or a pumpkin) waking up. Stones or wood shifting, then a little clicking of legs, 0.3 to 0.45 s.
+
+#### A big slime splitting
+
+- File: `sfx/creatures/slime_split_01.wav` (id `slimeSplit`)
+- Form: one-shot
+- Volume: Effects
+
+A big slime splitting into two small ones. A wet stretching squelch that pops into two, 0.25 to 0.4 s, comic rather than gross.
+
+#### A ghost fading in or out
+
+- File: `sfx/creatures/phase_shift_01.wav` (id `phaseShift`)
+- Form: one-shot
+- Volume: Effects
+
+A ghostly creature fading in or out of sight. A soft airy shimmer or breath, 0.3 to 0.5 s, quiet: it repeats every few seconds while the creature is near.
+
+#### A slime noticing you
+
+- File: `sfx/creatures/slime_alert_01.wav` (id `slimeAlert`)
+- Form: one-shot
+- Volume: Effects
+
+A slime noticing you. A small wet blorp with an upward bend, about 0.15 s. Cute; heard often.
+
+#### A slime falling
+
+- File: `sfx/creatures/slime_death_01.wav` (id `slimeDeath`)
+- Form: one-shot
+- Volume: Effects
+
+A slime defeated: its own sound under the game's defeat chime. A soft wet splat or deflating squish, 0.2 to 0.3 s. No chime of its own.
+
+#### A bug noticing you
+
+- File: `sfx/creatures/bug_alert_01.wav` (id `bugAlert`)
+- Form: one-shot
+- Volume: Effects
+
+A bug (mites, beetles, wasps, shellbacks, crabs) noticing you. A dry rapid clicking or chitter, about 0.15 to 0.2 s, insect-like.
+
+#### A bug falling
+
+- File: `sfx/creatures/bug_death_01.wav` (id `bugDeath`)
+- Form: one-shot
+- Volume: Effects
+
+A bug defeated, under the defeat chime. A dry crunch with a last click, 0.15 to 0.25 s. No chime of its own; never gory.
+
+#### A beast noticing you
+
+- File: `sfx/creatures/beast_alert_01.wav` (id `beastAlert`)
+- Form: one-shot
+- Volume: Effects
+
+A beast (bats, boars, rams, hounds, serpents) noticing you. A short snarl, snort or screech depending on size, 0.2 to 0.3 s, animal but stylized.
+
+#### A beast falling
+
+- File: `sfx/creatures/beast_death_01.wav` (id `beastDeath`)
+- Form: one-shot
+- Volume: Effects
+
+A beast defeated, under the defeat chime. A short falling yelp or grunt, 0.2 to 0.35 s. No chime of its own; never pained or cruel.
+
+#### A bone walker noticing you
+
+- File: `sfx/creatures/bone_alert_01.wav` (id `boneAlert`)
+- Form: one-shot
+- Volume: Effects
+
+A skeleton, wraith or grave rattler noticing you. A dry rattle of bones with a hollow knock, 0.2 to 0.3 s.
+
+#### A bone walker falling
+
+- File: `sfx/creatures/bone_death_01.wav` (id `boneDeath`)
+- Form: one-shot
+- Volume: Effects
+
+A skeleton or wraith defeated, under the defeat chime. Bones clattering to the floor, 0.3 to 0.45 s. No chime of its own.
+
+#### A ghost noticing you
+
+- File: `sfx/creatures/ghost_alert_01.wav` (id `ghostAlert`)
+- Form: one-shot
+- Volume: Effects
+
+A ghost or wisp noticing you. A soft hollow moan or breathy whistle rising, 0.3 to 0.45 s. Eerie but gentle.
+
+#### A ghost falling
+
+- File: `sfx/creatures/ghost_death_01.wav` (id `ghostDeath`)
+- Form: one-shot
+- Volume: Effects
+
+A ghost or wisp defeated, under the defeat chime. A sigh that thins into a high fading whisper, 0.3 to 0.5 s. No chime of its own.
+
+#### A fire creature noticing you
+
+- File: `sfx/creatures/ember_alert_01.wav` (id `emberAlert`)
+- Form: one-shot
+- Volume: Effects
+
+A fire or ash creature (magma sprites, golems, lurkers, soot puffs) noticing you. A crackling flare like a fire catching, 0.2 to 0.3 s.
+
+#### A fire creature falling
+
+- File: `sfx/creatures/ember_death_01.wav` (id `emberDeath`)
+- Form: one-shot
+- Volume: Effects
+
+A fire or ash creature defeated, under the defeat chime. A hiss of embers going out with a soft puff of ash, 0.3 to 0.45 s. No chime of its own.
+
+#### A plant creature noticing you
+
+- File: `sfx/creatures/plant_alert_01.wav` (id `plantAlert`)
+- Form: one-shot
+- Volume: Effects
+
+A plant creature (bramble sprites, the gourd and stump lurkers) noticing you. A creak of wood and a rustle of leaves, 0.2 to 0.3 s.
+
+#### A plant creature falling
+
+- File: `sfx/creatures/plant_death_01.wav` (id `plantDeath`)
+- Form: one-shot
+- Volume: Effects
+
+A plant creature defeated, under the defeat chime. A woody snap and a scatter of leaves, 0.25 to 0.4 s. No chime of its own.
 
 ### `sfx/farming/`
 

@@ -29,13 +29,17 @@ export function unlock() {
 const hz = (midi) => 440 * 2 ** ((midi - 69) / 12);
 export { hz };
 
+// v346: a level every tone and noise is scaled by while fn runs (a creature's sound heard from further away).
+let level = 1;
+export function atLevel(k, fn) { level = k; try { fn(); } finally { level = 1; } }
+
 // A short enveloped oscillator. slide: end frequency (Hz) for pitch sweeps.
 export function tone({ freq, dur = 0.12, type = 'square', vol = 0.12, slide = null, at = 0, bus = 'sfx', to = null }) {   // v318: to, a node to play into (a music voice's fader)
   const a = audio(); if (!a) return;
   const t = a.ctx.currentTime + at, o = a.ctx.createOscillator(), g = a.ctx.createGain();
   o.type = type; o.frequency.setValueAtTime(freq, t);
   if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + dur);
-  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(Math.max(0.0001, vol * level), t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
   o.connect(g); g.connect(to || a[bus]); o.start(t); o.stop(t + dur + 0.02);
 }
 
@@ -50,7 +54,7 @@ export function noise({ dur = 0.15, vol = 0.15, filter = 'lowpass', freq = 800, 
   const t = a.ctx.currentTime + at, src = a.ctx.createBufferSource(), f = a.ctx.createBiquadFilter(), g = a.ctx.createGain();
   src.buffer = noiseBuf; f.type = filter; f.frequency.setValueAtTime(freq, t);
   if (sweep) f.frequency.exponentialRampToValueAtTime(sweep, t + dur);
-  g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  g.gain.setValueAtTime(Math.max(0.0001, vol * level), t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
   src.connect(f); f.connect(g); g.connect(a[bus]); src.start(t); src.stop(t + dur + 0.02);
 }
 

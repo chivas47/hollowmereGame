@@ -2,6 +2,15 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v346: Creature families, creature sounds, spawn weights
+- Creatures make their own sounds. Each kind has a voice (slime, bug, beast, bone, ghost, ember or plant): a cry when it notices you and another as it falls. The warnings are heard: a charger winding up, a spitter gathering a shot, a burrower's mound shaking. So are a burrower digging down, a mimic waking, a shell cracking or turning a blade, a charger hitting a wall, a big slime splitting and a ghost fading. Sounds are quieter the further off the creature is, and silent from another map. The burrowers and shells no longer borrow the hoe and pickaxe.
+- The slime ward now keeps every slime off you, moss and ember slimes included (it only worked on plain slimes).
+- The bug killer enchantment now doubles damage to every bug: mites, burrow beetles, dune scuttlers, shellbacks, crag shellbacks, thorn wasps and firefly moths (it only worked on mites).
+- Rules read families (`tags`: slime, bug, undead) instead of creature names, so a new slime or bug is covered by the ring and the enchantment with no code. `undead` is a tag now. The lava lurker's mound is a `mound: 'lava'` field, not a name check.
+- Creatures can be given spawn weights (`weight` in data/monsters.js, a number or one per zone): how often a kind turns up among its floor's kinds. Every kind is weight 1 for now, so every floor spawns exactly as before (checked on 208 floors). `node tools/monster_stats.mjs --spawns hollow 60` shows a floor's odds.
+- `node tools/render_audio.mjs` recorded the 25 new sounds into `assets/audio/sfx/creatures/`, each with a recording brief in `assets/audio/README.md` for a sound designer to replace.
+- New save data: none.
+
 ## v345: Every creature in one table
 - Nothing changes in play: every creature has the same health, damage, speed, XP, drops and haunts as before (a test checks the stats on 62 floors against the old ones).
 - Every creature now lives in one entry in `src/data/monsters.js`: where it lives (`zones`: hollow, cavern, vent, wildfarm, night, duskmarch, plus `from` and `to` floors in the Hollow), how it fights, its stats and its loot. Stats are plain numbers (`12`, or `[12, 3]` for 12 plus 1 every 3 floors, with an optional cap) instead of code, so a balance patch only changes numbers.

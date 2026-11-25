@@ -83,6 +83,34 @@ export const SFX_FILES = {
   slay:        { files: ['sfx/combat/monster_defeated_01.wav'], about: 'a creature defeated', brief: 'A creature defeated. A soft poof or deflate with a small rising two-note chime, 0.2 to 0.4 s. Rewarding, never gory.', gain: 0.0779 },
   slam:        { files: ['sfx/combat/ground_slam_01.wav'], about: 'a weapon special slamming the ground', brief: 'A weapon special slamming the ground. A deep boom with rocks and dust, 0.3 to 0.5 s, strong low end.', gain: 0.158 },
   heartbeat:   { files: ['sfx/combat/low_health_heartbeat_01.wav'], about: 'low health in a fight', brief: 'Low health in a fight. Two soft low heartbeat thumps (lub-dub), about 0.3 s, repeated by the game. Felt more than heard; no high frequencies.', gain: 0.151 },
+  // v346: the creatures' own sounds (sfx/creatures/), played where the creature is (HEARING). The warnings (a charge,
+  // a spit, a burrower rising) come first: they tell you what is about to hit you. Each voice in data/monsters.js
+  // VOICES has an Alert (it notices you) and a Death (its cry under the defeat chime).
+  chargeWindup: { files: ['sfx/creatures/charge_windup_01.wav'], about: 'a charger winding up', brief: 'A charging creature winding up to rush you: the warning. A rising snort and scrape of hooves or claws on stone, 0.4 to 0.6 s, building toward the end. Must read at once as "it is about to charge" over the music.', gain: 0.0671 },
+  chargeBump:   { files: ['sfx/creatures/charge_bump_01.wav'], about: 'a charger hitting a wall', brief: 'A charging creature crashing into a wall or rock and staggering. A heavy dull body thud with a little rubble, 0.2 to 0.35 s, low and blunt (not the bright pickaxe clink).', gain: 0.156 },
+  spitCharge:   { files: ['sfx/creatures/spit_charge_01.wav'], about: 'a spitter gathering a shot', brief: 'A spitter gathering a glob before it fires: the warning. A short rising wet gurgle with a faint glow-like shimmer, 0.3 to 0.45 s. Must cut through a fight.', gain: 0.0714 },
+  spit:         { files: ['sfx/creatures/spit_glob_01.wav'], about: 'a spitter firing a glob', brief: 'A spitter firing a glob. A quick wet pop or "ptoo" with a small airy tail, 0.12 to 0.2 s.', gain: 0.105 },
+  burrowDig:    { files: ['sfx/creatures/burrow_dig_01.wav'], about: 'a burrower digging down', brief: 'A burrowing creature digging down out of sight. A short downward scrape of loose earth and pebbles, 0.25 to 0.4 s, fading as it goes under.', gain: 0.107 },
+  burrowRise:   { files: ['sfx/creatures/burrow_rise_01.wav'], about: 'a burrower about to come up', brief: 'A burrowing creature about to break the floor: the warning while its mound shakes. A rising rumble and crumble of earth, 0.4 to 0.55 s, ending in a small burst.', gain: 0.121 },
+  shellCrack:   { files: ['sfx/creatures/shell_crack_01.wav'], about: 'a mimic\'s shell cracking', brief: 'The first hit on a creature disguised as a rock or a pumpkin, cracking its shell. A stony crack with a hollow knock, 0.12 to 0.2 s.', gain: 0.0974 },
+  shellClang:   { files: ['sfx/creatures/shell_clang_01.wav'], about: 'a blade glancing off a shell', brief: 'A sword or dagger glancing off an armoured shell, doing little harm. A dull metallic clank with a short ring, 0.15 to 0.25 s: it should sound like the blade was the wrong tool.', gain: 0.098 },
+  mimicWake:    { files: ['sfx/creatures/mimic_wake_01.wav'], about: 'a mimic waking up', brief: 'A creature that sat as a rock (or a stump, or a pumpkin) waking up. Stones or wood shifting, then a little clicking of legs, 0.3 to 0.45 s.', gain: 0.0332 },
+  slimeSplit:   { files: ['sfx/creatures/slime_split_01.wav'], about: 'a big slime splitting', brief: 'A big slime splitting into two small ones. A wet stretching squelch that pops into two, 0.25 to 0.4 s, comic rather than gross.', gain: 0.124 },
+  phaseShift:   { files: ['sfx/creatures/phase_shift_01.wav'], about: 'a ghost fading in or out', brief: 'A ghostly creature fading in or out of sight. A soft airy shimmer or breath, 0.3 to 0.5 s, quiet: it repeats every few seconds while the creature is near.', gain: 0.0616 },
+  slimeAlert:   { files: ['sfx/creatures/slime_alert_01.wav'], about: 'a slime noticing you', brief: 'A slime noticing you. A small wet blorp with an upward bend, about 0.15 s. Cute; heard often.', gain: 0.125 },
+  slimeDeath:   { files: ['sfx/creatures/slime_death_01.wav'], about: 'a slime falling', brief: 'A slime defeated: its own sound under the game\'s defeat chime. A soft wet splat or deflating squish, 0.2 to 0.3 s. No chime of its own.', gain: 0.129 },
+  bugAlert:     { files: ['sfx/creatures/bug_alert_01.wav'], about: 'a bug noticing you', brief: 'A bug (mites, beetles, wasps, shellbacks, crabs) noticing you. A dry rapid clicking or chitter, about 0.15 to 0.2 s, insect-like.', gain: 0.0764 },
+  bugDeath:     { files: ['sfx/creatures/bug_death_01.wav'], about: 'a bug falling', brief: 'A bug defeated, under the defeat chime. A dry crunch with a last click, 0.15 to 0.25 s. No chime of its own; never gory.', gain: 0.109 },
+  beastAlert:   { files: ['sfx/creatures/beast_alert_01.wav'], about: 'a beast noticing you', brief: 'A beast (bats, boars, rams, hounds, serpents) noticing you. A short snarl, snort or screech depending on size, 0.2 to 0.3 s, animal but stylized.', gain: 0.0667 },
+  beastDeath:   { files: ['sfx/creatures/beast_death_01.wav'], about: 'a beast falling', brief: 'A beast defeated, under the defeat chime. A short falling yelp or grunt, 0.2 to 0.35 s. No chime of its own; never pained or cruel.', gain: 0.0571 },
+  boneAlert:    { files: ['sfx/creatures/bone_alert_01.wav'], about: 'a bone walker noticing you', brief: 'A skeleton, wraith or grave rattler noticing you. A dry rattle of bones with a hollow knock, 0.2 to 0.3 s.', gain: 0.0431 },
+  boneDeath:    { files: ['sfx/creatures/bone_death_01.wav'], about: 'a bone walker falling', brief: 'A skeleton or wraith defeated, under the defeat chime. Bones clattering to the floor, 0.3 to 0.45 s. No chime of its own.', gain: 0.0445 },
+  ghostAlert:   { files: ['sfx/creatures/ghost_alert_01.wav'], about: 'a ghost noticing you', brief: 'A ghost or wisp noticing you. A soft hollow moan or breathy whistle rising, 0.3 to 0.45 s. Eerie but gentle.', gain: 0.0721 },
+  ghostDeath:   { files: ['sfx/creatures/ghost_death_01.wav'], about: 'a ghost falling', brief: 'A ghost or wisp defeated, under the defeat chime. A sigh that thins into a high fading whisper, 0.3 to 0.5 s. No chime of its own.', gain: 0.122 },
+  emberAlert:   { files: ['sfx/creatures/ember_alert_01.wav'], about: 'a fire creature noticing you', brief: 'A fire or ash creature (magma sprites, golems, lurkers, soot puffs) noticing you. A crackling flare like a fire catching, 0.2 to 0.3 s.', gain: 0.167 },
+  emberDeath:   { files: ['sfx/creatures/ember_death_01.wav'], about: 'a fire creature falling', brief: 'A fire or ash creature defeated, under the defeat chime. A hiss of embers going out with a soft puff of ash, 0.3 to 0.45 s. No chime of its own.', gain: 0.15 },
+  plantAlert:   { files: ['sfx/creatures/plant_alert_01.wav'], about: 'a plant creature noticing you', brief: 'A plant creature (bramble sprites, the gourd and stump lurkers) noticing you. A creak of wood and a rustle of leaves, 0.2 to 0.3 s.', gain: 0.0799 },
+  plantDeath:   { files: ['sfx/creatures/plant_death_01.wav'], about: 'a plant creature falling', brief: 'A plant creature defeated, under the defeat chime. A woody snap and a scatter of leaves, 0.25 to 0.4 s. No chime of its own.', gain: 0.113 },
   pickup:      { files: ['sfx/items/item_pickup_01.wav'], about: 'picking something up', brief: 'Picking anything up. A light, happy two-note blip or soft pluck, about 0.15 s. Extremely frequent: pleasant and quick, the game\'s most \'feel-good\' tiny sound.', gain: 0.123 },
   bite:        { files: ['sfx/fishing/fish_bite_alert_01.wav'], about: 'a fish biting', brief: 'A fish biting: the reel starts now. A sharp alert, two quick plucks or a bobber plunk with a ping, about 0.2 s. Must cut through music and ambience.', gain: 0.127 },
   catch:       { files: ['sfx/fishing/fish_caught_01.wav'], about: 'a fish caught', brief: 'A fish caught. A short rising fanfare, 0.4 to 0.6 s, bright plucked or bell tones. Celebratory but small.', gain: 0.129 },
@@ -266,3 +294,15 @@ export const STEP_FILES = {
 };
 
 export const ALL_AUDIO = { sfx: SFX_FILES, ambience: BED_FILES, calls: CALL_FILES, footsteps: STEP_FILES };
+
+// v346: how far a creature's sounds carry (px from you): full volume within `near`, fading to silence at `far`. `gap`:
+// seconds before the same sound plays again, so a busy floor's alerts do not stack into a roar.
+export const HEARING = { near: 64, far: 280, gap: 0.12 };
+export const heard = (d) => (d <= HEARING.near ? 1 : d >= HEARING.far ? 0 : 1 - (d - HEARING.near) / (HEARING.far - HEARING.near));
+// v346: the creature events (systems/monsters.js) and the sound each plays where it happens. The voices' alerts and
+// deaths are played by the creature's own voice (data/monsters.js).
+export const MONSTER_SOUNDS = {
+  'monster:windup': 'chargeWindup', 'monster:bump': 'chargeBump', 'monster:aim': 'spitCharge', 'monster:spit': 'spit',
+  'monster:dig': 'burrowDig', 'monster:rise': 'burrowRise', 'monster:crack': 'shellCrack', 'monster:clang': 'shellClang',
+  'monster:wake': 'mimicWake', 'monster:split': 'slimeSplit', 'monster:phase': 'phaseShift',
+};
