@@ -19,7 +19,7 @@ import { placePlayer } from '../src/systems/world.js';
 import { freshFarm } from './setup.mjs';
 
 const CHARGERS = Object.keys(MONSTERS).filter((k) => MONSTERS[k].move === 'charge' && !livesIn(k, 'duskmarch'));   // v303: the dungeons' chargers (the Duskmarch's bristle hog has no Guild goal yet)
-const charged = Object.values(GOALS).filter((g) => g.kinds);
+const charged = Object.values(GOALS).filter((g) => g.who.move === 'charge');   // v350: goals pick by query
 const kill = (kind, n = 1) => { for (let i = 0; i < n; i++) emit('monster:slain', { kind, x: 0, y: 0, map: 'mine' }); };
 
 test('every charger counts toward exactly one goal, and each reward exists', () => {

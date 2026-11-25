@@ -7,7 +7,7 @@
 // pull request's diff as the fixture's change, never by accident.
 import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { MONSTERS, statAt, spawnShare, weightIn, noticeOf } from '../src/data/monsters.js';
+import { MONSTERS, statAt, spawnShare, weightIn, noticeOf, knockbackOf } from '../src/data/monsters.js';
 import { lootPerDefeat } from '../src/data/loot.js';
 
 export const FIXTURE_FLOORS = [...Array(30).keys()].map((i) => i + 1);
@@ -35,9 +35,9 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     const rows = Object.keys(MONSTERS).map((k) => {
       const d = MONSTERS[k], [a, b] = at(k), s = (st) => (statAt(k, st, a) === statAt(k, st, b) ? `${statAt(k, st, a)}` : `${statAt(k, st, a)}-${statAt(k, st, b)}`);
       const loot = Object.entries(lootPerDefeat(k)).map(([it, n]) => `${it} ${n.toFixed(2)}`).join(', ');
-      return [k, d.zones.join('+'), d.zones.includes('hollow') ? `${d.from}-${d.to ?? ''}` : `(${a}-${b})`, d.move, typeof d.weight === 'object' ? JSON.stringify(d.weight) : d.weight ?? 1, noticeOf(k), s('hp'), s('dmg'), s('speed'), d.xp, loot];
+      return [k, d.zones.join('+'), d.zones.includes('hollow') ? `${d.from}-${d.to ?? ''}` : `(${a}-${b})`, d.move, typeof d.weight === 'object' ? JSON.stringify(d.weight) : d.weight ?? 1, noticeOf(k), knockbackOf(k), s('hp'), s('dmg'), s('speed'), d.xp, loot];
     });
-    const head = ['kind', 'zones', 'floors', 'move', 'weight', 'notice', 'hp', 'dmg', 'speed', 'xp', 'drops per defeat'];
+    const head = ['kind', 'zones', 'floors', 'move', 'weight', 'notice', 'knockback', 'hp', 'dmg', 'speed', 'xp', 'drops per defeat'];
     const w = head.map((h, i) => Math.max(h.length, ...rows.map((r) => String(r[i]).length)));
     for (const r of [head, ...rows]) console.log(r.map((c, i) => String(c).padEnd(w[i])).join('  ').trimEnd());
   }
