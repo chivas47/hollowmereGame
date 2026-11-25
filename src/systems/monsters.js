@@ -156,7 +156,7 @@ function beetleTurn(m, d, vx, vy, dt) {
   if (m.bs === 'sink') { if (m.bt <= 0) { m.bs = 'under'; m.bt = BURROW.rest + BURROW.under; } return true; }
   if (m.bs === 'under') {
     if (d < AGGRO) underStep(m, vx, vy, m.speed * 2 * dt);
-    if (d < AGGRO && (d < BURROW.rise || m.bt <= 0)) { m.bs = 'rise'; m.bt = BURROW.tell; emit('monster:rise', { x: m.x, y: m.y, kind: m.kind }); }   // v345: the shake is heard
+    if (d < AGGRO && (d < BURROW.rise || m.bt <= 0)) { m.bs = 'rise'; m.bt = BURROW.tell; emit('monster:rise', { x: m.x, y: m.y, kind: m.kind }); }   // v346: the shake is heard
     return true;
   }
   if (m.bt > 0) return true;
@@ -166,7 +166,7 @@ function beetleTurn(m, d, vx, vy, dt) {
   return false;
 }
 const daze = (m, t) => { m.cs = 'dazed'; m.ct = t; m.cn = 0; };
-// v345: a charger starts its wind-up (the tell), and you hear it.
+// v346: a charger starts its wind-up (the tell), and you hear it.
 function windup(m, t) { m.cs = 'windup'; m.ct = t; emit('monster:windup', { x: m.x, y: m.y, kind: m.kind }); }
 
 // v253 (roadmap 85d1): a burrower's turn (data/weapons.js BURROW). m.bs: under (a mound sliding after you, below the
@@ -177,7 +177,7 @@ function burrowTurn(m, d, vx, vy, dt) {
   if (m.bs === 'sink') { if (m.bt <= 0) { m.bs = 'under'; m.bt = BURROW.rest + BURROW.under; } return true; }
   if (m.bs === 'under') {
     if (d < AGGRO) underStep(m, vx, vy, m.speed * dt);
-    if (d < AGGRO && (d < BURROW.rise || m.bt <= 0)) { m.bs = 'rise'; m.bt = BURROW.tell; emit('monster:rise', { x: m.x, y: m.y, kind: m.kind }); }   // v345: the shake is heard
+    if (d < AGGRO && (d < BURROW.rise || m.bt <= 0)) { m.bs = 'rise'; m.bt = BURROW.tell; emit('monster:rise', { x: m.x, y: m.y, kind: m.kind }); }   // v346: the shake is heard
     return true;
   }
   if (m.bs === 'rise') { if (m.bt <= 0) { m.bs = 'up'; m.bt = BURROW.up; emit('monster:surface', { x: m.x, y: m.y, kind: m.kind }); } return true; }
@@ -214,7 +214,7 @@ function shootTurn(m, d, dx, dy, dt, f) {
     }
     return [0, 0];
   }
-  if (m.st <= 0) { m.aim = true; m.st = SHOOT.tell; emit('monster:aim', { x: m.x, y: m.y, kind: m.kind }); return [0, 0]; }   // v345: the glow is heard
+  if (m.st <= 0) { m.aim = true; m.st = SHOOT.tell; emit('monster:aim', { x: m.x, y: m.y, kind: m.kind }); return [0, 0]; }   // v346: the glow is heard
   if (d < SHOOT.near) return [-dx / d, -dy / d];
   if (d > SHOOT.far) return [dx / d, dy / d];
   return [0, 0];
@@ -295,8 +295,8 @@ addUpdater((dt) => {
     }
     if (move === 'burrow' && burrowTurn(m, d, vx, vy, dt)) continue;   // v253: under the floor, nothing touches
     if (MONSTERS[m.kind || 'slime'].burrow && beetleTurn(m, d, vx, vy, dt)) continue;   // v266: the burrow beetle
-    if (move === 'phase') { m.pt -= dt; if (m.pt <= 0) { m.ph = m.ph === 'faint' ? 'solid' : 'faint'; m.pt = PHASE[m.ph]; if (d < AGGRO) emit('monster:phase', { x: m.x, y: m.y, kind: m.kind }); } }   // v257 (v345: heard when near)
-    if (d < AGGRO && !m.alerted && !untouchable(m)) { m.alerted = true; cry(`${MONSTERS[m.kind].voice}Alert`, m.x, m.y); }   // v345: it notices you
+    if (move === 'phase') { m.pt -= dt; if (m.pt <= 0) { m.ph = m.ph === 'faint' ? 'solid' : 'faint'; m.pt = PHASE[m.ph]; if (d < AGGRO) emit('monster:phase', { x: m.x, y: m.y, kind: m.kind }); } }   // v257 (v346: heard when near)
+    if (d < AGGRO && !m.alerted && !untouchable(m)) { m.alerted = true; cry(`${MONSTERS[m.kind].voice}Alert`, m.x, m.y); }   // v346: it notices you
     if (move === 'burrow') { /* up: it stands its ground */ }
     else if (move === 'charge' && chargeTurn(m, d, dx, dy, dt)) { /* v228: the charger moved itself */ }
     else if (move === 'hop' || move === 'split') { if (active) step(m, vx, vy, m.speed * 1.6 * dt); }   // v256: splitters hop
@@ -561,7 +561,7 @@ on('monster:spit', ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 8, IMP
 on('monster:charge', ({ x, y }) => { if (G.S.map === slimeMap) burst(x, y - 2, IMPACT.stone, 5, { speed: 30, up: 15, size: 1, life: 0.35, shrink: true }); });
 on('monster:bump', ({ x, y }) => { if (G.S.map !== slimeMap) return; burst(x, y - 4, IMPACT.stone, 10, { speed: 60, up: 35, size: 2, life: 0.45, shrink: true }); shake(1.5, 0.12); });
 
-// v345: the creatures' own sounds, played where they happen (data/audio.js HEARING): quieter further off, nothing from
+// v346: the creatures' own sounds, played where they happen (data/audio.js HEARING): quieter further off, nothing from
 // another map. MONSTER_SOUNDS maps each creature event to its sound; voices add each kind's alert and death cry.
 export function cry(id, x, y) {
   if (G.S.map !== slimeMap) return;

@@ -66,11 +66,11 @@ export const ZONES = ['hollow', 'cavern', 'vent', 'wildfarm', 'night', 'duskmarc
 const WOODS_LINE = 'Lives in Gloamwood and the Tangle, west of the village, by day and night.';
 const GRAVE_LINE = 'Rises from the graves of Mournfield, west of the town, after dark.';
 
-// v345: families for rules. slime: the slime ward keeps them off you. bug: the bug killer enchantment doubles damage
+// v346: families for rules. slime: the slime ward keeps them off you. bug: the bug killer enchantment doubles damage
 // to them (Stardew's bug killer works on every insect). undead: the crusader's enchantment and the gravewarden blade
 // hurt them more. A kind can have several tags, or none.
 export const TAGS = ['slime', 'bug', 'undead'];
-// v345: the families of creature sounds. Each needs an `<voice>Alert` (it notices you) and a `<voice>Death` (its cry as
+// v346: the families of creature sounds. Each needs an `<voice>Alert` (it notices you) and a `<voice>Death` (its cry as
 // it falls, under the defeat chime) in data/audio.js and audio/sfx.js.
 export const VOICES = ['slime', 'bug', 'beast', 'bone', 'ghost', 'ember', 'plant'];
 
@@ -207,12 +207,12 @@ export function kindsFor(zone, floor) {
   return list.filter((k) => floor >= MONSTERS[k].from && floor <= (MONSTERS[k].to ?? Infinity));
 }
 export const kindsIn = (zone) => BY_ZONE[zoneOf(zone)] || [];
-// v345: a kind's spawn weight in a zone (weight above).
+// v346: a kind's spawn weight in a zone (weight above).
 export function weightIn(kind, zone) {
   const w = MONSTERS[kind].weight;
   return typeof w === 'number' ? w : w?.[zoneOf(zone)] ?? 1;
 }
-// v345: one kind drawn from `kinds` by their weights in `zone`, with one roll of R (a floor's seeded rng). With every
+// v346: one kind drawn from `kinds` by their weights in `zone`, with one roll of R (a floor's seeded rng). With every
 // weight 1 it picks exactly what an even draw did, so floors stay as they were until a weight changes.
 export function pickKind(kinds, zone, R = Math.random) {
   const total = kinds.reduce((a, k) => a + weightIn(k, zone), 0);
@@ -220,13 +220,13 @@ export function pickKind(kinds, zone, R = Math.random) {
   for (const k of kinds) if ((t -= weightIn(k, zone)) < 0) return k;
   return kinds[kinds.length - 1];
 }
-// v345: each kind's chance to be picked on a floor ({ kind: share }, summing to 1).
+// v346: each kind's chance to be picked on a floor ({ kind: share }, summing to 1).
 export function spawnShare(zone, floor) {
   const kinds = kindsFor(zone, floor), total = kinds.reduce((a, k) => a + weightIn(k, zone), 0);
   return Object.fromEntries(kinds.map((k) => [k, total ? weightIn(k, zone) / total : 0]));
 }
 
-// v345: whether a kind belongs to a family (TAGS).
+// v346: whether a kind belongs to a family (TAGS).
 export const hasTag = (kind, tag) => !!MONSTERS[kind]?.tags.includes(tag);
 // The crusader's enchantment and the gravewarden blade hurt these more.
 export const UNDEAD = Object.keys(MONSTERS).filter((k) => hasTag(k, 'undead'));

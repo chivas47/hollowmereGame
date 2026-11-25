@@ -83,7 +83,7 @@ export const SFX_FILES = {
   slay:        { files: ['sfx/combat/monster_defeated_01.wav'], about: 'a creature defeated', brief: 'A creature defeated. A soft poof or deflate with a small rising two-note chime, 0.2 to 0.4 s. Rewarding, never gory.', gain: 0.0779 },
   slam:        { files: ['sfx/combat/ground_slam_01.wav'], about: 'a weapon special slamming the ground', brief: 'A weapon special slamming the ground. A deep boom with rocks and dust, 0.3 to 0.5 s, strong low end.', gain: 0.158 },
   heartbeat:   { files: ['sfx/combat/low_health_heartbeat_01.wav'], about: 'low health in a fight', brief: 'Low health in a fight. Two soft low heartbeat thumps (lub-dub), about 0.3 s, repeated by the game. Felt more than heard; no high frequencies.', gain: 0.151 },
-  // v345: the creatures' own sounds (sfx/creatures/), played where the creature is (HEARING). The warnings (a charge,
+  // v346: the creatures' own sounds (sfx/creatures/), played where the creature is (HEARING). The warnings (a charge,
   // a spit, a burrower rising) come first: they tell you what is about to hit you. Each voice in data/monsters.js
   // VOICES has an Alert (it notices you) and a Death (its cry under the defeat chime).
   chargeWindup: { files: ['sfx/creatures/charge_windup_01.wav'], about: 'a charger winding up', brief: 'A charging creature winding up to rush you: the warning. A rising snort and scrape of hooves or claws on stone, 0.4 to 0.6 s, building toward the end. Must read at once as "it is about to charge" over the music.', gain: 0.0671 },
@@ -295,11 +295,11 @@ export const STEP_FILES = {
 
 export const ALL_AUDIO = { sfx: SFX_FILES, ambience: BED_FILES, calls: CALL_FILES, footsteps: STEP_FILES };
 
-// v345: how far a creature's sounds carry (px from you): full volume within `near`, fading to silence at `far`. `gap`:
+// v346: how far a creature's sounds carry (px from you): full volume within `near`, fading to silence at `far`. `gap`:
 // seconds before the same sound plays again, so a busy floor's alerts do not stack into a roar.
 export const HEARING = { near: 64, far: 280, gap: 0.12 };
 export const heard = (d) => (d <= HEARING.near ? 1 : d >= HEARING.far ? 0 : 1 - (d - HEARING.near) / (HEARING.far - HEARING.near));
-// v345: the creature events (systems/monsters.js) and the sound each plays where it happens. The voices' alerts and
+// v346: the creature events (systems/monsters.js) and the sound each plays where it happens. The voices' alerts and
 // deaths are played by the creature's own voice (data/monsters.js).
 export const MONSTER_SOUNDS = {
   'monster:windup': 'chargeWindup', 'monster:bump': 'chargeBump', 'monster:aim': 'spitCharge', 'monster:spit': 'spit',

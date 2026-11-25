@@ -61,7 +61,7 @@ test('undead is a tag on the kind', () => {
   assert.ok(UNDEAD.includes('skeleton') && UNDEAD.includes('haunt') && !UNDEAD.includes('slime'));
 });
 
-// v345: spawn weights. Every kind is weight 1 today, so floors are exactly what an even draw made.
+// v346: spawn weights. Every kind is weight 1 today, so floors are exactly what an even draw made.
 test('spawn weights: a weighted draw, per zone, and even when every weight is 1', async () => {
   const { pickKind, spawnShare, weightIn } = await import('../src/data/monsters.js');
   for (const k of KINDS) { const w = MONSTERS[k].weight; assert.ok(w === undefined || typeof w === 'number' ? !(w < 0) : Object.keys(w).every((z) => ZONES.includes(z) && w[z] >= 0), `${k}: weight`); }

@@ -1,4 +1,4 @@
-// v345: creature families (tags) that rules read, and each creature's own sounds (voice, the warnings), heard where
+// v346: creature families (tags) that rules read, and each creature's own sounds (voice, the warnings), heard where
 // they happen. Nuno: the slime ward covers every slime and the bug killer every bug.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';

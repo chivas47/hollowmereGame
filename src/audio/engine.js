@@ -29,7 +29,7 @@ export function unlock() {
 const hz = (midi) => 440 * 2 ** ((midi - 69) / 12);
 export { hz };
 
-// v345: a level every tone and noise is scaled by while fn runs (a creature's sound heard from further away).
+// v346: a level every tone and noise is scaled by while fn runs (a creature's sound heard from further away).
 let level = 1;
 export function atLevel(k, fn) { level = k; try { fn(); } finally { level = 1; } }
 

@@ -37,7 +37,7 @@ export const SFX = {   // v317: exported for tools/render_audio.mjs, which recor
   chime:   () => [1175, 1568].forEach((f, i) => tone({ freq: f, dur: 0.5, type: 'sine', vol: 0.05, at: i * 0.18 })),   // v110: the wishing stone
   splash:  () => noise({ dur: 0.3, vol: 0.08, filter: 'lowpass', freq: 700, sweep: 200 }),   // v110: a lantern on the water
   morning: () => [784, 988, 1175].forEach((f, i) => tone({ freq: f, dur: 0.25, type: 'sine', vol: 0.06, at: i * 0.12 })),
-  // v345: the creatures' own sounds (data/audio.js briefs). The warnings first.
+  // v346: the creatures' own sounds (data/audio.js briefs). The warnings first.
   chargeWindup: () => { noise({ dur: 0.5, vol: 0.12, filter: 'bandpass', freq: 220, sweep: 900 }); tone({ freq: 70, dur: 0.5, type: 'sawtooth', vol: 0.05, slide: 140 }); noise({ dur: 0.08, vol: 0.1, freq: 1800, filter: 'bandpass', at: 0.38 }); },
   chargeBump:   () => { noise({ dur: 0.3, vol: 0.28, freq: 180, sweep: 60 }); tone({ freq: 85, dur: 0.18, type: 'sine', vol: 0.14, slide: 45 }); },
   spitCharge:   () => { tone({ freq: 220, dur: 0.4, type: 'triangle', vol: 0.06, slide: 660 }); noise({ dur: 0.4, vol: 0.06, filter: 'bandpass', freq: 500, sweep: 1600 }); },
@@ -66,7 +66,7 @@ export const SFX = {   // v317: exported for tools/render_audio.mjs, which recor
   plantDeath:   () => { noise({ dur: 0.05, vol: 0.2, filter: 'bandpass', freq: 1400 }); noise({ dur: 0.3, vol: 0.08, filter: 'highpass', freq: 1800, sweep: 700, at: 0.04 }); },
 };
 
-// name: an effect's id, or v345 { id, vol } for one heard from a distance (a creature's sound; vol 0 to 1). The same
+// name: an effect's id, or v346 { id, vol } for one heard from a distance (a creature's sound; vol 0 to 1). The same
 // distant sound does not play again within HEARING.gap s, so a pack does not stack into a roar.
 const lastAt = {};
 export function play(name) {
