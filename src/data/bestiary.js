@@ -36,7 +36,7 @@ export function whereLives(kind) {
 }
 
 // The Bestiary's order: by home zone (the first of ZONES a kind lives in: the Hollow's, then the Cavern's, the Vent's,
-// the night creatures, the Duskmarch's), the Hollow's by the floor they start on.
-const RANK = { hollow: 0, cavern: 1, vent: 2, wildfarm: 0, night: 3, duskmarch: 4 };
+// the night creatures, the Duskmarch's, v347 the bosses), the Hollow's by the floor they start on.
+const RANK = { hollow: 0, cavern: 1, vent: 2, wildfarm: 0, night: 3, duskmarch: 4, lair: 5 };   // v347: the bosses last
 const rank = (k) => Math.min(...MONSTERS[k].zones.map((z) => RANK[z]));
 export const BESTIARY_ORDER = Object.keys(MONSTERS).sort((a, b) => rank(a) - rank(b) || (MONSTERS[a].from ?? 0) - (MONSTERS[b].from ?? 0));

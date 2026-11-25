@@ -64,9 +64,3 @@ export function drawGallery(c, fallen, cracking, now) {
     if (t < 0.2) r(c, X + 2, Y + 2, 12, 12, 'rgba(0,0,0,.35)');
   }
 }
-
-// The Gravewarden's health over its head.
-export function drawBossBar(c, m) {
-  const w = 40, x = Math.round(m.x - w / 2), y = Math.round(m.y - 44), k = Math.max(0, m.hp / m.maxHp);
-  r(c, x - 1, y - 1, w + 2, 6, '#120e0b'); r(c, x, y, w, 4, '#3a2a2a'); r(c, x, y, Math.round(w * k), 4, '#c8352f'); r(c, x, y, Math.round(w * k), 1, '#e9862a');
-}

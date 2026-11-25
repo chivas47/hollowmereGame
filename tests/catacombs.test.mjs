@@ -12,6 +12,8 @@ import { MAPS, SOLID } from '../src/data/maps.js';
 import { CRYPT } from '../src/data/duskmarch.js';
 import { BARROW, CATA, GATES, SCONCES, STONE, TOUGH, GATE, GATE_OPEN, SPIKES, CRUMBLE, PIT, BIER_EMPTY, cataZone, spikeUp } from '../src/data/catacombs.js';
 import { slimes } from '../src/systems/monsters.js';
+import { MONSTERS } from '../src/data/monsters.js';
+const WARDEN = MONSTERS.gravewarden;   // v347: the boss is its own creature entry
 import { run, openChest, tryStone, takeBier, openBarrowChest, useCryptDoor, useBarrowDoor, lightSconce, pullLever, useBrazier, openSarcophagus } from '../src/systems/catacombs.js';
 import { placePlayer } from '../src/systems/world.js';
 import { freshFarm } from './setup.mjs';
@@ -195,11 +197,13 @@ test('the Gravewarden: shuts you in, calls the dead as it weakens, and once fall
   at(25, 31); tick();
   assert.equal(run.fight, 'boss'); assert.equal(tile('crypt', GATES.sealedOut[0]), GATE);
   const boss = slimes.find((m) => m.boss);
-  assert.ok(boss && boss.hp === CATA.boss.hp && boss.scale === CATA.boss.scale);
+  assert.ok(boss && boss.kind === 'gravewarden' && boss.hp === WARDEN.hp && boss.scale === WARDEN.boss.scale, 'its own stats, not toughened');
   boss.hp = boss.maxHp * 0.6; tick();
-  assert.equal(slimes.length, 1 + CATA.boss.summon, 'it calls up the dead');
+  assert.equal(slimes.length, 1 + WARDEN.boss.calls[1], 'it calls up the dead');
+  for (const m of slimes.filter((x) => !x.boss)) assert.equal(m.kind, WARDEN.boss.calls[0]);
+  assert.ok(slimes.filter((x) => !x.boss).every((m) => m.hp === Math.ceil(MONSTERS.rattler.hp * TOUGH.hp)), 'tough, as the dead underground are');
   boss.hp = boss.maxHp * 0.3; tick();
-  assert.equal(slimes.length, 1 + 2 * CATA.boss.summon); assert.equal(boss.speed, CATA.boss.rageSpeed, 'and grows quicker');
+  assert.equal(slimes.length, 1 + 2 * WARDEN.boss.calls[1]); assert.equal(boss.speed, WARDEN.boss.rageSpeed, 'and grows quicker');
   slimes.splice(slimes.indexOf(boss), 1); tick();
   assert.ok(G.S.dusk.cata.boss); assert.equal(tile('crypt', GATES.back[0]), GATE_OPEN); assert.equal(tile('crypt', GATES.sealedOut[0]), GATE_OPEN);
   openSarcophagus(); openSarcophagus();

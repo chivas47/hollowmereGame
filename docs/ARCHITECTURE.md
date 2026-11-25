@@ -72,7 +72,7 @@ src/
     hidden.js         GATES (grove log, railway rubble, sewer key), GROVE stumps, SPRING, TRADER stock (v45)
     cavern.js         CAVERN (the Sunken Cavern's door, strength, ores, shafts, chests), HOLLOW_GOLD (v38)
     guild.js          LODGE, LODGE_SHOP, GOALS, BOMBS, geode loot, chest loot (v37)
-    monsters.js       v345: MONSTERS, every creature in one entry (name, zones, Hollow floors, move, plain-number hp/dmg/speed, xp, colours, loot; v346: tags, voice, mound, weight); v346: TAGS (slime, bug, undead: the families rules read) and hasTag(); VOICES (the families of creature sounds); statAt()/statsAt(), livesIn(), kindsFor(zone, floor) (the spawn list), kindsIn(); weight, weightIn(), pickKind() (the weighted draw spawns use) and spawnShare(zone, floor); how each move works (CHARGE, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR); NIGHTFOLK, MONSTER_COUNT, BUSY, ELITE, UNDEAD
+    monsters.js       v345: MONSTERS, every creature in one entry (name, zones, Hollow floors, move, plain-number hp/dmg/speed, xp, colours, loot; v346: tags, voice, mound, weight); v346: TAGS (slime, bug, undead: the families rules read) and hasTag(); VOICES (the families of creature sounds); statAt()/statsAt(), livesIn(), kindsFor(zone, floor) (the spawn list), kindsIn(); weight, weightIn(), pickKind() (the weighted draw spawns use) and spawnShare(zone, floor); how each move works (CHARGE, MIMIC, BURROW, SHOOT, SPLIT, PHASE, ARMOR); NIGHTFOLK, MONSTER_COUNT, BUSY, ELITE, UNDEAD; v347: zone lair and `boss` (a named guardian's size, health marks, calls, rage; the Gravewarden)
     loot.js           v250 (roadmap 85a): LOOT_ITEMS (the six monster materials), LOOT (v345: each kind's loot rows, read from data/monsters.js), rollLoot(), lootPerDefeat()
     bestiary.js       v252 (roadmap 85c): HOW each way of moving fights, whereLives(kind), BESTIARY_ORDER
     weather.js        WEATHER kinds, Stardew ODDS, LIGHTNING, MIST, storm cell item, underSky()
@@ -174,7 +174,7 @@ src/
     coop.js           coop placement, coop animals, petting, feed
     mine.js           floor generation for the Hollow, the Sunken Cavern the Ember Vent and the Smoke Peak (MINE.zone, MINE.eff), the forge room and the summit (v67), rocks, breakRock(), ladders, shafts, lighting
     health.js         hurtPlayer(), fainting
-    monsters.js       mine monsters by kind and floor (and the wild farm's slimes), the weapon swing and its combos (v74), drops
+    monsters.js       mine monsters by kind and floor (and the wild farm's slimes), the weapon swing and its combos (v74), drops; v347 spawnBoss() and every boss's turn (its calls at health marks, rage, health bar at layer 986), riseOn(map, fn) (how a place raises what a boss calls)
     placeables.js     kit slot, placing/picking up crafted objects ('Y' tiles), drawing, lantern glow
     crafting.js       craft(): gold + materials -> kit
     sprinklers.js     water soil on day:start and on placement
@@ -475,6 +475,7 @@ The light of the hour (data/atmosphere.js LIGHT) is drawn by renderer.js after l
 | `monster:wake`, `monster:crack`, `monster:surface` | {x, y} | monsters.js (v253: a mimic wakes or its shell cracks; a burrower comes up or goes down) | monsters.js (grit, a sound) |
 | `monster:spit` | {x, y} | monsters.js (v255: a spitter lets fly; its glob joins `shots`) | monsters.js (a puff at its mouth) |
 | `monster:split` | {x, y} | monsters.js (v256: a big splitter falls into pieces) | monsters.js (a burst) |
+| `boss:call` | {kind, x, y} | monsters.js (v347: a boss's health fell past a mark and it called its creatures) | (none yet; the boss's `callLine` is told by monsters.js) |
 | `monster:windup`, `monster:aim`, `monster:rise`, `monster:phase` | {x, y, kind} | monsters.js (v346: a charger winds up, a spitter starts to glow, a burrower's mound shakes, a phaser near you fades in or out) | monsters.js (the warning sounds, data/audio.js MONSTER_SOUNDS) |
 | `monster:clang` | {x, y} | monsters.js (v257: a blade's hit on an armored monster) | monsters.js (sparks, a sound) |
 | `mine:cleared` | none | monsters.js (v259: the last creature on a busy floor fell) | mine.js (the ladder opens) |
@@ -575,6 +576,7 @@ Soil is per map: `soilOf(mapId)` returns `G.S.soil` (farm) or `G.S.greenSoil` (g
 
 - **Crop:** entry in `data/crops.js` (add `regrow`, `yield` or `packet` as needed). `CROPS` is everything plantable; `PRODUCE` is the crops that are items (no seed packets): use `PRODUCE` for anything about items.
 - **Fish:** entry in `data/fish.js`.
+- **Boss (v347):** a MONSTERS entry in zone `lair` with a `boss` block (scale, marks, calls, rage, rageSpeed, callLine) and a `lives` line. Its place spawns it with `spawnBoss(map, kind, x, y)` and watches for its defeat; size, health bar, calls, rage and boss music come from the entry. A place whose creatures rise its own way (open floor, tougher dead) registers `riseOn(map, fn)`.
 - **Creature (v345, v346):** one entry in `data/monsters.js` MONSTERS: `zones` (and `from`/`to` for the Hollow), `move`, stats as numbers or `[base, every, cap]`, `xp`, `loot` rows, `color`. `tags` for the families rules read (the slime ward, the bug killer, undead), `weight` for how often it spawns among its floor's kinds (a number, or per zone; `node tools/monster_stats.mjs --spawns hollow 60` shows the odds), `voice` for its sounds (VOICES; a new voice needs its `<voice>Alert` and `<voice>Death` in data/audio.js and audio/sfx.js, then `node tools/render_audio.mjs <ids>` and `node tools/audio_list.mjs --readme`). Spawns, the Bestiary, the drops and the sounds read it from there; add its art in `data/sprites.js` MONSTERS.kinds and a `MATERIAL` (data/animation.js). Run `node tools/monster_stats.mjs --fixture` so the stats test knows the new kind. A balance patch is an edit of the numbers plus the same command; the fixture's diff shows what changed.
 - **Forage:** entry in `data/forage.js` plus art in `FORAGE_ART` (render/sprites.js).
 - **Neighbour:** entry in `data/npcs.js` (farm path), a home in `data/homes.js` and, for a cottage, a floor plan in `data/interiors.js` (the `home_<id>` inside is built from it; run `node tools/check_interiors.mjs`), a routine in `data/schedules.js` and scenes in `data/scenes.js`. Routine spots are only the places that matter: neighbours find their own way around anything solid and from map to map (systems/routes.js); a spot may be a solid counter they stand behind.

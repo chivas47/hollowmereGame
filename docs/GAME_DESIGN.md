@@ -425,7 +425,7 @@ The key chain (97a, 97c): the crypt key is in three pieces. The Tangle's old che
 | 4 Spike corridor | 10 x 3 plates rise in a wave (2 s cycle, 0.8 s up, 0.15 s a column), 14 damage | (always) |
 | 5 Crumbling gallery | cracked floor over a pit falls 0.45 s after you step on it; two false turns; 2 haunts; a fall: 12 damage, back to the start | the far side reached: braced for good |
 | 6 Sealed hall | gates shut on three waves (3, 4, 6 of the dead) | all three beaten |
-| Warden's chamber | the Gravewarden: 320 health, 18 damage, 2 rattlers at 66% and 33%, quicker below 33%; the gate shuts behind you | it falls: the sarcophagus opens, a gate back to the entry hall |
+| Warden's chamber | the Gravewarden (v347: a creature of its own, data/monsters.js): 320 health, 18 damage, 2 rattlers at 66% and 33%, quicker below 33%; 100 combat XP and 6 to 10 bone shards, 1 to 2 iron, a gloommote half the time (ten rattlers' worth); the gate shuts behind you | it falls: the sarcophagus opens, a gate back to the entry hall |
 
 The dead below ground (the north tomb and the catacombs) have 1.6 times the health and 1.25 times the damage of Mournfield's night. The sarcophagus gives the gravewarden blade once: sword, 21 damage (Stardew's bone sword, 20 to 30, refitted like the claymore to our greatsword), 1.5 times against grave rattlers, barrow shamblers, mourning haunts, bone walkers and sand wraiths. The crusader enchantment stacks with it. Stardew by role: the Skull Key chain (a key won in one dungeon opens the next); the north tomb's chest is a treasure floor's chest (a handful of ore, coal and geodes).
 

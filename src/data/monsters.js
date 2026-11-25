@@ -16,6 +16,9 @@
 // weight: how often it is picked among the kinds of a floor (default 1, all equal; 2 is twice as often, 0.25 a
 //   quarter as often). A number, or one per zone ({ hollow: 1, vent: 0.3 }; zones left out count 1). spawnShare()
 //   gives the resulting odds, and tools/monster_stats.mjs prints them.
+// boss: a named guardian (systems/monsters.js spawnBoss): drawn `scale` times as big with a health bar, boss music
+//   while it lives; each time its health falls past a share in `marks` it calls up `calls` [kind, n] round it; below
+//   `rage` of its health it moves at `rageSpeed`. callLine: what you are told when it calls.
 // mound: what a burrower's mound looks like, 'earth' (the default) or 'lava'.
 // loot: rows of [item, chance, min, max], each rolled on its own at every defeat (data/loot.js rollLoot); Stardew by
 // role: each kind drops a material of its own and sometimes the ore of its floors.
@@ -62,7 +65,8 @@ export const ARMOR = 0.25;
 // wildfarm: the wild farm after dark (systems/farmPerks.js). night: the seasonal night creatures on every farm and the
 // Wilds, one a season (systems/nightfolk.js). duskmarch: Gloamwood, the Tangle and Mournfield (data/duskmarch.js
 // DUSK_CREATURES and NIGHT); `lives` is its Bestiary line.
-export const ZONES = ['hollow', 'cavern', 'vent', 'wildfarm', 'night', 'duskmarch'];
+// v347: lair: a boss's own room, where its place sets it (never drawn by a floor's spawns); `lives` is its line.
+export const ZONES = ['hollow', 'cavern', 'vent', 'wildfarm', 'night', 'duskmarch', 'lair'];
 const WOODS_LINE = 'Lives in Gloamwood and the Tangle, west of the village, by day and night.';
 const GRAVE_LINE = 'Rises from the graves of Mournfield, west of the town, after dark.';
 
@@ -183,6 +187,15 @@ export const MONSTERS = {
     loot: [['boneshard', 0.3, 1, 1], ['cloth', 0.12, 1, 1], ['gloommote', 0.05, 1, 1]] },
   haunt:    { name: 'Mourning haunt', zones: ['duskmarch'], tags: ['undead'], voice: 'ghost', lives: GRAVE_LINE, move: 'phase', hp: 16, dmg: 10, speed: 26, xp: 12, color: '#b8c8e0', glow: '#8ae0d0',
     loot: [['wispsilk', 0.08, 1, 1], ['gloommote', 0.1, 1, 1], ['sunmote', 0.04, 1, 1]] },
+
+  // v347: the Gravewarden, the chapel catacombs' guardian (data/catacombs.js CATA.boss sets where). A grave rattler
+  // grown huge. Stardew by role: a dungeon's named guardian, about ten of its floor's creatures in one, so ten times a
+  // rattler's XP and bone shards, with a void essence's chance (its ghosts' drop); the sarcophagus behind it holds the
+  // gravewarden blade.
+  gravewarden: { name: 'The Gravewarden', zones: ['lair'], tags: ['undead'], voice: 'bone', lives: 'Guards the sarcophagus at the heart of the chapel catacombs, under Mournfield\'s chapel.',
+    move: 'walk', hp: 320, dmg: 18, speed: 20, xp: 100, color: '#cfc4a8',
+    boss: { scale: 2, marks: [0.66, 0.33], calls: ['rattler', 2], rage: 0.33, rageSpeed: 30, callLine: 'The Gravewarden strikes the floor, and the dead answer!' },
+    loot: [['boneshard', 1, 6, 10], ['iron', 1, 1, 2], ['gloommote', 0.5, 1, 1]] },
 };
 
 // ---- reading the table ----

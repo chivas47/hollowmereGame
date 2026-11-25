@@ -37,7 +37,7 @@ function fight(S, now) {
   const near = slimes.filter((m) => m.hp > 0 && !m.hidden && Math.hypot(m.x - S.x, m.y - S.y) <= MUSIC.combatRange * T);
   if (near.length) calmAt = now;
   const on = near.length > 0 || now - calmAt < MUSIC.combatCalm * 1000;
-  return { combat: on, boss: on && slimes.some((m) => m.hp > 0 && m.elite && Math.hypot(m.x - S.x, m.y - S.y) <= MUSIC.combatRange * 2 * T) };
+  return { combat: on, boss: on && slimes.some((m) => m.hp > 0 && (m.elite || m.boss) && Math.hypot(m.x - S.x, m.y - S.y) <= MUSIC.combatRange * 2 * T) };
 }
 
 // v343: where you are, as a place (the map, or the Hollow's zone) and its region.
