@@ -190,7 +190,7 @@ Stardew counterparts by role: keg (wine 3 x fruit, juice 2.25 x vegetable), mayo
 
 ## Cutscenes (v240, roadmap 84)
 
-Short scenes played on the map for important moments (Stardew plays its events the same way; the scenes are ours). Bars slide in, the camera moves on its own, neighbours walk and speak, a title card can mark the moment, and the clock stops. Use or a tap shows the rest of a line, then goes on; holding Use or Esc, or a finger on the screen, for a second skips the rest (Nuno: always skippable, even the first time). Each plays once; a scene ends with you back where you stood. Saves from before a scene's moment never see it (Nuno: old saves mark what they passed as seen; v244: a farm with farming XP has had its first harvest; v358: a farm past day 1 has seen the shop and the smithy, one that has been down the Hollow has seen it; v359: a building, an animal, a donation or a claimed slaying goal marks the carpentry, ranch, museum or lodge seen; the first faint and 2 am still play once, since nothing saved says they happened). Notices that come during a scene wait for its end (v244).
+Short scenes played on the map for important moments (Stardew plays its events the same way; the scenes are ours). Bars slide in, the camera moves on its own, neighbours walk and speak, a title card can mark the moment, and the clock stops. Use or a tap shows the rest of a line, then goes on; holding Use or Esc, or a finger on the screen, for a second skips the rest (Nuno: always skippable, even the first time). Each plays once; a scene ends with you back where you stood. Saves from before a scene's moment never see it (Nuno: old saves mark what they passed as seen; v244: a farm with farming XP has had its first harvest; v358: a farm past day 1 has seen the shop and the smithy, one that has been down the Hollow has seen it; v359: a building, an animal, a donation or a claimed slaying goal marks the carpentry, ranch, museum or lodge seen; v360: the old wing given to, a film watched, club coins or a desert trade mark the hall, picture house, casino or Oasis seen; the first faint and 2 am still play once, since nothing saved says they happened). Notices that come during a scene wait for its end (v244).
 
 | Scene | When | Where |
 |---|---|---|
@@ -209,6 +209,10 @@ Short scenes played on the map for important moments (Stardew plays its events t
 | Hollowmere Museum | The first time you walk in (v359) | Aldous: one of each find, rewards as the cases fill, something rare for all of them |
 | Tamsin's Ranch Supply | The first time you walk in (v359) | Tamsin: animals only with a coop or barn, hay for winter, pet them daily; shut Mondays and Tuesdays |
 | Wardens' Lodge | The first time you walk in (v359) | Hale: slaying goals and their rewards, weapons opening up with depth |
+| Town hall | The first time you walk in (v360) | The narrator gives the clerk's words: the records, and the old wing whose rooms reopen the roads |
+| The Starlight Picture House | The first time you walk in (v360) | The usher: one film a season, bring a neighbour who loves its kind, snacks help |
+| The Oasis | The first time you walk in (v360) | Salma: ruby stalk seed found nowhere else (spring or the greenhouse), the trader's daily swap |
+| The Gilded Dune | The first time you walk in (v360) | The cashier: coins don't change back, the slots keep a little over a night |
 | Into the Hollow | Your first time on the Hollow's floor 1 (v358) | Where you stand; the narrator: ladders under rocks, richer and harder deeper, every fifth floor a checkpoint |
 | You blacked out | The first faint (v358), in place of the note | The clinic's ward; Maren: why you fell, eat or turn back, the bill |
 | Out on your feet | The first time you are still up at 2 am (v358) | Where you stand, then the night ends as usual |
