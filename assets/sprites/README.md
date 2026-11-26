@@ -124,7 +124,7 @@ Built by `tools/sprites/person.py`, which also writes the layout to `src/data/pe
 - Fertiliser dots are drawn in code.
 - Built by `tools/sprites/terrain.py` with the terrain sheets: ridges every 4 rows so tiles join at any offset, a raised bank round the edge.
 
-## cave-rock.png, cave-sand.png, cave-ember.png, cave-sewer.png, cave-peak.png
+## cave-rock.png, cave-sand.png, cave-ember.png, cave-sewer.png, cave-peak.png, cave-root.png
 
 128 x 80 each, full colour, one per cave theme (rock is the plain mines and the farm cave). The terrain layout with two blocks:
 

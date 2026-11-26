@@ -165,6 +165,7 @@ img.save(f'{OUT}/soil.png', optimize=True)
 THEME = {   # the floor's extra: sand ripples, ember glow in the cracks, damp moss, ash; and the colour it uses
     'rock': (None, None), 'sand': ('ripple', '#9a7a52'), 'ember': ('glow', '#c8501e'),
     'sewer': ('moss', '#4f6a3a'), 'peak': ('glow', '#a8401a'),
+    'root': ('roots', '#6a4e2c'),   # v366: the Rootways: fine roots across the floor
 }
 def cave_floor(theme, cols, seed):
     R = random.Random(seed)
@@ -192,6 +193,11 @@ def cave_floor(theme, cols, seed):
         y0 = R.randrange(S)
         for x in range(S):
             if (x + seed) % 7 < 5: put(x, y0 + (x // 5) % 2, hexc(extra))
+    if kind == 'roots':   # a thin root wandering across the tile, a lit knot on it
+        x, y = R.randrange(S), R.randrange(S)
+        for _ in range(R.randrange(5, 10)):
+            put(x, y, hexc(extra)); x += R.choice((1, 1, 0)); y += R.choice((0, 0, 1, -1))
+        put(x, y, mix(hexc(extra), 1.35))
     if kind == 'moss':
         for _ in range(1):
             cx, cy = R.randrange(S), R.randrange(S)

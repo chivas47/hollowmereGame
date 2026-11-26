@@ -20,6 +20,8 @@ import { BUSY } from '../data/monsters.js';
 import { VENT } from '../data/forge.js';
 import { tier } from '../data/upgrades.js';
 import { PEAK } from '../data/nuts.js';
+import { bandOf, CRACK } from '../data/hollow.js';
+import { SHAPES } from './hollowGen.js';
 
 const ENTRANCE = { map: 'wilds', x: 12, y: 2, dir: 'down' };
 const SPAWN = { x: 2, y: 1 };          // ladder up sits just above, at (2, 0)
@@ -34,7 +36,8 @@ MAPS.mine = { name: 'The Hollow', salt: 0, base: 'cave', grid: solidGrid(), obje
 
 export function genFloor(n, zone = 'hollow') {
   const cav = zone === 'cavern', vent = zone === 'vent', peak = zone === 'peak', eff = peak ? PEAK.eff(n) : vent ? VENT.eff(n) : cav ? CAVERN.eff(n) : n;
-  const R = rng(n * 7919 + G.S.day * 104729 + (peak ? 55555 : vent ? 77777 : cav ? 31337 : 13)), g = solidGrid(), hot = vent || peak;
+  const R = rng(n * 7919 + G.S.day * 104729 + (peak ? 55555 : vent ? 77777 : cav ? 31337 : 13)), hot = vent || peak;
+  let g = solidGrid();
   for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) g[y][x] = R() < (cav || hot ? 0.08 : 0.05) ? 'X' : hot && R() < (peak ? PEAK.lava : VENT.lava) ? '~' : 'f';
   for (let y = 1; y <= 4; y++) for (let x = 1; x <= 4; x++) g[y][x] = 'f';   // clear landing area
   g[0][SPAWN.x] = 'U';
@@ -43,33 +46,47 @@ export function genFloor(n, zone = 'hollow') {
   if (vent && n >= VENT.floors) return forgeRoom(n, eff, g);
   if (peak && n >= PEAK.floors) return summitRoom(n, eff, g);
 
-  MINE.rocks = {};
-  const keys = [], copperChance = Math.min(0.3, 0.1 + n * 0.02);
-  for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
-    if (g[y][x] !== 'f' || (x <= 4 && y <= 4) || R() > (cav ? 0.4 : 0.3)) continue;
-    const roll = R();
-    let t;
-    if (peak) {   // v67: the peak: cinder, umbrite, gold and stone
-      t = roll < PEAK.cinder ? '#' : roll < PEAK.cinder + PEAK.umbrite ? '*' : roll < PEAK.cinder + PEAK.umbrite + PEAK.gold ? '%' : 'r';
-    } else if (vent) {   // v39: the vent: cinder, umbrite, gold and stone
-      t = roll < VENT.cinder ? '#' : roll < VENT.cinder + VENT.umbrite ? '*' : roll < VENT.cinder + VENT.umbrite + VENT.gold ? '%' : 'r';
-    } else if (cav) {   // v38: the cavern: umbrite, gold, iron and stone
-      const um = CAVERN.umbrite(n);
-      t = roll < um ? '*' : roll < um + CAVERN.gold ? '%' : roll < um + CAVERN.gold + CAVERN.iron ? 'i' : 'r';
-    } else if (n >= HOLLOW_GOLD.from && roll < HOLLOW_GOLD.chance) t = '%';
-    else t = n >= 6 && roll < 0.1 ? 'i' : roll < 0.1 + copperChance ? 'c' : 'r';
-    g[y][x] = t;
-    MINE.rocks[`${x},${y}`] = { hp: ROCKS[t].hp };
-    keys.push(`${x},${y}`);
+  const copperChance = Math.min(0.3, 0.1 + n * 0.02);
+  // The rock a tile holds, from a roll. ore: never plain stone (v366: a sealed pocket in the Rootways).
+  const rockFor = (roll, ore = false) => {
+    if (peak) return roll < PEAK.cinder ? '#' : roll < PEAK.cinder + PEAK.umbrite ? '*' : roll < PEAK.cinder + PEAK.umbrite + PEAK.gold ? '%' : 'r';   // v67: the peak: cinder, umbrite, gold and stone
+    if (vent) return roll < VENT.cinder ? '#' : roll < VENT.cinder + VENT.umbrite ? '*' : roll < VENT.cinder + VENT.umbrite + VENT.gold ? '%' : 'r';   // v39: the vent
+    if (cav) { const um = CAVERN.umbrite(n); return roll < um ? '*' : roll < um + CAVERN.gold ? '%' : roll < um + CAVERN.gold + CAVERN.iron ? 'i' : 'r'; }   // v38: the cavern
+    if (n >= HOLLOW_GOLD.from && roll < HOLLOW_GOLD.chance) return '%';
+    if (ore) return n >= 6 && roll < 0.35 ? 'i' : 'c';
+    return n >= 6 && roll < 0.1 ? 'i' : roll < 0.1 + copperChance ? 'c' : 'r';
+  };
+  // v366 (roadmap 120a): a Hollow band with its own floor shape builds the floor (data/hollow.js, systems/hollowGen.js).
+  const band = !cav && !hot ? bandOf(n) : null, shape = band && SHAPES[band.shape];
+  let pocketKeys = new Set();
+  MINE.cracks = {};
+  if (shape) {
+    const made = shape(R, band, rockFor);
+    g = made.grid;
+    for (const p of made.pockets) for (let y = p.y; y < p.y + p.h; y++) for (let x = p.x; x < p.x + p.w; x++) pocketKeys.add(`${x},${y}`);
+  } else {
+    for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
+      if (g[y][x] !== 'f' || (x <= 4 && y <= 4) || R() > (cav ? 0.4 : 0.3)) continue;
+      g[y][x] = rockFor(R());
+    }
   }
+  MINE.rocks = {};
+  const keys = [];
+  g.forEach((row, y) => row.forEach((t, x) => {
+    if (t === CRACK) MINE.cracks[`${x},${y}`] = { hp: band.cracks.hp };
+    if (!ROCKS[t]) return;
+    MINE.rocks[`${x},${y}`] = { hp: ROCKS[t].hp };
+    if (!pocketKeys.has(`${x},${y}`)) keys.push(`${x},${y}`);   // the ladder is never sealed in a pocket
+  }));
   MINE.ladder = keys.length ? keys[Math.floor(R() * keys.length)] : null;
   // v259 (85h): a busy floor keeps its ladder until every creature on it is down (systems/monsters.js mine:cleared).
   MINE.busy = !cav && !hot && n >= BUSY.from && n % CHECKPOINT_EVERY !== 0 && R() < BUSY.chance;
   if (MINE.busy) MINE.ladder = null;
   else if (!MINE.ladder) g[8][12] = 'L';
 
-  Object.assign(MAPS.mine, { grid: g, name: peak ? `${PEAK.name}, floor ${n}` : vent ? `${VENT.name}, floor ${n}` : cav ? `${CAVERN.name}, floor ${n}` : `The Hollow, floor ${n}`, theme: peak ? 'peak' : vent ? 'ember' : cav ? 'sand' : null });
-  Object.assign(MINE, { floor: n, zone, eff });
+  Object.assign(MAPS.mine, { grid: g, name: peak ? `${PEAK.name}, floor ${n}` : vent ? `${VENT.name}, floor ${n}` : cav ? `${CAVERN.name}, floor ${n}` : band?.look ? `${band.name}, floor ${n}` : `The Hollow, floor ${n}`, theme: peak ? 'peak' : vent ? 'ember' : cav ? 'sand' : band?.look || null });
+  const newBand = band && MINE.band !== band.id && zone === 'hollow';
+  Object.assign(MINE, { floor: n, zone, eff, band: band?.id || null });
   if (peak) G.S.nuts.peakDeepest = Math.max(G.S.nuts.peakDeepest, n);
   else if (vent) G.S.ventDeepest = Math.max(G.S.ventDeepest || 0, n);
   else if (cav) G.S.cavernDeepest = Math.max(G.S.cavernDeepest || 0, n);
@@ -77,6 +94,7 @@ export function genFloor(n, zone = 'hollow') {
   emit('world:changed', 'mine');
   emit('mine:floor', { floor: n, rng: R, zone, eff, busy: MINE.busy });
   if (MINE.busy) notify('A busy floor! The ladder shows once every creature here is down.');
+  if (newBand && band.arrive) notify(band.arrive);   // v366: entering a band says what is different here
 }
 
 // v259 (85h): the last creature on a busy floor is down: a ladder opens on open floor near the middle.
@@ -84,9 +102,10 @@ on('mine:cleared', () => {
   if (G.S.map !== 'mine' || !MINE.busy) return;
   MINE.busy = false;
   const g = MAPS.mine.grid, open = [];
-  for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) if (g[y][x] === 'f' && (x > 4 || y > 4)) open.push([x, y]);
+  const gw = g[0].length, gh = g.length;   // v366: the floor's own size
+  for (let y = 1; y < gh - 1; y++) for (let x = 1; x < gw - 1; x++) if (g[y][x] === 'f' && (x > 4 || y > 4)) open.push([x, y]);
   if (!open.length) return;
-  const [x, y] = open.sort((a, b) => Math.hypot(a[0] - W / 2, a[1] - H / 2) - Math.hypot(b[0] - W / 2, b[1] - H / 2))[0];
+  const [x, y] = open.sort((a, b) => Math.hypot(a[0] - gw / 2, a[1] - gh / 2) - Math.hypot(b[0] - gw / 2, b[1] - gh / 2))[0];
   g[y][x] = 'L';
   notify('Every creature is down. A ladder opens up!');
   emit('mine:ladder', { floor: MINE.floor, zone: MINE.zone });
@@ -130,6 +149,7 @@ export function enterMine(n, zone = 'hollow') {
 }
 
 export function leaveMine() {
+  MINE.band = null;
   const out = MINE.zone === 'peak' ? { map: 'island', x: PEAK.entrance.x, y: PEAK.entrance.y + 1, dir: 'down' } : ENTRANCE;   // v67
   placePlayer(out.map, out.x, out.y, out.dir);
   emit('map:changed', out.map);
@@ -198,6 +218,7 @@ export function breakRock(tx, ty, quiet = false) {
 
 addInteraction(66, ({ tx, ty, tile, item, mapId }) => {
   if (mapId !== 'mine' || item !== 'pick') return false;
+  if (tile === CRACK) return hitCrack(tx, ty);   // v366: the Rootways' cracked walls
   if (!ROCKS[tile]) { notify('Nothing to break there.'); return true; }
   if (!useEnergy(PICK_ENERGY)) return true;
   const st = MINE.rocks[`${tx},${ty}`];
@@ -207,6 +228,29 @@ addInteraction(66, ({ tx, ty, tile, item, mapId }) => {
   breakRock(tx, ty);
   return true;
 });
+
+// v366 (roadmap 120a): a cracked wall takes a few pickaxe hits (energy as a rock), then opens: a shortcut between two
+// tunnels or the way into a sealed pocket of ore. Bombs break it at once (systems/treasure.js).
+export function breakCrack(tx, ty) {
+  const key = `${tx},${ty}`;
+  if (MAPS.mine.grid[ty]?.[tx] !== CRACK) return false;
+  delete MINE.cracks[key];
+  MAPS.mine.grid[ty][tx] = 'f';
+  emit('gather', { skill: 'mining', item: 'stone', xp: 3 });
+  emit('world:changed', 'mine');
+  changed();
+  return true;
+}
+function hitCrack(tx, ty) {
+  if (!useEnergy(PICK_ENERGY)) return true;
+  const st = MINE.cracks[`${tx},${ty}`] || (MINE.cracks[`${tx},${ty}`] = { hp: 3 });
+  swingAt(tx, ty, 'pick');
+  st.hp -= tier(G.S, 'pick').power + (G.S.toolEnch.pick === 'powerful' ? 1 : 0);
+  if (st.hp > 0) { changed(); return true; }
+  breakCrack(tx, ty);
+  notify('The cracked wall gives way.');
+  return true;
+}
 
 // Darkness with a pool of light around the player.
 addLayer(95, (c) => {

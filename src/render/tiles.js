@@ -844,6 +844,7 @@ const CAVE_COLS = {
   ember: { floor: ['#3a2422', '#4a2c26', '#2e1c1a'], wall: ['#1a0f0e', '#2a1612', '#3a1a14'] },
   sewer: { floor: ['#3a4038', '#454c42', '#30362e'], wall: ['#1c221e', '#262e28', '#2e3830'] },   // v45
   peak:  { floor: ['#4a3a34', '#56443c', '#3e302a'], wall: ['#221816', '#30201c', '#3c2620'] },   // v67: the Smoke Peak
+  root:  { floor: ['#3e3324', '#4a3d2b', '#33291d'], wall: ['#1e1810', '#2c2316', '#3a2e1c'] },   // v366: the Rootways (data/hollow.js)
 };
 const colsFor = (p) => CAVE_COLS[p?.theme] || CAVE_COLS.rock;
 export function drawCaveFloor(g, x, y, p) {
@@ -878,6 +879,15 @@ function mineRock(ore) {
     r(g, X + 2, Y + 5, 12, 9, '#6f6862'); r(g, X + 3, Y + 4, 10, 1, '#827a73'); r(g, X + 4, Y + 6, 3, 2, '#8d857d'); r(g, X + 2, Y + 13, 12, 1, '#4f4945');
     if (ore) { r(g, X + 5, Y + 8, 2, 2, ore); r(g, X + 9, Y + 6, 2, 1, ore); r(g, X + 10, Y + 10, 2, 2, ore); }
   };
+}
+// v366: a cracked wall in the Rootways: the rock split by a jagged crack, roots pushing out of it, chips at its foot.
+function crackedWall(g, x, y) {
+  const X = x * T, Y = y * T, dark = '#0e0a07', root = '#7a5a34', rootLit = '#a07a48';
+  [[7, 1], [8, 2], [7, 3], [6, 4], [7, 5], [8, 6], [9, 7], [8, 8], [7, 9], [8, 10], [9, 11]].forEach(([cx, cy]) => r(g, X + cx, Y + cy, 1, 1, dark));
+  [[9, 3], [10, 4], [5, 6], [4, 7], [10, 8], [11, 9]].forEach(([cx, cy]) => r(g, X + cx, Y + cy, 1, 1, dark));
+  r(g, X + 3, Y + 2, 1, 4, root); r(g, X + 4, Y + 5, 2, 1, root); r(g, X + 3, Y + 2, 1, 1, rootLit);
+  r(g, X + 12, Y + 6, 1, 5, root); r(g, X + 11, Y + 10, 1, 2, root); r(g, X + 12, Y + 6, 1, 1, rootLit);
+  r(g, X + 5, Y + 14, 2, 1, '#5a4a36'); r(g, X + 10, Y + 15, 1, 1, '#5a4a36'); r(g, X + 8, Y + 13, 1, 1, '#6a5a44');
 }
 function ladderUp(g, x, y, p) {
   const X = x * T, Y = y * T;
@@ -1198,7 +1208,7 @@ function bones(g, x, y) {   // a wall of stacked bones: rows of long bones, thei
 export const PROP_ART = {
   '¢': cartTile, '§': bookStall, '¤': prizeMachine,
   y: caveMouth, t: caveCrate, $: chest,
-  U: ladderUp, L: ladderDown,
+  U: ladderUp, L: ladderDown, 'ǩ': crackedWall,   // v366
   r: mineRock(null), c: mineRock('#d0874a'), i: mineRock('#c9ccd6'),
   '%': mineRock('#e9c46a'), '*': mineRock('#9a7ae0'), '^': cavernDoor, '!': shaft,
   '#': mineRock('#e9862a'), '~': lava, '>': ventDoor, '=': forgeAnvil,
@@ -1217,7 +1227,7 @@ export const PROP_ART = {
 // The ground under each prop: a cave's floor or wall, grass (with the salt its blades and flowers use) or sand.
 // Props not listed draw their whole tile, or sit on whatever the map has there (the ladder down, mine rocks).
 export const PROP_GROUND = {
-  U: 'wall', '^': 'wall', '>': 'wall', t: 'floor', $: 'floor', '!': 'floor', '=': 'floor', '+': 'floor', '?': 'floor',
+  U: 'wall', '^': 'wall', '>': 'wall', 'ǩ': 'wall', t: 'floor', $: 'floor', '!': 'floor', '=': 'floor', '+': 'floor', '?': 'floor',
   '|': 'grass:29', '}': 'grass:23', ';': 'grass:37', '9': 'grass:41', '<': 'grass:43', '`': 'grass:47',
   '¢': 'grass:53', '§': 'grass:59', '¤': 'grass:61', '8': 'sand',
   'ħ': 'grass:67', 'ǧ': 'grass:71', 'ƀ': 'grass:73', 'ɓ': 'grass:73', 'ɗ': 'grass:73', 'ʋ': 'grass:79', 'β': 'grass:83', 'ʂ': 'grass:89', 'ɲ': 'grass:97',

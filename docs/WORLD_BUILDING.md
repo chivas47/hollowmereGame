@@ -10,8 +10,9 @@ through `docs/NPC_LIFE.md`. The items are the "A real world" track in `ROADMAP.m
 
 - The screen is `W` x `H` = 24 x 16 tiles (`core/constants.js`). Since v156 and v157 (roadmap 75g, 75h) a map can
   be larger: the camera follows the farmer and the rules read the map's size from its grid (`sizeOf()` in
-  `data/maps.js`). Never use `W` and `H` for a map's size; they are the screen's. Mine floors stay one screen by
-  design. The hidden grove (40 x 24, v158) is the first larger map; the village (40 x 28) and the town (40 x 24)
+  `data/maps.js`). Never use `W` and `H` for a map's size; they are the screen's. Mine floors were one screen by
+  design until v366 (roadmap 120a): each Hollow band now sets its own floor size (data/hollow.js; the Rootways 36 x 24),
+  so its floor shape has room for tunnels, islands and halls (docs/sketches/120-hollow-by-depth.md). The hidden grove (40 x 24, v158) is the first larger map; the village (40 x 28) and the town (40 x 24)
   followed in v159 (roadmap 75c, docs/sketches/75c-village.md), and the mere (40 x 28) in v160 (75d). The farm is
   64 x 48 for every layout (roadmap 118b, data/layouts.js `big`); farms from before grew east and south to it in v341 (118c).
 - **Grow east and south when you can.** Tiles keep their coordinates, so saved things (stumps, forage, placed
