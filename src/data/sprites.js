@@ -196,7 +196,8 @@ export const MONSTERS = {
     // v303: the Duskmarch's creatures; the stump lurker sleeps as a plain stump.
     bristle: { code: 'charger', shadow: [-8, 16, 0.35] }, wasp: { code: 'puff', shadow: [-2, 4, 0.25], bob: 7 },
     stump: { code: 'crab', shadow: [-6, 12, 0.35], sleep: 'stumpsleep' }, stumpsleep: { code: 'crabrock', shadow: [-6, 12, 0.35] },
-    rattler: { code: 'skeleton', shadow: [-4, 8, 0.35] }, gravewarden: { code: 'skeleton', shadow: [-4, 8, 0.35], shape: 'rattler' }, shambler: { code: 'skeleton', shadow: [-5, 10, 0.35] }, haunt: { code: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#8ae0d0' },   // v347: the Gravewarden wears the rattler's shape, drawn twice as big
+    rattler: { code: 'skeleton', shadow: [-4, 8, 0.35] }, gravewarden: { code: 'skeleton', shadow: [-4, 8, 0.35], shape: 'rattler' }, rootgnawer: { code: 'charger', shape: 'beetle', shadow: [-6, 12, 0.35], rim: '#d8b88a' },   // v367: the Rootgnawer wears the beetle's shape, drawn twice as big
+    shambler: { code: 'skeleton', shadow: [-5, 10, 0.35] }, haunt: { code: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#8ae0d0' },   // v347: the Gravewarden wears the rattler's shape, drawn twice as big
   },
 };
 

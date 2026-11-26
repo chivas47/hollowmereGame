@@ -551,6 +551,13 @@ Five fish per season. Bite odds are weighted toward easy fish (weight 6 minus di
   |---|---|---|---|---|
   | 1-20 | The Rootways | winding tunnels, 36 x 24 (diggers branching from dug tunnels, rounded; 42% open, rocks on 22% of it) | cracked walls (3 pickaxe hits, 2 energy each; bombs break them): up to 3 shortcuts between tunnels 18+ steps apart on foot, up to 2 sealed pockets (60% each) of 3 to 5 copper or iron rocks (iron 35% from floor 6) | v366 |
   | 21-120 | five more bands | the one room until built | | planned (120c-120g) |
+
+  v367 (120b): landmarks and guardians (one-screen plan rooms; data/hollow.js).
+
+  | Floor | What | Details |
+  |---|---|---|
+  | 10 | The Root Camp | lit (2.6 times the light), no creatures, the ladder in sight, a seam of 3 copper and 1 iron, the floor find chest at (4, 3); the campfire heals to full once a day for 30 minutes (the hot spring's role: Stardew's spa) |
+  | 20 | The Rootgnawer | a charger boss, drawn twice as big: 90 health times the chargers' toughness 2 (180, about ten floor-20 beetles), 12 damage, 60 XP; calls 2 beetles at 66% and 33%, faster below 33%; loot chitin 3-5, copper 4-8, a geode half the time. The ladder opens at (12, 12) when it falls; the first time its hoard: 5 copper bars, 3 geodes, 4 chitin, 3 ember bombs (Stardew by role: a treasure floor's chest). Beaten: floor 20 is a plain Rootways floor. |
   | 121+ | The Deep | | | planned (120h) |
 
 - One rock per floor hides the ladder down. Checkpoints at floor 1 and every fifth floor reached.

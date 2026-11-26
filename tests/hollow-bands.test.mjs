@@ -15,7 +15,8 @@ import { HOTBAR } from '../src/data/hotbar.js';
 import { freshFarm } from './setup.mjs';
 
 const grid = () => MAPS.mine.grid;
-const each = (fn) => { for (let day = 1; day <= 12; day++) for (let f = 1; f <= 20; f++) { G.S.day = day; enterMine(f); fn(f, day); } };
+// v367: floors 10 and 20 are the camp and the guardian's lair (tests/hollow-landmarks.test.mjs)
+const each = (fn) => { for (let day = 1; day <= 12; day++) for (let f = 1; f <= 19; f++) { if (f === 10) continue; G.S.day = day; enterMine(f); fn(f, day); } };
 
 test('bands cover every floor, 20 at a time, in order', () => {
   for (let f = 1; f <= 400; f++) assert.ok(bandOf(f).from <= f && f <= bandOf(f).to, `floor ${f}`);

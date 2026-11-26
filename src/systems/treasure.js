@@ -90,11 +90,11 @@ addLayer(60, (c) => { if (G.S.map === 'mine') blasts.forEach((k) => drawBlast(c,
 
 // ---- Treasure chests ----
 // MINE.chest: { x, y, find } for the chest on this floor (find: a FLOOR_FINDS key), or null.
-on('mine:floor', ({ floor, rng: R, zone, eff }) => {
+on('mine:floor', ({ floor, rng: R, zone, eff, special }) => {
   MINE.chest = null;
   const cav = zone === 'cavern' || zone === 'peak', g = MAPS.mine.grid, find = cav ? null : FLOOR_FINDS[floor];   // v38: the cavern has loot chests only, more often; v67: so does the peak
   if (find && !G.S.finds.includes(floor)) MINE.chest = { ...CHEST_SPOT, find };
-  else if (eff >= 10 && R() < (cav ? CAVERN.chest : CHEST_CHANCE)) {
+  else if (!special && eff >= 10 && R() < (cav ? CAVERN.chest : CHEST_CHANCE)) {   // v367: no random chest in a camp or lair
     for (let guard = 0; guard < 200 && !MINE.chest; guard++) {
       const x = 1 + Math.floor(R() * (g[0].length - 2)), y = 1 + Math.floor(R() * (g.length - 2));   // v366: the floor's own size
       if (g[y][x] === 'f' && !(x <= 4 && y <= 4)) MINE.chest = { x, y, find: null };

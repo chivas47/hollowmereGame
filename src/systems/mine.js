@@ -4,7 +4,7 @@ import { G } from '../core/game.js';
 import { visible } from '../render/views.js';
 import { T, W, H } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
-import { addInteraction, addLayer } from '../core/registry.js';
+import { addInteraction, addLayer, addPrompt } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
 import { ITEMS } from '../data/items.js';
 import { ROCKS, COAL_FROM_STONE, GEM_DROPS, MINERALS } from '../data/minerals.js';
@@ -16,11 +16,12 @@ import { luck } from './buffs.js';
 import { GEODE_CHANCE, geodeFor } from '../data/guild.js';
 import { CAVERN, HOLLOW_GOLD } from '../data/cavern.js';
 import { RINGS } from '../data/weapons.js';
-import { BUSY } from '../data/monsters.js';
+import { BUSY, MONSTERS } from '../data/monsters.js';
 import { VENT } from '../data/forge.js';
 import { tier } from '../data/upgrades.js';
 import { PEAK } from '../data/nuts.js';
-import { bandOf, CRACK } from '../data/hollow.js';
+import { PLACEABLES } from '../data/crafting.js';
+import { bandOf, CRACK, specialOf, CAMPFIRE } from '../data/hollow.js';
 import { SHAPES } from './hollowGen.js';
 
 const ENTRANCE = { map: 'wilds', x: 12, y: 2, dir: 'down' };
@@ -60,7 +61,11 @@ export function genFloor(n, zone = 'hollow') {
   const band = !cav && !hot ? bandOf(n) : null, shape = band && SHAPES[band.shape];
   let pocketKeys = new Set();
   MINE.cracks = {};
-  if (shape) {
+  // v367 (roadmap 120b): a band's landmark (its 10th floor) and its guardian's lair (its last floor, until beaten) are
+  // hand-built rooms from the band's plan.
+  const special = band ? specialOf(n, G.S.hollow?.beaten || []) : null;
+  if (special) g = band[special].plan.map((row) => [...row]);
+  else if (shape) {
     const made = shape(R, band, rockFor);
     g = made.grid;
     for (const p of made.pockets) for (let y = p.y; y < p.y + p.h; y++) for (let x = p.x; x < p.x + p.w; x++) pocketKeys.add(`${x},${y}`);
@@ -78,13 +83,14 @@ export function genFloor(n, zone = 'hollow') {
     MINE.rocks[`${x},${y}`] = { hp: ROCKS[t].hp };
     if (!pocketKeys.has(`${x},${y}`)) keys.push(`${x},${y}`);   // the ladder is never sealed in a pocket
   }));
-  MINE.ladder = keys.length ? keys[Math.floor(R() * keys.length)] : null;
+  MINE.ladder = keys.length && !special ? keys[Math.floor(R() * keys.length)] : null;   // v367: a landmark's ladder is in sight, a lair's opens when its guardian falls
   // v259 (85h): a busy floor keeps its ladder until every creature on it is down (systems/monsters.js mine:cleared).
   MINE.busy = !cav && !hot && n >= BUSY.from && n % CHECKPOINT_EVERY !== 0 && R() < BUSY.chance;
   if (MINE.busy) MINE.ladder = null;
-  else if (!MINE.ladder) g[8][12] = 'L';
+  else if (!MINE.ladder && !special) g[8][12] = 'L';
+  MINE.special = special;
 
-  Object.assign(MAPS.mine, { grid: g, name: peak ? `${PEAK.name}, floor ${n}` : vent ? `${VENT.name}, floor ${n}` : cav ? `${CAVERN.name}, floor ${n}` : band?.look ? `${band.name}, floor ${n}` : `The Hollow, floor ${n}`, theme: peak ? 'peak' : vent ? 'ember' : cav ? 'sand' : band?.look || null });
+  Object.assign(MAPS.mine, { grid: g, name: peak ? `${PEAK.name}, floor ${n}` : vent ? `${VENT.name}, floor ${n}` : cav ? `${CAVERN.name}, floor ${n}` : special === 'landmark' ? `${band.landmark.name}, floor ${n}` : band?.look ? `${band.name}, floor ${n}` : `The Hollow, floor ${n}`, theme: peak ? 'peak' : vent ? 'ember' : cav ? 'sand' : band?.look || null });
   const newBand = band && MINE.band !== band.id && zone === 'hollow';
   Object.assign(MINE, { floor: n, zone, eff, band: band?.id || null });
   if (peak) G.S.nuts.peakDeepest = Math.max(G.S.nuts.peakDeepest, n);
@@ -92,9 +98,45 @@ export function genFloor(n, zone = 'hollow') {
   else if (cav) G.S.cavernDeepest = Math.max(G.S.cavernDeepest || 0, n);
   else G.S.mineDeepest = Math.max(G.S.mineDeepest, n);
   emit('world:changed', 'mine');
-  emit('mine:floor', { floor: n, rng: R, zone, eff, busy: MINE.busy });
+  emit('mine:floor', { floor: n, rng: R, zone, eff, busy: MINE.busy, special, guardian: special === 'guardian' ? band.guardian : null });
   if (MINE.busy) notify('A busy floor! The ladder shows once every creature here is down.');
   if (newBand && band.arrive) notify(band.arrive);   // v366: entering a band says what is different here
+  if (special) notify(band[special].arrive);   // v367: a landmark or a lair says so
+}
+
+// v367 (roadmap 120b): a guardian falls: the ladder down opens where its lair's plan says, and the first time its
+// hoard is yours. From then on its floor is a plain floor of the band.
+on('monster:slain', ({ kind, map }) => {
+  if (map !== 'mine' || MINE.special !== 'guardian') return;
+  const band = bandOf(MINE.floor), gd = band.guardian;
+  if (!gd || kind !== gd.kind) return;
+  const H0 = G.S.hollow, first = !H0.beaten.includes(band.id);
+  if (first) H0.beaten.push(band.id);
+  MAPS.mine.grid[gd.ladder.y][gd.ladder.x] = 'L';
+  MINE.special = null;
+  if (first) {
+    const got = Object.entries(gd.hoard).map(([k, n]) => {
+      if (PLACEABLES[k]) G.S.kit[k] = (G.S.kit[k] || 0) + n; else G.S.bag[k] = (G.S.bag[k] || 0) + n;
+      return `${n} ${(PLACEABLES[k] || ITEMS[k]).name}`;
+    });
+    notify(`${MONSTERS[kind].name} falls! In the roots of its lair: ${got.join(', ')}. A ladder leads down.`);
+  } else notify(`${MONSTERS[kind].name} falls again. A ladder leads down.`);
+  emit('mine:ladder', { floor: MINE.floor, zone: MINE.zone });
+  emit('hollow:guardian', { band: band.id, first });
+  emit('world:changed', 'mine');
+  changed();
+});
+
+addPrompt(72, ({ tile, mapId }) => (mapId === 'mine' && tile === CAMPFIRE.tile ? 'Rest by the fire' : null));   // v367
+// v367: the campfire at a band's camp: health back to full once a day, for half an hour.
+export function restAtFire() {
+  const S = G.S;
+  if (S.hollow.rested === S.day) { notify('The fire has burned low. It will be built up again tomorrow.'); return false; }
+  if (S.hp >= S.maxHp) { notify('You warm your hands at the fire. You feel fine already.'); return false; }
+  S.hp = S.maxHp; S.hollow.rested = S.day; S.time += CAMPFIRE.minutes;
+  notify('You rest by the miners\' fire for half an hour. Your wounds stop aching.');
+  changed();
+  return true;
 }
 
 // v259 (85h): the last creature on a busy floor is down: a ladder opens on open floor near the middle.
@@ -179,6 +221,7 @@ export function fallDown() {
 addInteraction(72, ({ tile, mapId }) => {
   if (tile === 'M') { emit('ui:mineEntrance'); return true; }
   if (mapId !== 'mine') return false;
+  if (tile === CAMPFIRE.tile) { restAtFire(); return true; }   // v367
   if (tile === 'U') { leaveMine(); return true; }
   if (tile === 'L') { enterMine(MINE.floor + 1, MINE.zone); return true; }
   if (tile === '^') { G.S.cavernOpen = true; enterMine(1, 'cavern'); return true; }   // v38
@@ -257,7 +300,8 @@ addLayer(95, (c) => {
   if (G.S.map !== 'mine') return;
   const px = (G.view || G.S).x, py = (G.view || G.S).y - 6;   // v139: around the farmer this view follows
   const glow = G.S.rings?.some((r) => r === 'glowring' || RINGS[r]?.counts?.includes('glowring')) ? 1.4 : 1;   // v36: the glow ring (v251: or the umbrite band)
-  const grad = c.createRadialGradient(px, py, 18 * glow, px, py, 120 * glow);
+  const lit = MINE.special === 'landmark' ? 2.6 : MINE.special === 'guardian' ? 2 : 1;   // v367: a camp is lit by its fire, a lair so you can see what you fight
+  const grad = c.createRadialGradient(px, py, 18 * glow * lit, px, py, 120 * glow * lit);
   grad.addColorStop(0, 'rgba(6,5,10,0)');
   grad.addColorStop(1, 'rgba(6,5,10,.88)');
   c.fillStyle = grad;

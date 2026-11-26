@@ -26,7 +26,7 @@ test('cold, the brazier changes nothing', () => {
 test('lit, every creature is tougher and about one in ten is an elite', () => {
   freshFarm();
   setBrazier(true);
-  const ms = spawned([12, 20, 30, 45, 55, 70]);
+  const ms = spawned([12, 21, 30, 45, 55, 70]);   // v367: floor 20 is the Rootways guardian's lair (a boss, never an elite)
   const elites = ms.filter((m) => m.elite), rest = ms.filter((m) => !m.elite);
   for (const m of rest) assert.ok(Math.abs(m.hp - base(m) * ELITE.tougher) < 1e-9);
   for (const m of elites) assert.ok(Math.abs(m.hp - base(m) * ELITE.tougher * ELITE.hp) < 1e-9);

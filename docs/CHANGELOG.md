@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v367: The Root Camp and the Rootgnawer
+- Every Hollow band now has a landmark on its 10th floor and a guardian on its last (docs/sketches/120-hollow-by-depth.md). The Rootways' are the first.
+- **Floor 10, the Root Camp:** an old miners' camp, lit and safe: no creatures, the ladder down in plain sight, a seam of copper and iron the miners left, and a campfire. Resting by the fire brings your health back to full, once a day, for half an hour. Floor 10's find still waits by the landing.
+- **Floor 20, the Rootgnawer's lair:** a burrow beetle grown huge in the roots. It charges like its kin, calls two beetles up through the floor at two thirds and one third of its health, and speeds up near the end. There is no ladder down until it falls. The first time, its hoard is yours: 5 copper bars, 3 geodes, 4 chitin and 3 ember bombs. After that, floor 20 is a plain Rootways floor.
+- Old saves: the guardian waits on floor 20 for everyone, deep farms included. The lift still goes to floor 25 and below.
+- New save data: `hollow` (the bands whose guardian is beaten, the day the camp's fire was last used).
+
 ## v366: The Rootways, the Hollow's first band
 - The Hollow is being rebuilt in bands of 20 floors, each its own place with its own ground, floor shape and mechanic (plan: docs/sketches/120-hollow-by-depth.md). Floors 1 to 20 are the first: **the Rootways**.
 - Rootways floors are winding tunnels instead of one room, about one and a half screens each way (36 x 24); the camera follows you. Earth-brown ground with fine roots, its own walls.
