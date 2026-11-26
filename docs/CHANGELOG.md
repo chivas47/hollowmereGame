@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v364: Creatures face the way they go
+- Snakes, mites, red rexes, shamblers, wasps, shellbacks and every other creature that walks, flies, crawls, swarms, phases or carries armour now turn to face where they are going, toward you once they notice you. Before, only chargers and spitters turned; the rest always faced right, so they walked backwards and showed their back whenever they went left.
+- Chargers wandering before they notice you face where they wander, not back at you.
+- New save data: none.
+
 ## v363: Cheat mode for testing
 - Type `nunomenezes` while playing (or press "Cheat mode" in the debug tools) to turn cheat mode on; type it again to turn it off. Its letters do nothing else while you type it, so `m` does not mute and `u` does not undo.
 - While it is on: the clock stands still, one pickaxe hit on any rock in the Hollow, the Sunken Cavern, the Ember Vent or the Smoke Peak takes you a floor down (with the rock's loot), and gold, energy, health, water, every item, seed and craftable piece, hay, feed, tide nuts, club coins and moon gems are kept topped up, so no price or material requirement stops you.

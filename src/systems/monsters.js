@@ -121,6 +121,9 @@ export function spawnAt(map, list) {
   return made;
 }
 
+// v364: how much of a creature's way must be sideways before it turns (no flicker on straight up or down).
+export const FACE_TURN = 0.2;
+
 function step(m, vx, vy, dist) {
   // v257: phasers and the storm wing pass over walls, as flyers do.
   const D = MONSTERS[m.kind || 'slime'], fly = D.move === 'fly' || D.move === 'phase' || D.fly, s = sizeOf(slimeMap), inside = (x, y) => x > 8 && y > 8 && x < s.w * T - 8 && y < s.h * T - 4;   // v157: the map's own edges
@@ -138,8 +141,7 @@ export function chargeTurn(m, d, dx, dy, dt) {
   if (!m.cs) {
     m.rest = Math.max(0, (m.rest || 0) - dt);
     if (d < k.range && m.rest <= 0) { windup(m, k.windup); m.cn = k.times; }
-    if (dx) m.face = dx < 0;
-    return false;   // walks after you as a walker does
+    return false;   // walks after you as a walker does (v364: and faces the way it walks, in the loop)
   }
   m.ct -= dt;
   if (m.cs === 'windup') {
@@ -323,6 +325,9 @@ addUpdater((dt) => {
     if (MONSTERS[m.kind || 'slime'].burrow && beetleTurn(m, d, vx, vy, dt)) continue;   // v266: the burrow beetle
     if (move === 'phase') { m.pt -= dt; if (m.pt <= 0) { m.ph = m.ph === 'faint' ? 'solid' : 'faint'; m.pt = PHASE[m.ph]; if (d < noticeOf(m.kind)) emit('monster:phase', { x: m.x, y: m.y, kind: m.kind }); } }   // v257 (v346: heard when near)
     if (d < noticeOf(m.kind) && !m.alerted && !untouchable(m)) { m.alerted = true; cry(`${MONSTERS[m.kind].voice}Alert`, m.x, m.y); }   // v346: it notices you
+    // v364: every creature faces the way it means to go (the art faces right; m.face flips it). Rushing chargers and
+    // spitters in range set their own (toward you); knockback does not turn them.
+    if (!m.cs && !(move === 'shoot' && d < noticeOf(m.kind)) && Math.abs(vx) > FACE_TURN) m.face = vx < 0;
     if (move === 'burrow') { /* up: it stands its ground */ }
     else if (move === 'charge' && chargeTurn(m, d, dx, dy, dt)) { /* v228: the charger moved itself */ }
     else if (move === 'hop' || move === 'split') { if (active) step(m, vx, vy, m.speed * 1.6 * dt); }   // v256: splitters hop
