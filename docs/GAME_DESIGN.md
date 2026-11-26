@@ -545,6 +545,14 @@ Five fish per season. Bite odds are weighted toward easy fish (weight 6 minus di
   | Shellback | Hollow 85+ | [12, 15, 6] | 17 / 15 / 18 |
   | Crag shellback | vent | [0, 6, 28] | 18 / 25 / 28 |
   | Storm wing | vent | [0, 8, 20] | 13 / 18 / 20 |
+- v366 (roadmap 120a): the Hollow by depth, in bands of 20 floors (data/hollow.js; plan docs/sketches/120-hollow-by-depth.md). Each band: its own ground, floor shape, size and mechanic; later a landmark on its 10th floor and a guardian on its last.
+
+  | Floors | Band | Shape | Mechanic | Built |
+  |---|---|---|---|---|
+  | 1-20 | The Rootways | winding tunnels, 36 x 24 (diggers branching from dug tunnels, rounded; 42% open, rocks on 22% of it) | cracked walls (3 pickaxe hits, 2 energy each; bombs break them): up to 3 shortcuts between tunnels 18+ steps apart on foot, up to 2 sealed pockets (60% each) of 3 to 5 copper or iron rocks (iron 35% from floor 6) | v366 |
+  | 21-120 | five more bands | the one room until built | | planned (120c-120g) |
+  | 121+ | The Deep | | | planned (120h) |
+
 - One rock per floor hides the ladder down. Checkpoints at floor 1 and every fifth floor reached.
 - Slimes: health 3 + floor/3, damage 5 + floor/10 up to 13 (v365; was 6 + floor), count up to 8. Sword does 3 damage. Gel drops 75%, 1 or 2 (5g; v250, was 60%). Ore sells for little (stone 2g, copper 5g, iron 10g) but the bin keeps it for upgrades anyway.
 - Player health 100, lost only in the mine, refilled by sleep. Fainting costs 15% of gold (max 500g) and leaves you at the entrance with half health.

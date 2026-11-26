@@ -15,7 +15,7 @@ import { CAVERN } from '../data/cavern.js';
 import { GATES } from '../data/hidden.js';
 import { BOMBS, FUSE, BLAST_RING, CHEST_CHANCE, CHEST_SPOT, chestLoot, GEODE_LOOT, CRACK_COST } from '../data/guild.js';
 import { drawBomb, drawBlast } from '../render/sprites.js';
-import { MINE, breakRock } from './mine.js';
+import { MINE, breakRock, breakCrack } from './mine.js';
 import { slimes, hitMonster, monstersOn } from './monsters.js';
 import { hurtPlayer } from './health.js';
 import { giveFind, wearing } from './gear.js';
@@ -48,6 +48,7 @@ export function explode(px, py, radius, damage, safe = false) {
   let broke = 0;
   for (let y = cy - R; y <= cy + R; y++) for (let x = cx - R; x <= cx + R; x++) {
     if (Math.hypot(x - cx, y - cy) <= radius && MINE.rocks[`${x},${y}`] && breakRock(x, y, true)) broke++;
+    else if (Math.hypot(x - cx, y - cy) <= radius && MINE.cracks?.[`${x},${y}`]) breakCrack(x, y);   // v366: cracked walls
   }
   if (monstersOn() === 'mine') for (const m of [...slimes]) {
     const d = Math.hypot(m.x - px, m.y - py);
@@ -95,7 +96,7 @@ on('mine:floor', ({ floor, rng: R, zone, eff }) => {
   if (find && !G.S.finds.includes(floor)) MINE.chest = { ...CHEST_SPOT, find };
   else if (eff >= 10 && R() < (cav ? CAVERN.chest : CHEST_CHANCE)) {
     for (let guard = 0; guard < 200 && !MINE.chest; guard++) {
-      const x = 1 + Math.floor(R() * 22), y = 1 + Math.floor(R() * 14);
+      const x = 1 + Math.floor(R() * (g[0].length - 2)), y = 1 + Math.floor(R() * (g.length - 2));   // v366: the floor's own size
       if (g[y][x] === 'f' && !(x <= 4 && y <= 4)) MINE.chest = { x, y, find: null };
     }
   }

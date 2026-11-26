@@ -465,6 +465,22 @@ Nuno (November 2026): after playing, the farm still looked small next to Stardew
 | 118b | Every layout at the big size | feature | done (chivas47/hollowmereGame#355) | River, woodland, quarry, wild, four corners, beach and meadow rebuilt at about 64 x 48, each keeping its theme (its water, wood or rock spread over the larger land), the homestead corner unchanged. Only farms started after it. Nuno (November 2026): Wide acres stays the default though the open field is now as big (its wild start gives the first week more to do). |
 | 118c | Old farms grow | feature | done (chivas47/hollowmereGame#356) | Nuno overturned 112's "old farms keep theirs": a farm saved at 24 x 16 grows east and south to its layout's new size on load. Existing tiles keep their coordinates (WORLD_BUILDING: grow east and south), so crops, buildings and objects stay put; a save step moves the exits' landing tiles, and the new land gets the layout's wild ground and clutter (Nuno, November 2026: the same clutter a new big farm starts with, not cleared). |
 
+## The Hollow by depth (November 2026)
+
+Nuno (November 2026): the Hollow and the other caves feel repetitive. Restructure the Hollow first, each depth band with its own theme and mechanic or structure, as a long-term plan chosen by comparing other games (Stardew's mines and Skull Cavern, Terraria, Spelunky 2, Dead Cells, Hades, Core Keeper, Moonlighter). The Sunken Cavern, Ember Vent and Smoke Peak wait until the Hollow is done and tested. Plan and comparison: docs/sketches/120-hollow-by-depth.md. Six bands of 20 floors and the Deep; each band a look, a floor shape, one mechanic, its creatures, a landmark on its 10th floor and a guardian on its last.
+
+| Item | What | Kind | Status | Notes |
+|---|---|---|---|---|
+| 120a | Bands and the Rootways | feature | in progress | The band framework (data/hollow.js BANDS, bandOf(), a generator, size and look per band) and floors 1-20: winding tunnels larger than the screen (36 x 24), the Rootways' own cave ground, cracked walls you pick through for shortcuts and sealed pockets of ore. Floors 21+ keep today's generator until their band is built. |
+| 120b | Landmark and guardian floors | feature | planned | The framework for a band's 10th floor (a hand-built safe set piece) and last floor (a guardian whose first defeat opens the way down), then the Rootways' camp (floor 10) and guardian (floor 20). |
+| 120c | The Flooded Galleries (21-40) | feature | planned | Islands joined by bridges over still water; a fishing pool on floors ending in 0 or 5 with cave fish found only there (Stardew's mine fishing floors); landmark and guardian. |
+| 120d | The Frost Halls (41-60) | feature | planned | Long halls and ice sheets: you and creatures slide until you hit something, chargers skid; landmark and guardian. Balance check on crossing time. |
+| 120e | The Bone Crypts (61-80) | feature | planned | Rooms split by pillars; darkness, braziers lit with coal stay lit for the visit; floor 80 keeps the Sunken Cavern door; landmark and guardian. |
+| 120f | The Magma Rifts (81-100) | feature | planned | Lava rivers and crumbling bridges; floor 100 keeps its scene; landmark and guardian. |
+| 120g | The Crystal Hollows (101-120) | feature | planned | Crystal pillars and geode chambers; strike three crystals in order to open a vault; landmark and guardian. |
+| 120h | The Deep (121+) | feature | planned | Each floor borrows a band's shape and mechanic; two mechanics at once from 141. |
+| 120i | Floor modifiers and music by band | feature | planned | Dark floors and rich seams as rare per-band modifiers beside busy and treasure floors; music bands follow the new bands. Then a playtest of the whole Hollow before the Cavern, Vent and Peak. |
+
 ## Done
 
 | Item | PR |

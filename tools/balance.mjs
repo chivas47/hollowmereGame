@@ -151,6 +151,7 @@ const { BUNDLES, stillNeeds, bundleDone, donate, payVault } = await load('system
 const { HALL } = await load('data/family.js');
 const { festivalToday, festivalOpen, contestItems, enterContest, nextFestival, grangeItems, grangeKind, judgeGrange } = await load('systems/festivals.js');
 const { MINE, enterMine, leaveMine, checkpoints } = await load('systems/mine.js');
+const { distances } = await load('systems/hollowGen.js');   // v366 (roadmap 120a): what is reachable on a floor
 const { slimes, hitMonster, damageOf, surface } = await load('systems/monsters.js');   // roadmap 83c: gel for a pond ask; 85d1: surface
 const { skillLevel } = await load('systems/skills.js');
 const { bombs, throwBomb, openChest, crackGeode, GEODES } = await load('systems/treasure.js');
@@ -742,9 +743,19 @@ function simulate(runSeed) {
         while (slimes.includes(m) && !late()) { hitMonster(m, damageOf()); spend(TIME.rock); }
       }
       bombFloor();
-      const grid = MAPS.mine.grid, free = (x, y) => [[0, 1], [0, -1], [1, 0], [-1, 0]].some(([a, b]) => grid[y + b]?.[x + a] && !SOLID.has(grid[y + b][x + a]));
+      // v366 (roadmap 120a): only rocks it can walk to; a sealed pocket of ore opens when it breaks the cracked wall
+      const grid = MAPS.mine.grid, reach = distances(grid, 2, 1), side = (x, y) => [[0, 1], [0, -1], [1, 0], [-1, 0]].map(([a, b]) => [x + a, y + b]);
+      const free = (x, y) => side(x, y).some(([a, b]) => reach[b]?.[a] >= 0 && !SOLID.has(grid[b][a]));   // somewhere to stand
       const rocks = Object.keys(MINE.rocks).map((k) => k.split(',').map(Number)).filter(([x, y]) => free(x, y));
       const ore = rocks.filter(([x, y]) => (grid[y][x] === 'i' && need.iron) || (grid[y][x] === 'c' && need.copper));
+      const pocket = Object.keys(MINE.cracks || {}).map((k) => k.split(',').map(Number))
+        .find(([x, y]) => free(x, y) && side(x, y).some(([a, b]) => grid[b]?.[a] && !SOLID.has(grid[b][a]) && reach[b][a] < 0 || (MINE.rocks[`${a},${b}`] && reach[b][a] < 0)));
+      if (!ore.length && (need.iron || need.copper) && pocket) {
+        const [x, y] = pocket;
+        for (let hits = 0; MINE.cracks[`${x},${y}`] && s.energy >= 2 && hits < 8; hits++) { if (!use('mine', x, y, 'pick')) break; spend(TIME.rock); }
+        if (MINE.cracks[`${x},${y}`]) break;   // could not open it: stop for today
+        continue;
+      }
       if (grid.flat().includes('L') && (!ore.length || (need.iron && MINE.floor < 6))) { enterMine(MINE.floor + 1); spend(TIME.travel); continue; }
       const pickFrom = ore.length ? ore : rocks;
       if (!pickFrom.length) break;

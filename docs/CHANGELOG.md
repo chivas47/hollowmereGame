@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v366: The Rootways, the Hollow's first band
+- The Hollow is being rebuilt in bands of 20 floors, each its own place with its own ground, floor shape and mechanic (plan: docs/sketches/120-hollow-by-depth.md). Floors 1 to 20 are the first: **the Rootways**.
+- Rootways floors are winding tunnels instead of one room, about one and a half screens each way (36 x 24); the camera follows you. Earth-brown ground with fine roots, its own walls.
+- Cracked walls, the Rootways' mechanic: three pickaxe hits open one. Some are shortcuts between tunnels that are a long walk apart; others seal a small pocket of copper and iron ore (never plain stone). The ladder is never sealed in a pocket. Bombs break cracked walls too.
+- Entering the band says what is different there. Floor names read "The Rootways, floor 6".
+- Floor 21 and deeper are unchanged until their band is built.
+- New save data: none (floors are rebuilt every visit).
+
 ## v365: Creatures hit on Stardew's scale
 - Creature damage grew by about one point every floor with no limit, so Hollow floor 50 hit for 30 to 65 (nearly 100 from an elite) against 100 to 190 health. It now follows Stardew's numbers and stops growing: 5 to 10 at the top of the Hollow, 7 to 16 on floor 50, 10 to 22 at the deepest. The Sunken Cavern, Ember Vent and Smoke Peak hit for 10 to 32, Stardew's Skull Cavern and volcano.
 - Bats, bone walkers and serpents in the Cavern and Vent used to hit for over 100. They now stop at 16 to 24.
