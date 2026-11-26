@@ -8,6 +8,7 @@ import { T } from '../core/constants.js';
 import { on, emit, changed } from '../core/events.js';
 import { addUpdater, addEntities } from '../core/registry.js';
 import { CUTSCENE, CUTSCENES } from '../data/cutscenes.js';
+import { VENT } from '../data/forge.js';
 import { NPCS } from '../data/npcs.js';
 import { CROPS } from '../data/crops.js';
 import { ITEMS } from '../data/items.js';
@@ -226,6 +227,9 @@ on('gather', (g) => {
 on('mine:floor', ({ floor, zone }) => {
   if (zone === 'hollow' && floor === 100) playCutscene('hollow100');
   if (zone === 'hollow' && floor === 1 && !G.cut) playCutscene('hollow');   // v358: the first time down
+  // v361 (roadmap 84m): the deep zones' first floors, and the vent's forge room.
+  if (floor === 1 && (zone === 'cavern' || zone === 'vent') && !G.cut) playCutscene(zone);
+  if (zone === 'vent' && floor === VENT.floors && !G.cut) playCutscene('forge');
 });
 // v358, v359 (roadmap 84j, 84k): first visits. Walking in through a building's door for the first time plays its scene
 // (systems/venues.js venue:entered; waking in the clinic is not walking in). The first faint's scene is

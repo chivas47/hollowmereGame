@@ -41,7 +41,9 @@ test('the Hollow plays its scene on the first floor the first time only', () => 
   emit('game:reset');
   freshFarm({ map: 'mine' });
   emit('mine:floor', { floor: 1, zone: 'cavern' }); update(0);
-  assert.equal(G.cut, null, 'not the cavern');
+  assert.notEqual(G.cut?.id, 'hollow', 'the cavern has its own scene, not the Hollow\'s');
+  skipAll();
+  assert.ok(!seen('hollow'));
   emit('mine:floor', { floor: 1, zone: 'hollow' }); update(0);
   assert.equal(G.cut?.id, 'hollow');
   skipAll();
@@ -106,4 +108,29 @@ test('v14: the hall, picture house, Oasis and casino count seen only where the s
   for (const id of ['hall', 'theatre', 'oasis', 'casino']) assert.ok(used.cutscenes[id], id);
   const traded = merge({ ...base(), desertTraded: 3 });
   assert.ok(traded.cutscenes.oasis && !traded.cutscenes.casino);
+});
+
+test('the Sunken Cavern and the Ember Vent play on their first floor, the forge on the vent\'s top floor, once each', () => {
+  for (const [zone, floor, id] of [['cavern', 1, 'cavern'], ['vent', 1, 'vent'], ['vent', 10, 'forge']]) {
+    emit('game:reset');
+    freshFarm({ map: 'mine' });
+    emit('mine:floor', { floor, zone }); update(0);
+    assert.equal(G.cut?.id, id);
+    skipAll();
+    assert.ok(seen(id));
+    emit('mine:floor', { floor, zone }); update(0);
+    assert.equal(G.cut, null, 'once only');
+  }
+  emit('game:reset'); freshFarm({ map: 'mine' });
+  emit('mine:floor', { floor: 5, zone: 'cavern' }); update(0);
+  assert.equal(G.cut, null, 'not deeper floors');
+});
+
+test('v15: a farm that opened the cavern or vent, or reached the forge, has seen those scenes', () => {
+  const base = () => ({ ...JSON.parse(JSON.stringify(newState())), v: 14, day: 60 });
+  const none = merge(base());
+  assert.ok(!none.cutscenes.cavern && !none.cutscenes.vent && !none.cutscenes.forge);
+  const deep = merge({ ...base(), cavernOpen: true, ventOpen: true, ventDeepest: 10 });
+  assert.ok(deep.cutscenes.cavern && deep.cutscenes.vent && deep.cutscenes.forge);
+  assert.ok(!merge({ ...base(), cavernOpen: true }).cutscenes.vent);
 });

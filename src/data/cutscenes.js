@@ -509,4 +509,44 @@ export const CUTSCENES = {
       { do: 'title', text: 'The Gilded Dune', sub: 'Coins for prizes; the house keeps a little', secs: 2.4 },
     ],
   },
+
+  // v361 (roadmap 84m): the deep zones, the first time down each (systems/mine.js mine:floor). Where you stand; no
+  // one follows you this far. What each is for and what it will cost you.
+  cavern: {
+    name: 'The Sunken Cavern',
+    steps: [
+      { do: 'fade', to: 1, secs: 0 },
+      { do: 'bars', on: true },
+      { do: 'say', who: null, text: 'The sealed door gives with a groan, and the stair beyond it goes down further than your lantern reaches.' },
+      { do: 'fade', to: 0, secs: 1.6 },
+      { do: 'say', who: null, text: 'Sand underfoot, this deep. The air is hot and dry, and the walls glitter with gold, and something darker than gold.' },
+      { do: 'say', who: null, text: 'No miner chalked these floors. No lift reaches them. Every time you come down, you start again at the top.' },
+      { do: 'say', who: null, text: 'Some rocks hide a shaft instead of a ladder. It drops you floors at once, and the landing hurts. Down here, that may be worth it.' },
+      { do: 'title', text: 'The Sunken Cavern', sub: 'Gold and umbrite, if you can get deep enough', secs: 2.8 },
+    ],
+  },
+  vent: {
+    name: 'The Ember Vent',
+    steps: [
+      { do: 'fade', to: 1, secs: 0 },
+      { do: 'bars', on: true },
+      { do: 'say', who: null, text: 'Heat hits you like an open oven. The rock glows red in its cracks.' },
+      { do: 'fade', to: 0, secs: 1.6 },
+      { do: 'say', who: null, text: 'Lava runs between the stones. It does not burn you; it simply does not let you pass. Find the way round.' },
+      { do: 'say', who: null, text: 'Cinder rocks crack with sparks. Keep the shards. Somewhere above, ten floors up, someone once kept a forge going on this heat.' },
+      { do: 'title', text: 'The Ember Vent', sub: 'Ten floors of fire, a forge at the top', secs: 2.8 },
+    ],
+  },
+  // The vent's floor 10, the forge room, the first time you reach it.
+  forge: {
+    name: 'The forge',
+    steps: [
+      { do: 'bars', on: true },
+      { do: 'wait', secs: 0.6 },
+      { do: 'say', who: null, text: 'The climb ends in a hall of black stone. In the middle, an anvil older than the village, and a forge that has never gone out.' },
+      { do: 'say', who: null, text: 'Set a gem in your blade here, paid for in cinder shards, and the blade takes on something of the gem. Up to three.' },
+      { do: 'say', who: null, text: 'Bring the rarest stone you have, and the forge will try to wake something in the steel itself.' },
+      { do: 'title', text: 'The forge', sub: 'Gems and cinder shards make a weapon your own', secs: 2.8 },
+    ],
+  },
 };
