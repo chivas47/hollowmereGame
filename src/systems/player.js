@@ -115,7 +115,7 @@ function drawSeated(c, s) {
 }
 
 addEntities(() => (G.youMap ? [] : [{   // v140: not drawn in their half when you are elsewhere
-  y: seated() ? seated().y + (seated().dir === 'up' ? -6 : 1) : G.S.y,   // v305: behind a seat's back when facing away
+  y: seated() ? seated().y + (seated().dir === 'up' ? SEATS.rise - 6 : 1) : G.S.y,   // v305: behind a seat's back when facing away (v357: sorted from the seat, not the raised body)
   draw: (c) => {
     const s = seated();
     if (s) return drawSeated(c, s);

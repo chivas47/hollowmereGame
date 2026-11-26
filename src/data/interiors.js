@@ -434,7 +434,7 @@ export const INTERIORS = {
       A: ['armchair', { dir: 'left', c: ['#5f8fb5', '#3d6a8f'] }],
       h: ['chair', { dir: 'down' }],
       T: ['table', { top: ['plate', 'cup'] }],
-      e: ['bench', {}],
+      e: ['bench', { dir: 'up' }],
       y: ['barrel', {}],
       b: ['bed', { c: ['#3d6a8f', '#a5753f'], note: "A narrow bunk, built like a boat's: everything has a lip, in case the house rolls." }],
       n: ['nightstand', { top: ['candle'] }],
