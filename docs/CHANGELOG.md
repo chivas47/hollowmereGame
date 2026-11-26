@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v365: Creatures hit on Stardew's scale
+- Creature damage grew by about one point every floor with no limit, so Hollow floor 50 hit for 30 to 65 (nearly 100 from an elite) against 100 to 190 health. It now follows Stardew's numbers and stops growing: 5 to 10 at the top of the Hollow, 7 to 16 on floor 50, 10 to 22 at the deepest. The Sunken Cavern, Ember Vent and Smoke Peak hit for 10 to 32, Stardew's Skull Cavern and volcano.
+- Bats, bone walkers and serpents in the Cavern and Vent used to hit for over 100. They now stop at 16 to 24.
+- Health, speed and XP are unchanged. Night creatures, the Duskmarch and the Gravewarden are unchanged.
+- New save data: none.
+
 ## v364: Creatures face the way they go
 - Snakes, mites, red rexes, shamblers, wasps, shellbacks and every other creature that walks, flies, crawls, swarms, phases or carries armour now turn to face where they are going, toward you once they notice you. Before, only chargers and spitters turned; the rest always faced right, so they walked backwards and showed their back whenever they went left.
 - Chargers wandering before they notice you face where they wander, not back at you.

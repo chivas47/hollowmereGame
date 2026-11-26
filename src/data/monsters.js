@@ -6,6 +6,10 @@
 //   [base, every]     base + 1 for every `every` floors (floor 30 with [12, 3] is 12 + 10 = 22); every 1 is +1 a
 //                     floor, 0.5 is +2 a floor
 //   [base, every, cap] the same, the growth stopping at `cap`
+//   v365: damage follows Stardew by role and stops growing: a Hollow kind's [base, every, cap] runs from Stardew's
+//   mine numbers at its first floor (5 for a slime) to 10-22 at most by floor 120; the Cavern, Vent and Peak kinds are
+//   [0, every, cap] on their strength (100-190), Stardew's Skull Cavern and volcano, 15-32. Before, +1 a floor with no
+//   cap made floor 50 hit for 30-65.
 // `floor` is the Hollow-floor strength: a Hollow floor's number, or the Cavern's, Vent's or Peak's eff (data/cavern.js,
 // forge.js, nuts.js). statsAt() is the one place they are worked out. A charger's health is multiplied by its
 // `tough` (CHARGE.tough).
@@ -102,84 +106,84 @@ export const VOICES = ['slime', 'bug', 'beast', 'bone', 'ghost', 'ember', 'plant
 // The order here is the Bestiary's within a zone (data/bestiary.js sorts by zone, then by first floor).
 export const MONSTERS = {
   // v36: the Hollow by floor (Stardew: slimes and bugs early, bats from 30, skeletons around 70, serpents deep).
-  slime:    { name: 'Slime', zones: ['hollow', 'wildfarm'], tags: ['slime'], voice: 'slime', weight: { hollow: [[1, 2], [20, 1], [50, 0.5], [80, 0.3]] }, from: 1, move: 'hop', hp: [3, 3], dmg: [6, 1], speed: [18, 0.5, 20], xp: 3,
+  slime:    { name: 'Slime', zones: ['hollow', 'wildfarm'], tags: ['slime'], voice: 'slime', weight: { hollow: [[1, 2], [20, 1], [50, 0.5], [80, 0.3]] }, from: 1, move: 'hop', hp: [3, 3], dmg: [5, 10, 8], speed: [18, 0.5, 20], xp: 3,
     loot: [['gel', 0.75, 1, 2], ['copper', 0.05, 1, 1]] },
-  mite:     { name: 'Hollow mite', zones: ['hollow'], tags: ['bug'], voice: 'bug', weight: [[3, 1.2], [30, 0.7], [60, 0.4]], notice: 80, from: 3, move: 'crawl', hp: [2, 5], dmg: [4, 2], speed: 14, xp: 2, color: '#6b4a2b',
+  mite:     { name: 'Hollow mite', zones: ['hollow'], tags: ['bug'], voice: 'bug', weight: [[3, 1.2], [30, 0.7], [60, 0.4]], notice: 80, from: 3, move: 'crawl', hp: [2, 5], dmg: [4, 12, 6], speed: 14, xp: 2, color: '#6b4a2b',
     loot: [['chitin', 0.5, 1, 1], ['fiber', 0.2, 1, 1]] },
-  bat:      { name: 'Cave bat', zones: ['hollow', 'cavern'], tags: [], voice: 'beast', knockback: 1.3, notice: 160, from: 12, move: 'fly', hp: [4, 4], dmg: [7, 1], speed: [34, 1, 16], xp: 6, color: '#4a3b5a',
+  bat:      { name: 'Cave bat', zones: ['hollow', 'cavern'], tags: [], voice: 'beast', knockback: 1.3, notice: 160, from: 12, move: 'fly', hp: [4, 4], dmg: [6, 8, 10], speed: [34, 1, 16], xp: 6, color: '#4a3b5a',
     loot: [['leatherwing', 0.5, 1, 1], ['coal', 0.15, 1, 1]] },
-  skeleton: { name: 'Bone walker', zones: ['hollow', 'cavern'], tags: ['undead'], voice: 'bone', weight: { hollow: [[30, 0.6], [45, 1]] }, from: 30, move: 'walk', hp: [12, 3], dmg: [10, 1], speed: 22, xp: 15, color: '#e8e0d0',
+  skeleton: { name: 'Bone walker', zones: ['hollow', 'cavern'], tags: ['undead'], voice: 'bone', weight: { hollow: [[30, 0.6], [45, 1]] }, from: 30, move: 'walk', hp: [12, 3], dmg: [10, 15, 6], speed: 22, xp: 15, color: '#e8e0d0',
     loot: [['boneshard', 0.6, 1, 2], ['iron', 0.2, 1, 1]] },
   // v38: the Sunken Cavern's own (Stardew's mummies and pepper rex). v39: the Ember Vent's (magma sprites and golems).
-  wraith:   { name: 'Sand wraith', zones: ['cavern'], tags: ['undead'], voice: 'bone', knockback: 0.7, move: 'walk', hp: [30, 3], dmg: [18, 4], speed: 18, xp: 25, color: '#d9c39a',
+  wraith:   { name: 'Sand wraith', zones: ['cavern'], tags: ['undead'], voice: 'bone', knockback: 0.7, move: 'walk', hp: [30, 3], dmg: [0, 5, 30], speed: 18, xp: 25, color: '#d9c39a',
     loot: [['boneshard', 0.4, 1, 1], ['cloth', 0.1, 1, 1], ['wispsilk', 0.05, 1, 1]] },
-  rex:      { name: 'Scorch rex', zones: ['cavern', 'vent'], tags: [], voice: 'beast', weight: 0.7, notice: 160, move: 'fly', hp: [22, 4], dmg: [20, 4], speed: 40, xp: 30, color: '#c8352f',
+  rex:      { name: 'Scorch rex', zones: ['cavern', 'vent'], tags: [], voice: 'beast', weight: 0.7, notice: 160, move: 'fly', hp: [22, 4], dmg: [0, 7, 24], speed: 40, xp: 30, color: '#c8352f',
     loot: [['sunmote', 0.25, 1, 1], ['coal', 0.4, 1, 1]] },
-  sprite:   { name: 'Magma sprite', zones: ['vent'], tags: [], voice: 'ember', notice: 160, move: 'fly', hp: [30, 4], dmg: [24, 5], speed: 46, xp: 35, color: '#e9862a',
+  sprite:   { name: 'Magma sprite', zones: ['vent'], tags: [], voice: 'ember', notice: 160, move: 'fly', hp: [30, 4], dmg: [0, 8, 22], speed: 46, xp: 35, color: '#e9862a',
     loot: [['cinder', 0.5, 1, 1], ['sunmote', 0.1, 1, 1]] },
-  golem:    { name: 'Ember golem', zones: ['vent'], tags: [], voice: 'ember', knockback: 0.3, weight: 0.6, notice: 80, move: 'walk', hp: [60, 2], dmg: [28, 5], speed: 14, xp: 45, color: '#5a3a30',
+  golem:    { name: 'Ember golem', zones: ['vent'], tags: [], voice: 'ember', knockback: 0.3, weight: 0.6, notice: 80, move: 'walk', hp: [60, 2], dmg: [0, 7, 26], speed: 14, xp: 45, color: '#5a3a30',
     loot: [['cinder', 0.8, 1, 2], ['gold', 0.1, 1, 1]] },
   // v251: sunmote too, so the Hollow has one (Stardew: solar essence from its mines' ghosts).
-  serpent:  { name: 'Hollow serpent', zones: ['hollow', 'cavern', 'vent'], tags: [], voice: 'beast', weight: { hollow: [[50, 0.4], [70, 0.7]], cavern: 0.6, vent: 0.5 }, notice: 160, from: 50, move: 'fly', hp: [20, 2], dmg: [15, 1], speed: 44, xp: 20, color: '#5f8a4a',
+  serpent:  { name: 'Hollow serpent', zones: ['hollow', 'cavern', 'vent'], tags: [], voice: 'beast', weight: { hollow: [[50, 0.4], [70, 0.7]], cavern: 0.6, vent: 0.5 }, notice: 160, from: 50, move: 'fly', hp: [20, 2], dmg: [12, 12, 12], speed: 44, xp: 20, color: '#5f8a4a',
     loot: [['gloommote', 0.1, 1, 1], ['sunmote', 0.1, 1, 1], ['violet', 0.05, 1, 1]] },
 
   // v228: chargers, their stats beside the walkers of the same floors.
-  beetle:     { name: 'Burrow beetle', zones: ['hollow'], tags: ['bug'], voice: 'bug', knockback: 0.7, weight: [[6, 1], [50, 0.6]], notice: 128, from: 6, ...charger({ burrow: true, windup: 0.5, rush: 110, time: 0.4, recover: 0.8 }), hp: [4, 4], dmg: [5, 2], speed: 16, xp: 4, color: '#5a4a6a',
+  beetle:     { name: 'Burrow beetle', zones: ['hollow'], tags: ['bug'], voice: 'bug', knockback: 0.7, weight: [[6, 1], [50, 0.6]], notice: 128, from: 6, ...charger({ burrow: true, windup: 0.5, rush: 110, time: 0.4, recover: 0.8 }), hp: [4, 4], dmg: [5, 12, 7], speed: 16, xp: 4, color: '#5a4a6a',
     loot: [['chitin', 0.4, 1, 1], ['copper', 0.2, 1, 1]] },
-  boar:       { name: 'Tusk boar', zones: ['hollow'], tags: [], voice: 'beast', knockback: 0.7, weight: [[15, 1], [70, 0.7]], notice: 128, from: 15, ...charger({ windup: 0.6, rush: 140, time: 0.6, recover: 0.9 }), hp: [8, 3], dmg: [8, 1], speed: 18, xp: 8, color: '#7a5a3a',
+  boar:       { name: 'Tusk boar', zones: ['hollow'], tags: [], voice: 'beast', knockback: 0.7, weight: [[15, 1], [70, 0.7]], notice: 128, from: 15, ...charger({ windup: 0.6, rush: 140, time: 0.6, recover: 0.9 }), hp: [8, 3], dmg: [7, 10, 9], speed: 18, xp: 8, color: '#7a5a3a',
     loot: [['coal', 0.25, 1, 1], ['boneshard', 0.2, 1, 1]] },
-  ram:        { name: 'Stone ram', zones: ['hollow'], tags: [], voice: 'beast', knockback: 0.5, weight: 0.6, notice: 128, from: 35, ...charger({ windup: 0.7, rush: 150, time: 0.7, recover: 0.9, stun: 2 }), hp: [18, 3], dmg: [12, 1], speed: 16, xp: 16, color: '#9a928a',
+  ram:        { name: 'Stone ram', zones: ['hollow'], tags: [], voice: 'beast', knockback: 0.5, weight: 0.6, notice: 128, from: 35, ...charger({ windup: 0.7, rush: 150, time: 0.7, recover: 0.9, stun: 2 }), hp: [18, 3], dmg: [10, 12, 8], speed: 16, xp: 16, color: '#9a928a',
     loot: [['iron', 0.3, 1, 1], ['stone', 0.5, 2, 3]] },
-  gloomhound: { name: 'Gloom hound', zones: ['hollow'], tags: [], voice: 'beast', weight: [[60, 0.3], [75, 0.5]], notice: 128, from: 60, ...charger({ windup: 0.45, rush: 160, time: 0.45, recover: 0.9, times: 2 }), hp: [26, 2], dmg: [14, 1], speed: 24, xp: 22, color: '#3a3550',
+  gloomhound: { name: 'Gloom hound', zones: ['hollow'], tags: [], voice: 'beast', weight: [[60, 0.3], [75, 0.5]], notice: 128, from: 60, ...charger({ windup: 0.45, rush: 160, time: 0.45, recover: 0.9, times: 2 }), hp: [26, 2], dmg: [12, 12, 8], speed: 24, xp: 22, color: '#3a3550',
     loot: [['gloommote', 0.15, 1, 1], ['gold', 0.2, 1, 1]] },
-  scuttler:   { name: 'Dune scuttler', zones: ['cavern'], tags: ['bug'], voice: 'bug', notice: 128, ...charger({ windup: 0.35, rush: 150, time: 0.35, recover: 0.6 }), hp: [20, 4], dmg: [16, 4], speed: 20, xp: 20, color: '#c9a36a',
+  scuttler:   { name: 'Dune scuttler', zones: ['cavern'], tags: ['bug'], voice: 'bug', notice: 128, ...charger({ windup: 0.35, rush: 150, time: 0.35, recover: 0.6 }), hp: [20, 4], dmg: [0, 6, 24], speed: 20, xp: 20, color: '#c9a36a',
     loot: [['chitin', 0.4, 1, 1], ['copper', 0.4, 1, 1]] },
-  bull:       { name: 'Sand bull', zones: ['cavern'], tags: [], voice: 'beast', knockback: 0.5, weight: 0.5, notice: 128, ...charger({ windup: 0.8, rush: 170, time: 0.9, recover: 1.1 }), hp: [40, 3], dmg: [22, 4], speed: 16, xp: 32, color: '#a5753f',
+  bull:       { name: 'Sand bull', zones: ['cavern'], tags: [], voice: 'beast', knockback: 0.5, weight: 0.5, notice: 128, ...charger({ windup: 0.8, rush: 170, time: 0.9, recover: 1.1 }), hp: [40, 3], dmg: [0, 5, 32], speed: 16, xp: 32, color: '#a5753f',
     loot: [['boneshard', 0.3, 1, 1], ['iron', 0.3, 1, 1]] },
-  hound:      { name: 'Cinder hound', zones: ['vent'], tags: [], voice: 'beast', notice: 128, ...charger({ windup: 0.4, rush: 170, time: 0.5, recover: 0.8, times: 2 }), hp: [28, 4], dmg: [22, 5], speed: 26, xp: 34, color: '#5a2a22',
+  hound:      { name: 'Cinder hound', zones: ['vent'], tags: [], voice: 'beast', notice: 128, ...charger({ windup: 0.4, rush: 170, time: 0.5, recover: 0.8, times: 2 }), hp: [28, 4], dmg: [0, 7, 26], speed: 26, xp: 34, color: '#5a2a22',
     loot: [['cinder', 0.4, 1, 1], ['gloommote', 0.1, 1, 1]] },
-  magmaram:   { name: 'Magma ram', zones: ['vent'], tags: [], voice: 'beast', knockback: 0.4, weight: 0.5, notice: 128, ...charger({ windup: 0.8, rush: 150, time: 0.8, recover: 1, stun: 2.2 }), hp: [70, 2], dmg: [30, 5], speed: 14, xp: 48, color: '#4a3430',
+  magmaram:   { name: 'Magma ram', zones: ['vent'], tags: [], voice: 'beast', knockback: 0.4, weight: 0.5, notice: 128, ...charger({ windup: 0.8, rush: 150, time: 0.8, recover: 1, stun: 2.2 }), hp: [70, 2], dmg: [0, 6, 30], speed: 14, xp: 48, color: '#4a3430',
     loot: [['cinder', 0.8, 1, 1], ['umbrite', 0.03, 1, 1]] },
 
   // v253 (85d1): mimic, burrow and swarm, kept to bands of floors (Stardew's rock crabs, duggies and dust sprites).
-  crab:  { name: 'Pebble crab', zones: ['hollow'], tags: [], voice: 'bug', knockback: 0.7, weight: 0.5, from: 1, to: 40, move: 'mimic', hp: [6, 3], dmg: [5, 2], speed: 16, xp: 4, color: '#8a7a6a',
+  crab:  { name: 'Pebble crab', zones: ['hollow'], tags: [], voice: 'bug', knockback: 0.7, weight: 0.5, from: 1, to: 40, move: 'mimic', hp: [6, 3], dmg: [5, 15, 3], speed: 16, xp: 4, color: '#8a7a6a',
     loot: [['chitin', 0.4, 1, 1], ['stone', 0.6, 2, 4], ['copper', 0.15, 1, 1]] },
-  mole:  { name: 'Burrow mole', zones: ['hollow'], tags: [], voice: 'beast', weight: 0.7, notice: 96, from: 8, to: 35, move: 'burrow', hp: [5, 4], dmg: [6, 2], speed: 34, xp: 5, color: '#6a5040',
+  mole:  { name: 'Burrow mole', zones: ['hollow'], tags: [], voice: 'beast', weight: 0.7, notice: 96, from: 8, to: 35, move: 'burrow', hp: [5, 4], dmg: [6, 15, 3], speed: 34, xp: 5, color: '#6a5040',
     loot: [['fiber', 0.3, 1, 1], ['copper', 0.25, 1, 1], ['geode', 0.03, 1, 1]] },
-  puff:  { name: 'Soot puffs', zones: ['hollow'], tags: [], voice: 'ember', knockback: 1.3, weight: 0.4, from: 40, to: 80, move: 'swarm', pack: [4, 5], hp: [2, 10], dmg: [4, 5], speed: 42, xp: 3, color: '#3d3833',
+  puff:  { name: 'Soot puffs', zones: ['hollow'], tags: [], voice: 'ember', knockback: 1.3, weight: 0.4, from: 40, to: 80, move: 'swarm', pack: [4, 5], hp: [2, 10], dmg: [5, 20, 3], speed: 42, xp: 3, color: '#3d3833',
     loot: [['coal', 0.3, 1, 1], ['quartz', 0.03, 1, 1]] },
   // v254 (85d2): the same three in the deep dungeons, beside their dungeon's other kinds (Stardew: lava lurks).
-  lurker:    { name: 'Lava lurker', zones: ['vent'], tags: [], voice: 'ember', knockback: 0, weight: 0.7, notice: 96, move: 'burrow', mound: 'lava', hp: [40, 4], dmg: [26, 5], speed: 40, xp: 40, color: '#a8352a',
+  lurker:    { name: 'Lava lurker', zones: ['vent'], tags: [], voice: 'ember', knockback: 0, weight: 0.7, notice: 96, move: 'burrow', mound: 'lava', hp: [40, 4], dmg: [0, 8, 22], speed: 40, xp: 40, color: '#a8352a',
     loot: [['cinder', 0.5, 1, 1], ['sunmote', 0.15, 1, 1]] },
-  dustdevil: { name: 'Dust devils', zones: ['cavern'], tags: [], voice: 'ghost', knockback: 1.3, weight: 0.4, move: 'swarm', pack: [4, 5], hp: [8, 10], dmg: [10, 10], speed: 46, xp: 8, color: '#c9a36a',
+  dustdevil: { name: 'Dust devils', zones: ['cavern'], tags: [], voice: 'ghost', knockback: 1.3, weight: 0.4, move: 'swarm', pack: [4, 5], hp: [8, 10], dmg: [0, 10, 16], speed: 46, xp: 8, color: '#c9a36a',
     loot: [['stone', 0.3, 1, 2], ['copper', 0.1, 1, 1]] },
-  ashswarm:  { name: 'Ash swarm', zones: ['vent'], tags: [], voice: 'ember', knockback: 1.3, weight: 0.4, move: 'swarm', pack: [4, 5], hp: [12, 10], dmg: [14, 8], speed: 46, xp: 10, color: '#6a5a58',
+  ashswarm:  { name: 'Ash swarm', zones: ['vent'], tags: [], voice: 'ember', knockback: 1.3, weight: 0.4, move: 'swarm', pack: [4, 5], hp: [12, 10], dmg: [0, 9, 18], speed: 46, xp: 10, color: '#6a5a58',
     loot: [['cinder', 0.2, 1, 1], ['sunmote', 0.03, 1, 1]] },
 
   // v255 (85e1): shooters (Stardew's shooting mages and squid kids).
-  spitter:     { name: 'Hollow spitter', zones: ['hollow'], tags: [], voice: 'ghost', weight: [[70, 0.4], [85, 0.6]], notice: 140, from: 70, move: 'shoot', hp: [18, 3], dmg: [12, 2], speed: 20, xp: 18, color: '#5a4a6a', glow: '#b07ae0',
+  spitter:     { name: 'Hollow spitter', zones: ['hollow'], tags: [], voice: 'ghost', weight: [[70, 0.4], [85, 0.6]], notice: 140, from: 70, move: 'shoot', hp: [18, 3], dmg: [10, 15, 6], speed: 20, xp: 18, color: '#5a4a6a', glow: '#b07ae0',
     loot: [['sunmote', 0.2, 1, 1], ['gold', 0.1, 1, 1]] },
-  sandspitter: { name: 'Sand spitter', zones: ['cavern'], tags: [], voice: 'bug', weight: 0.6, notice: 140, move: 'shoot', hp: [26, 4], dmg: [16, 5], speed: 22, xp: 26, color: '#b08a5a', glow: '#e9c46a',
+  sandspitter: { name: 'Sand spitter', zones: ['cavern'], tags: [], voice: 'bug', weight: 0.6, notice: 140, move: 'shoot', hp: [26, 4], dmg: [0, 6, 24], speed: 22, xp: 26, color: '#b08a5a', glow: '#e9c46a',
     loot: [['sunmote', 0.25, 1, 1], ['gold', 0.15, 1, 1]] },
-  cragspitter: { name: 'Crag spitter', zones: ['vent'], tags: [], voice: 'ember', weight: 0.6, notice: 140, move: 'shoot', hp: [32, 4], dmg: [20, 5], speed: 22, xp: 32, color: '#4a3a36', glow: '#e9862a',
+  cragspitter: { name: 'Crag spitter', zones: ['vent'], tags: [], voice: 'ember', weight: 0.6, notice: 140, move: 'shoot', hp: [32, 4], dmg: [0, 6, 26], speed: 22, xp: 32, color: '#4a3a36', glow: '#e9862a',
     loot: [['sunmote', 0.3, 1, 1], ['gloommote', 0.15, 1, 1]] },
 
   // v256 (85e2): splitters (Stardew's big slimes).
-  mossslime:  { name: 'Moss slime', zones: ['hollow'], tags: ['slime'], voice: 'slime', weight: 0.6, from: 20, to: 60, move: 'split', hp: [14, 2], dmg: [8, 2], speed: 22, xp: 8, color: '#6a9a3a',
+  mossslime:  { name: 'Moss slime', zones: ['hollow'], tags: ['slime'], voice: 'slime', weight: 0.6, from: 20, to: 60, move: 'split', hp: [14, 2], dmg: [6, 12, 4], speed: 22, xp: 8, color: '#6a9a3a',
     loot: [['gel', 0.8, 1, 3], ['fiber', 0.25, 1, 1]] },
-  emberslime: { name: 'Ember slime', zones: ['vent'], tags: ['slime'], voice: 'slime', weight: 0.5, move: 'split', hp: [50, 4], dmg: [24, 5], speed: 24, xp: 30, color: '#e07a3a',
+  emberslime: { name: 'Ember slime', zones: ['vent'], tags: ['slime'], voice: 'slime', weight: 0.5, move: 'split', hp: [50, 4], dmg: [0, 7, 24], speed: 24, xp: 30, color: '#e07a3a',
     loot: [['gel', 0.6, 1, 2], ['cinder', 0.3, 1, 1]] },
 
   // v257 (85f): phasers and the armored. The lantern wisp is wisp silk's own source.
-  wisp:      { name: 'Lantern wisp', zones: ['hollow'], tags: [], voice: 'ghost', weight: 0.5, notice: 140, from: 50, to: 80, move: 'phase', hp: [16, 4], dmg: [10, 2], speed: 26, xp: 16, color: '#cfe6f0', glow: '#ffe08a',
+  wisp:      { name: 'Lantern wisp', zones: ['hollow'], tags: [], voice: 'ghost', weight: 0.5, notice: 140, from: 50, to: 80, move: 'phase', hp: [16, 4], dmg: [9, 15, 4], speed: 26, xp: 16, color: '#cfe6f0', glow: '#ffe08a',
     loot: [['wispsilk', 0.15, 1, 1], ['sunmote', 0.05, 1, 1]] },
-  shade:     { name: 'Tomb shade', zones: ['cavern'], tags: [], voice: 'ghost', weight: 0.5, notice: 140, move: 'phase', hp: [28, 4], dmg: [18, 4], speed: 28, xp: 28, color: '#5a5070', glow: '#b07ae0',
+  shade:     { name: 'Tomb shade', zones: ['cavern'], tags: [], voice: 'ghost', weight: 0.5, notice: 140, move: 'phase', hp: [28, 4], dmg: [0, 6, 24], speed: 28, xp: 28, color: '#5a5070', glow: '#b07ae0',
     loot: [['gloommote', 0.25, 1, 1], ['boneshard', 0.3, 1, 1]] },
-  shellback: { name: 'Shellback', zones: ['hollow'], tags: ['bug'], voice: 'bug', knockback: 0.5, weight: [[85, 0.3], [100, 0.5]], notice: 80, from: 85, move: 'armored', armored: true, hp: [30, 3], dmg: [14, 2], speed: 14, xp: 24, color: '#7a8a6a',
+  shellback: { name: 'Shellback', zones: ['hollow'], tags: ['bug'], voice: 'bug', knockback: 0.5, weight: [[85, 0.3], [100, 0.5]], notice: 80, from: 85, move: 'armored', armored: true, hp: [30, 3], dmg: [12, 15, 6], speed: 14, xp: 24, color: '#7a8a6a',
     loot: [['chitin', 0.6, 2, 3], ['umbrite', 0.05, 1, 1]] },
-  cragshell: { name: 'Crag shellback', zones: ['vent'], tags: ['bug'], voice: 'bug', knockback: 0.4, weight: 0.5, notice: 80, move: 'armored', armored: true, hp: [70, 3], dmg: [28, 5], speed: 14, xp: 45, color: '#5a4a44',
+  cragshell: { name: 'Crag shellback', zones: ['vent'], tags: ['bug'], voice: 'bug', knockback: 0.4, weight: 0.5, notice: 80, move: 'armored', armored: true, hp: [70, 3], dmg: [0, 6, 28], speed: 14, xp: 45, color: '#5a4a44',
     loot: [['chitin', 0.6, 2, 3], ['umbrite', 0.08, 1, 1]] },
-  stormwing: { name: 'Storm wing', zones: ['vent'], tags: [], voice: 'beast', knockback: 1.3, weight: 0.4, notice: 160, move: 'swarm', fly: true, pack: [3, 4], hp: [14, 10], dmg: [16, 8], speed: 50, xp: 12, color: '#3a4a6a',
+  stormwing: { name: 'Storm wing', zones: ['vent'], tags: [], voice: 'beast', knockback: 1.3, weight: 0.4, notice: 160, move: 'swarm', fly: true, pack: [3, 4], hp: [14, 10], dmg: [0, 8, 20], speed: 50, xp: 12, color: '#3a4a6a',
     loot: [['leatherwing', 0.5, 1, 1], ['gloommote', 0.1, 1, 1]] },
 
   // v261 (85j): the seasonal night creatures, one a season. Stats beside the Hollow's first floors; Stardew has no
