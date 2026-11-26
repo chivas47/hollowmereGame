@@ -34,7 +34,7 @@ test('every goal counts exactly the creatures it did, picked by its query', () =
 test('a query picks by kind, way of fighting, where it lives and family; a new kind that fits counts', () => {
   assert.deepEqual(kindsWhere({ kind: 'bat' }), ['bat']);
   assert.deepEqual(kindsWhere({ kind: 'nobody' }), []);
-  assert.deepEqual(kindsWhere({ tag: 'slime' }), ['slime', 'mossslime', 'emberslime']);
+  assert.deepEqual(kindsWhere({ tag: 'slime' }), ['slime', 'mossslime', 'emberslime', 'mossmother']);   // v368
   assert.ok(kindsWhere({ move: 'swarm' }).includes('wasp') && !kindsWhere({ move: 'swarm', zones: ['hollow', 'cavern', 'vent'] }).includes('wasp'));
   MONSTERS.testcharger = { ...MONSTERS.boar, name: 'Test charger' };
   try { assert.ok(kindsWhere(GOALS.hollowchargers.who).includes('testcharger'), 'a new Hollow charger counts toward the Hollow chargers'); }

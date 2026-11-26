@@ -57,7 +57,7 @@ A band of 20 lines up with the lift (every 5 floors) and gives four lift stops p
 | Floors | Band | Look | Floor shape | Mechanic | Landmark (10th floor) | Stardew by role |
 |---|---|---|---|---|---|---|
 | 1-20 | **The Rootways** | earth, roots | winding tunnels instead of one room, larger than the screen | cracked walls: pick through for shortcuts and sealed pockets of ore | a root-bound miner's camp: a safe room with a bed roll | upper mines |
-| 21-40 | **The Flooded Galleries** | wet stone, moss | islands joined by narrow bridges over still water | water: a pool to fish on every floor ending in 0 or 5, with cave fish only found there | a sunken shrine | the mines' fishing floors |
+| 21-40 | **The Flooded Galleries** | wet stone, moss | islands joined by narrow bridges over still water | water: fish anywhere in the band (v368: water fills every floor, so every floor is a fishing floor), with cave fish only found there; the rarest only in the shrine's pool | a sunken shrine | the mines' fishing floors |
 | 41-60 | **The Frost Halls** | ice, blue stone | long halls and ice sheets | ice: you slide until you hit something; so do creatures, and chargers skid | a frozen lake | the frost floors 40-79 |
 | 61-80 | **The Bone Crypts** | pale stone, bones | rooms split by pillars and walls | darkness: your light is small; braziers lit with coal stay lit for the visit | an ossuary chapel; floor 80 keeps the Sunken Cavern's door | the dark floors |
 | 81-100 | **The Magma Rifts** | basalt, glowing cracks | lava rivers cutting the floor | lava hurts; crumbling bridges fall a few seconds after you cross | a forge ruin; floor 100 keeps "the bottom of the old maps" | the lava floors 80-119 |

@@ -36,7 +36,7 @@ test('every kind has known tags and a voice', () => {
 });
 
 test('the families: every slime, the insects, the dead', () => {
-  assert.deepEqual(KINDS.filter((k) => hasTag(k, 'slime')), ['slime', 'mossslime', 'emberslime']);
+  assert.deepEqual(KINDS.filter((k) => hasTag(k, 'slime')), ['slime', 'mossslime', 'emberslime', 'mossmother']);   // v368: the Mossmother too
   for (const k of ['mite', 'beetle', 'scuttler', 'shellback', 'cragshell', 'wasp', 'moth']) assert.ok(hasTag(k, 'bug'), `${k} is a bug`);
   for (const k of ['bat', 'crab', 'boar']) assert.ok(!hasTag(k, 'bug'), `${k} is not a bug`);
 });

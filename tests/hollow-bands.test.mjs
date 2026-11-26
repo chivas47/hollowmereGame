@@ -85,13 +85,13 @@ test('the pickaxe breaks a cracked wall in a few hits, for energy', () => {
   assert.equal(e - G.S.energy, 6, '2 energy a hit, as a rock');
 });
 
-test('floors keep their seed, creatures spawn in the tunnels, and floor 21 on is unchanged for now', () => {
+test('floors keep their seed, creatures spawn in the tunnels, and floor 41 on is unchanged for now', () => {
   freshFarm(); G.S.day = 5;
   enterMine(7); const a = JSON.stringify(grid());
   enterMine(7); assert.equal(JSON.stringify(grid()), a, 'the same day and floor build the same floor');
   for (const m of slimes) { const t = grid()[Math.floor(m.y / 16)]?.[Math.floor(m.x / 16)]; assert.ok(t && t !== 'X' && t !== CRACK, 'creatures stand in the tunnels'); }
-  enterMine(21);
+  enterMine(41);   // v368: 21-40 are the Flooded Galleries (tests/hollow-flooded.test.mjs)
   assert.equal(grid().length, H); assert.equal(grid()[0].length, W);
-  assert.match(MAPS.mine.name, /^The Hollow, floor 21$/);
+  assert.match(MAPS.mine.name, /^The Hollow, floor 41$/);
   assert.deepEqual(MINE.cracks, {});
 });

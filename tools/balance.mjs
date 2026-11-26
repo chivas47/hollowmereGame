@@ -687,12 +687,24 @@ function simulate(runSeed) {
     if (s.shimmer && s.energy >= 4) { panAt(s.shimmer.x, s.shimmer.y); spend(TIME.chore); }
   }
 
+  // v368 (roadmap 120c): a cast at the Flooded Galleries' water: the first water tile beside land on this floor.
+  const caveSpot = () => {
+    const g = MAPS.mine.grid;
+    for (let y = 1; y < g.length - 1; y++) for (let x = 1; x < g[0].length - 1; x++)
+      if (g[y][x] === 'ȶ' && [[0, 1], [0, -1], [1, 0], [-1, 0]].some(([a, b]) => !SOLID.has(g[y + b][x + a]))) return [x, y];
+    return null;
+  };
   function fish(stopAt) {
     const s = S();
     spend(TIME.travel);
     pond();
+    // every third day, once it has reached them, the galleries' cave fish (a lift stop in floors 21-39)
+    const galleries = s.day % 3 === 0 ? checkpoints().filter((f) => f >= 21 && f <= 39 && f !== 30).pop() : null;
+    if (galleries) { enterMine(galleries); spend(TIME.travel * 2); }
+    const spot = galleries ? caveSpot() : null;
     while (s.energy >= COST.cast + stopAt && !late()) {
-      if (s.day % 2) use('wilds', 15, 10, 'rod');
+      if (spot) use('mine', ...spot, 'rod');
+      else if (s.day % 2) use('wilds', 15, 10, 'rod');
       else {   // v160: the mere's dock every other day; v161: bait from Garrow's counter while it is open
         if ((s.bag.bait || 0) < 5 && boathouseOpen(s) && s.gold > 500) track('bait', () => buyBoathouse(0));
         use('mere', 17, 13, 'rod');
@@ -717,6 +729,7 @@ function simulate(runSeed) {
       }
       spend(TIME.cast);
     }
+    if (galleries) leaveMine();
   }
 
   // Mines until the next purchase has its materials or energy runs out. Every rock gives stone.

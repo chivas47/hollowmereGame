@@ -39,7 +39,7 @@ test('lit, every creature is tougher and about one in ten is an elite', () => {
 test('an elite always drops a mote and is marked in the Bestiary; the brazier is saved', () => {
   freshFarm();
   setBrazier(true);
-  for (let i = 0; i < 40 && !slimes.some((m) => m.elite); i++) { G.S.day = i + 1; enterMine(30); }
+  for (let i = 0; i < 40 && !slimes.some((m) => m.elite); i++) { G.S.day = i + 1; enterMine(31); }   // v368: floor 30 is the Sunken Shrine
   const m = slimes.find((o) => o.elite);
   assert.ok(m, 'found an elite');
   Object.assign(m, { hidden: false, shell: false, bs: undefined, ph: undefined });

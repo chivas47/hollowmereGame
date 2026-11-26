@@ -89,6 +89,7 @@ export function genFloor(n, zone = 'hollow') {
   if (MINE.busy) MINE.ladder = null;
   else if (!MINE.ladder && !special) g[8][12] = 'L';
   MINE.special = special;
+  G.mineWater = special === 'landmark' ? band.landmark.water || band.water : band?.water || null;   // v368: which fish bite here (systems/fishing.js)
 
   Object.assign(MAPS.mine, { grid: g, name: peak ? `${PEAK.name}, floor ${n}` : vent ? `${VENT.name}, floor ${n}` : cav ? `${CAVERN.name}, floor ${n}` : special === 'landmark' ? `${band.landmark.name}, floor ${n}` : band?.look ? `${band.name}, floor ${n}` : `The Hollow, floor ${n}`, theme: peak ? 'peak' : vent ? 'ember' : cav ? 'sand' : band?.look || null });
   const newBand = band && MINE.band !== band.id && zone === 'hollow';
