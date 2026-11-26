@@ -55,3 +55,27 @@ test('sitting puts you on the seat without moving your saved spot; a step stands
   G.keys = {};
   assert.equal(sit(p.x, p.y), true); assert.equal(stand(), true); assert.equal(seated(), null);
 });
+
+// v356: seated, the old code clipped the bottom four rows of the frame, which on the person sheet are all of the
+// legs (pants on rows 16 to 18, shoes on 18 and 19 of 20). Now the body folds at the hips instead, and the legs show.
+test('seated, your legs fold under you instead of being cut away', async () => {
+  const { PERSON } = await import('../src/data/personSheet.js');
+  assert.equal(SEATS.hide, undefined, 'no rows of the body are clipped away');
+  assert.equal(SEATS.legs, 4, 'the legs are the bottom four rows of a frame');
+  assert.equal(PERSON.h, 20);
+  assert.ok(SEATS.fold > 0 && SEATS.fold < SEATS.legs, 'the body drops onto the seat but some leg still shows');
+});
+
+test('the town and village benches never stand one right behind another', () => {
+  for (const id of ['town', 'village']) {
+    const g = MAPS[id].grid, benches = [];
+    g.forEach((row, y) => row.forEach((t, x) => { if (t === 'ƀ') benches.push([x, y]); }));
+    assert.ok(benches.length >= 2, id);
+    for (const [x, y] of benches) assert.notEqual(g[y + 1]?.[x], 'ƀ', `${id}: a bench right in front of the one at ${x},${y}`);
+  }
+});
+
+test('the village square has a bench either side, facing each other across the fountain', () => {
+  assert.deepEqual(seatAt('village', 7, 7, {}), { dir: 'right', name: 'bench', side: true });
+  assert.deepEqual(seatAt('village', 16, 7, {}), { dir: 'left', name: 'bench', side: true });
+});

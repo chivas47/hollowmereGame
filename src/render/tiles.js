@@ -961,6 +961,15 @@ function bench(g, x, y) {
   r(g, X + 1, Y + 6, 14, 3, '#8a5a32'); r(g, X + 1, Y + 6, 14, 1, '#b0804a'); r(g, X + 1, Y + 3, 14, 2, '#6e4626');
   r(g, X + 2, Y + 9, 2, 5, '#4a3020'); r(g, X + 12, Y + 9, 2, 5, '#4a3020');
 }
+// v356: a bench seen side on, for benches that face each other across the village square. right: it faces right,
+// its back on the left.
+function sideBench(g, x, y, right) {
+  const X = x * T, Y = y * T, back = right ? X + 1 : X + 13;
+  r(g, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.2)');
+  r(g, X + 3, Y + 8, 10, 3, '#8a5a32'); r(g, X + 3, Y + 8, 10, 1, '#b0804a');
+  r(g, back, Y + 2, 2, 12, '#6e4626'); r(g, back + (right ? 1 : 0), Y + 2, 1, 12, '#8a5a32');
+  r(g, X + 4, Y + 11, 2, 3, '#4a3020'); r(g, X + 10, Y + 11, 2, 3, '#4a3020');
+}
 // v166: Tamsin's pens: fence rails round the box, grazed grass (data/maps.js RANCH_PEN); v276: her animals are
 // entities now (systems/pen.js, render/wildlife.js).
 function pen(g, x, y, p) {
@@ -1196,7 +1205,7 @@ export const PROP_ART = {
   '@': shrineDoor, '+': pedestal,
   '|': fallenLog, '}': rubble, ';': grate, '{': hotSpring, '?': traderSpot,
   '7': peakMouth, '8': shell, '9': basin, '<': altar, '`': lantern,
-  'ħ': hedge, 'ǧ': gardenBed, 'ƀ': bench, 'ɲ': pen,   // v159; v166 the pens
+  'ħ': hedge, 'ǧ': gardenBed, 'ƀ': bench, 'ɓ': (g, x, y) => sideBench(g, x, y, true), 'ɗ': (g, x, y) => sideBench(g, x, y, false), 'ɲ': pen,   // v159; v166 the pens; v356 side benches
   'ʋ': reeds,   // v160
   'ʂ': stall,   // v165
   'ψ': weedClump, 'ɤ': headstone, 'ɮ': cryptRoof, 'ɯ': cryptFront, 'ɸ': railing, 'ʇ': deadTree,   // v303
@@ -1211,7 +1220,7 @@ export const PROP_GROUND = {
   U: 'wall', '^': 'wall', '>': 'wall', t: 'floor', $: 'floor', '!': 'floor', '=': 'floor', '+': 'floor', '?': 'floor',
   '|': 'grass:29', '}': 'grass:23', ';': 'grass:37', '9': 'grass:41', '<': 'grass:43', '`': 'grass:47',
   '¢': 'grass:53', '§': 'grass:59', '¤': 'grass:61', '8': 'sand',
-  'ħ': 'grass:67', 'ǧ': 'grass:71', 'ƀ': 'grass:73', 'ʋ': 'grass:79', 'β': 'grass:83', 'ʂ': 'grass:89', 'ɲ': 'grass:97',
+  'ħ': 'grass:67', 'ǧ': 'grass:71', 'ƀ': 'grass:73', 'ɓ': 'grass:73', 'ɗ': 'grass:73', 'ʋ': 'grass:79', 'β': 'grass:83', 'ʂ': 'grass:89', 'ɲ': 'grass:97',
   'ψ': 'grass:109', 'ɤ': 'grass:113', 'ɮ': 'grass:127', 'ɯ': 'grass:131', 'ɸ': 'grass:137', 'ʇ': 'grass:139',   // v303
   'ʊ': 'grass:149', 'ʖ': 'grass:149', 'ʞ': 'grass:151', 'ʡ': 'grass:151', 'ʚ': 'floor', 'ʛ': 'floor', 'ʜ': 'floor',   // 97a
   'ʩ': 'floor', 'ʪ': 'floor', 'ʫ': 'wall', 'ʬ': 'wall', 'ʭ': 'wall', 'ʮ': 'wall', 'ʯ': 'wall', 'ʰ': 'floor', 'ʱ': 'floor', 'ʲ': 'floor',   // 97c

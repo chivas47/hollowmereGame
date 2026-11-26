@@ -3,7 +3,7 @@
 //   ground cover: small walkable things drawn into the map's background (flower clumps, ferns, mushrooms, pebbles,
 //     shells), in patches rather than an even sprinkle, by biome and season (render/scenery.js);
 //   props: solid things placed on open ground when a map is built (bushes, boulders, stumps, woodpiles, hay,
-//     barrels, planters), by hand, where someone would have put them or where they would grow.
+//     barrels, planters, flower pots, flower beds), by hand, where someone would have put them or where they would grow.
 // The farm has neither: its grass is for the player to farm and build on.
 
 // Biomes: which cover each map grows. Each kind is [name, weight]; rate is the share of open tiles that get
@@ -11,6 +11,7 @@
 export const BIOMES = {
   meadow:   { kinds: [['flowers', 5], ['clover', 3], ['tall', 3], ['pebbles', 1]], on: 'g' },
   lane:     { kinds: [['flowers', 4], ['clover', 2], ['tall', 1], ['pebbles', 2]], on: 'g' },
+  garden:   { kinds: [['flowers', 7], ['clover', 2], ['tall', 1], ['pebbles', 1]], on: 'g' },   // v356: the town's tended verges
   woods:    { kinds: [['fern', 5], ['mushrooms', 2], ['leaves', 3], ['moss', 2], ['flowers', 1]], on: 'g' },
   highland: { kinds: [['heather', 4], ['pebbles', 4], ['tall', 2], ['flowers', 1]], on: 'g' },
   shore:    { kinds: [['shells', 3], ['pebbles', 3], ['driftwood', 1], ['weed', 2]], on: 'z' },
@@ -24,7 +25,7 @@ export const BIOMES = {
 export const COVER = {
   wilds:    { biome: 'meadow', rate: 0.22, patch: 0.6 },
   village:  { biome: 'lane', rate: 0.14, patch: 0.7 },
-  town:     { biome: 'lane', rate: 0.12, patch: 0.7 },
+  town:     { biome: 'garden', rate: 0.18, patch: 0.6 },   // v356: more flowers, so the town reads lived in
   mere:     { biome: 'meadow', rate: 0.22, patch: 0.6 },
   railway:  { biome: 'meadow', rate: 0.2, patch: 0.5 },
   forest:   { biome: 'woods', rate: 0.3, patch: 0.5 },
@@ -43,7 +44,7 @@ export const COVER = {
 // Props, solid, each on an open tile of its map ([kind, x, y]). Tile letters are in PROP_TILES; the art is in
 // render/scenery.js. Kept clear of paths' edges where people walk, doors, exits, signs and every neighbour's spots
 // (tests/scenery.test.mjs). Trees are the maps' own trees (T), planted in small stands on the widest open ground.
-export const PROP_TILES = { tree: 'T', bush: 'ƃ', boulder: 'ǫ', stump: 'ƫ', woodpile: 'ǥ', hay: 'ȟ', barrels: 'ȸ', planter: 'ƥ' };
+export const PROP_TILES = { tree: 'T', bush: 'ƃ', boulder: 'ǫ', stump: 'ƫ', woodpile: 'ǥ', hay: 'ȟ', barrels: 'ȸ', planter: 'ƥ', pots: 'ǒ', flowerbed: 'ǚ' };   // v356: pots and flower beds
 export const PROPS = {
   village: [
     // shrubs along the north row's gardens and the east road's hedge end, a woodpile by Kit's, hay by Tamsin's pens
@@ -54,6 +55,8 @@ export const PROPS = {
     ['bush', 2, 25], ['bush', 13, 25], ['bush', 21, 26], ['bush', 37, 16], ['boulder', 36, 1],
     // stands of trees: the north-east corner, the east lane's verge, the meadow south of the lower lane
     ['tree', 27, 2], ['tree', 31, 1], ['tree', 34, 3], ['tree', 36, 10], ['tree', 35, 15], ['tree', 19, 23], ['tree', 22, 24], ['tree', 27, 26],
+    // v356: pots by the north row's and the lower lane's doors
+    ['pots', 4, 3], ['pots', 19, 3], ['pots', 3, 19], ['pots', 7, 19], ['pots', 12, 19],
   ],
   town: [
     // barrels and crates by the store, the smithy's woodpile, planters at the clinic and museum, shrubs on the edges
@@ -62,6 +65,11 @@ export const PROPS = {
     ['boulder', 6, 21], ['bush', 20, 20], ['stump', 28, 21], ['bush', 33, 17], ['bush', 17, 18], ['planter', 13, 15],
     // a copse in the open south-east, and trees by the tavern's back field
     ['tree', 24, 18], ['tree', 26, 20], ['tree', 22, 21], ['tree', 30, 19], ['tree', 33, 21], ['tree', 35, 13], ['tree', 4, 17], ['tree', 8, 18],
+    // v356: pots of flowers by the doors, flower beds by the hall, along the lanes and on the open east side
+    ['pots', 3, 7], ['pots', 6, 3], ['pots', 15, 3], ['pots', 18, 3], ['pots', 17, 7], ['pots', 19, 7],
+    ['pots', 16, 16], ['pots', 31, 6],
+    ['flowerbed', 11, 3], ['flowerbed', 12, 3], ['flowerbed', 4, 13], ['flowerbed', 5, 13], ['flowerbed', 19, 13], ['flowerbed', 20, 13],
+    ['flowerbed', 23, 6], ['flowerbed', 24, 6], ['flowerbed', 25, 6], ['planter', 26, 6], ['planter', 29, 3], ['bush', 22, 6],
   ],
   mere: [
     ['bush', 2, 6], ['boulder', 9, 2], ['bush', 16, 2], ['stump', 30, 2], ['boulder', 34, 4], ['bush', 37, 8],
