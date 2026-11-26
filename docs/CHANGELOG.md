@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v356: Sitting shows your legs, a livelier town
+- Sitting on a chair, bench, sofa or armchair no longer cuts you off at the waist. You fold at the hips: your body drops onto the seat and your legs and shoes show below it, reaching forward when you sit side on. Facing away, the seat's back still hides them.
+- The town's two benches on the green, where the Anvil stood, now sit side by side facing the lane instead of one behind the other.
+- Clay pots of flowers by the town's and the village's doors, stone-edged flower beds by the town hall, along the lower lane and on the open east side, and more wildflowers on the town's verges. All of it changes with the seasons: evergreen sprigs and snow in winter.
+- A save made standing on a tile that now holds pots or a flower bed loads at the map's entrance, as with other new scenery.
+- New save data: none.
+
 ## v355: Heavy creatures hold their ground
 - A blow now pushes creatures by their weight. Ember golems barely move (three tenths of the push), magma rams and crag shellbacks hold well (four tenths), stone rams, sand bulls, shellbacks and barrow shamblers half as far, burrow beetles, tusk boars, bristle hogs, pebble crabs and sand wraiths a little less. Lava lurkers do not move at all from their pools.
 - Bats, firefly moths and the swarms (soot puffs, dust devils, ash swarms, storm wings, bramble sprites, thorn wasps) fly further.

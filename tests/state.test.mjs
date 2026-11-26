@@ -62,6 +62,6 @@ test('v159: a farmer saved where the new village has a bench moves to the lane; 
   assert.deepEqual({ x: bench.x, y: bench.y }, at(10, 1));
   const open = merge({ day: 9, gold: 0, v: 3, map: 'village', ...at(12, 7) });    // by the fountain
   assert.deepEqual({ x: open.x, y: open.y }, at(12, 7));
-  const town = merge({ day: 9, gold: 0, v: 3, map: 'town', ...at(11, 5) });       // the Anvil's old spot, a bench now
+  const town = merge({ day: 9, gold: 0, v: 3, map: 'town', ...at(11, 6) });       // the Anvil's old spot, a bench now
   assert.deepEqual({ x: town.x, y: town.y }, at(10, 22));
 });

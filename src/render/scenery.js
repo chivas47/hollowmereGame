@@ -225,4 +225,33 @@ function planter(g, x, y, p) {
   else r(g, X + 3, Y + 3, 10, 2, SNOW);
   r(g, X + 2, Y + 8, 12, 6, '#5c3a20'); r(g, X + 3, Y + 8, 10, 5, '#8a5a32'); r(g, X + 3, Y + 8, 10, 1, '#b0804a'); r(g, X + 7, Y + 9, 1, 4, '#6e4626');
 }
-export const SCENERY_ART = { 'ƃ': bush, 'ǫ': boulder, 'ƫ': stump, 'ǥ': woodpile, 'ȟ': hay, 'ȸ': barrels, 'ƥ': planter };
+// v356: clay pots of flowers by a door, three sizes; in winter a sprig of evergreen with snow on the rims.
+const POTTED = { Spring: ['#f2a0b8', '#f6e27a', '#b8a0e8'], Summer: ['#e2707a', '#f4ead2', '#e9b44c'], Autumn: ['#e8862a', '#c94a3a', '#e9b44c'], Winter: null };
+function pots(g, x, y, p) {
+  const X = x * T, Y = y * T, fl = POTTED[p.season];
+  r(g, X + 1, Y + 14, 14, 2, SHADE);
+  [[1, 7, 6, 7, 0], [7, 9, 4, 5, 1], [11, 6, 4, 8, 2]].forEach(([a, b, w, h, i]) => {
+    const top = Y + b, cx = X + a + (w >> 1);
+    if (fl) {
+      r(g, cx - 2, top - 4, 4, 4, '#3f7a34'); r(g, cx - 1, top - 5, 2, 1, '#5a9a44'); r(g, cx - 3, top - 2, 1, 2, '#3f7a34'); r(g, cx + 2, top - 2, 1, 2, '#3f7a34');
+      [[-2, -5], [1, -4], [-1, -2]].forEach(([dx, dy]) => { r(g, cx + dx, top + dy, 2, 2, fl[i]); r(g, cx + dx, top + dy, 1, 1, '#fff6d8'); });
+    } else { r(g, cx - 1, top - 4, 2, 4, '#2f5a3a'); r(g, cx - 2, top - 2, 4, 1, '#2f5a3a'); }
+    r(g, X + a, top, w, 2, '#a5502e'); r(g, X + a + 1, top + 2, w - 2, h - 2, '#c0643a'); r(g, X + a + 1, top + 2, 1, h - 2, '#d8845a');
+    r(g, X + a, top, w, 1, '#d8845a'); r(g, X + a + w - 2, top + 2, 1, h - 2, '#8e3e22');
+    if (p.snow) r(g, X + a, top - 1, w, 1, SNOW);
+  });
+}
+// v356: a low flower bed edged with stones, thick with the season's blooms; dug over and snowed on in winter.
+const BED = { Spring: ['#f2a0b8', '#f4ead2', '#b8a0e8'], Summer: ['#e2707a', '#e9b44c', '#f4ead2'], Autumn: ['#e8862a', '#c94a3a', '#c99a3a'], Winter: null };
+function flowerbed(g, x, y, p) {
+  const X = x * T, Y = y * T, fl = BED[p.season], R = rng(x * 13 + y * 29);
+  r(g, X, Y + 13, 16, 2, SHADE);
+  r(g, X + 1, Y + 5, 14, 8, '#5a3a24'); r(g, X + 2, Y + 6, 12, 6, '#6e4a2e');
+  if (fl) {
+    r(g, X + 2, Y + 4, 12, 7, '#3f7a34'); r(g, X + 3, Y + 3, 10, 2, '#5a9a44');
+    for (let i = 0; i < 9; i++) { const a = 2 + Math.floor(R() * 11), b = 3 + Math.floor(R() * 7), c = fl[i % 3]; r(g, X + a, Y + b, 2, 2, c); r(g, X + a, Y + b, 1, 1, '#fff6d8'); }
+  } else { r(g, X + 3, Y + 6, 10, 1, '#4a2e1a'); r(g, X + 3, Y + 9, 10, 1, '#4a2e1a'); r(g, X + 2, Y + 5, 12, 2, SNOW); }
+  for (let a = 0; a < 16; a += 3) { r(g, X + a, Y + 11, 3, 3, '#8d8a85'); r(g, X + a, Y + 11, 2, 1, '#b5b2ac'); r(g, X + a + 2, Y + 12, 1, 2, '#65625d'); }
+  if (p.snow) for (let a = 0; a < 16; a += 3) r(g, X + a, Y + 10, 3, 1, SNOW);
+}
+export const SCENERY_ART = { 'ƃ': bush, 'ǫ': boulder, 'ƫ': stump, 'ǥ': woodpile, 'ȟ': hay, 'ȸ': barrels, 'ƥ': planter, 'ǒ': pots, 'ǚ': flowerbed };

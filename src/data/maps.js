@@ -232,7 +232,7 @@ function townGrid() {
   fill(m, 10, 9, 10, h - 1, 'P'); m[h - 1][10] = 'E';
   fill(m, 2, 12, 30, 12, 'P');   // v47: the lower lane past the tavern and the clinic
   put(m, [[3, 2], [7, 3], [24, 3], [7, 14], [2, 14], [30, 15], [36, 19]], 'T');
-  put(m, [[11, 5], [11, 6]], 'ƀ');   // benches on the green where the Anvil stood
+  put(m, [[11, 6], [13, 6]], 'ƀ');   // benches on the green where the Anvil stood (v356: side by side facing the lane, not one behind the other)
   fill(m, 13, 1, 15, 2, 'V'); fill(m, 14, 3, 14, 7, 'P');   // v49: Lio's cottage on the north edge
   fill(m, 4, 1, 6, 2, 'V'); fill(m, 5, 3, 5, 7, 'P');        // v50: Pell's cottage
   fill(m, 18, 1, 20, 2, 'V'); fill(m, 19, 3, 20, 3, 'P'); fill(m, 20, 4, 20, 7, 'P');   // v50: Juno's cottage

@@ -4,7 +4,7 @@ import { speedMult } from './buffs.js';
 import { emit, changed, notify } from '../core/events.js';
 import { addUpdater, addEntities } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
-import { drawPerson, drawHorse, drawBlink } from '../render/sprites.js';
+import { drawPerson, drawHorse, drawBlink, drawSeatedPerson } from '../render/sprites.js';
 import { STABLE } from '../data/upgrades.js';
 import { moveBox, playerTile, currentMap, placePlayer } from './world.js';
 import { outfitPal } from './clothing.js';
@@ -108,13 +108,10 @@ const SWUNG = new Set(['hoe', 'pick', 'axe', 'can', 'sword', 'rod', 'pan']);
 const mine = () => G.fishing && !G.fishing.p2;   // v134: a line of yours, not the second farmer's
 export const rodBend = () => { const f = G.fishing; return f?.phase === 'reel' ? 25 + Math.sin(performance.now() / 90) * 6 : f?.phase === 'bite' ? 18 : Math.sin(performance.now() / 600) * 2; };
 
-// v305: seated (systems/seats.js): on the seat, facing its way, the legs hidden under its edge.
+// v305: seated (systems/seats.js): on the seat, facing its way. v356: the legs fold at the hips instead of being
+// clipped away (the sheet's legs are its bottom four rows, so the old clip hid them whole).
 function drawSeated(c, s) {
-  const pal = outfitPal(G.S.profile, G.S.outfit);
-  c.save(); c.beginPath(); c.rect(s.x - 12, s.y - 40, 24, 40 - SEATS.hide); c.clip();
-  drawPerson(c, s.x, s.y, s.dir, false, 0, pal, lean(s.x));
-  if (M.blink > 0) drawBlink(c, s.x, s.y, s.dir, pal);
-  c.restore();
+  drawSeatedPerson(c, s.x, s.y, s.dir, outfitPal(G.S.profile, G.S.outfit), lean(s.x), SEATS, M.blink > 0);
 }
 
 addEntities(() => (G.youMap ? [] : [{   // v140: not drawn in their half when you are elsewhere

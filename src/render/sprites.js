@@ -245,6 +245,26 @@ export function drawPerson(c, px, py, dir, moving, walkT, p, wind = 0) {
   else r(c, x + 2, y + 1, 6, 1, p.hair);
 }
 
+// Seated (systems/seats.js): the standing frame folded at the hips. The body above the hips drops `fold` pixels
+// onto the seat and the legs shorten by as much, so the shoes still rest on the floor. Facing down the knees come
+// toward you; sideways the shins and shoes reach forward a little; facing up the seat's back hides the legs.
+// The bottom `legs` rows of a frame are the legs on both the sheet and the code art (hips first, shoes last).
+let fold = null;
+export function drawSeatedPerson(c, px, py, dir, p, wind, { legs, fold: f }, blink = false) {
+  const W = 32, H = 40, ax = 16, ay = 36;
+  if (!fold) { fold = document.createElement('canvas'); fold.width = W; fold.height = H; }
+  const g = fold.getContext('2d'); g.clearRect(0, 0, W, H);
+  drawPerson(g, ax, ay, dir, false, 0, p, wind);
+  if (blink) drawBlink(g, ax, ay, dir, p);
+  const X = Math.round(px) - ax, Y = Math.round(py) - ay, hip = ay - legs;
+  const part = (sy, h, dx, dy) => c.drawImage(fold, 0, sy, W, h, X + dx, Y + sy + dy, W, h);
+  part(0, hip + 1, 0, f);                         // head, body and the lap (the hip row)
+  if (dir === 'up') return;
+  const fwd = dir === 'left' ? -1 : dir === 'right' ? 1 : 0;
+  part(ay - 1, 1, fwd * f, 0);                    // the shoes on the floor, forward of the knees when side on
+  if (fwd) part(hip + 1, 1, fwd * (f - 1), f - 1);   // a shin between lap and shoes
+}
+
 // v115: closed eyes, drawn in skin over a standing person's eyes (the sheet and the code art put them on the same row).
 export function drawBlink(c, px, py, dir, p) {
   const sheet = ready(PERSON.sheet), x = Math.round(px), y = Math.round(py) - 11 + (sheet ? PERSON.bodies[lookOf(p).body].dy : 0);   // v223: a child's eyes are lower

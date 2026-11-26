@@ -10,5 +10,6 @@ export const SEATS = {
   rot: ['down', 'right', 'up', 'left'],
   push: 0.3,     // seconds walking into a seat before you sit (Stardew sits you on the bump; a beat avoids sitting by accident)
   drop: 3,       // pixels the body sits lower than standing
-  hide: 4,       // pixels of legs hidden under the seat's edge
+  legs: 4,       // rows at the bottom of a person's frame that are legs (hips to shoes), on the sheet and the code art
+  fold: 2,       // v356: pixels the body folds at the hips: it drops onto the seat and the legs shorten by as much
 };
