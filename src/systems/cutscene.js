@@ -9,6 +9,7 @@ import { on, emit, changed } from '../core/events.js';
 import { addUpdater, addEntities } from '../core/registry.js';
 import { CUTSCENE, CUTSCENES } from '../data/cutscenes.js';
 import { VENT } from '../data/forge.js';
+import { PEAK } from '../data/nuts.js';
 import { NPCS } from '../data/npcs.js';
 import { CROPS } from '../data/crops.js';
 import { ITEMS } from '../data/items.js';
@@ -230,6 +231,9 @@ on('mine:floor', ({ floor, zone }) => {
   // v361 (roadmap 84m): the deep zones' first floors, and the vent's forge room.
   if (floor === 1 && (zone === 'cavern' || zone === 'vent') && !G.cut) playCutscene(zone);
   if (zone === 'vent' && floor === VENT.floors && !G.cut) playCutscene('forge');
+  // v362 (roadmap 84n): the Smoke Peak's first floor and its summit.
+  if (zone === 'peak' && floor === 1 && !G.cut) playCutscene('peak');
+  if (zone === 'peak' && floor === PEAK.floors && !G.cut) playCutscene('summit');
 });
 // v358, v359 (roadmap 84j, 84k): first visits. Walking in through a building's door for the first time plays its scene
 // (systems/venues.js venue:entered; waking in the clinic is not walking in). The first faint's scene is

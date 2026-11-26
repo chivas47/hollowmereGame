@@ -549,4 +549,30 @@ export const CUTSCENES = {
       { do: 'title', text: 'The forge', sub: 'Gems and cinder shards make a weapon your own', secs: 2.8 },
     ],
   },
+
+  // v362 (roadmap 84n): the Smoke Peak, the island's dungeon, its first floor and its summit, the first time each
+  // (systems/mine.js mine:floor, zone 'peak'). Where you stand.
+  peak: {
+    name: 'The Smoke Peak',
+    steps: [
+      { do: 'fade', to: 1, secs: 0 },
+      { do: 'bars', on: true },
+      { do: 'say', who: null, text: 'Up the parrot\'s rope ladder and into the mountain. The sea sound stops at once.' },
+      { do: 'fade', to: 0, secs: 1.6 },
+      { do: 'say', who: null, text: 'Smoke hangs under the roof. Lava glows between black rocks, and the things that live here have never seen a farmer.' },
+      { do: 'say', who: null, text: 'The way leads up, ten floors to the top. On every second floor, the first ladder you find has a tide nut beside it.' },
+      { do: 'say', who: null, text: 'Faint, or take the ladder out, and the mountain puts you back at its mouth. It shifts its floors behind you, every time.' },
+      { do: 'title', text: 'The Smoke Peak', sub: 'Ten floors up, tide nuts on the way', secs: 2.8 },
+    ],
+  },
+  summit: {
+    name: 'The summit',
+    steps: [
+      { do: 'bars', on: true },
+      { do: 'wait', secs: 0.6 },
+      { do: 'say', who: null, text: 'The last ladder opens onto a quiet room at the top of the mountain. No smoke, no rocks, nothing moving.' },
+      { do: 'say', who: null, text: 'Whoever climbed here first left something behind for whoever came next. It looks like that is you.' },
+      { do: 'title', text: 'The summit', sub: 'The top of the Smoke Peak', secs: 2.6 },
+    ],
+  },
 };

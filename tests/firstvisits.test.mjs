@@ -134,3 +134,23 @@ test('v15: a farm that opened the cavern or vent, or reached the forge, has seen
   assert.ok(deep.cutscenes.cavern && deep.cutscenes.vent && deep.cutscenes.forge);
   assert.ok(!merge({ ...base(), cavernOpen: true }).cutscenes.vent);
 });
+
+test('the Smoke Peak plays on its first floor and its summit, once each', () => {
+  for (const [floor, id] of [[1, 'peak'], [10, 'summit']]) {
+    emit('game:reset');
+    freshFarm({ map: 'mine' });
+    emit('mine:floor', { floor, zone: 'peak' }); update(0);
+    assert.equal(G.cut?.id, id);
+    skipAll();
+    emit('mine:floor', { floor, zone: 'peak' }); update(0);
+    assert.equal(G.cut, null, 'once only');
+  }
+});
+
+test('v16: a farm that has climbed the peak has seen it, and the summit only if it reached floor 10', () => {
+  const base = (d) => ({ ...JSON.parse(JSON.stringify(newState())), v: 15, day: 80, nuts: { ...newState().nuts, peakDeepest: d } });
+  assert.ok(!merge(base(0)).cutscenes.peak);
+  const half = merge(base(5));
+  assert.ok(half.cutscenes.peak && !half.cutscenes.summit);
+  assert.ok(merge(base(10)).cutscenes.summit);
+});
