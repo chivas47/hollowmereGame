@@ -106,6 +106,13 @@ export const MIGRATIONS = [
     if (d.blade) s.dusk.cata = { sconces: [0, 1, 2, 3], levers: true, brazier: true, gallery: true, waves: true, boss: true };
     if (s.map === 'crypt') Object.assign(s, { map: 'mournfield', x: 19 * T + 8, y: 16 * T + 12, dir: 'down' });
   } },
+  // v13 (roadmap 84j): first-visit scenes. A farm past its first day has been to the shops, and one that has been
+  // down the Hollow has seen it; those are marked seen. Fainting and the 2 am drop leave no trace, so they still play once.
+  { v: 13, run(s) {
+    s.cutscenes ||= {};
+    if ((s.day || 1) > 1) { s.cutscenes.store ||= s.day; s.cutscenes.smithy ||= s.day; }
+    if ((s.mineDeepest || 0) > 0) s.cutscenes.hollow ||= s.day;
+  } },
 ];
 
 export const SAVE_VERSION = MIGRATIONS[MIGRATIONS.length - 1].v;

@@ -5,13 +5,14 @@ import { G } from '../core/game.js';
 import { has } from './professions.js';
 import { on, emit, changed } from '../core/events.js';
 import { addUpdater } from '../core/registry.js';
-import { CLINIC_BED } from '../data/maps.js';
+import { CLINIC_BED, MAPS } from '../data/maps.js';
 import { SHOPS, CLINIC } from '../data/town.js';
 import { moveBox, placePlayer } from './world.js';
 import { defense } from './clothing.js';
 import { asThem, asPartnerStats } from './partner.js';
 import { fmtGold } from '../core/format.js';
 import { HURT } from '../data/animation.js';
+import { playCutscene, seen } from './cutscene.js';
 
 const INVULNERABLE = 1, KNOCKBACK = 10;
 // v281 (roadmap 93b): health low enough for the red pulse and the heartbeat; whether a farmer is in the red tint.
@@ -75,14 +76,17 @@ function faint() {
   S.hp = Math.round(S.maxHp / 2);
   G.hurtT = 0;
   emit('player:fainted');   // v318: the game over stinger (systems/musicDirector.js)
-  const inMine = S.map === 'mine';
+  const inMine = S.map === 'mine', where = inMine ? 'the Hollow' : S.map === 'farm' ? 'your farm' : (MAPS[S.map]?.name || 'the wilds');
   if (inMine) emit('mine:faint');   // the Hollow lets go of you first
   placePlayer(CLINIC_BED.map, CLINIC_BED.x, CLINIC_BED.y, CLINIC_BED.dir);
   emit('map:changed', CLINIC_BED.map);
-  emit('ui:message', {
+  const message = () => emit('ui:message', {
     title: 'You blacked out',
     text: `${inMine ? 'Someone found you in the Hollow and carried you to town.' : 'Someone found you and carried you to town.'} You come to at ${SHOPS.clinic.name}.${bill ? ` ${SHOPS.clinic.keeper} patched you up: the bill is ${fmtGold(bill)}.` : ` ${SHOPS.clinic.keeper} waves away the bill.`}`,
   });
+  // v358 (roadmap 84j): the first time, Maren tells you in the ward why you fell and what it cost, instead of the note.
+  const told = !seen('faint') && playCutscene('faint', { vars: { where, bill: bill ? `I've patched you up. The bill is ${fmtGold(bill)}, and I've taken it from your purse. Next time, come in on your own feet.` : 'No charge this time. You\'ve nothing to charge. Next time, come in on your own feet.' } });
+  if (!told) message();
   changed();
 }
 

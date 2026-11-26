@@ -2,6 +2,15 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v358: First visits play a scene
+- The first time you walk into Fenn's Provisions, Wren greets you and says what the shop is for: seed sold by the season (sown late, the frost takes it), crops go in your shipping bin, not to her, and her hours. You are left at the counter.
+- The first time into the Anvil, the forge's heat, then Corvin: five bars and the gold make any tool better, ore comes from the Hollow, and he cracks geodes.
+- Your first time down the Hollow: the cold, something moving below, the ladder hidden under a rock, richer and harder floors deeper, and every fifth floor a place to start from next time.
+- Your first faint: the blow, the dark, being carried, then Doctor Maren in the ward says why you fell (your health ran out), to eat or turn back, and what the bill was. It replaces the note that time only.
+- The first time you are still up at 2 am, you see yourself drop before the night ends.
+- Every scene can be skipped as before (hold Use or Esc). Saves past day 1 count the shops as seen, and the Hollow if you have been down.
+- New save data: none (scenes seen are kept as before).
+
 ## v357: Benches face the right way indoors
 - Benches indoors can face away from you now, and the ones that faced the wrong way are turned: Rook's bench faces his table instead of sitting with its back to it; the store's bench and the museum's, hall's, theatre's and ranch's face into the room, the exhibits or the counter instead of the wall; the clinic's two waiting benches face each other across the low table.
 - Sitting with your back to the room, on a bench, chair, sofa or armchair, you sit a little higher, so your head and shoulders show above the seat's back instead of only your hat.

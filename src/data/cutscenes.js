@@ -230,4 +230,96 @@ export const CUTSCENES = {
       { do: 'fade', to: 1, secs: 0.8 },
     ],
   },
+
+  // v358 (roadmap 84j): first visits. Each says what the place is for and hints at how to use it. The shops play on
+  // walking in for the first time (systems/cutscene.js, map:changed); you are left at the counter.
+  store: {
+    name: "Fenn's Provisions",
+    at: { map: 'inside_store', x: 9, y: 12, dir: 'up' },
+    end: { map: 'inside_store', x: 13, y: 8, dir: 'up' },
+    steps: [
+      { do: 'bars', on: true },
+      { do: 'actor', id: 'wren', x: 13, y: 6, dir: 'down' },
+      { do: 'cam', x: 9, y: 11 },
+      { do: 'pan', x: 6, y: 5, secs: 2 },
+      { do: 'say', who: null, text: 'Seed packets in rows up the wall, sorted by season. This season\'s sit at eye level; the rest wait their turn.' },
+      { do: 'pan', x: 13, y: 7, secs: 1.4 },
+      { do: 'emote', id: 'wren', kind: 'surprise' },
+      { do: 'say', who: 'wren', text: 'A new face! You\'re the one who took on the old farm. I\'m Wren. Come in, mind the bins.' },
+      { do: 'walk', id: 'you', path: [[9, 9], [13, 9], [13, 8]] },
+      { do: 'face', id: 'you', dir: 'up' },
+      { do: 'say', who: 'wren', text: 'Seed is what I sell, and it only grows in its own season. Sow it late and the frost takes it in the ground. Watch the calendar, not the sky.' },
+      { do: 'say', who: 'wren', text: 'Don\'t bring me your crops, though. The bin on your farm pays for them overnight. Bring me the gold, and I\'ll keep you in seed.' },
+      { do: 'say', who: 'wren', text: 'Nine till five. Shut on Wednesdays, I\'ve a garden of my own.' },
+      { do: 'title', text: "Fenn's Provisions", sub: 'Seed for each season, sold by the packet', secs: 2.4 },
+    ],
+  },
+  // The Anvil, first time in: the heat first, then Corvin at the counter. Tools, bars and geodes.
+  smithy: {
+    name: 'The Anvil',
+    at: { map: 'inside_smithy', x: 8, y: 12, dir: 'up' },
+    end: { map: 'inside_smithy', x: 5, y: 10, dir: 'up' },
+    steps: [
+      { do: 'bars', on: true },
+      { do: 'actor', id: 'corvin', x: 5, y: 8, dir: 'up' },
+      { do: 'cam', x: 8, y: 11 },
+      { do: 'pan', x: 5, y: 5, secs: 1.8 },
+      { do: 'say', who: null, text: 'The heat meets you at the door. The forge is white at its heart, and the anvil still rings from the last blow.' },
+      { do: 'face', id: 'corvin', dir: 'down' },
+      { do: 'pan', x: 5, y: 9, secs: 1.2 },
+      { do: 'say', who: 'corvin', text: 'Shut that door, you\'re letting the heat out. Corvin. You\'ll be the farmer.' },
+      { do: 'walk', id: 'you', path: [[8, 10], [5, 10]] },
+      { do: 'face', id: 'you', dir: 'up' },
+      { do: 'say', who: 'corvin', text: 'That hoe and that can of yours are rust and hope. Bring me five bars and the gold, and I\'ll make any tool better: copper first, then steel, then gold.' },
+      { do: 'say', who: 'corvin', text: 'Bars come from ore, and ore comes from the Hollow, up in the Wilds east of your farm. A furnace and a lump of coal does the rest.' },
+      { do: 'say', who: 'corvin', text: 'And if you find a stone that rattles, bring it here. I crack geodes for a few coins. Some days there\'s something in them worth the walk.' },
+      { do: 'title', text: 'The Anvil', sub: 'Better tools, made from the bars you smelt', secs: 2.4 },
+    ],
+  },
+  // The Hollow's first floor, the first time down (systems/mine.js mine:floor). Where you stand; no one comes with you.
+  hollow: {
+    name: 'Into the Hollow',
+    steps: [
+      { do: 'bars', on: true },
+      { do: 'wait', secs: 0.6 },
+      { do: 'say', who: null, text: 'Three steps down and the air changes: cold, wet, and older than the village.' },
+      { do: 'say', who: null, text: 'Somewhere below, rock shifts. Something shifts with it.' },
+      { do: 'say', who: null, text: 'Ore glints in the walls. The ladder down is under one of these rocks, and every floor is richer than the one above it, and less friendly.' },
+      { do: 'say', who: null, text: 'Old miners\' chalk by the ladder: every fifth floor marked with a ring. Reach one, and you can start from it next time.' },
+      { do: 'title', text: 'The Hollow', sub: 'Break rock, find the ladder, go deeper', secs: 2.6 },
+    ],
+  },
+  // The first time you faint (systems/health.js): your health ran out. You come to in the clinic's ward; Maren says
+  // why and what it cost. {where}: where you fell, {bill}: the bill's words.
+  faint: {
+    name: 'You blacked out',
+    at: { map: 'inside_clinic', x: 14, y: 12, dir: 'up' },
+    steps: [
+      { do: 'fade', to: 1, secs: 0 },
+      { do: 'bars', on: true },
+      { do: 'say', who: null, text: 'One blow too many. Your knees go, the ground comes up to meet you, and everything goes dark.' },
+      { do: 'wait', secs: 0.8 },
+      { do: 'say', who: null, text: 'Voices. A lantern swinging. Someone lifting you, and a long, jolting walk.' },
+      { do: 'actor', id: 'maren', x: 11, y: 11, dir: 'right' },
+      { do: 'fade', to: 0, secs: 2 },
+      { do: 'walk', id: 'maren', path: [[12, 11], [12, 12], [13, 12]] },
+      { do: 'face', id: 'you', dir: 'left' },
+      { do: 'say', who: 'maren', text: 'Easy, don\'t sit up yet. They carried you in from {where}, out cold, and lucky not to be worse.' },
+      { do: 'say', who: 'maren', text: 'You ran yourself to nothing. Watch your health when you fight: eat before it\'s low, and walk away while you still can. Nothing out there stops because you\'re tired.' },
+      { do: 'say', who: 'maren', text: '{bill}' },
+      { do: 'title', text: 'Hollowmere Clinic', sub: 'Fainting costs gold. Eat, or turn back', secs: 2.6 },
+    ],
+  },
+  // The first time you are still up at 2 am (systems/clock.js): you drop where you stand, then the night ends.
+  passout: {
+    name: 'Out on your feet',
+    steps: [
+      { do: 'bars', on: true },
+      { do: 'say', who: null, text: 'Two in the morning. Your legs have been asking you to stop for hours.' },
+      { do: 'say', who: null, text: 'The world tilts. The ground is closer than it ought to be. Then it is very close.' },
+      { do: 'fade', to: 1, secs: 1.6 },
+      { do: 'say', who: null, text: 'Someone finds you and gets you home. You will wake tired, with only part of your energy back.' },
+      { do: 'title', text: 'Out on your feet', sub: 'Be in bed before 2 am', secs: 2.4 },
+    ],
+  },
 };
