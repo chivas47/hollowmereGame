@@ -174,7 +174,7 @@ src/
     coop.js           coop placement, coop animals, petting, feed
     mine.js           floor generation for the Hollow, the Sunken Cavern the Ember Vent and the Smoke Peak (MINE.zone, MINE.eff), the forge room and the summit (v67), rocks, breakRock(), ladders, shafts, lighting
     health.js         hurtPlayer(), fainting
-    monsters.js       mine monsters by kind and floor (and the wild farm's slimes), the weapon swing and its combos (v74), drops; v347 spawnBoss() and every boss's turn (its calls at health marks, rage, health bar at layer 986), riseOn(map, fn) (how a place raises what a boss calls)
+    monsters.js       mine monsters by kind and floor (and the wild farm's slimes), the weapon swing and its combos (v74), drops; v347 spawnBoss() and every boss's turn (its calls at health marks, rage, health bar at layer 986), riseOn(map, fn) (how a place raises what a boss calls); v364: every creature faces the way it means to go (m.face, FACE_TURN), set in the movement loop
     placeables.js     kit slot, placing/picking up crafted objects ('Y' tiles), drawing, lantern glow
     crafting.js       craft(): gold + materials -> kit
     sprinklers.js     water soil on day:start and on placement
