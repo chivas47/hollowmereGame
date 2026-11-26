@@ -136,6 +136,13 @@ export const MIGRATIONS = [
     if (s.ventOpen) s.cutscenes.vent ||= s.day;
     if ((s.ventDeepest || 0) >= 10) s.cutscenes.forge ||= s.day;
   } },
+  // v16 (v362, roadmap 84n): the Smoke Peak. A farm that has climbed it has seen it, and its summit if it got there.
+  { v: 16, run(s) {
+    s.cutscenes ||= {};
+    const d = s.nuts?.peakDeepest || 0;
+    if (d > 0) s.cutscenes.peak ||= s.day;
+    if (d >= 10) s.cutscenes.summit ||= s.day;
+  } },
 ];
 
 export const SAVE_VERSION = MIGRATIONS[MIGRATIONS.length - 1].v;

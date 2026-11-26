@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v362: The Smoke Peak has a first time
+- Your first climb into the island's Smoke Peak: the sea goes quiet, smoke and lava inside, ten floors up with a tide nut by the first ladder of every second floor, and the mountain sends you back to its mouth if you faint or leave.
+- Reaching the summit the first time: a quiet room, and something left behind for whoever got there.
+- Old saves that have climbed the peak count it seen, and the summit if they reached it.
+- New save data: none.
+
 ## v361: The deep zones have a first time
 - Your first time down the Sunken Cavern: the sealed door gives way to heat and gold. No miner charted it and no lift reaches it, so every visit starts at the top, and some rocks hide a shaft that drops you several floors at once and hurts on landing.
 - Your first time into the Ember Vent: lava you have to go round, cinder rocks whose shards are worth keeping, and word of a forge ten floors up.
