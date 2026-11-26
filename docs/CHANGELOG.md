@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v355: Heavy creatures hold their ground
+- A blow now pushes creatures by their weight. Ember golems barely move (three tenths of the push), magma rams and crag shellbacks hold well (four tenths), stone rams, sand bulls, shellbacks and barrow shamblers half as far, burrow beetles, tusk boars, bristle hogs, pebble crabs and sand wraiths a little less. Lava lurkers do not move at all from their pools.
+- Bats, firefly moths and the swarms (soot puffs, dust devils, ash swarms, storm wings, bramble sprites, thorn wasps) fly further.
+- Heavy creatures stay within your reach, so they fall sooner, but they stay in contact longer too: stand still against a stone ram or magma ram and they hit you about a fifth more often.
+- The gloom and cinder hounds keep the old knockback: a strong blow still drives a charging hound into a wall and dazes it. The Gravewarden is unchanged until its fight is played through.
+- New save data: none.
+
 ## v354: The Hollow's creatures change as you go down
 - The Hollow's first creatures fade as you go deeper: slimes are four in five creatures on floor 1 but only one in twenty-five by floor 90; Hollow mites, burrow beetles and tusk boars thin out too.
 - Creatures that arrive deep start rare on their first floors and grow commoner: bone walkers from floor 30 (common from 45), Hollow serpents from 50 (from 70), gloom hounds from 60, spitters from 70, shellbacks from 85.

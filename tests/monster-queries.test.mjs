@@ -55,3 +55,12 @@ test('knockback: the usual push by default, less for a heavy kind, none for an i
   assert.deepEqual(push(0.5), [50, -20]);
   assert.deepEqual(push(0), [0, -0]);
 });
+
+// v355: knockback by weight. Heavy kinds hold their ground, light ones fly; chargers that rely on being driven into
+// a wall (and dazed) keep their knockback.
+test('knockback tuning: heavy kinds hold, light ones fly, the hounds still bounce off walls', () => {
+  for (const k of ['golem', 'magmaram', 'cragshell', 'ram', 'bull', 'shellback']) assert.ok(knockbackOf(k) < 1, `${k} is heavy`);
+  for (const k of ['bat', 'puff', 'dustdevil', 'ashswarm', 'stormwing']) assert.ok(knockbackOf(k) > 1, `${k} is light`);
+  for (const k of ['gloomhound', 'hound']) assert.equal(knockbackOf(k), 1, `${k} keeps its knockback`);
+  assert.ok(knockbackOf('golem') < knockbackOf('ram') && knockbackOf('ram') < knockbackOf('boar'), 'heavier, less');
+});
