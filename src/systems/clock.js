@@ -8,7 +8,7 @@ import { sleep } from './days.js';
 import { playCutscene, queued, seen } from './cutscene.js';
 
 addUpdater((dt) => {
-  if (G.cut) return;   // v240: time stands still in a cutscene
+  if (G.cut || G.cheat) return;   // v240: time stands still in a cutscene; v363: and in cheat mode (systems/cheats.js)
   G.clockAcc += dt;
   if (G.clockAcc < TICK) return;
   G.clockAcc -= TICK;

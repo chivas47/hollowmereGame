@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v363: Cheat mode for testing
+- Type `nunomenezes` while playing (or press "Cheat mode" in the debug tools) to turn cheat mode on; type it again to turn it off. Its letters do nothing else while you type it, so `m` does not mute and `u` does not undo.
+- While it is on: the clock stands still, one pickaxe hit on any rock in the Hollow, the Sunken Cavern, the Ember Vent or the Smoke Peak takes you a floor down (with the rock's loot), and gold, energy, health, water, every item, seed and craftable piece, hay, feed, tide nuts, club coins and moon gems are kept topped up, so no price or material requirement stops you.
+- It is not saved: reloading turns it off. What it topped up stays in that save, so test on a spare farm.
+- Not on itch.io, like the rest of the debug tools.
+- New save data: none.
+
 ## v362: The Smoke Peak has a first time
 - Your first climb into the island's Smoke Peak: the sea goes quiet, smoke and lava inside, ten floors up with a tide nut by the first ladder of every second floor, and the mountain sends you back to its mouth if you faint or leave.
 - Reaching the summit the first time: a quiet room, and something left behind for whoever got there.

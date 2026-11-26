@@ -12,7 +12,8 @@ import { playerTile } from '../systems/world.js';
 import { closeModal, dialogOf } from './modal.js';
 import { selectSlot } from './hotbar.js';
 import { confirmReset } from './dialogs.js';
-import { toggleDebug } from './debugPanel.js';
+import { toggleDebug, debugAllowed } from './debugPanel.js';
+import { typeCode, toggleCheat } from '../systems/cheats.js';
 import { openMenu, closeMenu, menuOpen, menuBack } from './menu.js';
 import { toggleAll } from './sound.js';
 import { cycleHud } from './hudPrefs.js';
@@ -52,6 +53,7 @@ export function escape() {
 }
 
 // v141: a key whose focus sits in farmer two's dialog: yours to play with, not a press of their button.
+let typed = '';   // v363: letters toward the cheat code (systems/cheats.js)
 const theirs = (e) => !!document.getElementById('modal2')?.contains(e.target);
 
 export function initInput(canvas) {
@@ -66,6 +68,12 @@ export function initInput(canvas) {
     if (e.code === 'Escape') { escape(); return; }
     if (dialogOf('you') || menuOpen() || titleOpen()) return;   // v271: the title screen's buttons take the keys   // v141: farmer two's dialog leaves your keys to you
     if (e.code === 'Backquote') { toggleDebug(); return; }
+    if (debugAllowed && !e.ctrlKey && !e.metaKey && !e.altKey && !e.repeat) {   // v363: the cheat code; its letters do nothing else
+      const t = typeCode(typed, e.key);
+      typed = t.buffer;
+      if (t.done) { notify(toggleCheat()); return; }
+      if (t.eat) { e.preventDefault(); return; }
+    }
     if (e.ctrlKey || e.metaKey) {   // browser shortcuts stay the browser's, except Ctrl Z (undo)
       if (e.code === 'KeyZ') { e.preventDefault(); if (!e.repeat) undo(); }
       return;
