@@ -10,6 +10,7 @@ import { ripenAll } from './farming.js';
 import { SKILLS } from '../data/skills.js';
 import { festivalOn } from '../data/festivals.js';
 import { emit } from '../core/events.js';
+import { toggleCheat } from './cheats.js';
 
 // v318 (roadmap 110): the music director's tools. "Why this track" names the track, the layer and the reason, and turns
 // on the console log of every pick (or set localStorage 'hollowmere-music-debug' to '1'); "next track" skips ahead.
@@ -46,5 +47,6 @@ export const DEBUG = {
     sleep(false);
     return null;
   },
+  cheat: toggleCheat,   // v363: the same as typing the code word
   energy: () => { G.S.energy = G.S.maxEnergy; G.S.water = G.S.maxw; changed(); return 'Energy and water refilled.'; },
 };

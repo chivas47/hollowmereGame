@@ -34,6 +34,7 @@ import './systems/upgrades.js';
 import './systems/livestock.js';
 import './systems/coop.js';
 import './systems/mine.js';
+import './systems/cheats.js';   // v363: cheat mode for testing (the code word, ui/input.js)
 import './systems/health.js';
 import './systems/gear.js';
 import './systems/monsters.js';

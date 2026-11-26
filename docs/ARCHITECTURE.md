@@ -219,7 +219,8 @@ src/
     indoors.js        indoor dark and light pools, the farmhouse windows, G.indoorRain and G.fires for the window art and ambience (v100, drawn only)
     clearing.js       debris and wild alders (G.S.debris), axe use, creeping debris, alder cones, gates, fences and paths
     quality.js        item quality: counts(), addItem(), valueOf(), takeBest(), quality rolls
-    debug.js          DEBUG actions for the debug panel
+    debug.js          DEBUG actions for the debug panel; v363: cheat (systems/cheats.js)
+    cheats.js         v363: cheat mode (G.cheat, runtime only): typeCode() for the code word (ui/input.js), topUp(S) each frame, the clock stops (clock.js), one pickaxe hit on a mine rock goes a floor down (interaction 67)
   render/
     pixel.js          r() rectangle primitive, rng(seed), blink()
     tiles.js          static art: grass, path, trees, water, rocks, buildings, cave tiles; v297: treeStamp(); v299: drawBed() (the farmhouse bed and every neighbour's), the wall phone
