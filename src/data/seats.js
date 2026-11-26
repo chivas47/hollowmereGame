@@ -6,10 +6,11 @@
 export const SEATS = {
   pieces: ['chair', 'stool', 'bench', 'sofa', 'armchair'],
   shapes: ['chair', 'stool', 'sofa', 'armchair'],
-  tiles: { 'ƀ': 'down' },
+  tiles: { 'ƀ': 'down', 'ɓ': 'right', 'ɗ': 'left' },   // v356: side-on benches either side of the village square
   rot: ['down', 'right', 'up', 'left'],
   push: 0.3,     // seconds walking into a seat before you sit (Stardew sits you on the bump; a beat avoids sitting by accident)
   drop: 3,       // pixels the body sits lower than standing
   legs: 4,       // rows at the bottom of a person's frame that are legs (hips to shoes), on the sheet and the code art
+  side: 2,       // v356: pixels a side-on bench sits you forward of its back, so the back shows behind you
   fold: 2,       // v356: pixels the body folds at the hips: it drops onto the seat and the legs shorten by as much
 };

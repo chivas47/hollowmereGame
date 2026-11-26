@@ -58,7 +58,7 @@ test('importing rejects files that are not a farm, with a reason', () => {
 
 test('v159: a farmer saved where the new village has a bench moves to the lane; one on open ground stays', () => {
   const at = (x, y) => ({ x: x * 16 + 8, y: y * 16 + 12 });
-  const bench = merge({ day: 9, gold: 0, v: 3, map: 'village', ...at(5, 12) });   // the green's bench
+  const bench = merge({ day: 9, gold: 0, v: 3, map: 'village', ...at(4, 14) });   // the green's bench
   assert.deepEqual({ x: bench.x, y: bench.y }, at(10, 1));
   const open = merge({ day: 9, gold: 0, v: 3, map: 'village', ...at(12, 7) });    // by the fountain
   assert.deepEqual({ x: open.x, y: open.y }, at(12, 7));

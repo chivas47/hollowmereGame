@@ -40,7 +40,7 @@ export const WILDLIFE = {
 // reload shows the same day); she naps through the afternoon and keeps indoors in rain, storms and snow.
 export const CAT = {
   name: 'Pudding', map: 'village', from: 7 * 60, to: 20 * 60, every: 90, nap: [13 * 60, 16 * 60], walk: 18,
-  spots: [[2, 12], [5, 12], [2, 14], [5, 14], [26, 5], [31, 5], [12, 10], [2, 4], [17, 4]],
+  spots: [[4, 14], [7, 14], [7, 7], [16, 7], [26, 5], [31, 5], [12, 10], [2, 4], [17, 4]],
   pet: ['Pudding opens one eye, then closes it again. She purrs.', 'Pudding leans into your hand and purrs like a kettle.', 'Pudding allows it, this once.'],
 };
 // v277 (roadmap 92b, Nuno): birds by place, season and weather. Each species is one of the bird sheet's shapes

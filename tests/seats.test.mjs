@@ -66,9 +66,16 @@ test('seated, your legs fold under you instead of being cut away', async () => {
   assert.ok(SEATS.fold > 0 && SEATS.fold < SEATS.legs, 'the body drops onto the seat but some leg still shows');
 });
 
-test('the town green benches sit side by side, not one behind the other', () => {
-  const g = MAPS.town.grid, benches = [];
-  g.forEach((row, y) => row.forEach((t, x) => { if (t === 'ƀ') benches.push([x, y]); }));
-  assert.ok(benches.length >= 2);
-  for (const [x, y] of benches) assert.notEqual(g[y + 1]?.[x], 'ƀ', `a bench right in front of the one at ${x},${y}`);
+test('the town and village benches never stand one right behind another', () => {
+  for (const id of ['town', 'village']) {
+    const g = MAPS[id].grid, benches = [];
+    g.forEach((row, y) => row.forEach((t, x) => { if (t === 'ƀ') benches.push([x, y]); }));
+    assert.ok(benches.length >= 2, id);
+    for (const [x, y] of benches) assert.notEqual(g[y + 1]?.[x], 'ƀ', `${id}: a bench right in front of the one at ${x},${y}`);
+  }
+});
+
+test('the village square has a bench either side, facing each other across the fountain', () => {
+  assert.deepEqual(seatAt('village', 7, 7, {}), { dir: 'right', name: 'bench', side: true });
+  assert.deepEqual(seatAt('village', 16, 7, {}), { dir: 'left', name: 'bench', side: true });
 });

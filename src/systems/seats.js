@@ -17,7 +17,7 @@ const PIECE = new Set(SEATS.pieces), SHAPE = new Set(SEATS.shapes);
 // The seat on a tile: { dir (null: keep facing your way), name, note } or null.
 export function seatAt(mapId, tx, ty, placed = G.S?.placed || {}) {
   const t = tileAt(tx, ty, mapId);
-  if (SEATS.tiles[t]) return { dir: SEATS.tiles[t], name: 'bench' };
+  if (SEATS.tiles[t]) return { dir: SEATS.tiles[t], name: 'bench', ...(SEATS.tiles[t] === 'down' ? {} : { side: true }) };
   const plan = MAPS[mapId]?.plan;
   if (plan) {
     const p = piecesOf(plan).find((q) => PIECE.has(q.k) && tx >= q.x && tx < q.x + q.w && ty >= q.y && ty < q.y + q.h);
@@ -35,7 +35,8 @@ export const seated = () => seat;
 export function sit(tx, ty) {
   const S = G.S, s = seatAt(S.map, tx, ty);
   if (!s || seat || G.riding || G.lock || G.cut) return false;
-  seat = { map: S.map, tx, ty, dir: s.dir || S.dir, x: tx * T + T / 2, y: ty * T + 12 + SEATS.drop, held: moving() };
+  const dir = s.dir || S.dir, side = s.side ? (dir === 'right' ? 1 : -1) * SEATS.side : 0;   // v356: forward of a side-on bench's back
+  seat = { map: S.map, tx, ty, dir, x: tx * T + T / 2 + side, y: ty * T + 12 + SEATS.drop, held: moving() };
   G.moving = false;
   if (s.note) notify(s.note);
   emit('sfx', 'place');

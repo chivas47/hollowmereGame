@@ -7,7 +7,7 @@ import { CAT } from '../src/data/atmosphere.js';
 import { MAPS } from '../src/data/maps.js';
 
 test('her spots are in the village, on a bench, the hedge or open ground', () => {
-  for (const [x, y] of CAT.spots) assert.ok(['ƀ', 'ħ', 'P', 'g'].includes(MAPS[CAT.map].grid[y][x]), `${x},${y}`);
+  for (const [x, y] of CAT.spots) assert.ok(['ƀ', 'ɓ', 'ɗ', 'ħ', 'P', 'g'].includes(MAPS[CAT.map].grid[y][x]), `${x},${y}`);
 });
 
 test('the same day and hour put her in the same place; she is in at night and in rain or snow', () => {

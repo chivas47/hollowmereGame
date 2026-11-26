@@ -40,7 +40,7 @@ import { CATA_SOLID, CATA, BARROW, cataGrid, barrowGrid } from './catacombs.js';
 // v156 (roadmap 75g): a map's size in tiles, read from its grid, so a map can be larger than the screen (W x H).
 export const sizeOf = (id) => { const g = MAPS[id]?.grid; return g?.length ? { w: g[0].length, h: g.length } : { w: W, h: H }; };
 
-export const SOLID = new Set([...Object.values(PROP_TILES), ...DUSK_TILES, ...CATA_SOLID, 'ħ', 'ǧ', 'ƀ', 'β', 'ʋ', 'ʂ', 'ɲ', 'ʘ', 'ʌ', 'ŧ', 'Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'ǂ', 'ǀ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
+export const SOLID = new Set([...Object.values(PROP_TILES), ...DUSK_TILES, ...CATA_SOLID, 'ħ', 'ǧ', 'ƀ', 'ɓ', 'ɗ', 'β', 'ʋ', 'ʂ', 'ɲ', 'ʘ', 'ʌ', 'ŧ', 'Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'ǂ', 'ǀ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
 
 // v158: w and h for a map larger than the screen (roadmap 75i); the camera follows you across it.
 function emptyGrid(w = W, h = H) {
@@ -121,7 +121,9 @@ function villageGrid() {
   fill(m, 33, 9, 33, 19, 'P');                       // the east lane down to the lower lane
   fill(m, 2, 20, 33, 20, 'P');                       // the lower lane
   [[4, 18], [13, 18]].forEach(([x, y]) => fill(m, x, y, x + 2, y + 1, 'V'));   // Nell and Rook, doors onto it
-  put(m, [[2, 12], [5, 12], [2, 14], [5, 14]], 'ƀ');   // the green's benches
+  // the green's benches. v356: as a real town sets them, each facing something: two side by side looking over Nell's
+  // garden, and two either side of the square facing each other across the fountain (ɓ faces right, ɗ left).
+  put(m, [[4, 14], [7, 14]], 'ƀ'); m[7][7] = 'ɓ'; m[7][16] = 'ɗ';
   fill(m, 3, 15, 8, 16, 'ǧ');                        // Nell's garden behind her house
   fill(m, 30, 22, 36, 25, 'O');                      // the village pond
   fill(m, 34, 20, w - 2, 20, 'P'); m[20][w - 1] = 'E';   // v160: the lower lane runs on east to the mere

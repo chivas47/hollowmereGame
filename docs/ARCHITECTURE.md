@@ -367,7 +367,7 @@ Systems must stay importable without a DOM (and without audio: systems only emit
 | 73 | venues.js | Any tile of a building with an inside: go in, or why it is shut (v98) |
 | 72 | homes.js | Cottage V front row (enter the owner's cottage, or why it is locked) (v76) |
 | 72 | venues.js | The counter or hopper inside a building: its dialog (v98) |
-| 72 | seats.js | A seat in a floor plan or a bench tile ƀ: sit (your own placed seats go to placeables' dialog, which has Sit) (v305) |
+| 72 | seats.js | A seat in a floor plan or a bench tile ƀ (ɓ, ɗ side on, v356): sit (your own placed seats go to placeables' dialog, which has Sit) (v305) |
 | 71 | venues.js | Any piece inside a cottage or building, on the floor or on a wall (its own line, v97, v98) (v76) |
 | 71 | stalls.js | The Saturday stalls ʂ on the town green (buy from this week's seller, ui:stalls) (v165) |
 | 71 | village.js | Fountain F, cottage V away from its front (where the door is) |
@@ -559,7 +559,7 @@ Maps are 24 x 16 character grids in `data/maps.js`. Tile legend:
 | ʌ | the attic ladder on the farmhouse's bed corner wall, and the hatch in the attic (v172; house tile, drawn on the wall face) | yes |
 | ŧ | the dining room's long table in the farmhouse (v173; house tile) | yes |
 | \|, }, ;, {, ? | fallen log, rubble, sewer grate, hot spring, sewer trader (v45; the gates become P once open) | yes |
-| ħ, ǧ, ƀ | hedge, garden bed, bench (v159: the village and the town; props drawn on grass, render/tiles.js) | yes |
+| ħ, ǧ, ƀ, ɓ, ɗ | hedge, garden bed, bench (v159: the village and the town; v356 ɓ, ɗ: side-on benches facing right and left; props drawn on grass, render/tiles.js) | yes |
 | ψ | thick weeds in the Duskmarch's woods, cut by a weapon swing, back each morning (v303, systems/duskmarch.js) | yes, until cut |
 | ɤ, ɮ, ɯ, ɸ, ʇ | Mournfield's headstone, crypt roof, crypt front, railing, dead tree (v303, data/duskmarch.js) | yes |
 | ʊ, ʖ, ʞ, ʡ, ʚ, ʛ, ʜ | the Tangle's and the north tomb's chest (shut, open), the crypt door (locked, open; the north tomb's always open), a coffin, the great sarcophagus (shut, open) (97a, set from G.S.dusk by systems/catacombs.js) | yes |
