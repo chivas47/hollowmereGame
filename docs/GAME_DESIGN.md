@@ -508,8 +508,45 @@ Five fish per season. Bite odds are weighted toward easy fish (weight 6 minus di
 ### Mine: the Hollow (cave at the top of the Wilds)
 
 - Pickaxe costs 2 energy per hit. Stone takes 1 hit, copper 2, iron 3. Iron appears from floor 6.
+- v365: creature damage follows Stardew by role and stops growing. The damage columns in the creature tables further down are from before v365; this table (data/monsters.js `dmg`, [base, every, cap]: base + floor/every, the growth stopping at cap) replaces them. Hollow kinds are read at their first floor, 50 and 120; Cavern, Vent and Peak kinds at strength 110, 150 and 190. Elites hit 1.5 times as hard. Counterparts: Stardew's green slime 5, bats 6 to 15, skeletons 10, shadow brutes 18 in the mines; serpents 23 and mummies 30 in the Skull Cavern; the volcano's 15 to 25.
+
+  | Creature | Where | dmg | Damage |
+  |---|---|---|---|
+  | Slime | Hollow 1+ | [5, 10, 8] | 5 / 10 / 13 |
+  | Hollow mite | Hollow 3+ | [4, 12, 6] | 4 / 8 / 10 |
+  | Cave bat | Hollow 12+ | [6, 8, 10] | 7 / 12 / 16 |
+  | Bone walker | Hollow 30+ | [10, 15, 6] | 12 / 13 / 16 |
+  | Sand wraith | cavern | [0, 5, 30] | 22 / 30 / 30 |
+  | Scorch rex | cavern, vent | [0, 7, 24] | 15 / 21 / 24 |
+  | Magma sprite | vent | [0, 8, 22] | 13 / 18 / 22 |
+  | Ember golem | vent | [0, 7, 26] | 15 / 21 / 26 |
+  | Hollow serpent | Hollow 50+ | [12, 12, 12] | 16 / 16 / 22 |
+  | Burrow beetle | Hollow 6+ | [5, 12, 7] | 5 / 9 / 12 |
+  | Tusk boar | Hollow 15+ | [7, 10, 9] | 8 / 12 / 16 |
+  | Stone ram | Hollow 35+ | [10, 12, 8] | 12 / 14 / 18 |
+  | Gloom hound | Hollow 60+ | [12, 12, 8] | 17 / 16 / 20 |
+  | Dune scuttler | cavern | [0, 6, 24] | 18 / 24 / 24 |
+  | Sand bull | cavern | [0, 5, 32] | 22 / 30 / 32 |
+  | Cinder hound | vent | [0, 7, 26] | 15 / 21 / 26 |
+  | Magma ram | vent | [0, 6, 30] | 18 / 25 / 30 |
+  | Pebble crab | Hollow 1 to 40 | [5, 15, 3] | 5 / 8 / 8 |
+  | Burrow mole | Hollow 8 to 35 | [6, 15, 3] | 6 / 9 / 9 |
+  | Soot puffs | Hollow 40 to 80 | [5, 20, 3] | 7 / 7 / 8 |
+  | Lava lurker | vent | [0, 8, 22] | 13 / 18 / 22 |
+  | Dust devils | cavern | [0, 10, 16] | 11 / 15 / 16 |
+  | Ash swarm | vent | [0, 9, 18] | 12 / 16 / 18 |
+  | Hollow spitter | Hollow 70+ | [10, 15, 6] | 14 / 13 / 16 |
+  | Sand spitter | cavern | [0, 6, 24] | 18 / 24 / 24 |
+  | Crag spitter | vent | [0, 6, 26] | 18 / 25 / 26 |
+  | Moss slime | Hollow 20 to 60 | [6, 12, 4] | 7 / 10 / 10 |
+  | Ember slime | vent | [0, 7, 24] | 15 / 21 / 24 |
+  | Lantern wisp | Hollow 50 to 80 | [9, 15, 4] | 12 / 12 / 13 |
+  | Tomb shade | cavern | [0, 6, 24] | 18 / 24 / 24 |
+  | Shellback | Hollow 85+ | [12, 15, 6] | 17 / 15 / 18 |
+  | Crag shellback | vent | [0, 6, 28] | 18 / 25 / 28 |
+  | Storm wing | vent | [0, 8, 20] | 13 / 18 / 20 |
 - One rock per floor hides the ladder down. Checkpoints at floor 1 and every fifth floor reached.
-- Slimes: health 3 + floor/3, damage 6 + floor, count up to 8. Sword does 3 damage. Gel drops 75%, 1 or 2 (5g; v250, was 60%). Ore sells for little (stone 2g, copper 5g, iron 10g) but the bin keeps it for upgrades anyway.
+- Slimes: health 3 + floor/3, damage 5 + floor/10 up to 13 (v365; was 6 + floor), count up to 8. Sword does 3 damage. Gel drops 75%, 1 or 2 (5g; v250, was 60%). Ore sells for little (stone 2g, copper 5g, iron 10g) but the bin keeps it for upgrades anyway.
 - Player health 100, lost only in the mine, refilled by sleep. Fainting costs 15% of gold (max 500g) and leaves you at the entrance with half health.
 
 ### Neighbours

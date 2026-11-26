@@ -50,7 +50,7 @@ test('statAt reads every stat format', () => {
   assert.equal(statAt('slime', 'speed', 50), 18 + 20, 'the cap stops the growth');
   assert.equal(statAt('boar', 'hp', 30), CHARGE.tough * (8 + 10), "a charger's health is times its tough");
   assert.equal(statAt('bristle', 'hp', 1), CHARGE.tough * 7);
-  assert.deepEqual(statsAt('mite', 10), { hp: 4, dmg: 9, speed: 14 });
+  assert.deepEqual(statsAt('mite', 10), { hp: 4, dmg: 4, speed: 14 });   // v365: damage [4, 12, 6]
 });
 
 test('spawn lists come from zones and floors', () => {
@@ -137,4 +137,13 @@ test('tuning by depth: early kinds fade deeper, late kinds ramp in', async () =>
   for (const k of ['slime', 'mite', 'beetle', 'boar']) assert.ok(weightIn(k, 'hollow', 100) < weightIn(k, 'hollow', MONSTERS[k].from), `${k} is rarer deep than where it starts`);
   for (const k of ['skeleton', 'serpent', 'gloomhound', 'spitter', 'shellback']) assert.ok(weightIn(k, 'hollow', MONSTERS[k].from) < weightIn(k, 'hollow', MONSTERS[k].from + 20), `${k} arrives rare and grows commoner`);
   assert.equal(weightIn('serpent', 'vent', 5), 0.5, 'its Vent weight is untouched');
+});
+
+// v365: damage follows Stardew by role and stops growing (Nuno: floor 50 nearly one-hit you). A starting farmer
+// (100 health, no defense) takes at least four plain hits from anything on Hollow floor 50, and no dungeon kind
+// passes Stardew's deepest (32) at any depth.
+test('damage stays on the Stardew scale at every depth', () => {
+  for (const k of kindsFor('hollow', 50)) assert.ok(statAt(k, 'dmg', 50) <= 25, `${k} hits for ${statAt(k, 'dmg', 50)} on floor 50`);
+  for (const k of KINDS) for (const f of [120, 190, 400]) assert.ok(statAt(k, 'dmg', f) <= 32, `${k} hits for ${statAt(k, 'dmg', f)} at strength ${f}`);
+  assert.equal(statAt('slime', 'dmg', 1), 5);   // Stardew's green slime
 });
