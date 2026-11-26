@@ -21,6 +21,7 @@ const px = (t) => t * T + 8, py = (t) => t * T + 12;
 
 export const seen = (id, S = G.S) => !!S.cutscenes?.[id];
 export const playing = () => !!G.cut;
+export const queued = (id) => queue.some((q) => q.id === id);   // v358: asked for, not yet begun
 
 // Asks for a scene. It starts when nothing else is open; a scene already seen plays again only with replay.
 // then(): called when it ends or is skipped.
@@ -222,7 +223,15 @@ on('gather', (g) => {
   playCutscene('harvest', { vars: { crop: (ITEMS[g.item]?.name || g.item).toLowerCase() } });
 });
 // The Hollow's floor 100, the first time (systems/mine.js emits mine:floor after it saves the deepest floor).
-on('mine:floor', ({ floor, zone }) => { if (zone === 'hollow' && floor === 100) playCutscene('hollow100'); });
+on('mine:floor', ({ floor, zone }) => {
+  if (zone === 'hollow' && floor === 100) playCutscene('hollow100');
+  if (zone === 'hollow' && floor === 1 && !G.cut) playCutscene('hollow');   // v358: the first time down
+});
+// v358, v359 (roadmap 84j, 84k): first visits. Walking in through a building's door for the first time plays its scene
+// (systems/venues.js venue:entered; waking in the clinic is not walking in). The first faint's scene is
+// systems/health.js's, the 2 am one systems/clock.js's. A scene id per building that has one.
+const FIRST_VISIT = ['store', 'smithy', 'carpenter', 'tavern', 'clinic', 'museum', 'ranch', 'lodge'];
+on('venue:entered', (id) => { if (FIRST_VISIT.includes(id) && !G.cut) playCutscene(id); });
 
 // A new game or a loaded save starts with no scene running.
 on('game:reset', () => { G.cut = null; queue.length = 0; });

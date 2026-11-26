@@ -2,6 +2,21 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v359: Every keeper's building has a first visit
+- The first time through the door of Bram's Carpentry, the Lantern, the clinic, the museum, Tamsin's Ranch Supply and the Wardens' Lodge, the keeper greets you and says what the place is for, then leaves you at the counter: Bram builds from your gold, timber and stone and takes orders by phone; Hob's food puts back energy and the evenings are for meeting people; Maren sells a tonic and bills you if you are carried in; Aldous wants one of each find and rewards you as the cases fill; Tamsin sells animals only to a farmer with a coop or barn; Hale pays for slaying goals and sells better weapons as you go deeper.
+- Waking in the clinic after a faint is not a visit: the walk-in scene waits until you come through the door.
+- Old saves count a building seen where the save shows you used it (a building, an animal, a donation, a claimed goal). The tavern and the clinic still play once.
+- New save data: none.
+
+## v358: First visits play a scene
+- The first time you walk into Fenn's Provisions, Wren greets you and says what the shop is for: seed sold by the season (sown late, the frost takes it), crops go in your shipping bin, not to her, and her hours. You are left at the counter.
+- The first time into the Anvil, the forge's heat, then Corvin: five bars and the gold make any tool better, ore comes from the Hollow, and he cracks geodes.
+- Your first time down the Hollow: the cold, something moving below, the ladder hidden under a rock, richer and harder floors deeper, and every fifth floor a place to start from next time.
+- Your first faint: the blow, the dark, being carried, then Doctor Maren in the ward says why you fell (your health ran out), to eat or turn back, and what the bill was. It replaces the note that time only.
+- The first time you are still up at 2 am, you see yourself drop before the night ends.
+- Every scene can be skipped as before (hold Use or Esc). Saves past day 1 count the shops as seen, and the Hollow if you have been down.
+- New save data: none (scenes seen are kept as before).
+
 ## v357: Benches face the right way indoors
 - Benches indoors can face away from you now, and the ones that faced the wrong way are turned: Rook's bench faces his table instead of sitting with its back to it; the store's bench and the museum's, hall's, theatre's and ranch's face into the room, the exhibits or the counter instead of the wall; the clinic's two waiting benches face each other across the low table.
 - Sitting with your back to the room, on a bench, chair, sofa or armchair, you sit a little higher, so your head and shoulders show above the seat's back instead of only your hat.

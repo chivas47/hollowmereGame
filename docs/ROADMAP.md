@@ -279,6 +279,8 @@ people, a living world. Each item goes through `docs/WORLD_BUILDING.md` on top o
 | 84g | Cutscenes: heart scenes (Esme, Rook, Pell) | feature | done (chivas47/hollowmereGame#262) | Their 12 scenes staged (data/scenes.js HEART_STAGES and HEART_STAGED). |
 | 84h | Cutscenes: heart scenes (Juno, Corvin) | feature | done (chivas47/hollowmereGame#263) | Their 8 scenes staged; then every heart scene plays out and the page can go. |
 | 84i | Cutscenes: wedding vows | feature | done (chivas47/hollowmereGame#264) | Nuno (November 2026): each of the eight candidates says their own vow at the wedding, drawn from their heart scenes, instead of one line for all. |
+| 84j | Cutscenes: first visits | feature | done (chivas47/hollowmereGame#372) | Nuno (November 2026): scenes on firsts that hint at what the place is for, or why you fainted: Fenn's Provisions and the Anvil on walking in, the Hollow's first floor, the first faint (the clinic's ward, in place of the note) and the first 2 am drop. Old saves past day 1 count the shops seen, and the Hollow if they have been down. |
+| 84k | Cutscenes: first visits, the other keepers | feature | done (chivas47/hollowmereGame#372) | Nuno: next, after 84j. The carpentry, tavern, clinic (walking in, not waking after a faint), museum, ranch and Wardens' Lodge each get a first-visit scene with their keeper. Old saves count one seen where the save shows it used (buildings, animals, donations, claimed goals). |
 | 77r | Polish: a finer ravine and bridge | polish | done (chivas47/hollowmereGame#265) | Nuno (November 2026): fix the bridge and cliff art, more detail, more finish. Redrawn in render/tiles.js (drawRavine, drawBridge, drawBrokenBridge); nothing else changes. |
 
 ## Creatures and loot (November 2026)

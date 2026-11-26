@@ -5,6 +5,7 @@ import { dayEnd } from '../core/time.js';
 import { changed } from '../core/events.js';
 import { addUpdater } from '../core/registry.js';
 import { sleep } from './days.js';
+import { playCutscene, queued, seen } from './cutscene.js';
 
 addUpdater((dt) => {
   if (G.cut) return;   // v240: time stands still in a cutscene
@@ -13,5 +14,8 @@ addUpdater((dt) => {
   G.clockAcc -= TICK;
   G.S.time += 10;
   changed();
-  if (G.S.time >= dayEnd()) sleep(true);
+  if (G.S.time < dayEnd() || queued('passout')) return;
+  // v358 (roadmap 84j): the first time, you see yourself drop before the night ends (watched or skipped).
+  if (!seen('passout') && playCutscene('passout', { then: () => sleep(true) })) return;
+  sleep(true);
 });

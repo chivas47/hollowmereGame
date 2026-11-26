@@ -56,6 +56,7 @@ addInteraction(73, ({ tile, mapId }) => {
   G.keys = {}; G.swing = null;
   emit('map:changed', map);
   notify(V.name);
+  emit('venue:entered', id);   // v358: through the door on foot (systems/cutscene.js first visits)
   changed();
   return true;
 });
