@@ -36,7 +36,7 @@ export function sit(tx, ty) {
   const S = G.S, s = seatAt(S.map, tx, ty);
   if (!s || seat || G.riding || G.lock || G.cut) return false;
   const dir = s.dir || S.dir, side = s.side ? (dir === 'right' ? 1 : -1) * SEATS.side : 0;   // v356: forward of a side-on bench's back
-  seat = { map: S.map, tx, ty, dir, x: tx * T + T / 2 + side, y: ty * T + 12 + SEATS.drop, held: moving() };
+  seat = { map: S.map, tx, ty, dir, x: tx * T + T / 2 + side, y: ty * T + 12 + SEATS.drop - (dir === 'up' ? SEATS.rise : 0), held: moving() };
   G.moving = false;
   if (s.note) notify(s.note);
   emit('sfx', 'place');

@@ -241,9 +241,18 @@ const ART = {
     }
   },
   // v299: a slatted bench: a back rail on posts, a seat of two lit planks, splayed legs with a stretcher
-  bench: (c, X, Y, W, H, a, b) => {
+  // v357: facing up (dir 'up'), seen from behind: the seat further off, the back rail nearest you.
+  bench: (c, X, Y, W, H, a, b, p = {}) => {
     const al = sh(a, 1.22), ad = sh(a, 0.78), bk = sh(b, 0.6), bl = sh(b, 1.2);
     shadow(c, X, Y, W, H);
+    if (p.dir === 'up') {
+      for (const lx of [X + 2, X + W - 4]) { r(c, lx, Y + 11, 2, 4, bk); r(c, lx, Y + 11, 1, 4, b); }
+      r(c, X + 1, Y + 5, W - 2, 3, ad); r(c, X + 1, Y + 5, W - 2, 1, al);   // the seat, beyond the back
+      for (let x = X + 3; x < X + W - 3; x += 6) r(c, x, Y + 7, 1, 2, b);
+      r(c, X + 3, Y + 7, 1, 2, b); r(c, X + W - 4, Y + 7, 1, 2, b);
+      r(c, X + 1, Y + 9, W - 2, 3, bk); r(c, X + 2, Y + 9, W - 4, 1, bl); r(c, X + 2, Y + 10, W - 4, 1, b);   // the back rail
+      return;
+    }
     r(c, X + 1, Y + 1, W - 2, 3, bk); r(c, X + 2, Y + 1, W - 4, 1, bl); r(c, X + 2, Y + 2, W - 4, 1, b);   // back rail
     for (let x = X + 3; x < X + W - 3; x += 6) r(c, x, Y + 4, 1, 2, b);
     r(c, X + 3, Y + 4, 1, 2, b); r(c, X + W - 4, Y + 4, 1, 2, b);

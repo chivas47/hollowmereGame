@@ -79,3 +79,30 @@ test('the village square has a bench either side, facing each other across the f
   assert.deepEqual(seatAt('village', 7, 7, {}), { dir: 'right', name: 'bench', side: true });
   assert.deepEqual(seatAt('village', 16, 7, {}), { dir: 'left', name: 'bench', side: true });
 });
+
+// v357: benches in the store, the clinic, Rook's cottage and others faced the south wall, or faced away from the
+// table they stood at, because a bench could only face down.
+test('no seat in a floor plan faces straight into a wall', () => {
+  const bad = [];
+  for (const { id, p } of planSeats()) {
+    if (p.k === 'stool') continue;
+    const d = p.dir || 'down', g = MAPS[id].grid;
+    const fx = d === 'right' ? p.x + p.w : d === 'left' ? p.x - 1 : p.x, fy = d === 'down' ? p.y + p.h : d === 'up' ? p.y - 1 : p.y;
+    if (g[fy]?.[fx] === 'I') bad.push(`${id} ${p.k} at ${p.x},${p.y} faces ${d}`);
+  }
+  assert.deepEqual(bad, []);
+});
+
+test('a bench at a table faces it; the clinic waiting benches face each other', () => {
+  assert.equal(seatAt('home_rook', 7, 7, {}).dir, 'up');
+  assert.equal(seatAt('inside_clinic', 3, 9, {}).dir, 'down');
+  assert.equal(seatAt('inside_clinic', 3, 12, {}).dir, 'up');
+});
+
+test('facing away you sit higher, so your head shows above the seat back', () => {
+  G.S = newState();
+  Object.assign(G.S, { map: 'home_rook', x: 6 * T + 8, y: 8 * T + 12 });
+  stand(); assert.ok(sit(7, 7));
+  assert.equal(seated().y, 7 * T + 12 + SEATS.drop - SEATS.rise);
+  stand();
+});

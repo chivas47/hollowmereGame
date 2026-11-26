@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v357: Benches face the right way indoors
+- Benches indoors can face away from you now, and the ones that faced the wrong way are turned: Rook's bench faces his table instead of sitting with its back to it; the store's bench and the museum's, hall's, theatre's and ranch's face into the room, the exhibits or the counter instead of the wall; the clinic's two waiting benches face each other across the low table.
+- Sitting with your back to the room, on a bench, chair, sofa or armchair, you sit a little higher, so your head and shoulders show above the seat's back instead of only your hat.
+- New save data: none.
+
 ## v356: Sitting shows your legs, benches set right, a livelier town
 - Sitting on a chair, bench, sofa or armchair no longer cuts you off at the waist. You fold at the hips: your body drops onto the seat and your legs and shoes show below it, reaching forward when you sit side on. Facing away, the seat's back still hides them.
 - The town's two benches on the green, where the Anvil stood, now sit side by side facing the lane instead of one behind the other.
