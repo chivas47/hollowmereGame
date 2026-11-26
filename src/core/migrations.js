@@ -129,6 +129,13 @@ export const MIGRATIONS = [
     if (club) s.cutscenes.casino ||= s.day;
     if (club || (s.desertTraded || 0) > 0) s.cutscenes.oasis ||= s.day;
   } },
+  // v15 (v361, roadmap 84m): the deep zones. A farm that opened the cavern or the vent, or reached the forge, has seen it.
+  { v: 15, run(s) {
+    s.cutscenes ||= {};
+    if (s.cavernOpen) s.cutscenes.cavern ||= s.day;
+    if (s.ventOpen) s.cutscenes.vent ||= s.day;
+    if ((s.ventDeepest || 0) >= 10) s.cutscenes.forge ||= s.day;
+  } },
 ];
 
 export const SAVE_VERSION = MIGRATIONS[MIGRATIONS.length - 1].v;

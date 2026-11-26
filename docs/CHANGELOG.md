@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v361: The deep zones have a first time
+- Your first time down the Sunken Cavern: the sealed door gives way to heat and gold. No miner charted it and no lift reaches it, so every visit starts at the top, and some rocks hide a shaft that drops you several floors at once and hurts on landing.
+- Your first time into the Ember Vent: lava you have to go round, cinder rocks whose shards are worth keeping, and word of a forge ten floors up.
+- Reaching the forge at the vent's top: what it does with gems, cinder shards and the rarest stone.
+- Old saves that opened the cavern or vent, or reached the forge, count those seen.
+- New save data: none.
+
 ## v360: First visits to the hall, picture house, Oasis and casino
 - The first time into the town hall, the Starlight Picture House, the Oasis and the Gilded Dune plays a short scene. The narrator voices the staff: the clerk on the old wing and the roads it reopens, the usher on bringing a neighbour to a film they love, Salma on ruby stalk seed and the trader's daily swap, the cashier on coins that don't change back and slots that keep a little.
 - Old saves count one seen where the save shows it used: the old wing given to, a film watched, club coins, or a desert trade.
