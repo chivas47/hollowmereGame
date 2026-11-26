@@ -230,7 +230,7 @@ on('mine:floor', ({ floor, zone }) => {
 // v358, v359 (roadmap 84j, 84k): first visits. Walking in through a building's door for the first time plays its scene
 // (systems/venues.js venue:entered; waking in the clinic is not walking in). The first faint's scene is
 // systems/health.js's, the 2 am one systems/clock.js's. A scene id per building that has one.
-const FIRST_VISIT = ['store', 'smithy', 'carpenter', 'tavern', 'clinic', 'museum', 'ranch', 'lodge'];
+const FIRST_VISIT = ['store', 'smithy', 'carpenter', 'tavern', 'clinic', 'museum', 'ranch', 'lodge', 'hall', 'theatre', 'oasis', 'casino'];   // v360: the last four
 on('venue:entered', (id) => { if (FIRST_VISIT.includes(id) && !G.cut) playCutscene(id); });
 
 // A new game or a loaded save starts with no scene running.

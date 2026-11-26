@@ -2,6 +2,11 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v360: First visits to the hall, picture house, Oasis and casino
+- The first time into the town hall, the Starlight Picture House, the Oasis and the Gilded Dune plays a short scene. The narrator voices the staff: the clerk on the old wing and the roads it reopens, the usher on bringing a neighbour to a film they love, Salma on ruby stalk seed and the trader's daily swap, the cashier on coins that don't change back and slots that keep a little.
+- Old saves count one seen where the save shows it used: the old wing given to, a film watched, club coins, or a desert trade.
+- New save data: none.
+
 ## v359: Every keeper's building has a first visit
 - The first time through the door of Bram's Carpentry, the Lantern, the clinic, the museum, Tamsin's Ranch Supply and the Wardens' Lodge, the keeper greets you and says what the place is for, then leaves you at the counter: Bram builds from your gold, timber and stone and takes orders by phone; Hob's food puts back energy and the evenings are for meeting people; Maren sells a tonic and bills you if you are carried in; Aldous wants one of each find and rewards you as the cases fill; Tamsin sells animals only to a farmer with a coop or barn; Hale pays for slaying goals and sells better weapons as you go deeper.
 - Waking in the clinic after a faint is not a visit: the walk-in scene waits until you come through the door.

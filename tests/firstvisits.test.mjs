@@ -17,7 +17,7 @@ const skipAll = () => { G.useHeld = true; for (let i = 0; i < 80 && G.cut; i++) 
 const messages = [];
 on('ui:message', (m) => messages.push(m));
 
-const VISITS = ['store', 'smithy', 'carpenter', 'tavern', 'clinic', 'museum', 'ranch', 'lodge'];
+const VISITS = ['store', 'smithy', 'carpenter', 'tavern', 'clinic', 'museum', 'ranch', 'lodge', 'hall', 'theatre', 'oasis', 'casino'];
 
 test('walking into each building the first time plays its scene once, leaving you at its counter', () => {
   for (const id of VISITS) {
@@ -96,4 +96,14 @@ test('old saves past their first day count the shops seen, and the Hollow if the
   const fresh = merge({ ...JSON.parse(JSON.stringify(newState())), v: 12, day: 1 });
   assert.ok(!fresh.cutscenes.store && !fresh.cutscenes.hollow);
   assert.ok(CUTSCENE.skipHold > 0);
+});
+
+test('v14: the hall, picture house, Oasis and casino count seen only where the save shows them used', () => {
+  const base = () => ({ ...JSON.parse(JSON.stringify(newState())), v: 13, day: 40 });
+  const none = merge(base());
+  for (const id of ['hall', 'theatre', 'oasis', 'casino']) assert.ok(!none.cutscenes[id], id);
+  const used = merge({ ...base(), restore: { given: { a: 1 } }, theatre: { day: 12 }, casino: { coins: 50 } });
+  for (const id of ['hall', 'theatre', 'oasis', 'casino']) assert.ok(used.cutscenes[id], id);
+  const traded = merge({ ...base(), desertTraded: 3 });
+  assert.ok(traded.cutscenes.oasis && !traded.cutscenes.casino);
 });

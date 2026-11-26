@@ -118,6 +118,17 @@ export const MIGRATIONS = [
     if (s.museum?.donated?.length) s.cutscenes.museum ||= s.day;
     if (s.goalsClaimed?.length) s.cutscenes.lodge ||= s.day;
   } },
+  // v14 (v360, roadmap 84l): first visits to the hall, picture house, Oasis and casino, seen where the save shows
+  // them used: the old wing given to, a film watched, club coins or a desert trade.
+  { v: 14, run(s) {
+    s.cutscenes ||= {};
+    const r = s.restore || {};
+    if (Object.keys(r.given || {}).length || r.rival || r.done) s.cutscenes.hall ||= s.day;
+    if ((s.theatre?.day || 0) > 0) s.cutscenes.theatre ||= s.day;
+    const club = (s.casino?.coins || 0) > 0 || s.casino?.bought?.length;
+    if (club) s.cutscenes.casino ||= s.day;
+    if (club || (s.desertTraded || 0) > 0) s.cutscenes.oasis ||= s.day;
+  } },
 ];
 
 export const SAVE_VERSION = MIGRATIONS[MIGRATIONS.length - 1].v;
