@@ -112,6 +112,11 @@ export const MIGRATIONS = [
     s.cutscenes ||= {};
     if ((s.day || 1) > 1) { s.cutscenes.store ||= s.day; s.cutscenes.smithy ||= s.day; }
     if ((s.mineDeepest || 0) > 0) s.cutscenes.hollow ||= s.day;
+    // v359 (84k): the other buildings, where the save shows you used them. The tavern and the clinic leave no trace.
+    if (Object.values(s.built || {}).some((b) => b)) s.cutscenes.carpenter ||= s.day;
+    if (s.chickens?.length || s.animals?.length) s.cutscenes.ranch ||= s.day;
+    if (s.museum?.donated?.length) s.cutscenes.museum ||= s.day;
+    if (s.goalsClaimed?.length) s.cutscenes.lodge ||= s.day;
   } },
 ];
 

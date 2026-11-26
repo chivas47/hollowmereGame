@@ -227,10 +227,11 @@ on('mine:floor', ({ floor, zone }) => {
   if (zone === 'hollow' && floor === 100) playCutscene('hollow100');
   if (zone === 'hollow' && floor === 1 && !G.cut) playCutscene('hollow');   // v358: the first time down
 });
-// v358 (roadmap 84j): first visits. Walking into a shop for the first time plays its scene (the clinic's is the
-// first faint's: systems/health.js; the 2 am one: systems/clock.js).
-const FIRST_VISIT = { inside_store: 'store', inside_smithy: 'smithy' };
-on('map:changed', (map) => { const id = FIRST_VISIT[map]; if (id && !G.cut) playCutscene(id); });
+// v358, v359 (roadmap 84j, 84k): first visits. Walking in through a building's door for the first time plays its scene
+// (systems/venues.js venue:entered; waking in the clinic is not walking in). The first faint's scene is
+// systems/health.js's, the 2 am one systems/clock.js's. A scene id per building that has one.
+const FIRST_VISIT = ['store', 'smithy', 'carpenter', 'tavern', 'clinic', 'museum', 'ranch', 'lodge'];
+on('venue:entered', (id) => { if (FIRST_VISIT.includes(id) && !G.cut) playCutscene(id); });
 
 // A new game or a loaded save starts with no scene running.
 on('game:reset', () => { G.cut = null; queue.length = 0; });

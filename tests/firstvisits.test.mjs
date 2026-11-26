@@ -1,11 +1,11 @@
-// v358 (roadmap 84j): first visits play a scene once: Fenn's Provisions and the Anvil on walking in, the Hollow's
+// v358/v359 (roadmap 84j, 84k): first visits play a scene once: each keeper's building on walking in, the Hollow's
 // first floor, the first faint (in the clinic's ward, in place of the note) and the first 2 am drop (then the night).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { G } from '../src/core/game.js';
 import { on, emit } from '../src/core/events.js';
 import { newState, merge } from '../src/core/state.js';
-import { CUTSCENE } from '../src/data/cutscenes.js';
+import { CUTSCENE, CUTSCENES } from '../src/data/cutscenes.js';
 import { CLINIC_BED } from '../src/data/maps.js';
 import { T } from '../src/core/constants.js';
 import { update, seen } from '../src/systems/cutscene.js';
@@ -17,18 +17,22 @@ const skipAll = () => { G.useHeld = true; for (let i = 0; i < 80 && G.cut; i++) 
 const messages = [];
 on('ui:message', (m) => messages.push(m));
 
-test('walking into the shop and the smithy the first time plays each scene once, leaving you at the counter', () => {
-  for (const [map, id, at] of [['inside_store', 'store', [13, 8]], ['inside_smithy', 'smithy', [5, 10]]]) {
+const VISITS = ['store', 'smithy', 'carpenter', 'tavern', 'clinic', 'museum', 'ranch', 'lodge'];
+
+test('walking into each building the first time plays its scene once, leaving you at its counter', () => {
+  for (const id of VISITS) {
+    const map = `inside_${id}`, at = [CUTSCENES[id].end.x, CUTSCENES[id].end.y];
+    assert.equal(CUTSCENES[id].end.map, map);
     emit('game:reset');
     freshFarm({ map: 'town' });
-    emit('map:changed', map);
+    emit('venue:entered', id);
     update(0);
     assert.equal(G.cut?.id, id);
     skipAll();
     assert.equal(G.cut, null);
     assert.ok(seen(id));
     assert.deepEqual([G.S.map, Math.floor(G.S.x / T), Math.floor(G.S.y / T)], [map, ...at]);
-    emit('map:changed', map); update(0);
+    emit('venue:entered', id); update(0);
     assert.equal(G.cut, null, 'once only');
   }
 });
@@ -55,6 +59,7 @@ test('the first faint plays in the ward with the bill instead of the note; the n
   assert.equal(G.S.map, CLINIC_BED.map);
   assert.equal(G.S.gold, 850, 'the bill is still paid');
   assert.equal(messages.length, 0, 'no note over the scene');
+  assert.ok(!G.S.cutscenes.clinic && !G.cut.id.includes('clinic'), 'waking in the ward is not walking in');
   skipAll();
   assert.ok(seen('faint'));
   G.S.map = 'farm'; G.S.hp = 5; G.hurtT = 0;
@@ -85,6 +90,9 @@ test('old saves past their first day count the shops seen, and the Hollow if the
   const s = merge(old);
   assert.ok(s.cutscenes.store && s.cutscenes.smithy && s.cutscenes.hollow);
   assert.ok(!s.cutscenes.faint && !s.cutscenes.passout);
+  assert.ok(!s.cutscenes.museum && !s.cutscenes.ranch && !s.cutscenes.carpenter && !s.cutscenes.lodge && !s.cutscenes.tavern, 'no sign of those visits');
+  const used = merge({ ...JSON.parse(JSON.stringify(newState())), v: 12, day: 30, museum: { donated: ['quartz'] }, chickens: [{ kind: 'chicken' }], goalsClaimed: ['slime'], built: { coop: true } });
+  for (const id of ['museum', 'ranch', 'lodge', 'carpenter']) assert.ok(used.cutscenes[id], id);
   const fresh = merge({ ...JSON.parse(JSON.stringify(newState())), v: 12, day: 1 });
   assert.ok(!fresh.cutscenes.store && !fresh.cutscenes.hollow);
   assert.ok(CUTSCENE.skipHold > 0);

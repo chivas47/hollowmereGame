@@ -2,6 +2,12 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v359: Every keeper's building has a first visit
+- The first time through the door of Bram's Carpentry, the Lantern, the clinic, the museum, Tamsin's Ranch Supply and the Wardens' Lodge, the keeper greets you and says what the place is for, then leaves you at the counter: Bram builds from your gold, timber and stone and takes orders by phone; Hob's food puts back energy and the evenings are for meeting people; Maren sells a tonic and bills you if you are carried in; Aldous wants one of each find and rewards you as the cases fill; Tamsin sells animals only to a farmer with a coop or barn; Hale pays for slaying goals and sells better weapons as you go deeper.
+- Waking in the clinic after a faint is not a visit: the walk-in scene waits until you come through the door.
+- Old saves count a building seen where the save shows you used it (a building, an animal, a donation, a claimed goal). The tavern and the clinic still play once.
+- New save data: none.
+
 ## v358: First visits play a scene
 - The first time you walk into Fenn's Provisions, Wren greets you and says what the shop is for: seed sold by the season (sown late, the frost takes it), crops go in your shipping bin, not to her, and her hours. You are left at the counter.
 - The first time into the Anvil, the forge's heat, then Corvin: five bars and the gold make any tool better, ore comes from the Hollow, and he cracks geodes.
