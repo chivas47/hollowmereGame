@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v368: The Flooded Galleries
+- Hollow floors 21 to 40 are the second band, **the Flooded Galleries**: still water from wall to wall, eight to twelve islands in it, joined by narrow plank bridges (every island can be reached, and there is one way between any two, so bridges are where fights happen). Their own damp, mossy ground. Bats still fly straight over the water.
+- **Fishing in the Hollow:** cast into the galleries' water for two cave fish found nowhere else, all year: the blindfin (45g) and the stonescale (300g).
+- **Floor 30, the Sunken Shrine:** safe and lit, the ladder in sight, a seam of ore and a pool crossed by a bridge. Its pool is the only water where the **pearlgill** (500g) bites. Floor 30's find still waits by the landing.
+- **Floor 40, the Mossmother:** a moss slime as big as a cart, 300 health. She hops after you and sheds two moss slimes at two thirds and one third of her health. The ladder opens when she falls, and the first time her hoard is yours: 4 iron bars, 3 frost geodes, 2 tidestones and 10 gel. Floor 40's find and the sewer key still wait by the landing.
+- Floor 41 and deeper are unchanged until their band is built.
+- New save data: none.
+
 ## v367: The Root Camp and the Rootgnawer
 - Every Hollow band now has a landmark on its 10th floor and a guardian on its last (docs/sketches/120-hollow-by-depth.md). The Rootways' are the first.
 - **Floor 10, the Root Camp:** an old miners' camp, lit and safe: no creatures, the ladder down in plain sight, a seam of copper and iron the miners left, and a campfire. Resting by the fire brings your health back to full, once a day, for half an hour. Floor 10's find still waits by the landing.

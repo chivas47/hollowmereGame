@@ -222,6 +222,14 @@ export const MONSTERS = {
     boss: { scale: 2, marks: [0.66, 0.33], calls: ['beetle', 2], rage: 0.33, rageSpeed: 26, callLine: 'The Rootgnawer shrieks, and beetles burrow up through the floor!' },
     loot: [['chitin', 1, 3, 5], ['copper', 1, 4, 8], ['geode', 0.5, 1, 1]] },
 
+  // v368 (roadmap 120c): the Mossmother, guardian of the Flooded Galleries (Hollow floor 40). A moss slime grown as big
+  // as a cart. Stardew by role: a named guardian, about ten of its band's creatures in one (health and XP about ten
+  // floor-40 moss slimes, their gel), hitting a little harder; it calls two moss slimes at each health mark.
+  mossmother: { name: 'The Mossmother', zones: ['lair'], tags: ['slime'], voice: 'slime', knockback: 0.2, notice: 200, lives: 'Guards the bottom of the Flooded Galleries, Hollow floor 40, until it falls.',
+    move: 'hop', hp: 300, dmg: 14, speed: 20, xp: 90, color: '#7aaa4a',
+    boss: { scale: 2.5, marks: [0.66, 0.33], calls: ['mossslime', 2], rage: 0.33, rageSpeed: 28, callLine: 'The Mossmother shudders, and moss slimes slough off her sides!' },
+    loot: [['gel', 1, 8, 12], ['fiber', 1, 3, 6], ['tidestone', 0.25, 1, 1]] },
+
   // v347: the Gravewarden, the chapel catacombs' guardian (data/catacombs.js CATA.boss sets where). A grave rattler
   // grown huge. Stardew by role: a dungeon's named guardian, about ten of its floor's creatures in one, so ten times a
   // rattler's XP and bone shards, with a void essence's chance (its ghosts' drop); the sarcophagus behind it holds the

@@ -55,7 +55,52 @@ export const BANDS = [
     ],
       hoard: { copperbar: 5, geode: 3, chitin: 4, emberbomb: 3 },
       arrive: 'The tunnels open into a gnawed hollow. Something huge shifts in the roots.' } },
-  { id: 'flooded', name: 'The Flooded Galleries', from: 21, to: 40, look: null, shape: 'room' },
+  // v368 (roadmap 120c): islands joined by plank bridges over still water you can fish (the cave fish, data/fish.js).
+  // islands: how many besides the landing, their radius; water: the fish that bite here (systems/fishing.js).
+  { id: 'flooded', name: 'The Flooded Galleries', from: 21, to: 40, look: 'flooded', shape: 'islands', size: { w: 36, h: 24 }, rocks: 0.25,
+    islands: [8, 11], radius: [2, 4], water: 'cave',
+    arrive: 'Still water fills the galleries here. Fish move in it, pale and blind.',
+    // floor 30: a flooded shrine; its pool is the only water where the pearlgill bites
+    landmark: { name: 'The Sunken Shrine', water: 'shrine', plan: [
+      'XXUXXXXXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XfffffffXXXXXXXXXXXXXXXX',
+      'XffffffffffffffffffffXXX',
+      'XfffffffffffffffffffffXX',
+      'XXffffȶȶȶȶȶȶȶȶȶȶȶȶffffXX',
+      'XXfffȶȶȶȶȶȶȶȶȶȶȶȶȶȶfffXX',
+      'XXfffȶȶȶȶȶȶȶȶȶȶȶȶȶȶfffXX',
+      'XXfffɕɕɕɕɕɕɕɕɕɕɕɕɕɕfffXX',
+      'XXfffȶȶȶȶȶȶȶȶȶȶȶȶȶȶfffXX',
+      'XXffffȶȶȶȶȶȶȶȶȶȶȶȶffffXX',
+      'XXXfffffffffffffffcicXXX',
+      'XXXXfffffffffffffffLfXXX',
+      'XXXXXffffffffffffffffXXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+    ],
+      arrive: 'A shrine half sunk in a still pool. Something pale glints in the water. Nothing here wants to hurt you.' },
+    // floor 40: the Mossmother's pool
+    guardian: { kind: 'mossmother', at: { x: 12, y: 8 }, ladder: { x: 12, y: 12 }, plan: [
+      'XXUXXXXXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XffffffȶȶȶȶȶȶȶȶȶȶȶȶȶȶXXX',
+      'XfffffffffffffffffffȶXXX',
+      'XfffffffffffffffffffȶXXX',
+      'XfffffȶȶffffffffȶȶffȶXXX',
+      'XfffffffffffffffffffȶXXX',
+      'XfffffffffffffffffffȶXXX',
+      'XfffffffffffffffffffȶXXX',
+      'XfffffȶȶffffffffȶȶffȶXXX',
+      'XfffffffffffffffffffȶXXX',
+      'XfffffffffffffffffffȶXXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+    ],
+      hoard: { ironbar: 4, frostgeode: 3, tidestone: 2, gel: 10 },
+      arrive: 'The water stirs. A mound of moss as big as a cart heaves itself up the bank.' } },
   { id: 'frost', name: 'The Frost Halls', from: 41, to: 60, look: null, shape: 'room' },
   { id: 'crypts', name: 'The Bone Crypts', from: 61, to: 80, look: null, shape: 'room' },
   { id: 'magma', name: 'The Magma Rifts', from: 81, to: 100, look: null, shape: 'room' },
@@ -75,6 +120,8 @@ export function specialOf(floor, beaten = []) {
 // v367: the campfire at a band's camp: health back to full once a day, for half an hour (the hot spring's role,
 // Stardew's spa: data/hidden.js SPRING).
 export const CAMPFIRE = { tile: 'ȵ', minutes: 30 };
+// v368: still cave water (solid; the rod fishes it) and plank bridges over it, east-west and north-south.
+export const WATER = 'ȶ', BRIDGE_H = 'ɕ', BRIDGE_V = 'ɟ';
 
 // The band a Hollow floor belongs to.
 export const bandOf = (floor) => BANDS.find((b) => floor >= b.from && floor <= b.to) || BANDS[BANDS.length - 1];

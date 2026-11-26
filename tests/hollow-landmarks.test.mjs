@@ -86,7 +86,7 @@ test('old saves load with no guardian beaten; bad data is dropped', () => {
 
 test('the Hollow\'s own tiles are not used by any other tile art', async () => {
   const { PROP_TILES } = await import('../src/data/scenery.js');
-  const { CRACK } = await import('../src/data/hollow.js');
-  for (const t of [CRACK, CAMPFIRE.tile]) assert.ok(!Object.values(PROP_TILES).includes(t), `${t} is not a scenery tile`);
-  assert.notEqual(CRACK, CAMPFIRE.tile);
+  const { CRACK, WATER, BRIDGE_H, BRIDGE_V } = await import('../src/data/hollow.js');
+  for (const t of [CRACK, CAMPFIRE.tile, WATER, BRIDGE_H, BRIDGE_V]) assert.ok(!Object.values(PROP_TILES).includes(t), `${t} is not a scenery tile`);
+  assert.equal(new Set([CRACK, CAMPFIRE.tile, WATER, BRIDGE_H, BRIDGE_V]).size, 5);
 });

@@ -23,7 +23,7 @@ import { skillLevel } from './skills.js';
 import { asFarmer } from './partner.js';
 
 const ENERGY = 8, BITE_WINDOW = 1.1;
-const WATER = new Set(['O']);
+const WATER = new Set(['O', 'ȶ']);   // v368: the Hollow's still cave water (data/hollow.js WATER)
 
 function end() { G.fishing = null; G.lock = false; }
 on('map:changed', () => { if (G.fishing && !!G.fishing.p2 === (mover() === 'p2')) end(); });   // v140: only the line of whoever left
@@ -156,7 +156,7 @@ addInteraction(65, ({ tx, ty, tile, item, mapId }) => {
   const bait = baitOk() && S.bait && S.bag[S.bait] > 0 ? S.bait : null;
   if (bait) { S.bag[bait]--; if (!S.bag[bait]) notify(`That was your last ${ITEMS[bait].name.toLowerCase()}.`); }
   const wait = (1.5 + Math.random() * 2.5) * (bait ? BAIT[bait].wait : 1) * (tackle() === 'spinner' ? 0.75 : 1);
-  G.fishing = { phase: 'wait', t: wait, tx, ty, ice, bait, water: WATERS[mapId] || 'pond', p2: !!G.partnerActing };
+  G.fishing = { phase: 'wait', t: wait, tx, ty, ice, bait, water: mapId === 'mine' ? G.mineWater || 'cave' : WATERS[mapId] || 'pond', p2: !!G.partnerActing };   // v368: the mine's water is the floor's (systems/mine.js)
   G.lock = !G.partnerActing;   // the second farmer's line holds them instead (systems/partner.js)
   changed();
   return true;

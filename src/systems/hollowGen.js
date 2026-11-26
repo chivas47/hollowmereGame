@@ -1,12 +1,12 @@
 // v366 (roadmap 120a): floor shapes for the Hollow's bands (data/hollow.js). Pure: each takes the floor's random
 // numbers (R), its band and a rockFor(roll) that picks a rock tile for this floor, and returns the grid with its rocks,
 // cracked walls and pockets. systems/mine.js turns the grid into a floor (rocks, the ladder, the landing).
-import { CRACK } from '../data/hollow.js';
+import { CRACK, WATER, BRIDGE_H, BRIDGE_V } from '../data/hollow.js';
 
 const SPAWN = { x: 2, y: 1 };   // the ladder up sits just above, at (2, 0); the landing is x 1-4, y 1-4
 const DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 const inLanding = (x, y) => x <= 4 && y <= 4;
-export const isOpen = (t) => t !== 'X' && t !== CRACK;
+export const isOpen = (t) => t !== 'X' && t !== CRACK && t !== WATER;   // v368: water blocks too
 
 // Steps from (sx, sy) to every open tile (cracked walls and walls block), as a w x h array (-1: cannot reach).
 export function distances(g, sx, sy) {
@@ -105,4 +105,52 @@ export function tunnels(R, band, rockFor) {
   return { grid: g, pockets, shortcuts };
 }
 
-export const SHAPES = { tunnels };
+// v368 (roadmap 120c): the Flooded Galleries: still water from wall to wall, round islands in it (the landing is one),
+// joined by plank bridges along a spanning tree (every island reachable, a single way between any two, so bridges
+// are choke points), each bridge an L: across, then down. Rocks only on the islands.
+export function islands(R, band, rockFor) {
+  const { w, h } = band.size, g = Array.from({ length: h }, () => Array(w).fill('X'));
+  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) g[y][x] = WATER;
+  g[0][SPAWN.x] = 'U';
+  const land = (x, y) => { if (x >= 1 && y >= 1 && x <= w - 2 && y <= h - 2) g[y][x] = 'f'; };
+  for (let y = 1; y <= 4; y++) for (let x = 1; x <= 4; x++) land(x, y);
+  const centres = [[3, 3]], [a, b] = band.islands, n = a + Math.floor(R() * (b - a + 1));
+  for (let tries = 0; centres.length <= n && tries < 400; tries++) {
+    const [ra, rb] = band.radius, rad = ra + R() * (rb - ra), cx = 3 + Math.floor(R() * (w - 6)), cy = 3 + Math.floor(R() * (h - 6));
+    if (centres.some(([x, y]) => Math.hypot(x - cx, y - cy) < rad + 4)) continue;   // apart, with water between
+    for (let y = Math.floor(cy - rad - 1); y <= cy + rad + 1; y++) for (let x = Math.floor(cx - rad - 2); x <= cx + rad + 2; x++) {
+      const d = Math.hypot((x - cx) / 1.25, y - cy);   // a little wider than tall
+      if (d <= rad + (R() - 0.5) * 0.8) land(x, y);
+    }
+    if (rad > 3 && R() < 0.5) g[cy][cx] = 'X';   // a rock pillar on a big island
+    centres.push([cx, cy]);
+  }
+  // Prim's tree over the island centres, nearest first; each edge an L of plank (across on row ay, then down column bx)
+  const joined = [0], left = centres.map((_, i) => i).slice(1);
+  const plank = (x, y, t) => { if (g[y][x] === WATER) g[y][x] = t; };
+  while (left.length) {
+    let best = null;
+    for (const i of joined) for (const j of left) {
+      const d = Math.abs(centres[i][0] - centres[j][0]) + Math.abs(centres[i][1] - centres[j][1]);
+      if (!best || d < best[2]) best = [i, j, d];
+    }
+    const [i, j] = best, [ax, ay] = centres[i], [bx, by] = centres[j];
+    for (let x = Math.min(ax, bx); x <= Math.max(ax, bx); x++) plank(x, ay, BRIDGE_H);
+    for (let y = Math.min(ay, by); y <= Math.max(ay, by); y++) plank(bx, y, BRIDGE_V);
+    if (g[ay][bx] === BRIDGE_H || g[ay][bx] === BRIDGE_V) g[ay][bx] = 'f';   // the turn: a little landing stage
+    if (g[ay][bx] === 'X') g[ay][bx] = 'f';
+    for (let x = Math.min(ax, bx); x <= Math.max(ax, bx); x++) if (g[ay][x] === 'X') g[ay][x] = 'f';   // a pillar in the way gives
+    for (let y = Math.min(ay, by); y <= Math.max(ay, by); y++) if (g[y][bx] === 'X') g[y][bx] = 'f';
+    joined.push(j); left.splice(left.indexOf(j), 1);
+  }
+  let reach = distances(g, SPAWN.x, SPAWN.y);
+  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) if (g[y][x] === 'f' && reach[y][x] < 0) g[y][x] = WATER;   // a ragged edge cut off from its island
+  reach = distances(g, SPAWN.x, SPAWN.y);
+  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
+    if (g[y][x] !== 'f' || inLanding(x, y) || reach[y][x] < 0 || R() > band.rocks) continue;
+    g[y][x] = rockFor(R(), false);
+  }
+  return { grid: g, pockets: [], shortcuts: [] };
+}
+
+export const SHAPES = { tunnels, islands };

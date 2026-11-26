@@ -54,6 +54,12 @@ export const FISH = {
   glideskip: { name: 'Glade skipper',   sell: 75,  difficulty: 3, color: '#7a8a5a', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], water: 'grove' },
   gutterpike:{ name: 'Gutter pike',     sell: 60,  difficulty: 3, color: '#5a6a4a', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], water: 'sewer' },
   crookcarp: { name: 'Crooked carp',    sell: 1000, difficulty: 6, color: '#8aa05a', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], legendary: true, level: 0, water: 'sewer' },
+  // v368 (roadmap 120c): the Hollow's cave fish, only in the Flooded Galleries (floors 21-40). Stardew's mine fish by
+  // role: ghostfish 45g (floors 20 and 60), stonefish 300g (floor 20), ice pip 500g (floor 60) for the one that bites
+  // only in the Sunken Shrine's pool (floor 30). Every season: the cave has none.
+  blindfin:  { name: 'Blindfin',        sell: 45,  difficulty: 2, color: '#d8dcd6', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], water: 'cave' },
+  stonescale:{ name: 'Stonescale',      sell: 300, difficulty: 4, color: '#7a746a', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], water: 'cave' },
+  pearlgill: { name: 'Pearlgill',       sell: 500, difficulty: 5, color: '#e8f0f2', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], water: 'shrine' },
   // v42: crab pot catches (spot 'pot': never on the rod). Stardew's freshwater pot: crayfish 75g, snail 65g, periwinkle 20g.
   crayfish: { name: 'Pond crayfish',   sell: 75,  difficulty: 1, color: '#c8553f', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], spot: 'pot' },
   snail:    { name: 'Mud snail',       sell: 65,  difficulty: 1, color: '#8a6a44', seasons: ['Spring', 'Summer', 'Autumn', 'Winter'], spot: 'pot' },
