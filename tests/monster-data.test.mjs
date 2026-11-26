@@ -76,7 +76,7 @@ test('spawn weights: a weighted draw, per zone, and even when every weight is 1'
     const w = MONSTERS[k].weight;
     assert.ok(w === undefined || okOne(w) || (typeof w === 'object' && !Array.isArray(w) && Object.entries(w).every(([z, v]) => ZONES.includes(z) && okOne(v))), `${k}: weight`);
   }
-  const kinds = ['slime', 'mite', 'bat', 'skeleton'];   // all weight 1
+  const kinds = ['bat', 'wraith', 'scuttler', 'sprite'];   // all weight 1
   for (let i = 0; i < kinds.length; i++) assert.equal(pickKind(kinds, 'hollow', () => (i + 0.5) / kinds.length), kinds[i], 'weight 1: the even draw');
   const share = spawnShare('hollow', 60);
   assert.ok(Math.abs(Object.values(share).reduce((a, b) => a + b, 0) - 1) < 1e-9);
@@ -129,4 +129,12 @@ test('weights in bands by depth follow the floor of their zone', async () => {
     assert.equal(weightIn('slime', 'hollow', 1), 2, 'above the first band: the first band');
     assert.equal(weightIn('slime', 'vent', 9), 2, 'bands without a zone apply everywhere');
   } finally { if (was === undefined) delete MONSTERS.slime.weight; else MONSTERS.slime.weight = was; }
+});
+
+// v354: the Hollow's mix changes as you go down: its first kinds fade, the deep ones arrive rare and grow commoner.
+test('tuning by depth: early kinds fade deeper, late kinds ramp in', async () => {
+  const { weightIn } = await import('../src/data/monsters.js');
+  for (const k of ['slime', 'mite', 'beetle', 'boar']) assert.ok(weightIn(k, 'hollow', 100) < weightIn(k, 'hollow', MONSTERS[k].from), `${k} is rarer deep than where it starts`);
+  for (const k of ['skeleton', 'serpent', 'gloomhound', 'spitter', 'shellback']) assert.ok(weightIn(k, 'hollow', MONSTERS[k].from) < weightIn(k, 'hollow', MONSTERS[k].from + 20), `${k} arrives rare and grows commoner`);
+  assert.equal(weightIn('serpent', 'vent', 5), 0.5, 'its Vent weight is untouched');
 });
