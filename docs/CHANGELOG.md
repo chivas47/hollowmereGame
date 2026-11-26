@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v354: The Hollow's creatures change as you go down
+- The Hollow's first creatures fade as you go deeper: slimes are four in five creatures on floor 1 but only one in twenty-five by floor 90; Hollow mites, burrow beetles and tusk boars thin out too.
+- Creatures that arrive deep start rare on their first floors and grow commoner: bone walkers from floor 30 (common from 45), Hollow serpents from 50 (from 70), gloom hounds from 60, spitters from 70, shellbacks from 85.
+- The deepest floors now belong to bats, bone walkers, serpents, stone rams, spitters and gloom hounds instead of an even mix with the slimes of floor 1.
+- The Sunken Cavern, the Ember Vent and the Smoke Peak are unchanged.
+- New save data: none.
+
 ## v353: Spawn weights can change with depth
 - A creature's spawn weight can now be bands by depth (`weight: { hollow: [[1, 3], [30, 1], [60, 0.5]] }`): from each floor of its zone down, its own weight. A creature can be common on the first floors and rare deep, or the other way, without changing every floor at once.
 - Bands count the floors of their own zone (Hollow, Sunken Cavern, Ember Vent, Smoke Peak floor numbers), not their strength.
