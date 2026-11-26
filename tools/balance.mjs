@@ -738,7 +738,7 @@ function simulate(runSeed) {
     let need = oreNeeds();
     while (Object.keys(need).length && s.energy >= 2 && !late()) {
       if (MINE.chest) { openChest(); spend(TIME.chore); }   // v37: treasure chests
-      if (MINE.busy) for (const m of [...slimes]) {   // roadmap 85h: a busy floor's ladder waits for its last creature
+      if (MINE.busy || MINE.special === 'guardian') for (const m of [...slimes]) {   // roadmap 85h: a busy floor's ladder waits for its last creature; 120b: so does a guardian's lair
         if (m.bs || m.ph) { surface(m); spend(TIME.rock); }
         while (slimes.includes(m) && !late()) { hitMonster(m, damageOf()); spend(TIME.rock); }
       }

@@ -13,7 +13,48 @@ export const BAND_SIZE = 20;
 export const BANDS = [
   { id: 'rootways', name: 'The Rootways', from: 1, to: 20, look: 'root', shape: 'tunnels', size: { w: 36, h: 24 }, rocks: 0.22,
     open: 0.42, cracks: { hp: 3, shortcuts: 3, far: 18, pockets: 2, pocketChance: 0.6, pocketRocks: [3, 5] },
-    arrive: 'Roots thread the walls here. Cracked rock gives way to a pickaxe.' },
+    arrive: 'Roots thread the walls here. Cracked rock gives way to a pickaxe.',
+    // v367 (roadmap 120b): floor 10, a camp the old miners left: no creatures, the ladder in sight, a campfire, a seam.
+    landmark: { name: 'The Root Camp', plan: [
+      'XXUXXXXXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXcciXXX',
+      'XfffffffXXXXXXXXXffffXXX',
+      'XffffffffXXXXXXXffffffXX',
+      'XfffffffffffffffffffffXX',
+      'XXffffffffffffffffffffXX',
+      'XXXfffffffffffffffffffXX',
+      'XXXffffffffȵfffffffffXXX',
+      'XXXfffffffffffffffffXXXX',
+      'XXfffffffffffffffffXXXXX',
+      'XXffffffXXXffffffffffXXX',
+      'XfffffXXXXXXffffffffffXX',
+      'XffffXXXXXXXXfffffffLfXX',
+      'XXffXXXXXXXXXXffffffffXX',
+      'XXXXXXXXXXXXXXXXffffffXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+    ],
+      arrive: 'An old miners\' camp, roots grown through its tent poles. Nothing here wants to hurt you.' },
+    // v367: floor 20, the Rootgnawer's lair. The ladder down shows when it falls; the first time, its hoard too.
+    guardian: { kind: 'rootgnawer', at: { x: 14, y: 8 }, ladder: { x: 12, y: 12 }, plan: [
+      'XXUXXXXXXXXXXXXXXXXXXXXX',
+      'XffffXXXXXXXXXXXXXXXXXXX',
+      'XfffffXXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXfffXXXXXXXXX',
+      'XffffffffffffffffffXXXXX',
+      'XXXffffffffffffffffffXXX',
+      'XXfffffXfffffffffXffffXX',
+      'XXffffffffffffffffffffXX',
+      'XXffffffffffffffffffffXX',
+      'XXffffffffffffffffffffXX',
+      'XXfffffXfffffffffXffffXX',
+      'XXXffffffffffffffffffXXX',
+      'XXXXffffffffffffffffXXXX',
+      'XXXXXXXfffffffffffXXXXXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+    ],
+      hoard: { copperbar: 5, geode: 3, chitin: 4, emberbomb: 3 },
+      arrive: 'The tunnels open into a gnawed hollow. Something huge shifts in the roots.' } },
   { id: 'flooded', name: 'The Flooded Galleries', from: 21, to: 40, look: null, shape: 'room' },
   { id: 'frost', name: 'The Frost Halls', from: 41, to: 60, look: null, shape: 'room' },
   { id: 'crypts', name: 'The Bone Crypts', from: 61, to: 80, look: null, shape: 'room' },
@@ -21,6 +62,19 @@ export const BANDS = [
   { id: 'crystal', name: 'The Crystal Hollows', from: 101, to: 120, look: null, shape: 'room' },
   { id: 'deep', name: 'The Deep', from: 121, to: Infinity, look: null, shape: 'room' },
 ];
+
+// v367 (roadmap 120b): a band's landmark is its 10th floor; its guardian waits on its last floor until beaten.
+export const LANDMARK_AT = 10;
+// What a Hollow floor is: 'landmark', 'guardian' (only while that band's guardian is unbeaten) or null (a plain floor).
+export function specialOf(floor, beaten = []) {
+  const b = bandOf(floor);
+  if (b.landmark && floor === b.from + LANDMARK_AT - 1) return 'landmark';
+  if (b.guardian && floor === b.to && !beaten.includes(b.id)) return 'guardian';
+  return null;
+}
+// v367: the campfire at a band's camp: health back to full once a day, for half an hour (the hot spring's role,
+// Stardew's spa: data/hidden.js SPRING).
+export const CAMPFIRE = { tile: 'ȵ', minutes: 30 };
 
 // The band a Hollow floor belongs to.
 export const bandOf = (floor) => BANDS.find((b) => floor >= b.from && floor <= b.to) || BANDS[BANDS.length - 1];

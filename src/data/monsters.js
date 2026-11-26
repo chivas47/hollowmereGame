@@ -213,6 +213,15 @@ export const MONSTERS = {
   haunt:    { name: 'Mourning haunt', zones: ['duskmarch'], tags: ['undead'], voice: 'ghost', notice: 140, lives: GRAVE_LINE, move: 'phase', hp: 16, dmg: 10, speed: 26, xp: 12, color: '#b8c8e0', glow: '#8ae0d0',
     loot: [['wispsilk', 0.08, 1, 1], ['gloommote', 0.1, 1, 1], ['sunmote', 0.04, 1, 1]] },
 
+  // v367 (roadmap 120b): the Rootgnawer, guardian of the Rootways (Hollow floor 20, data/hollow.js). A burrow beetle
+  // grown huge in the roots, a charger. Stardew by role: a named guardian, about ten of its band's creatures in one
+  // (health about ten floor-20 beetles, XP and chitin about ten), hitting a little harder than they do; it calls
+  // two beetles at each health mark.
+  rootgnawer: { name: 'The Rootgnawer', zones: ['lair'], tags: ['bug'], voice: 'bug', knockback: 0.2, notice: 200, lives: 'Guards the bottom of the Rootways, Hollow floor 20, until it falls.',
+    ...charger({ windup: 0.6, rush: 150, time: 0.6, recover: 1.1, stun: 2 }), hp: 90, dmg: 12, speed: 18, xp: 60, color: '#9a7050',
+    boss: { scale: 2, marks: [0.66, 0.33], calls: ['beetle', 2], rage: 0.33, rageSpeed: 26, callLine: 'The Rootgnawer shrieks, and beetles burrow up through the floor!' },
+    loot: [['chitin', 1, 3, 5], ['copper', 1, 4, 8], ['geode', 0.5, 1, 1]] },
+
   // v347: the Gravewarden, the chapel catacombs' guardian (data/catacombs.js CATA.boss sets where). A grave rattler
   // grown huge. Stardew by role: a dungeon's named guardian, about ten of its floor's creatures in one, so ten times a
   // rattler's XP and bone shards, with a void essence's chance (its ghosts' drop); the sarcophagus behind it holds the

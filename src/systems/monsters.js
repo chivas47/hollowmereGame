@@ -47,8 +47,9 @@ function make(kind, floor, px, py, R) {
 }
 
 let busyFloor = false;   // v259: this floor's ladder waits for the last creature
-on('mine:floor', ({ floor: n, rng: R, zone, eff: floor, busy }) => {
+on('mine:floor', ({ floor: n, rng: R, zone, eff: floor, busy, special, guardian }) => {
   slimes.length = 0; slimeMap = 'mine'; busyFloor = !!busy;
+  if (special) { if (guardian) spawnBoss('mine', guardian.kind, guardian.at.x, guardian.at.y); return; }   // v367: a camp is safe; a lair holds its guardian alone
   // v38: in the Sunken Cavern only its own monsters and those marked cavern, at the cavern's strength.
   const cav = zone === 'cavern', peak = zone === 'peak', vent = zone === 'vent' || peak, g = MAPS.mine.grid, D = MONSTERS;   // v67: the peak has the vent's monsters
   const kinds = kindsFor(zone, floor);   // v345: by each kind's zones (data/monsters.js)

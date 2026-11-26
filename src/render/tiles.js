@@ -889,6 +889,14 @@ function crackedWall(g, x, y) {
   r(g, X + 12, Y + 6, 1, 5, root); r(g, X + 11, Y + 10, 1, 2, root); r(g, X + 12, Y + 6, 1, 1, rootLit);
   r(g, X + 5, Y + 14, 2, 1, '#5a4a36'); r(g, X + 10, Y + 15, 1, 1, '#5a4a36'); r(g, X + 8, Y + 13, 1, 1, '#6a5a44');
 }
+// v367: the Root Camp's campfire: a ring of stones, crossed logs and a fire (static: the tiles are drawn once).
+function campfire(g, x, y) {
+  const X = x * T, Y = y * T;
+  r(g, X + 2, Y + 13, 12, 1, 'rgba(0,0,0,.3)');
+  [[2, 10], [4, 12], [7, 13], [10, 12], [12, 10], [3, 8], [12, 8]].forEach(([a, b]) => { r(g, X + a, Y + b, 2, 2, '#6f6862'); r(g, X + a, Y + b, 1, 1, '#8d857d'); });
+  r(g, X + 4, Y + 10, 8, 2, '#5a3a22'); r(g, X + 5, Y + 9, 6, 1, '#7a4e2c');
+  r(g, X + 5, Y + 5, 6, 4, '#e9862a'); r(g, X + 6, Y + 3, 4, 3, '#f2b04a'); r(g, X + 7, Y + 2, 2, 2, '#ffe08a'); r(g, X + 7, Y + 6, 2, 2, '#fff3c4');
+}
 function ladderUp(g, x, y, p) {
   const X = x * T, Y = y * T;
   r(g, X + 4, Y, 8, 16, '#2a2421'); r(g, X + 5, Y, 6, 2, '#e9c46a');
@@ -1208,7 +1216,7 @@ function bones(g, x, y) {   // a wall of stacked bones: rows of long bones, thei
 export const PROP_ART = {
   '¢': cartTile, '§': bookStall, '¤': prizeMachine,
   y: caveMouth, t: caveCrate, $: chest,
-  U: ladderUp, L: ladderDown, 'ǩ': crackedWall,   // v366
+  U: ladderUp, L: ladderDown, 'ǩ': crackedWall, 'ȵ': campfire,   // v366, v367
   r: mineRock(null), c: mineRock('#d0874a'), i: mineRock('#c9ccd6'),
   '%': mineRock('#e9c46a'), '*': mineRock('#9a7ae0'), '^': cavernDoor, '!': shaft,
   '#': mineRock('#e9862a'), '~': lava, '>': ventDoor, '=': forgeAnvil,
@@ -1227,7 +1235,7 @@ export const PROP_ART = {
 // The ground under each prop: a cave's floor or wall, grass (with the salt its blades and flowers use) or sand.
 // Props not listed draw their whole tile, or sit on whatever the map has there (the ladder down, mine rocks).
 export const PROP_GROUND = {
-  U: 'wall', '^': 'wall', '>': 'wall', 'ǩ': 'wall', t: 'floor', $: 'floor', '!': 'floor', '=': 'floor', '+': 'floor', '?': 'floor',
+  U: 'wall', '^': 'wall', '>': 'wall', 'ǩ': 'wall', 'ȵ': 'floor', t: 'floor', $: 'floor', '!': 'floor', '=': 'floor', '+': 'floor', '?': 'floor',
   '|': 'grass:29', '}': 'grass:23', ';': 'grass:37', '9': 'grass:41', '<': 'grass:43', '`': 'grass:47',
   '¢': 'grass:53', '§': 'grass:59', '¤': 'grass:61', '8': 'sand',
   'ħ': 'grass:67', 'ǧ': 'grass:71', 'ƀ': 'grass:73', 'ɓ': 'grass:73', 'ɗ': 'grass:73', 'ʋ': 'grass:79', 'β': 'grass:83', 'ʂ': 'grass:89', 'ɲ': 'grass:97',
