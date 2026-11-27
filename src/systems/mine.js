@@ -21,8 +21,8 @@ import { VENT } from '../data/forge.js';
 import { tier } from '../data/upgrades.js';
 import { PEAK } from '../data/nuts.js';
 import { PLACEABLES } from '../data/crafting.js';
-import { bandOf, CRACK, specialOf, CAMPFIRE, CRYPT } from '../data/hollow.js';
-import { SHAPES } from './hollowGen.js';
+import { bandOf, CRACK, specialOf, CAMPFIRE, CRYPT, deepFloor, BANDS } from '../data/hollow.js';
+import { SHAPES, freeze } from './hollowGen.js';
 
 const ENTRANCE = { map: 'wilds', x: 12, y: 2, dir: 'down' };
 const SPAWN = { x: 2, y: 1 };          // ladder up sits just above, at (2, 0)
@@ -58,7 +58,9 @@ export function genFloor(n, zone = 'hollow') {
     return n >= 6 && roll < 0.1 ? 'i' : roll < 0.1 + copperChance ? 'c' : 'r';
   };
   // v366 (roadmap 120a): a Hollow band with its own floor shape builds the floor (data/hollow.js, systems/hollowGen.js).
-  const band = !cav && !hot ? bandOf(n) : null, shape = band && SHAPES[band.shape];
+  // v373 (roadmap 120h): a Deep floor borrows a band above (and from floor 141 an overlay), by floor and day.
+  const home = !cav && !hot ? bandOf(n) : null, deep = home?.borrow ? deepFloor(n, rng(n * 4243 + G.S.day * 7121 + 99)) : null;
+  const band = deep ? { ...deep.band, landmark: null, guardian: null } : home, shape = band && SHAPES[band.shape];
   let pocketKeys = new Set();
   MINE.cracks = {};
   // v367 (roadmap 120b): a band's landmark (its 10th floor) and its guardian's lair (its last floor, until beaten) are
@@ -92,11 +94,13 @@ export function genFloor(n, zone = 'hollow') {
   MINE.special = special;
   if (n === CAVERN.doorFloor && band && !cav && !hot) g[CAVERN.door.y][CAVERN.door.x] = '^';   // v370: the Sunken Cavern's door, on whatever floor 80 is built as
   MINE.dark = band?.dark && !special ? band.dark : null;   // v370: the Bone Crypts' darkness (landmarks and lairs are lit)
+  if (deep?.overlay === 'dark') MINE.dark = BANDS.find((b) => b.dark).dark;   // v373: the Deep's overlays
+  if (deep?.overlay === 'ice') freeze(g, R, home.freeze);
   G.mineWater = special === 'landmark' ? band.landmark.water || band.water : band?.water || null;   // v368: which fish bite here (systems/fishing.js)
 
-  Object.assign(MAPS.mine, { grid: g, name: peak ? `${PEAK.name}, floor ${n}` : vent ? `${VENT.name}, floor ${n}` : cav ? `${CAVERN.name}, floor ${n}` : special === 'landmark' ? `${band.landmark.name}, floor ${n}` : band?.look ? `${band.name}, floor ${n}` : `The Hollow, floor ${n}`, theme: peak ? 'peak' : vent ? 'ember' : cav ? 'sand' : band?.look || null });
-  const newBand = band && MINE.band !== band.id && zone === 'hollow';
-  Object.assign(MINE, { floor: n, zone, eff, band: band?.id || null });
+  Object.assign(MAPS.mine, { grid: g, name: peak ? `${PEAK.name}, floor ${n}` : vent ? `${VENT.name}, floor ${n}` : cav ? `${CAVERN.name}, floor ${n}` : special === 'landmark' ? `${band.landmark.name}, floor ${n}` : deep ? `${home.name}, floor ${n}` : band?.look ? `${band.name}, floor ${n}` : `The Hollow, floor ${n}`, theme: peak ? 'peak' : vent ? 'ember' : cav ? 'sand' : band?.look || null });
+  const newBand = home && MINE.band !== home.id && zone === 'hollow';
+  Object.assign(MINE, { floor: n, zone, eff, band: home?.id || null, borrowed: deep ? deep.band.id : null, overlay: deep?.overlay || null });
   if (peak) G.S.nuts.peakDeepest = Math.max(G.S.nuts.peakDeepest, n);
   else if (vent) G.S.ventDeepest = Math.max(G.S.ventDeepest || 0, n);
   else if (cav) G.S.cavernDeepest = Math.max(G.S.cavernDeepest || 0, n);
@@ -104,7 +108,8 @@ export function genFloor(n, zone = 'hollow') {
   emit('world:changed', 'mine');
   emit('mine:floor', { floor: n, rng: R, zone, eff, busy: MINE.busy, special, guardian: special === 'guardian' ? band.guardian : null });
   if (MINE.busy) notify('A busy floor! The ladder shows once every creature here is down.');
-  if (newBand && band.arrive) notify(band.arrive);   // v366: entering a band says what is different here
+  if (newBand && home.arrive) notify(home.arrive);   // v366: entering a band says what is different here
+  if (deep) notify(`Like ${deep.band.name.replace(/^The /, 'the ')}${deep.overlay === 'dark' ? ', and dark' : deep.overlay === 'ice' ? ', and iced over' : ''}.`);   // v373: what this Deep floor borrows
   if (special) notify(band[special].arrive);   // v367: a landmark or a lair says so
 }
 
