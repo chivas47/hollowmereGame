@@ -17,6 +17,7 @@ import { tinted } from './health.js';
 import { rng } from '../render/pixel.js';
 import { seated } from './seats.js';
 import { SEATS } from '../data/seats.js';
+import { slideTurn } from './ice.js';
 
 const SPEED = 62; // pixels per second
 
@@ -34,6 +35,7 @@ addUpdater((dt) => {
   const S = G.S, k = G.keys;
   const dx = (k.right ? 1 : 0) - (k.left ? 1 : 0);
   const dy = (k.down ? 1 : 0) - (k.up ? 1 : 0);
+  if (slideTurn(dx, dy, dt, SPEED * speedMult())) { G.moving = false; M.ease = 0; return; }   // v369: on ice you slide (systems/ice.js)
   const was = G.moving;
   G.moving = !!(dx || dy);
   if (!G.moving) { if (was) M.settle = MOTION.settle; M.ease = 0; return; }

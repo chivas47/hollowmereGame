@@ -59,6 +59,9 @@ export const CLOTHES = {
   tunnelboots: { name: 'Tunnel boots',   slot: 'shoes', color: '#6b5a48', def: 3, found: true },
   emberboots:  { name: 'Ember boots',    slot: 'shoes', color: '#a5432f', def: 4, found: true },
   deepboots:   { name: 'Deepstone boots', slot: 'shoes', color: '#3f4850', def: 5, found: true },
+  // v369 (roadmap 120d): on a peg by the Frozen Lake (Hollow floor 50): grip, no sliding on ice, at the cost of defense
+  // (Terraria's ice skates by role; Stardew has no ice).
+  icecleats:   { name: 'Ice cleats',      slot: 'shoes', color: '#9fc8e0', def: 1, found: true, grip: true },
 };
 export const SLOTS = { shirt: 'Shirt', pants: 'Trousers', hat: 'Hat', shoes: 'Shoes', accessory: 'Accessory' };   // v225: accessory
 export const DYEABLE = ['shirt', 'pants', 'accessory'];   // the slots the dye pots take

@@ -222,6 +222,14 @@ export const MONSTERS = {
     boss: { scale: 2, marks: [0.66, 0.33], calls: ['beetle', 2], rage: 0.33, rageSpeed: 26, callLine: 'The Rootgnawer shrieks, and beetles burrow up through the floor!' },
     loot: [['chitin', 1, 3, 5], ['copper', 1, 4, 8], ['geode', 0.5, 1, 1]] },
 
+  // v369 (roadmap 120d): the Rimehorn, guardian of the Frost Halls (Hollow floor 60). A stone ram grown as tall as a
+  // door. Stardew by role: a named guardian, about ten of its band's creatures in one, hitting a little harder than
+  // they do; on its rink its rushes skid, so baiting it into a pillar dazes it. It calls two bats at each health mark.
+  rimehorn: { name: 'The Rimehorn', zones: ['lair'], tags: [], voice: 'beast', knockback: 0.1, notice: 200, lives: 'Guards the bottom of the Frost Halls, Hollow floor 60, until it falls.',
+    ...charger({ windup: 0.8, rush: 160, time: 0.7, recover: 1.2, stun: 2.4 }), hp: 200, dmg: 18, speed: 16, xp: 120, color: '#b8c8d8',
+    boss: { scale: 2, marks: [0.66, 0.33], calls: ['bat', 2], rage: 0.33, rageSpeed: 24, callLine: 'The Rimehorn bellows, and bats pour down from the frozen roof!' },
+    loot: [['iron', 1, 5, 10], ['frostgeode', 1, 1, 2], ['coal', 1, 3, 6]] },
+
   // v368 (roadmap 120c): the Mossmother, guardian of the Flooded Galleries (Hollow floor 40). A moss slime grown as big
   // as a cart. Stardew by role: a named guardian, about ten of its band's creatures in one (health and XP about ten
   // floor-40 moss slimes, their gel), hitting a little harder; it calls two moss slimes at each health mark.
