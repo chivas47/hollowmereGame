@@ -7,7 +7,8 @@ Scripts that build the placeholder sheets in `assets/sprites/` (needs Python 3 w
 | person.png | `python3 tools/sprites/person.py assets/sprites/person.png` (v192: the frames are letter grids in the script; outlines worked out) |
 | animals.png | `python3 tools/sprites/animals.py assets/sprites/animals.png [preview.png]` (v196: letter grids, outlines worked out) |
 | pets.png, horse.png | `python3 tools/sprites/pets.py assets/sprites` (v196: letter grids, outlines worked out) |
-| birds.png, penstock.png | `python3 tools/sprites/wildlife.py assets/sprites [preview.png]` (v276: letter grids, outlines worked out; birds in body, wing and ink bands) |
+| birds.png | `python3 tools/sprites/wildlife.py assets/sprites [preview.png]` (v276: letter grids, outlines worked out; birds in body, wing and ink bands) |
+| penstock.png | Hand-tuned pen animals; preserved by default. Pass `--rebuild-penstock` to `wildlife.py` to replace it with the code-drawn version. |
 | monsters.png | `python3 tools/sprites/monsters.py assets/sprites/monsters.png [preview.png]` (v208: letter grids, outlines worked out) |
 | crops.png | `python3 tools/sprites/crops.py assets/sprites/crops.png` (v197: letter grids, outlines worked out) |
 | greenhouse.png, packet.png, children.png | `python3 tools/sprites/small.py assets/sprites [preview.png]` (v213: letter grids) |
