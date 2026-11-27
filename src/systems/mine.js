@@ -64,11 +64,12 @@ export function genFloor(n, zone = 'hollow') {
   // v367 (roadmap 120b): a band's landmark (its 10th floor) and its guardian's lair (its last floor, until beaten) are
   // hand-built rooms from the band's plan.
   const special = band ? specialOf(n, G.S.hollow?.beaten || []) : null;
-  if (special) g = band[special].plan.map((row) => [...row]);
+  if (special) g = band[special].plan.map((row) => [...row].map((t) => (t === 'ʄ' && G.S.wardrobe?.icecleats ? 'ɦ' : t)));   // v369: the cleats' peg hangs empty once they are taken
   else if (shape) {
     const made = shape(R, band, rockFor);
     g = made.grid;
     for (const p of made.pockets) for (let y = p.y; y < p.y + p.h; y++) for (let x = p.x; x < p.x + p.w; x++) pocketKeys.add(`${x},${y}`);
+    for (const k of made.noLadder || []) pocketKeys.add(k);   // v369: rocks on ice never hide the ladder
   } else {
     for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
       if (g[y][x] !== 'f' || (x <= 4 && y <= 4) || R() > (cav ? 0.4 : 0.3)) continue;

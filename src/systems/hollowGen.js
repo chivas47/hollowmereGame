@@ -1,7 +1,7 @@
 // v366 (roadmap 120a): floor shapes for the Hollow's bands (data/hollow.js). Pure: each takes the floor's random
 // numbers (R), its band and a rockFor(roll) that picks a rock tile for this floor, and returns the grid with its rocks,
 // cracked walls and pockets. systems/mine.js turns the grid into a floor (rocks, the ladder, the landing).
-import { CRACK, WATER, BRIDGE_H, BRIDGE_V } from '../data/hollow.js';
+import { CRACK, WATER, BRIDGE_H, BRIDGE_V, ICE } from '../data/hollow.js';
 
 const SPAWN = { x: 2, y: 1 };   // the ladder up sits just above, at (2, 0); the landing is x 1-4, y 1-4
 const DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
@@ -153,4 +153,63 @@ export function islands(R, band, rockFor) {
   return { grid: g, pockets: [], shortcuts: [] };
 }
 
-export const SHAPES = { tunnels, islands };
+// v369 (roadmap 120d): the Frost Halls: long straight halls, each crossing one already dug (so all join the landing),
+// a few side rooms off them, then ice across whole stretches of each hall; a few rocks stand on the ice and stop a
+// slide, and they never hide the ladder (noLadder). Plain rocks only on dry floor.
+export function halls(R, band, rockFor) {
+  const { w, h } = band.size, g = Array.from({ length: h }, () => Array(w).fill('X'));
+  const inside = (x, y) => x >= 1 && y >= 1 && x <= w - 2 && y <= h - 2;
+  const carve = (x0, y0, x1, y1, t = 'f') => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (inside(x, y)) g[y][x] = t; };
+  carve(1, 1, 4, 4);
+  g[0][SPAWN.x] = 'U';
+  const list = [], [ha, hb] = band.halls, n = ha + Math.floor(R() * (hb - ha + 1)), [wa, wb] = band.width;
+  const span = (size, lo, hi) => {   // a long run along one axis that covers lo..hi, inside the walls
+    const len = Math.max(hi - lo + 4, Math.floor((size - 2) * (0.55 + R() * 0.4))), most = size - 2 - len;
+    const from = Math.max(1, Math.min(most, lo - Math.floor(R() * Math.max(1, len - (hi - lo)))));
+    return [from, Math.min(size - 2, from + len)];
+  };
+  const far = () => Math.max(R(), R());   // crossings lean toward a hall's far end, so the halls spread out from the landing
+  for (let i = 0; i < n; i++) {
+    const wd = wa + Math.floor(R() * (wb - wa + 1));
+    let hl;
+    if (i === 0) { const [x0, x1] = span(w, 1, 4); hl = { x0, x1, y0: 2, y1: 1 + wd, across: true }; }   // through the landing
+    else {
+      const from = R() < 0.6 ? list[i - 1] : list[Math.floor(R() * list.length)];   // crosses an earlier hall, mostly the last
+      if (from.across) {   // a hall down, crossing it at a random point along it
+        const x = from.x0 + Math.floor(far() * Math.max(1, from.x1 - from.x0 - wd)), [y0, y1] = span(h, from.y0, from.y1);
+        hl = { x0: x, x1: x + wd - 1, y0, y1, across: false };
+      } else {
+        const y = from.y0 + Math.floor(far() * Math.max(1, from.y1 - from.y0 - wd)), [x0, x1] = span(w, from.x0, from.x1);
+        hl = { x0, x1, y0: y, y1: y + wd - 1, across: true };
+      }
+    }
+    carve(hl.x0, hl.y0, hl.x1, hl.y1);
+    list.push(hl);
+  }
+  // side rooms: a small room off a hall's side
+  const [ra, rb] = band.rooms;
+  for (let i = 0, m = ra + Math.floor(R() * (rb - ra + 1)); i < m; i++) {
+    const hl = list[Math.floor(R() * list.length)], rw = 4 + Math.floor(R() * 3), rh = 3 + Math.floor(R() * 2);
+    const x = hl.across ? hl.x0 + Math.floor(R() * Math.max(1, hl.x1 - hl.x0 - rw)) : (R() < 0.5 ? hl.x0 - rw : hl.x1 + 1);
+    const y = hl.across ? (R() < 0.5 ? hl.y0 - rh : hl.y1 + 1) : hl.y0 + Math.floor(R() * Math.max(1, hl.y1 - hl.y0 - rh));
+    carve(x, y, x + rw - 1, y + rh - 1);
+  }
+  // ice: a frozen stretch across the whole width of each hall, away from the landing
+  for (const hl of list) {
+    const len = (hl.across ? hl.x1 - hl.x0 : hl.y1 - hl.y0) + 1, run = Math.max(4, Math.round(len * band.ice * (0.6 + R() * 0.8)));
+    const from = (hl.across ? hl.x0 : hl.y0) + Math.floor(R() * Math.max(1, len - run));
+    for (let k = from; k < from + run; k++) for (let j = hl.across ? hl.y0 : hl.x0; j <= (hl.across ? hl.y1 : hl.x1); j++) {
+      const [x, y] = hl.across ? [k, j] : [j, k];
+      if (inside(x, y) && g[y][x] === 'f' && !(x <= 5 && y <= 5)) g[y][x] = ICE.tile;
+    }
+  }
+  const noLadder = [], reach = distances(g, SPAWN.x, SPAWN.y);
+  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
+    if (reach[y][x] < 0) { if (g[y][x] !== 'X') g[y][x] = 'X'; continue; }   // nothing is ever cut off
+    if (g[y][x] === ICE.tile && R() < band.stoppers) { g[y][x] = rockFor(R(), false); noLadder.push(`${x},${y}`); }
+    else if (g[y][x] === 'f' && !inLanding(x, y) && R() < band.rocks) g[y][x] = rockFor(R(), false);
+  }
+  return { grid: g, pockets: [], shortcuts: [], noLadder };
+}
+
+export const SHAPES = { tunnels, islands, halls };

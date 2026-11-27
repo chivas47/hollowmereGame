@@ -2,6 +2,15 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v369: The Frost Halls
+- Hollow floors 41 to 60 are the third band, **the Frost Halls**: long straight halls crossing the floor and joining at their crossings, small rooms off them, their own cold blue ground, and ice across whole stretches of the halls.
+- **Ice:** step onto it and you slide the way you stepped, keys or not, until something stops you (a wall, a pillar, a rock standing on the ice) or the ice ends. From a stop you can slide off another way. Creatures drift on ice, slow to turn, and a charger's rush skids on past its end.
+- **Floor 50, the Frozen Lake:** safe and lit, a lake frozen from wall to wall with pillars to stop against, the ladder in sight, a seam of ore, and a peg with the old miners' **ice cleats**. Shoes that grip: in them you walk on ice instead of sliding, but they guard you less (defense 1) than good boots.
+- **Floor 60, the Rimehorn:** a ram as tall as a door on an ice rink with four pillars. Its rushes skid across the ice; bait one into a pillar and it is dazed. 400 health, calls two bats at two thirds and one third of its health. The ladder opens when it falls, and the first time its hoard: 5 iron bars, 4 frost geodes, a heartstone and 3 blast bombs. Floor 60's find still waits by the landing.
+- Floor 61 and deeper are unchanged until their band is built.
+- Known: farmer two (local co-op) walks on ice without sliding.
+- New save data: none (the cleats go in the wardrobe like any found shoes).
+
 ## v368: The Flooded Galleries
 - Hollow floors 21 to 40 are the second band, **the Flooded Galleries**: still water from wall to wall, eight to twelve islands in it, joined by narrow plank bridges (every island can be reached, and there is one way between any two, so bridges are where fights happen). Their own damp, mossy ground. Bats still fly straight over the water.
 - **Fishing in the Hollow:** cast into the galleries' water for two cave fish found nowhere else, all year: the blindfin (45g) and the stonescale (300g).

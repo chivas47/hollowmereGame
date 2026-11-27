@@ -101,7 +101,53 @@ export const BANDS = [
     ],
       hoard: { ironbar: 4, frostgeode: 3, tidestone: 2, gel: 10 },
       arrive: 'The water stirs. A mound of moss as big as a cart heaves itself up the bank.' } },
-  { id: 'frost', name: 'The Frost Halls', from: 41, to: 60, look: null, shape: 'room' },
+  // v369 (roadmap 120d): long halls crossing the floor, ice sheets across them (ICE below): on ice you slide until
+  // something stops you; creatures drift and chargers skid. halls: how many (each crosses one already dug), their
+  // width; ice: the share of each hall's length that freezes; stoppers: rocks standing on the ice.
+  { id: 'frost', name: 'The Frost Halls', from: 41, to: 60, look: 'frost', shape: 'halls', size: { w: 36, h: 24 }, rocks: 0.2,
+    halls: [10, 13], width: [2, 3], rooms: [2, 4], ice: 0.3, stoppers: 0.05,
+    arrive: 'Ice sheets the halls here. Step onto it and you slide until something stops you.',
+    // floor 50: a frozen lake; the old miners' ice cleats hang on a peg by it (found once: they stop you sliding)
+    landmark: { name: 'The Frozen Lake', plan: [
+      'XXUXXXXXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XfffffffffffffffffffffXX',
+      'XfffɠɠɠɠɠɠɠXɠɠɠɠɠɠɠfffXX',
+      'XfffɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠfffXX',
+      'XfffɠɠɠɠXɠɠɠɠɠɠɠɠɠɠfffXX',
+      'XfffɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠfffXX',
+      'XfffɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠfʄfXX',
+      'XfffɠɠɠɠɠɠɠɠɠɠXɠɠɠɠfffXX',
+      'XfffɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠfffXX',
+      'XfffɠɠɠɠɠɠɠXɠɠɠɠɠɠɠfffXX',
+      'XfifffffffffffffffffLfXX',
+      'XfccffffffffffffffffffXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+    ],
+      arrive: 'A lake frozen hard from wall to wall, and a peg with something hanging from it. Nothing here wants to hurt you.' },
+    // floor 60: the Rimehorn's rink; its rushes skid on the ice, into the pillars if you are quick
+    guardian: { kind: 'rimehorn', at: { x: 12, y: 8 }, ladder: { x: 12, y: 13 }, plan: [
+      'XXUXXXXXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XfffffffffffffffffffffXX',
+      'XffɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠffXX',
+      'XffɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠffXX',
+      'XffɠɠɠXɠɠɠɠɠɠɠɠɠXɠɠɠffXX',
+      'XffɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠffXX',
+      'XffɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠffXX',
+      'XffɠɠɠXɠɠɠɠɠɠɠɠɠXɠɠɠffXX',
+      'XffɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠffXX',
+      'XffɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠɠffXX',
+      'XfffffffffffffffffffffXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+    ],
+      hoard: { ironbar: 5, frostgeode: 4, heartstone: 1, blastbomb: 3 },
+      arrive: 'Frost cracks under hooves. A ram as tall as a door lowers its horns across the ice.' } },
   { id: 'crypts', name: 'The Bone Crypts', from: 61, to: 80, look: null, shape: 'room' },
   { id: 'magma', name: 'The Magma Rifts', from: 81, to: 100, look: null, shape: 'room' },
   { id: 'crystal', name: 'The Crystal Hollows', from: 101, to: 120, look: null, shape: 'room' },
@@ -122,6 +168,10 @@ export function specialOf(floor, beaten = []) {
 export const CAMPFIRE = { tile: 'ȵ', minutes: 30 };
 // v368: still cave water (solid; the rod fishes it) and plank bridges over it, east-west and north-south.
 export const WATER = 'ȶ', BRIDGE_H = 'ɕ', BRIDGE_V = 'ɟ';
+// v369: ice (walkable, slippery). slide: your speed on it, times walking; grip: how much of a creature's wanted
+// heading it takes up each step on ice (low: it drifts); drift: its speed on ice, times; skid: seconds a charger's
+// rush runs on past its end on ice. cleats: the shoes that stop you sliding (data/clothing.js grip), on their peg.
+export const ICE = { tile: 'ɠ', slide: 2.2, grip: 0.06, drift: 1.2, skid: 0.5, cleats: 'icecleats', peg: 'ʄ', pegEmpty: 'ɦ' };
 
 // The band a Hollow floor belongs to.
 export const bandOf = (floor) => BANDS.find((b) => floor >= b.from && floor <= b.to) || BANDS[BANDS.length - 1];

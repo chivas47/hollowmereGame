@@ -844,6 +844,7 @@ const CAVE_COLS = {
   ember: { floor: ['#3a2422', '#4a2c26', '#2e1c1a'], wall: ['#1a0f0e', '#2a1612', '#3a1a14'] },
   sewer: { floor: ['#3a4038', '#454c42', '#30362e'], wall: ['#1c221e', '#262e28', '#2e3830'] },   // v45
   peak:  { floor: ['#4a3a34', '#56443c', '#3e302a'], wall: ['#221816', '#30201c', '#3c2620'] },   // v67: the Smoke Peak
+  frost: { floor: ['#3a4250', '#465060', '#30384a'], wall: ['#181c24', '#232a36', '#30384a'] },   // v369: the Frost Halls
   flooded: { floor: ['#33393a', '#3d4544', '#2a302f'], wall: ['#161b1c', '#212829', '#2c3536'] },   // v368: the Flooded Galleries
   root:  { floor: ['#3e3324', '#4a3d2b', '#33291d'], wall: ['#1e1810', '#2c2316', '#3a2e1c'] },   // v366: the Rootways (data/hollow.js)
 };
@@ -912,6 +913,18 @@ function bridge(across) {
     if (across) for (let i = 0; i < 4; i++) { r(g, X + i * 4, Y + 3, 3, 10, wood[i % 2]); r(g, X + i * 4, Y + 12, 3, 1, wood[2]); }
     else for (let i = 0; i < 4; i++) { r(g, X + 3, Y + i * 4, 10, 3, wood[i % 2]); r(g, X + 3, Y + i * 4 + 2, 10, 1, wood[2]); }
   };
+}
+// v369: the Frost Halls' ice, pale and glassy with scratches and a glint; the cleats' peg by the Frozen Lake.
+function ice(g, x, y) {
+  const X = x * T, Y = y * T, R = rng(x * 211 + y * 389 + 9);
+  r(g, X, Y, T, T, '#a8c8d8'); r(g, X, Y, T, 1, '#c8e0ea'); r(g, X, Y + 15, T, 1, '#8aaabb');
+  for (let i = 0; i < 2; i++) { const sx = X + 1 + Math.floor(R() * 10), sy = Y + 2 + Math.floor(R() * 11); r(g, sx, sy, 4, 1, '#d8ecf2'); r(g, sx + 4, sy + 1, 2, 1, '#d8ecf2'); }
+  if (R() < 0.4) r(g, X + 2 + Math.floor(R() * 11), Y + 2 + Math.floor(R() * 11), 1, 1, '#ffffff');
+}
+function cleatPeg(g, x, y, p, taken = false) {
+  const X = x * T, Y = y * T;
+  r(g, X + 7, Y + 2, 2, 13, '#6a5038'); r(g, X + 7, Y + 2, 1, 13, '#8a6a48'); r(g, X + 4, Y + 4, 8, 2, '#6a5038');
+  if (!taken) { r(g, X + 3, Y + 6, 4, 5, '#9fc8e0'); r(g, X + 9, Y + 6, 4, 5, '#9fc8e0'); r(g, X + 3, Y + 11, 4, 1, '#c8d0d8'); r(g, X + 9, Y + 11, 4, 1, '#c8d0d8'); }
 }
 function ladderUp(g, x, y, p) {
   const X = x * T, Y = y * T;
@@ -1232,7 +1245,7 @@ function bones(g, x, y) {   // a wall of stacked bones: rows of long bones, thei
 export const PROP_ART = {
   '¢': cartTile, '§': bookStall, '¤': prizeMachine,
   y: caveMouth, t: caveCrate, $: chest,
-  U: ladderUp, L: ladderDown, 'ǩ': crackedWall, 'ȵ': campfire, 'ȶ': caveWater, 'ɕ': bridge(true), 'ɟ': bridge(false),   // v366, v367, v368
+  U: ladderUp, L: ladderDown, 'ǩ': crackedWall, 'ȵ': campfire, 'ȶ': caveWater, 'ɕ': bridge(true), 'ɟ': bridge(false), 'ɠ': ice, 'ʄ': cleatPeg, 'ɦ': (g, x, y, p) => cleatPeg(g, x, y, p, true),   // v366, v367, v368, v369
   r: mineRock(null), c: mineRock('#d0874a'), i: mineRock('#c9ccd6'),
   '%': mineRock('#e9c46a'), '*': mineRock('#9a7ae0'), '^': cavernDoor, '!': shaft,
   '#': mineRock('#e9862a'), '~': lava, '>': ventDoor, '=': forgeAnvil,
@@ -1251,7 +1264,7 @@ export const PROP_ART = {
 // The ground under each prop: a cave's floor or wall, grass (with the salt its blades and flowers use) or sand.
 // Props not listed draw their whole tile, or sit on whatever the map has there (the ladder down, mine rocks).
 export const PROP_GROUND = {
-  U: 'wall', '^': 'wall', '>': 'wall', 'ǩ': 'wall', 'ȵ': 'floor', 'ȶ': 'floor', 'ɕ': 'floor', 'ɟ': 'floor', t: 'floor', $: 'floor', '!': 'floor', '=': 'floor', '+': 'floor', '?': 'floor',
+  U: 'wall', '^': 'wall', '>': 'wall', 'ǩ': 'wall', 'ȵ': 'floor', 'ȶ': 'floor', 'ɕ': 'floor', 'ɟ': 'floor', 'ɠ': 'floor', 'ʄ': 'floor', 'ɦ': 'floor', t: 'floor', $: 'floor', '!': 'floor', '=': 'floor', '+': 'floor', '?': 'floor',
   '|': 'grass:29', '}': 'grass:23', ';': 'grass:37', '9': 'grass:41', '<': 'grass:43', '`': 'grass:47',
   '¢': 'grass:53', '§': 'grass:59', '¤': 'grass:61', '8': 'sand',
   'ħ': 'grass:67', 'ǧ': 'grass:71', 'ƀ': 'grass:73', 'ɓ': 'grass:73', 'ɗ': 'grass:73', 'ʋ': 'grass:79', 'β': 'grass:83', 'ʂ': 'grass:89', 'ɲ': 'grass:97',

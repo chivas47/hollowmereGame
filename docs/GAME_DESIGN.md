@@ -551,7 +551,8 @@ Five fish per season. Bite odds are weighted toward easy fish (weight 6 minus di
   |---|---|---|---|---|
   | 1-20 | The Rootways | winding tunnels, 36 x 24 (diggers branching from dug tunnels, rounded; 42% open, rocks on 22% of it) | cracked walls (3 pickaxe hits, 2 energy each; bombs break them): up to 3 shortcuts between tunnels 18+ steps apart on foot, up to 2 sealed pockets (60% each) of 3 to 5 copper or iron rocks (iron 35% from floor 6) | v366 |
   | 21-40 | The Flooded Galleries | islands over still water, 36 x 24: 8 to 11 round islands besides the landing, joined by L-shaped plank bridges along a spanning tree; rocks on 25% of the land | fishing anywhere in the water: blindfin 45g (difficulty 2) and stonescale 300g (difficulty 4), all year (Stardew's ghostfish and stonefish) | v368 |
-  | 41-120 | four more bands | the one room until built | | planned (120d-120g) |
+  | 41-60 | The Frost Halls | 10 to 13 long halls 2 to 3 wide, each crossing an earlier one (crossings lean to its far end, so they spread), 2 to 4 side rooms; ice across 30% of each hall's length on average; rocks on 20% of dry floor, 5% of ice tiles hold a rock that stops slides (never the ladder) | ice (data/hollow.js ICE): you slide at 2.2 times walking speed until stopped or off the ice (systems/ice.js); creatures drift (grip 0.06 a step, 1.2 times speed); a charger's rush skids 0.5 s on; the ice cleats (shoes, defense 1, grip) stop sliding | v369 |
+  | 61-120 | three more bands | the one room until built | | planned (120e-120g) |
 
   v367 (120b): landmarks and guardians (one-screen plan rooms; data/hollow.js).
 
@@ -560,6 +561,8 @@ Five fish per season. Bite odds are weighted toward easy fish (weight 6 minus di
   | 10 | The Root Camp | lit (2.6 times the light), no creatures, the ladder in sight, a seam of 3 copper and 1 iron, the floor find chest at (4, 3); the campfire heals to full once a day for 30 minutes (the hot spring's role: Stardew's spa) |
   | 30 | The Sunken Shrine | lit, no creatures, the ladder in sight, a seam of 2 copper and 1 iron, a pool crossed by a bridge; the pool is the only water with the pearlgill, 500g, difficulty 5 (Stardew's ice pip by role) |
   | 40 | The Mossmother | a hopping slime boss, drawn 2.5 times as big: 300 health (about ten floor-40 moss slimes), 14 damage, 90 XP; sheds 2 moss slimes at 66% and 33%, faster below 33%; loot gel 8-12, fiber 3-6, a tidestone a quarter of the time. The ladder opens at (12, 12); the first time her hoard: 4 iron bars, 3 frost geodes, 2 tidestones, 10 gel. |
+  | 50 | The Frozen Lake | lit, no creatures, the ladder in sight, a seam of 2 copper and 1 iron, a lake of ice 15 x 8 with four pillars, the ice cleats on a peg (found once; Terraria's ice skates by role) |
+  | 60 | The Rimehorn | a charger boss on an ice rink with four pillars, drawn twice as big: 200 health times the chargers' toughness 2 (400), 18 damage, 120 XP; calls 2 bats at 66% and 33%; its rushes skid on ice, a pillar dazes it 2.4 s; loot iron 5-10, frost geodes 1-2, coal 3-6. Ladder at (12, 13); the first time its hoard: 5 iron bars, 4 frost geodes, a heartstone, 3 blast bombs. |
   | 20 | The Rootgnawer | a charger boss, drawn twice as big: 90 health times the chargers' toughness 2 (180, about ten floor-20 beetles), 12 damage, 60 XP; calls 2 beetles at 66% and 33%, faster below 33%; loot chitin 3-5, copper 4-8, a geode half the time. The ladder opens at (12, 12) when it falls; the first time its hoard: 5 copper bars, 3 geodes, 4 chitin, 3 ember bombs (Stardew by role: a treasure floor's chest). Beaten: floor 20 is a plain Rootways floor. |
   | 121+ | The Deep | | | planned (120h) |
 

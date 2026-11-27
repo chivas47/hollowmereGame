@@ -5,6 +5,8 @@ import { G } from '../core/game.js';
 import { T, DIRS } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addUpdater, addInteraction, addEntities, addLayer } from '../core/registry.js';
+import { iceAt } from './ice.js';
+import { ICE } from '../data/hollow.js';
 import { MAPS, SOLID, sizeOf } from '../data/maps.js';
 import { SLIME } from '../data/minerals.js';
 import { RARE_DROP, DROP_POOL, SPECIALS } from '../data/weapons.js';
@@ -128,6 +130,13 @@ export const FACE_TURN = 0.2;
 function step(m, vx, vy, dist) {
   // v257: phasers and the storm wing pass over walls, as flyers do.
   const D = MONSTERS[m.kind || 'slime'], fly = D.move === 'fly' || D.move === 'phase' || D.fly, s = sizeOf(slimeMap), inside = (x, y) => x > 8 && y > 8 && x < s.w * T - 8 && y < s.h * T - 4;   // v157: the map's own edges
+  if (!fly && iceAt(slimeMap, m.x, m.y)) {   // v369: on ice it drifts: its heading turns slowly toward the way it wants
+    m.ix = (m.ix ?? vx) + (vx - (m.ix ?? vx)) * ICE.grip; m.iy = (m.iy ?? vy) + (vy - (m.iy ?? vy)) * ICE.grip;
+    const hit = moveBox(m, m.ix * dist * ICE.drift, m.iy * dist * ICE.drift, BOX);
+    if (hit.x) { m.ix = 0; m.tx = m.x; } if (hit.y) { m.iy = 0; m.ty = m.y; }
+    return;
+  }
+  m.ix = vx; m.iy = vy;
   if (!fly) { const hit = moveBox(m, vx * dist, vy * dist, BOX); if (hit.x) m.tx = m.x; if (hit.y) m.ty = m.y; return; }
   const nx = m.x + vx * dist; if (inside(nx, m.y)) m.x = nx; else m.tx = m.x;
   const ny = m.y + vy * dist; if (inside(m.x, ny)) m.y = ny; else m.ty = m.y;
@@ -156,6 +165,7 @@ export function chargeTurn(m, d, dx, dy, dt) {
     if (Math.random() < dt * 30 && G.S.map === slimeMap) burst(m.x - m.cdx * 5, m.y - 1, IMPACT.stone, 1, { speed: 8, up: 6, size: 2, life: 0.35, gravity: 0, shrink: true });   // v264: a dust trail
     const hit = moveBox(m, m.cdx * k.rush * dt, m.cdy * k.rush * dt, BOX);
     if (hit.x || hit.y) { daze(m, k.stun); emit('monster:bump', { x: m.x, y: m.y }); return true; }
+    if (m.ct <= 0 && !m.skid && iceAt(slimeMap, m.x, m.y)) { m.skid = true; m.ct = ICE.skid; }   // v369: on ice the rush skids on
     if (m.ct <= 0) {
       if (--m.cn > 0) windup(m, k.windup * 0.6);   // the next rush comes quicker
       else { m.cs = 'recover'; m.ct = k.recover; }
@@ -196,7 +206,7 @@ function beetleTurn(m, d, vx, vy, dt) {
 }
 const daze = (m, t) => { m.cs = 'dazed'; m.ct = t; m.cn = 0; };
 // v346: a charger starts its wind-up (the tell), and you hear it.
-function windup(m, t) { m.cs = 'windup'; m.ct = t; emit('monster:windup', { x: m.x, y: m.y, kind: m.kind }); }
+function windup(m, t) { m.cs = 'windup'; m.ct = t; m.skid = false; emit('monster:windup', { x: m.x, y: m.y, kind: m.kind }); }
 
 // v253 (roadmap 85d1): a burrower's turn (data/weapons.js BURROW). m.bs: under (a mound sliding after you, below the
 // rocks), rise (the mound shakes: the tell), up (out and fighting), for m.bt seconds each. Returns true while it

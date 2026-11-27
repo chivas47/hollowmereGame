@@ -166,7 +166,8 @@ THEME = {   # the floor's extra: sand ripples, ember glow in the cracks, damp mo
     'rock': (None, None), 'sand': ('ripple', '#9a7a52'), 'ember': ('glow', '#c8501e'),
     'sewer': ('moss', '#4f6a3a'), 'peak': ('glow', '#a8401a'),
     'root': ('roots', '#6a4e2c'),
-    'flooded': ('moss', '#3f5a44'),   # v368: the Flooded Galleries: damp moss   # v366: the Rootways: fine roots across the floor
+    'flooded': ('moss', '#3f5a44'),
+    'frost': ('ripple', '#8aa0b8'),   # v369: the Frost Halls: rime streaks   # v368: the Flooded Galleries: damp moss   # v366: the Rootways: fine roots across the floor
 }
 def cave_floor(theme, cols, seed):
     R = random.Random(seed)
