@@ -370,4 +370,21 @@ export function geodes(R, band, rockFor) {
   return { grid: g, pockets, shortcuts: [] };
 }
 
+// v373 (roadmap 120h): ice patches laid over any floor (the Deep's overlay): blobs grown from open floor tiles, never
+// the landing. Ice can be walked, so nothing is cut off.
+export function freeze(g, R, { patches: [pa, pb], size: [sa, sb] }) {
+  const open = [];
+  g.forEach((row, y) => row.forEach((t, x) => { if (t === 'f' && !inLanding(x, y)) open.push([x, y]); }));
+  for (let i = 0, n = pa + Math.floor(R() * (pb - pa + 1)); i < n && open.length; i++) {
+    const front = [open[Math.floor(R() * open.length)]];
+    for (let k = 0, m = sa + Math.floor(R() * (sb - sa + 1)); k < m && front.length; k++) {
+      const [x, y] = front.splice(Math.floor(R() * front.length), 1)[0];
+      if (g[y][x] !== 'f' || inLanding(x, y)) continue;
+      g[y][x] = ICE.tile;
+      for (const [dx, dy] of DIRS) if (g[y + dy]?.[x + dx] === 'f') front.push([x + dx, y + dy]);
+    }
+  }
+  return g;
+}
+
 export const SHAPES = { tunnels, islands, halls, crypt, rifts, geodes };

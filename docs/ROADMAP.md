@@ -477,8 +477,8 @@ Nuno (November 2026): the Hollow and the other caves feel repetitive. Restructur
 | 120d | The Frost Halls (41-60) | feature | done (chivas47/hollowmereGame#382) | Long halls and ice sheets: you and creatures slide until you hit something, chargers skid; landmark and guardian. Balance check on crossing time. |
 | 120e | The Bone Crypts (61-80) | feature | done (chivas47/hollowmereGame#383) | Rooms split by pillars; darkness, braziers lit with coal stay lit for the visit; floor 80 keeps the Sunken Cavern door; landmark and guardian. |
 | 120f | The Magma Rifts (81-100) | feature | done (chivas47/hollowmereGame#384) | Lava rivers and crumbling bridges; floor 100 keeps its scene; landmark and guardian. |
-| 120g | The Crystal Hollows (101-120) | feature | in progress (chivas47/hollowmereGame#385) | Crystal pillars and geode chambers; strike three crystals in order to open a vault; landmark and guardian. |
-| 120h | The Deep (121+) | feature | planned | Each floor borrows a band's shape and mechanic; two mechanics at once from 141. |
+| 120g | The Crystal Hollows (101-120) | feature | done (chivas47/hollowmereGame#385) | Crystal pillars and geode chambers; strike three crystals in order to open a vault; landmark and guardian. |
+| 120h | The Deep (121+) | feature | in progress | Each floor borrows a band's shape and mechanic; two mechanics at once from 141. |
 | 120i | Floor modifiers and music by band | feature | planned | Dark floors and rich seams as rare per-band modifiers beside busy and treasure floors; music bands follow the new bands. Then a playtest of the whole Hollow before the Cavern, Vent and Peak. |
 
 ## Done

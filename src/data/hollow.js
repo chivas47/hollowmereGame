@@ -288,7 +288,12 @@ export const BANDS = [
     ],
       hoard: { umbritebar: 2, magmageode: 4, heartstone: 3, blastbomb: 5 },
       arrive: 'The crystals dim. Something made of them pulls itself out of the wall, light moving inside it.' } },
-  { id: 'deep', name: 'The Deep', from: 121, to: Infinity, look: null, shape: 'room' },
+  // v373 (roadmap 120h): below the old maps. Each floor borrows one of the bands above (borrow), its shape, look and
+  // mechanic, picked by floor and day; from doubleFrom it adds darkness or ice on top (overlays, the two that suit any
+  // shape: freeze, how many ice patches and their size). No landmarks or guardians (Stardew's Skull Cavern by role).
+  { id: 'deep', name: 'The Deep', from: 121, to: Infinity, look: null, shape: 'room', borrow: ['rootways', 'flooded', 'frost', 'crypts', 'magma', 'crystal'],
+    doubleFrom: 141, overlays: ['dark', 'ice'], freeze: { patches: [4, 7], size: [6, 16] },
+    arrive: 'Below the bottom of the old maps. Every floor down here is like one of the places above, and none of them is safe.' },
 ];
 
 // v367 (roadmap 120b): a band's landmark is its 10th floor; its guardian waits on its last floor until beaten.
@@ -321,6 +326,15 @@ export const LAVA = { tile: '~', crumble: 'ʱ', delay: 2.5, burn: 0.15, smelter:
 export const CRYSTAL = { pillar: 'ʉ', song: ['ʏ', 'ʐ', 'ʒ'], seal: 'ʑ', anvil: 'ʎ', crack: 5,
   notes: ['a high, thin note', 'a clear middle note', 'a deep, low note'] };
 export const CRYPT = { brazier: 'ʳ', lit: 'ʴ', bones: 'ʷ', altar: 'ʵ', ward: { defense: 3 }, coal: 1 };
+
+// v373: the band a Deep floor borrows, and from doubleFrom the overlay it adds: { band, overlay }. pick(): a roll
+// for this floor and day, so the floor's own shape rolls stay the same.
+export function deepFloor(floor, roll) {
+  const D = BANDS[BANDS.length - 1], id = D.borrow[Math.floor(roll() * D.borrow.length)], from = BANDS.find((b) => b.id === id);   // one roll, not one per band
+  if (floor < D.doubleFrom) return { band: from, overlay: null };
+  const choices = D.overlays.filter((o) => !(o === 'dark' && from.dark) && !(o === 'ice' && from.shape === 'halls'));
+  return { band: from, overlay: choices[Math.floor(roll() * choices.length)] };
+}
 
 // The band a Hollow floor belongs to.
 export const bandOf = (floor) => BANDS.find((b) => floor >= b.from && floor <= b.to) || BANDS[BANDS.length - 1];

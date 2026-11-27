@@ -2,6 +2,13 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v373: The Deep
+- Below floor 120 is **the Deep**, and it has no bottom. Every floor borrows one of the six bands above, its shape, its look and its mechanic: Rootways tunnels with cracked walls, flooded islands you can fish from, frozen halls, dark crypts with braziers, lava rifts with crumbling bridges, or crystal chambers with a sealed vault. Which one changes by floor and by day.
+- **From floor 141, two at once:** each floor adds darkness or ice on top of the band it borrows (never the one it already has): a flooded floor in the dark, rifts iced over in patches, crystal chambers you light one brazier at a time.
+- Each floor says what it is like when you arrive. There are no landmarks or guardians in the Deep (Stardew's Skull Cavern by role); creatures keep growing tougher floor by floor.
+- With this, no Hollow floor is the old single room any more.
+- New save data: none.
+
 ## v372: The Crystal Hollows
 - Hollow floors 101 to 120 are the sixth band, **the Crystal Hollows**: round geode chambers joined by short tunnels, violet crystal pillars standing in them, violet light in the cracks.
 - **Resonance vaults:** on most floors a small vault of gold rock is sealed behind a wall of crystal no pickaxe can break. Three singing crystals stand in three of the chambers, small, middle and large. Strike them from the highest note to the deepest (small, then middle, then large) and the seal shatters; a wrong note and the others fall silent, so start again.
