@@ -475,8 +475,8 @@ Nuno (November 2026): the Hollow and the other caves feel repetitive. Restructur
 | 120b | Landmark and guardian floors | feature | done (chivas47/hollowmereGame#380) | The framework for a band's 10th floor (a hand-built safe set piece) and last floor (a guardian whose first defeat opens the way down), then the Rootways' camp (floor 10) and guardian (floor 20). |
 | 120c | The Flooded Galleries (21-40) | feature | done (chivas47/hollowmereGame#381) | Islands joined by bridges over still water; a fishing pool on floors ending in 0 or 5 with cave fish found only there (Stardew's mine fishing floors); landmark and guardian. |
 | 120d | The Frost Halls (41-60) | feature | done (chivas47/hollowmereGame#382) | Long halls and ice sheets: you and creatures slide until you hit something, chargers skid; landmark and guardian. Balance check on crossing time. |
-| 120e | The Bone Crypts (61-80) | feature | in progress (chivas47/hollowmereGame#383) | Rooms split by pillars; darkness, braziers lit with coal stay lit for the visit; floor 80 keeps the Sunken Cavern door; landmark and guardian. |
-| 120f | The Magma Rifts (81-100) | feature | planned | Lava rivers and crumbling bridges; floor 100 keeps its scene; landmark and guardian. |
+| 120e | The Bone Crypts (61-80) | feature | done (chivas47/hollowmereGame#383) | Rooms split by pillars; darkness, braziers lit with coal stay lit for the visit; floor 80 keeps the Sunken Cavern door; landmark and guardian. |
+| 120f | The Magma Rifts (81-100) | feature | in progress | Lava rivers and crumbling bridges; floor 100 keeps its scene; landmark and guardian. |
 | 120g | The Crystal Hollows (101-120) | feature | planned | Crystal pillars and geode chambers; strike three crystals in order to open a vault; landmark and guardian. |
 | 120h | The Deep (121+) | feature | planned | Each floor borrows a band's shape and mechanic; two mechanics at once from 141. |
 | 120i | Floor modifiers and music by band | feature | planned | Dark floors and rich seams as rare per-band modifiers beside busy and treasure floors; music bands follow the new bands. Then a playtest of the whole Hollow before the Cavern, Vent and Peak. |

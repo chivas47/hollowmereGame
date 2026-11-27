@@ -844,6 +844,7 @@ const CAVE_COLS = {
   ember: { floor: ['#3a2422', '#4a2c26', '#2e1c1a'], wall: ['#1a0f0e', '#2a1612', '#3a1a14'] },
   sewer: { floor: ['#3a4038', '#454c42', '#30362e'], wall: ['#1c221e', '#262e28', '#2e3830'] },   // v45
   peak:  { floor: ['#4a3a34', '#56443c', '#3e302a'], wall: ['#221816', '#30201c', '#3c2620'] },   // v67: the Smoke Peak
+  magma: { floor: ['#2e2422', '#3a2c28', '#241c1a'], wall: ['#140e0d', '#201614', '#2c1c18'] },   // v371: the Magma Rifts
   crypt: { floor: ['#3a3634', '#46413e', '#2e2a28'], wall: ['#181514', '#24201e', '#302a27'] },   // v370: the Bone Crypts
   frost: { floor: ['#3a4250', '#465060', '#30384a'], wall: ['#181c24', '#232a36', '#30384a'] },   // v369: the Frost Halls
   flooded: { floor: ['#33393a', '#3d4544', '#2a302f'], wall: ['#161b1c', '#212829', '#2c3536'] },   // v368: the Flooded Galleries
@@ -926,6 +927,14 @@ function cleatPeg(g, x, y, p, taken = false) {
   const X = x * T, Y = y * T;
   r(g, X + 7, Y + 2, 2, 13, '#6a5038'); r(g, X + 7, Y + 2, 1, 13, '#8a6a48'); r(g, X + 4, Y + 4, 8, 2, '#6a5038');
   if (!taken) { r(g, X + 3, Y + 6, 4, 5, '#9fc8e0'); r(g, X + 9, Y + 6, 4, 5, '#9fc8e0'); r(g, X + 3, Y + 11, 4, 1, '#c8d0d8'); r(g, X + 9, Y + 11, 4, 1, '#c8d0d8'); }
+}
+// v371: the Forge Ruin's smelter: a squat stone furnace, its mouth glowing.
+function smelter(g, x, y) {
+  const X = x * T, Y = y * T;
+  r(g, X + 1, Y + 14, 14, 1, 'rgba(0,0,0,.35)');
+  r(g, X + 2, Y + 3, 12, 11, '#4a3e38'); r(g, X + 2, Y + 3, 12, 1, '#6a5a50'); r(g, X + 3, Y + 1, 4, 2, '#4a3e38');
+  r(g, X + 5, Y + 8, 6, 5, '#2a1612'); r(g, X + 6, Y + 9, 4, 3, '#e9862a'); r(g, X + 7, Y + 10, 2, 1, '#ffd98a');
+  r(g, X + 2, Y + 6, 12, 1, '#3a302a');
 }
 function ladderUp(g, x, y, p) {
   const X = x * T, Y = y * T;
@@ -1246,7 +1255,7 @@ function bones(g, x, y) {   // a wall of stacked bones: rows of long bones, thei
 export const PROP_ART = {
   '¢': cartTile, '§': bookStall, '¤': prizeMachine,
   y: caveMouth, t: caveCrate, $: chest,
-  U: ladderUp, L: ladderDown, 'ǩ': crackedWall, 'ȵ': campfire, 'ȶ': caveWater, 'ɕ': bridge(true), 'ɟ': bridge(false), 'ɠ': ice, 'ʄ': cleatPeg, 'ɦ': (g, x, y, p) => cleatPeg(g, x, y, p, true),   // v366, v367, v368, v369
+  U: ladderUp, L: ladderDown, 'ǩ': crackedWall, 'ȵ': campfire, 'ȶ': caveWater, 'ɕ': bridge(true), 'ɟ': bridge(false), 'ɠ': ice, 'ɧ': smelter, 'ʄ': cleatPeg, 'ɦ': (g, x, y, p) => cleatPeg(g, x, y, p, true),   // v366, v367, v368, v369
   r: mineRock(null), c: mineRock('#d0874a'), i: mineRock('#c9ccd6'),
   '%': mineRock('#e9c46a'), '*': mineRock('#9a7ae0'), '^': cavernDoor, '!': shaft,
   '#': mineRock('#e9862a'), '~': lava, '>': ventDoor, '=': forgeAnvil,
@@ -1265,7 +1274,7 @@ export const PROP_ART = {
 // The ground under each prop: a cave's floor or wall, grass (with the salt its blades and flowers use) or sand.
 // Props not listed draw their whole tile, or sit on whatever the map has there (the ladder down, mine rocks).
 export const PROP_GROUND = {
-  U: 'wall', '^': 'wall', '>': 'wall', 'ǩ': 'wall', 'ȵ': 'floor', 'ȶ': 'floor', 'ɕ': 'floor', 'ɟ': 'floor', 'ɠ': 'floor', 'ʄ': 'floor', 'ɦ': 'floor', t: 'floor', $: 'floor', '!': 'floor', '=': 'floor', '+': 'floor', '?': 'floor',
+  U: 'wall', '^': 'wall', '>': 'wall', 'ǩ': 'wall', 'ȵ': 'floor', 'ȶ': 'floor', 'ɕ': 'floor', 'ɟ': 'floor', 'ɠ': 'floor', 'ɧ': 'floor', 'ʄ': 'floor', 'ɦ': 'floor', t: 'floor', $: 'floor', '!': 'floor', '=': 'floor', '+': 'floor', '?': 'floor',
   '|': 'grass:29', '}': 'grass:23', ';': 'grass:37', '9': 'grass:41', '<': 'grass:43', '`': 'grass:47',
   '¢': 'grass:53', '§': 'grass:59', '¤': 'grass:61', '8': 'sand',
   'ħ': 'grass:67', 'ǧ': 'grass:71', 'ƀ': 'grass:73', 'ɓ': 'grass:73', 'ɗ': 'grass:73', 'ʋ': 'grass:79', 'β': 'grass:83', 'ʂ': 'grass:89', 'ɲ': 'grass:97',
