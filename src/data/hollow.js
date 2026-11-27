@@ -195,7 +195,52 @@ export const BANDS = [
     ],
       hoard: { goldbar: 3, frostgeode: 3, heartstone: 2, blastbomb: 4 },
       arrive: 'Bones rattle together in the dark and rise: a robed skeleton twice your height, a staff in its hand.' } },
-  { id: 'magma', name: 'The Magma Rifts', from: 81, to: 100, look: null, shape: 'room' },
+  // v371 (roadmap 120f): basalt cut by rivers of lava (rivers, their width); each river keeps solid causeways
+  // (causeways) and has crumbling bridges (crumbles) that fall a few seconds after you step on them (LAVA below).
+  { id: 'magma', name: 'The Magma Rifts', from: 81, to: 100, look: 'magma', shape: 'rifts', size: { w: 36, h: 24 }, rocks: 0.22,
+    rivers: [2, 3], causeways: [1, 2], crumbles: [2, 3],
+    arrive: 'Lava cuts the floor into islands of black rock. The old plank bridges will not hold you long.',
+    // floor 90: a forge the old miners left; its smelter still holds heat (LAVA.smelt)
+    landmark: { name: 'The Forge Ruin', plan: [
+      'XXUXXXXXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'Xffffffff~~fffffffffffXX',
+      'Xffffffff~~fffffffffffXX',
+      'Xffffffff~~fffffɧfffffXX',
+      'Xffffffff~~fffffffffffXX',
+      'XfffffffffffffffffffffXX',
+      'XfffffffffffffffffffffXX',
+      'Xffffffff~~fffffffffffXX',
+      'Xffffffff~~fffffffffffXX',
+      'Xfcffffff~~ffffffffLffXX',
+      'Xfi%fffff~~fffffffffffXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+    ],
+      arrive: 'An old forge by a lava channel, its smelter still warm. Nothing here wants to hurt you.' },
+    // floor 100: the Ember Wyrm's rift; it flies over the lava pools that you have to go round
+    guardian: { kind: 'emberwyrm', at: { x: 12, y: 6 }, ladder: { x: 12, y: 12 }, plan: [
+      'XXUXXXXXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XfffffffffffffffffffffXX',
+      'XfffffffffffffffffffffXX',
+      'Xfffff~~~ffffff~~~ffffXX',
+      'Xfffff~~~ffffff~~~ffffXX',
+      'Xffffffffff~~fffffffffXX',
+      'Xffffffffff~~fffffffffXX',
+      'Xfffff~~~ffffff~~~ffffXX',
+      'Xfffff~~~ffffff~~~ffffXX',
+      'XfffffffffffffffffffffXX',
+      'XfffffffffffffffffffffXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+    ],
+      hoard: { goldbar: 5, magmageode: 3, heartstone: 2, blastbomb: 4 },
+      arrive: 'Heat rolls off the pools. Something long and burning uncoils above the lava.' } },
   { id: 'crystal', name: 'The Crystal Hollows', from: 101, to: 120, look: null, shape: 'room' },
   { id: 'deep', name: 'The Deep', from: 121, to: Infinity, look: null, shape: 'room' },
 ];
@@ -220,6 +265,10 @@ export const WATER = 'ȶ', BRIDGE_H = 'ɕ', BRIDGE_V = 'ɟ';
 export const ICE = { tile: 'ɠ', slide: 2.2, grip: 0.06, drift: 1.2, skid: 0.5, cleats: 'icecleats', peg: 'ʄ', pegEmpty: 'ɦ' };
 // v370: the Bone Crypts' braziers (the catacombs' own tiles, data/catacombs.js), bones, and the chapel's altar: the
 // dead's ward, +3 defense until the day ends, once a day (Stardew's defense food buffs: +3).
+// v371: the Magma Rifts. lava: the tile (solid, as the Ember Vent's); crumble: a bridge that falls `delay` seconds
+// after you first step on it, burning you for `burn` of your health and throwing you back to safe ground if you are
+// still on it; smelter: the Forge Ruin's, `smelt` bars a day at once on the furnace's recipe (data/crafting.js).
+export const LAVA = { tile: '~', crumble: 'ʱ', delay: 2.5, burn: 0.15, smelter: 'ɧ', smelt: 5 };
 export const CRYPT = { brazier: 'ʳ', lit: 'ʴ', bones: 'ʷ', altar: 'ʵ', ward: { defense: 3 }, coal: 1 };
 
 // The band a Hollow floor belongs to.

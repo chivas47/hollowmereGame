@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v371: The Magma Rifts
+- Hollow floors 81 to 100 are the fifth band, **the Magma Rifts**: open black rock cut by two or three wandering rivers of lava, with cracks glowing in the floor.
+- **Crossings:** every river keeps a solid causeway or two, so nothing is ever cut off. The old plank bridges are shortcuts: one falls into the lava 2.5 seconds after you first step on it. Still on it, you are burned for 15% of your health and scramble back to the last solid ground you stood on. A fallen bridge stays gone for the rest of the visit.
+- **Floor 90, the Forge Ruin:** safe and lit, a lava channel with a causeway, the ladder in sight, a seam with gold in it, and an old smelter that still holds heat: it turns your ore and coal into bars at once, on the furnace's recipe (5 ore and 1 coal a bar), up to 5 bars a day, best ore first.
+- **Floor 100, the Ember Wyrm:** a burning serpent that flies over the lava pools you have to walk round, 650 health, calling two spitters at two thirds and one third of its health. The ladder opens when it falls, and the first time its hoard: 5 gold bars, 3 magma geodes, 2 heartstones and 4 blast bombs. The floor 100 scene still plays the first time you arrive.
+- Floor 101 and deeper are unchanged until their band is built.
+- New save data: `hollow.smeltDay` and `hollow.smelted` (today's bars from the smelter).
+
 ## v370: The Bone Crypts
 - Hollow floors 61 to 80 are the fourth band, **the Bone Crypts**: a grid of twelve chambers joined by doorways (one way through, plus a few loops), pillar rows and bones in some, old grey stone.
 - **Darkness:** your light reaches only a few steps here. Cold braziers stand in about half the chambers: a piece of coal lights one, and it lights its chamber for the rest of your visit (Stardew's torch costs coal too). The glow ring still widens your light.

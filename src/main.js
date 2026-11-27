@@ -34,7 +34,8 @@ import './systems/upgrades.js';
 import './systems/livestock.js';
 import './systems/coop.js';
 import './systems/mine.js';
-import './systems/ice.js';   // v369: ice in the Frost Halls (sliding, the cleats' peg)
+import './systems/ice.js';
+import './systems/rifts.js';   // v371: the Magma Rifts' crumbling bridges and the Forge Ruin's smelter   // v369: ice in the Frost Halls (sliding, the cleats' peg)
 import './systems/cheats.js';   // v363: cheat mode for testing (the code word, ui/input.js)
 import './systems/health.js';
 import './systems/gear.js';

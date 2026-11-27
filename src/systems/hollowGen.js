@@ -1,22 +1,22 @@
 // v366 (roadmap 120a): floor shapes for the Hollow's bands (data/hollow.js). Pure: each takes the floor's random
 // numbers (R), its band and a rockFor(roll) that picks a rock tile for this floor, and returns the grid with its rocks,
 // cracked walls and pockets. systems/mine.js turns the grid into a floor (rocks, the ladder, the landing).
-import { CRACK, WATER, BRIDGE_H, BRIDGE_V, ICE, CRYPT } from '../data/hollow.js';
+import { CRACK, WATER, BRIDGE_H, BRIDGE_V, ICE, CRYPT, LAVA } from '../data/hollow.js';
 
 const SPAWN = { x: 2, y: 1 };   // the ladder up sits just above, at (2, 0); the landing is x 1-4, y 1-4
 const DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 const inLanding = (x, y) => x <= 4 && y <= 4;
-export const isOpen = (t) => t !== 'X' && t !== CRACK && t !== WATER;   // v368: water blocks too
+export const isOpen = (t) => t !== 'X' && t !== CRACK && t !== WATER && t !== LAVA.tile;   // v368: water blocks too; v371: lava
 
 // Steps from (sx, sy) to every open tile (cracked walls and walls block), as a w x h array (-1: cannot reach).
-export function distances(g, sx, sy) {
+export function distances(g, sx, sy, blocked = null) {   // v371: blocked, more tiles to treat as walls
   const h = g.length, w = g[0].length, d = Array.from({ length: h }, () => Array(w).fill(-1)), q = [[sx, sy]];
   d[sy][sx] = 0;
   for (let i = 0; i < q.length; i++) {
     const [x, y] = q[i];
     for (const [dx, dy] of DIRS) {
       const nx = x + dx, ny = y + dy;
-      if (ny < 0 || nx < 0 || ny >= h || nx >= w || d[ny][nx] >= 0 || !isOpen(g[ny][nx])) continue;
+      if (ny < 0 || nx < 0 || ny >= h || nx >= w || d[ny][nx] >= 0 || !isOpen(g[ny][nx]) || blocked?.has(g[ny][nx])) continue;
       d[ny][nx] = d[y][x] + 1; q.push([nx, ny]);
     }
   }
@@ -251,4 +251,47 @@ export function crypt(R, band, rockFor) {
   return { grid: g, pockets: [], shortcuts: [] };
 }
 
-export const SHAPES = { tunnels, islands, halls, crypt };
+// v371 (roadmap 120f): the Magma Rifts: open basalt with a few boulders, cut by two or three lava rivers, two wide,
+// wandering across the floor (some across, some down). Each river keeps a solid causeway or two and has crumbling
+// bridges (shortcuts that fall); then, counting crumbling bridges as gone, any ground still cut off from the landing
+// gets a causeway dug to it, so nothing can ever be stranded.
+export function rifts(R, band, rockFor) {
+  const { w, h } = band.size, g = Array.from({ length: h }, () => Array(w).fill('X'));
+  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) g[y][x] = R() < 0.05 ? 'X' : 'f';
+  const [ra, rb] = band.rivers, n = ra + Math.floor(R() * (rb - ra + 1)), rivers = [];
+  for (let i = 0; i < n; i++) {
+    const across = i % 2 === 0, cells = [];
+    let c = across ? 6 + Math.floor(R() * (h - 10)) : 8 + Math.floor(R() * (w - 14));
+    for (let k = 1; k < (across ? w : h) - 1; k++) {
+      if (R() < 0.3) c = Math.max(across ? 6 : 7, Math.min((across ? h : w) - 4, c + (R() < 0.5 ? -1 : 1)));
+      for (const d of [0, 1]) { const [x, y] = across ? [k, c + d] : [c + d, k]; g[y][x] = LAVA.tile; cells.push([x, y, k]); }
+    }
+    rivers.push({ across, cells });
+  }
+  for (let y = 1; y <= 4; y++) for (let x = 1; x <= 4; x++) g[y][x] = 'f';
+  g[0][SPAWN.x] = 'U';
+  const cross = (rv, k, t) => { for (const [x, y, kk] of rv.cells) if (kk === k || (t === 'f' && kk === k + 1)) g[y][x] = t; };
+  for (const rv of rivers) {
+    const len = rv.across ? w - 2 : h - 2, [ca, cb] = band.causeways, [ka, kb] = band.crumbles;
+    for (let i = 0, m = ca + Math.floor(R() * (cb - ca + 1)); i < m; i++) cross(rv, 2 + Math.floor(R() * (len - 4)), 'f');   // a causeway, two wide
+    for (let i = 0, m = ka + Math.floor(R() * (kb - ka + 1)); i < m; i++) cross(rv, 2 + Math.floor(R() * (len - 4)), LAVA.crumble);
+  }
+  // nothing stranded: dig a causeway from each cut-off piece of ground to the nearest ground you can reach
+  const solidOnly = new Set([LAVA.crumble]);
+  for (let guard = 0; guard < 30; guard++) {
+    const d = distances(g, SPAWN.x, SPAWN.y, solidOnly), cut = [], ok = [];
+    g.forEach((row, y) => row.forEach((t, x) => { if (t === 'f') (d[y][x] < 0 ? cut : ok).push([x, y]); }));
+    if (!cut.length) break;
+    const [ux, uy] = cut[0];
+    let best = ok[0];
+    for (const p of ok) if (Math.abs(p[0] - ux) + Math.abs(p[1] - uy) < Math.abs(best[0] - ux) + Math.abs(best[1] - uy)) best = p;
+    for (let x = Math.min(ux, best[0]); x <= Math.max(ux, best[0]); x++) if (g[uy][x] !== 'U') g[uy][x] = 'f';
+    for (let y = Math.min(uy, best[1]); y <= Math.max(uy, best[1]); y++) if (g[y][best[0]] !== 'U') g[y][best[0]] = 'f';
+  }
+  const reach = distances(g, SPAWN.x, SPAWN.y, solidOnly);
+  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++)
+    if (g[y][x] === 'f' && !inLanding(x, y) && reach[y][x] >= 0 && R() < band.rocks) g[y][x] = rockFor(R(), false);
+  return { grid: g, pockets: [], shortcuts: [] };
+}
+
+export const SHAPES = { tunnels, islands, halls, crypt, rifts };

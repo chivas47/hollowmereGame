@@ -222,6 +222,14 @@ export const MONSTERS = {
     boss: { scale: 2, marks: [0.66, 0.33], calls: ['beetle', 2], rage: 0.33, rageSpeed: 26, callLine: 'The Rootgnawer shrieks, and beetles burrow up through the floor!' },
     loot: [['chitin', 1, 3, 5], ['copper', 1, 4, 8], ['geode', 0.5, 1, 1]] },
 
+  // v371 (roadmap 120f): the Ember Wyrm, guardian of the Magma Rifts (Hollow floor 100). A Hollow serpent grown long
+  // and burning, flying over the lava you must walk round. Stardew by role: a named guardian, about ten of its band's
+  // creatures in one, hitting a little harder than they do; it calls two spitters at each health mark.
+  emberwyrm: { name: 'The Ember Wyrm', zones: ['lair'], tags: [], voice: 'ember', knockback: 0.2, notice: 220, lives: 'Guards the bottom of the Magma Rifts, Hollow floor 100, until it falls.',
+    move: 'fly', hp: 650, dmg: 22, speed: 30, xp: 180, color: '#d8552a', glow: '#ffd98a',
+    boss: { scale: 2, marks: [0.66, 0.33], calls: ['spitter', 2], rage: 0.33, rageSpeed: 42, callLine: 'The Ember Wyrm shrieks, and spitters crawl up out of the cracks!' },
+    loot: [['cinder', 1, 4, 8], ['gold', 1, 3, 6], ['magmageode', 0.5, 1, 1]] },
+
   // v370 (roadmap 120e): the Bone Abbot, guardian of the Bone Crypts (Hollow floor 80). A bone walker grown twice your
   // height in a rotted robe. Stardew by role: a named guardian, about ten of its band's creatures in one, hitting a
   // little harder than they do; it raises two bone walkers at each health mark.
