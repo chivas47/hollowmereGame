@@ -2,12 +2,16 @@
 // row band per layer drawn in grey, tinted at runtime to a palette (white = the colour, grey = its shades).
 // Until a sheet has loaded (or in node, for tools/balance.mjs) ready() is false and callers draw their code art.
 import { PERSON } from '../data/personSheet.js';
+import { BIRDS_SHEET } from '../data/sprites.js';
 
 const sheets = {};
 // Sheets whose layout changes with their generator: the URL carries the PNG's revision, so a browser never pairs a
 // cached old PNG with the new layout, and a PNG of the wrong size counts as not loaded (code art) rather than
 // drawing blank or wrong frames. [revision, width, height]
-const CHECK = { [PERSON.sheet]: [PERSON.rev, PERSON.w * 4 * PERSON.steps, PERSON.h * PERSON.layers.length] };
+const CHECK = {
+  [PERSON.sheet]: [PERSON.rev, PERSON.w * 4 * PERSON.steps, PERSON.h * PERSON.layers.length],
+  [BIRDS_SHEET.sheet]: [null, BIRDS_SHEET.size * 8, BIRDS_SHEET.size * BIRDS_SHEET.layers.length],
+};
 const tints = new Map();
 const hasImage = typeof Image !== 'undefined';
 

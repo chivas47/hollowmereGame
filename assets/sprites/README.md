@@ -1,6 +1,6 @@
 # Sprite sheets
 
-PNG pixel art loaded by `src/render/sheets.js`, laid out as described in `src/data/sprites.js`. Every sheet has a code-drawn fallback, so the game still draws if a sheet is missing.
+PNG pixel art loaded by `src/render/sheets.js`, laid out as described in `src/data/sprites.js`. These files are definitive: code-drawn art is only a fallback when a sheet is missing or invalid.
 
 Rules (PROJECT_INSTRUCTIONS rule 3): original art or a permissive licence (CC0, CC-BY), credited below. Never Stardew Valley sprites or edits of them, not even as placeholders.
 
@@ -35,7 +35,7 @@ Built by `tools/sprites/person.py`, which also writes the layout to `src/data/pe
 
 ## birds.png
 
-128 x 320 (v276; v277 five shapes). Frames are 16 x 16, facing right (mirrored in code), the bird's feet at (8, 15). Built by `tools/sprites/wildlife.py`.
+128 x 320 (v276; v277 five shapes). Frames are 16 x 16, facing right (mirrored in code), the bird's feet at (8, 15). The fallback generator is `tools/sprites/wildlife.py`; it preserves this PNG unless `--rebuild-birds` is passed.
 
 - **Columns (8):** stand, look up, peck (head down), hop (crouched), take off, wings up, wings level, wings down.
 - **Rows (v277):** a block of four bands per shape (`BIRDS_SHEET.shapes`: song, crow, gull, parrot, quail): body, wing and accent, tinted to the species' colours (`BIRD_SPECIES` in `src/data/atmosphere.js`); ink (beak, eye, legs, outline) drawn as is.
