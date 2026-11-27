@@ -7,22 +7,15 @@
 # shade and a third letter the deep shade. E is an eye, drawn as is. Every silhouette gets a one-pixel outline in a
 # darker version of the colour it borders, worked out here (the person sheet's style, tools/sprites/person.py).
 import sys
-from functools import lru_cache
 from PIL import Image
 
 S = 24
 KINDS = ['chicken', 'duck', 'rabbit', 'mossback', 'cow', 'goat', 'sheep', 'pig', 'strider']
 EYE = '#2b211a'
 
-@lru_cache(maxsize=None)
 def hexc(h):
     h = h.lstrip('#')
-    if len(h) != 6:
-        raise ValueError(f'Invalid palette hex: #{h}')
-    try:
-        return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
-    except ValueError as exc:
-        raise ValueError(f'Invalid palette hex: #{h}') from exc
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
 
 def quad(near, far, hoof, h=3, back=4, front=13):
     """Four legs from the side for a 20-wide frame strip: each pair a near leg (2 wide) and a far one (1 wide, behind).
