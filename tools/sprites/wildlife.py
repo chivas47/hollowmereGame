@@ -1,5 +1,6 @@
-# Builds assets/sprites/birds.png and assets/sprites/penstock.png (v276, roadmap 92a):
+# Builds assets/sprites/birds.png (v276, roadmap 92a):
 #   python3 tools/sprites/wildlife.py assets/sprites [preview.png]
+# The hand-tuned penstock.png is preserved unless --rebuild-penstock is passed.
 #
 # birds.png: 16x16 frames, 8 columns, facing right (code mirrors them), feet at (8, 15). v277 (92b): a block of four
 # bands per shape (song, crow, gull, parrot, quail; BIRDS_SHEET.shapes): body, wing and accent (tinted to the
@@ -175,15 +176,6 @@ def bird_sheet():
                     band, v = BIRD_TONE[ch]
                     img.putpixel((f * S + x, (base + BIRD_BANDS.index(band)) * S + y), (v, v, v, 255))
                 else: img.putpixel((f * S + x, ink + y), hexc(INK[ch]) + (255,))
-            for (x, y), ch in cells.items():
-                if not (0 <= x < S and 0 <= y < S) or (x, y + 1) in cells:
-                    continue
-                if ch in BIRD_TONE:
-                    band, v = BIRD_TONE[ch]
-                    c = darker((v, v, v)) + (255,)
-                    img.putpixel((f * S + x, (base + BIRD_BANDS.index(band)) * S + y), c)
-                else:
-                    img.putpixel((f * S + x, ink + y), darker(hexc(INK[ch])) + (255,))
     return img
 
 def pen_sheet():
@@ -204,10 +196,11 @@ def pen_sheet():
                 img.putpixel((f * S + x, row * S + y), darker(col(ch)) + (255,))
     return img
 
-def build(out_dir, preview=None):
-    birds, pen = bird_sheet(), pen_sheet()
+def build(out_dir, preview=None, rebuild_penstock=False):
+    birds = bird_sheet()
     birds.save(f'{out_dir}/birds.png', optimize=True)
-    pen.save(f'{out_dir}/penstock.png', optimize=True)
+    if rebuild_penstock:
+        pen_sheet().save(f'{out_dir}/penstock.png', optimize=True)
     if preview:
         sample = {'song': ('#8a6a48', '#5a3e28', '#d8582a'), 'crow': ('#2e2a34', '#24212a', '#5a5a8a'), 'gull': ('#f4f4f0', '#9aa4ac', '#f0c040'),
                   'parrot': ('#4aa84a', '#d8402a', '#3a7ad8'), 'quail': ('#b89868', '#7a5a3a', '#2a2420')}
@@ -227,4 +220,5 @@ def build(out_dir, preview=None):
         p.resize((p.width * 8, p.height * 8), Image.NEAREST).save(preview)
 
 if __name__ == '__main__':
-    build(sys.argv[1] if len(sys.argv) > 1 else 'assets/sprites', sys.argv[2] if len(sys.argv) > 2 else None)
+    args = [arg for arg in sys.argv[1:] if arg != '--rebuild-penstock']
+    build(args[0] if args else 'assets/sprites', args[1] if len(args) > 1 else None, '--rebuild-penstock' in sys.argv[1:])
