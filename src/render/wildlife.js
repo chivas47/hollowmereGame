@@ -14,11 +14,7 @@ function flipped(c, px, flip, draw) {
 // v277: sp is its species (data/atmosphere.js BIRD_SPECIES): its shape and colours.
 export function drawBird(c, px, py, f, left, sp, lift = 0) {
   const B = BIRDS_SHEET, x = Math.round(px), y = Math.round(py), [body, wing, accent] = sp.colors;
-  if (lift < 4) {
-    const wide = lift ? 6 : sp.shape === 'crow' || sp.shape === 'gull' ? 10 : 8;
-    r(c, x - Math.floor(wide / 2), y + 1, wide, 1, lift ? 'rgba(0,0,0,.10)' : 'rgba(0,0,0,.16)');
-    if (!lift) r(c, x - Math.floor(wide / 2) + 2, y + 2, wide - 4, 1, 'rgba(0,0,0,.08)');
-  }
+  if (!lift) r(c, x - 3, y, sp.shape === 'crow' || sp.shape === 'gull' ? 8 : 6, 1, 'rgba(0,0,0,.18)');
   if (ready(B.sheet)) {
     const s = sp.shape, src = tinted(B.sheet, B.layers, [[`${s}.body`, body], [`${s}.wing`, wing], [`${s}.accent`, accent], [`${s}.ink`, null]], B.size);
     flipped(c, x, left, () => frame(c, src, f, B.size, x + B.origin[0], y + B.origin[1] - lift));
