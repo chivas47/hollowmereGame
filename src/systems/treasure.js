@@ -139,10 +139,11 @@ addInteraction(72, ({ tile, mapId }) => {
 export const GEODES = Object.keys(GEODE_LOOT);
 
 // Cracks one geode of a kind at Bram's workbench. Returns { item, n } or null.
-export function crackGeode(kind) {
+export function crackGeode(kind, free = false) {   // v372: free at the Geode Cathedral's anvil (systems/crystals.js)
   const S = G.S, table = GEODE_LOOT[kind];
-  if (!table || !(S.bag[kind] > 0) || S.gold < CRACK_COST) return null;
-  S.gold -= CRACK_COST; S.bag[kind]--;
+  if (!table || !(S.bag[kind] > 0) || (!free && S.gold < CRACK_COST)) return null;
+  if (!free) S.gold -= CRACK_COST;
+  S.bag[kind]--;
   let r = Math.random(), pick = table[table.length - 1];
   for (const row of table) { if (r < row[1]) { pick = row; break; } r -= row[1]; }
   const [item, , min = 1, max = 1] = pick, n = roll(min, max);

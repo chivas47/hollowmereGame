@@ -83,7 +83,7 @@ export function newState() {
     projects: {},                                       // village projects funded: key -> true
     hp: 100, maxHp: 100,                                // health, only lost in the mine
     mineDeepest: 0,                                     // deepest mine floor reached
-    hollow: { beaten: [], rested: 0, prayed: 0, ward: null, smeltDay: 0, smelted: 0 },                  // v367 (roadmap 120b): Hollow bands whose guardian is beaten (data/hollow.js), the day the camp's fire was last rested at
+    hollow: { beaten: [], rested: 0, prayed: 0, ward: null, smeltDay: 0, smelted: 0, crackDay: 0, cracked: 0 },                  // v367 (roadmap 120b): Hollow bands whose guardian is beaten (data/hollow.js), the day the camp's fire was last rested at
     kit: Object.fromEntries(Object.keys(PLACEABLES).map((k) => [k, 0])),   // crafted objects not yet placed
     bagFav: [], bagView: { view: 'grid', sort: 'kind' },   // v113: pinned bag items (ids, see systems/bag.js) and how the Bag shows them
     kitSel: 'sprinkler',                                // object the kit slot places (see systems/placeables.js)
@@ -155,7 +155,8 @@ export function merge(saved) {
   const ho = saved.hollow;   // v367
   s.hollow = { beaten: Array.isArray(ho?.beaten) ? ho.beaten.filter((b) => typeof b === 'string') : [], rested: Number.isFinite(ho?.rested) ? ho.rested : 0,
     prayed: Number.isFinite(ho?.prayed) ? ho.prayed : 0, ward: ho?.ward && Number.isFinite(ho.ward.until) && Number.isFinite(ho.ward.defense) ? { id: 'ward', until: ho.ward.until, defense: ho.ward.defense } : null,   // v370
-    smeltDay: Number.isFinite(ho?.smeltDay) ? ho.smeltDay : 0, smelted: Number.isFinite(ho?.smelted) ? ho.smelted : 0 };   // v371
+    smeltDay: Number.isFinite(ho?.smeltDay) ? ho.smeltDay : 0, smelted: Number.isFinite(ho?.smelted) ? ho.smelted : 0,   // v371
+    crackDay: Number.isFinite(ho?.crackDay) ? ho.crackDay : 0, cracked: Number.isFinite(ho?.cracked) ? ho.cracked : 0 };   // v372
   const bl = saved.binLast;   // v236
   s.binLast = bl && ITEMS[bl.k] && bl.n > 0 && bl.t >= 0 && bl.t <= 3 ? { k: bl.k, t: bl.t, n: bl.n, value: bl.value || 0 } : null;
   s.npcs = Object.assign(newState().npcs, saved.npcs || {});

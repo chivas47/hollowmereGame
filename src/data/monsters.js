@@ -222,6 +222,14 @@ export const MONSTERS = {
     boss: { scale: 2, marks: [0.66, 0.33], calls: ['beetle', 2], rage: 0.33, rageSpeed: 26, callLine: 'The Rootgnawer shrieks, and beetles burrow up through the floor!' },
     loot: [['chitin', 1, 3, 5], ['copper', 1, 4, 8], ['geode', 0.5, 1, 1]] },
 
+  // v372 (roadmap 120g): the Prism Golem, guardian of the Crystal Hollows (Hollow floor 120, the bottom of the old
+  // maps' Hollow). A golem of crystal, light moving inside it. Stardew by role: a named guardian, about ten of its
+  // band's creatures in one, hitting a little harder; it calls two shellbacks at each health mark.
+  prismgolem: { name: 'The Prism Golem', zones: ['lair'], tags: [], voice: 'ember', knockback: 0.1, notice: 220, lives: 'Guards the bottom of the Crystal Hollows, Hollow floor 120, until it falls.',
+    move: 'walk', hp: 800, dmg: 24, speed: 16, xp: 220, color: '#b8a8e8', glow: '#f0e8ff',
+    boss: { scale: 2, marks: [0.66, 0.33], calls: ['shellback', 2], rage: 0.33, rageSpeed: 28, callLine: 'The Prism Golem flares, and shellbacks crawl out of the crystal!' },
+    loot: [['gold', 1, 4, 8], ['magmageode', 1, 1, 2], ['heartstone', 0.3, 1, 1]] },
+
   // v371 (roadmap 120f): the Ember Wyrm, guardian of the Magma Rifts (Hollow floor 100). A Hollow serpent grown long
   // and burning, flying over the lava you must walk round. Stardew by role: a named guardian, about ten of its band's
   // creatures in one, hitting a little harder than they do; it calls two spitters at each health mark.

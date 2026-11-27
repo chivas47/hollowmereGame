@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v372: The Crystal Hollows
+- Hollow floors 101 to 120 are the sixth band, **the Crystal Hollows**: round geode chambers joined by short tunnels, violet crystal pillars standing in them, violet light in the cracks.
+- **Resonance vaults:** on most floors a small vault of gold rock is sealed behind a wall of crystal no pickaxe can break. Three singing crystals stand in three of the chambers, small, middle and large. Strike them from the highest note to the deepest (small, then middle, then large) and the seal shatters; a wrong note and the others fall silent, so start again.
+- **Floor 110, the Geode Cathedral:** safe and lit, crystal pillars round a humming anvil. It cracks up to 5 of your geodes a day for nothing. The ladder in sight, a seam with gold.
+- **Floor 120, the Prism Golem:** a golem of crystal with light moving inside it, 800 health, calling two shellbacks at two thirds and one third of its health. The ladder opens when it falls, and the first time its hoard: 2 umbrite bars, 4 magma geodes, 3 heartstones and 5 blast bombs.
+- Floor 121 and deeper are unchanged until the Deep is built.
+- New save data: `hollow.crackDay` and `hollow.cracked` (today's geodes at the anvil).
+
 ## v371: The Magma Rifts
 - Hollow floors 81 to 100 are the fifth band, **the Magma Rifts**: open black rock cut by two or three wandering rivers of lava, with cracks glowing in the floor.
 - **Crossings:** every river keeps a solid causeway or two, so nothing is ever cut off. The old plank bridges are shortcuts: one falls into the lava 2.5 seconds after you first step on it. Still on it, you are burned for 15% of your health and scramble back to the last solid ground you stood on. A fallen bridge stays gone for the rest of the visit.
