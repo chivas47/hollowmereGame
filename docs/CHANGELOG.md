@@ -2,6 +2,14 @@
 
 Newest first. Version numbers match published versions of the playable page.
 
+## v370: The Bone Crypts
+- Hollow floors 61 to 80 are the fourth band, **the Bone Crypts**: a grid of twelve chambers joined by doorways (one way through, plus a few loops), pillar rows and bones in some, old grey stone.
+- **Darkness:** your light reaches only a few steps here. Cold braziers stand in about half the chambers: a piece of coal lights one, and it lights its chamber for the rest of your visit (Stardew's torch costs coal too). The glow ring still widens your light.
+- **Floor 70, the Ossuary Chapel:** safe and lit, the ladder in sight, a seam of ore and a bone altar. Pray there for the dead's ward: defense +3 until the day ends, once a day. Floor 70's find still waits by the landing.
+- **Floor 80, the Bone Abbot:** a robed bone walker twice your height, 500 health, raising two bone walkers at two thirds and one third of its health. The ladder opens when it falls, and the first time its hoard: 3 gold bars, 3 frost geodes, 2 heartstones and 4 blast bombs. The Sunken Cavern's door is still in floor 80's south wall, before and after the fight, and floor 80's find still waits by the landing.
+- Floor 81 and deeper are unchanged until their band is built.
+- New save data: `hollow.prayed` (the day you last prayed) and `hollow.ward` (today's ward).
+
 ## v369: The Frost Halls
 - Hollow floors 41 to 60 are the third band, **the Frost Halls**: long straight halls crossing the floor and joining at their crossings, small rooms off them, their own cold blue ground, and ice across whole stretches of the halls.
 - **Ice:** step onto it and you slide the way you stepped, keys or not, until something stops you (a wall, a pillar, a rock standing on the ice) or the ice ends. From a stop you can slide off another way. Creatures drift on ice, slow to turn, and a charger's rush skids on past its end.

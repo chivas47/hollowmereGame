@@ -5,7 +5,7 @@ export { PERSON } from './personSheet.js';
 
 // v297: every PNG in assets/sprites/, preloaded at boot (render/sheets.js preloadSheets) so no sheet arrives mid-play and
 // sends cached backgrounds back to be redrawn. tests/sheets.test.mjs keeps this list in step with the folder.
-export const SHEET_FILES = ['alders', 'animals', 'birds', 'buildings', 'buildings-winter', 'bunting', 'cave-ember', 'cave-peak', 'cave-root', 'cave-flooded', 'cave-frost', 'cave-rock', 'cave-sand', 'cave-sewer', 'children', 'crops', 'debris', 'fences', 'fixtures', 'floors', 'forage', 'furniture', 'giants', 'glow', 'greenhouse', 'horse', 'monsters', 'packet', 'pens', 'penstock', 'person', 'pets', 'placed', 'props', 'soil', 'terrain-autumn', 'terrain-spring', 'terrain-summer', 'terrain-winter', 'tools', 'trees', 'variants', 'wallpapers', 'weapons', 'dusk'];   // 97b: dusk
+export const SHEET_FILES = ['alders', 'animals', 'birds', 'buildings', 'buildings-winter', 'bunting', 'cave-ember', 'cave-peak', 'cave-root', 'cave-flooded', 'cave-frost', 'cave-crypt', 'cave-rock', 'cave-sand', 'cave-sewer', 'children', 'crops', 'debris', 'fences', 'fixtures', 'floors', 'forage', 'furniture', 'giants', 'glow', 'greenhouse', 'horse', 'monsters', 'packet', 'pens', 'penstock', 'person', 'pets', 'placed', 'props', 'soil', 'terrain-autumn', 'terrain-spring', 'terrain-summer', 'terrain-winter', 'tools', 'trees', 'variants', 'wallpapers', 'weapons', 'dusk'];   // 97b: dusk
 
 // v78 animals.png: 24x24 frames, one row per kind; columns are right stand, right step, left stand, left step.
 // Colours are drawn in (no tinting). origin as above: the frame's top-left from the animal's feet.
@@ -197,6 +197,7 @@ export const MONSTERS = {
     bristle: { code: 'charger', shadow: [-8, 16, 0.35] }, wasp: { code: 'puff', shadow: [-2, 4, 0.25], bob: 7 },
     stump: { code: 'crab', shadow: [-6, 12, 0.35], sleep: 'stumpsleep' }, stumpsleep: { code: 'crabrock', shadow: [-6, 12, 0.35] },
     rattler: { code: 'skeleton', shadow: [-4, 8, 0.35] }, gravewarden: { code: 'skeleton', shadow: [-4, 8, 0.35], shape: 'rattler' }, mossmother: { code: 'slime', shape: 'mossslime', shadow: [-4, 9, 0.35] },   // v368: the Mossmother wears the moss slime's bands, drawn 2.5 times as big
+    boneabbot: { code: 'skeleton', shadow: [-4, 8, 0.35], shape: 'skeleton', rim: '#f0e8d8' },   // v370: the Bone Abbot wears the bone walker's shape, drawn twice as big
     rimehorn: { code: 'charger', shape: 'ram', shadow: [-8, 16, 0.35], glow: '#d8e8f0', rim: '#e8f0f8' },   // v369: the Rimehorn wears the ram's shape, drawn twice as big
     rootgnawer: { code: 'charger', shape: 'beetle', shadow: [-6, 12, 0.35], rim: '#d8b88a' },   // v367: the Rootgnawer wears the beetle's shape, drawn twice as big
     shambler: { code: 'skeleton', shadow: [-5, 10, 0.35] }, haunt: { code: 'wisp', shadow: [-3, 6, 0.2], bob: 3, glow: '#8ae0d0' },   // v347: the Gravewarden wears the rattler's shape, drawn twice as big

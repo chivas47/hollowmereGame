@@ -844,6 +844,7 @@ const CAVE_COLS = {
   ember: { floor: ['#3a2422', '#4a2c26', '#2e1c1a'], wall: ['#1a0f0e', '#2a1612', '#3a1a14'] },
   sewer: { floor: ['#3a4038', '#454c42', '#30362e'], wall: ['#1c221e', '#262e28', '#2e3830'] },   // v45
   peak:  { floor: ['#4a3a34', '#56443c', '#3e302a'], wall: ['#221816', '#30201c', '#3c2620'] },   // v67: the Smoke Peak
+  crypt: { floor: ['#3a3634', '#46413e', '#2e2a28'], wall: ['#181514', '#24201e', '#302a27'] },   // v370: the Bone Crypts
   frost: { floor: ['#3a4250', '#465060', '#30384a'], wall: ['#181c24', '#232a36', '#30384a'] },   // v369: the Frost Halls
   flooded: { floor: ['#33393a', '#3d4544', '#2a302f'], wall: ['#161b1c', '#212829', '#2c3536'] },   // v368: the Flooded Galleries
   root:  { floor: ['#3e3324', '#4a3d2b', '#33291d'], wall: ['#1e1810', '#2c2316', '#3a2e1c'] },   // v366: the Rootways (data/hollow.js)

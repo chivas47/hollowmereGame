@@ -80,8 +80,8 @@ test('floor 20 holds the Rootgnawer and no ladder; it falls, the ladder opens an
 
 test('old saves load with no guardian beaten; bad data is dropped', () => {
   const s = newState(); delete s.hollow;
-  assert.deepEqual(merge(JSON.parse(JSON.stringify(s))).hollow, { beaten: [], rested: 0 });
-  assert.deepEqual(merge({ ...newState(), hollow: { beaten: ['rootways', 5, null], rested: 'x' } }).hollow, { beaten: ['rootways'], rested: 0 });
+  assert.deepEqual(merge(JSON.parse(JSON.stringify(s))).hollow, { beaten: [], rested: 0, prayed: 0, ward: null });
+  assert.deepEqual(merge({ ...newState(), hollow: { beaten: ['rootways', 5, null], rested: 'x', ward: { until: 'x' } } }).hollow, { beaten: ['rootways'], rested: 0, prayed: 0, ward: null });
 });
 
 test('the Hollow\'s own tiles are not used by any other tile art', async () => {

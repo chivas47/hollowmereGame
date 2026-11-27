@@ -2,7 +2,7 @@
 // Floors are rebuilt every visit (seeded by floor and day); only the deepest floor is saved.
 import { G } from '../core/game.js';
 import { visible } from '../render/views.js';
-import { T, W, H } from '../core/constants.js';
+import { T, W, H, END } from '../core/constants.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { addInteraction, addLayer, addPrompt } from '../core/registry.js';
 import { MAPS } from '../data/maps.js';
@@ -21,7 +21,7 @@ import { VENT } from '../data/forge.js';
 import { tier } from '../data/upgrades.js';
 import { PEAK } from '../data/nuts.js';
 import { PLACEABLES } from '../data/crafting.js';
-import { bandOf, CRACK, specialOf, CAMPFIRE } from '../data/hollow.js';
+import { bandOf, CRACK, specialOf, CAMPFIRE, CRYPT } from '../data/hollow.js';
 import { SHAPES } from './hollowGen.js';
 
 const ENTRANCE = { map: 'wilds', x: 12, y: 2, dir: 'down' };
@@ -90,6 +90,8 @@ export function genFloor(n, zone = 'hollow') {
   if (MINE.busy) MINE.ladder = null;
   else if (!MINE.ladder && !special) g[8][12] = 'L';
   MINE.special = special;
+  if (n === CAVERN.doorFloor && band && !cav && !hot) g[CAVERN.door.y][CAVERN.door.x] = '^';   // v370: the Sunken Cavern's door, on whatever floor 80 is built as
+  MINE.dark = band?.dark && !special ? band.dark : null;   // v370: the Bone Crypts' darkness (landmarks and lairs are lit)
   G.mineWater = special === 'landmark' ? band.landmark.water || band.water : band?.water || null;   // v368: which fish bite here (systems/fishing.js)
 
   Object.assign(MAPS.mine, { grid: g, name: peak ? `${PEAK.name}, floor ${n}` : vent ? `${VENT.name}, floor ${n}` : cav ? `${CAVERN.name}, floor ${n}` : special === 'landmark' ? `${band.landmark.name}, floor ${n}` : band?.look ? `${band.name}, floor ${n}` : `The Hollow, floor ${n}`, theme: peak ? 'peak' : vent ? 'ember' : cav ? 'sand' : band?.look || null });
@@ -297,9 +299,42 @@ function hitCrack(tx, ty) {
   return true;
 }
 
+// v370 (roadmap 120e): a cold brazier in the Bone Crypts takes a piece of coal and lights its chamber for the visit;
+// the Ossuary Chapel's altar gives the dead's ward (+3 defense until the day ends), once a day.
+export function lightBrazier(tx, ty) {
+  const S = G.S;
+  if ((S.bag.coal || 0) < CRYPT.coal) { notify('The brazier is cold. A piece of coal would light it.'); return false; }
+  S.bag.coal -= CRYPT.coal;
+  MAPS.mine.grid[ty][tx] = CRYPT.lit;
+  emit('sfx', 'chime'); emit('world:changed', 'mine');
+  notify('The coal catches. Light spills across the chamber.');
+  changed();
+  return true;
+}
+on('day:start', () => { if (G.S.hollow) G.S.hollow.ward = null; });   // the ward lasts until the day ends
+export function prayAtAltar() {
+  const H0 = G.S.hollow;
+  if (H0.prayed === G.S.day) { notify('The bones are quiet. Come back tomorrow.'); return false; }
+  H0.prayed = G.S.day; H0.ward = { id: 'ward', until: END, ...CRYPT.ward };
+  emit('sfx', 'chime');
+  notify(`You kneel at the bone altar. A cold calm settles over you: defense +${CRYPT.ward.defense} until the day ends.`);
+  changed();
+  return true;
+}
+addInteraction(73, ({ tx, ty, tile, mapId }) => {
+  if (mapId !== 'mine') return false;
+  if (tile === CRYPT.brazier) { lightBrazier(tx, ty); return true; }
+  if (tile === CRYPT.lit) { notify('The brazier burns steadily.'); return true; }
+  if (tile === CRYPT.altar && MINE.special === 'landmark') { prayAtAltar(); return true; }
+  return false;
+});
+addPrompt(73, ({ tile, mapId }) => (mapId !== 'mine' ? null : tile === CRYPT.brazier ? 'Light the brazier (1 coal)' : tile === CRYPT.altar && MINE.special === 'landmark' ? 'Pray at the altar' : null));
+
 // Darkness with a pool of light around the player.
+const shade = typeof document !== 'undefined' ? document.createElement('canvas') : null;
 addLayer(95, (c) => {
   if (G.S.map !== 'mine') return;
+  if (MINE.dark && shade) return darkness(c);   // v370
   const px = (G.view || G.S).x, py = (G.view || G.S).y - 6;   // v139: around the farmer this view follows
   const glow = G.S.rings?.some((r) => r === 'glowring' || RINGS[r]?.counts?.includes('glowring')) ? 1.4 : 1;   // v36: the glow ring (v251: or the umbrite band)
   const lit = MINE.special === 'landmark' ? 2.6 : MINE.special === 'guardian' ? 2 : 1;   // v367: a camp is lit by its fire, a lair so you can see what you fight
@@ -309,3 +344,24 @@ addLayer(95, (c) => {
   c.fillStyle = grad;
   const v = visible(); c.fillRect(v.x, v.y, v.w, v.h);
 });
+// v370: the Bone Crypts' dark: nearly black, with a small pool of light round you and one round each lit brazier.
+function darkness(c) {
+  const v = visible(), D = MINE.dark, s = shade, x = s.getContext('2d');
+  if (s.width !== Math.ceil(v.w) || s.height !== Math.ceil(v.h)) { s.width = Math.ceil(v.w); s.height = Math.ceil(v.h); }
+  x.globalCompositeOperation = 'source-over'; x.clearRect(0, 0, s.width, s.height);
+  x.fillStyle = 'rgba(4,3,8,.96)'; x.fillRect(0, 0, s.width, s.height);
+  x.globalCompositeOperation = 'destination-out';
+  const glow = G.S.rings?.some((r) => r === 'glowring' || RINGS[r]?.counts?.includes('glowring')) ? 1.4 : 1;
+  const hole = (px, py, a, b) => {
+    const gr = x.createRadialGradient(px - v.x, py - v.y, a, px - v.x, py - v.y, b);
+    gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    x.fillStyle = gr; x.fillRect(px - v.x - b, py - v.y - b, b * 2, b * 2);
+  };
+  const p = G.view || G.S;
+  hole(p.x, p.y - 6, D.inner * glow, D.outer * glow);
+  MAPS.mine.grid.forEach((row, ty) => row.forEach((t, tx) => {
+    const bx = tx * T + 8, by = ty * T + 8;
+    if (t === CRYPT.lit && bx > v.x - D.brazier && bx < v.x + v.w + D.brazier && by > v.y - D.brazier && by < v.y + v.h + D.brazier) hole(bx, by, 16, D.brazier);
+  }));
+  c.drawImage(s, v.x, v.y);
+}
