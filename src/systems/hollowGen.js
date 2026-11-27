@@ -1,7 +1,7 @@
 // v366 (roadmap 120a): floor shapes for the Hollow's bands (data/hollow.js). Pure: each takes the floor's random
 // numbers (R), its band and a rockFor(roll) that picks a rock tile for this floor, and returns the grid with its rocks,
 // cracked walls and pockets. systems/mine.js turns the grid into a floor (rocks, the ladder, the landing).
-import { CRACK, WATER, BRIDGE_H, BRIDGE_V, ICE } from '../data/hollow.js';
+import { CRACK, WATER, BRIDGE_H, BRIDGE_V, ICE, CRYPT } from '../data/hollow.js';
 
 const SPAWN = { x: 2, y: 1 };   // the ladder up sits just above, at (2, 0); the landing is x 1-4, y 1-4
 const DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
@@ -212,4 +212,43 @@ export function halls(R, band, rockFor) {
   return { grid: g, pockets: [], shortcuts: [], noLadder };
 }
 
-export const SHAPES = { tunnels, islands, halls };
+// v370 (roadmap 120e): the Bone Crypts: a grid of chambers (7 x 6 inside a wall of one), joined by two-wide doorways
+// along a random spanning tree and a few more for loops. Each chamber's outer ring stays open, so every doorway joins
+// every other through it; pillar rows, bones and a cold brazier stand inside. Rocks on the open floor.
+export function crypt(R, band, rockFor) {
+  const { w, h } = band.size, g = Array.from({ length: h }, () => Array(w).fill('X'));
+  const [cols, rows] = band.cells, CW = 8, CH = 7, room = (c, r) => ({ x0: 1 + c * CW, y0: 1 + r * CH, x1: 1 + c * CW + 6, y1: 1 + r * CH + 5 });
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) { const m = room(c, r); for (let y = m.y0; y <= m.y1; y++) for (let x = m.x0; x <= m.x1; x++) g[y][x] = 'f'; }
+  g[0][SPAWN.x] = 'U';
+  const door = (c, r, c2, r2) => {   // a two-wide gap in the wall between two neighbouring chambers
+    const a = room(c, r), b = room(c2, r2);   // the wall is just past the nearer chamber's far edge
+    if (c2 !== c) { const x = Math.min(a.x1, b.x1) + 1, y = a.y0 + 1 + Math.floor(R() * 3); g[y][x] = 'f'; g[y + 1][x] = 'f'; }
+    else { const y = Math.min(a.y1, b.y1) + 1, x = a.x0 + 1 + Math.floor(R() * 4); g[y][x] = 'f'; g[y][x + 1] = 'f'; }
+  };
+  const seen = new Set(['0,0']), stack = [[0, 0]], N = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+  while (stack.length) {   // a random depth-first tree over the chambers
+    const [c, r] = stack[stack.length - 1], next = N.map(([a, b]) => [c + a, r + b]).filter(([a, b]) => a >= 0 && b >= 0 && a < cols && b < rows && !seen.has(`${a},${b}`));
+    if (!next.length) { stack.pop(); continue; }
+    const [a, b] = next[Math.floor(R() * next.length)];
+    door(c, r, a, b); seen.add(`${a},${b}`); stack.push([a, b]);
+  }
+  const [la, lb] = band.loops;
+  for (let i = 0, n = la + Math.floor(R() * (lb - la + 1)); i < n; i++) {
+    const c = Math.floor(R() * cols), r = Math.floor(R() * rows), [a, b] = N[Math.floor(R() * 4)];
+    if (c + a >= 0 && r + b >= 0 && c + a < cols && r + b < rows) door(c, r, c + a, r + b);
+  }
+  // inside each chamber but the landing's: pillars, bones, a cold brazier (never on its outer ring)
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+    if (!c && !r) continue;
+    const m = room(c, r);
+    if (R() < band.pillars) for (const x of [m.x0 + 2, m.x0 + 4]) for (const y of [m.y0 + 2, m.y0 + 3]) g[y][x] = 'X';
+    if (R() < band.braziers) g[m.y0 + 1][m.x0 + 3] = CRYPT.brazier;
+    if (R() < band.bones) g[m.y0 + 4][m.x0 + (R() < 0.5 ? 1 : 5)] = CRYPT.bones;
+  }
+  const reach = distances(g, SPAWN.x, SPAWN.y);
+  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++)
+    if (g[y][x] === 'f' && !inLanding(x, y) && reach[y][x] >= 0 && R() < band.rocks) g[y][x] = rockFor(R(), false);
+  return { grid: g, pockets: [], shortcuts: [] };
+}
+
+export const SHAPES = { tunnels, islands, halls, crypt };

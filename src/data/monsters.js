@@ -222,6 +222,14 @@ export const MONSTERS = {
     boss: { scale: 2, marks: [0.66, 0.33], calls: ['beetle', 2], rage: 0.33, rageSpeed: 26, callLine: 'The Rootgnawer shrieks, and beetles burrow up through the floor!' },
     loot: [['chitin', 1, 3, 5], ['copper', 1, 4, 8], ['geode', 0.5, 1, 1]] },
 
+  // v370 (roadmap 120e): the Bone Abbot, guardian of the Bone Crypts (Hollow floor 80). A bone walker grown twice your
+  // height in a rotted robe. Stardew by role: a named guardian, about ten of its band's creatures in one, hitting a
+  // little harder than they do; it raises two bone walkers at each health mark.
+  boneabbot: { name: 'The Bone Abbot', zones: ['lair'], tags: ['undead'], voice: 'bone', knockback: 0.2, notice: 200, lives: 'Guards the bottom of the Bone Crypts, Hollow floor 80, until it falls.',
+    move: 'walk', hp: 500, dmg: 20, speed: 18, xp: 150, color: '#d8ccb0',
+    boss: { scale: 2, marks: [0.66, 0.33], calls: ['skeleton', 2], rage: 0.33, rageSpeed: 30, callLine: 'The Bone Abbot strikes its staff down, and the dead climb out of the floor!' },
+    loot: [['boneshard', 1, 8, 12], ['iron', 1, 4, 8], ['gold', 0.5, 2, 4]] },
+
   // v369 (roadmap 120d): the Rimehorn, guardian of the Frost Halls (Hollow floor 60). A stone ram grown as tall as a
   // door. Stardew by role: a named guardian, about ten of its band's creatures in one, hitting a little harder than
   // they do; on its rink its rushes skid, so baiting it into a pillar dazes it. It calls two bats at each health mark.

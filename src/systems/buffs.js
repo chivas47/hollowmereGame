@@ -8,7 +8,8 @@ import { SAVAGE } from '../data/guild.js';   // v230: the savage ring
 
 export function buff(key) {
   const S = G.S;
-  return [S.buff, S.drink, S.blessing].reduce((sum, b) => sum + (b && S.time < b.until ? b[key] || 0 : 0), 0);
+  return [S.buff, S.drink, S.blessing, S.hollow?.ward].reduce(   // v370: the Ossuary Chapel's ward
+   (sum, b) => sum + (b && S.time < b.until ? b[key] || 0 : 0), 0);
 }
 export const luck = () => (G.S.luck || 0) + buff('luck') * BUFF.luck;
 export const speedMult = () => (1 + (buff('speed') + (G.savageT > 0 ? SAVAGE.speed : 0)) * BUFF.speed) * (G.S.read?.includes('pw_tailwind') ? 1.05 : 1);   // v40: Tailwind Treatise; v230: the savage ring

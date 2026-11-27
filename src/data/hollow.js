@@ -148,7 +148,53 @@ export const BANDS = [
     ],
       hoard: { ironbar: 5, frostgeode: 4, heartstone: 1, blastbomb: 3 },
       arrive: 'Frost cracks under hooves. A ram as tall as a door lowers its horns across the ice.' } },
-  { id: 'crypts', name: 'The Bone Crypts', from: 61, to: 80, look: null, shape: 'room' },
+  // v370 (roadmap 120e): a grid of crypt chambers joined by doorways (a spanning tree and a few loops), pillar rows
+  // in some; darkness (dark: your light's inner and outer reach, px) and braziers in half the chambers that a piece
+  // of coal lights for the visit (brazier: its light's reach; Stardew's torch costs coal too).
+  { id: 'crypts', name: 'The Bone Crypts', from: 61, to: 80, look: 'crypt', shape: 'crypt', size: { w: 36, h: 24 }, rocks: 0.2,
+    cells: [4, 3], loops: [2, 3], pillars: 0.5, braziers: 0.5, bones: 0.4, dark: { inner: 10, outer: 64, brazier: 92 },
+    arrive: 'The dark presses close here. Braziers stand cold in the chambers; a piece of coal would light one.',
+    // floor 70: the ossuary chapel; pray at its altar for the dead's ward (+3 defense for the day, once a day)
+    landmark: { name: 'The Ossuary Chapel', plan: [
+      'XXUXXXXXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XffffffffffffffffffffXXX',
+      'XXXfffffffʴfʵfʴffffffXXX',
+      'XXXffffffffffffffffffXXX',
+      'XXXfffXffXfffffXffXffXXX',
+      'XXXffffffffffffffffffXXX',
+      'XXXffffffffffffffffffXXX',
+      'XXXffffffffffffffffffXXX',
+      'XXXfffXffXfffffXffXffXXX',
+      'XXXfʷfffffffffffffffʷXXX',
+      'XXXiccfffffffffffffLfXXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+    ],
+      arrive: 'A chapel built of bones, its braziers somehow still burning. Nothing here wants to hurt you.' },
+    // floor 80: the Bone Abbot's crypt; the Sunken Cavern's door stays in its south wall
+    guardian: { kind: 'boneabbot', at: { x: 12, y: 8 }, ladder: { x: 12, y: 12 }, plan: [
+      'XXUXXXXXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XfffffffffffffffffffffXX',
+      'XXfʴffffffffffffffffʴfXX',
+      'XXffffXffffffffffXffffXX',
+      'XXffffffffffffffffffffXX',
+      'XXffffffffffffffffffffXX',
+      'XXffffffffffffffffffffXX',
+      'XXffffffffffffffffffffXX',
+      'XXffffXffffffffffXffffXX',
+      'XXfʴffffffffffffffffʴfXX',
+      'XXffffffffffffffffffffXX',
+      'XXXXXXXXXXXXXXXXXXXXX^XX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+    ],
+      hoard: { goldbar: 3, frostgeode: 3, heartstone: 2, blastbomb: 4 },
+      arrive: 'Bones rattle together in the dark and rise: a robed skeleton twice your height, a staff in its hand.' } },
   { id: 'magma', name: 'The Magma Rifts', from: 81, to: 100, look: null, shape: 'room' },
   { id: 'crystal', name: 'The Crystal Hollows', from: 101, to: 120, look: null, shape: 'room' },
   { id: 'deep', name: 'The Deep', from: 121, to: Infinity, look: null, shape: 'room' },
@@ -172,6 +218,9 @@ export const WATER = 'ȶ', BRIDGE_H = 'ɕ', BRIDGE_V = 'ɟ';
 // heading it takes up each step on ice (low: it drifts); drift: its speed on ice, times; skid: seconds a charger's
 // rush runs on past its end on ice. cleats: the shoes that stop you sliding (data/clothing.js grip), on their peg.
 export const ICE = { tile: 'ɠ', slide: 2.2, grip: 0.06, drift: 1.2, skid: 0.5, cleats: 'icecleats', peg: 'ʄ', pegEmpty: 'ɦ' };
+// v370: the Bone Crypts' braziers (the catacombs' own tiles, data/catacombs.js), bones, and the chapel's altar: the
+// dead's ward, +3 defense until the day ends, once a day (Stardew's defense food buffs: +3).
+export const CRYPT = { brazier: 'ʳ', lit: 'ʴ', bones: 'ʷ', altar: 'ʵ', ward: { defense: 3 }, coal: 1 };
 
 // The band a Hollow floor belongs to.
 export const bandOf = (floor) => BANDS.find((b) => floor >= b.from && floor <= b.to) || BANDS[BANDS.length - 1];

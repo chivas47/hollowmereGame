@@ -44,13 +44,13 @@ test('three new kinds, each with its way of fighting, drawn on the sheet', () =>
 test('they keep to their bands of floors; a swarm comes as a pack', () => {
   const seen = (floors) => { const out = new Map(); for (const f of floors) for (let i = 0; i < 6; i++) { enterMine(f); for (const m of slimes) out.set(m.kind, (out.get(m.kind) || 0) + 1); } return out; };
   freshFarm();
-  const deep = seen([45, 60, 75]);
+  const deep = seen([43, 45, 47, 53, 55, 57, 63, 65, 67, 73, 75, 77]);   // v370: 50, 60 and 70 are landmarks and lairs now
   assert.ok(!deep.has('crab') && !deep.has('mole'), 'no crabs or moles past their floors');
   const shallow = seen([11, 12, 14, 17, 19, 23, 27, 33]);   // v368: 10, 20 and 30 are landmarks and lairs now
   assert.ok(!shallow.has('puff'), 'no puffs above floor 40');
   assert.ok(shallow.has('crab') && shallow.has('mole') && deep.has('puff'), 'each turns up on its floors');
   for (let i = 0; i < 20; i++) {
-    enterMine(50);
+    G.S.day = i + 1; enterMine(53);   // v370: floor 50 is the Frozen Lake (no creatures)
     const n = slimes.filter((m) => m.kind === 'puff').length;
     assert.ok(n === 0 || n >= MONSTERS.puff.pack[0], `puffs come in packs (${n})`);
   }
