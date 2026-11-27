@@ -16,11 +16,8 @@ export function drawBird(c, px, py, f, left, sp, lift = 0) {
   const B = BIRDS_SHEET, x = Math.round(px), y = Math.round(py), [body, wing, accent] = sp.colors;
   if (lift < 4) {
     const wide = lift ? 6 : sp.shape === 'crow' || sp.shape === 'gull' ? 10 : 8;
-    if (lift) r(c, x - Math.floor(wide / 2), y + 1, wide, 1, 'rgba(0,0,0,.10)');
-    else {
-      r(c, x - 2, y + 1, 4, 1, 'rgba(0,0,0,.24)');
-      r(c, x - Math.floor(wide / 2), y + 2, wide, 1, 'rgba(0,0,0,.12)');
-    }
+    r(c, x - Math.floor(wide / 2), y + 1, wide, 1, lift ? 'rgba(0,0,0,.10)' : 'rgba(0,0,0,.16)');
+    if (!lift) r(c, x - Math.floor(wide / 2) + 2, y + 2, wide - 4, 1, 'rgba(0,0,0,.08)');
   }
   if (ready(B.sheet)) {
     const s = sp.shape, src = tinted(B.sheet, B.layers, [[`${s}.body`, body], [`${s}.wing`, wing], [`${s}.accent`, accent], [`${s}.ink`, null]], B.size);

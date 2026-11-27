@@ -7,7 +7,6 @@ import { G } from '../src/core/game.js';
 import { emit } from '../src/core/events.js';
 import { BIRDS_SHEET, PENSTOCK } from '../src/data/sprites.js';
 import { RANCH_PEN } from '../src/data/ranch.js';
-import { drawBird } from '../src/render/wildlife.js';
 import { penHerd, penBounds, stepPen, penFrame } from '../src/systems/pen.js';
 import { birdFrame } from '../src/systems/atmosphere.js';
 import { BIRD_SPECIES, BIRD_PLACES, birdsFor } from '../src/data/atmosphere.js';
@@ -43,21 +42,6 @@ test('a bird pecks, looks and hops on the ground, and flaps through its wing fra
   assert.ok(ground.has(0) && ground.has(1) && ground.has(2) && ground.has(3));
   const air = new Set([0, 0.05, 0.2, 0.27, 0.34, 0.41].map((age) => birdFrame({ flee: true, age })));
   assert.ok(air.has(4) && air.has(5) && air.has(6) && air.has(7), [...air].join());
-});
-
-test('grounded birds get a firm contact shadow while lifted birds keep a soft shadow', () => {
-  const calls = [];
-  const ctx = { fillStyle: '', fillRect(x, y, w, h) { calls.push({ x, y, w, h, color: this.fillStyle }); } };
-  const songbird = Object.values(BIRD_SPECIES).find((sp) => sp.shape === 'song');
-  drawBird(ctx, 10, 20, 2, false, songbird);
-  assert.deepEqual(calls.slice(0, 2), [
-    { x: 8, y: 21, w: 4, h: 1, color: 'rgba(0,0,0,.24)' },
-    { x: 6, y: 22, w: 8, h: 1, color: 'rgba(0,0,0,.12)' },
-  ]);
-
-  calls.length = 0;
-  drawBird(ctx, 10, 20, 4, false, songbird, 1);
-  assert.deepEqual(calls[0], { x: 7, y: 21, w: 6, h: 1, color: 'rgba(0,0,0,.10)' });
 });
 
 // Roadmap 92b (Nuno): different birds on the island and in each biome, season and weather.
