@@ -844,6 +844,7 @@ const CAVE_COLS = {
   ember: { floor: ['#3a2422', '#4a2c26', '#2e1c1a'], wall: ['#1a0f0e', '#2a1612', '#3a1a14'] },
   sewer: { floor: ['#3a4038', '#454c42', '#30362e'], wall: ['#1c221e', '#262e28', '#2e3830'] },   // v45
   peak:  { floor: ['#4a3a34', '#56443c', '#3e302a'], wall: ['#221816', '#30201c', '#3c2620'] },   // v67: the Smoke Peak
+  crystal: { floor: ['#2e2a3a', '#3a3448', '#242030'], wall: ['#141220', '#1e1a2c', '#2a2440'] },   // v372: the Crystal Hollows
   magma: { floor: ['#2e2422', '#3a2c28', '#241c1a'], wall: ['#140e0d', '#201614', '#2c1c18'] },   // v371: the Magma Rifts
   crypt: { floor: ['#3a3634', '#46413e', '#2e2a28'], wall: ['#181514', '#24201e', '#302a27'] },   // v370: the Bone Crypts
   frost: { floor: ['#3a4250', '#465060', '#30384a'], wall: ['#181c24', '#232a36', '#30384a'] },   // v369: the Frost Halls
@@ -935,6 +936,28 @@ function smelter(g, x, y) {
   r(g, X + 2, Y + 3, 12, 11, '#4a3e38'); r(g, X + 2, Y + 3, 12, 1, '#6a5a50'); r(g, X + 3, Y + 1, 4, 2, '#4a3e38');
   r(g, X + 5, Y + 8, 6, 5, '#2a1612'); r(g, X + 6, Y + 9, 4, 3, '#e9862a'); r(g, X + 7, Y + 10, 2, 1, '#ffd98a');
   r(g, X + 2, Y + 6, 12, 1, '#3a302a');
+}
+// v372: the Crystal Hollows: a crystal pillar; the singing crystals, small to large; the vault's seal; the anvil.
+function crystalShape(g, X, Y, w, h, col, lit) {
+  r(g, X + 8 - w / 2, Y + 15, w, 1, 'rgba(0,0,0,.3)');
+  for (let i = 0; i < h; i++) { const ww = Math.max(1, Math.round(w * Math.min(1, (h - i) / (h * 0.35)))); r(g, X + 8 - ww / 2, Y + 15 - i, ww, 1, i % 3 ? col : lit); }
+  r(g, X + 8 - w / 4, Y + 15 - h + 2, 1, h - 4, lit);
+}
+const crystalPillar = (g, x, y) => { crystalShape(g, x * T, y * T, 10, 15, '#7a6ab0', '#c8b8f0'); crystalShape(g, x * T - 3, y * T + 2, 4, 9, '#6a5aa0', '#b8a8e8'); };
+const singing = (size) => (g, x, y) => {   // brighter than the pillars, cyan to blue, with a sparkle: the ones that sing
+  const [w, h] = [[6, 9], [8, 12], [10, 15]][size], X = x * T, Y = y * T;
+  crystalShape(g, X, Y, w, h, ['#7ae8f0', '#6ac0f8', '#7aa0ff'][size], '#ffffff');
+  r(g, X + 8 + w / 2, Y + 15 - h, 1, 3, '#ffffff'); r(g, X + 7 + w / 2, Y + 16 - h, 3, 1, '#ffffff');
+};
+function crystalSeal(g, x, y) {
+  const X = x * T, Y = y * T;
+  r(g, X, Y, T, T, '#3a3060');
+  for (let i = 0; i < 4; i++) { r(g, X + i * 4, Y, 3, T, i % 2 ? '#6a5ab0' : '#8a7ad0'); r(g, X + i * 4 + 1, Y + 2, 1, 12, '#c8b8f0'); }
+}
+function crystalAnvil(g, x, y) {
+  const X = x * T, Y = y * T;
+  r(g, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.35)');
+  r(g, X + 4, Y + 9, 8, 5, '#4a4060'); r(g, X + 2, Y + 6, 12, 3, '#8a7ad0'); r(g, X + 2, Y + 6, 12, 1, '#c8b8f0'); r(g, X + 6, Y + 3, 4, 3, '#a88af0');
 }
 function ladderUp(g, x, y, p) {
   const X = x * T, Y = y * T;
@@ -1255,7 +1278,7 @@ function bones(g, x, y) {   // a wall of stacked bones: rows of long bones, thei
 export const PROP_ART = {
   '¢': cartTile, '§': bookStall, '¤': prizeMachine,
   y: caveMouth, t: caveCrate, $: chest,
-  U: ladderUp, L: ladderDown, 'ǩ': crackedWall, 'ȵ': campfire, 'ȶ': caveWater, 'ɕ': bridge(true), 'ɟ': bridge(false), 'ɠ': ice, 'ɧ': smelter, 'ʄ': cleatPeg, 'ɦ': (g, x, y, p) => cleatPeg(g, x, y, p, true),   // v366, v367, v368, v369
+  U: ladderUp, L: ladderDown, 'ǩ': crackedWall, 'ȵ': campfire, 'ȶ': caveWater, 'ɕ': bridge(true), 'ɟ': bridge(false), 'ɠ': ice, 'ɧ': smelter, 'ʉ': crystalPillar, 'ʏ': singing(0), 'ʐ': singing(1), 'ʒ': singing(2), 'ʑ': crystalSeal, 'ʎ': crystalAnvil, 'ʄ': cleatPeg, 'ɦ': (g, x, y, p) => cleatPeg(g, x, y, p, true),   // v366, v367, v368, v369
   r: mineRock(null), c: mineRock('#d0874a'), i: mineRock('#c9ccd6'),
   '%': mineRock('#e9c46a'), '*': mineRock('#9a7ae0'), '^': cavernDoor, '!': shaft,
   '#': mineRock('#e9862a'), '~': lava, '>': ventDoor, '=': forgeAnvil,
@@ -1274,7 +1297,7 @@ export const PROP_ART = {
 // The ground under each prop: a cave's floor or wall, grass (with the salt its blades and flowers use) or sand.
 // Props not listed draw their whole tile, or sit on whatever the map has there (the ladder down, mine rocks).
 export const PROP_GROUND = {
-  U: 'wall', '^': 'wall', '>': 'wall', 'ǩ': 'wall', 'ȵ': 'floor', 'ȶ': 'floor', 'ɕ': 'floor', 'ɟ': 'floor', 'ɠ': 'floor', 'ɧ': 'floor', 'ʄ': 'floor', 'ɦ': 'floor', t: 'floor', $: 'floor', '!': 'floor', '=': 'floor', '+': 'floor', '?': 'floor',
+  U: 'wall', '^': 'wall', '>': 'wall', 'ǩ': 'wall', 'ȵ': 'floor', 'ȶ': 'floor', 'ɕ': 'floor', 'ɟ': 'floor', 'ɠ': 'floor', 'ɧ': 'floor', 'ʉ': 'floor', 'ʏ': 'floor', 'ʐ': 'floor', 'ʒ': 'floor', 'ʑ': 'wall', 'ʎ': 'floor', 'ʄ': 'floor', 'ɦ': 'floor', t: 'floor', $: 'floor', '!': 'floor', '=': 'floor', '+': 'floor', '?': 'floor',
   '|': 'grass:29', '}': 'grass:23', ';': 'grass:37', '9': 'grass:41', '<': 'grass:43', '`': 'grass:47',
   '¢': 'grass:53', '§': 'grass:59', '¤': 'grass:61', '8': 'sand',
   'ħ': 'grass:67', 'ǧ': 'grass:71', 'ƀ': 'grass:73', 'ɓ': 'grass:73', 'ɗ': 'grass:73', 'ʋ': 'grass:79', 'β': 'grass:83', 'ʂ': 'grass:89', 'ɲ': 'grass:97',

@@ -35,7 +35,8 @@ import './systems/livestock.js';
 import './systems/coop.js';
 import './systems/mine.js';
 import './systems/ice.js';
-import './systems/rifts.js';   // v371: the Magma Rifts' crumbling bridges and the Forge Ruin's smelter   // v369: ice in the Frost Halls (sliding, the cleats' peg)
+import './systems/rifts.js';
+import './systems/crystals.js';   // v372: the Crystal Hollows' singing crystals and the Geode Cathedral's anvil   // v371: the Magma Rifts' crumbling bridges and the Forge Ruin's smelter   // v369: ice in the Frost Halls (sliding, the cleats' peg)
 import './systems/cheats.js';   // v363: cheat mode for testing (the code word, ui/input.js)
 import './systems/health.js';
 import './systems/gear.js';

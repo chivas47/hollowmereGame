@@ -1,12 +1,13 @@
 // v366 (roadmap 120a): floor shapes for the Hollow's bands (data/hollow.js). Pure: each takes the floor's random
 // numbers (R), its band and a rockFor(roll) that picks a rock tile for this floor, and returns the grid with its rocks,
 // cracked walls and pockets. systems/mine.js turns the grid into a floor (rocks, the ladder, the landing).
-import { CRACK, WATER, BRIDGE_H, BRIDGE_V, ICE, CRYPT, LAVA } from '../data/hollow.js';
+import { CRACK, WATER, BRIDGE_H, BRIDGE_V, ICE, CRYPT, LAVA, CRYSTAL } from '../data/hollow.js';
 
 const SPAWN = { x: 2, y: 1 };   // the ladder up sits just above, at (2, 0); the landing is x 1-4, y 1-4
 const DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 const inLanding = (x, y) => x <= 4 && y <= 4;
-export const isOpen = (t) => t !== 'X' && t !== CRACK && t !== WATER && t !== LAVA.tile;   // v368: water blocks too; v371: lava
+const WALLS = new Set(['X', CRACK, WATER, LAVA.tile, CRYSTAL.pillar, CRYSTAL.seal, ...CRYSTAL.song]);   // v368: water; v371: lava; v372: crystal
+export const isOpen = (t) => !WALLS.has(t);
 
 // Steps from (sx, sy) to every open tile (cracked walls and walls block), as a w x h array (-1: cannot reach).
 export function distances(g, sx, sy, blocked = null) {   // v371: blocked, more tiles to treat as walls
@@ -294,4 +295,79 @@ export function rifts(R, band, rockFor) {
   return { grid: g, pockets: [], shortcuts: [] };
 }
 
-export const SHAPES = { tunnels, islands, halls, crypt, rifts };
+// v372 (roadmap 120g): the Crystal Hollows: round geode chambers (the landing's is one), joined by two-wide tunnels
+// along a spanning tree; crystal pillars inside (only where one cuts nothing off); on most floors a small vault of
+// gold rock sealed in solid rock behind a crystal seal, and the three singing crystals that open it, each in a
+// different chamber (never cutting anything off either).
+export function geodes(R, band, rockFor) {
+  const { w, h } = band.size, g = Array.from({ length: h }, () => Array(w).fill('X'));
+  const inside = (x, y) => x >= 1 && y >= 1 && x <= w - 2 && y <= h - 2;
+  const chambers = [{ x: 3, y: 3, r: 3 }], [ca, cb] = band.chambers, n = ca + Math.floor(R() * (cb - ca + 1)), [ra, rb] = band.radius;
+  for (let tries = 0; chambers.length < n + 1 && tries < 500; tries++) {
+    const r = ra + R() * (rb - ra), x = 3 + Math.floor(R() * (w - 6)), y = 3 + Math.floor(R() * (h - 6));
+    if (chambers.some((c) => Math.hypot(c.x - x, c.y - y) < c.r + r + 2)) continue;
+    chambers.push({ x, y, r });
+  }
+  for (const c of chambers) for (let y = Math.floor(c.y - c.r - 1); y <= c.y + c.r + 1; y++) for (let x = Math.floor(c.x - c.r * 1.3 - 1); x <= c.x + c.r * 1.3 + 1; x++)
+    if (inside(x, y) && ((x - c.x) / 1.3) ** 2 + (y - c.y) ** 2 <= c.r * c.r + (R() - 0.5)) g[y][x] = 'f';
+  for (let y = 1; y <= 4; y++) for (let x = 1; x <= 4; x++) g[y][x] = 'f';
+  g[0][SPAWN.x] = 'U';
+  const joined = [0], left = chambers.map((_, i) => i).slice(1), dig = (x, y) => { if (inside(x, y) && g[y][x] === 'X') g[y][x] = 'f'; };
+  while (left.length) {
+    let best = null;
+    for (const i of joined) for (const j of left) { const d = Math.hypot(chambers[i].x - chambers[j].x, chambers[i].y - chambers[j].y); if (!best || d < best[2]) best = [i, j, d]; }
+    const [i, j] = best, a = chambers[i], b = chambers[j];
+    for (let x = Math.min(a.x, b.x); x <= Math.max(a.x, b.x); x++) { dig(x, a.y); dig(x, a.y + 1); }
+    for (let y = Math.min(a.y, b.y); y <= Math.max(a.y, b.y); y++) { dig(b.x, y); dig(b.x + 1, y); }
+    joined.push(j); left.splice(left.indexOf(j), 1);
+  }
+  const reachable = () => { const d = distances(g, SPAWN.x, SPAWN.y); let k = 0; d.forEach((row) => row.forEach((v) => { if (v >= 0) k++; })); return k; };
+  // stand a solid thing on an open tile only if it cuts nothing else off
+  const stand = (x, y, t) => { if (g[y][x] !== 'f' || inLanding(x, y)) return false; const before = reachable(); g[y][x] = t; if (reachable() === before - 1) return true; g[y][x] = 'f'; return false; };
+  const [pa, pb] = band.pillars;
+  for (const c of chambers.slice(1)) for (let i = 0, m = pa + Math.floor(R() * (pb - pa + 1)); i < m; i++)
+    stand(Math.round(c.x + (R() - 0.5) * c.r * 1.6), Math.round(c.y + (R() - 0.5) * c.r * 1.2), CRYSTAL.pillar);
+  const pockets = [];
+  if (R() < band.vault) {
+    for (let tries = 0; tries < 80 && !pockets.length; tries++) {
+      const pw = 3, ph = 2, px = 2 + Math.floor(R() * (w - pw - 4)), py = 2 + Math.floor(R() * (h - ph - 4));
+      let solid = true;
+      for (let y = py - 1; y <= py + ph && solid; y++) for (let x = px - 1; x <= px + pw && solid; x++) if (!inside(x, y) || g[y][x] !== 'X') solid = false;
+      if (!solid) continue;
+      const doors = [];
+      for (let x = px; x < px + pw; x++) { doors.push([x, py - 1, x, py - 2]); doors.push([x, py + ph, x, py + ph + 1]); }
+      for (let y = py; y < py + ph; y++) { doors.push([px - 1, y, px - 2, y]); doors.push([px + pw, y, px + pw + 1, y]); }
+      const reach = distances(g, SPAWN.x, SPAWN.y), ok = doors.filter(([, , bx, by]) => g[by]?.[bx] === 'f' && reach[by][bx] >= 0);
+      if (!ok.length) continue;
+      const [sx, sy] = ok[Math.floor(R() * ok.length)];
+      g[sy][sx] = CRYSTAL.seal;
+      const cells = [];
+      for (let y = py; y < py + ph; y++) for (let x = px; x < px + pw; x++) { g[y][x] = 'f'; cells.push([x, y]); }
+      const [va, vb] = band.vaultRocks;
+      for (let i = 0, m = Math.min(cells.length, va + Math.floor(R() * (vb - va + 1))); i < m; i++) { const [x, y] = cells.splice(Math.floor(R() * cells.length), 1)[0]; g[y][x] = '%'; }
+      pockets.push({ door: [sx, sy], x: px, y: py, w: pw, h: ph });
+    }
+    // the song: one crystal in each of three chambers (not the landing's)
+    if (pockets.length) {
+      const order = chambers.slice(1).sort(() => R() - 0.5);
+      let placed = 0;
+      for (const c of order) {
+        if (placed === 3) break;
+        for (let t = 0; t < 12; t++) if (stand(Math.round(c.x + (R() - 0.5) * c.r), Math.round(c.y + (R() - 0.5) * c.r * 0.8), CRYSTAL.song[placed])) { placed++; break; }
+      }
+      if (placed < 3) {   // not room for the song: the vault stays solid rock
+        g.forEach((row, y) => row.forEach((t, x) => { if (CRYSTAL.song.includes(t)) row[x] = 'f'; }));
+        const p = pockets.pop(); g[p.door[1]][p.door[0]] = 'X';
+        for (let y = p.y; y < p.y + p.h; y++) for (let x = p.x; x < p.x + p.w; x++) g[y][x] = 'X';
+      }
+    }
+  }
+  const reach = distances(g, SPAWN.x, SPAWN.y);
+  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
+    if (g[y][x] === 'f' && reach[y][x] < 0 && !pockets.some((p) => x >= p.x && x < p.x + p.w && y >= p.y && y < p.y + p.h)) g[y][x] = 'X';
+    else if (g[y][x] === 'f' && !inLanding(x, y) && reach[y][x] >= 0 && R() < band.rocks) g[y][x] = rockFor(R(), false);
+  }
+  return { grid: g, pockets, shortcuts: [] };
+}
+
+export const SHAPES = { tunnels, islands, halls, crypt, rifts, geodes };

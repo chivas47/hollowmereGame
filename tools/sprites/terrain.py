@@ -169,7 +169,8 @@ THEME = {   # the floor's extra: sand ripples, ember glow in the cracks, damp mo
     'flooded': ('moss', '#3f5a44'),
     'frost': ('ripple', '#8aa0b8'),
     'crypt': (None, None),
-    'magma': ('glow', '#c8501e'),   # v371: the Magma Rifts: cracks glowing   # v370: the Bone Crypts: bare old stone   # v369: the Frost Halls: rime streaks   # v368: the Flooded Galleries: damp moss   # v366: the Rootways: fine roots across the floor
+    'magma': ('glow', '#c8501e'),
+    'crystal': ('glow', '#9a7ae0'),   # v372: the Crystal Hollows: violet light in the cracks   # v371: the Magma Rifts: cracks glowing   # v370: the Bone Crypts: bare old stone   # v369: the Frost Halls: rime streaks   # v368: the Flooded Galleries: damp moss   # v366: the Rootways: fine roots across the floor
 }
 def cave_floor(theme, cols, seed):
     R = random.Random(seed)

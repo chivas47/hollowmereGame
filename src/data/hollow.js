@@ -241,7 +241,53 @@ export const BANDS = [
     ],
       hoard: { goldbar: 5, magmageode: 3, heartstone: 2, blastbomb: 4 },
       arrive: 'Heat rolls off the pools. Something long and burning uncoils above the lava.' } },
-  { id: 'crystal', name: 'The Crystal Hollows', from: 101, to: 120, look: null, shape: 'room' },
+  // v372 (roadmap 120g): round geode chambers joined by short tunnels, crystal pillars in them; a vault of gold rock
+  // sealed behind a crystal seal on most floors (vault: the chance), opened by striking the three singing crystals
+  // from the highest note to the deepest (CRYSTAL below).
+  { id: 'crystal', name: 'The Crystal Hollows', from: 101, to: 120, look: 'crystal', shape: 'geodes', size: { w: 36, h: 24 }, rocks: 0.2,
+    chambers: [7, 9], radius: [3, 5], pillars: [1, 3], vault: 0.7, vaultRocks: [4, 6],
+    arrive: 'Crystal grows through the rock here. Some of it sings when struck: highest note first, deepest last.',
+    // floor 110: a cathedral of crystal; its anvil cracks your geodes for nothing (CRYSTAL.crack a day)
+    landmark: { name: 'The Geode Cathedral', plan: [
+      'XXUXXXXXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XffffffXXfffffffXXXXXXXX',
+      'XfffffffffffffffffXXXXXX',
+      'XXXXXXfʉfffffffffʉfXXXXX',
+      'XXXXXXfffffffffffffXXXXX',
+      'XXXXXfffffffffffffffXXXX',
+      'XXXXXʉffffffʎffffffʉXXXX',
+      'XXXXXfffffffffffffffXXXX',
+      'XXXXXXfffffffffffffXXXXX',
+      'XXXXXXfʉfffffffffʉfXXXXX',
+      'XXXXXXXffifffffLffXXXXXX',
+      'XXXXXXXXXf%%ffffXXXXXXXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+    ],
+      arrive: 'A geode the size of a church, its crystal anvil humming. Nothing here wants to hurt you.' },
+    // floor 120: the Prism Golem, the bottom of the old maps' Hollow
+    guardian: { kind: 'prismgolem', at: { x: 12, y: 8 }, ladder: { x: 12, y: 12 }, plan: [
+      'XXUXXXXXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXXXXXXXXXXXXX',
+      'XffffffXXXXXfXXXXXXXXXXX',
+      'XffffffXfffffffffXXXXXXX',
+      'XfffffffffffʉfffffXXXXXX',
+      'XXXXXXfffffffffffffXXXXX',
+      'XXXXXfʉfffffffffffʉfXXXX',
+      'XXXXXfffffffffffffffXXXX',
+      'XXXXXfffffffffffffffXXXX',
+      'XXXXXfffffffffffffffXXXX',
+      'XXXXXfʉfffffffffffʉfXXXX',
+      'XXXXXXfffffffffffffXXXXX',
+      'XXXXXXXfffffffffffXXXXXX',
+      'XXXXXXXXfffffffffXXXXXXX',
+      'XXXXXXXXXXXXfXXXXXXXXXXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXX',
+    ],
+      hoard: { umbritebar: 2, magmageode: 4, heartstone: 3, blastbomb: 5 },
+      arrive: 'The crystals dim. Something made of them pulls itself out of the wall, light moving inside it.' } },
   { id: 'deep', name: 'The Deep', from: 121, to: Infinity, look: null, shape: 'room' },
 ];
 
@@ -269,6 +315,11 @@ export const ICE = { tile: 'ɠ', slide: 2.2, grip: 0.06, drift: 1.2, skid: 0.5, 
 // after you first step on it, burning you for `burn` of your health and throwing you back to safe ground if you are
 // still on it; smelter: the Forge Ruin's, `smelt` bars a day at once on the furnace's recipe (data/crafting.js).
 export const LAVA = { tile: '~', crumble: 'ʱ', delay: 2.5, burn: 0.15, smelter: 'ɧ', smelt: 5 };
+// v372: the Crystal Hollows. pillar: a crystal pillar (solid); singing crystals small, medium, large (struck in that
+// order: highest note to deepest); seal: the vault's crystal wall (only the song opens it); anvil: the Geode
+// Cathedral's, cracking `crack` geodes a day for free (Bram charges, data/guild.js CRACK_COST).
+export const CRYSTAL = { pillar: 'ʉ', song: ['ʏ', 'ʐ', 'ʒ'], seal: 'ʑ', anvil: 'ʎ', crack: 5,
+  notes: ['a high, thin note', 'a clear middle note', 'a deep, low note'] };
 export const CRYPT = { brazier: 'ʳ', lit: 'ʴ', bones: 'ʷ', altar: 'ʵ', ward: { defense: 3 }, coal: 1 };
 
 // The band a Hollow floor belongs to.
