@@ -148,7 +148,7 @@ def animal(body, heads, LEGS, f):
 def outline_cells(cells):
     """The outline: every empty neighbour of a drawn cell, keyed to the colour it edges."""
     edge = {}
-    for i, j in cells:
+    for (i, j) in cells:
         for q in ((i + 1, j), (i - 1, j), (i, j - 1), (i, j + 1)):
             if q not in cells and q not in edge: edge[q] = (i, j)
     return edge
@@ -167,7 +167,7 @@ def bird_sheet():
             x0 = max(0, (S - len(rows[0])) // 2 - 1)
             cells = {(x0 + i, y0 + j): ch for j, r in enumerate(rows) for i, ch in enumerate(r) if ch != '.'}
             ink = (base + BIRD_BANDS.index('ink')) * S
-            for (x, y), _ in outline_cells(cells).items():
+            for (x, y), (i, j) in outline_cells(cells).items():
                 if 0 <= x < S and 0 <= y < S: img.putpixel((f * S + x, ink + y), (40, 30, 26, 255))
             for (x, y), ch in cells.items():
                 if not (0 <= x < S and 0 <= y < S): continue
@@ -175,15 +175,6 @@ def bird_sheet():
                     band, v = BIRD_TONE[ch]
                     img.putpixel((f * S + x, (base + BIRD_BANDS.index(band)) * S + y), (v, v, v, 255))
                 else: img.putpixel((f * S + x, ink + y), hexc(INK[ch]) + (255,))
-            for (x, y), ch in cells.items():
-                if not (0 <= x < S and 0 <= y < S) or (x, y + 1) in cells:
-                    continue
-                if ch in BIRD_TONE:
-                    band, v = BIRD_TONE[ch]
-                    c = darker((v, v, v)) + (255,)
-                    img.putpixel((f * S + x, (base + BIRD_BANDS.index(band)) * S + y), c)
-                else:
-                    img.putpixel((f * S + x, ink + y), darker(hexc(INK[ch])) + (255,))
     return img
 
 def pen_sheet():
@@ -198,10 +189,6 @@ def pen_sheet():
                 if 0 <= x < S and 0 <= y < S: img.putpixel((f * S + x, row * S + y), darker(col(cells[src])) + (255,))
             for (x, y), ch in cells.items():
                 if 0 <= x < S and 0 <= y < S: img.putpixel((f * S + x, row * S + y), col(ch) + (255,))
-            for (x, y), ch in cells.items():
-                if not (0 <= x < S and 0 <= y < S) or (x, y + 1) in cells:
-                    continue
-                img.putpixel((f * S + x, row * S + y), darker(col(ch)) + (255,))
     return img
 
 def build(out_dir, preview=None):

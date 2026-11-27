@@ -239,10 +239,6 @@ def frame(kind, step):
             ink[q] = outline(c)
     for q, c in ink.items(): im.putpixel(q, c + (255,))
     for q, c in px.items(): im.putpixel(q, c + (255,))
-    for (i, j), c in px.items():
-        if c == hexc(EYE) or (i, j + 1) in px:
-            continue
-        im.putpixel((i, j), outline(c) + (255,))
     return im
 
 def build(path, preview=None):
