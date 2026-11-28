@@ -3,6 +3,7 @@
 Newest first. Version numbers match published versions of the playable page.
 
 ## Unreleased
+- The cast now draws its fishing line and bobber only once instead of duplicating them on the pole.
 - Flowers no longer block access to the prize machine in town.
 - Skipping the first-day guide now also hides the first-week pointer that could remain over the field.
 - Fenn's Provisions now blocks the whole building footprint, and Pell's path skirts around it instead of crossing the shop.

@@ -9,13 +9,18 @@ import { TREES, FRUIT } from '../data/trees.js';
 import { TOOLS_SHEET, PACKET_SHEET, WEAPONS_SHEET } from '../data/sprites.js';
 import { ready, sheet, tinted } from './sheets.js';
 
+function rodPole(g) {
+  for (let i = 0; i < 11; i++) r(g, 2 + i, 14 - i, 1, 1, '#8a5a32');
+  r(g, 2, 13, 2, 2, '#5c371e'); r(g, 4, 11, 2, 2, '#a9b4bd');
+}
+
 const TOOL_ICONS = {
   hoe: (g) => { for (let i = 0; i < 9; i++) r(g, 3 + i, 13 - i, 2, 2, '#8a5a32'); r(g, 10, 2, 5, 3, '#a9b4bd'); r(g, 10, 4, 2, 2, '#7f8a93'); },
   rod: (g) => {
-    for (let i = 0; i < 11; i++) r(g, 2 + i, 14 - i, 1, 1, '#8a5a32');
-    r(g, 2, 13, 2, 2, '#5c371e'); r(g, 4, 11, 2, 2, '#a9b4bd');
+    rodPole(g);
     r(g, 13, 3, 1, 8, '#e8e0d0'); r(g, 12, 11, 3, 2, '#d8484a'); r(g, 12, 11, 3, 1, '#f4ead2');
   },
+  rodPole,
   pick: (g) => {
     for (let i = 0; i < 10; i++) r(g, 3 + i, 13 - i, 2, 2, '#8a5a32');
     r(g, 6, 2, 3, 2, '#9aa3ab'); r(g, 9, 3, 3, 2, '#9aa3ab'); r(g, 12, 5, 2, 3, '#9aa3ab'); r(g, 4, 3, 2, 2, '#7f8a93'); r(g, 13, 8, 1, 2, '#7f8a93');
