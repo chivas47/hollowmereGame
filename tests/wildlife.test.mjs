@@ -21,15 +21,21 @@ test('the sheets have the frames and bands the code draws', () => {
 });
 
 test('lake ducks have distinct mallard drake, hen and young palettes', () => {
-  const colors = (female, young) => {
-    const seen = new Set(), c = { fillStyle: '', fillRect() { seen.add(this.fillStyle); } };
-    drawLakeDuck(c, 20, 20, false, young, female);
+  const draws = (female, young, left = false) => {
+    const seen = [], c = { fillStyle: '', fillRect(x, y, w, h) { seen.push([this.fillStyle, x, y, w, h]); } };
+    drawLakeDuck(c, 20, 20, left, young, female);
     return seen;
   };
-  const drake = colors(false, false), hen = colors(true, false), duckling = colors(false, true);
+  const colors = (draws) => new Set(draws.map(([color]) => color));
+  const drakeDraws = draws(false, false), henDraws = draws(true, false), ducklingDraws = draws(false, true);
+  const drake = colors(drakeDraws), hen = colors(henDraws), duckling = colors(ducklingDraws);
   assert.ok(drake.has('#24764b') && drake.has('#884b32') && drake.has('#286b9b'));
   assert.ok(hen.has('#725138') && hen.has('#39739a'));
   assert.ok(duckling.has('#b58b55'));
+  assert.ok(!drakeDraws.some(([color, , , w, h]) => color === '#f4ead2' && w > 1 && h > 1), 'the drake has no blocky white neck patch');
+  assert.ok(!drakeDraws.some(([color, , , w]) => color.startsWith('rgba(255,255,255') && w > 2), 'the wake is broken into short ripples');
+  const mirrored = draws(false, false, true).map(([color, x, y, w, h]) => [color, 40 - x - w, y, w, h]);
+  assert.deepEqual(mirrored, drakeDraws);
 });
 
 test('the pen animals stay inside the rails for a long afternoon, and graze, walk and call', () => {

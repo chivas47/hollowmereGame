@@ -204,8 +204,7 @@ addUpdater((dt) => {
 addLayer(9, (c) => {
   if (!underSky(G.S.map)) return;
   if (open('ducks')) for (const d of fauna.ducks) {
-    const x = d.x | 0, y = (d.y + Math.sin(d.bob * 2) * 0.6) | 0, scale = d.young ? 0.7 : 1, left = d.vx < 0;
-    c.fillStyle = 'rgba(255,255,255,.25)'; c.fillRect(x - 5 * scale, y + 2, 10 * scale, 1);   // the wake
+    const x = d.x | 0, y = (d.y + Math.sin(d.bob * 2) * 0.6) | 0, left = d.vx < 0;
     drawLakeDuck(c, x, y, left, d.young, d.female);
   }
   const j = fauna.jump;

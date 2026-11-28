@@ -34,26 +34,33 @@ export function drawBird(c, px, py, f, left, sp, lift = 0) {
 export function drawLakeDuck(c, px, py, left, young, female) {
   const x = Math.round(px), y = Math.round(py), scale = young ? 0.7 : 1;
   const pixel = (dx, dy, w, h, color) => r(c, x + (left ? -dx - w : dx) * scale, y + dy * scale, w * scale, h * scale, color);
+  pixel(-6, 2, 2, 1, 'rgba(255,255,255,.22)');
+  pixel(-9, 1, 1, 1, 'rgba(255,255,255,.16)');
   if (young) {
-    pixel(-5, -2, 9, 4, '#b58b55'); pixel(-4, -1, 6, 2, '#d6b77d');
-    pixel(0, -6, 4, 4, '#8a643d'); pixel(1, -4, 2, 1, '#ead8ad');
-    pixel(4, -5, 2, 1, '#e0a030'); pixel(2, -5, 1, 1, '#2b211a');
+    pixel(-4, -2, 6, 1, '#b58b55'); pixel(-5, -1, 8, 1, '#b58b55');
+    pixel(-4, 0, 6, 1, '#9d7548'); pixel(-3, -1, 2, 1, '#d6b77d');
+    pixel(0, -5, 3, 2, '#8a643d'); pixel(1, -6, 2, 1, '#8a643d');
+    pixel(1, -4, 1, 1, '#ead8ad'); pixel(3, -5, 2, 1, '#e0a030'); pixel(2, -5, 1, 1, '#2b211a');
     return;
   }
   if (female) {
-    pixel(-5, -2, 9, 4, '#8b6846'); pixel(-4, -1, 6, 2, '#b39168');
-    pixel(-2, -1, 3, 1, '#39739a'); pixel(-2, -2, 3, 1, '#f4ead2');
-    pixel(0, -6, 4, 4, '#725138'); pixel(1, -4, 3, 1, '#d5b78e');
-    pixel(4, -5, 2, 1, '#e0a030'); pixel(2, -5, 1, 1, '#2b211a');
-    pixel(4, -2, 2, 2, '#51402f');
+    pixel(-3, -2, 6, 1, '#8b6846'); pixel(-5, -1, 9, 1, '#8b6846');
+    pixel(-4, 0, 7, 1, '#725138'); pixel(-3, 1, 5, 1, '#51402f');
+    pixel(-3, -1, 2, 1, '#b39168'); pixel(0, 0, 2, 1, '#b39168'); pixel(-1, 1, 1, 1, '#d5b78e');
+    pixel(-2, -1, 2, 1, '#39739a'); pixel(-2, -2, 2, 1, '#f4ead2');
+    pixel(0, -5, 3, 2, '#725138'); pixel(1, -6, 2, 1, '#725138'); pixel(1, -3, 2, 1, '#725138');
+    pixel(1, -4, 1, 1, '#d5b78e'); pixel(3, -5, 2, 1, '#e0a030'); pixel(2, -5, 1, 1, '#2b211a');
+    pixel(4, -2, 1, 1, '#51402f');
     return;
   }
-  pixel(-5, -2, 9, 4, '#969d9a'); pixel(-4, -1, 6, 2, '#c2c6bd');
-  pixel(-5, -2, 3, 4, '#884b32'); pixel(-2, -1, 3, 1, '#286b9b');
-  pixel(-2, -2, 3, 1, '#f4ead2'); pixel(0, -3, 2, 3, '#f4ead2');
-  pixel(0, -6, 4, 4, '#24764b'); pixel(1, -6, 2, 1, '#45975d');
-  pixel(4, -5, 2, 1, '#e0a030'); pixel(2, -5, 1, 1, '#2b211a');
-  pixel(4, -2, 2, 2, '#343b38');
+  pixel(-3, -2, 6, 1, '#969d9a'); pixel(-5, -1, 9, 1, '#969d9a');
+  pixel(-4, 0, 7, 1, '#7f8784'); pixel(-3, 1, 5, 1, '#6e7774');
+  pixel(-5, -1, 2, 1, '#884b32'); pixel(-4, 0, 2, 1, '#884b32');
+  pixel(-3, -1, 2, 1, '#286b9b'); pixel(-3, -2, 2, 1, '#f4ead2');
+  pixel(1, -2, 2, 1, '#884b32'); pixel(1, -1, 1, 2, '#884b32');
+  pixel(1, -3, 2, 1, '#24764b'); pixel(0, -5, 4, 2, '#24764b'); pixel(1, -6, 2, 1, '#45975d');
+  pixel(0, -3, 1, 1, '#f4ead2'); pixel(4, -5, 2, 1, '#e0a030'); pixel(2, -5, 1, 1, '#2b211a');
+  pixel(-6, -1, 2, 1, '#343b38');
 }
 
 // A pen animal at its feet. kind: 'sheep' or 'cow'; f: the frame (see PENSTOCK).
