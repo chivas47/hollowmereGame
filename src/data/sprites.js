@@ -71,7 +71,7 @@ export const FURN_SHEET = {
   order: ['tv', 'chair', 'armchair', 'sofa', 'stool', 'table', 'roundtable', 'desk', 'endtable', 'tablelamp', 'floorlamp', 'plant',
     'cactus', 'flowers', 'tallplant', 'rug', 'roundrug', 'bookcase', 'dresser', 'clock', 'hearth', 'globe', 'barrel', 'easel', 'sewing',
     'dyepots', 'mannequin', 'chest',
-    'chair.side', 'chair.back', 'armchair.side', 'armchair.back', 'sofa.side', 'sofa.back',   // v209: seats turned (data/furniture.js TURNS)
+    'chair.side', 'chair.back', 'armchair.side', 'armchair.back', 'sofa.side', 'sofa.back', 'rocker.side', 'rocker.back',   // v209: seats turned (data/furniture.js TURNS)
     'bed', 'wardrobe', 'stove', 'hutch', 'crates', 'bench', 'shelf', 'candles', 'vase', 'rocker', 'piano', 'fishbowl', 'lantern'],   // v331 (roadmap 114): the room sets' shapes, after the rest
 };
 

@@ -140,7 +140,7 @@ export const TURNS = {
   rug: 'flat',
   tv: 'mirror', desk: 'mirror', plant: 'mirror', cactus: 'mirror', flowers: 'mirror', bookcase: 'mirror',
   globe: 'mirror', easel: 'mirror', sewing: 'mirror', dyepots: 'mirror',
-  rocker: 'mirror', piano: 'mirror', bed: 'mirror', stove: 'mirror', shelf: 'mirror',   // v331
+  rocker: 'seat', piano: 'mirror', bed: 'mirror', stove: 'mirror', shelf: 'mirror',   // v331
 };
 export const TURN_STEPS = { seat: 4, flat: 2, mirror: 2 };
 export const turnsOf = (kind) => TURN_STEPS[TURNS[FURNITURE[kind]?.shape]] || 1;

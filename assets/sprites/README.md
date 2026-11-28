@@ -95,7 +95,7 @@ Built by `tools/sprites/person.py`, which also writes the layout to `src/data/pe
 
 ## furniture.png
 
-752 x 96. Furniture by shape. Frames are 16 x 32 with the tile in the bottom 16 rows, in the order of `FURN_SHEET.order`: every shape's front view, then (v209) the seats' side view (facing right; the game mirrors it for the other side) and back view: `chair.side`, `chair.back`, `armchair.side`, `armchair.back`, `sofa.side`, `sofa.back`. v331: then the room sets' shapes, appended so earlier frames keep their places: `bed`, `wardrobe`, `stove`, `hutch`, `crates`, `bench`, `shelf`, `candles`, `vase`, `rocker`, `piano`, `fishbowl`, `lantern`.
+784 x 96. Furniture by shape. Frames are 16 x 32 with the tile in the bottom 16 rows, in the order of `FURN_SHEET.order`: every shape's front view, then the seats' side view (facing right; the game mirrors it for the other side) and back view: `chair.side`, `chair.back`, `armchair.side`, `armchair.back`, `sofa.side`, `sofa.back`, `rocker.side`, `rocker.back`. v331: then the room sets' shapes, appended so earlier frames keep their places: `bed`, `wardrobe`, `stove`, `hutch`, `crates`, `bench`, `shelf`, `candles`, `vase`, `rocker`, `piano`, `fishbowl`, `lantern`.
 
 - **Rows (3 bands):** main (tinted to the piece's first colour), second (its second colour), ink (fixed colours and see-through white shine; drawn as is).
 

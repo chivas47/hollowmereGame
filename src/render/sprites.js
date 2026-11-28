@@ -1103,16 +1103,20 @@ function furnitureFrame(c, X, Y, def, key) {
 // [side facing right, back]. v209: drawn only until the furniture sheet (which now holds these views) has loaded.
 const SEAT_ART = {
   chair: [
-    (c, X, Y, a, b) => { r(c, X + 4, Y + 1, 2, 10, b); r(c, X + 4, Y + 8, 9, 3, a); r(c, X + 4, Y + 11, 1, 4, b); r(c, X + 12, Y + 11, 1, 4, b); },
+    (c, X, Y, a, b) => { r(c, X + 4, Y + 1, 3, 7, b); r(c, X + 5, Y + 2, 1, 5, a); r(c, X + 6, Y + 7, 7, 2, a); r(c, X + 6, Y + 9, 7, 1, b); r(c, X + 5, Y + 10, 1, 4, b); r(c, X + 12, Y + 10, 1, 4, b); },
     (c, X, Y, a, b) => { r(c, X + 3, Y + 8, 10, 3, a); r(c, X + 4, Y + 2, 8, 9, b); r(c, X + 5, Y + 3, 6, 1, a); r(c, X + 4, Y + 11, 1, 4, b); r(c, X + 11, Y + 11, 1, 4, b); },
   ],
   armchair: [
-    (c, X, Y, a, b) => { r(c, X + 2, Y + 2, 4, 12, b); r(c, X + 5, Y + 8, 9, 6, a); r(c, X + 5, Y + 6, 8, 3, b); r(c, X + 5, Y + 6, 8, 1, a); },
+    (c, X, Y, a, b) => { r(c, X + 2, Y + 2, 4, 8, b); r(c, X + 3, Y + 3, 1, 6, a); r(c, X + 5, Y + 8, 9, 4, a); r(c, X + 5, Y + 11, 9, 1, b); r(c, X + 11, Y + 6, 3, 3, b); r(c, X + 11, Y + 6, 3, 1, a); r(c, X + 4, Y + 12, 1, 2, b); r(c, X + 12, Y + 12, 1, 2, b); },
     (c, X, Y, a, b) => { r(c, X + 1, Y + 6, 3, 8, a); r(c, X + 12, Y + 6, 3, 8, a); r(c, X + 2, Y + 2, 12, 12, b); r(c, X + 3, Y + 3, 10, 1, a); },
   ],
   sofa: [
     (c, X, Y, a, b) => { r(c, X + 2, Y + 1, 4, 14, b); r(c, X + 5, Y + 8, 9, 7, a); r(c, X + 6, Y + 7, 1, 1, b); r(c, X + 12, Y + 6, 3, 9, b); },
     (c, X, Y, a, b) => { r(c, X, Y + 3, 16, 11, b); r(c, X, Y + 3, 16, 1, a); r(c, X + 7, Y + 4, 1, 9, a); },
+  ],
+  rocker: [
+    (c, X, Y, a, b) => { r(c, X + 4, Y + 1, 3, 8, b); r(c, X + 5, Y + 2, 1, 6, a); r(c, X + 6, Y + 7, 7, 2, a); r(c, X + 6, Y + 9, 7, 1, b); r(c, X + 5, Y + 10, 1, 2, b); r(c, X + 12, Y + 10, 1, 2, b); r(c, X + 3, Y + 13, 10, 1, a); r(c, X + 2, Y + 14, 12, 1, b); },
+    (c, X, Y, a, b) => { r(c, X + 3, Y + 2, 10, 8, b); r(c, X + 4, Y + 3, 8, 6, a); r(c, X + 4, Y + 10, 8, 1, b); r(c, X + 4, Y + 11, 1, 2, b); r(c, X + 11, Y + 11, 1, 2, b); r(c, X + 2, Y + 14, 12, 1, a); r(c, X + 1, Y + 15, 14, 1, b); },
   ],
 };
 

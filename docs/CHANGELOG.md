@@ -4,6 +4,7 @@ Newest first. Version numbers match published versions of the playable page.
 
 ## Unreleased
 - Bird PNG art is definitive: the wildlife generator now preserves an existing `birds.png` unless `--rebuild-birds` is explicitly passed. Invalid-sized bird sheets fall back to code art.
+- Chair side views now show a shaped seat and separated legs; armchairs have a visible arm, and rocking chairs show curved runners. The rocker also has proper side and back views when turned.
 
 ## v373: The Deep
 - Below floor 120 is **the Deep**, and it has no bottom. Every floor borrows one of the six bands above, its shape, its look and its mechanic: Rootways tunnels with cracked walls, flooded islands you can fish from, frozen halls, dark crypts with braziers, lava rifts with crumbling bridges, or crystal chambers with a sealed vault. Which one changes by floor and by day.
