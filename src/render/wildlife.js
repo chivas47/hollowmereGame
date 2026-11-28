@@ -52,7 +52,7 @@ export function drawLakeDuck(c, px, py, left, young, female) {
     pixel(-2, -1, 2, 1, '#39739a'); pixel(-2, -2, 2, 1, '#f4ead2');
     pixel(0, -5, 3, 2, '#725138'); pixel(1, -6, 2, 1, '#725138'); pixel(1, -3, 2, 1, '#725138');
     pixel(1, -4, 1, 1, '#d5b78e'); pixel(3, -5, 2, 1, '#e0a030'); pixel(1, -5, 1, 1, '#493b2d');
-    pixel(4, -2, 1, 1, '#51402f');
+    pixel(3, -2, 1, 1, '#51402f');
     waterline();
     return;
   }

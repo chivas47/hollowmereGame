@@ -35,7 +35,8 @@ test('lake ducks have distinct mallard drake, hen and young palettes', () => {
   assert.ok(duckling.has('#b58b55'));
   for (const duck of [drakeDraws, henDraws, ducklingDraws]) assert.ok(duck.some(([color]) => color === 'rgba(79,137,165,.78)'), 'the lower hull sits behind the waterline');
   for (const duck of [drakeDraws, henDraws, ducklingDraws]) assert.ok(duck.some(([color]) => color === '#493b2d'), 'the eye sits back from the bill');
-  assert.equal(WILDLIFE.ducks.speed, 2.5);
+  assert.ok(henDraws.some(([color, x, y]) => color === '#51402f' && x === 23 && y === 18), 'the dark feather pixel touches the hen body');
+  assert.equal(WILDLIFE.ducks.speed, 1);
   assert.ok(!drakeDraws.some(([color, , , w, h]) => color === '#f4ead2' && w > 1 && h > 1), 'the drake has no blocky white neck patch');
   assert.ok(!drakeDraws.some(([color, , , w]) => color.startsWith('rgba(255,255,255') && w > 2), 'the wake is broken into short ripples');
   const mirrored = draws(false, false, true).map(([color, x, y, w, h]) => [color, 40 - x - w, y, w, h]);
