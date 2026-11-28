@@ -41,7 +41,7 @@ export function drawLakeDuck(c, px, py, left, young, female) {
     pixel(-4, -2, 6, 1, '#b58b55'); pixel(-5, -1, 8, 1, '#b58b55');
     pixel(-4, 0, 6, 1, '#9d7548'); pixel(-3, -1, 2, 1, '#d6b77d');
     pixel(0, -5, 3, 2, '#8a643d'); pixel(1, -6, 2, 1, '#8a643d');
-    pixel(1, -4, 1, 1, '#ead8ad'); pixel(3, -5, 2, 1, '#e0a030'); pixel(2, -5, 1, 1, '#2b211a');
+    pixel(1, -4, 1, 1, '#ead8ad'); pixel(3, -5, 2, 1, '#e0a030'); pixel(1, -5, 1, 1, '#493b2d');
     waterline();
     return;
   }
@@ -51,7 +51,7 @@ export function drawLakeDuck(c, px, py, left, young, female) {
     pixel(-3, -1, 2, 1, '#b39168'); pixel(0, 0, 2, 1, '#b39168'); pixel(-1, 1, 1, 1, '#d5b78e');
     pixel(-2, -1, 2, 1, '#39739a'); pixel(-2, -2, 2, 1, '#f4ead2');
     pixel(0, -5, 3, 2, '#725138'); pixel(1, -6, 2, 1, '#725138'); pixel(1, -3, 2, 1, '#725138');
-    pixel(1, -4, 1, 1, '#d5b78e'); pixel(3, -5, 2, 1, '#e0a030'); pixel(2, -5, 1, 1, '#2b211a');
+    pixel(1, -4, 1, 1, '#d5b78e'); pixel(3, -5, 2, 1, '#e0a030'); pixel(1, -5, 1, 1, '#493b2d');
     pixel(4, -2, 1, 1, '#51402f');
     waterline();
     return;
@@ -62,7 +62,7 @@ export function drawLakeDuck(c, px, py, left, young, female) {
   pixel(-3, -1, 2, 1, '#286b9b'); pixel(-3, -2, 2, 1, '#f4ead2');
   pixel(1, -2, 2, 1, '#884b32'); pixel(1, -1, 1, 2, '#884b32');
   pixel(1, -3, 2, 1, '#24764b'); pixel(0, -5, 4, 2, '#24764b'); pixel(1, -6, 2, 1, '#45975d');
-  pixel(0, -3, 1, 1, '#f4ead2'); pixel(4, -5, 2, 1, '#e0a030'); pixel(2, -5, 1, 1, '#2b211a');
+  pixel(0, -3, 1, 1, '#f4ead2'); pixel(4, -5, 2, 1, '#e0a030'); pixel(1, -5, 1, 1, '#493b2d');
   pixel(-6, -1, 2, 1, '#343b38');
   waterline();
 }
