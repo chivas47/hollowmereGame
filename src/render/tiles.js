@@ -3,7 +3,7 @@ import { T } from '../core/constants.js';
 import { r, rng } from './pixel.js';
 import { SHRINE } from '../data/books.js';
 import { CHIMES } from '../data/nuts.js';
-import { DECOR_SHEETS, BUILDING_SHEETS, PROPS_SHEET, GREENHOUSE_SHEET, VARIANTS_SHEET, DUSK_SHEET } from '../data/sprites.js';
+import { DECOR_SHEETS, BUILDING_SHEETS, PROPS_SHEET, GREENHOUSE_SHEET, VARIANTS_SHEET, DUSK_SHEET, RANCH_FENCE_SHEET } from '../data/sprites.js';
 import { cryptPart } from '../data/duskmarch.js';
 import { CATA } from '../data/catacombs.js';   // 97c: which carving each lever has
 import { BUILDINGS } from '../data/buildings.js';
@@ -1071,6 +1071,16 @@ function sideBench(g, x, y, right) {
 function pen(g, x, y, p) {
   const X = x * T, Y = y * T, [x0, y0, x1, y1] = RANCH_PEN.box, rail = '#8a5a32', post = '#5c371e';
   r(g, X, Y, T, T, p?.snow ? '#e6e2d6' : '#7a9a52');
+  let piece = '';
+  if (y === y0) piece = x === x0 ? 'top-left' : x === x1 ? 'top-right' : x % 2 ? 'top-a' : 'top-b';
+  else if (y === y1) piece = x === x0 ? 'bottom-left' : x === x1 ? 'bottom-right' : x % 2 ? 'bottom-a' : 'bottom-b';
+  else if (x === x0) piece = 'left';
+  else if (x === x1) piece = 'right';
+  const F = RANCH_FENCE_SHEET, frame = F.order.indexOf(piece);
+  if (frame >= 0 && ready(F.sheet)) {
+    g.drawImage(sheet(F.sheet).img, frame * F.size, 0, F.size, F.size, X, Y, F.size, F.size);
+    return;
+  }
   if (y === y0) { r(g, X, Y + 2, T, 1, rail); r(g, X, Y + 5, T, 1, rail); }
   if (y === y1) { r(g, X, Y + 11, T, 1, rail); r(g, X, Y + 14, T, 1, rail); }
   if (x === x0) { r(g, X + 1, Y, 1, T, rail); r(g, X + 1, Y, 2, 4, post); }

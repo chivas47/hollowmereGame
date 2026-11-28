@@ -177,6 +177,12 @@ The placeholder sheets are built by the scripts in `tools/sprites/`.
 - **Rows (2 bands):** main (greyscale, tinted to the fence's colour: wood, stone, hardwood), ink (see-through white light, drawn as is).
 - Rails and posts reach the frame's edges without an outline there, so they join the next fence.
 
+## ranch-fence.png
+
+160 x 16. Ten full-colour, transparent 16 x 16 tiles for the village ranch pen's top, sides and bottom. The two middle
+rail tiles vary their wood grain to avoid a repeated pair; corner pieces join the horizontal rails to the side posts.
+Frame order is `RANCH_FENCE_SHEET.order` in `src/data/sprites.js`. Built by `tools/sprites/ranch_fence.py`; original art.
+
 ## fixtures.png
 
 96 x 16. 16 x 16 over the tile, colours drawn in, one row in the order of `FIXTURES_SHEET.order`: the gate across (closed, open), the gate along (closed, open), the wood path, the stone path. The paths repeat edge to edge.
@@ -218,6 +224,7 @@ Lit bombs use the bomb frames of placed.png.
 | File | Author | Licence |
 | --- | --- | --- |
 | person.png | Hollowmere Farm (original, v77; rebuilt part by part v222) | same as the game |
+| ranch-fence.png | Hollowmere Farm (original) | same as the game |
 | animals.png | Hollowmere Farm (original, v78; redrawn v196) | same as the game |
 | pets.png, horse.png | Hollowmere Farm (original, v79; redrawn v196) | same as the game |
 | birds.png, penstock.png | Hollowmere Farm (original, v276) | same as the game |

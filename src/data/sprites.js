@@ -5,7 +5,7 @@ export { PERSON } from './personSheet.js';
 
 // v297: every PNG in assets/sprites/, preloaded at boot (render/sheets.js preloadSheets) so no sheet arrives mid-play and
 // sends cached backgrounds back to be redrawn. tests/sheets.test.mjs keeps this list in step with the folder.
-export const SHEET_FILES = ['alders', 'animals', 'birds', 'buildings', 'buildings-winter', 'bunting', 'cave-ember', 'cave-peak', 'cave-root', 'cave-flooded', 'cave-frost', 'cave-crypt', 'cave-magma', 'cave-crystal', 'cave-rock', 'cave-sand', 'cave-sewer', 'children', 'crops', 'debris', 'fences', 'fixtures', 'floors', 'forage', 'furniture', 'giants', 'glow', 'greenhouse', 'horse', 'monsters', 'packet', 'pens', 'penstock', 'person', 'pets', 'placed', 'props', 'soil', 'terrain-autumn', 'terrain-spring', 'terrain-summer', 'terrain-winter', 'tools', 'trees', 'variants', 'wallpapers', 'weapons', 'dusk'];   // 97b: dusk
+export const SHEET_FILES = ['alders', 'animals', 'birds', 'buildings', 'buildings-winter', 'bunting', 'cave-ember', 'cave-peak', 'cave-root', 'cave-flooded', 'cave-frost', 'cave-crypt', 'cave-magma', 'cave-crystal', 'cave-rock', 'cave-sand', 'cave-sewer', 'children', 'crops', 'debris', 'fences', 'fixtures', 'floors', 'forage', 'furniture', 'giants', 'glow', 'greenhouse', 'horse', 'monsters', 'packet', 'pens', 'penstock', 'person', 'pets', 'placed', 'props', 'ranch-fence', 'soil', 'terrain-autumn', 'terrain-spring', 'terrain-summer', 'terrain-winter', 'tools', 'trees', 'variants', 'wallpapers', 'weapons', 'dusk'];   // 97b: dusk
 
 // v78 animals.png: 24x24 frames, one row per kind; columns are right stand, right step, left stand, left step.
 // Colours are drawn in (no tinting). origin as above: the frame's top-left from the animal's feet.
@@ -223,6 +223,8 @@ export const SEASON_WASH = {
 // colours drawn in, one row in this order (gate: across or along, closed or open; paths by kind).
 export const FENCES_SHEET = { sheet: 'fences', w: 16, h: 18, origin: [0, -2], layers: ['main', 'ink'] };
 export const FIXTURES_SHEET = { sheet: 'fixtures', size: 16, order: ['gate-across', 'gate-across-open', 'gate-along', 'gate-along-open', 'woodpath', 'stonepath'] };
+// Original, full-colour tiles for the village ranch pen's perimeter (render/tiles.js).
+export const RANCH_FENCE_SHEET = { sheet: 'ranch-fence', size: 16, order: ['top-left', 'top-a', 'top-b', 'top-right', 'left', 'right', 'bottom-left', 'bottom-a', 'bottom-b', 'bottom-right'] };
 
 // v92 children.png: the farm's children, 16x16 frames, the child's feet at x 8, y 14 (origin: the frame's top-left
 // from the feet). Columns: baby, crawler, toddler (CHILDREN_SHEET.stages); a row per child's colours (KIDS in
