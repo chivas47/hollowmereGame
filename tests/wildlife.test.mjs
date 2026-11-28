@@ -6,6 +6,7 @@ import { readFileSync } from 'node:fs';
 import { G } from '../src/core/game.js';
 import { emit } from '../src/core/events.js';
 import { BIRDS_SHEET, PENSTOCK } from '../src/data/sprites.js';
+import { drawLakeDuck } from '../src/render/wildlife.js';
 import { RANCH_PEN } from '../src/data/ranch.js';
 import { penHerd, penBounds, stepPen, penFrame } from '../src/systems/pen.js';
 import { birdFrame } from '../src/systems/atmosphere.js';
@@ -17,6 +18,18 @@ const size = (name) => { const b = readFileSync(new URL(`../assets/sprites/${nam
 test('the sheets have the frames and bands the code draws', () => {
   assert.deepEqual(size('birds'), [BIRDS_SHEET.size * 8, BIRDS_SHEET.size * BIRDS_SHEET.layers.length]);
   assert.deepEqual(size('penstock'), [PENSTOCK.size * 8, PENSTOCK.size * PENSTOCK.rows.length]);
+});
+
+test('lake ducks have distinct mallard drake, hen and young palettes', () => {
+  const colors = (female, young) => {
+    const seen = new Set(), c = { fillStyle: '', fillRect() { seen.add(this.fillStyle); } };
+    drawLakeDuck(c, 20, 20, false, young, female);
+    return seen;
+  };
+  const drake = colors(false, false), hen = colors(true, false), duckling = colors(false, true);
+  assert.ok(drake.has('#24764b') && drake.has('#884b32') && drake.has('#286b9b'));
+  assert.ok(hen.has('#725138') && hen.has('#39739a'));
+  assert.ok(duckling.has('#b58b55'));
 });
 
 test('the pen animals stay inside the rails for a long afternoon, and graze, walk and call', () => {

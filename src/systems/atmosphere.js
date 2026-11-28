@@ -10,7 +10,7 @@ import { MAPS, sizeOf } from '../data/maps.js';
 import { underSky } from '../data/weather.js';
 import { WATERFALLS, WILDLIFE, BIRD_SPECIES, BIRD_PLACES, birdsFor } from '../data/atmosphere.js';
 import { r, rng } from '../render/pixel.js';
-import { drawBird } from '../render/wildlife.js';   // v276
+import { drawBird, drawLakeDuck } from '../render/wildlife.js';   // v276
 import { coverKind } from '../render/scenery.js';   // v278: birds keep off tall ground cover
 
 const wet = () => G.S.weather === 'rain' || G.S.weather === 'storm';
@@ -96,7 +96,7 @@ function spawn() {
   const D = WILDLIFE.ducks;
   if (water.length && D.maps.includes(S.map)) for (let i = 0; i < D.n[S.map]; i++) {
     const [x, y] = water[(R() * water.length) | 0], a = R() * Math.PI * 2;
-    fauna.ducks.push({ x: x * T + 8, y: y * T + 8, vx: Math.cos(a), vy: Math.sin(a), turn: 2 + R() * 4, bob: R() * 6, young: i > 0 && i % 3 === 2 });
+    fauna.ducks.push({ x: x * T + 8, y: y * T + 8, vx: Math.cos(a), vy: Math.sin(a), turn: 2 + R() * 4, bob: R() * 6, young: i > 0 && i % 3 === 2, female: i % 2 === 1 });
   }
   if (shore.length && WILDLIFE.frogs.maps.includes(S.map)) for (let i = 0; i < WILDLIFE.frogs.n; i++) {
     const [x, y] = shore[(R() * shore.length) | 0]; fauna.frogs.push({ x: x * T + 8, y: y * T + 11, hop: 0, next: 2 + R() * 8 });
@@ -204,11 +204,9 @@ addUpdater((dt) => {
 addLayer(9, (c) => {
   if (!underSky(G.S.map)) return;
   if (open('ducks')) for (const d of fauna.ducks) {
-    const x = d.x | 0, y = (d.y + Math.sin(d.bob * 2) * 0.6) | 0, s = d.young ? 0.6 : 1, left = d.vx < 0;
-    c.fillStyle = 'rgba(255,255,255,.25)'; c.fillRect(x - 5 * s, y + 2, 10 * s, 1);   // the wake
-    r(c, x - 4 * s, y - 2, 8 * s, 4, d.young ? '#c9b083' : '#8a6a4a');
-    const hx = left ? x - 5 * s : x + 2 * s;
-    r(c, hx, y - 5, 3 * s, 3, d.young ? '#c9b083' : '#3a6a4a'); r(c, left ? hx - 2 : hx + 3 * s, y - 4, 2, 1, '#e0a030');
+    const x = d.x | 0, y = (d.y + Math.sin(d.bob * 2) * 0.6) | 0, scale = d.young ? 0.7 : 1, left = d.vx < 0;
+    c.fillStyle = 'rgba(255,255,255,.25)'; c.fillRect(x - 5 * scale, y + 2, 10 * scale, 1);   // the wake
+    drawLakeDuck(c, x, y, left, d.young, d.female);
   }
   const j = fauna.jump;
   if (j) {
