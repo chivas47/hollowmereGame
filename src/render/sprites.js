@@ -190,13 +190,13 @@ function childArt(c, x, y, stage, i) {
 // v77: from the person sheet (assets/sprites/person.png) tinted to p once it has loaded, else drawn in code below.
 // v222: part by part (data/people.js personParts): body, outfit, hair, beard, extras and hat, each band tinted.
 // v223: the head's parts drawn on their own, lower on a child's body (and without the walking bob there).
-function sheetPerson(c, px, py, dir, moving, walkT, p) {
+function sheetPerson(c, px, py, dir, moving, walkT, p, seated = false) {
   const P = PERSON, parts = personParts(p), step = moving ? P.walk[Math.floor(walkT * 12) % P.walk.length] : 0;   // a, pass, b, pass
-  const f = (P.dirs[dir] ?? 0) * P.steps + step, X = Math.round(px) + P.origin[0], Y = Math.round(py) + P.origin[1];
+  const f = seated ? P.seated[dir] : (P.dirs[dir] ?? 0) * P.steps + step, X = Math.round(px) + P.origin[0], Y = Math.round(py) + P.origin[1];
   const draw = (layers, dy) => c.drawImage(tinted(P.sheet, P.layers, layers, P.h), f * P.w, 0, P.w, P.h, X, Y + dy, P.w, P.h);
   if (!parts.dy) return draw([...parts.body, ...parts.head], 0);
   draw(parts.body, 0);
-  draw(parts.head, parts.dy - (P.bobs[step] && !parts.bob ? 1 : 0));
+  draw(parts.head, seated ? 0 : parts.dy - (P.bobs[step] && !parts.bob ? 1 : 0));
 }
 
 // v123: wind in the hair and clothes. wind is the lean where they stand (systems/wind.js, about 0 to 1, + is
@@ -211,58 +211,64 @@ function flutter(c, px, py, p, wind) {
   if (on) r(c, side + s, y - 6, 1, 1, p.shirt);
 }
 
-export function drawPerson(c, px, py, dir, moving, walkT, p, wind = 0) {
+export function drawPerson(c, px, py, dir, moving, walkT, p, wind = 0, pose = {}) {
+  const { seated = false, blinkNow = false } = pose;
   if (p.small && !ready(PERSON.sheet)) {   // v166: a child (Pip), three quarters size, until the sheet (v223: with its child's body) loads
     c.save(); c.translate(px, py); c.scale(0.75, 0.75); c.translate(-px, -py);
-    drawPerson(c, px, py, dir, moving, walkT, { ...p, small: false }, wind); c.restore(); return;
+    drawPerson(c, px, py, dir, moving, walkT, { ...p, small: false }, wind, pose); c.restore(); return;
   }
-  const x = Math.round(px) - 5, y = Math.round(py) - 15, st = moving ? Math.floor(walkT * 8) % 2 : 0, eye = '#2b211a';
+  const x = Math.round(px) - 5, y = Math.round(py) - 15, headY = y + (seated ? 2 : 0), st = moving ? Math.floor(walkT * 8) % 2 : 0, eye = '#2b211a';
   if (ready(PERSON.sheet)) {
-    sheetPerson(c, px, py, dir, moving, walkT, p);   // v222: hats are on the sheet too
-    flutter(c, px, py, p, wind);
+    sheetPerson(c, px, py, dir, moving, walkT, p, seated);   // v222: hats are on the sheet too
+    flutter(c, px, py + (seated ? 2 : 0), p, wind);
+    if (seated && blinkNow) drawBlink(c, px, py + 2, dir, p);
     return;
   }
   r(c, x + 1, y + 14, 8, 2, 'rgba(0,0,0,.25)');
-  r(c, x + 2, y + 11, 2, st ? 2 : 3, p.pants); r(c, x + 6, y + 11, 2, st ? 3 : 2, p.pants);
-  r(c, x + 2, y + 13 - (st ? 1 : 0), 2, 1, p.shoes || eye); r(c, x + 6, y + 13 - (st ? 0 : 1), 2, 1, p.shoes || eye);
-  r(c, x + 1, y + 6, 8, 5, p.shirt); r(c, x + 1, y + 10, 8, 1, 'rgba(0,0,0,.22)');
-  r(c, x, y + 7, 1, 3, p.skin); r(c, x + 9, y + 7, 1, 3, p.skin);
-  r(c, x + 2, y + 2, 6, 5, p.skin);
-  if (dir === 'up') { r(c, x + 2, y + 2, 6, 4, p.hair); if (p.long) r(c, x + 2, y + 6, 6, 3, p.hair); }
-  else if (dir === 'down') {
-    r(c, x + 2, y + 2, 6, 1, p.hair); r(c, x + 3, y + 4, 1, 1, eye); r(c, x + 6, y + 4, 1, 1, eye);
-    if (p.long) { r(c, x + 1, y + 2, 1, 6, p.hair); r(c, x + 8, y + 2, 1, 6, p.hair); }
-    if (p.beard) r(c, x + 2, y + 5, 6, 2, p.hair);
-  } else if (dir === 'left') {
-    r(c, x + 5, y + 2, 3, 4, p.hair); r(c, x + 3, y + 4, 1, 1, eye);
-    if (p.long) r(c, x + 6, y + 6, 3, 3, p.hair); if (p.beard) r(c, x + 2, y + 5, 4, 2, p.hair);
+  if (seated) {
+    const shoes = p.shoes || eye;
+    r(c, x + 2, y + 10, 6, 2, p.pants);
+    if (dir === 'left' || dir === 'right') {
+      const step = dir === 'right' ? 1 : -1;
+      r(c, x + 2 + (step > 0 ? 1 : 0), y + 11, 6, 1, p.pants);
+      r(c, x + 2 + (step > 0 ? 4 : 0), y + 12, 2, 2, p.pants);
+      r(c, x + 2 + (step > 0 ? 4 : 0), y + 14, 2, 1, shoes);
+      r(c, x + 2 + (step > 0 ? 1 : 3), y + 12, 2, 2, p.pants);
+      r(c, x + 2 + (step > 0 ? 1 : 3), y + 14, 2, 1, shoes);
+    } else {
+      r(c, x + 2, y + 11, 2, 2, p.pants); r(c, x + 6, y + 11, 2, 2, p.pants);
+      r(c, x + 2, y + 13, 2, 1, shoes); r(c, x + 6, y + 13, 2, 1, shoes);
+    }
+    r(c, x + 1, y + 8, 8, 4, p.shirt); r(c, x + 1, y + 11, 8, 1, 'rgba(0,0,0,.22)');
+    r(c, x, y + 9, 1, 3, p.skin); r(c, x + 9, y + 9, 1, 3, p.skin);
   } else {
-    r(c, x + 2, y + 2, 3, 4, p.hair); r(c, x + 6, y + 4, 1, 1, eye);
-    if (p.long) r(c, x + 1, y + 6, 3, 3, p.hair); if (p.beard) r(c, x + 4, y + 5, 4, 2, p.hair);
+    r(c, x + 2, y + 11, 2, st ? 2 : 3, p.pants); r(c, x + 6, y + 11, 2, st ? 3 : 2, p.pants);
+    r(c, x + 2, y + 13 - (st ? 1 : 0), 2, 1, p.shoes || eye); r(c, x + 6, y + 13 - (st ? 0 : 1), 2, 1, p.shoes || eye);
+    r(c, x + 1, y + 6, 8, 5, p.shirt); r(c, x + 1, y + 10, 8, 1, 'rgba(0,0,0,.22)');
+    r(c, x, y + 7, 1, 3, p.skin); r(c, x + 9, y + 7, 1, 3, p.skin);
   }
-  flutter(c, px, py, p, wind);
-  if (p.hat) (HATS[p.hatStyle] || HATS.straw)(c, x, y, p.hat, p.band || p.hat, p.hair);
-  else r(c, x + 2, y + 1, 6, 1, p.hair);
+  r(c, x + 2, headY + 2, 6, 5, p.skin);
+  if (dir === 'up') { r(c, x + 2, headY + 2, 6, 4, p.hair); if (p.long) r(c, x + 2, headY + 6, 6, 3, p.hair); }
+  else if (dir === 'down') {
+    r(c, x + 2, headY + 2, 6, 1, p.hair); r(c, x + 3, headY + 4, 1, 1, eye); r(c, x + 6, headY + 4, 1, 1, eye);
+    if (p.long) { r(c, x + 1, headY + 2, 1, 6, p.hair); r(c, x + 8, headY + 2, 1, 6, p.hair); }
+    if (p.beard) r(c, x + 2, headY + 5, 6, 2, p.hair);
+  } else if (dir === 'left') {
+    r(c, x + 5, headY + 2, 3, 4, p.hair); r(c, x + 3, headY + 4, 1, 1, eye);
+    if (p.long) r(c, x + 6, headY + 6, 3, 3, p.hair); if (p.beard) r(c, x + 2, headY + 5, 4, 2, p.hair);
+  } else {
+    r(c, x + 2, headY + 2, 3, 4, p.hair); r(c, x + 6, headY + 4, 1, 1, eye);
+    if (p.long) r(c, x + 1, headY + 6, 3, 3, p.hair); if (p.beard) r(c, x + 4, headY + 5, 4, 2, p.hair);
+  }
+  flutter(c, px, py + (seated ? 2 : 0), p, wind);
+  if (p.hat) (HATS[p.hatStyle] || HATS.straw)(c, x, headY, p.hat, p.band || p.hat, p.hair);
+  else r(c, x + 2, headY + 1, 6, 1, p.hair);
+  if (seated && blinkNow) drawBlink(c, px, py + 2, dir, p);
 }
 
-// Seated (systems/seats.js): the standing frame folded at the hips. The body above the hips drops `fold` pixels
-// onto the seat and the legs shorten by as much, so the shoes still rest on the floor. Facing down the knees come
-// toward you; sideways the shins and shoes reach forward a little; facing up the seat's back hides the legs.
-// The bottom `legs` rows of a frame are the legs on both the sheet and the code art (hips first, shoes last).
-let fold = null;
-export function drawSeatedPerson(c, px, py, dir, p, wind, { legs, fold: f }, blink = false) {
-  const W = 32, H = 40, ax = 16, ay = 36;
-  if (!fold) { fold = document.createElement('canvas'); fold.width = W; fold.height = H; }
-  const g = fold.getContext('2d'); g.clearRect(0, 0, W, H);
-  drawPerson(g, ax, ay, dir, false, 0, p, wind);
-  if (blink) drawBlink(g, ax, ay, dir, p);
-  const X = Math.round(px) - ax, Y = Math.round(py) - ay, hip = ay - legs;
-  const part = (sy, h, dx, dy) => c.drawImage(fold, 0, sy, W, h, X + dx, Y + sy + dy, W, h);
-  part(0, hip + 1, 0, f);                         // head, body and the lap (the hip row)
-  if (dir === 'up') return;
-  const fwd = dir === 'left' ? -1 : dir === 'right' ? 1 : 0;
-  part(ay - 1, 1, fwd * f, 0);                    // the shoes on the floor, forward of the knees when side on
-  if (fwd) part(hip + 1, 1, fwd * (f - 1), f - 1);   // a shin between lap and shoes
+// Seated (systems/seats.js): dedicated pose art in the person sheet, with a direct code-art fallback.
+export function drawSeatedPerson(c, px, py, dir, p, wind, blink = false) {
+  drawPerson(c, px, py, dir, false, 0, p, wind, { seated: true, blinkNow: blink });
 }
 
 // v115: closed eyes, drawn in skin over a standing person's eyes (the sheet and the code art put them on the same row).

@@ -9,7 +9,7 @@ const sheets = {};
 // cached old PNG with the new layout, and a PNG of the wrong size counts as not loaded (code art) rather than
 // drawing blank or wrong frames. [revision, width, height]
 const CHECK = {
-  [PERSON.sheet]: [PERSON.rev, PERSON.w * 4 * PERSON.steps, PERSON.h * PERSON.layers.length],
+  [PERSON.sheet]: [PERSON.rev, PERSON.w * PERSON.columns, PERSON.h * PERSON.layers.length],
   [BIRDS_SHEET.sheet]: [null, BIRDS_SHEET.size * 8, BIRDS_SHEET.size * BIRDS_SHEET.layers.length],
 };
 const tints = new Map();

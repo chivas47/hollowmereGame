@@ -9,7 +9,7 @@ import { PERSON } from '../src/data/personSheet.js';
 const png = readFileSync(new URL('../assets/sprites/person.png', import.meta.url));
 
 test('person.png is the size its layout expects', () => {
-  assert.equal(png.readUInt32BE(16), PERSON.w * 4 * PERSON.steps, 'width: 4 directions x steps');
+  assert.equal(png.readUInt32BE(16), PERSON.w * PERSON.columns, 'width: walk frames and seated directions');
   assert.equal(png.readUInt32BE(20), PERSON.h * PERSON.layers.length, 'height: one band per layer');
 });
 
@@ -20,4 +20,9 @@ test('the layout names the PNG it was built with', () => {
 test('the walk cycle uses real step columns', () => {
   assert.equal(PERSON.bobs.length, PERSON.steps);
   for (const s of PERSON.walk) assert.ok(s > 0 && s < PERSON.steps, `step ${s}`);
+});
+
+test('the seated frames follow the walking frames in facing order', () => {
+  assert.deepEqual(PERSON.seated, { down: 16, up: 17, left: 18, right: 19 });
+  assert.ok(Object.values(PERSON.seated).every((column) => column < PERSON.columns));
 });

@@ -110,10 +110,9 @@ const SWUNG = new Set(['hoe', 'pick', 'axe', 'can', 'sword', 'rod', 'pan']);
 const mine = () => G.fishing && !G.fishing.p2;   // v134: a line of yours, not the second farmer's
 export const rodBend = () => { const f = G.fishing; return f?.phase === 'reel' ? 25 + Math.sin(performance.now() / 90) * 6 : f?.phase === 'bite' ? 18 : Math.sin(performance.now() / 600) * 2; };
 
-// v305: seated (systems/seats.js): on the seat, facing its way. v356: the legs fold at the hips instead of being
-// clipped away (the sheet's legs are its bottom four rows, so the old clip hid them whole).
+// v305: seated (systems/seats.js): on the seat, facing its way, using a dedicated direction-specific pose.
 function drawSeated(c, s) {
-  drawSeatedPerson(c, s.x, s.y, s.dir, outfitPal(G.S.profile, G.S.outfit), lean(s.x), SEATS, M.blink > 0);
+  drawSeatedPerson(c, s.x, s.y, s.dir, outfitPal(G.S.profile, G.S.outfit), lean(s.x), M.blink > 0);
 }
 
 addEntities(() => (G.youMap ? [] : [{   // v140: not drawn in their half when you are elsewhere

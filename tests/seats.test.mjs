@@ -57,14 +57,12 @@ test('sitting puts you on the seat without moving your saved spot; a step stands
   assert.equal(sit(p.x, p.y), true); assert.equal(stand(), true); assert.equal(seated(), null);
 });
 
-// v356: seated, the old code clipped the bottom four rows of the frame, which on the person sheet are all of the
-// legs (pants on rows 16 to 18, shoes on 18 and 19 of 20). Now the body folds at the hips instead, and the legs show.
-test('seated, your legs fold under you instead of being cut away', async () => {
+// Dedicated seated frame columns keep the pose coherent across sheet art and its code fallback.
+test('seated poses use dedicated frames for every facing', async () => {
   const { PERSON } = await import('../src/data/personSheet.js');
-  assert.equal(SEATS.hide, undefined, 'no rows of the body are clipped away');
-  assert.equal(SEATS.legs, 4, 'the legs are the bottom four rows of a frame');
-  assert.equal(PERSON.h, 20);
-  assert.ok(SEATS.fold > 0 && SEATS.fold < SEATS.legs, 'the body drops onto the seat but some leg still shows');
+  assert.deepEqual(PERSON.seated, { down: 16, up: 17, left: 18, right: 19 });
+  assert.equal(PERSON.columns, 20);
+  assert.equal(SEATS.fold, undefined);
 });
 
 test('the town and village benches never stand one right behind another', () => {

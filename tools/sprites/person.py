@@ -15,7 +15,8 @@
 # order, each tinted to its colour. To add a style: draw it in the right PARTS table below, run this script, and give
 # it a label in src/data/people.js. Nothing else changes: the sheet's layout is written to src/data/personSheet.js.
 #
-# Layout: frames 16 wide and 20 tall, columns down, up, left, right (stand, step a, pass, step b; left is right mirrored).
+# Layout: frames 16 wide and 20 tall, columns down, up, left, right (stand, step a, pass, step b), then one seated
+# frame per direction. Left is right mirrored in both poses.
 # One 20 px band per part and colour layer, named "<part>|<layer>" (layers: skin, shoes, pants, shirt, hair, beard,
 # hat, band, acc, scarf, bag, ink). Tinted layers are grey: 255 the colour, 205 its shade, 160 its deep shade, 105 the outline;
 # ink is drawn as is. Fixed points the code relies on, from the feet at (8, 20): the down eyes at x 6 and 9 and the
@@ -129,6 +130,11 @@ TORSO = {
   ]],
 }
 # rows 12 to 14: hips, legs and shoes; the far leg in shade
+SIT_TORSO = {
+  'down': ['...cCCCzzCCck...', '...CcCCCCCCck...', '....SkCCCCkS....'],
+  'up': ['...cCCCCCCCck...', '...CcCCkkCCck...', '....SkCCCCkS....'],
+  'right': ['.....cCCCCk.....', '.....cCCcCk.....', '.....kccSck.....'],
+}
 LEGS = {
   'down': [[
     '....pPPPPPpq....',
@@ -167,7 +173,21 @@ LEGS = {
 }
 LEGS['up'] = [[r.replace('qq', 'pp') for r in step] for step in LEGS['down']]
 
-def body(d, step):
+# Seated legs: knees angle forward and the lower legs hang to the floor.
+SIT_LEGS = {
+  'down': ['....pPPPPPpq....', '...pPP....PPp...', '...PP......PP...', '...fF......Ff...'],
+  'up': ['....pPPPPPpq....', '...pPP....PPp...', '...PP......PP...', '...fF......Ff...'],
+  'right': ['.....pPPPPq.....', '......pPPPPp....', '..........Pp....', '..........Ff....'],
+}
+SIT_CHILD = {
+  'down': ['....SCCkkCCS....', '...pPP....PPp...', '...PP......PP...', '...fF......Ff...'],
+  'up': ['....SCCkkCCS....', '...pPP....PPp...', '...PP......PP...', '...fF......Ff...'],
+  'right': ['......SCCS......', '......pPPq......', '.........Pp.....', '.........Ff.....'],
+}
+
+def body(d, step, seated=False):
+    if seated:
+      return {'pieces': [(HEAD[d], 4), (SIT_TORSO[d], 11), (SIT_LEGS[d], 11)]}
     return {'rows': HEAD[d] + TORSO[d][step] + LEGS[d][step], 'y': 2}
 
 # v223: a child (Pip): the adult head on a body of four rows (shoulders, hands, shorts, shoes), so the head is about
@@ -228,7 +248,9 @@ for _d, _pass in (('down', ['.....pPPPp......', '.....fFFFf......']), ('up', ['.
                   ('right', ['......pPPq......', '.....fFFfFf.....'])):
     CHILD[_d].insert(2, CHILD[_d][0][:2] + _pass)
 
-def child(d, step):
+def child(d, step, seated=False):
+    if seated:
+        return {'pieces': [(HEAD[d], 6), (SIT_CHILD[d], 12)]}
     return {'rows': HEAD[d] + CHILD[d][step], 'y': 2 + CHILD_DY}
 
 # ---------------- outfits, over the body (rows from y) ----------------
@@ -446,6 +468,7 @@ def ring(tint, solid, keep=None):
     return out
 
 def mirror(d): return {(W - 1 - x, y): v for (x, y), v in d.items()}
+def shift(d, dy): return {(x, y + dy): v for (x, y), v in d.items() if y + dy < H}
 
 def art(table, view, step):
     """A part's rows for a view and step: tables give per-view (rows, y) or per-view ([rows per step], y)."""
@@ -454,20 +477,27 @@ def art(table, view, step):
     if rows and isinstance(rows[0], list): rows = rows[step] if len(rows) == STEPS else rows[OLD_STEP[step]]
     return rows, y
 
-def frame(part, view, step, base):
+def frame(part, view, step, base, seated=False):
     """{layer: {(x, y): tone or rgba}} for one part in one frame. base: the body's pixels, for overlay outlines."""
     if part in ('body', 'body:child'):
-        b = (body if part == 'body' else child)('right' if view == 'left' else view, step)
-        tint, ink = cells(b['rows'], b['y'])
+        b = (body if part == 'body' else child)('right' if view == 'left' else view, step, seated)
+        if seated:
+            tint, ink = {}, {}
+            for rows, y in b['pieces']:
+              t, i = cells(rows, y)
+              tint.update(t); ink.update(i)
+        else:
+            tint, ink = cells(b['rows'], b['y'])
     else:
         kind, _, name = part.partition(':')
         hat = name.endswith('@hat')
         name = name.replace('@hat', '')
         table = {'outfit': OUTFIT, 'gear': GEAR, 'hair': HAIR, 'beard': BEARD, 'extra': EXTRA, 'hat': HAT}[kind][name]
-        rows, y = art(table, view, step)
+        rows, y = art(table, view, 0 if seated else step)
         tint, ink = cells(rows, y)
         if hat: tint = {q: v for q, v in tint.items() if q[1] >= TOP + HAT_LINE}; ink = {q: v for q, v in ink.items() if q[1] >= TOP + HAT_LINE}
-    if part != 'body:child': tint, ink = bob(tint, step), bob(ink, step)
+        if seated: tint, ink = shift(tint, 2), shift(ink, 2)
+    if part != 'body:child' and not seated: tint, ink = bob(tint, step), bob(ink, step)
     if view == 'left': tint, ink = mirror(tint), mirror(ink)
     if part in ('body', 'body:child'):
         tint.update({q: v for q, v in ring(tint, set(tint)).items()})
@@ -496,8 +526,14 @@ def build(path, js, preview=None):
             for part in parts():
                 f = base if part == 'body' else frame(part, view, step, {} if part == 'body:child' else solid)
                 for layer, px in f.items(): frames.setdefault(f'{part}|{layer}', {})[(v * STEPS + step)] = px
+        base = frame('body', view, 0, {}, seated=True)
+        solid = {q for layer in base.values() for q in layer} - set(base.get('ink', {}))
+        for part in parts():
+            f = base if part == 'body' else frame(part, view, 0, {} if part == 'body:child' else solid, seated=True)
+            for layer, px in f.items(): frames.setdefault(f'{part}|{layer}', {})[(len(VIEWS) * STEPS + v)] = px
     bands = sorted(frames, key=lambda b: (parts().index(b.split('|')[0]), LAYER_ORDER.index(b.split('|')[1])))
-    img = Image.new('RGBA', (W * 4 * STEPS, H * len(bands)), (0, 0, 0, 0))
+    columns = len(VIEWS) * (STEPS + 1)
+    img = Image.new('RGBA', (W * columns, H * len(bands)), (0, 0, 0, 0))
     for n, band in enumerate(bands):
         for f, px in frames[band].items():
             for (x, y), c in px.items(): img.putpixel((f * W + x, n * H + y), c)
@@ -506,10 +542,11 @@ def build(path, js, preview=None):
     styles = {k: list(t) for k, t in (('outfit', OUTFIT), ('gear', GEAR), ('hair', HAIR), ('beard', BEARD), ('extra', EXTRA), ('hat', HAT))}
     with open(js, 'w') as f:
         f.write('// Generated by tools/sprites/person.py (do not edit by hand): the layout of assets/sprites/person.png.\n')
-        f.write('// Frames w x h, the feet at -origin; columns: dirs x steps (stand, step a, step b). One band of h px per\n')
+        f.write('// Frames w x h, the feet at -origin; columns: dirs x steps, then one seated frame per direction.\n')
         f.write('// "<part>|<layer>" in `layers` order; styles: what each part can be (labels in data/people.js).\n')
         f.write('export const PERSON = ' + json.dumps({
-            'sheet': 'person', 'rev': rev, 'w': W, 'h': H, 'origin': [-8, -H], 'dirs': {'down': 0, 'up': 1, 'left': 2, 'right': 3},
+            'sheet': 'person', 'rev': rev, 'w': W, 'h': H, 'columns': columns, 'origin': [-8, -H], 'dirs': {'down': 0, 'up': 1, 'left': 2, 'right': 3},
+            'seated': {'down': len(VIEWS) * STEPS, 'up': len(VIEWS) * STEPS + 1, 'left': len(VIEWS) * STEPS + 2, 'right': len(VIEWS) * STEPS + 3},
             'steps': STEPS, 'bobs': BOBS, 'walk': [1, 2, 3, 2], 'hatLine': HAT_LINE, 'styles': styles,
             # per body: dy, how much lower the head's parts are drawn; bob, whether they bob on the step frames
             'bodies': {'adult': {'dy': 0, 'bob': True}, 'child': {'dy': CHILD_DY, 'bob': False}},
@@ -531,7 +568,8 @@ def make_preview(img, bands, out):
     ]
     def hexc(h): h = h.lstrip('#'); return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
     cols = 4
-    prev = Image.new('RGBA', (len(looks) * (W * cols + 4), H * 4 + 6), (110, 120, 90, 255))
+    poses = [(step, False) for step in (0, 1, 2, 3)] + [(0, True)]
+    prev = Image.new('RGBA', (len(looks) * (W * cols + 4), H * len(poses) + 2 * (len(poses) - 1)), (110, 120, 90, 255))
     for n, L in enumerate(looks):
         hat = L.get('hat')
         hair = f"hair:{L['hairs']}" + ('@hat' if hat else '')
@@ -540,9 +578,9 @@ def make_preview(img, bands, out):
                ([f'hat:{hat[0]}'] if hat else [])
         col = {'skin': L['skin'], 'shoes': '#2b211a', 'pants': L['pants'], 'shirt': L['shirt'], 'hair': L['hair'],
                'beard': L['hair'], 'acc': '#f4ead2', 'hat': hat[1] if hat else None, 'band': hat[2] if hat else None}
-        for row, step in enumerate((0, 1, 2, 3)):
+        for row, (step, seated) in enumerate(poses):
             for v in range(4):
-                f = v * STEPS + step
+                f = len(VIEWS) * STEPS + v if seated else v * STEPS + step
                 tile = Image.new('RGBA', (W, H), (0, 0, 0, 0))
                 for part in want:
                     for b, band in enumerate(bands):

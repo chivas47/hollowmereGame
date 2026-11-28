@@ -3,6 +3,7 @@
 Newest first. Version numbers match published versions of the playable page.
 
 ## Unreleased
+- Sitting now uses a dedicated bent-leg pose for each facing, including a matching code-art fallback, instead of slicing and shifting the standing sprite.
 - Bird PNG art is definitive: the wildlife generator now preserves an existing `birds.png` unless `--rebuild-birds` is explicitly passed. Invalid-sized bird sheets fall back to code art.
 - Chair side views now show a shaped seat and separated legs; armchairs have a visible arm, and rocking chairs show curved runners. The rocker also has proper side and back views when turned.
 - The village-square benches now have a joined side profile with a slatted back, supported seat and stretcher; both directions share one mirrored design.
