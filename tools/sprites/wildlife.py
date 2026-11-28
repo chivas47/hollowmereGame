@@ -17,7 +17,7 @@ from PIL import Image
 
 INK = {'K': '#2b211a', 'O': '#e0a030', 'o': '#b07020', 'L': '#a06a3a', 'E': '#f4ead2', 'P': '#e2a0a0', 'p': '#c07878',
        'G': '#6aa444', 'g': '#4f8a34', 'H': '#d9c9a0', 'R': '#c8505a', 'F': '#3b3430', 'f': '#5a4e46',
-       'S': '#3a3028', 's': '#5a4a3e', 'D': '#4a4a52', 'e': '#9a9aa2'}
+         'S': '#3a3028', 's': '#5a4a3e', 'D': '#4a4a52', 'e': '#514d54'}
 BIRD_TONE = {'B': ('body', 255), 'b': ('body', 200), 'c': ('body', 150), 'V': ('wing', 255), 'v': ('wing', 185), 'W': ('body', 255),
              'A': ('accent', 255), 'a': ('accent', 190)}
 BIRD_BANDS = ['body', 'wing', 'accent', 'ink']
@@ -60,10 +60,10 @@ BIRDS = {
     ['....BBBBBB...', 'VVbBAABBBeDD.', '..vvvbbbbb...', '..VVvv.......', '..VVV........', '.............'],
   ],
   'gull': [   # white with long grey wings and a yellow beak (the accent); pink legs
-    ['........BBB..', '.......BBBBAA', '.......BKBB..', '...VVVVBBBb..', '.VVVvvvBBBBb.', 'VVvvvvvbbbbc.', '.......bbb...', '.......P.P...'],
-    ['........BBBA.', '.......BBBBA.', '.......BKBB..', '...VVVVBBBb..', '.VVVvvvBBBBb.', 'VVvvvvvbbbbc.', '.......bbb...', '.......P.P...'],
+    ['........BBB..', '.......BBBBAA', '.......BBKB..', '...VVVVBBBb..', '.VVVvvvBBBBb.', 'VVvvvvvbbbbc.', '.......bbb...', '.......P.P...'],
+    ['........BBBA.', '.......BBBBA.', '.......BBKB..', '...VVVVBBBb..', '.VVVvvvBBBBb.', 'VVvvvvvbbbbc.', '.......bbb...', '.......P.P...'],
     ['.VVV.........', 'VVvvvBBBBb...', '.vvvvBBBBBBB.', '.....bbbBBKBB', '......P.P.BAA'],
-    ['........BBB..', '.......BBBBAA', '.......BKBB..', '...VVVVBBBb..', '.VVVvvvBBBBb.', 'VVvvvvvbbbbc.', '.......bbb...', '.......PP....', '.............'],
+    ['........BBB..', '.......BBBBAA', '.......BBKB..', '...VVVVBBBb..', '.VVVvvvBBBBb.', 'VVvvvvvbbbbc.', '.......bbb...', '.......PP....', '.............'],
     ['.VV..........', 'VVvV.........', '.vvvvBBBB....', '...BBBBBKAA..', '...bbbbbb....', '....P.P......'],
     ['VV...........', 'VVV..........', '.VvV.........', '..vvvBBBBB...', '...bBBBBBKAA.', '....bbbbb....'],
     ['VVVVVVvvBBBBB...', '.VVVVvvvBBBBKAA.', '.....bbbbbb.....', '................'],
