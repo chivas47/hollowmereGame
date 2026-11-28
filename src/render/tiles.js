@@ -1038,8 +1038,16 @@ function gardenBed(g, x, y) {
 }
 function bench(g, x, y) {
   const X = x * T, Y = y * T;
-  r(g, X + 1, Y + 6, 14, 3, '#8a5a32'); r(g, X + 1, Y + 6, 14, 1, '#b0804a'); r(g, X + 1, Y + 3, 14, 2, '#6e4626');
-  r(g, X + 2, Y + 9, 2, 5, '#4a3020'); r(g, X + 12, Y + 9, 2, 5, '#4a3020');
+  r(g, X + 1, Y + 14, 14, 1, 'rgba(0,0,0,.2)');
+  r(g, X + 2, Y + 4, 2, 10, '#4a3020'); r(g, X + 12, Y + 4, 2, 10, '#4a3020');
+  r(g, X + 3, Y + 5, 1, 8, '#b0804a'); r(g, X + 12, Y + 5, 1, 8, '#b0804a');
+  r(g, X + 1, Y + 2, 14, 4, '#4a3020');
+  r(g, X + 2, Y + 3, 12, 2, '#a66f3b'); r(g, X + 2, Y + 3, 12, 1, '#d0a05e');
+  r(g, X + 3, Y + 4, 10, 1, '#bd8247'); r(g, X + 7, Y + 4, 1, 1, '#8a5a32');
+  r(g, X + 1, Y + 7, 14, 3, '#4a3020');
+  r(g, X + 2, Y + 7, 12, 1, '#d0a05e'); r(g, X + 2, Y + 8, 12, 1, '#a66f3b');
+  r(g, X + 4, Y + 8, 2, 1, '#bd8247'); r(g, X + 10, Y + 8, 2, 1, '#8a5a32');
+  r(g, X + 2, Y + 10, 2, 4, '#6e4626'); r(g, X + 12, Y + 10, 2, 4, '#6e4626');
 }
 // v356: a bench seen side on, for benches that face each other across the village square. right: it faces right,
 // its back on the left.
