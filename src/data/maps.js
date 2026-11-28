@@ -36,11 +36,13 @@ import { MERE } from './mere.js';
 import { PROPS, PROP_TILES } from './scenery.js';
 import { DUSK_TILES, DUSK_EXITS, DUSK_WAYS_IN, CRYPT, gloamwoodGrid, tangleGrid, mournfieldGrid } from './duskmarch.js';   // v303
 import { CATA_SOLID, CATA, BARROW, cataGrid, barrowGrid } from './catacombs.js';   // 97c
+import { NIGHT_LIGHTS } from './atmosphere.js';
 
 // v156 (roadmap 75g): a map's size in tiles, read from its grid, so a map can be larger than the screen (W x H).
 export const sizeOf = (id) => { const g = MAPS[id]?.grid; return g?.length ? { w: g[0].length, h: g.length } : { w: W, h: H }; };
 
-export const SOLID = new Set([...Object.values(PROP_TILES), ...DUSK_TILES, ...CATA_SOLID, 'ǩ', 'ȵ', 'ȶ', 'ʄ', 'ɦ', 'ɧ', 'ʉ', 'ʏ', 'ʐ', 'ʒ', 'ʑ', 'ʎ', 'ħ', 'ǧ', 'ƀ', 'ɓ', 'ɗ', 'β', 'ʋ', 'ʂ', 'ɲ', 'ʘ', 'ʌ', 'ŧ', 'Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'ǂ', 'ǀ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
+export const LAMP_POST = 'Ɩ';
+export const SOLID = new Set([...Object.values(PROP_TILES), LAMP_POST, ...DUSK_TILES, ...CATA_SOLID, 'ǩ', 'ȵ', 'ȶ', 'ʄ', 'ɦ', 'ɧ', 'ʉ', 'ʏ', 'ʐ', 'ʒ', 'ʑ', 'ʎ', 'ħ', 'ǧ', 'ƀ', 'ɓ', 'ɗ', 'β', 'ʋ', 'ʂ', 'ɲ', 'ʘ', 'ʌ', 'ŧ', 'Ѫ', 'Ӂ', 'Ž', 'Ç', 'Ş', 'Ŧ', 'ǂ', 'ǀ', 'Þ', '¢', '§', '¤', '£', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '`', '-', '[', '/', '_', '(', ')', ']', '|', '}', ';', '{', '?', '@', '+', '#', '~', '>', '=', '%', '*', '^', '!', '&', '$', 'a', 'e', 'd', 'y', 't', 'u', 'j', 's', 'm', 'k', '.', 'I', 'Z', 'l', 'n', 'o', 'x', 'v', 'b', 'N', 'T', 'H', 'D', 'B', 'W', 'S', 'O', 'R', 'K', 'C', 'M', 'X', 'r', 'c', 'i', 'U', 'L', 'A', 'Y', 'V', 'Q', 'F', 'J', 'G', 'w']);
 
 // v158: w and h for a map larger than the screen (roadmap 75i); the camera follows you across it.
 function emptyGrid(w = W, h = H) {
@@ -244,6 +246,7 @@ function townGrid() {
   m[MACHINE.at.y][MACHINE.at.x] = '¤';   // v69: the prize machine by the town hall
   m[4][w - 1] = 'E'; m[4][w - 2] = 'Ŧ'; fill(m, w - 3, 4, w - 3, 7, 'P');   // v106: the ridge path east to the mountain, behind a fallen trunk
   fill(m, 14, 14, 16, 15, 'V'); fill(m, 11, 16, 15, 16, 'P');   // v166 (roadmap 75j): Aurel, Bryn and Pip's cottage
+  for (const [x, y] of NIGHT_LIGHTS.lamps.town) m[y][x] = LAMP_POST;
   return m;
 }
 

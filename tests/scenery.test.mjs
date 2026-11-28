@@ -18,7 +18,7 @@ import * as wing from '../src/data/wing.js';
 import * as traditions from '../src/data/traditions.js';
 import { coverKind } from '../src/render/scenery.js';
 
-const { MAPS, SOLID } = maps;
+const { MAPS, SOLID, LAMP_POST } = maps;
 const key = (m, x, y) => `${m} ${x},${y}`;
 
 // Every tile something else claims, by map.
@@ -60,6 +60,11 @@ test('every scenery prop has art, is solid and sits on open ground nobody else u
     }
   }
   assert.deepEqual(bad, []);
+});
+
+test('town lampposts occupy solid map tiles', () => {
+  assert.ok(SOLID.has(LAMP_POST), 'lamp post tiles block movement');
+  for (const [x, y] of NIGHT_LIGHTS.lamps.town) assert.equal(MAPS.town.grid[y][x], LAMP_POST, `town lamp at ${x},${y}`);
 });
 
 test('ground cover grows on open ground, never on the farm or the island plot', () => {
