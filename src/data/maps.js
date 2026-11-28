@@ -230,7 +230,6 @@ export const CLINIC_BED = { map: 'inside_clinic', x: 14, y: 12, dir: 'up' };   /
 export const TOWN_SIZE = { w: 40, h: 24 };
 function townGrid() {
   const { w, h } = TOWN_SIZE, m = emptyGrid(w, h);
-  for (const s of Object.values(SHOP_SPOTS)) fill(m, s.x, s.y, s.x + 2, s.y + 1, s.tile);   // v98: keepers work inside now
   fill(m, 2, 8, w - 2, 8, 'P');
   for (const s of Object.values(SHOP_SPOTS)) if (s.y < 8) m[7][s.x + 1] = 'P';
   fill(m, 10, 9, 10, h - 1, 'P'); m[h - 1][10] = 'E';
@@ -238,14 +237,16 @@ function townGrid() {
   put(m, [[3, 2], [7, 3], [24, 3], [7, 14], [2, 14], [30, 15], [36, 19]], 'T');
   put(m, [[11, 6], [13, 6]], 'ƀ');   // benches on the green where the Anvil stood (v356: side by side facing the lane, not one behind the other)
   fill(m, 13, 1, 15, 2, 'V'); fill(m, 14, 3, 14, 7, 'P');   // v49: Lio's cottage on the north edge
-  fill(m, 4, 1, 6, 2, 'V'); fill(m, 5, 3, 5, 7, 'P');        // v50: Pell's cottage
+  fill(m, 4, 1, 6, 2, 'V'); put(m, [[5, 3], [5, 4], [5, 7]], 'P'); fill(m, 6, 4, 6, 7, 'P');   // v50: Pell's cottage, path around Fenn's Provisions
   fill(m, 18, 1, 20, 2, 'V'); fill(m, 19, 3, 20, 3, 'P'); fill(m, 20, 4, 20, 7, 'P');   // v50: Juno's cottage
   fill(m, 9, 1, 11, 2, '-'); fill(m, 8, 3, 10, 3, 'P'); fill(m, 8, 4, 8, 7, 'P');      // v53: the town hall
   m[7][35] = '0';   // v64: the coach stop at the east end of the lane (v159: the new east end; v275: one tile west, so its two
   // tiles (35 and 36) sit on the grass between the lane's two paths and neither path is blocked)
   m[MACHINE.at.y][MACHINE.at.x] = '¤';   // v69: the prize machine by the town hall
+  m[MACHINE.at.y + 1][MACHINE.at.x] = 'P';   // keep the machine's approach clear
   m[4][w - 1] = 'E'; m[4][w - 2] = 'Ŧ'; fill(m, w - 3, 4, w - 3, 7, 'P');   // v106: the ridge path east to the mountain, behind a fallen trunk
   fill(m, 14, 14, 16, 15, 'V'); fill(m, 11, 16, 15, 16, 'P');   // v166 (roadmap 75j): Aurel, Bryn and Pip's cottage
+  for (const s of Object.values(SHOP_SPOTS)) fill(m, s.x, s.y, s.x + 2, s.y + 1, s.tile);   // shop footprints stay solid over paths
   return m;
 }
 

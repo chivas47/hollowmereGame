@@ -72,6 +72,7 @@ const HERE = {
   town: () => null,
 };
 export function weekAim(S = G.S) {
+  if (S.firstWeek.guide.skipped) return null;
   const g = weekGoal();
   if (!g) return null;
   return S.map === g.map || g.anywhere ? HERE[g.aim]?.(S) || null : exitToward(S.map, g.map);

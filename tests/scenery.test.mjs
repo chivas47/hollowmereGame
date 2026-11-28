@@ -114,6 +114,13 @@ test('ground cover grows on open ground, never on the farm or the island plot', 
   assert.equal(coverKind('farm', 5, 8, 'Summer'), null);
 });
 
+test('the prize machine has a clear, flower-free approach', () => {
+  const { x, y } = MACHINE.at, approachY = y + 1;
+  assert.equal(MAPS.town.grid[approachY][x], 'P');
+  assert.equal(coverKind('town', x, approachY, 'Summer'), null);
+  assert.ok(!PROPS.town.some(([, px, py]) => px === x && py === approachY));
+});
+
 test('no flowers or mushrooms on the snow', () => {
   for (const m of Object.keys(COVER)) MAPS[m].grid.forEach((row, y) => row.forEach((_, x) => {
     assert.ok(!['flowers', 'mushrooms', 'bloom', 'clover'].includes(coverKind(m, x, y, 'Winter')), `${m} ${x},${y}`);

@@ -65,10 +65,10 @@ export const PROPS = {
     ['boulder', 6, 21], ['bush', 20, 20], ['stump', 28, 21], ['bush', 33, 17], ['bush', 17, 18], ['planter', 13, 15],
     // a copse in the open south-east, and trees by the tavern's back field
     ['tree', 24, 18], ['tree', 26, 20], ['tree', 22, 21], ['tree', 30, 19], ['tree', 33, 21], ['tree', 35, 13], ['tree', 4, 17], ['tree', 8, 18],
-    // v356: pots of flowers by the doors, flower beds by the hall, along the lanes and on the open east side
+    // v356: pots of flowers by the doors, flower beds along the lanes and on the open east side
     ['pots', 3, 7], ['pots', 6, 3], ['pots', 15, 3], ['pots', 18, 3], ['pots', 17, 7], ['pots', 19, 7],
     ['pots', 16, 16], ['pots', 31, 6],
-    ['flowerbed', 11, 3], ['flowerbed', 12, 3], ['flowerbed', 4, 13], ['flowerbed', 5, 13], ['flowerbed', 19, 13], ['flowerbed', 20, 13],
+    ['flowerbed', 4, 13], ['flowerbed', 5, 13], ['flowerbed', 19, 13], ['flowerbed', 20, 13],
     ['flowerbed', 23, 6], ['flowerbed', 24, 6], ['flowerbed', 25, 6], ['planter', 26, 6], ['planter', 29, 3], ['bush', 22, 6],
   ],
   mere: [

@@ -9,7 +9,7 @@ import { T } from '../src/core/constants.js';
 import { MAPS } from '../src/data/maps.js';
 import { HOTBAR } from '../src/data/hotbar.js';
 import { GUIDE, FARM } from '../src/data/guide.js';
-import { advance, aimAt, guideOn, facts, farmAction, guideLine } from '../src/systems/guide.js';
+import { advance, aimAt, guideOn, facts, farmAction, guideLine, skipGuide } from '../src/systems/guide.js';
 
 function fresh() {
   const S = newState(); S.firstWeek.arrived = true; S.profile = { name: 'Test' };
@@ -43,6 +43,22 @@ test('a new farm starts on the field, only after the opening', () => {
   assert.equal(guideOn(S), true);
   assert.equal(advance(S, true).id, 'farm');
   S.firstWeek.arrived = false; assert.equal(guideOn(S), false, 'not during the opening');
+});
+
+test('skipping the guide turns it off and remembers the choice', () => {
+  const S = fresh(), stored = new Map();
+  globalThis.localStorage = { setItem: (key, value) => stored.set(key, value) };
+  try {
+    G.guide = guideLine(S);
+    skipGuide();
+    assert.equal(guideOn(S), false);
+    assert.equal(S.firstWeek.guide.skipped, true);
+    assert.equal(G.guide, null);
+    const saved = JSON.parse(stored.values().next().value);
+    assert.equal(merge(saved).firstWeek.guide.skipped, true, 'the saved farm keeps the skip after reload');
+  } finally {
+    delete globalThis.localStorage;
+  }
 });
 
 test('the first round goes till, plant, water, one tile, asking for each tool in turn', () => {
@@ -102,7 +118,9 @@ test('saves: before the guide it is off; mid-guide keeps its step; a v308 guide 
   const mid = JSON.parse(JSON.stringify(newState())); mid.firstWeek.arrived = true; mid.firstWeek.guide.step = 2;
   assert.equal(merge(mid).firstWeek.guide.step, 2);
   const v308 = JSON.parse(JSON.stringify(newState())); v308.firstWeek.arrived = true; v308.firstWeek.guide = { step: 6, off: false };
-  assert.deepEqual(merge(v308).firstWeek.guide, { step: 0, off: false, v: 2 });
+  assert.deepEqual(merge(v308).firstWeek.guide, { step: 0, off: false, skipped: false, v: 2 });
+  const skipped = JSON.parse(JSON.stringify(newState())); skipped.firstWeek.guide.skipped = true;
+  assert.equal(merge(skipped).firstWeek.guide.skipped, true, 'the skip choice survives saving');
   const unseen = JSON.parse(JSON.stringify(newState())); unseen.v = 7; unseen.firstWeek = { arrived: false, done: {}, over: false };
   assert.equal(merge(unseen).firstWeek.guide.off, false, 'a farm that has not seen the opening yet still gets the guide');
 });

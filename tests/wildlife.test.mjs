@@ -4,10 +4,13 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { G } from '../src/core/game.js';
+import { T } from '../src/core/constants.js';
+import { collectEntities } from '../src/core/registry.js';
 import { emit } from '../src/core/events.js';
 import { BIRDS_SHEET, PENSTOCK } from '../src/data/sprites.js';
 import { MAPS } from '../src/data/maps.js';
 import { drawLakeDuck } from '../src/render/wildlife.js';
+import '../src/render/tiles.js';
 import { WILDLIFE } from '../src/data/atmosphere.js';
 import { RANCH_PEN } from '../src/data/ranch.js';
 import { penHerd, penBounds, stepPen, penFrame } from '../src/systems/pen.js';
@@ -63,6 +66,15 @@ test('the pen animals stay inside the rails for a long afternoon, and graze, wal
   for (const s of ['graze', 'walk', 'stand', 'call']) assert.ok(seen.has(s), `they ${s}`);
   for (const f of frames) assert.ok(f >= 0 && f < 8);
   assert.ok(frames.has(1) && frames.has(4) && frames.has(5) && frames.has(6), 'walk beats and grazing both show');
+});
+
+test('the pen front fence sorts in front of animals inside and behind people outside', () => {
+  freshFarm();
+  G.S.map = 'village';
+  const y = (RANCH_PEN.box[3] * T) + 14;
+  assert.ok(collectEntities().some((entity) => entity.y === y), 'the fence front has a y-sort position at its ground line');
+  G.S.map = 'farm';
+  assert.ok(!collectEntities().some((entity) => entity.y === y), 'the village fence is not drawn on other maps');
 });
 
 test('a bird pecks, looks and hops on the ground, and flaps through its wing frames when it flies off', () => {

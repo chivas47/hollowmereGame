@@ -1,5 +1,7 @@
 // Static world art: tiles and buildings. Drawn once per map and season into a cached canvas.
 import { T } from '../core/constants.js';
+import { G } from '../core/game.js';
+import { addEntities } from '../core/registry.js';
 import { r, rng } from './pixel.js';
 import { SHRINE } from '../data/books.js';
 import { CHIMES } from '../data/nuts.js';
@@ -151,10 +153,8 @@ const TREE_CROWNS = [
     if (v) g.push([x, y, v]);
   }
   const on = new Set(g.map(([x, y]) => x + ',' + y)), edge = [];
-  for (let y = 0; y < 12; y++) for (let x = 0; x < 16; x++) {
-    if (on.has(x + ',' + y)) continue;
-    if ([[1, 0], [-1, 0], [0, 1], [0, -1]].some(([i, j]) => on.has((x + i) + ',' + (y + j)))) edge.push([x, y]);
-  }
+  for (const [x, y] of g)
+    if ([[1, 0], [-1, 0], [0, 1], [0, -1]].some(([i, j]) => !on.has((x + i) + ',' + (y + j)))) edge.push([x, y]);
   return { g, edge };
 });
 // v297: a tree is one of three crowns, flipped or not, in the palette's colours: six pictures a palette, each drawn
@@ -178,8 +178,8 @@ function paintTree(g, X, Y, crown, flip, p) {
   r(g, X + 2, Y + 13, 12, 2, 'rgba(0,0,0,.18)'); r(g, X + 4, Y + 14, 8, 1, 'rgba(0,0,0,.12)');
   r(g, X + 6, Y + 9, 4, 6, '#3f2a18'); r(g, X + 7, Y + 9, 2, 6, '#6b4a2b'); r(g, X + 7, Y + 9, 1, 6, '#8a6440');
   r(g, X + 5, Y + 14, 6, 1, '#3f2a18'); r(g, X + 6, Y + 14, 4, 1, '#6b4a2b'); r(g, X + 8, Y + 12, 1, 1, '#4e3420');
-  for (const [cx, cy] of crown.edge) r(g, X + (flip ? 15 - cx : cx), Y + cy, 1, 1, line);
   for (const [cx, cy, v] of crown.g) r(g, X + (flip ? 15 - cx : cx), Y + cy, 1, 1, col[v]);
+  for (const [cx, cy] of crown.edge) r(g, X + (flip ? 15 - cx : cx), Y + cy, 1, 1, line);
   r(g, X + 3, Y + 11, 10, 1, 'rgba(0,0,0,.18)');
   if (p.snow) for (const [cx, cy, v] of crown.g) if (v === 'L' && cy < 8) r(g, X + (flip ? 15 - cx : cx), Y + cy, 1, 1, cy < 3 || (cx + cy) % 3 ? SNOW : '#d6e2ea');
 }
@@ -1087,6 +1087,26 @@ function pen(g, x, y, p) {
   if (x === x1) { r(g, X + 14, Y, 1, T, rail); r(g, X + 13, Y, 2, 4, post); }
   // v276: the animals are no longer painted into the ground; they live and move (systems/pen.js).
 }
+function penFront(g, x, y) {
+  const [x0, , x1, y1] = RANCH_PEN.box;
+  if (y !== y1) return;
+  const X = x * T, Y = y * T;
+  const piece = x === x0 ? 'bottom-left' : x === x1 ? 'bottom-right' : x % 2 ? 'bottom-a' : 'bottom-b';
+  const F = RANCH_FENCE_SHEET, frame = F.order.indexOf(piece);
+  if (frame >= 0 && ready(F.sheet)) {
+    g.drawImage(sheet(F.sheet).img, frame * F.size, 0, F.size, F.size, X, Y, F.size, F.size);
+    return;
+  }
+  r(g, X, Y + 11, T, 1, '#8a5a32'); r(g, X, Y + 14, T, 1, '#8a5a32');
+}
+addEntities(() => {
+  if (G.S.map !== 'village') return [];
+  const [x0, , x1, y1] = RANCH_PEN.box;
+  return [{
+    y: y1 * T + 14,
+    draw: (g) => { for (let x = x0; x <= x1; x++) penFront(g, x, y1); },
+  }];
+});
 // v165: a market stall on the town green: a striped awning over a plank counter.
 function stall(g, x, y) {
   const X = x * T, Y = y * T;

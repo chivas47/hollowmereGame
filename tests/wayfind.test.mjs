@@ -50,6 +50,13 @@ test('each goal from day 2 points somewhere useful', async () => {
   S = goalDay('hollow', 'wilds'); assert.deepEqual(weekAim(S), { tx: 12, ty: 1 }, 'the Hollow: the cave mouth');
 });
 
+test('skipping the first-day guide also hides the first-week goal pointer', () => {
+  const S = goalDay('plant');
+  assert.ok(weekAim(S), 'the goal pointer is available before skipping');
+  S.firstWeek.guide.skipped = true;
+  assert.equal(weekAim(S), null);
+});
+
 test('Say hello keeps one neighbour: not swapped for someone nearer, followed off the map, chosen again once indoors', async () => {
   const { NPCRT } = await import('../src/systems/npcs.js');
   const { forgetNeighbour, chosenNeighbour } = await import('../src/systems/firstweek.js');

@@ -34,7 +34,7 @@ export function newState() {
     bin: 0,
     binLast: null,   // v236: the last stack put in the bin today, { k, t, n, value }; it can come back out until night
     journal: { story: {}, log: [], seen: [], pins: [], track: null, markers: true },   // v114: story steps done, finished quests, places found, map pins, tracked objective (systems/journal.js)
-    firstWeek: { arrived: false, done: {}, over: false, guide: { step: 0, off: false, v: GUIDE_VERSION } },   // v122: the arrival scene and the first week's goals (systems/firstweek.js); v308: the guided first day (systems/guide.js)
+    firstWeek: { arrived: false, done: {}, over: false, guide: { step: 0, off: false, skipped: false, v: GUIDE_VERSION } },   // v122: the arrival scene and the first week's goals (systems/firstweek.js); v308: the guided first day (systems/guide.js)
     tips: [],   // v311: first-time tips already shown (systems/tips.js)
     tipsGen: TIPS_GEN,   // v319 (roadmap 111): the newest tip generation this farm was offered (data/tips.js since, core/stage.js)
     music: { history: [], lastFor: {} },   // v318: recent tracks and each place's last one (systems/musicDirector.js)
@@ -190,7 +190,7 @@ export function merge(saved) {
   s.journal = { story: { ...(sj.story || {}) }, log: [...(sj.log || [])], seen: [...(sj.seen || [])], pins: [...(sj.pins || [])], track: sj.track || null, markers: sj.markers !== false };
   const fw = saved.firstWeek || {};   // v122
   const gd = fw.guide;   // v308
-  s.firstWeek = { arrived: !!fw.arrived, done: { ...(fw.done || {}) }, over: !!fw.over, guide: gd ? { step: gd.v === GUIDE_VERSION ? +gd.step || 0 : 0, off: !!gd.off, v: GUIDE_VERSION } : { step: 0, off: false, v: GUIDE_VERSION } };   // v310: steps saved under older numbers start again (done ones pass at once); v319: a farm from before the guide is decided by migration 8
+  s.firstWeek = { arrived: !!fw.arrived, done: { ...(fw.done || {}) }, over: !!fw.over, guide: gd ? { step: gd.v === GUIDE_VERSION ? +gd.step || 0 : 0, off: !!gd.off, skipped: !!gd.skipped, v: GUIDE_VERSION } : { step: 0, off: false, skipped: false, v: GUIDE_VERSION } };   // v310: steps saved under older numbers start again (done ones pass at once); v319: a farm from before the guide is decided by migration 8
   s.reckoning = { ...newState().reckoning, ...(saved.reckoning || {}) };   // v128
   const sm = saved.music || {};   // v318
   s.music = { history: Array.isArray(sm.history) ? sm.history.filter((x) => typeof x === 'string').slice(0, 8) : [], lastFor: sm.lastFor && typeof sm.lastFor === 'object' ? { ...sm.lastFor } : {} };

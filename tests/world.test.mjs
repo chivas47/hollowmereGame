@@ -3,13 +3,15 @@
 // Guards the maps as the world grows: a moved door, a walled-in exit or a one-way edge fails here.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { W, H } from '../src/core/constants.js';
-import { MAPS, SOLID } from '../src/data/maps.js';
+import { W, H, T } from '../src/core/constants.js';
+import { MAPS, SHOP_SPOTS, SOLID } from '../src/data/maps.js';
 import { HOMES, homeMap, homeEntry } from '../src/data/homes.js';
 import { VENUES, venueMap, venueFront } from '../src/data/venues.js';
 import { NPCS } from '../src/data/npcs.js';
 import { CAVE } from '../src/data/helpers.js';
 import { MAZE } from '../src/data/maps.js';
+import { BOX, blocked } from '../src/systems/world.js';
+import { tilePath } from '../src/systems/routes.js';
 
 // Ways in that are not an exit tile: a door you face, a ride, a festival. from/stand: where you stand to take it;
 // to/land: where it sets you down (the placePlayer call in the system named). Keep in step with those systems.
@@ -148,6 +150,18 @@ test('every neighbour has a home that exists, with a door on open ground', () =>
     if (!out || out.to !== h.map || key(out.x, out.y) !== key(...h.door)) bad.push(`${n.id}: the way out does not lead back to the door`);
   }
   assert.deepEqual(bad, []);
+});
+
+test("Fenn's Provisions blocks movement and Pell's route goes around it", () => {
+  const { x, y, tile } = SHOP_SPOTS.store, grid = MAPS.town.grid;
+  for (let ty = y; ty < y + 2; ty++) for (let tx = x; tx < x + 3; tx++) {
+    assert.equal(grid[ty][tx], tile, `shop footprint at ${tx},${ty} is not overwritten by a path`);
+    assert.ok(SOLID.has(grid[ty][tx]), `shop footprint at ${tx},${ty} is solid`);
+    assert.ok(blocked(tx * T + 8, ty * T + 8, BOX, 'town'), `player is blocked at ${tx},${ty}`);
+  }
+  const route = tilePath('town', [5, 3], [5, 8]);
+  assert.ok(route, "Pell's cottage has a route to the lane");
+  assert.ok(route.every(([tx, ty]) => tx < x || tx >= x + 3 || ty < y || ty >= y + 2), "Pell's route avoids the shop");
 });
 
 // v157 (roadmap 75h): a map may be larger than the screen (the camera follows you), never smaller, and square-edged.

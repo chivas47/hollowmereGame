@@ -3,9 +3,13 @@
 Newest first. Version numbers match published versions of the playable page.
 
 ## Unreleased
+- Flowers no longer block access to the prize machine in town.
+- Skipping the first-day guide now also hides the first-week pointer that could remain over the field.
+- Fenn's Provisions now blocks the whole building footprint, and Pell's path skirts around it instead of crossing the shop.
 - Lake ducks now sit lower in the water and paddle more slowly.
 - Lake mallards now have cleaner silhouettes and broken wakes, with drakes, hens and ducklings distinct from the farm's duck.
 - Tamsin's ranch pen now uses detailed, original pixel-art fence tiles instead of thin code-drawn rails.
+- The ranch's front fence now sorts with characters, so it hides animals inside the pen without drawing over people outside it.
 - Sitting now uses a dedicated bent-leg pose for each facing, including a matching code-art fallback, instead of slicing and shifting the standing sprite.
 - Bird PNG art is definitive: the wildlife generator now preserves an existing `birds.png` unless `--rebuild-birds` is explicitly passed. Invalid-sized bird sheets fall back to code art.
 - Chair side views now show a shaped seat and separated legs; armchairs have a visible arm, and rocking chairs show curved runners. The rocker also has proper side and back views when turned.

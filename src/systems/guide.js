@@ -5,6 +5,7 @@
 // v310 (roadmap 102): the field is one looping step that picks the next real action each moment (farmAction), so
 // the line, the slot, the key and the arrow always agree, and till, plant and water repeat for every seed.
 import { G } from '../core/game.js';
+import { save } from '../core/state.js';
 import { T } from '../core/constants.js';
 import { on, notify, changed, emit } from '../core/events.js';
 import { addUpdater, addLayer } from '../core/registry.js';
@@ -88,7 +89,7 @@ export function advance(S = G.S, quiet = false) {
   if (g.step >= GUIDE.length && !g.off) { g.off = true; if (!quiet) { notify(GUIDE_DONE); emit('sfx', 'chime'); } }
   return g.off ? null : GUIDE[g.step];
 }
-export function skipGuide() { state().off = true; G.guide = null; changed(); }
+export function skipGuide() { const g = state(); g.off = true; g.skipped = true; G.guide = null; save(); changed(); }
 
 // The line for the step shown now, or null.
 export function guideLine(S = G.S) {
