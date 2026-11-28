@@ -34,6 +34,7 @@ export function drawBird(c, px, py, f, left, sp, lift = 0) {
 export function drawLakeDuck(c, px, py, left, young, female) {
   const x = Math.round(px), y = Math.round(py), scale = young ? 0.7 : 1;
   const pixel = (dx, dy, w, h, color) => r(c, x + (left ? -dx - w : dx) * scale, y + dy * scale, w * scale, h * scale, color);
+  const waterline = () => pixel(-3, young ? 0 : 1, young ? 5 : 6, 1, 'rgba(79,137,165,.78)');
   pixel(-6, 2, 2, 1, 'rgba(255,255,255,.22)');
   pixel(-9, 1, 1, 1, 'rgba(255,255,255,.16)');
   if (young) {
@@ -41,6 +42,7 @@ export function drawLakeDuck(c, px, py, left, young, female) {
     pixel(-4, 0, 6, 1, '#9d7548'); pixel(-3, -1, 2, 1, '#d6b77d');
     pixel(0, -5, 3, 2, '#8a643d'); pixel(1, -6, 2, 1, '#8a643d');
     pixel(1, -4, 1, 1, '#ead8ad'); pixel(3, -5, 2, 1, '#e0a030'); pixel(2, -5, 1, 1, '#2b211a');
+    waterline();
     return;
   }
   if (female) {
@@ -51,6 +53,7 @@ export function drawLakeDuck(c, px, py, left, young, female) {
     pixel(0, -5, 3, 2, '#725138'); pixel(1, -6, 2, 1, '#725138'); pixel(1, -3, 2, 1, '#725138');
     pixel(1, -4, 1, 1, '#d5b78e'); pixel(3, -5, 2, 1, '#e0a030'); pixel(2, -5, 1, 1, '#2b211a');
     pixel(4, -2, 1, 1, '#51402f');
+    waterline();
     return;
   }
   pixel(-3, -2, 6, 1, '#969d9a'); pixel(-5, -1, 9, 1, '#969d9a');
@@ -61,6 +64,7 @@ export function drawLakeDuck(c, px, py, left, young, female) {
   pixel(1, -3, 2, 1, '#24764b'); pixel(0, -5, 4, 2, '#24764b'); pixel(1, -6, 2, 1, '#45975d');
   pixel(0, -3, 1, 1, '#f4ead2'); pixel(4, -5, 2, 1, '#e0a030'); pixel(2, -5, 1, 1, '#2b211a');
   pixel(-6, -1, 2, 1, '#343b38');
+  waterline();
 }
 
 // A pen animal at its feet. kind: 'sheep' or 'cow'; f: the frame (see PENSTOCK).

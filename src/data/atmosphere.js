@@ -30,7 +30,7 @@ export const WILDLIFE = {
   // ducks paddle about the mere and the village pond (not in winter); frogs sit at the water's edge on summer evenings
   // and hop now and then.
   jumps: { every: 6, seasons: ['Spring', 'Summer', 'Autumn'], maps: ['wilds', 'forest', 'grove', 'mere', 'mountain', 'village'] },
-  ducks: { n: { mere: 4, village: 2 }, speed: 6, seasons: ['Spring', 'Summer', 'Autumn'], maps: ['mere', 'village'] },
+  ducks: { n: { mere: 4, village: 2 }, speed: 2.5, seasons: ['Spring', 'Summer', 'Autumn'], maps: ['mere', 'village'] },
   frogs: { n: 4, seasons: ['Summer'], from: 19 * 60, to: 23 * 60, maps: ['mere', 'wilds', 'forest', 'village'] },
 };
 

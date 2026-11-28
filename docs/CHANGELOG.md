@@ -3,6 +3,7 @@
 Newest first. Version numbers match published versions of the playable page.
 
 ## Unreleased
+- Lake ducks now sit lower in the water and paddle more slowly.
 - Lake mallards now have cleaner silhouettes and broken wakes, with drakes, hens and ducklings distinct from the farm's duck.
 - Tamsin's ranch pen now uses detailed, original pixel-art fence tiles instead of thin code-drawn rails.
 - Sitting now uses a dedicated bent-leg pose for each facing, including a matching code-art fallback, instead of slicing and shifting the standing sprite.

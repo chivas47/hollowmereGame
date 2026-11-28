@@ -7,6 +7,7 @@ import { G } from '../src/core/game.js';
 import { emit } from '../src/core/events.js';
 import { BIRDS_SHEET, PENSTOCK } from '../src/data/sprites.js';
 import { drawLakeDuck } from '../src/render/wildlife.js';
+import { WILDLIFE } from '../src/data/atmosphere.js';
 import { RANCH_PEN } from '../src/data/ranch.js';
 import { penHerd, penBounds, stepPen, penFrame } from '../src/systems/pen.js';
 import { birdFrame } from '../src/systems/atmosphere.js';
@@ -32,6 +33,8 @@ test('lake ducks have distinct mallard drake, hen and young palettes', () => {
   assert.ok(drake.has('#24764b') && drake.has('#884b32') && drake.has('#286b9b'));
   assert.ok(hen.has('#725138') && hen.has('#39739a'));
   assert.ok(duckling.has('#b58b55'));
+  for (const duck of [drakeDraws, henDraws, ducklingDraws]) assert.ok(duck.some(([color]) => color === 'rgba(79,137,165,.78)'), 'the lower hull sits behind the waterline');
+  assert.equal(WILDLIFE.ducks.speed, 2.5);
   assert.ok(!drakeDraws.some(([color, , , w, h]) => color === '#f4ead2' && w > 1 && h > 1), 'the drake has no blocky white neck patch');
   assert.ok(!drakeDraws.some(([color, , , w]) => color.startsWith('rgba(255,255,255') && w > 2), 'the wake is broken into short ripples');
   const mirrored = draws(false, false, true).map(([color, x, y, w, h]) => [color, 40 - x - w, y, w, h]);
