@@ -1,13 +1,13 @@
 # Sprite sheet generators
 
-Scripts that build the placeholder sheets in `assets/sprites/` (needs Python 3 with Pillow). Each draws original pixel art, shades bottom edges and outlines every silhouette. Hand-drawn sheets can replace their output at any time: keep the layout in `assets/sprites/README.md`.
+Scripts that build fallback sheets in `assets/sprites/` (needs Python 3 with Pillow). Pixel art PNGs are definitive; the wildlife generator preserves an existing `birds.png` unless its explicit rebuild flag is passed. Keep the layout in `assets/sprites/README.md`.
 
 | Sheet | Build |
 | --- | --- |
 | person.png | `python3 tools/sprites/person.py assets/sprites/person.png` (v192: the frames are letter grids in the script; outlines worked out) |
 | animals.png | `python3 tools/sprites/animals.py assets/sprites/animals.png [preview.png]` (v196: letter grids, outlines worked out) |
 | pets.png, horse.png | `python3 tools/sprites/pets.py assets/sprites` (v196: letter grids, outlines worked out) |
-| birds.png | `python3 tools/sprites/wildlife.py assets/sprites [preview.png]` (v276: letter grids, outlines worked out; birds in body, wing and ink bands) |
+| birds.png | `python3 tools/sprites/wildlife.py assets/sprites [preview.png]` (creates only if missing; pass `--rebuild-birds` to replace; v276 fallback: letter grids, outlines worked out) |
 | penstock.png | Hand-tuned pen animals; preserved by default. Pass `--rebuild-penstock` to `wildlife.py` to replace it with the code-drawn version. |
 | monsters.png | `python3 tools/sprites/monsters.py assets/sprites/monsters.png [preview.png]` (v208: letter grids, outlines worked out) |
 | crops.png | `python3 tools/sprites/crops.py assets/sprites/crops.png` (v197: letter grids, outlines worked out) |

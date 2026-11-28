@@ -1,6 +1,7 @@
-# Builds assets/sprites/birds.png (v276, roadmap 92a):
+# Can build a fallback assets/sprites/birds.png (v276, roadmap 92a):
 #   python3 tools/sprites/wildlife.py assets/sprites [preview.png]
-# The hand-tuned penstock.png is preserved unless --rebuild-penstock is passed.
+# Existing birds.png art is preserved unless --rebuild-birds is passed. The hand-tuned penstock.png is likewise
+# preserved unless --rebuild-penstock is passed.
 #
 # birds.png: 16x16 frames, 8 columns, facing right (code mirrors them), feet at (8, 15). v277 (92b): a block of four
 # bands per shape (song, crow, gull, parrot, quail; BIRDS_SHEET.shapes): body, wing and accent (tinted to the
@@ -13,6 +14,7 @@
 # Drawn as letters like tools/sprites/monsters.py: B b c the body lit, mid, deep; V v the wing; W a shine; anything
 # else an ink colour. Outlines are worked out (the body's and wing's in the ink band, darker than the colour they edge).
 import sys
+from pathlib import Path
 from PIL import Image
 
 INK = {'K': '#2b211a', 'O': '#e0a030', 'o': '#b07020', 'L': '#a06a3a', 'E': '#f4ead2', 'P': '#e2a0a0', 'p': '#c07878',
@@ -196,9 +198,13 @@ def pen_sheet():
                 img.putpixel((f * S + x, row * S + y), darker(col(ch)) + (255,))
     return img
 
-def build(out_dir, preview=None, rebuild_penstock=False):
+def build(out_dir, preview=None, rebuild_penstock=False, rebuild_birds=False):
     birds = bird_sheet()
-    birds.save(f'{out_dir}/birds.png', optimize=True)
+    birds_path = Path(out_dir) / 'birds.png'
+    if rebuild_birds or not birds_path.exists():
+        birds.save(birds_path, optimize=True)
+    else:
+        print(f'Preserving existing {birds_path}; pass --rebuild-birds to replace it.')
     if rebuild_penstock:
         pen_sheet().save(f'{out_dir}/penstock.png', optimize=True)
     if preview:
@@ -220,5 +226,7 @@ def build(out_dir, preview=None, rebuild_penstock=False):
         p.resize((p.width * 8, p.height * 8), Image.NEAREST).save(preview)
 
 if __name__ == '__main__':
-    args = [arg for arg in sys.argv[1:] if arg != '--rebuild-penstock']
-    build(args[0] if args else 'assets/sprites', args[1] if len(args) > 1 else None, '--rebuild-penstock' in sys.argv[1:])
+    flags = {'--rebuild-penstock', '--rebuild-birds'}
+    args = [arg for arg in sys.argv[1:] if arg not in flags]
+    build(args[0] if args else 'assets/sprites', args[1] if len(args) > 1 else None,
+          '--rebuild-penstock' in sys.argv[1:], '--rebuild-birds' in sys.argv[1:])
