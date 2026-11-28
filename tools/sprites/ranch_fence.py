@@ -57,12 +57,12 @@ def draw(name):
     img = Image.new('RGBA', (SIZE, SIZE), (0, 0, 0, 0))
     if name.startswith('top'):
         horizontal(img, 2, 0 if name.endswith('a') or name.endswith('left') else 1)
-        if name == 'top-left': post(img, 1, 0, 8)
-        elif name == 'top-right': post(img, 11, 0, 8)
+        if name == 'top-left': post(img, 1, 0, 15)
+        elif name == 'top-right': post(img, 11, 0, 15)
     elif name.startswith('bottom'):
         horizontal(img, 8, 0 if name.endswith('a') or name.endswith('left') else 1)
-        if name == 'bottom-left': post(img, 1, 7, 15)
-        elif name == 'bottom-right': post(img, 11, 7, 15)
+        if name == 'bottom-left': post(img, 1, 0, 15)
+        elif name == 'bottom-right': post(img, 11, 0, 15)
     elif name == 'left':
         side_rail(img, 1)
     else:
