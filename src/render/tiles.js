@@ -1049,14 +1049,22 @@ function bench(g, x, y) {
   r(g, X + 4, Y + 8, 2, 1, '#bd8247'); r(g, X + 10, Y + 8, 2, 1, '#8a5a32');
   r(g, X + 2, Y + 10, 2, 4, '#6e4626'); r(g, X + 12, Y + 10, 2, 4, '#6e4626');
 }
-// v356: a bench seen side on, for benches that face each other across the village square. right: it faces right,
-// its back on the left.
+// Side-on bench for the paired village-square seats. Draw one profile and mirror it so both directions share the
+// same joinery and proportions.
 function sideBench(g, x, y, right) {
-  const X = x * T, Y = y * T, back = right ? X + 1 : X + 13;
+  const X = x * T, Y = y * T;
+  g.save();
+  if (!right) { g.translate(2 * X + T, 0); g.scale(-1, 1); }
   r(g, X + 2, Y + 14, 12, 1, 'rgba(0,0,0,.2)');
-  r(g, X + 3, Y + 8, 10, 3, '#8a5a32'); r(g, X + 3, Y + 8, 10, 1, '#b0804a');
-  r(g, back, Y + 2, 2, 12, '#6e4626'); r(g, back + (right ? 1 : 0), Y + 2, 1, 12, '#8a5a32');
-  r(g, X + 4, Y + 11, 2, 3, '#4a3020'); r(g, X + 10, Y + 11, 2, 3, '#4a3020');
+  r(g, X + 3, Y + 9, 2, 5, '#4a3020'); r(g, X + 4, Y + 10, 1, 4, '#8a5a32');
+  r(g, X + 12, Y + 9, 2, 5, '#4a3020'); r(g, X + 12, Y + 10, 1, 4, '#8a5a32');
+  r(g, X + 5, Y + 12, 7, 1, '#4a3020'); r(g, X + 5, Y + 12, 7, 1, '#6e4626');
+  r(g, X + 2, Y + 1, 4, 9, '#4a3020'); r(g, X + 3, Y + 2, 2, 7, '#a66f3b');
+  r(g, X + 3, Y + 2, 2, 1, '#d0a05e'); r(g, X + 3, Y + 5, 2, 1, '#6e4626');
+  r(g, X + 3, Y + 7, 12, 4, '#4a3020');
+  r(g, X + 4, Y + 7, 10, 1, '#d0a05e'); r(g, X + 4, Y + 8, 10, 1, '#a66f3b');
+  r(g, X + 4, Y + 9, 10, 1, '#8a5a32'); r(g, X + 7, Y + 7, 1, 1, '#e0b875');
+  g.restore();
 }
 // v166: Tamsin's pens: fence rails round the box, grazed grass (data/maps.js RANCH_PEN); v276: her animals are
 // entities now (systems/pen.js, render/wildlife.js).
