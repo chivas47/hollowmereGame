@@ -177,8 +177,8 @@ export const NIGHT_LIGHTS = {
   window: { r: 1.6, rgb: '255,200,110' },
   lamp: { r: 3.5, rgb: '255,214,140' },
   lantern: { r: 3, rgb: '255,200,110' },
-  // Lamp posts, drawn only (you walk past them): [x, y] tiles, lit the whole night.
-  lamps: { village: [[8, 5], [15, 5], [7, 10], [16, 10]], town: [[11, 9], [9, 13], [11, 13]] },
+  // Lamp posts: [x, y] tiles, lit the whole night and solid on the map.
+  lamps: { village: [[8, 5], [15, 5], [7, 10], [18, 9]], town: [[11, 9], [9, 13], [11, 13]] },
 };
 
 // v109: footsteps by surface, on the ambient bus (the Ambience slider and Sound off cover them; Steps in the menu turns

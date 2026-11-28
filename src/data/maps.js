@@ -246,7 +246,6 @@ function townGrid() {
   m[MACHINE.at.y][MACHINE.at.x] = '¤';   // v69: the prize machine by the town hall
   m[4][w - 1] = 'E'; m[4][w - 2] = 'Ŧ'; fill(m, w - 3, 4, w - 3, 7, 'P');   // v106: the ridge path east to the mountain, behind a fallen trunk
   fill(m, 14, 14, 16, 15, 'V'); fill(m, 11, 16, 15, 16, 'P');   // v166 (roadmap 75j): Aurel, Bryn and Pip's cottage
-  for (const [x, y] of NIGHT_LIGHTS.lamps.town) m[y][x] = LAMP_POST;
   return m;
 }
 
@@ -553,6 +552,9 @@ for (const [id, list] of Object.entries(DUSK_WAYS_IN)) {
   Object.assign(MAPS[id].exits, duskExits(id, list));
   for (const e of list) { const [x, y] = e.at; MAPS[id].grid[y][x] = 'E'; if (MAPS[id].grid[y][x + 1] === 'g') MAPS[id].grid[y][x + 1] = 'P'; }
 }
+
+// Lamp locations drive their lighting, drawing and collision on every configured map.
+for (const [id, lamps] of Object.entries(NIGHT_LIGHTS.lamps)) for (const [x, y] of lamps) MAPS[id].grid[y][x] = LAMP_POST;
 
 // v195: scenery props (data/scenery.js), each on open ground of its map.
 for (const [id, list] of Object.entries(PROPS)) for (const [kind, x, y] of list) {

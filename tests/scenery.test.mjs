@@ -26,15 +26,21 @@ import { freshFarm } from './setup.mjs';
 const { MAPS, SOLID, LAMP_POST } = maps;
 const key = (m, x, y) => `${m} ${x},${y}`;
 
-// Every tile something else claims, by map.
-function reserved() {
+// Neighbour routes and festival stations, by map.
+function occupiedSpots() {
   const out = new Set(), add = (m, x, y) => out.add(key(m, x, y));
   for (const def of NPCS) for (let day = 1; day <= 112; day++) for (const b of scheduleFor(def, day)) for (const [x, y] of b.path) add(b.map, x, y);
+  for (const s of STATIONS) add('village', ...s.at);
+  return out;
+}
+
+// Every tile something else claims, by map.
+function reserved() {
+  const out = occupiedSpots(), add = (m, x, y) => out.add(key(m, x, y));
   for (const [m, list] of Object.entries(SIGNS)) for (const s of list) add(m, s.x, s.y);
   for (const [m, list] of Object.entries(VIGNETTES)) for (const v of list) add(m, v.x, v.y);
   for (const [x, y] of CAT.spots) add(CAT.map, x, y);
   for (const [m, list] of Object.entries(NIGHT_LIGHTS.lamps)) for (const [x, y] of list) { add(m, x, y); add(m, x, y - 1); }
-  for (const s of STATIONS) add('village', ...s.at);
   for (const [x, y] of GROVE.stumps) add('grove', x, y);
   add(CART.map, CART.at.x, CART.at.y); add(BOOKSELLER.map, BOOKSELLER.at.x, BOOKSELLER.at.y); add('town', MACHINE.at.x, MACHINE.at.y);
   // anything else in data that names a map and a tile ({ map, x, y }): the wing, the cart stops, the wishing stone
@@ -67,11 +73,18 @@ test('every scenery prop has art, is solid and sits on open ground nobody else u
   assert.deepEqual(bad, []);
 });
 
-test('town lampposts occupy solid map tiles', () => {
+test('configured lampposts occupy solid map tiles', () => {
   assert.ok(SOLID.has(LAMP_POST), 'lamp post tiles block movement');
-  for (const [x, y] of NIGHT_LIGHTS.lamps.town) {
-    assert.equal(MAPS.town.grid[y][x], LAMP_POST, `town lamp at ${x},${y}`);
-    assert.ok(blocked(x * T + T / 2, y * T + T - 4, undefined, 'town'), `town lamp at ${x},${y} blocks movement`);
+  for (const [mapId, lamps] of Object.entries(NIGHT_LIGHTS.lamps)) for (const [x, y] of lamps) {
+    assert.equal(MAPS[mapId].grid[y][x], LAMP_POST, `${mapId} lamp at ${x},${y}`);
+    assert.ok(blocked(x * T + T / 2, y * T + T - 4, undefined, mapId), `${mapId} lamp at ${x},${y} blocks movement`);
+  }
+});
+
+test('lampposts leave neighbour routes and festival stations clear', () => {
+  const occupied = occupiedSpots();
+  for (const [mapId, lamps] of Object.entries(NIGHT_LIGHTS.lamps)) for (const [x, y] of lamps) {
+    assert.ok(!occupied.has(key(mapId, x, y)), `${mapId} lamp at ${x},${y} blocks a neighbour spot`);
   }
 });
 
