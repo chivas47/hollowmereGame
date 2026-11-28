@@ -4,6 +4,8 @@
 // island's plot. tests/world.test.mjs and tests/week.test.mjs check the walks still work round them.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { emit } from '../src/core/events.js';
+import { T } from '../src/core/constants.js';
 import * as maps from '../src/data/maps.js';
 import { PROPS, PROP_TILES, COVER, BIOMES } from '../src/data/scenery.js';
 import { NPCS } from '../src/data/npcs.js';
@@ -17,6 +19,9 @@ import { CART, BOOKSELLER, MACHINE } from '../src/data/market.js';
 import * as wing from '../src/data/wing.js';
 import * as traditions from '../src/data/traditions.js';
 import { coverKind } from '../src/render/scenery.js';
+import '../src/systems/theatre.js';
+import { blocked } from '../src/systems/world.js';
+import { freshFarm } from './setup.mjs';
 
 const { MAPS, SOLID, LAMP_POST } = maps;
 const key = (m, x, y) => `${m} ${x},${y}`;
@@ -64,7 +69,19 @@ test('every scenery prop has art, is solid and sits on open ground nobody else u
 
 test('town lampposts occupy solid map tiles', () => {
   assert.ok(SOLID.has(LAMP_POST), 'lamp post tiles block movement');
-  for (const [x, y] of NIGHT_LIGHTS.lamps.town) assert.equal(MAPS.town.grid[y][x], LAMP_POST, `town lamp at ${x},${y}`);
+  for (const [x, y] of NIGHT_LIGHTS.lamps.town) {
+    assert.equal(MAPS.town.grid[y][x], LAMP_POST, `town lamp at ${x},${y}`);
+    assert.ok(blocked(x * T + T / 2, y * T + T - 4, undefined, 'town'), `town lamp at ${x},${y} blocks movement`);
+  }
+});
+
+test('loading an unbuilt theatre preserves its overlapping lamppost collision', () => {
+  freshFarm();
+  emit('game:loaded');
+  for (const [x, y] of NIGHT_LIGHTS.lamps.town) {
+    assert.equal(MAPS.town.grid[y][x], LAMP_POST, `town lamp at ${x},${y}`);
+    assert.ok(blocked(x * T + T / 2, y * T + T - 4, undefined, 'town'), `town lamp at ${x},${y} blocks movement`);
+  }
 });
 
 test('ground cover grows on open ground, never on the farm or the island plot', () => {

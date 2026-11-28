@@ -5,7 +5,7 @@
 import { G } from '../core/game.js';
 import { on, emit, changed, notify } from '../core/events.js';
 import { THEATRE, FILMS, SNACKS, TASTES, ARCADE } from '../data/theatre.js';
-import { MAPS } from '../data/maps.js';
+import { MAPS, LAMP_POST } from '../data/maps.js';
 import { NPCS } from '../data/npcs.js';
 import { SEASONS } from '../data/seasons.js';
 import { today } from '../core/time.js';
@@ -25,7 +25,10 @@ export const watchedToday = () => T().day === G.S.day;
 const SPOT = { art: 'storefront', kind: 'theatre', x: THEATRE.at.x, y: THEATRE.at.y };
 function writeTheatre() {
   const m = MAPS.town, up = theatreBuilt(), { x, y } = THEATRE.at;
-  for (let j = 0; j < 2; j++) for (let i = 0; i < 3; i++) m.grid[y + j][x + i] = up ? 'Þ' : 'g';
+  for (let j = 0; j < 2; j++) for (let i = 0; i < 3; i++) {
+    const tile = m.grid[y + j][x + i];
+    m.grid[y + j][x + i] = up ? 'Þ' : tile === LAMP_POST ? LAMP_POST : 'g';
+  }
   m.objects = m.objects.filter((o) => o.kind !== 'theatre');
   if (up) m.objects.push(SPOT);
   emit('world:changed', 'town');
