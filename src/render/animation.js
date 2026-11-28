@@ -118,7 +118,7 @@ export function drawTinted(c, x, y, col, a, fn) {
 // The rod held out while a line is in the water; returns the tip for the line.
 export function drawRod(c, px, py, dir, bend) {
   const ang = -35 + bend;
-  c.save(); handFrame(c, px, py, dir); c.rotate((ang + 45) * RAD); c.drawImage(sprite('rod'), -4, -12); c.restore();
+  c.save(); handFrame(c, px, py, dir); c.rotate((ang + 45) * RAD); c.drawImage(sprite('rodPole'), -4, -12); c.restore();
   return handPoint(px, py, dir, ang, 13);
 }
 

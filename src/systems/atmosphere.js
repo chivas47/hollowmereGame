@@ -84,7 +84,7 @@ export const TALL_COVER = new Set(['fern', 'tall', 'heather', 'bloom', 'scrub', 
 const isWater = (x, y) => MAPS[G.S.map].grid[y]?.[x] === 'O';
 const isBirdGround = (x, y) => ['g', 'z'].includes(MAPS[G.S.map].grid[y]?.[x]);
 function spawn() {
-  const S = G.S, map = MAPS[S.map], R = rng(S.day * 31 + map.salt), tiles = [], water = [], shore = [];
+  const S = G.S, map = MAPS[S.map], R = rng(S.day * 31 + maaasp.salt), tiles = [], water = [], shore = [];
   map.grid.forEach((row, y) => [...row].forEach((t, x) => { if ((t === 'g' || t === 'z') && !S.soil?.[`${x},${y}`] && !S.placed?.[`${x},${y}`]) tiles.push([x, y]); }));
   const { w, h } = sizeOf(S.map), many = (n) => Math.round(n * Math.max(1, (w * h) / (W * H)));   // v195: more on maps larger than the screen
   const pick = () => tiles[(R() * tiles.length) | 0] || [sizeOf(G.S.map).w / 2, sizeOf(G.S.map).h / 2];   // v157: the middle of the map
