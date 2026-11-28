@@ -82,6 +82,7 @@ const faunaKey = () => `${G.S.map}-${G.S.day}`;
 export const faunaNow = () => fauna;
 export const TALL_COVER = new Set(['fern', 'tall', 'heather', 'bloom', 'scrub', 'cactus', 'driftwood', 'bones', 'twigs', 'mushrooms']);   // v278   // v276: for tools and tests (the birds on this map)
 const isWater = (x, y) => MAPS[G.S.map].grid[y]?.[x] === 'O';
+const isBirdGround = (x, y) => ['g', 'z'].includes(MAPS[G.S.map].grid[y]?.[x]);
 function spawn() {
   const S = G.S, map = MAPS[S.map], R = rng(S.day * 31 + map.salt), tiles = [], water = [], shore = [];
   map.grid.forEach((row, y) => [...row].forEach((t, x) => { if ((t === 'g' || t === 'z') && !S.soil?.[`${x},${y}`] && !S.placed?.[`${x},${y}`]) tiles.push([x, y]); }));
@@ -103,7 +104,7 @@ function spawn() {
   }
   // v278 (roadmap 92c, Nuno): birds land on bare ground or low cover, never in a fern, tall grass or a bush, where
   // they looked to sit on top of it.
-  const low = tiles.filter(([x, y]) => !TALL_COVER.has(coverKind(S.map, x, y, today().season)));
+  const low = tiles.filter(([x, y]) => isBirdGround(x, y) && !TALL_COVER.has(coverKind(S.map, x, y, today().season)));
   const perch = () => low[(R() * low.length) | 0] || pick();
   fauna.perch = perch; fauna.R = R; fauna.flock = many(WILDLIFE.birds.n); fauna.sky = skyHere();
   if (S.time < BIRD_DAY.leave[0]) for (let i = 0; i < fauna.flock; i++) addBird(false);   // none if you arrive after dusk
@@ -171,7 +172,11 @@ addUpdater((dt) => {
     if (b.flee) { b.age += dt; b.x += b.vx * dt; b.y += b.vy * dt; continue; }
     // v276 (92a): a bird on the ground pecks in bursts, looks about, turns and hops a little.
     b.peck += dt; b.t -= dt;
-    if (b.mode === 'hop') b.x += (b.left ? -1 : 1) * 16 * dt;
+    if (b.mode === 'hop') {
+      const nextX = b.x + (b.left ? -1 : 1) * 16 * dt;
+      if (isBirdGround(Math.floor(nextX / T), Math.floor((b.y - 10) / T))) b.x = nextX;
+      else b.left = !b.left;
+    }
     if (b.t <= 0) {
       const k = Math.random();
       b.mode = k < 0.45 ? 'peck' : k < 0.7 ? 'look' : k < 0.9 ? 'hop' : 'stand';

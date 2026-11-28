@@ -34,9 +34,14 @@ export function drawBird(c, px, py, f, left, sp, lift = 0) {
 export function drawLakeDuck(c, px, py, left, young, female) {
   const x = Math.round(px), y = Math.round(py), scale = young ? 0.7 : 1;
   const pixel = (dx, dy, w, h, color) => r(c, x + (left ? -dx - w : dx) * scale, y + dy * scale, w * scale, h * scale, color);
-  const waterline = () => pixel(-3, young ? 0 : 1, young ? 5 : 6, 1, 'rgba(79,137,165,.78)');
-  pixel(-6, 2, 2, 1, 'rgba(255,255,255,.22)');
-  pixel(-9, 1, 1, 1, 'rgba(255,255,255,.16)');
+  const waterline = () => {
+    const dy = young ? 0 : 1;
+    pixel(-3, dy, 3, 1, 'rgba(50,101,119,.62)');
+    pixel(1, dy, 2, 1, 'rgba(112,160,169,.48)');
+  };
+  pixel(-4, 2, 8, 1, 'rgba(24,66,79,.20)');
+  pixel(-7, 1, 2, 1, 'rgba(220,239,237,.18)');
+  pixel(6, 2, 2, 1, 'rgba(220,239,237,.12)');
   if (young) {
     pixel(-4, -2, 6, 1, '#b58b55'); pixel(-5, -1, 8, 1, '#b58b55');
     pixel(-4, 0, 6, 1, '#9d7548'); pixel(-3, -1, 2, 1, '#d6b77d');

@@ -6,6 +6,7 @@ import { readFileSync } from 'node:fs';
 import { G } from '../src/core/game.js';
 import { emit } from '../src/core/events.js';
 import { BIRDS_SHEET, PENSTOCK } from '../src/data/sprites.js';
+import { MAPS } from '../src/data/maps.js';
 import { drawLakeDuck } from '../src/render/wildlife.js';
 import { WILDLIFE } from '../src/data/atmosphere.js';
 import { RANCH_PEN } from '../src/data/ranch.js';
@@ -33,7 +34,10 @@ test('lake ducks have distinct mallard drake, hen and young palettes', () => {
   assert.ok(drake.has('#24764b') && drake.has('#884b32') && drake.has('#286b9b'));
   assert.ok(hen.has('#725138') && hen.has('#39739a'));
   assert.ok(duckling.has('#b58b55'));
-  for (const duck of [drakeDraws, henDraws, ducklingDraws]) assert.ok(duck.some(([color]) => color === 'rgba(79,137,165,.78)'), 'the lower hull sits behind the waterline');
+  for (const duck of [drakeDraws, henDraws, ducklingDraws]) {
+    assert.ok(duck.some(([color]) => color === 'rgba(50,101,119,.62)') && duck.some(([color]) => color === 'rgba(112,160,169,.48)'), 'the waterline shades across the lower hull');
+    assert.ok(duck.some(([color]) => color === 'rgba(24,66,79,.20)'), 'a soft submerged shadow anchors the duck in the lake');
+  }
   for (const duck of [drakeDraws, henDraws, ducklingDraws]) assert.ok(duck.some(([color]) => color === '#493b2d'), 'the eye sits back from the bill');
   assert.ok(henDraws.some(([color, x, y]) => color === '#51402f' && x === 23 && y === 18), 'the dark feather pixel touches the hen body');
   assert.equal(WILDLIFE.ducks.speed, 1);
@@ -123,6 +127,33 @@ test('birds land on bare ground or low cover, never in a fern or tall grass', as
     }
   }
   assert.ok(seen > 30, `${seen} birds checked`);
+});
+test('a ground bird turns back instead of hopping onto lake water', async () => {
+  const { faunaNow } = await import('../src/systems/atmosphere.js');
+  const { runUpdaters } = await import('../src/core/registry.js');
+  freshFarm();
+  Object.assign(G.S, { map: 'mere', day: 31, weather: 'sun', time: 600, x: -999, y: -999 });
+  runUpdaters(0.01);
+  const grid = MAPS.mere.grid;
+  let shore;
+  for (let y = 0; y < grid.length && !shore; y++) for (let x = 0; x < grid[y].length && !shore; x++) {
+    if (!['g', 'z'].includes(grid[y][x])) continue;
+    const water = [[1, 0], [-1, 0]].find(([dx, dy]) => grid[y + dy]?.[x + dx] === 'O');
+    if (water) shore = { x, y, water };
+  }
+  assert.ok(shore, 'mere has dry shoreline ground beside lake water');
+  const bird = faunaNow().birds[0];
+  assert.ok(bird, 'a bird spawned');
+  bird.x = shore.x * 16 + 8;
+  bird.y = shore.y * 16 + 10;
+  bird.mode = 'hop';
+  bird.t = 10;
+  bird.left = shore.water[0] < 0;
+  for (let i = 0; i < 30; i++) {
+    runUpdaters(0.1);
+    const tile = grid[Math.floor((bird.y - 10) / 16)]?.[Math.floor(bird.x / 16)];
+    assert.notEqual(tile, 'O', 'bird stays on dry ground');
+  }
 });
 
 // Roadmap 92d (Nuno: "birds just completely vanish in thin air when it gets dark"): wildlife comes and goes
